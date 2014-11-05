@@ -1,0 +1,342 @@
+{
+    "/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/musella-isolation_studies-alphaV1-52-g0636fd0-v0-d4d716a13973bb662753d1518f2275fa/USER": {
+        "files": [
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_1.root", 
+                "nevents": 237465
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_10.root", 
+                "nevents": 208447
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_11.root", 
+                "nevents": 233728
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_12.root", 
+                "nevents": 236341
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_13.root", 
+                "nevents": 231738
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_14.root", 
+                "nevents": 230513
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_15.root", 
+                "nevents": 231789
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_16.root", 
+                "nevents": 233568
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_17.root", 
+                "nevents": 230358
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_18.root", 
+                "nevents": 234911
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_19.root", 
+                "nevents": 233800
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_2.root", 
+                "nevents": 234052
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_20.root", 
+                "nevents": 234027
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_21.root", 
+                "nevents": 231025
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_22.root", 
+                "nevents": 46128
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_3.root", 
+                "nevents": 233955
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_4.root", 
+                "nevents": 212892
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_5.root", 
+                "nevents": 197558
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_6.root", 
+                "nevents": 237016
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_7.root", 
+                "nevents": 230636
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_8.root", 
+                "nevents": 236820
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_9.root", 
+                "nevents": 197853
+            }
+        ]
+    }, 
+    "/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/musella-isolation_studies-alphaV1-52-g0636fd0-v0-d4d716a13973bb662753d1518f2275fa/USER": {
+        "files": [
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_1.root", 
+                "nevents": 232251
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_10.root", 
+                "nevents": 232252
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_11.root", 
+                "nevents": 232689
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_12.root", 
+                "nevents": 238243
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_13.root", 
+                "nevents": 231098
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_14.root", 
+                "nevents": 229684
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_15.root", 
+                "nevents": 233822
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_16.root", 
+                "nevents": 232581
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_17.root", 
+                "nevents": 228974
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_18.root", 
+                "nevents": 232827
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_19.root", 
+                "nevents": 229859
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_2.root", 
+                "nevents": 233028
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_20.root", 
+                "nevents": 136968
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_3.root", 
+                "nevents": 233630
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_4.root", 
+                "nevents": 237502
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_5.root", 
+                "nevents": 206891
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_6.root", 
+                "nevents": 230709
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_7.root", 
+                "nevents": 228780
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_8.root", 
+                "nevents": 236356
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_9.root", 
+                "nevents": 232113
+            }
+        ]
+    }, 
+    "/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/musella-isolation_studies-alphaV1-52-g0636fd0-v0-d4d716a13973bb662753d1518f2275fa/USER": {
+        "files": [
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_1.root", 
+                "nevents": 211712
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_10.root", 
+                "nevents": 230563
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_11.root", 
+                "nevents": 228400
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_12.root", 
+                "nevents": 230450
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_13.root", 
+                "nevents": 231029
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_14.root", 
+                "nevents": 227415
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_16.root", 
+                "nevents": 230092
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_17.root", 
+                "nevents": 230249
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_18.root", 
+                "nevents": 234625
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_19.root", 
+                "nevents": 240591
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_2.root", 
+                "nevents": 229572
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_20.root", 
+                "nevents": 215358
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_21.root", 
+                "nevents": 232381
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_3.root", 
+                "nevents": 230010
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_4.root", 
+                "nevents": 236438
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_5.root", 
+                "nevents": 226695
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_6.root", 
+                "nevents": 242021
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_7.root", 
+                "nevents": 234289
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_8.root", 
+                "nevents": 183219
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_164916/0000/myOutputFile_9.root", 
+                "nevents": 232482
+            }
+        ]
+    }, 
+    "/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/musella-isolation_studies-alphaV1-52-g0636fd0-v0-d4d716a13973bb662753d1518f2275fa/USER": {
+        "files": [
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_224209/0000/myOutputFile_1.root", 
+                "nevents": 238150
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_224209/0000/myOutputFile_10.root", 
+                "nevents": 225133
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_224209/0000/myOutputFile_11.root", 
+                "nevents": 237554
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_224209/0000/myOutputFile_12.root", 
+                "nevents": 235803
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_224209/0000/myOutputFile_13.root", 
+                "nevents": 221480
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_224209/0000/myOutputFile_14.root", 
+                "nevents": 236862
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_224209/0000/myOutputFile_15.root", 
+                "nevents": 242002
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_224209/0000/myOutputFile_16.root", 
+                "nevents": 241455
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_224209/0000/myOutputFile_17.root", 
+                "nevents": 227706
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_224209/0000/myOutputFile_18.root", 
+                "nevents": 198199
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_224209/0000/myOutputFile_19.root", 
+                "nevents": 98104
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_224209/0000/myOutputFile_2.root", 
+                "nevents": 245663
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_224209/0000/myOutputFile_3.root", 
+                "nevents": 235780
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_224209/0000/myOutputFile_4.root", 
+                "nevents": 232072
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_224209/0000/myOutputFile_5.root", 
+                "nevents": 231850
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_224209/0000/myOutputFile_6.root", 
+                "nevents": 245035
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_224209/0000/myOutputFile_7.root", 
+                "nevents": 198275
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_224209/0000/myOutputFile_8.root", 
+                "nevents": 234122
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_224209/0000/myOutputFile_9.root", 
+                "nevents": 244634
+            }
+        ]
+    }
+}
