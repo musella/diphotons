@@ -1,6 +1,7 @@
 <use   name="DataFormats/Math"/>
 <use   name="DataFormats/Common"/>
 <use   name="DataFormats/JetReco"/>
+<use   name="DataFormats/EcalRecHit"/>
 <use   name="flashgg/MicroAODFormats"/>
 <use   name="DataFormats/PatCandidates"/>
 <use   name="FWCore/Utilities"/>

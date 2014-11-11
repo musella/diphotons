@@ -2,7 +2,12 @@
 #include <string>
 
 #include "TH1.h"
+#include "TTree.h"
 #include "PhysicsTools/UtilAlgos/interface/BasicAnalyzer.h"
+#include "flashgg/MicroAODFormats/interface/Photon.h"
+/// #include "PhysicsTools/FWLite/interface/ScannerHelpers.h"
+
+#include "CommonTools/Utils/interface/StringObjectFunction.h"
 
 /**
    \class PhotonIdAnalyzer PhotonIdAnalyzer.h "PhysicsTools/PatExamples/interface/PhotonIdAnalyzer.h"
@@ -15,6 +20,9 @@
 */
 
 namespace diphotons {
+
+	typedef StringObjectFunction<flashgg::Photon,false> PhotonFunctor;
+	/// typedef fwlite::helper::ScannerBase PhotonFunctor;
 
 	class PhotonIdAnalyzer : public edm::BasicAnalyzer {
 		
@@ -34,12 +42,21 @@ namespace diphotons {
 	protected:
 		float getEventWeight(const edm::EventBase& event);
 		/// input tag for mouns
-		edm::InputTag photons_, packedGen_, prunedGen_;
+		edm::InputTag photons_, packedGen_, prunedGen_, vertexes_;
 		/// histograms
 		std::map<std::string, TH1*> hists_;
 		// event weight
-		float lumi_weight_,weight_;
+		float lumiWeight_,weight_;
 		
+		TTree * bookTree(const std::string & name, TFileDirectory& fs);
+		void fillTreeBranches(const flashgg::Photon & pho);
+
+		TTree * promptTree_, *fakesTree_;
+		std::vector<std::string> miniTreeBranches_;
+		/// PhotonFunctor photonFunctor_;
+		std::vector<PhotonFunctor> miniTreeFunctors_;
+		std::vector<float> miniTreeBuffers_, miniTreeDefaults_;
+		int ipho_;
 	};
 	
 }

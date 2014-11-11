@@ -1,3 +1,4 @@
+
 #include "../interface/PhotonIdAnalyzer.h"
 #include "PhysicsTools/UtilAlgos/interface/FWLiteAnalyzerWrapper.h"
 
@@ -10,6 +11,9 @@ int main(int argc, char* argv[])
   // load framework libraries
   gSystem->Load( "libFWCoreFWLite" );
   AutoLibraryLoader::enable();
+  gSystem->Load("libDataFormatsFWLite.so");
+  gSystem->Load("libDataFormatsPatCandidates.so");
+  gSystem->Load("libflashggMicroAODFormats.so"); 
   
   // only allow one argument for this simple example which should be the
   // the python cfg file
@@ -20,7 +24,7 @@ int main(int argc, char* argv[])
 
   // get the python configuration
   PythonProcessDesc builder(argv[1],argc,argv);
-  WrappedFWLiteAnalyzer ana(*(builder.processDesc()->getProcessPSet()), std::string("photonIdAnalyzer"), std::string("analyzeBasicPat"));
+  WrappedFWLiteAnalyzer ana(*(builder.processDesc()->getProcessPSet()), std::string("photonIdAnalyzer"));
   ana.beginJob();
   ana.analyze();
   ana.endJob();

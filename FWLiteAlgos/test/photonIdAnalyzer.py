@@ -5,7 +5,20 @@ import FWCore.ParameterSet.Config as cms
 import FWCore.ParameterSet.VarParsing as VarParsing
 from flashgg.MetaData.samples_utils import SamplesManager
 
-
+def addMiniTreeVar(miniTreeCfg,var,name=None):
+    if not name:
+        name = var.replace(".","_").replace("get","")
+    miniTreeCfg.append( cms.untracked.PSet(var=cms.untracked.string(var),
+                                           name=cms.untracked.string(name)),
+                        )
+        
+def addMiniTreeVars(miniTreeCfg,lst):
+    for var in lst:
+        args = [var]
+        if type(var) == list or type(var) == tuple:
+            args = var
+        addMiniTreeVar(miniTreeCfg,*args)
+        
 options = VarParsing.VarParsing ('analysis')
 options.setDefault ('maxEvents',100)
 options.register ('dataset',
@@ -14,7 +27,7 @@ options.register ('dataset',
                   VarParsing.VarParsing.varType.string,          # string, int, or float
                   "dataset")
 options.register ('campaign',
-                  "CSA14", # default value
+                  "isolation_studies", # default value
                   VarParsing.VarParsing.multiplicity.singleton, # singleton or list
                   VarParsing.VarParsing.varType.string,          # string, int, or float
                   "campaign")
@@ -46,7 +59,9 @@ elif options.useEOS:
 dataset = None
 if options.dataset != "":
     print "Reading dataset (%s) %s" % ( options.campaign, options.dataset)
-    dataset = SamplesManager("$CMSSW_BASE/src/flashgg/Production/data/%s/datasets.json" % options.campaign).getDataset(options.maxEvents,options.dataset)
+    dataset = SamplesManager("$CMSSW_BASE/src/diphotons/MetaData/data/%s/datasets.json" % options.campaign,
+                             ["$CMSSW_BASE/src/diphotons/MetaData/data/cross_sections.json"],
+                             ).getDatasetMetaData(options.maxEvents,options.dataset)
     print dataset
 
 process = cms.Process("FWLitePlots")
@@ -67,13 +82,86 @@ process.fwliteOutput = cms.PSet(
 process.photonIdAnalyzer = cms.PSet(
   photons = cms.InputTag('flashggPhotons'), ## input for the simple example above
   packedGenParticles = cms.InputTag('packedGenParticles'),
-  lumi_weight = cms.double(1.)
+  lumiWeight = cms.double(1.),
+  miniTreeCfg = cms.untracked.VPSet(
+        ),
+  vertexes = cms.InputTag("offlineSlimmedPrimaryVertices"),
 )
+
+addMiniTreeVars(process.photonIdAnalyzer.miniTreeCfg,
+                ["phi","eta","pt","energy",
+                 
+                 ("superCluster.eta","scEta"),
+                 ("superCluster.rawEnergy","scRawEnergy"),
+                 ("userFloat('etrue')","etrue"),
+                 ("userFloat('dRMatch')","dRMatch"),
+                 ("userInt('seedRecoFlag')","seedRecoFlag"),
+
+                ## charged isolation
+                 ("userFloat('chgIsoWrtVtx0')","chgIsoWrtVtx0"),
+                 ("userFloat('chgIsoWrtVtx1')","chgIsoWrtVtx1"),
+                 ("userFloat('chgIsoWrtVtx2')","chgIsoWrtVtx2"),
+                 ("userFloat('chgIsoWrtVtx3')","chgIsoWrtVtx3"),
+                 ("userFloat('chgIsoWrtVtx4')","chgIsoWrtVtx4"),
+                 ("getpfChgIsoWrtWorstVtx03","chgIsoWrtWorstVtx"),
+                 
+                 ## photon and neutral isolation
+                 ("userIso(0)" ,"phoIsoBlock"),
+                 ("userIso(1)" ,"neuIsoBlock"),
+                 ("userIso(2)" ,"phoIsoVeto007"),
+                 ("userIso(3)" ,"phoIsoVeto015"),
+                 ("userIso(4)" ,"phoIsoBlockVeto015"),
+                 ("userIso(5)" ,"neuIsoRing005"),
+                 ("userIso(6)" ,"neuIsoRing010"),
+                 ("userIso(7)" ,"neuIsoRing015"),
+                 ("userIso(8)" ,"neuIsoRing020"),
+                 ("userIso(9)" ,"neuIsoRing030"),
+                 ("userIso(10)","neuIsoBlockRing005"),
+                 ("userIso(11)","neuIsoBlockRing010"),
+                 ("userIso(12)","neuIsoBlockRing015"),
+                 ("userIso(13)","neuIsoBlockRing020"),
+                 ("userIso(14)","neuIsoBlockRing030"),
+                 "passElectronVeto","hasPixelSeed",
+                 ## cluster shapes
+                 "e1x5",           "full5x5_e1x5",           
+                 "e2x5",           "full5x5_e2x5",           
+                 "e3x3",           "full3x3_e3x3",           
+                 "e5x5",           "full5x5_e5x5",           
+                 "maxEnergyXtal",  "full5x5_maxEnergyXtal",  
+                 "sigmaIetaIeta",  "full5x5_sigmaIetaIeta",  
+                 "r1x5",           "full5x5_r1x5",           
+                 "r2x5",           "full5x5_r2x5",           
+                 "r9",             "full5x5_r9",             
+                 ## the hcal full_5x5 only differ in the denominator and so aren't really worth saving
+                 "hadronicDepth1OverEm",
+                 "hadronicDepth2OverEm",
+                 "hadronicOverEm",
+                 "hadTowDepth1OverEm",
+                 "hadTowDepth2OverEm",
+                 "maxDR","maxDRDEta","maxDRDPhi","maxDRRawEnergy",
+                 "hadTowOverEm",
+                 ## more cluster shapes
+                 ("getE2nd","e2nd"),
+                 ("getE2x5right","e2x5right"),
+                 ("getE2x5left","e2x5left"),
+                 ("getE2x5top","e2x5top"),
+                 ("getE2x5bottom","e2x5bottom"),
+                 ("getE2x5max","e2x5max"),
+                 ("getEright","eright"),
+                 ("getEleft","eleft"),
+                 ("getEtop","etop"),
+                 ("getEbottom","ebottom"),
+                 ("getE1x3","e1x3"),
+                 ("getS4","s4"),
+                 ("getESEffSigmaRR","eSEffSigmaRR"),
+
+                 ]
+                )
 
 if dataset:
     name,xsec,totEvents,files = dataset
     if xsec != 0.:
-        process.photonIdAnalyzer.lumi_weight = xsec["xs"]/float(totEvents)*options.targetLumi
+        process.photonIdAnalyzer.lumiWeight = xsec["xs"]/float(totEvents)*options.targetLumi
     process.fwliteInput.fileNames.extend([ str("%s%s" % (options.filePrepend,f)) for f in  files])
     
 

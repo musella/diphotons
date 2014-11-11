@@ -1,9 +1,12 @@
 #include "DataFormats/Common/interface/Handle.h"
+#include "DataFormats/Common/interface/Ptr.h"
 #include "CommonTools/CandUtils/interface/AddFourMomenta.h"
-#include "flashgg/MicroAODFormats/interface/Photon.h"
 #include "DataFormats/Candidate/interface/CompositeCandidate.h"
 #include "../interface/PhotonIdAnalyzer.h"
 #include "DataFormats/PatCandidates/interface/PackedGenParticle.h"
+#include "FWCore/Utilities/interface/TypeWithDict.h"
+
+#include "DataFormats/EcalRecHit/interface/EcalRecHitCollections.h"
 
 #include <map>
 
@@ -15,6 +18,7 @@ using namespace diphotons;
 
 using pat::PackedGenParticle;
 using reco::Candidate;
+using reco::Vertex;
 
 typedef enum { kFake, kPrompt  } genMatch_t;
 
@@ -35,7 +39,10 @@ PhotonIdAnalyzer::PhotonIdAnalyzer(const edm::ParameterSet& cfg, TFileDirectory&
   edm::BasicAnalyzer::BasicAnalyzer(cfg, fs),
   photons_(cfg.getParameter<edm::InputTag>("photons")),
   packedGen_(cfg.getParameter<edm::InputTag>("packedGenParticles")),
-  lumi_weight_(cfg.getParameter<double>("lumi_weight"))
+  vertexes_(cfg.getParameter<edm::InputTag> ("vertexes")),
+  lumiWeight_(cfg.getParameter<double>("lumiWeight")),
+  /// photonFunctor_(edm::TypeWithDict(edm::Wrapper<vector<Photon> >::typeInfo())),
+  promptTree_(0), fakesTree_(0)
 {
   hists_["photonPt"  ]	     = fs.make<TH1F>("photonPt"		, "pt"           ,  100,  0., 300.);
   hists_["photonEta" ]	     = fs.make<TH1F>("photonEta"	, "eta"          ,  100, -3.,   3.);
@@ -55,6 +62,49 @@ PhotonIdAnalyzer::PhotonIdAnalyzer(const edm::ParameterSet& cfg, TFileDirectory&
   hists_["matchRelPtNonIso" ]    = fs.make<TH1F>("matchRelPtNonIso"	, "matchRelPtNonIso" ,  100,  0,    1.5);
   hists_["matchNPartInCone" ]   = fs.make<TH1F>("matchNPartInCone", "matchNPartInCone" , 21,  -0.5,   20);
   hists_["matchExtraEnergy" ]    = fs.make<TH1F>("matchExtraEnergy"	, "matchExtraEnergy" ,  100,  0,    1.5);
+
+
+  
+  vector<ParameterSet> miniTreeCfg = cfg.getUntrackedParameter<vector<ParameterSet> >("miniTreeCfg",vector<ParameterSet>());
+  if( ! miniTreeCfg.empty() ) {
+	  for( vector<ParameterSet>::iterator ivar=miniTreeCfg.begin(); ivar!=miniTreeCfg.end(); ++ivar ) {
+		  string method = ivar->getUntrackedParameter<string>("var");
+		  string name = ivar->getUntrackedParameter<string>("name","");
+		  double def = ivar->getUntrackedParameter<double>("default",0.);
+		  if( name.empty() ) { name = method; }
+		  /// cout << "miniTreeCfg " << name << " " << method << endl;
+		  miniTreeBranches_.push_back(name);
+		  miniTreeFunctors_.push_back(PhotonFunctor(method));
+		  //// miniTreeFunctors_.push_back();
+		  /// photonFunctor_.addExpression(method);
+		  miniTreeBuffers_.push_back(def);
+	  }
+	  miniTreeDefaults_ = miniTreeBuffers_;
+	  promptTree_ = bookTree("promptTree",fs);
+	  fakesTree_ = bookTree("fakesTree",fs);
+  }
+  
+}
+
+
+TTree * PhotonIdAnalyzer::bookTree(const string & name, TFileDirectory& fs)
+{
+	TTree * ret = fs.make<TTree>(name.c_str(),name.c_str());
+	
+	ret->Branch("ipho",&ipho_,"ipho/I");
+	ret->Branch("weight",&weight_,"weight/F");
+	for(size_t ibr=0; ibr<miniTreeBuffers_.size(); ++ibr) {
+		/// cout << "miniTree branch "  << miniTreeBranches_[ibr] << endl;
+		ret->Branch(Form("%s",miniTreeBranches_[ibr].c_str()),&miniTreeBuffers_[ibr],Form("%s/F",miniTreeBranches_[ibr].c_str()));
+	}
+	return ret;
+}
+
+void PhotonIdAnalyzer::fillTreeBranches(const Photon & pho)
+{
+	for(size_t ibr=0; ibr<miniTreeFunctors_.size(); ++ibr) {
+		miniTreeBuffers_[ibr] = miniTreeFunctors_[ibr](pho);
+	}
 }
 
 
@@ -66,6 +116,7 @@ void PhotonIdAnalyzer::beginJob()
 {
 
 }
+
 /// everything that needs to be done after the event loop
 void PhotonIdAnalyzer::endJob()
 {
@@ -73,7 +124,7 @@ void PhotonIdAnalyzer::endJob()
 
 float PhotonIdAnalyzer::getEventWeight(const edm::EventBase& event)
 {
-	return lumi_weight_;
+	return lumiWeight_;
 }
 
 // MC truth
@@ -166,19 +217,28 @@ PhotonIdAnalyzer::analyze(const edm::EventBase& event)
   // Handle to the photon collection
   Handle<vector<Photon> > photons;
   Handle<vector<PackedGenParticle> > packedGenParticles;
+  Handle<vector<Vertex> > vertexes;
+  
   // Handle<vector<PrunedGenParticle> > prunedGenParticles;
   event.getByLabel(photons_, photons);
   // event.getByLabel(prunedGenParticles_, prunedGenParticles);
   event.getByLabel(packedGen_, packedGenParticles);
+  event.getByLabel(vertexes_,vertexes);
   
   weight_ = getEventWeight(event);
   
   // loop photon collection and fill histograms
   std::vector<GenMatchInfo> genMatch;
   int nPrompt=false, nFakes = false;
-  for(std::vector<Photon>::const_iterator pho1=photons->begin(); pho1!=photons->end(); ++pho1){
+  ipho_ = 0;
+  for(std::vector<Photon>::const_iterator ipho=photons->begin(); ipho!=photons->end(); ++ipho){
 	  
-	  GenMatchInfo match = doGenMatch(*pho1,*packedGenParticles,0.1,15.,0.,0.,0.05
+	  Photon * pho = ipho->clone();
+
+	  float scEta = pho->superCluster()->eta();
+	  if( fabs(scEta)>2.5 || (fabs(scEta)>1.4442 && fabs(scEta)<1.556 ) ) { continue; }
+
+	  GenMatchInfo match = doGenMatch(*pho,*packedGenParticles,0.1,15.,0.,0.,0.05
 					  /// ,weight_,
 					  /// hists_["matchMinDr"],hists_["matchRelPtOnePhoton"],
 					  /// hists_["matchRelPtIso"],hists_["matchRelPtNonIso"],
@@ -186,26 +246,59 @@ PhotonIdAnalyzer::analyze(const edm::EventBase& event)
 		  );
 	  /// cout << "match " << match << endl;
 	  genMatch.push_back( match );
+	  if( match.matched )  {
+		  pho->addUserFloat("etrue",match.matched->energy());
+	  } else {
+		  pho->addUserFloat("etrue",0.);
+	  }
+	  pho->addUserFloat("dRMatch",match.deltaR);
+	  
+	  DetId seedId = pho->superCluster()->seed()->seed();
+	  cout << " rechits " << pho->recHits()->size() << endl ;
+	                   
+	  EcalRecHitCollection::const_iterator seedRh = pho->recHits()->find(seedId);
+	  if( seedRh != pho->recHits()->end() ) {
+		  pho->addUserInt("seedRecoFlag",seedRh->recoFlag());
+	  } else {
+		  pho->addUserInt("seedRecoFlag",-1);
+	  }
+	  
+	  for(size_t iv=0; iv<vertexes->size(); ++iv) {
+		  Ptr<Vertex> vtx(vertexes,iv);
+		  pho->addUserFloat(Form("chgIsoWrtVtx%d",(int)iv), pho->getpfChgIso03WrtVtx(vtx));
+	  }
+
+	  fillTreeBranches(*pho);
 	  
 	  if( match.match == kPrompt ) {
 		  if( nPrompt ==0 ) { 
-			  hists_["promptPhotonPt" ]->Fill( pho1->pt (), weight_ );
-			  hists_["promptPhotonEta"]->Fill( pho1->eta(), weight_ );
-			  hists_["promptPhotonPhi"]->Fill( pho1->phi(), weight_ );
+			  hists_["promptPhotonPt" ]->Fill( pho->pt (), weight_ );
+			  hists_["promptPhotonEta"]->Fill( pho->eta(), weight_ );
+			  hists_["promptPhotonPhi"]->Fill( pho->phi(), weight_ );
+			  if( promptTree_ ) {
+				  promptTree_->Fill();
+			  }
+
 		  }
 		  ++nPrompt;
 	  } else {
 		  if(  nFakes == 0 ) {
-			  hists_["fakePhotonPt" ]->Fill( pho1->pt (), weight_ );
-			  hists_["fakePhotonEta"]->Fill( pho1->eta(), weight_ );
-			  hists_["fakePhotonPhi"]->Fill( pho1->phi(), weight_ );
+			  hists_["fakePhotonPt" ]->Fill( pho->pt (), weight_ );
+			  hists_["fakePhotonEta"]->Fill( pho->eta(), weight_ );
+			  hists_["fakePhotonPhi"]->Fill( pho->phi(), weight_ );
+		  }
+		  if( fakesTree_ ) {
+			  fakesTree_->Fill();
 		  }
 		  ++nFakes;
 	  }
 	  
-	  hists_["photonPt" ]->Fill( pho1->pt (), weight_ );
-	  hists_["photonEta"]->Fill( pho1->eta(), weight_ );
-	  hists_["photonPhi"]->Fill( pho1->phi(), weight_ );
+	  hists_["photonPt" ]->Fill( pho->pt (), weight_ );
+	  hists_["photonEta"]->Fill( pho->eta(), weight_ );
+	  hists_["photonPhi"]->Fill( pho->phi(), weight_ );
+
+	  ++ipho_;
+	  delete pho;
   }
 
   hists_["promptPhotonN" ]->Fill(nPrompt, weight_);
