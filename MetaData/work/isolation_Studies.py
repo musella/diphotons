@@ -24,7 +24,8 @@ process.SimpleMemoryCheck = cms.Service("SimpleMemoryCheck",
 
 process.source = cms.Source("PoolSource",
                             fileNames=cms.untracked.vstring(
-        "/store/mc/Spring14miniaod/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/MINIAODSIM/PU20bx25_POSTLS170_V5-v1/00000/02ACF78E-9621-E411-BD22-0025904B2ABC.root",
+        "/store/relval/CMSSW_7_2_0/RelValH130GGgluonfusion_13/MINIAODSIM/PU25ns_PHYS14_25_V1_Phys14-v2/00000/1830E403-9F59-E411-9BAC-0025905A48BC.root"
+        ## "/store/mc/Spring14miniaod/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/MINIAODSIM/PU20bx25_POSTLS170_V5-v1/00000/02ACF78E-9621-E411-BD22-0025904B2ABC.root",
         ## "/store/mc/Spring14miniaod/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/MINIAODSIM/PU20bx25_POSTLS170_V5-v1/00000/0A9AA777-8521-E411-B528-0025904CC686.root",
         ## "/store/mc/Spring14miniaod/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/MINIAODSIM/PU20bx25_POSTLS170_V5-v1/00000/14AA7B7A-8521-E411-B204-0025904A862C.root",
         ## "/store/mc/Spring14miniaod/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/MINIAODSIM/PU20bx25_POSTLS170_V5-v1/00000/18DB3235-9321-E411-AB87-00259082116C.root",
