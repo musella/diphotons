@@ -92,6 +92,8 @@ TTree * PhotonIdAnalyzer::bookTree(const string & name, TFileDirectory& fs)
 	TTree * ret = fs.make<TTree>(name.c_str(),name.c_str());
 	
 	ret->Branch("ipho",&ipho_,"ipho/I");
+	ret->Branch("iprompt",&iprompt_,"iprompt/I");
+	ret->Branch("ifake",&ifake_,"ifake/I");
 	ret->Branch("weight",&weight_,"weight/F");
 	for(size_t ibr=0; ibr<miniTreeBuffers_.size(); ++ibr) {
 		/// cout << "miniTree branch "  << miniTreeBranches_[ibr] << endl;
@@ -229,8 +231,9 @@ PhotonIdAnalyzer::analyze(const edm::EventBase& event)
   
   // loop photon collection and fill histograms
   std::vector<GenMatchInfo> genMatch;
-  int nPrompt=false, nFakes = false;
   ipho_ = 0;
+  iprompt_ = 0;
+  ifake_ = 0;
   for(std::vector<Photon>::const_iterator ipho=photons->begin(); ipho!=photons->end(); ++ipho){
 	  
 	  Photon * pho = ipho->clone();
@@ -254,7 +257,7 @@ PhotonIdAnalyzer::analyze(const edm::EventBase& event)
 	  pho->addUserFloat("dRMatch",match.deltaR);
 	  
 	  DetId seedId = pho->superCluster()->seed()->seed();
-	  cout << " rechits " << pho->recHits()->size() << endl ;
+	  // cout << " rechits " << pho->recHits()->size() << endl ;
 	                   
 	  EcalRecHitCollection::const_iterator seedRh = pho->recHits()->find(seedId);
 	  if( seedRh != pho->recHits()->end() ) {
@@ -271,7 +274,7 @@ PhotonIdAnalyzer::analyze(const edm::EventBase& event)
 	  fillTreeBranches(*pho);
 	  
 	  if( match.match == kPrompt ) {
-		  if( nPrompt ==0 ) { 
+		  if( iprompt_ ==0 ) { 
 			  hists_["promptPhotonPt" ]->Fill( pho->pt (), weight_ );
 			  hists_["promptPhotonEta"]->Fill( pho->eta(), weight_ );
 			  hists_["promptPhotonPhi"]->Fill( pho->phi(), weight_ );
@@ -280,9 +283,9 @@ PhotonIdAnalyzer::analyze(const edm::EventBase& event)
 			  }
 
 		  }
-		  ++nPrompt;
+		  ++iprompt_;
 	  } else {
-		  if(  nFakes == 0 ) {
+		  if(  ifake_ == 0 ) {
 			  hists_["fakePhotonPt" ]->Fill( pho->pt (), weight_ );
 			  hists_["fakePhotonEta"]->Fill( pho->eta(), weight_ );
 			  hists_["fakePhotonPhi"]->Fill( pho->phi(), weight_ );
@@ -290,7 +293,7 @@ PhotonIdAnalyzer::analyze(const edm::EventBase& event)
 		  if( fakesTree_ ) {
 			  fakesTree_->Fill();
 		  }
-		  ++nFakes;
+		  ++ifake_;
 	  }
 	  
 	  hists_["photonPt" ]->Fill( pho->pt (), weight_ );
@@ -301,8 +304,8 @@ PhotonIdAnalyzer::analyze(const edm::EventBase& event)
 	  delete pho;
   }
 
-  hists_["promptPhotonN" ]->Fill(nPrompt, weight_);
-  hists_["fakePhotonN" ]->Fill(nFakes, weight_);
+  hists_["promptPhotonN" ]->Fill(iprompt_, weight_);
+  hists_["fakePhotonN" ]->Fill(ifake_, weight_);
   
   
 }

@@ -56,7 +56,7 @@ namespace diphotons {
 		/// PhotonFunctor photonFunctor_;
 		std::vector<PhotonFunctor> miniTreeFunctors_;
 		std::vector<float> miniTreeBuffers_, miniTreeDefaults_;
-		int ipho_;
+		int ipho_, iprompt_, ifake_;
 	};
 	
 }

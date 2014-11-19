@@ -46,6 +46,16 @@ options.register ('targetLumi',
                   VarParsing.VarParsing.multiplicity.singleton, # singleton or list
                   VarParsing.VarParsing.varType.float,          # string, int, or float
                   "targetLumi")
+options.register ('nJobs',
+                  0, # default value
+                  VarParsing.VarParsing.multiplicity.singleton, # singleton or list
+                  VarParsing.VarParsing.varType.int,          # string, int, or float
+                  "nJobs")
+options.register ('jobId',
+                  -1, # default value
+                  VarParsing.VarParsing.multiplicity.singleton, # singleton or list
+                  VarParsing.VarParsing.varType.int,          # string, int, or float
+                  "jobId")
 
 options.parseArguments()
 
@@ -61,8 +71,12 @@ if options.dataset != "":
     print "Reading dataset (%s) %s" % ( options.campaign, options.dataset)
     dataset = SamplesManager("$CMSSW_BASE/src/diphotons/MetaData/data/%s/datasets.json" % options.campaign,
                              ["$CMSSW_BASE/src/diphotons/MetaData/data/cross_sections.json"],
-                             ).getDatasetMetaData(options.maxEvents,options.dataset)
+                             ).getDatasetMetaData(options.maxEvents,options.dataset,jobId=options.jobId,nJobs=options.nJobs)
     print dataset
+
+outputFile=options.outputFile
+if options.jobId != -1:
+    outputFile = "%s_%d.root" % ( outputFile.replace(".root",""), options.jobId )
 
 process = cms.Process("FWLitePlots")
 
@@ -76,7 +90,7 @@ process.fwliteInput = cms.PSet(
 
 
 process.fwliteOutput = cms.PSet(
-      fileName = cms.string(options.outputFile)      ## mandatory
+      fileName = cms.string(outputFile)      ## mandatory
 )
 
 process.photonIdAnalyzer = cms.PSet(
