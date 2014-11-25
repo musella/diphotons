@@ -506,7 +506,16 @@ def optimizeMultiDim(options,args):
     ## fom       = ROOT.PoissonCutAndCountFomProvider()
 
     ### ### Likelihood ratio using asymptotic approx.
-    fom       = ROOT.SimpleShapeFomProvider(nsubcats)
+    ## fom       = ROOT.SimpleShapeFomProvider(nsubcats)
+    
+    ## Configurable from command line
+    if not options.fom.endswith(")"):
+        optimization.fom += "()"
+    fomBooking = """int nsubcats = %d;
+AbsFomProvider * fom = new %s;
+""" % ( nsubcats, options.fom)
+    ROOT.gROOT.ProcessLine(fomBooking)
+    fom = ROOT.gROOT.Get("fom")
     for sigModel in signals:
         sigModel.getModel().setMu(mu)
     fom.addPOI(mu)
@@ -838,7 +847,8 @@ if __name__ == "__main__":
                         action="store_true", dest="makeWorkspace",
                         default=False,
                         help=""
-                        )
+                        ),
+            make_option("--fom",default="SimpleShapeFomProvider(nsubcats)",action="store",type="string")
             ])
     
     (options, args) = parser.parse_args()

@@ -201,9 +201,9 @@ private:
 class SimpleShapeFomProvider : public AbsFomProvider 
 {
 public:
-	SimpleShapeFomProvider(size_t nSubcats=1,RooRealVar *poi=0, int ncpu=4, const char * minimizer="Minuit2", 
+	SimpleShapeFomProvider(size_t nSubcats=1,bool doDeltaMuBinOptim=false,RooRealVar *poi=0, int ncpu=4, const char * minimizer="Minuit2", 
 			       int minStrategy=2) : 
-		nSubcats_(nSubcats), ncpu_(ncpu), minimizer_(minimizer),minStrategy_(minStrategy), useRooSimultaneous_(false)
+		nSubcats_(nSubcats), doDeltaMuBinOptim_(doDeltaMuBinOptim), ncpu_(ncpu), minimizer_(minimizer),minStrategy_(minStrategy), useRooSimultaneous_(false)
 		{ 
 			if( poi ) { addPOI(poi); }
 			assert(minStrategy_<3); 
@@ -228,6 +228,7 @@ public:
 
 private:
 	size_t nSubcats_;
+	bool doDeltaMuBinOptim_;
 	int ncpu_;
 	std::vector<RooRealVar *> pois_;
 	std::vector<RooRealVar *> resets_;

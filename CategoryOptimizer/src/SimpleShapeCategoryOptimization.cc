@@ -537,8 +537,6 @@ double SimpleShapeFomProvider::operator() ( std::vector<AbsModel *> sig, std::ve
 
   std::cout << "SimpleShapeFomProvider::operator() useRooSimultaneous_="<<useRooSimultaneous_<<std::endl;
   
-  bool doDeltaMuBinOptim = true;
-
   	float ret;
 
 	assert(sig.size() % nSubcats_ == 0);
@@ -672,7 +670,7 @@ double SimpleShapeFomProvider::operator() ( std::vector<AbsModel *> sig, std::ve
 		garbageColl.push_back(nll);
 	  
 	} else { 
-	  if (!doDeltaMuBinOptim){
+	  if (!doDeltaMuBinOptim_){
 		RooArgSet nlls;
 		for(size_t icat=0; icat<totcat; ++icat) {
 			//// RooAbsReal *inll = pdfs[icat].createNLL( asimovs[icat], RooFit::Extended() );				
@@ -695,7 +693,7 @@ double SimpleShapeFomProvider::operator() ( std::vector<AbsModel *> sig, std::ve
 		//// nll->Print("V");
 		garbageColl.push_back(nll);
 	  }
-	  else if (doDeltaMuBinOptim){
+	  else if (doDeltaMuBinOptim_){
 	 
 		  RooArgSet* nlls = new RooArgSet[ncat];
 		  for(size_t ibin = 0; ibin < ncat; ibin++){
@@ -730,7 +728,7 @@ double SimpleShapeFomProvider::operator() ( std::vector<AbsModel *> sig, std::ve
 	bool bconvergedSignif = false;
 	bool sconvergedSignif = false;
 
-	if (doDeltaMuBinOptim){
+	if (doDeltaMuBinOptim_){
 	  //Minimization for each bin
 	  double* MuError = new double[ncat];
 
@@ -889,7 +887,7 @@ double SimpleShapeFomProvider::operator() ( std::vector<AbsModel *> sig, std::ve
 	  ret = Mes;
 	}
 
-	if (!doDeltaMuBinOptim){
+	if (!doDeltaMuBinOptim_){
 
 	
 	// S+B fit
@@ -997,10 +995,10 @@ double SimpleShapeFomProvider::operator() ( std::vector<AbsModel *> sig, std::ve
 	  Bconverged *= bconverged[i];
 	}
 
-	if (doDeltaMuBinOptim){
+	if (doDeltaMuBinOptim_){
 	  if( ! isfinite(ret) || ! Sconverged || ! Sconverged08 || ! Sconverged12 || ! Bconverged ) { ret=0.; }
 	}
-	else if (!doDeltaMuBinOptim){
+	else if (!doDeltaMuBinOptim_){
 	  if( ! isfinite(ret) || ! sconvergedSignif || ! bconvergedSignif ) { ret=0.; }
 	}
 

@@ -1,6 +1,14 @@
 #include "../interface/FunctionHelpers.h"
+#include "TTreeFormula.h"
 
 using namespace std;
+
+
+HistoConverter::~HistoConverter() {
+	if( sp_ )   { delete sp_; }
+	if( hist_ ) { delete hist_; }
+	if( g_ )    { delete g_; }
+}
 
 // ------------------------------------------------------------------------------------------------
 TH1 * integrate1D(TH1 * h, bool normalize) {
@@ -31,6 +39,17 @@ TH2 * integrate2D(TH2 * h, bool normalize) {
 	return ret;
 }
 
+HistoConverter * mkCdfInv(TH1 * h, double min, double max)
+{
+	return cdfInv<GraphToTF1>(h,min,max);
+}
+
+HistoConverter * mkCdf(TH1 * h, double min, double max)
+{
+	return cdf<GraphToTF1>(h,min,max);
+}
+
+
 // ------------------------------------------------------------------------------------------------
 TF1 * GraphToTF1::asTF1(TString name)
 {
@@ -38,7 +57,7 @@ TF1 * GraphToTF1::asTF1(TString name)
 }
 
 // ------------------------------------------------------------------------------------------------
-DecorrTransform::DecorrTransform(TH2 * histo, float ref, bool doRatio) : doRatio_(doRatio)
+DecorrTransform::DecorrTransform(TH2 * histo, float ref, bool doRatio, bool invert) : doRatio_(doRatio)
 {
 	refbin_ = histo->GetXaxis()->FindBin(ref);
 	hist_ = histo;
@@ -47,10 +66,18 @@ DecorrTransform::DecorrTransform(TH2 * histo, float ref, bool doRatio) : doRatio
 	for(int ii=0; ii<histo->GetNbinsX()+1; ++ii) {
 		TH1 * proj = histo->ProjectionY(Form("%s_%d",histo->GetName(),ii),ii,ii);
 		/// dirtr_.push_back(cdf<GraphToTF1>(proj,miny,maxy));
-		dirtr_.push_back(cdf(proj,miny,maxy));
+		if( invert ) { 
+			dirtr_.push_back(cdfInv(proj,miny,maxy));
+		} else {
+			dirtr_.push_back(cdf(proj,miny,maxy));
+		}
 		if( ii == refbin_ ) {
 			/// invtr_ = cdfInv<GraphToTF1>(proj,miny,maxy);
-			invtr_ = cdfInv(proj,miny,maxy);
+			if( invert ) { 
+				invtr_ = cdf(proj,miny,maxy);
+			} else {
+				invtr_ = cdfInv(proj,miny,maxy);
+			}
 			cout << invtr_->eval(0.) << " " << invtr_->eval(0.5)  << " " << invtr_->eval(1.) << endl;
 			
 		}
@@ -61,12 +88,11 @@ DecorrTransform::DecorrTransform(TH2 * histo, float ref, bool doRatio) : doRatio
 // ------------------------------------------------------------------------------------------------
 double DecorrTransform::operator() (double *x, double *p)
 {
-	if( x[1] < -2.7 ) { return x[1]; }
+	/// if( x[1] < -2.7 ) { return x[1]; }
 	double ret = x[1];
 	ret = invtr_->eval(getConverter(x[0])->eval(x[1]));
 	return (doRatio_?ret/x[1]:ret);
 }
-
 
 // ------------------------------------------------------------------------------------------------
 HistoConverter * DecorrTransform::clone() const
@@ -98,3 +124,120 @@ HistoConverter * WrapDecorr::clone() const
 WrapDecorr::~WrapDecorr()
 {
 }
+
+// ------------------------------------------------------------------------------------------------
+SliceFitter::SliceFitter( TH2 * histo, TString formula, float ymin, float ymax, bool normalize)
+{
+	hist_ = (TH1*)histo->ProjectionX()->Clone();
+	hist_->SetDirectory(0);
+	ymin_ = ymin;
+	ymax_ = ymax;
+	xmin_ = histo->GetXaxis()->GetXmin();
+	xmax_ = histo->GetXaxis()->GetXmax();
+	if( normalize ) {
+		hist_->Scale(1./hist_->Integral());
+	}
+	for(int jj=0; jj<hist_->GetNbinsX()+1; ++jj) {
+		float w = hist_->GetBinWidth(jj);
+		hist_->SetBinContent(jj,hist_->GetBinContent(jj)/w);
+		hist_->SetBinError(jj,hist_->GetBinError(jj)/w);
+	}
+	for(int ii=0; ii<histo->GetNbinsX()+1; ++ii) {
+		TH1 * proj = histo->ProjectionY(Form("%s_%d",histo->GetName(),ii),ii,ii);
+
+		proj->Scale( 1./proj->Integral() );
+		
+		for(int jj=0; jj<proj->GetNbinsX()+1; ++jj) {
+			float w = proj->GetBinWidth(jj);
+			proj->SetBinContent(jj,proj->GetBinContent(jj)/w);
+			proj->SetBinError(jj,proj->GetBinError(jj)/w);
+		}
+		
+		/// cout << proj->Integral() << endl;
+		/// proj->Print();
+		
+		sliceFits_.push_back(TF1(Form("%s_%d",histo->GetName(),ii),formula,ymin,ymax));
+		proj->Fit(&sliceFits_.back(),"QR");
+				
+		delete proj;
+	}
+}
+
+// ------------------------------------------------------------------------------------------------
+const TF1 & SliceFitter::getSlice(double x)
+{
+	int bin = hist_->FindBin( x );
+	return sliceFits_[bin];
+}
+
+// ------------------------------------------------------------------------------------------------
+double SliceFitter::operator() (double *x, double *p)
+{
+	if( x[0] < xmin_ || x[0] > xmax_ || x[1] < ymin_ || x[1] > ymax_ ) { return 0.; }
+	int bin = hist_->FindBin( x[0] );
+	if(bin<(int)sliceFits_.size()) {
+		return hist_->GetBinContent(bin) * sliceFits_[bin].Eval(x[1]);
+	}
+	return 0.;
+}
+
+// ------------------------------------------------------------------------------------------------
+SliceFitter::~SliceFitter()
+{
+}
+
+// ------------------------------------------------------------------------------------------------
+TF2 * SliceFitter::asTF2(TString name)
+{
+	return new TF2(name,this,xmin_,xmax_,ymin_,ymax_,0,"SliceFitter");
+}
+
+
+// ------------------------------------------------------------------------------------------------
+void fillReweight(TString xvar, TString yvar, TString sel, TF2 & wei, TTree & in, TTree & out)
+{
+	float rewei, xr, yr, sr;
+	TTreeFormula x("x",xvar,&in);
+	TTreeFormula y("x",yvar,&in);
+	TTreeFormula w("w",sel,&in);
+	
+	out.Branch("rewei",&rewei,"rewei/F");
+	out.Branch("xrewei",&xr,"xrewei/F");
+	out.Branch("yrewei",&yr,"yrewei/F");
+	out.Branch("srewei",&sr,"srewei/F");
+	for(int ie=0; ie<in.GetEntries(); ++ie) {
+		in.GetEntry(ie);
+		rewei = 0.;
+		xr = x.EvalInstance();
+		yr = y.EvalInstance();
+		sr = w.EvalInstance();
+		if( sr > 0. ) {
+			rewei = wei.Eval(xr,yr);
+		}
+		out.Fill();
+	}
+}
+
+// ------------------------------------------------------------------------------------------------
+double FlatReweight::operator() (double *x, double *p)
+{
+	double sum = 0.;
+	for(size_t ii=0; ii<components_.size(); ++ii) {
+		sum += (*components_[ii])(x,p);
+	}
+	if( sum != 0. ) { sum = 1./sum; }
+	return sum;
+}
+
+// ------------------------------------------------------------------------------------------------
+FlatReweight::~FlatReweight()
+{
+	
+}
+
+// ------------------------------------------------------------------------------------------------
+TF2 * FlatReweight::asTF2(TString name)
+{
+	return new TF2(name,this,xmin_,xmax_,ymin_,ymax_,0,"FlatReweight");
+}
+

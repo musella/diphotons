@@ -2,7 +2,9 @@
 #define _FunctionHelpers_h_
 
 #include "Math/IFunction.h"
+#include "TTree.h"
 #include "TF1.h"
+#include "TF2.h"
 #include "TSpline.h"
 #include "TH1.h"
 #include "TH2.h"
@@ -18,14 +20,10 @@ class HistoConverter { // : public ROOT::Math::IBaseFunctionMultiDim {
 public:
 	HistoConverter() : sp_(0), hist_(0), g_(0) {};
 	
-	virtual ~HistoConverter() {
-		if( sp_ )   { delete sp_; }
-		if( hist_ ) { delete hist_; }
-		if( g_ )    { delete g_; }
-	};
+	virtual ~HistoConverter() ;
 
 	virtual double operator() (double *x, double *p) = 0;
-	double operator() (double x) { return eval(x); };
+	double operator() (double x, double y=0., double z=0.) { return eval(x,y,z); };
 	
 	//// double DoEval(const double * x) const { 
 	//// 	return (*this)(x,0);
@@ -33,13 +31,17 @@ public:
 		
 	//// ROOT::Math::IBaseFunctionMultiDim * Clone() const { return clone(); }
 	
-	double eval(double x) { return (*this)(&x,0); };
+	double eval(double x, double y=0., double z=0.) { 
+		double xv[3] = { x, y, z };
+		return (*this)(&xv[0],0); 
+	};
 	virtual HistoConverter * clone() const = 0;
 
 protected:
 	TSpline * sp_;
 	TH1  * hist_;
 	TGraph * g_;
+	
 	
 };
 
@@ -234,6 +236,53 @@ public:
 
 
 // ------------------------------------------------------------------------------------------------
+class  SliceFitter : public HistoConverter {
+public:
+	SliceFitter( TH2 * g, TString formula, float ymin, float ymax, bool normalize=false);
+	~SliceFitter();
+	double operator() (double *x, double *p) ;
+	
+	unsigned int NDim() const { return 2; }
+	HistoConverter * clone() const { return new SliceFitter(*this); };
+	
+	const TF1 & getSlice(double x);
+
+	TF2 * asTF2(TString name);
+	
+private:
+	std::vector<TF1> sliceFits_;
+	float xmin_, xmax_, ymin_, ymax_;
+};
+
+
+// ------------------------------------------------------------------------------------------------
+class FlatReweight : public HistoConverter
+{
+public:
+	FlatReweight(double xmin, double xmax, double ymin, double ymax ) : 
+		xmin_(xmin),
+		xmax_(xmax),
+		ymin_(ymin),
+		ymax_(ymax)
+		{}
+	
+	~FlatReweight();
+	double operator() (double *x, double *p) ;
+	
+	unsigned int NDim() const { return 2; }
+	HistoConverter * clone() const { return new FlatReweight(*this); };
+	
+	void add(HistoConverter * h) { components_.push_back(h); }
+
+	TF2 * asTF2(TString name);
+
+private:
+	double xmin_, xmax_, ymin_, ymax_;
+	std::vector<HistoConverter *> components_;
+};
+
+
+// ------------------------------------------------------------------------------------------------
 TH1 * integrate1D(TH1 * h, bool normalize=true);
 TH2 * integrate2D(TH2 * h, bool normalize=true);
 
@@ -306,6 +355,10 @@ HistoConverter * cdf(TH1 * h,double min, double max)
 	delete hi;
 	return invg;
 }
+
+
+HistoConverter * mkCdfInv(TH1 * h, double min, double max);
+HistoConverter * mkCdf(TH1 * h, double min, double max);
 
 //// 
 //// HistoConverter * cdfInv(TH1 * h, double min, double max);
@@ -566,7 +619,7 @@ private:
 class DecorrTransform : public HistoConverter
 {
 public:
-	DecorrTransform(TH2 * histo, float ref,bool doRatio=false);
+	DecorrTransform(TH2 * histo, float ref,bool doRatio=false, bool invert=false);
 	
 	virtual double operator() (double *x, double *p);
 	virtual HistoConverter * clone() const;
@@ -614,6 +667,8 @@ private:
 	DecorrTransform * tr_;
 
 };
+
+void fillReweight(TString xvar, TString yvar, TString sel, TF2 & wei, TTree & in, TTree & out);
 
 #endif 
 

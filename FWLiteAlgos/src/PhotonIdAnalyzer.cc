@@ -40,6 +40,7 @@ PhotonIdAnalyzer::PhotonIdAnalyzer(const edm::ParameterSet& cfg, TFileDirectory&
   photons_(cfg.getParameter<edm::InputTag>("photons")),
   packedGen_(cfg.getParameter<edm::InputTag>("packedGenParticles")),
   vertexes_(cfg.getParameter<edm::InputTag> ("vertexes")),
+  rhoFixedGrid_(cfg.getParameter<edm::InputTag>("rhoFixedGrid")),
   lumiWeight_(cfg.getParameter<double>("lumiWeight")),
   /// photonFunctor_(edm::TypeWithDict(edm::Wrapper<vector<Photon> >::typeInfo())),
   promptTree_(0), fakesTree_(0)
@@ -95,6 +96,7 @@ TTree * PhotonIdAnalyzer::bookTree(const string & name, TFileDirectory& fs)
 	ret->Branch("iprompt",&iprompt_,"iprompt/I");
 	ret->Branch("ifake",&ifake_,"ifake/I");
 	ret->Branch("weight",&weight_,"weight/F");
+	ret->Branch("rho",&rho_,"rho/F");
 	for(size_t ibr=0; ibr<miniTreeBuffers_.size(); ++ibr) {
 		/// cout << "miniTree branch "  << miniTreeBranches_[ibr] << endl;
 		ret->Branch(Form("%s",miniTreeBranches_[ibr].c_str()),&miniTreeBuffers_[ibr],Form("%s/F",miniTreeBranches_[ibr].c_str()));
@@ -220,20 +222,24 @@ PhotonIdAnalyzer::analyze(const edm::EventBase& event)
   Handle<vector<Photon> > photons;
   Handle<vector<PackedGenParticle> > packedGenParticles;
   Handle<vector<Vertex> > vertexes;
-  
+  Handle<double> rhoHandle;
+
   // Handle<vector<PrunedGenParticle> > prunedGenParticles;
   event.getByLabel(photons_, photons);
   // event.getByLabel(prunedGenParticles_, prunedGenParticles);
   event.getByLabel(packedGen_, packedGenParticles);
   event.getByLabel(vertexes_,vertexes);
+  event.getByLabel(rhoFixedGrid_, rhoHandle );
   
   weight_ = getEventWeight(event);
+  
   
   // loop photon collection and fill histograms
   std::vector<GenMatchInfo> genMatch;
   ipho_ = 0;
   iprompt_ = 0;
   ifake_ = 0;
+  rho_ = *rhoHandle;
   for(std::vector<Photon>::const_iterator ipho=photons->begin(); ipho!=photons->end(); ++ipho){
 	  
 	  Photon * pho = ipho->clone();
@@ -266,9 +272,25 @@ PhotonIdAnalyzer::analyze(const edm::EventBase& event)
 		  pho->addUserInt("seedRecoFlag",-1);
 	  }
 	  
+	  std::map<edm::Ptr<reco::Vertex>,float> pfChgIso03 = pho->getpfChgIso03();
+	  //// for(std::map<edm::Ptr<reco::Vertex>,float>::iterator it=pfChgIso03.begin(); it!=pfChgIso03.end(); ++it) {
+	  //// 	  cout << it->first.key() << " " << it->first.id() << " " << it->first->z() << " " << it->second << endl;
+	  //// }
+
 	  for(size_t iv=0; iv<vertexes->size(); ++iv) {
 		  Ptr<Vertex> vtx(vertexes,iv);
-		  pho->addUserFloat(Form("chgIsoWrtVtx%d",(int)iv), pho->getpfChgIso03WrtVtx(vtx));
+		  // HACK: direct comparison of Ptr vector does not work
+		  float iso=0.;
+		  for(std::map<edm::Ptr<reco::Vertex>,float>::iterator it=pfChgIso03.begin(); it!=pfChgIso03.end(); ++it) {
+			  if( it->first.key() == vtx.key() ) { 
+				  iso = it->second;
+				  break;
+			  }
+		  }
+		  //// cout << "ivtx " << iv << " " << vtx.key() << " " << vtx.id() << " " << vtx->z() << " chIso " << iso << endl;
+		  pho->addUserFloat(Form("chgIsoWrtVtx%d",(int)iv), iso);
+		  //// cout << "ivtx " << iv << " " << vtx.key() << " " << vtx.id() << " " << vtx->z() << " chIso " << pho->getpfChgIso03WrtVtx(vtx) << endl;
+		  //// pho->addUserFloat(Form("chgIsoWrtVtx%d",(int)iv), pho->getpfChgIso03WrtVtx(vtx));
 	  }
 
 	  fillTreeBranches(*pho);
