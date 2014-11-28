@@ -264,7 +264,7 @@ PhotonIdAnalyzer::analyze(const edm::EventBase& event)
 	  
 	  DetId seedId = pho->superCluster()->seed()->seed();
 	  // cout << " rechits " << pho->recHits()->size() << endl ;
-	                   
+	  
 	  EcalRecHitCollection::const_iterator seedRh = pho->recHits()->find(seedId);
 	  if( seedRh != pho->recHits()->end() ) {
 		  pho->addUserInt("seedRecoFlag",seedRh->recoFlag());
@@ -272,21 +272,42 @@ PhotonIdAnalyzer::analyze(const edm::EventBase& event)
 		  pho->addUserInt("seedRecoFlag",-1);
 	  }
 	  
-	  std::map<edm::Ptr<reco::Vertex>,float> pfChgIso03 = pho->getpfChgIso03();
-	  //// for(std::map<edm::Ptr<reco::Vertex>,float>::iterator it=pfChgIso03.begin(); it!=pfChgIso03.end(); ++it) {
-	  //// 	  cout << it->first.key() << " " << it->first.id() << " " << it->first->z() << " " << it->second << endl;
-	  //// }
+	  ///// // recompute maxDRCluster
+	  ///// //    does not seem to be set upstream
+	  ///// reco::CaloClusterPtr seed = pho->superCluster()->seed();
+	  ///// reco::CaloCluster_iterator it = pho->superCluster()->clustersBegin();
+	  ///// reco::CaloCluster_iterator end = pho->superCluster()->clustersEnd();
+	  ///// reco::CaloClusterPtr maxDRCluster;
+	  ///// float maxDr = 0.;
+	  ///// for( ; it!=end; ++it) {
+	  ///// 	  float dR = deltaR(seed->eta(),seed->phi(),(*it)->eta(),(*it)->phi());
+	  ///// 	  if( dR > maxDr ) {
+	  ///// 		  maxDRCluster = *it;
+	  ///// 	  }
+	  ///// }
+	  ///// if( maxDRCluster.isNonnull() ) {
+	  ///// 	  pho->setMaxDR         (deltaR(seed->eta(),seed->phi(),maxDRCluster->eta(),maxDRCluster->phi()));
+	  ///// 	  pho->setMaxDRDEta     (fabs(seed->eta() - maxDRCluster->eta())				);
+	  ///// 	  pho->setMaxDRDPhi     (deltaPhi(seed->phi(),maxDRCluster->phi())				);
+	  ///// 	  pho->setMaxDRRawEnergy(maxDRCluster->energy()                                                 );
+	  ///// }
+	  	  
+	  ////std::map<edm::Ptr<reco::Vertex>,float> pfChgIso03 = pho->getpfChgIso03();
+	  //// //// for(std::map<edm::Ptr<reco::Vertex>,float>::iterator it=pfChgIso03.begin(); it!=pfChgIso03.end(); ++it) {
+	  //// //// 	  cout << it->first.key() << " " << it->first.id() << " " << it->first->z() << " " << it->second << endl;
+	  //// //// }
 
 	  for(size_t iv=0; iv<vertexes->size(); ++iv) {
 		  Ptr<Vertex> vtx(vertexes,iv);
-		  // HACK: direct comparison of Ptr vector does not work
-		  float iso=0.;
-		  for(std::map<edm::Ptr<reco::Vertex>,float>::iterator it=pfChgIso03.begin(); it!=pfChgIso03.end(); ++it) {
-			  if( it->first.key() == vtx.key() ) { 
-				  iso = it->second;
-				  break;
-			  }
-		  }
+		  float iso = pho->getpfChgIso03WrtVtx(vtx,true);
+		  //// // HACK: direct comparison of Ptr vector does not work
+		  //// float iso=0.;
+		  //// for(std::map<edm::Ptr<reco::Vertex>,float>::iterator it=pfChgIso03.begin(); it!=pfChgIso03.end(); ++it) {
+		  //// 	  if( it->first.key() == vtx.key() ) { 
+		  //// 		  iso = it->second;
+		  //// 		  break;
+		  //// 	  }
+		  //// }
 		  //// cout << "ivtx " << iv << " " << vtx.key() << " " << vtx.id() << " " << vtx->z() << " chIso " << iso << endl;
 		  pho->addUserFloat(Form("chgIsoWrtVtx%d",(int)iv), iso);
 		  //// cout << "ivtx " << iv << " " << vtx.key() << " " << vtx.id() << " " << vtx->z() << " chIso " << pho->getpfChgIso03WrtVtx(vtx) << endl;

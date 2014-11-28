@@ -126,8 +126,9 @@ WrapDecorr::~WrapDecorr()
 }
 
 // ------------------------------------------------------------------------------------------------
-SliceFitter::SliceFitter( TH2 * histo, TString formula, float ymin, float ymax, bool normalize)
+SliceFitter::SliceFitter( TH2 * histo, TString formula, float ymin, float ymax, bool normalize, bool yonly)
 {
+	yonly_ = yonly;
 	hist_ = (TH1*)histo->ProjectionX()->Clone();
 	hist_->SetDirectory(0);
 	ymin_ = ymin;
@@ -176,7 +177,7 @@ double SliceFitter::operator() (double *x, double *p)
 	if( x[0] < xmin_ || x[0] > xmax_ || x[1] < ymin_ || x[1] > ymax_ ) { return 0.; }
 	int bin = hist_->FindBin( x[0] );
 	if(bin<(int)sliceFits_.size()) {
-		return hist_->GetBinContent(bin) * sliceFits_[bin].Eval(x[1]);
+		return ( yonly_ ? 1. : hist_->GetBinContent(bin)) * std::max(0.,sliceFits_[bin].Eval(x[1]));
 	}
 	return 0.;
 }

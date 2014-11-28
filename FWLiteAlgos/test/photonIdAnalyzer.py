@@ -115,12 +115,13 @@ addMiniTreeVars(process.photonIdAnalyzer.miniTreeCfg,
                 ## charged isolation
                  ("userFloat('chgIsoWrtVtx0')","chgIsoWrtVtx0"),
                  ("userFloat('chgIsoWrtVtx1')","chgIsoWrtVtx1"),
-                 ("userFloat('chgIsoWrtVtx2')","chgIsoWrtVtx2"),
-                 ("userFloat('chgIsoWrtVtx3')","chgIsoWrtVtx3"),
-                 ("userFloat('chgIsoWrtVtx4')","chgIsoWrtVtx4"),
+                 ### ("userFloat('chgIsoWrtVtx2')","chgIsoWrtVtx2"),
+                 ### ("userFloat('chgIsoWrtVtx3')","chgIsoWrtVtx3"),
+                 ### ("userFloat('chgIsoWrtVtx4')","chgIsoWrtVtx4"),
                  ("getpfChgIsoWrtWorstVtx03","chgIsoWrtWorstVtx"),
                  
                  ## photon and neutral isolation
+                 "egChargedHadronIso" ,"egNeutralHadronIso","egPhotonIso" ,
                  ("userIso(0)" ,"phoIsoBlock"),
                  ("userIso(1)" ,"neuIsoBlock"),
                  ("userIso(2)" ,"phoIsoVeto007"),
@@ -154,6 +155,7 @@ addMiniTreeVars(process.photonIdAnalyzer.miniTreeCfg,
                  "hadTowDepth1OverEm",
                  "hadTowDepth2OverEm",
                  "maxDR","maxDRDEta","maxDRDPhi","maxDRRawEnergy",
+                 
                  "hadTowOverEm",
                  ## more cluster shapes
                  ("getE2nd","e2nd"),

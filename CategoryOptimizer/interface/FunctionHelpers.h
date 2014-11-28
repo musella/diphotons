@@ -238,7 +238,7 @@ public:
 // ------------------------------------------------------------------------------------------------
 class  SliceFitter : public HistoConverter {
 public:
-	SliceFitter( TH2 * g, TString formula, float ymin, float ymax, bool normalize=false);
+	SliceFitter( TH2 * g, TString formula, float ymin, float ymax, bool normalize=false, bool yonly=false);
 	~SliceFitter();
 	double operator() (double *x, double *p) ;
 	
@@ -252,6 +252,7 @@ public:
 private:
 	std::vector<TF1> sliceFits_;
 	float xmin_, xmax_, ymin_, ymax_;
+	bool yonly_;
 };
 
 

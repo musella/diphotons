@@ -128,6 +128,7 @@ if options.hadd:
     hadd = "hadd -f "
     if options.hadd_process:
         for proc,out in poutfiles.iteritems():
+            outfile,outfiles = out
             p.run("%s %s" % (hadd, outfile), outfiles )
     if options.hadd_dataset:
         if options.hadd_process:
