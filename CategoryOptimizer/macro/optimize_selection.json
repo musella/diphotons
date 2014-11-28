@@ -1,0 +1,137 @@
+{ 
+    "#" : "This is a JSON file to configure categoryOptimizationMultiDim.py script",
+        "#" : "Comments are not supported in JSON.",
+        "#" : "The trick here is to encapsulate them as well formatted input with key #",
+        "#" : "Configuration items are commented prepending an # to the name (any other character would work)",
+        
+        "###" : "----------------------------------------------------------------------------------------------",
+        "observable"          : ["mass",[100,180,0.25],125],
+        "settings"            : [["floatLast",[1]],["setScan",[100,1,2]]],
+        
+        "###" : "----------------------------------------------------------------------------------------------",
+        "##" : "Define extra variables",
+        "aliases"             : ["nlsMoM := TMath::Max(-1.5,TMath::Min(-0.1,-(logSigmaMrvoM+5)))",
+				 "nlsMoMD := TMath::Max(-1.5,TMath::Min(0.,-(log(decorrSigmaMrvoM)+5)))",
+				 "isEE1   := (! isEB1)",
+				 "isEE2   := (! isEB2)",
+				 "isEBHighR91     := isEB1 && r91 >  0.94",
+				 "isEBHighR92     := isEB2 && r92 >  0.94",
+				 "isEBLowR91      := isEB1 && r91 <= 0.94",
+				 "isEBLowR92      := isEB2 && r92 <= 0.94",
+				 "isEEHighR91     := isEE1 && r91 >  0.94",
+				 "isEEHighR92     := isEE2 && r92 >  0.94",
+				 "isEELowR91      := isEE1 && r91 <= 0.94",
+				 "isEELowR92      := isEE2 && r92 <= 0.94",
+                                 
+				 "ebmva   := ( ( isEB1 &&  isEB2)*TMath::Min(idmva1,idmva2) + ( isEB1 && !isEB2)*idmva1 + (!isEB1 &&  isEB2)*idmva2 + (!isEB1 && !isEB2)*0.95 )",
+				 "eemva   := ( (!isEB1 && !isEB2)*TMath::Min(idmva1,idmva2) + (!isEB1 &&  isEB2)*idmva1 + ( isEB1 && !isEB2)*idmva2 + ( isEB1 &&  isEB2)*0.95 )",
+                                 
+				 "ebhmva  := ( ( isEBHighR91 &&  isEBHighR92)*TMath::Min(idmva1,idmva2) + ( isEBHighR91 && !isEBHighR92)*idmva1 + (!isEBHighR91 &&  isEBHighR92)*idmva2 + (!isEBHighR91 && !isEBHighR92)*0.95 )",
+				 "eblmva  := ( (  isEBLowR91 &&   isEBLowR92)*TMath::Min(idmva1,idmva2) + (  isEBLowR91 && ! isEBLowR92)*idmva1 + (! isEBLowR91 &&   isEBLowR92)*idmva2 + (! isEBLowR91 && ! isEBLowR92)*0.95 )",
+                                 
+				 "eehmva  := ( ( isEEHighR91 &&  isEEHighR92)*TMath::Min(idmva1,idmva2) + ( isEEHighR91 && !isEEHighR92)*idmva1 + (!isEEHighR91 &&  isEEHighR92)*idmva2 + (!isEEHighR91 && !isEEHighR92)*0.95 )",
+				 "eelmva  := ( (  isEELowR91 &&   isEELowR92)*TMath::Min(idmva1,idmva2) + (  isEELowR91 && ! isEELowR92)*idmva1 + (! isEELowR91 &&   isEELowR92)*idmva2 + (! isEELowR91 && ! isEELowR92)*0.95 )",
+				 
+				 "diphoEquivPt := dipho_pt / mass"
+				 ],
+        
+        "###" : "----------------------------------------------------------------------------------------------",
+        "###" : "Simultaneous minimization: sigmaM/M categories with IDMVA.",
+        "###" : "----------------------------------------------------------------------------------------------",
+        "#variables"           : [["nlsMoM", [-1.5,-0.08,0.01],0.0,[-1.0,0.0]]
+                                 ],
+        "variables"           : [["nlsMoMD", [-1.5,0.0,0.005],0.0,[-1.0,0.0]]
+                                 ],
+        "range"               : [2,3,4],
+	
+        "#" : "Fixed photon ID ",
+        "##selection"           : "ptoM1 > 1./3. && ptoM2 > 0.25 && ebmva>0.01 && eemva>0.04",
+        "#selection"           : "ptoM1 > 1./3. && ptoM2 > 0.25 && ebmva>0.02 && eemva>0.06",
+        "##selection"          : "cicpf4cutlevel1>=4 && cicpf4cutlevel2>=4 && ptoM1 > 1./3. && ptoM2 > 0.25",
+        "#selectioncuts"       : [],
+        
+        "#" : "Floating photon ID ",
+        "selection"          : "ptoM1 > 1./3. && ptoM2 > 0.25",
+	"#" : "EB/EE",
+        "#selectioncuts"      : [["ebmva",[-0.5,1,0.02],0,[-0.2,0.5]],
+				 ["eemva",[-0.5,1,0.02],0,[-0.2,0.5]]
+                                 ],
+        "#" : "EB/EE High/Low R9",
+        "selectioncuts"      : [["eblmva",[-0.3,1,0.03],0,[-0.2,0.5]],
+				["ebhmva",[-0.3,1,0.03],0,[-0.2,0.5]],
+				["eemva", [-0.3,1,0.03],0,[-0.2,0.5]]
+				],
+        
+        "###" : "----------------------------------------------------------------------------------------------",
+        "###" : "Minimize photon ID MVA fixing sM/M", 
+        "###" : "----------------------------------------------------------------------------------------------",
+        "##" : "Minimization settings: one cut on categorization variables + additional selection cuts",
+        "#selection"          : "ptoM1 > 1./3. && ptoM2 > 0.25",
+        "#range"              : [1],
+        
+        "##" : "To fix selection cuts",
+        "#fix"                : ["ebmva"],
+        
+        "##" : "Split in sigmaM/M subcategories",
+        "#subcategories"      : [["cat0","nlsMoM > -0.04"],
+                                 ["cat1","nlsMoM <= -0.04 && nlsMoM > -0.27"],
+                                 ["cat2","nlsMoM <= -0.27 && nlsMoM > -0.65"],
+                                 ["cat3","nlsMoM <= -0.65 && nlsMoM > -1.11"]
+                                 ],
+        "##" : "Split Barrel / Endcaps",
+        "#variables"          : [["eemva",[-0.2,1,0.01],0]
+                                 ],
+        "#selectioncuts"      : [["ebmva",[-0.2,1,0.01],0]
+                                 ],
+        "##" : "Split also High/Low R9",
+        "#variables"          : [["eelmva",[-0.2,1,0.02],0],
+                                 ["eehmva",[-0.2,1,0.02],0]                   
+                                 ],
+        "#selectioncuts"      : [["eblmva",[-0.2,1,0.01],0],
+                                 ["ebhmva",[-0.2,1,0.01],0]
+                                 ],
+        
+        "###" : "----------------------------------------------------------------------------------------------",
+        "###" : "Signal and background processes",
+        "###" : "----------------------------------------------------------------------------------------------",
+        "signals"             : {
+        "sigRv"               : [["ggh_m125_8TeV","(abs(gv_z-vtx_z)<1.)"],
+                                 ["vbf_m125_8TeV","(abs(gv_z-vtx_z)<1.)"],
+                                 ["wzh_m125_8TeV","(abs(gv_z-vtx_z)<1.)"],
+                                 ["tth_m125_8TeV","(abs(gv_z-vtx_z)<1.)"]
+                                 ],
+            "sigWv"           : [["ggh_m125_8TeV","(abs(gv_z-vtx_z)>=1.)"],
+                                 ["vbf_m125_8TeV","(abs(gv_z-vtx_z)>=1.)"],
+                                 ["wzh_m125_8TeV","(abs(gv_z-vtx_z)>=1.)"],
+                                 ["tth_m125_8TeV","(abs(gv_z-vtx_z)>=1.)"]
+                                 ]
+            },
+        
+        "#backgrounds"        : { 
+        "bkg"                 : [["gjet_20_8TeV_pf","1"],
+                                 ["gjet_40_8TeV_pf","1"],
+                                 ["qcd_30_8TeV_ff","1"],
+                                 ["qcd_40_8TeV_ff","1"] 
+                                 ]
+            },
+        
+        "backgrounds"         : { 
+        "bkg"                 : [["diphojet_sherpa_8TeV","1"],
+                                 ["gjet_20_8TeV_pf","1"],
+                                 ["gjet_40_8TeV_pf","1"],
+				 ["qcd_30_8TeV_ff","1"],
+                                 ["qcd_40_8TeV_ff","1"]
+                                 ]
+            },
+        
+        "weights"             : { "sigRv" : "full_weight", "sigWv" : "full_weight", "bkg" : "full_weight"  },
+        "##" : "'Ultraviolet' cutoff in number of events",
+        "minevents"           : { "sigRv" : 0.1, "sigWv" : 0.01, "bkg" : 10.0  },
+        
+        "###" : "----------------------------------------------------------------------------------------------",
+        "##" : "When loading previous steps only look at ncat in [2:5]",
+        "mincat"              : 2,
+        "maxcat"              : 5,
+        "#" : "No direct cutoff on categorization variable (see below for minevents)",
+        "cutoff"              : 0.0
+}

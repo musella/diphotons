@@ -42,7 +42,7 @@ namespace diphotons {
 	protected:
 		float getEventWeight(const edm::EventBase& event);
 		/// input tag for mouns
-		edm::InputTag photons_, packedGen_, prunedGen_, vertexes_;
+		edm::InputTag photons_, packedGen_, prunedGen_, vertexes_, rhoFixedGrid_;
 		/// histograms
 		std::map<std::string, TH1*> hists_;
 		// event weight
@@ -56,7 +56,8 @@ namespace diphotons {
 		/// PhotonFunctor photonFunctor_;
 		std::vector<PhotonFunctor> miniTreeFunctors_;
 		std::vector<float> miniTreeBuffers_, miniTreeDefaults_;
-		int ipho_;
+		int ipho_, iprompt_, ifake_;
+		float rho_;
 	};
 	
 }

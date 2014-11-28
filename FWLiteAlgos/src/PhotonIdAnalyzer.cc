@@ -40,6 +40,7 @@ PhotonIdAnalyzer::PhotonIdAnalyzer(const edm::ParameterSet& cfg, TFileDirectory&
   photons_(cfg.getParameter<edm::InputTag>("photons")),
   packedGen_(cfg.getParameter<edm::InputTag>("packedGenParticles")),
   vertexes_(cfg.getParameter<edm::InputTag> ("vertexes")),
+  rhoFixedGrid_(cfg.getParameter<edm::InputTag>("rhoFixedGrid")),
   lumiWeight_(cfg.getParameter<double>("lumiWeight")),
   /// photonFunctor_(edm::TypeWithDict(edm::Wrapper<vector<Photon> >::typeInfo())),
   promptTree_(0), fakesTree_(0)
@@ -92,7 +93,10 @@ TTree * PhotonIdAnalyzer::bookTree(const string & name, TFileDirectory& fs)
 	TTree * ret = fs.make<TTree>(name.c_str(),name.c_str());
 	
 	ret->Branch("ipho",&ipho_,"ipho/I");
+	ret->Branch("iprompt",&iprompt_,"iprompt/I");
+	ret->Branch("ifake",&ifake_,"ifake/I");
 	ret->Branch("weight",&weight_,"weight/F");
+	ret->Branch("rho",&rho_,"rho/F");
 	for(size_t ibr=0; ibr<miniTreeBuffers_.size(); ++ibr) {
 		/// cout << "miniTree branch "  << miniTreeBranches_[ibr] << endl;
 		ret->Branch(Form("%s",miniTreeBranches_[ibr].c_str()),&miniTreeBuffers_[ibr],Form("%s/F",miniTreeBranches_[ibr].c_str()));
@@ -218,19 +222,24 @@ PhotonIdAnalyzer::analyze(const edm::EventBase& event)
   Handle<vector<Photon> > photons;
   Handle<vector<PackedGenParticle> > packedGenParticles;
   Handle<vector<Vertex> > vertexes;
-  
+  Handle<double> rhoHandle;
+
   // Handle<vector<PrunedGenParticle> > prunedGenParticles;
   event.getByLabel(photons_, photons);
   // event.getByLabel(prunedGenParticles_, prunedGenParticles);
   event.getByLabel(packedGen_, packedGenParticles);
   event.getByLabel(vertexes_,vertexes);
+  event.getByLabel(rhoFixedGrid_, rhoHandle );
   
   weight_ = getEventWeight(event);
   
+  
   // loop photon collection and fill histograms
   std::vector<GenMatchInfo> genMatch;
-  int nPrompt=false, nFakes = false;
   ipho_ = 0;
+  iprompt_ = 0;
+  ifake_ = 0;
+  rho_ = *rhoHandle;
   for(std::vector<Photon>::const_iterator ipho=photons->begin(); ipho!=photons->end(); ++ipho){
 	  
 	  Photon * pho = ipho->clone();
@@ -254,8 +263,8 @@ PhotonIdAnalyzer::analyze(const edm::EventBase& event)
 	  pho->addUserFloat("dRMatch",match.deltaR);
 	  
 	  DetId seedId = pho->superCluster()->seed()->seed();
-	  cout << " rechits " << pho->recHits()->size() << endl ;
-	                   
+	  // cout << " rechits " << pho->recHits()->size() << endl ;
+	  
 	  EcalRecHitCollection::const_iterator seedRh = pho->recHits()->find(seedId);
 	  if( seedRh != pho->recHits()->end() ) {
 		  pho->addUserInt("seedRecoFlag",seedRh->recoFlag());
@@ -263,15 +272,52 @@ PhotonIdAnalyzer::analyze(const edm::EventBase& event)
 		  pho->addUserInt("seedRecoFlag",-1);
 	  }
 	  
+	  ///// // recompute maxDRCluster
+	  ///// //    does not seem to be set upstream
+	  ///// reco::CaloClusterPtr seed = pho->superCluster()->seed();
+	  ///// reco::CaloCluster_iterator it = pho->superCluster()->clustersBegin();
+	  ///// reco::CaloCluster_iterator end = pho->superCluster()->clustersEnd();
+	  ///// reco::CaloClusterPtr maxDRCluster;
+	  ///// float maxDr = 0.;
+	  ///// for( ; it!=end; ++it) {
+	  ///// 	  float dR = deltaR(seed->eta(),seed->phi(),(*it)->eta(),(*it)->phi());
+	  ///// 	  if( dR > maxDr ) {
+	  ///// 		  maxDRCluster = *it;
+	  ///// 	  }
+	  ///// }
+	  ///// if( maxDRCluster.isNonnull() ) {
+	  ///// 	  pho->setMaxDR         (deltaR(seed->eta(),seed->phi(),maxDRCluster->eta(),maxDRCluster->phi()));
+	  ///// 	  pho->setMaxDRDEta     (fabs(seed->eta() - maxDRCluster->eta())				);
+	  ///// 	  pho->setMaxDRDPhi     (deltaPhi(seed->phi(),maxDRCluster->phi())				);
+	  ///// 	  pho->setMaxDRRawEnergy(maxDRCluster->energy()                                                 );
+	  ///// }
+	  	  
+	  ////std::map<edm::Ptr<reco::Vertex>,float> pfChgIso03 = pho->getpfChgIso03();
+	  //// //// for(std::map<edm::Ptr<reco::Vertex>,float>::iterator it=pfChgIso03.begin(); it!=pfChgIso03.end(); ++it) {
+	  //// //// 	  cout << it->first.key() << " " << it->first.id() << " " << it->first->z() << " " << it->second << endl;
+	  //// //// }
+
 	  for(size_t iv=0; iv<vertexes->size(); ++iv) {
 		  Ptr<Vertex> vtx(vertexes,iv);
-		  pho->addUserFloat(Form("chgIsoWrtVtx%d",(int)iv), pho->getpfChgIso03WrtVtx(vtx));
+		  float iso = pho->getpfChgIso03WrtVtx(vtx,true);
+		  //// // HACK: direct comparison of Ptr vector does not work
+		  //// float iso=0.;
+		  //// for(std::map<edm::Ptr<reco::Vertex>,float>::iterator it=pfChgIso03.begin(); it!=pfChgIso03.end(); ++it) {
+		  //// 	  if( it->first.key() == vtx.key() ) { 
+		  //// 		  iso = it->second;
+		  //// 		  break;
+		  //// 	  }
+		  //// }
+		  //// cout << "ivtx " << iv << " " << vtx.key() << " " << vtx.id() << " " << vtx->z() << " chIso " << iso << endl;
+		  pho->addUserFloat(Form("chgIsoWrtVtx%d",(int)iv), iso);
+		  //// cout << "ivtx " << iv << " " << vtx.key() << " " << vtx.id() << " " << vtx->z() << " chIso " << pho->getpfChgIso03WrtVtx(vtx) << endl;
+		  //// pho->addUserFloat(Form("chgIsoWrtVtx%d",(int)iv), pho->getpfChgIso03WrtVtx(vtx));
 	  }
 
 	  fillTreeBranches(*pho);
 	  
 	  if( match.match == kPrompt ) {
-		  if( nPrompt ==0 ) { 
+		  if( iprompt_ ==0 ) { 
 			  hists_["promptPhotonPt" ]->Fill( pho->pt (), weight_ );
 			  hists_["promptPhotonEta"]->Fill( pho->eta(), weight_ );
 			  hists_["promptPhotonPhi"]->Fill( pho->phi(), weight_ );
@@ -280,9 +326,9 @@ PhotonIdAnalyzer::analyze(const edm::EventBase& event)
 			  }
 
 		  }
-		  ++nPrompt;
+		  ++iprompt_;
 	  } else {
-		  if(  nFakes == 0 ) {
+		  if(  ifake_ == 0 ) {
 			  hists_["fakePhotonPt" ]->Fill( pho->pt (), weight_ );
 			  hists_["fakePhotonEta"]->Fill( pho->eta(), weight_ );
 			  hists_["fakePhotonPhi"]->Fill( pho->phi(), weight_ );
@@ -290,7 +336,7 @@ PhotonIdAnalyzer::analyze(const edm::EventBase& event)
 		  if( fakesTree_ ) {
 			  fakesTree_->Fill();
 		  }
-		  ++nFakes;
+		  ++ifake_;
 	  }
 	  
 	  hists_["photonPt" ]->Fill( pho->pt (), weight_ );
@@ -301,8 +347,8 @@ PhotonIdAnalyzer::analyze(const edm::EventBase& event)
 	  delete pho;
   }
 
-  hists_["promptPhotonN" ]->Fill(nPrompt, weight_);
-  hists_["fakePhotonN" ]->Fill(nFakes, weight_);
+  hists_["promptPhotonN" ]->Fill(iprompt_, weight_);
+  hists_["fakePhotonN" ]->Fill(ifake_, weight_);
   
   
 }
