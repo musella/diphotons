@@ -53,55 +53,43 @@ process.flashggPhotons.extraCaloIsolations.extend([
                  ),
         cms.PSet(overlapRemoval=cms.bool(True),
                  type=cms.int32(5), # neutral hadron, use str to enum 
-                 vetoRegions=cms.vdouble(0.3,0.,0.,0.,0.,0.,0.)
+                 vetoRegions=cms.vdouble(0.3,0.1,0.,0.,0.1,0.,0.)
                  ),
         
         # photon iso w/ veto cones
+        cms.PSet(overlapRemoval=cms.bool(False),
+                 type=cms.int32(4), # photon, use str to enum 
+                 vetoRegions=cms.vdouble(0.3,0.0,0.050,0.01,0.0,0.0,0.0)
+                 ),
+        cms.PSet(overlapRemoval=cms.bool(False),
+                 type=cms.int32(4), # photon, use str to enum 
+                 vetoRegions=cms.vdouble(0.3,0.0,0.060,0.012,0.0,0.0,0.0)
+                 ),
         cms.PSet(overlapRemoval=cms.bool(False),
                  type=cms.int32(4), # photon, use str to enum 
                  vetoRegions=cms.vdouble(0.3,0.0,0.070,0.015,0.0,0.0,0.0)
                  ),
         cms.PSet(overlapRemoval=cms.bool(False),
                  type=cms.int32(4), # photon, use str to enum 
-                 vetoRegions=cms.vdouble(0.3,0.0,0.150,0.030,0.0,0.0,0.0)
+                 vetoRegions=cms.vdouble(0.3,0.0,0.080,0.02,0.0,0.0,0.0)
                  ),
-        cms.PSet(overlapRemoval=cms.bool(True), # check if overlap removal is still taking something out
+        cms.PSet(overlapRemoval=cms.bool(True),
                  type=cms.int32(4), # photon, use str to enum 
-                 vetoRegions=cms.vdouble(0.3,0.0,0.150,0.030,0.0,0.0,0.0)
+                 vetoRegions=cms.vdouble(0.3,0.0,0.050,0.01,0.0,0.0,0.0)
                  ),
-        
-        ### # neutral iso w/ veto cones
-        ### cms.PSet(overlapRemoval=cms.bool(False),
-        ###       type=cms.int32(5), # neutral hadron, use str to enum 
-        ###          vetoRegions=cms.vdouble(0.3,0.05,0.,0.05,0.,0.,0.)
-        ###          ),
-        ### cms.PSet(overlapRemoval=cms.bool(False),
-        ###       type=cms.int32(5), # neutral hadron, use str to enum 
-        ###          vetoRegions=cms.vdouble(0.3,0.1,0.,0.1,0.,0.,0.)
-        ###          ),
-        ### 
-        ### # neutral iso in small cones: ~cone based H/E 
-        ### cms.PSet(overlapRemoval=cms.bool(False),
-        ###          type=cms.int32(5), # neutral hadron, use str to enum 
-        ###          vetoRegions=cms.vdouble(0.1,0.0,0.,0.0,0.,0.,0.)
-        ###          ),
-        ### cms.PSet(overlapRemoval=cms.bool(False),
-        ###          type=cms.int32(5), # neutral hadron, use str to enum 
-        ###          vetoRegions=cms.vdouble(0.05,0.0,0.,0.0,0.,0.,0.)
-        ###          ),
-        
+                
         # netural iso rings
-        cms.PSet(overlapRemoval=cms.bool(True),
+         cms.PSet(overlapRemoval=cms.bool(True),
                  type=cms.int32(5), # neutral hadron, use str to enum 
-                 vetoRegions=cms.vdouble(0.05,0.,0.,0.,0.,0.,0.)
+                 vetoRegions=cms.vdouble(0.1,0.,0.,0.,0.,0.,0.)
                  ),
         cms.PSet(overlapRemoval=cms.bool(True),
                  type=cms.int32(5), # neutral hadron, use str to enum 
-                 vetoRegions=cms.vdouble(0.1,0.05,0.,0.05,0.,0.,0.)
+                 vetoRegions=cms.vdouble(0.12,0.1,0.,0.1,0.,0.,0.)
                  ),
         cms.PSet(overlapRemoval=cms.bool(True),
                  type=cms.int32(5), # neutral hadron, use str to enum 
-                 vetoRegions=cms.vdouble(0.15,0.1,0.,0.1,0.,0.,0.)
+                 vetoRegions=cms.vdouble(0.15,0.12,0.,0.12,0.,0.,0.)
                  ),
         cms.PSet(overlapRemoval=cms.bool(True),
                  type=cms.int32(5), # neutral hadron, use str to enum 
@@ -114,15 +102,15 @@ process.flashggPhotons.extraCaloIsolations.extend([
         
         cms.PSet(overlapRemoval=cms.bool(False),
                  type=cms.int32(5), # neutral hadron, use str to enum 
-                 vetoRegions=cms.vdouble(0.05,0.,0.,0.,0.,0.,0.)
+                 vetoRegions=cms.vdouble(0.1,0.,0.,0.,0.,0.,0.)
                  ),
         cms.PSet(overlapRemoval=cms.bool(False),
                  type=cms.int32(5), # neutral hadron, use str to enum 
-                 vetoRegions=cms.vdouble(0.1,0.05,0.,0.05,0.,0.,0.)
+                 vetoRegions=cms.vdouble(0.12,0.1,0.,0.1,0.,0.,0.)
                  ),
         cms.PSet(overlapRemoval=cms.bool(False),
                  type=cms.int32(5), # neutral hadron, use str to enum 
-                 vetoRegions=cms.vdouble(0.15,0.1,0.,0.1,0.,0.,0.)
+                 vetoRegions=cms.vdouble(0.15,0.12,0.,0.12,0.,0.,0.)
                  ),
         cms.PSet(overlapRemoval=cms.bool(False),
                  type=cms.int32(5), # neutral hadron, use str to enum 
@@ -136,6 +124,14 @@ process.flashggPhotons.extraCaloIsolations.extend([
                                                   )
 
 process.eventCount = cms.EDProducer("EventCountProducer")
+process.weightsCount = cms.EDProducer("WeightsCountProducer",
+                                      generator=cms.InputTag("generator"),
+                                      pileupInfo=cms.InputTag("addPileupInfo"),
+                                      doObsPileup=cms.untracked.bool(True),
+                                      minObsPileup=cms.double(-0.5),
+                                      maxObsPileup=cms.double(100.5),
+                                      nbinsObsPileup=cms.int32(101),
+                                      )
 
 from flashgg.MicroAODProducers.flashggMicroAODOutputCommands_cff import microAODDefaultOutputCommand
 
@@ -144,6 +140,7 @@ process.out = cms.OutputModule("PoolOutputModule", fileName = cms.untracked.stri
                                )
 
 process.out.outputCommands.extend(["keep *_eventCount_*_*",
+                                   "keep *_weightsCount_*_*",
                                    "keep *_prunedGenParticles_*_*",
                                    "keep *_packedGenParticles_*_*",
                                    "keep *_reducedEgamma_reduced*RecHits_*",
@@ -160,7 +157,7 @@ process.out.outputCommands.extend(["keep *_eventCount_*_*",
 ##                                    fileName = cms.string("tree.root")
 ## )
 
-process.p = cms.Path(process.eventCount+
+process.p = cms.Path(process.eventCount+process.weightsCount+
                      ((process.flashggVertexMapUnique+process.flashggVertexMapNonUnique+process.flashggPrunedGenParticles)*
                       process.flashggPhotons*
                       process.flashggDiPhotons
