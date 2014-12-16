@@ -118,6 +118,7 @@ for name,datasets in options.processes.iteritems():
             if not options.dry_run:
                 parallel.run(job,jobargs)
             outfiles.append( outfile )
+            poutfiles[name][1].append( outfiles[-1] )
         
 if not options.dry_run:
     wait(parallel)        
