@@ -19,78 +19,17 @@ def addMiniTreeVars(miniTreeCfg,lst):
             args = var
         addMiniTreeVar(miniTreeCfg,*args)
         
-options = VarParsing.VarParsing ('analysis')
-options.setDefault ('maxEvents',100)
-options.register ('dataset',
-                  "", # default value
-                  VarParsing.VarParsing.multiplicity.singleton, # singleton or list
-                  VarParsing.VarParsing.varType.string,          # string, int, or float
-                  "dataset")
-options.register ('campaign',
-                  "isolation_studies", # default value
-                  VarParsing.VarParsing.multiplicity.singleton, # singleton or list
-                  VarParsing.VarParsing.varType.string,          # string, int, or float
-                  "campaign")
-options.register ('useAAA',
-                  False, # default value
-                  VarParsing.VarParsing.multiplicity.singleton, # singleton or list
-                  VarParsing.VarParsing.varType.bool,          # string, int, or float
-                  "useAAA")
-options.register ('useEOS',
-                  True, # default value
-                  VarParsing.VarParsing.multiplicity.singleton, # singleton or list
-                  VarParsing.VarParsing.varType.bool,          # string, int, or float
-                  "useEOS")
-options.register ('targetLumi',
-                  1.e+3, # default value
-                  VarParsing.VarParsing.multiplicity.singleton, # singleton or list
-                  VarParsing.VarParsing.varType.float,          # string, int, or float
-                  "targetLumi")
-options.register ('nJobs',
-                  0, # default value
-                  VarParsing.VarParsing.multiplicity.singleton, # singleton or list
-                  VarParsing.VarParsing.varType.int,          # string, int, or float
-                  "nJobs")
-options.register ('jobId',
-                  -1, # default value
-                  VarParsing.VarParsing.multiplicity.singleton, # singleton or list
-                  VarParsing.VarParsing.varType.int,          # string, int, or float
-                  "jobId")
-
-options.parseArguments()
-
-if options.useAAA:
-    print "Using AAA"
-    options.filePrepend = "root://xrootd-cms.infn.it/"
-elif options.useEOS:
-    print "Using EOS"
-    options.filePrepend = "root://eoscms//eos/cms"
-
-dataset = None
-if options.dataset != "":
-    print "Reading dataset (%s) %s" % ( options.campaign, options.dataset)
-    dataset = SamplesManager("$CMSSW_BASE/src/diphotons/MetaData/data/%s/datasets.json" % options.campaign,
-                             ["$CMSSW_BASE/src/diphotons/MetaData/data/cross_sections.json"],
-                             ).getDatasetMetaData(options.maxEvents,options.dataset,jobId=options.jobId,nJobs=options.nJobs)
-    print dataset
-
-outputFile=options.outputFile
-if options.jobId != -1:
-    outputFile = "%s_%d.root" % ( outputFile.replace(".root",""), options.jobId )
-
 process = cms.Process("FWLitePlots")
 
 process.fwliteInput = cms.PSet(
     fileNames = cms.vstring(),
-    ## fileNames = cms.vstring('root://eoscms//eos/cms/store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_224209/0000/myOutputFile_9.root'),
-    ## fileNames = cms.vstring('root://xrootd-cms.infn.it//store/group/phys_higgs/cmshgg/flashgg/isolation_studies/alphaV1-52-g0636fd0/GJets_HT-600toInf_Tune4C_13TeV-madgra_ph-tauola/isolation_studies-alphaV1-52-g0636fd0-v0/141030_224209/0000/myOutputFile_9.root'),  ## mandatory
-    maxEvents   = cms.int32(options.maxEvents),
+    maxEvents   = cms.int32(100),
     outputEvery = cms.uint32(200),
 )
 
 
 process.fwliteOutput = cms.PSet(
-      fileName = cms.string(outputFile)      ## mandatory
+      fileName = cms.string("output.root")      ## mandatory
 )
 
 process.photonIdAnalyzer = cms.PSet(
@@ -175,11 +114,8 @@ addMiniTreeVars(process.photonIdAnalyzer.miniTreeCfg,
                  ]
                 )
 
-if dataset:
-    name,xsec,totEvents,files = dataset
-    if xsec != 0.:
-        process.photonIdAnalyzer.lumiWeight = xsec["xs"]/float(totEvents)*options.targetLumi
-    process.fwliteInput.fileNames.extend([ str("%s%s" % (options.filePrepend,f)) for f in  files])
-    
+# customization for job splitting, lumi weighting, etc.
+from diphotons.MetaData.JobConfig import customize
+customize.campaign = "isolation_studies"
+customize(process)
 
-print process.fwliteInput.fileNames
