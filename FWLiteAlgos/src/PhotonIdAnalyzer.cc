@@ -6,7 +6,11 @@
 #include "DataFormats/PatCandidates/interface/PackedGenParticle.h"
 #include "FWCore/Utilities/interface/TypeWithDict.h"
 
-#include "DataFormats/EcalRecHit/interface/EcalRecHitCollections.h"
+
+#include "Geometry/CaloTopology/interface/CaloTopology.h"
+#include "Geometry/CaloTopology/interface/EcalBarrelHardcodedTopology.h"
+#include "Geometry/CaloTopology/interface/EcalEndcapHardcodedTopology.h"
+#include "RecoCaloTools/Navigation/interface/CaloNavigator.h"
 
 #include <map>
 
@@ -43,7 +47,8 @@ PhotonIdAnalyzer::PhotonIdAnalyzer(const edm::ParameterSet& cfg, TFileDirectory&
   rhoFixedGrid_(cfg.getParameter<edm::InputTag>("rhoFixedGrid")),
   lumiWeight_(cfg.getParameter<double>("lumiWeight")),
   /// photonFunctor_(edm::TypeWithDict(edm::Wrapper<vector<Photon> >::typeInfo())),
-  promptTree_(0), fakesTree_(0)
+  promptTree_(0), fakesTree_(0),
+  topology_(0), theSubdetTopologyEB_(0), theSubdetTopologyEE_(0)
 {
   hists_["photonPt"  ]	     = fs.make<TH1F>("photonPt"		, "pt"           ,  100,  0., 300.);
   hists_["photonEta" ]	     = fs.make<TH1F>("photonEta"	, "eta"          ,  100, -3.,   3.);
@@ -67,26 +72,37 @@ PhotonIdAnalyzer::PhotonIdAnalyzer(const edm::ParameterSet& cfg, TFileDirectory&
 
   
   vector<ParameterSet> miniTreeCfg = cfg.getUntrackedParameter<vector<ParameterSet> >("miniTreeCfg",vector<ParameterSet>());
+  dumpRecHits_ = cfg.getUntrackedParameter<bool>("dumpRecHits",false);
   if( ! miniTreeCfg.empty() ) {
 	  for( vector<ParameterSet>::iterator ivar=miniTreeCfg.begin(); ivar!=miniTreeCfg.end(); ++ivar ) {
 		  string method = ivar->getUntrackedParameter<string>("var");
 		  string name = ivar->getUntrackedParameter<string>("name","");
 		  double def = ivar->getUntrackedParameter<double>("default",0.);
 		  if( name.empty() ) { name = method; }
-		  /// cout << "miniTreeCfg " << name << " " << method << endl;
 		  miniTreeBranches_.push_back(name);
 		  miniTreeFunctors_.push_back(PhotonFunctor(method));
-		  //// miniTreeFunctors_.push_back();
-		  /// photonFunctor_.addExpression(method);
 		  miniTreeBuffers_.push_back(def);
 	  }
 	  miniTreeDefaults_ = miniTreeBuffers_;
 	  promptTree_ = bookTree("promptTree",fs);
 	  fakesTree_ = bookTree("fakesTree",fs);
   }
+  if( dumpRecHits_ ) {
+	  ecalHitEBColl_ = cfg.getParameter<edm::InputTag>("barrelRecHits");
+	  ecalHitEEColl_ = cfg.getParameter<edm::InputTag>("endcapRecHits");
+
+	  // FIXME: memory leak
+	  CaloTopology * topology=new CaloTopology();
+	  EcalBarrelHardcodedTopology* ebTopology=new EcalBarrelHardcodedTopology();
+	  EcalEndcapHardcodedTopology* eeTopology=new EcalEndcapHardcodedTopology();
+	  topology->setSubdetTopology(DetId::Ecal,EcalBarrel,ebTopology);
+	  topology->setSubdetTopology(DetId::Ecal,EcalEndcap,eeTopology);
+	  theSubdetTopologyEB_ = ebTopology;
+	  theSubdetTopologyEE_ = eeTopology;
+	  topology_ = topology;
+  }
   
 }
-
 
 TTree * PhotonIdAnalyzer::bookTree(const string & name, TFileDirectory& fs)
 {
@@ -101,14 +117,161 @@ TTree * PhotonIdAnalyzer::bookTree(const string & name, TFileDirectory& fs)
 		/// cout << "miniTree branch "  << miniTreeBranches_[ibr] << endl;
 		ret->Branch(Form("%s",miniTreeBranches_[ibr].c_str()),&miniTreeBuffers_[ibr],Form("%s/F",miniTreeBranches_[ibr].c_str()));
 	}
+	
+	if( dumpRecHits_ ) {
+		TString tree5x5 = "amplit[25]/F:ieta[25]/I:iphi[25]/I:ix[25]/I:iy[25]/I:iz[25]/I:kSaturated[25]/I:kLeRecovered[25]/I:kNeighRecovered[25]/I";
+		ret->Branch("tree5x5",&recHitsInfo_,tree5x5);
+	}
+	
 	return ret;
 }
 
-void PhotonIdAnalyzer::fillTreeBranches(const Photon & pho)
+void PhotonIdAnalyzer::fillTreeBranches(const Photon & pho, 
+					const EcalRecHitCollection * EcalBarrelRecHits, const EcalRecHitCollection * EcalEndcapRecHits)
 {
 	for(size_t ibr=0; ibr<miniTreeFunctors_.size(); ++ibr) {
 		miniTreeBuffers_[ibr] = miniTreeFunctors_[ibr](pho);
 	}
+
+	if( dumpRecHits_ ) {
+		// extra info on rechits for xtals in the 5x5 matrix around the seed
+		DetId seedDetId = ( (pho.superCluster())->seed() )->seed();
+    
+		if(seedDetId.subdetId()==EcalEndcap) {
+      
+			int iNeigh=0; 
+      
+			CaloNavigator<DetId> cursorE = CaloNavigator<DetId>(seedDetId, theSubdetTopologyEE_ );
+
+			for(int ix=-2; ix<3; ++ix) {
+				for(int iy=-2; iy<3; ++iy) {
+					cursorE.home();
+					cursorE.offsetBy( ix, iy );
+					DetId cryId = cursorE.pos();
+
+					if(cryId.subdetId()!=EcalEndcap) { 
+						recHitsInfo_.amplit[iNeigh] = -5000.;
+						recHitsInfo_.kSaturated[iNeigh] = -5000;
+						recHitsInfo_.kLeRecovered[iNeigh] = -5000;
+						recHitsInfo_.kNeighRecovered[iNeigh] = -5000;
+						recHitsInfo_.ieta[iNeigh] = -5000; 
+						recHitsInfo_.iphi[iNeigh] = -5000;
+						recHitsInfo_.ix[iNeigh] = -5000; 
+						recHitsInfo_.iy[iNeigh] = -5000; 
+						recHitsInfo_.iz[iNeigh] = -5000; 
+						recHitsInfo_.ieta[iNeigh] = -5000; 
+						recHitsInfo_.iphi[iNeigh] = -5000; 
+						recHitsInfo_.ix[iNeigh] = -5000;
+						recHitsInfo_.iy[iNeigh] = -5000;
+						recHitsInfo_.iz[iNeigh] = -5000;
+						iNeigh++;
+						continue;  
+					}
+
+					EcalRecHitCollection::const_iterator itneigh = EcalEndcapRecHits->find( cryId );
+
+					if( itneigh != EcalEndcapRecHits->end() ) {
+						recHitsInfo_.amplit[iNeigh] = itneigh->energy();
+						recHitsInfo_.kSaturated[iNeigh] = itneigh->checkFlag(EcalRecHit::kSaturated);      
+						recHitsInfo_.kLeRecovered[iNeigh] = itneigh->checkFlag(EcalRecHit::kLeadingEdgeRecovered);      
+						recHitsInfo_.kNeighRecovered[iNeigh] = itneigh->checkFlag(EcalRecHit::kNeighboursRecovered);
+						recHitsInfo_.ieta[iNeigh] = -999; 
+						recHitsInfo_.iphi[iNeigh] = -999; 
+						recHitsInfo_.ix[iNeigh] = ((EEDetId)itneigh->detid()).ix();
+						recHitsInfo_.iy[iNeigh] = ((EEDetId)itneigh->detid()).iy();
+						recHitsInfo_.iz[iNeigh] = ((EEDetId)itneigh->detid()).zside();
+					} else {
+						recHitsInfo_.amplit[iNeigh] = -2000.;
+						recHitsInfo_.kSaturated[iNeigh] = -2000;
+						recHitsInfo_.kLeRecovered[iNeigh] = -2000;
+						recHitsInfo_.kNeighRecovered[iNeigh] = -2000;
+						recHitsInfo_.ieta[iNeigh] = -2000; 
+						recHitsInfo_.iphi[iNeigh] = -2000;
+						recHitsInfo_.ix[iNeigh] = -2000; 
+						recHitsInfo_.iy[iNeigh] = -2000; 
+						recHitsInfo_.iz[iNeigh] = -2000; 
+						recHitsInfo_.ieta[iNeigh] = -2000; 
+						recHitsInfo_.iphi[iNeigh] = -2000; 
+						recHitsInfo_.ix[iNeigh] = -2000;
+						recHitsInfo_.iy[iNeigh] = -2000;
+						recHitsInfo_.iz[iNeigh] = -2000;
+					}
+	  
+					iNeigh++;
+				}
+			}
+			if (iNeigh!=25) cout << "problem: not 25 crystals!  ==> " << iNeigh << endl;
+
+		} else if (seedDetId.subdetId()==EcalBarrel) {
+      
+			int iNeigh=0; 
+
+			CaloNavigator<DetId> cursorE = CaloNavigator<DetId>(seedDetId, theSubdetTopologyEB_ );
+
+			for(int ix=-2; ix<3; ++ix) {
+				for(int iy=-2; iy<3; ++iy) {
+					cursorE.home();
+					cursorE.offsetBy( ix, iy );
+					DetId cryId = cursorE.pos();
+
+					if(cryId.subdetId()!=EcalBarrel) { 
+						recHitsInfo_.amplit[iNeigh] = -5000.;
+						recHitsInfo_.kSaturated[iNeigh] = -5000;
+						recHitsInfo_.kLeRecovered[iNeigh] = -5000;
+						recHitsInfo_.kNeighRecovered[iNeigh] = -5000;
+						recHitsInfo_.ieta[iNeigh] = -5000; 
+						recHitsInfo_.iphi[iNeigh] = -5000;
+						recHitsInfo_.ix[iNeigh] = -5000; 
+						recHitsInfo_.iy[iNeigh] = -5000; 
+						recHitsInfo_.iz[iNeigh] = -5000; 
+						recHitsInfo_.ieta[iNeigh] = -5000; 
+						recHitsInfo_.iphi[iNeigh] = -5000; 
+						recHitsInfo_.ix[iNeigh] = -5000;
+						recHitsInfo_.iy[iNeigh] = -5000;
+						recHitsInfo_.iz[iNeigh] = -5000;
+						iNeigh++;
+						continue;  
+					}
+	  
+					EcalRecHitCollection::const_iterator itneigh = EcalBarrelRecHits->find( cryId );
+
+					if( itneigh != EcalBarrelRecHits->end() ) { 
+						recHitsInfo_.amplit[iNeigh] = itneigh->energy();
+						recHitsInfo_.kSaturated[iNeigh] = itneigh->checkFlag(EcalRecHit::kSaturated);      
+						recHitsInfo_.kLeRecovered[iNeigh] = itneigh->checkFlag(EcalRecHit::kLeadingEdgeRecovered);      
+						recHitsInfo_.kNeighRecovered[iNeigh] = itneigh->checkFlag(EcalRecHit::kNeighboursRecovered);
+						recHitsInfo_.ieta[iNeigh] = ((EBDetId)itneigh->detid()).ieta();
+						recHitsInfo_.iphi[iNeigh] = ((EBDetId)itneigh->detid()).iphi();
+						recHitsInfo_.ix[iNeigh] = -999;
+						recHitsInfo_.iy[iNeigh] = -999;
+						recHitsInfo_.iz[iNeigh] = -999;
+					} else {
+						recHitsInfo_.amplit[iNeigh] = -2000.;
+						recHitsInfo_.kSaturated[iNeigh] = -2000;
+						recHitsInfo_.kLeRecovered[iNeigh] = -2000;
+						recHitsInfo_.kNeighRecovered[iNeigh] = -2000;
+						recHitsInfo_.ieta[iNeigh] = -2000; 
+						recHitsInfo_.iphi[iNeigh] = -2000;
+						recHitsInfo_.ix[iNeigh] = -2000; 
+						recHitsInfo_.iy[iNeigh] = -2000; 
+						recHitsInfo_.iz[iNeigh] = -2000; 
+						recHitsInfo_.ieta[iNeigh] = -2000; 
+						recHitsInfo_.iphi[iNeigh] = -2000; 
+						recHitsInfo_.ix[iNeigh] = -2000;
+						recHitsInfo_.iy[iNeigh] = -2000;
+						recHitsInfo_.iz[iNeigh] = -2000;
+					}
+
+					iNeigh++;
+				}
+			}
+			if (iNeigh!=25) cout << "problem: not 25 crystals!  ==> " << iNeigh << endl;
+		}
+		
+
+
+	}
+	
 }
 
 
@@ -223,13 +386,20 @@ PhotonIdAnalyzer::analyze(const edm::EventBase& event)
   Handle<vector<PackedGenParticle> > packedGenParticles;
   Handle<vector<Vertex> > vertexes;
   Handle<double> rhoHandle;
-
+  Handle< EcalRecHitCollection > EcalBarrelRecHits;
+  Handle< EcalRecHitCollection > EcalEndcapRecHits;
+  
   // Handle<vector<PrunedGenParticle> > prunedGenParticles;
   event.getByLabel(photons_, photons);
   // event.getByLabel(prunedGenParticles_, prunedGenParticles);
   event.getByLabel(packedGen_, packedGenParticles);
   event.getByLabel(vertexes_,vertexes);
   event.getByLabel(rhoFixedGrid_, rhoHandle );
+  
+  if( dumpRecHits_ ) {
+	  event.getByLabel(ecalHitEBColl_, EcalBarrelRecHits); 
+	  event.getByLabel(ecalHitEEColl_, EcalEndcapRecHits); 
+  }
   
   weight_ = getEventWeight(event);
   
@@ -300,21 +470,10 @@ PhotonIdAnalyzer::analyze(const edm::EventBase& event)
 	  for(size_t iv=0; iv<vertexes->size(); ++iv) {
 		  Ptr<Vertex> vtx(vertexes,iv);
 		  float iso = pho->getpfChgIso03WrtVtx(vtx,true);
-		  //// // HACK: direct comparison of Ptr vector does not work
-		  //// float iso=0.;
-		  //// for(std::map<edm::Ptr<reco::Vertex>,float>::iterator it=pfChgIso03.begin(); it!=pfChgIso03.end(); ++it) {
-		  //// 	  if( it->first.key() == vtx.key() ) { 
-		  //// 		  iso = it->second;
-		  //// 		  break;
-		  //// 	  }
-		  //// }
-		  //// cout << "ivtx " << iv << " " << vtx.key() << " " << vtx.id() << " " << vtx->z() << " chIso " << iso << endl;
 		  pho->addUserFloat(Form("chgIsoWrtVtx%d",(int)iv), iso);
-		  //// cout << "ivtx " << iv << " " << vtx.key() << " " << vtx.id() << " " << vtx->z() << " chIso " << pho->getpfChgIso03WrtVtx(vtx) << endl;
-		  //// pho->addUserFloat(Form("chgIsoWrtVtx%d",(int)iv), pho->getpfChgIso03WrtVtx(vtx));
 	  }
 
-	  fillTreeBranches(*pho);
+	  fillTreeBranches(*pho,EcalBarrelRecHits.product(),EcalEndcapRecHits.product());
 	  
 	  if( match.match == kPrompt ) {
 		  if( iprompt_ ==0 ) { 

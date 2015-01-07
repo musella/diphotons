@@ -11,6 +11,7 @@
 <use   name="PhysicsTools/PatUtils"/>
 <use   name="PhysicsTools/UtilAlgos"/>
 <use   name="PhysicsTools/Utilities"/>
+<use   name="Geometry/CaloTopology"/>
 <use   name="clhep"/>
 <Flags CXXFLAGS="-ggdb"/>
 <export>

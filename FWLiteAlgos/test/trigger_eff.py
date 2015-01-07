@@ -53,8 +53,8 @@ def mkCategoryHistos(process,name,sel):
     setattr(process,name,flashggPreselectedDiPhotons.clone(cut = cms.string(sel)))
     photons = getattr(process,name)
         
-    num = mkHistogrammer(process,"num_%s" % name, name)
-    den = mkHistogrammer(process,"den_%s" % name, name)
+    num = mkHistogrammer(process,"num%s" % name, name)
+    den = mkHistogrammer(process,"den%s" % name, name)
 
     return (photons,num,den)
 
@@ -95,10 +95,10 @@ for name,sel in [ ("EBEB",   "(%s) &&   leadingPhoton.isEB && subLeadingPhoton.i
     nums += num
     dens += den
 
-## process.load("flashgg.MetaData.WeightProducer_cfi")
-process.weightProducer = weightProducer = cms.EDProducer('WeightProducer',
-                                lumiWeight = cms.double(1.),
-)
+process.load("flashgg.MetaData.WeightProducer_cfi")
+### process.weightProducer = weightProducer = cms.EDProducer('WeightProducer',
+###                                 lumiWeight = cms.double(1.),
+### )
 photonColls += process.weightProducer
 
 process.load('HLTrigger.HLTfilters.hltHighLevel_cfi')
@@ -114,6 +114,6 @@ process.p2 = cms.Path(process.hltHighLevel+
                       )
 
 from diphotons.MetaData.JobConfig import customize
-customize.campaign = "isolation_studies"
-
+## customize.campaign = "isolation_studies"
+customize.setDefault("maxEvents",100)
 customize(process)

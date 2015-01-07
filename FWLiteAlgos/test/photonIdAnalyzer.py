@@ -40,6 +40,11 @@ process.photonIdAnalyzer = cms.PSet(
   miniTreeCfg = cms.untracked.VPSet(
         ),
   vertexes = cms.InputTag("offlineSlimmedPrimaryVertices"),
+  
+  dumpRecHits = cms.untracked.bool(True),
+  barrelRecHits = cms.InputTag('reducedEgamma','reducedEBRecHits'),
+  endcapRecHits = cms.InputTag('reducedEgamma','reducedEERecHits'),
+
 )
 
 addMiniTreeVars(process.photonIdAnalyzer.miniTreeCfg,
@@ -80,7 +85,7 @@ addMiniTreeVars(process.photonIdAnalyzer.miniTreeCfg,
                  ## cluster shapes
                  "e1x5",           "full5x5_e1x5",           
                  "e2x5",           "full5x5_e2x5",           
-                 "e3x3",           "full3x3_e3x3",           
+                 "e3x3",           "full5x5_e3x3",           
                  "e5x5",           "full5x5_e5x5",           
                  "maxEnergyXtal",  "full5x5_maxEnergyXtal",  
                  "sigmaIetaIeta",  "full5x5_sigmaIetaIeta",  
@@ -116,6 +121,6 @@ addMiniTreeVars(process.photonIdAnalyzer.miniTreeCfg,
 
 # customization for job splitting, lumi weighting, etc.
 from diphotons.MetaData.JobConfig import customize
-customize.campaign = "isolation_studies"
+customize.setDefault("maxEvents",500)
 customize(process)
 

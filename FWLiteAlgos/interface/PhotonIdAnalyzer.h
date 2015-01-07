@@ -19,6 +19,11 @@
    on this on WorkBookFWLiteExamples#ExampleFive.
 */
 
+#include "DataFormats/EcalRecHit/interface/EcalRecHitCollections.h"
+/// class EcalRecHitCollection;
+class CaloTopology;
+class CaloSubdetectorTopology;
+
 namespace diphotons {
 
 	typedef StringObjectFunction<flashgg::Photon,false> PhotonFunctor;
@@ -40,16 +45,30 @@ namespace diphotons {
 		
 		
 	protected:
+		struct RecHitsInfo {
+			
+			float amplit[25];
+			int ieta[25];
+			int iphi[25];
+			int ix[25];
+			int iy[25];
+			int iz[25];
+			int kSaturated[25];
+			int kLeRecovered[25];
+			int kNeighRecovered[25];
+		};
+		
 		float getEventWeight(const edm::EventBase& event);
 		/// input tag for mouns
-		edm::InputTag photons_, packedGen_, prunedGen_, vertexes_, rhoFixedGrid_;
+		edm::InputTag photons_, packedGen_, prunedGen_, vertexes_, rhoFixedGrid_, ecalHitEBColl_, ecalHitEEColl_;
 		/// histograms
 		std::map<std::string, TH1*> hists_;
 		// event weight
 		float lumiWeight_,weight_;
 		
 		TTree * bookTree(const std::string & name, TFileDirectory& fs);
-		void fillTreeBranches(const flashgg::Photon & pho);
+		void fillTreeBranches(const flashgg::Photon & pho, 
+				      const EcalRecHitCollection * EcalBarrelRecHits, const EcalRecHitCollection * EcalEndcapRecHits);
 
 		TTree * promptTree_, *fakesTree_;
 		std::vector<std::string> miniTreeBranches_;
@@ -58,6 +77,13 @@ namespace diphotons {
 		std::vector<float> miniTreeBuffers_, miniTreeDefaults_;
 		int ipho_, iprompt_, ifake_;
 		float rho_;
+		
+		bool dumpRecHits_;
+		const CaloTopology * topology_;
+		const CaloSubdetectorTopology* theSubdetTopologyEB_;
+		const CaloSubdetectorTopology* theSubdetTopologyEE_;
+
+		RecHitsInfo recHitsInfo_;		
 	};
 	
 }

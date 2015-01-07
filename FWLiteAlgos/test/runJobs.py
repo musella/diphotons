@@ -109,6 +109,9 @@ for name,datasets in options.processes.iteritems():
             print  "splitting in %d jobs" % options.njobs
             for ijob in range(options.njobs):
                 iargs = jobargs+["nJobs=%d jobId=%d" % (options.njobs, ijob)]
+                ret = parallel.run("python %s" % job,iargs+["dryRun=1"],interactive=True)[2][0]
+                if ret != 0:
+                    continue
                 if not options.dry_run:
                     parallel.run(job,iargs)
                 outfiles.append( outfile.replace(".root","_%d.root" % ijob) )

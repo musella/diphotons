@@ -147,6 +147,7 @@ cd ${CMSSW_BASE}/src/flashgg
 git remote add musella git@github.com:musella/flashgg.git
 git fetch musella
 git co -b campaing_ExoPhys14 diphotonsPhys14V1
+# git cp cb657ec
 
 scram b -j 16
 
@@ -160,10 +161,38 @@ ln -sf  ${CMSSW_BASE}/src/diphotons/MetaData/work/isolation_Studies.py .
 
 # edit list of samples to be actually submitted 
 emacs -nw campaigns/MyPhys14_samples.json
-./prepareCrabJobs.py -C ExoPhys14 -s campaigns/MyPhys14_samples.json -p isolation_Studies.py  --mkPilot
+./prepareCrabJobs.py -V diphotonsPhys14V1 -C ExoPhys14 -s campaigns/MyPhys14_samples.json -p isolation_Studies.py  --mkPilot
 
 # submit pilot jobs
 cd ExoPhys14
 echo pilot* | xargs -n 1 crab sub
 
+```
+
+### Minitree dumper
+
+#### Set up file catalog
+
+See instructions in flashgg/MetaData/README.md
+
+File catalog for ExoPhys14 is in git.
+```
+# Needs flashgg after mergin of https://github.com/cms-analysis/flashgg/pull/136
+# can be taken from musella:topic_jobs_driver
+fggManageSamples.py -m diphotons -C ExoPhys14 list
+```
+
+#### Run
+
+```
+cd FWLiteAlgos/test
+cp -p jobs_gamjets_gamgam.json myjobs.json
+emacs -nw photonIdAnalyzer.py myjobs.json
+
+# Needs flashgg after mergin of https://github.com/cms-analysis/flashgg/pull/136
+# can be taken from musella:topic_jobs_driver
+# alternative, can still use MetaData/test/runJobs.py but not 100% safe
+fggRunJobs.py --load myjobs.json -d myjobs ./photonIdAnalyzer.py maxEvent=100
+
+fggRunJobs.py --load myjobs.json -d myjobs -H -D -P -n 5 ./photonIdAnalyzer.py maxEvent=-1
 ```
