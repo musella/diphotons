@@ -1,0 +1,702 @@
+{
+    "/GGJets_M-1000To2000_Pt-50_13TeV-sherpa/musella-ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1-a36c358c8bb5ef2fffce970840767217/USER": {
+        "files": [
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GGJets_M-1000To2000_Pt-50_13TeV-sherpa/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_132710/0000/myOutputFile_1.root", 
+                "nevents": 149135
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GGJets_M-1000To2000_Pt-50_13TeV-sherpa/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_132710/0000/myOutputFile_2.root", 
+                "nevents": 49389
+            }
+        ]
+    }, 
+    "/GGJets_M-2000To4000_Pt-50_13TeV-sherpa/musella-ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1-a36c358c8bb5ef2fffce970840767217/USER": {
+        "files": [
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GGJets_M-2000To4000_Pt-50_13TeV-sherpa/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_132817/0000/myOutputFile_1.root", 
+                "nevents": 86326
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GGJets_M-2000To4000_Pt-50_13TeV-sherpa/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_132817/0000/myOutputFile_2.root", 
+                "nevents": 12986
+            }
+        ]
+    }, 
+    "/GGJets_M-200To500_Pt-50_13TeV-sherpa/musella-ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1-a36c358c8bb5ef2fffce970840767217/USER": {
+        "files": [
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GGJets_M-200To500_Pt-50_13TeV-sherpa/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_132856/0000/myOutputFile_1.root", 
+                "nevents": 99900
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GGJets_M-200To500_Pt-50_13TeV-sherpa/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_132856/0000/myOutputFile_3.root", 
+                "nevents": 103383
+            }
+        ]
+    }, 
+    "/GGJets_M-4000To8000_Pt-50_13TeV-sherpa/musella-ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1-a36c358c8bb5ef2fffce970840767217/USER": {
+        "files": [
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GGJets_M-4000To8000_Pt-50_13TeV-sherpa/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_132938/0000/myOutputFile_1.root", 
+                "nevents": 79924
+            }
+        ]
+    }, 
+    "/GGJets_M-500To1000_Pt-50_13TeV-sherpa/musella-ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1-a36c358c8bb5ef2fffce970840767217/USER": {
+        "files": [
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GGJets_M-500To1000_Pt-50_13TeV-sherpa/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133021/0000/myOutputFile_1.root", 
+                "nevents": 110256
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GGJets_M-500To1000_Pt-50_13TeV-sherpa/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133021/0000/myOutputFile_2.root", 
+                "nevents": 61120
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GGJets_M-500To1000_Pt-50_13TeV-sherpa/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133021/0000/myOutputFile_3.root", 
+                "nevents": 119679
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GGJets_M-500To1000_Pt-50_13TeV-sherpa/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133021/0000/myOutputFile_4.root", 
+                "nevents": 52000
+            }
+        ]
+    }, 
+    "/GGJets_M-8000To13000_Pt-50_13TeV-sherpa/musella-ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1-a36c358c8bb5ef2fffce970840767217/USER": {
+        "files": [
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GGJets_M-8000To13000_Pt-50_13TeV-sherpa/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133101/0000/myOutputFile_1.root", 
+                "nevents": 80000
+            }
+        ]
+    }, 
+    "/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/musella-ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1-a36c358c8bb5ef2fffce970840767217/USER": {
+        "files": [
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133145/0000/myOutputFile_1.root", 
+                "nevents": 145846
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133145/0000/myOutputFile_10.root", 
+                "nevents": 147281
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133145/0000/myOutputFile_11.root", 
+                "nevents": 99598
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133145/0000/myOutputFile_12.root", 
+                "nevents": 110803
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133145/0000/myOutputFile_13.root", 
+                "nevents": 149725
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133145/0000/myOutputFile_14.root", 
+                "nevents": 148804
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133145/0000/myOutputFile_15.root", 
+                "nevents": 149582
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133145/0000/myOutputFile_16.root", 
+                "nevents": 136824
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133145/0000/myOutputFile_17.root", 
+                "nevents": 112843
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133145/0000/myOutputFile_18.root", 
+                "nevents": 149226
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133145/0000/myOutputFile_19.root", 
+                "nevents": 149050
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133145/0000/myOutputFile_2.root", 
+                "nevents": 102332
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133145/0000/myOutputFile_20.root", 
+                "nevents": 149461
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133145/0000/myOutputFile_21.root", 
+                "nevents": 149942
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133145/0000/myOutputFile_22.root", 
+                "nevents": 108582
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133145/0000/myOutputFile_23.root", 
+                "nevents": 136587
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133145/0000/myOutputFile_24.root", 
+                "nevents": 126201
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133145/0000/myOutputFile_25.root", 
+                "nevents": 149555
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133145/0000/myOutputFile_26.root", 
+                "nevents": 149044
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133145/0000/myOutputFile_27.root", 
+                "nevents": 97014
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133145/0000/myOutputFile_29.root", 
+                "nevents": 103554
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133145/0000/myOutputFile_3.root", 
+                "nevents": 107441
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133145/0000/myOutputFile_30.root", 
+                "nevents": 149327
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133145/0000/myOutputFile_31.root", 
+                "nevents": 86542
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133145/0000/myOutputFile_32.root", 
+                "nevents": 138319
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133145/0000/myOutputFile_33.root", 
+                "nevents": 149623
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133145/0000/myOutputFile_34.root", 
+                "nevents": 131431
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133145/0000/myOutputFile_35.root", 
+                "nevents": 149244
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133145/0000/myOutputFile_36.root", 
+                "nevents": 105893
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133145/0000/myOutputFile_37.root", 
+                "nevents": 49966
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133145/0000/myOutputFile_4.root", 
+                "nevents": 149757
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133145/0000/myOutputFile_5.root", 
+                "nevents": 149345
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133145/0000/myOutputFile_6.root", 
+                "nevents": 149419
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133145/0000/myOutputFile_7.root", 
+                "nevents": 149289
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133145/0000/myOutputFile_8.root", 
+                "nevents": 102084
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133145/0000/myOutputFile_9.root", 
+                "nevents": 88546
+            }
+        ]
+    }, 
+    "/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/musella-ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1-a36c358c8bb5ef2fffce970840767217/USER": {
+        "files": [
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133229/0000/myOutputFile_1.root", 
+                "nevents": 149038
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133229/0000/myOutputFile_10.root", 
+                "nevents": 149421
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133229/0000/myOutputFile_11.root", 
+                "nevents": 149125
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133229/0000/myOutputFile_12.root", 
+                "nevents": 118097
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133229/0000/myOutputFile_13.root", 
+                "nevents": 149406
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133229/0000/myOutputFile_14.root", 
+                "nevents": 104673
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133229/0000/myOutputFile_15.root", 
+                "nevents": 149954
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133229/0000/myOutputFile_16.root", 
+                "nevents": 149238
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133229/0000/myOutputFile_17.root", 
+                "nevents": 149157
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133229/0000/myOutputFile_18.root", 
+                "nevents": 102218
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133229/0000/myOutputFile_19.root", 
+                "nevents": 149377
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133229/0000/myOutputFile_2.root", 
+                "nevents": 139530
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133229/0000/myOutputFile_20.root", 
+                "nevents": 102325
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133229/0000/myOutputFile_22.root", 
+                "nevents": 149538
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133229/0000/myOutputFile_23.root", 
+                "nevents": 149373
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133229/0000/myOutputFile_24.root", 
+                "nevents": 149331
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133229/0000/myOutputFile_25.root", 
+                "nevents": 148289
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133229/0000/myOutputFile_26.root", 
+                "nevents": 149195
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133229/0000/myOutputFile_27.root", 
+                "nevents": 148927
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133229/0000/myOutputFile_28.root", 
+                "nevents": 149897
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133229/0000/myOutputFile_29.root", 
+                "nevents": 133070
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133229/0000/myOutputFile_3.root", 
+                "nevents": 149562
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133229/0000/myOutputFile_30.root", 
+                "nevents": 148935
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133229/0000/myOutputFile_31.root", 
+                "nevents": 149501
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133229/0000/myOutputFile_32.root", 
+                "nevents": 149660
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133229/0000/myOutputFile_33.root", 
+                "nevents": 85518
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133229/0000/myOutputFile_4.root", 
+                "nevents": 141519
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133229/0000/myOutputFile_5.root", 
+                "nevents": 149069
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133229/0000/myOutputFile_6.root", 
+                "nevents": 149390
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133229/0000/myOutputFile_7.root", 
+                "nevents": 149029
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133229/0000/myOutputFile_8.root", 
+                "nevents": 149343
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133229/0000/myOutputFile_9.root", 
+                "nevents": 100554
+            }
+        ]
+    }, 
+    "/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/musella-ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1-a36c358c8bb5ef2fffce970840767217/USER": {
+        "files": [
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133311/0000/myOutputFile_1.root", 
+                "nevents": 74799
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133311/0000/myOutputFile_10.root", 
+                "nevents": 146554
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133311/0000/myOutputFile_11.root", 
+                "nevents": 56347
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133311/0000/myOutputFile_13.root", 
+                "nevents": 101143
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133311/0000/myOutputFile_14.root", 
+                "nevents": 107423
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133311/0000/myOutputFile_15.root", 
+                "nevents": 49189
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133311/0000/myOutputFile_16.root", 
+                "nevents": 106689
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133311/0000/myOutputFile_17.root", 
+                "nevents": 142477
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133311/0000/myOutputFile_18.root", 
+                "nevents": 147034
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133311/0000/myOutputFile_19.root", 
+                "nevents": 120114
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133311/0000/myOutputFile_2.root", 
+                "nevents": 146380
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133311/0000/myOutputFile_20.root", 
+                "nevents": 146457
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133311/0000/myOutputFile_21.root", 
+                "nevents": 103695
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133311/0000/myOutputFile_22.root", 
+                "nevents": 143702
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133311/0000/myOutputFile_23.root", 
+                "nevents": 82959
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133311/0000/myOutputFile_24.root", 
+                "nevents": 139577
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133311/0000/myOutputFile_25.root", 
+                "nevents": 149818
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133311/0000/myOutputFile_26.root", 
+                "nevents": 90466
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133311/0000/myOutputFile_27.root", 
+                "nevents": 99013
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133311/0000/myOutputFile_28.root", 
+                "nevents": 98201
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133311/0000/myOutputFile_29.root", 
+                "nevents": 71677
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133311/0000/myOutputFile_3.root", 
+                "nevents": 114787
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133311/0000/myOutputFile_30.root", 
+                "nevents": 149276
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133311/0000/myOutputFile_31.root", 
+                "nevents": 122565
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133311/0000/myOutputFile_32.root", 
+                "nevents": 134940
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133311/0000/myOutputFile_33.root", 
+                "nevents": 102423
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133311/0000/myOutputFile_34.root", 
+                "nevents": 149676
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133311/0000/myOutputFile_35.root", 
+                "nevents": 127148
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133311/0000/myOutputFile_37.root", 
+                "nevents": 82836
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133311/0000/myOutputFile_38.root", 
+                "nevents": 59369
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133311/0000/myOutputFile_39.root", 
+                "nevents": 141630
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133311/0000/myOutputFile_4.root", 
+                "nevents": 53243
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133311/0000/myOutputFile_40.root", 
+                "nevents": 130570
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133311/0000/myOutputFile_5.root", 
+                "nevents": 98968
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133311/0000/myOutputFile_6.root", 
+                "nevents": 107464
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133311/0000/myOutputFile_7.root", 
+                "nevents": 136569
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133311/0000/myOutputFile_8.root", 
+                "nevents": 118234
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133311/0000/myOutputFile_9.root", 
+                "nevents": 148146
+            }
+        ]
+    }, 
+    "/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/musella-ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1-a36c358c8bb5ef2fffce970840767217/USER": {
+        "files": [
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133350/0000/myOutputFile_1.root", 
+                "nevents": 149033
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133350/0000/myOutputFile_10.root", 
+                "nevents": 145125
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133350/0000/myOutputFile_11.root", 
+                "nevents": 149255
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133350/0000/myOutputFile_12.root", 
+                "nevents": 114654
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133350/0000/myOutputFile_13.root", 
+                "nevents": 101306
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133350/0000/myOutputFile_14.root", 
+                "nevents": 107853
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133350/0000/myOutputFile_15.root", 
+                "nevents": 149302
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133350/0000/myOutputFile_16.root", 
+                "nevents": 113111
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133350/0000/myOutputFile_17.root", 
+                "nevents": 149163
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133350/0000/myOutputFile_18.root", 
+                "nevents": 149760
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133350/0000/myOutputFile_2.root", 
+                "nevents": 137575
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133350/0000/myOutputFile_20.root", 
+                "nevents": 148686
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133350/0000/myOutputFile_21.root", 
+                "nevents": 100653
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133350/0000/myOutputFile_22.root", 
+                "nevents": 149128
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133350/0000/myOutputFile_23.root", 
+                "nevents": 148793
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133350/0000/myOutputFile_24.root", 
+                "nevents": 115409
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133350/0000/myOutputFile_25.root", 
+                "nevents": 118762
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133350/0000/myOutputFile_26.root", 
+                "nevents": 149350
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133350/0000/myOutputFile_27.root", 
+                "nevents": 148653
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133350/0000/myOutputFile_28.root", 
+                "nevents": 149922
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133350/0000/myOutputFile_29.root", 
+                "nevents": 148829
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133350/0000/myOutputFile_3.root", 
+                "nevents": 149824
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133350/0000/myOutputFile_30.root", 
+                "nevents": 114641
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133350/0000/myOutputFile_31.root", 
+                "nevents": 149616
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133350/0000/myOutputFile_32.root", 
+                "nevents": 49602
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133350/0000/myOutputFile_5.root", 
+                "nevents": 149663
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133350/0000/myOutputFile_6.root", 
+                "nevents": 149173
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133350/0000/myOutputFile_7.root", 
+                "nevents": 144644
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133350/0000/myOutputFile_8.root", 
+                "nevents": 149453
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133350/0000/myOutputFile_9.root", 
+                "nevents": 149265
+            }
+        ]
+    }, 
+    "/RSGravToGG_kMpl-001_M-1500_Tune4C_13TeV-pythia8/musella-ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1-a36c358c8bb5ef2fffce970840767217/USER": {
+        "files": [
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/RSGravToGG_kMpl-001_M-1500_Tune4C_13TeV-pythia8/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133433/0000/myOutputFile_1.root", 
+                "nevents": 99130
+            }
+        ]
+    }, 
+    "/RSGravToGG_kMpl-001_M-750_Tune4C_13TeV-pythia8/musella-ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1-a36c358c8bb5ef2fffce970840767217/USER": {
+        "files": [
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/RSGravToGG_kMpl-001_M-750_Tune4C_13TeV-pythia8/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133514/0000/myOutputFile_1.root", 
+                "nevents": 100000
+            }
+        ]
+    }, 
+    "/RSGravToGG_kMpl-01_M-1500_Tune4C_13TeV-pythia8/musella-ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU30bx50_PHYS14_25_V1-v1-a36c358c8bb5ef2fffce970840767217/USER": {
+        "files": [
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/RSGravToGG_kMpl-01_M-1500_Tune4C_13TeV-pythia8/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU30bx50_PHYS14_25_V1-v1/150128_133622/0000/myOutputFile_1.root", 
+                "nevents": 99914
+            }
+        ]
+    }, 
+    "/RSGravToGG_kMpl-01_M-3000_Tune4C_13TeV-pythia8/musella-ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU30bx50_PHYS14_25_V1-v1-a36c358c8bb5ef2fffce970840767217/USER": {
+        "files": [
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/RSGravToGG_kMpl-01_M-3000_Tune4C_13TeV-pythia8/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU30bx50_PHYS14_25_V1-v1/150128_133702/0000/myOutputFile_1.root", 
+                "nevents": 100000
+            }
+        ]
+    }, 
+    "/RSGravToGG_kMpl-02_M-1500_Tune4C_13TeV-pythia8/musella-ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1-a36c358c8bb5ef2fffce970840767217/USER": {
+        "files": [
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/RSGravToGG_kMpl-02_M-1500_Tune4C_13TeV-pythia8/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133741/0000/myOutputFile_1.root", 
+                "nevents": 99900
+            }
+        ]
+    }, 
+    "/RSGravToGG_kMpl-02_M-3000_Tune4C_13TeV-pythia8/musella-ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1-a36c358c8bb5ef2fffce970840767217/USER": {
+        "files": [
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/RSGravToGG_kMpl-02_M-3000_Tune4C_13TeV-pythia8/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133820/0000/myOutputFile_1.root", 
+                "nevents": 97980
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/RSGravToGG_kMpl-02_M-3000_Tune4C_13TeV-pythia8/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133820/0000/myOutputFile_2.root", 
+                "nevents": 2020
+            }
+        ]
+    }, 
+    "/RSGravToGG_kMpl-02_M-5000_Tune4C_13TeV-pythia8/musella-ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1-a36c358c8bb5ef2fffce970840767217/USER": {
+        "files": [
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/RSGravToGG_kMpl-02_M-5000_Tune4C_13TeV-pythia8/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133856/0000/myOutputFile_1.root", 
+                "nevents": 100000
+            }
+        ]
+    }, 
+    "/RSGravToGG_kMpl001_M_5000_Tune4C_13TeV_pythia8/musella-ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1-a36c358c8bb5ef2fffce970840767217/USER": {
+        "files": [
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/RSGravToGG_kMpl001_M_5000_Tune4C_13TeV_pythia8/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133931/0000/myOutputFile_1.root", 
+                "nevents": 99952
+            }
+        ]
+    }
+}
