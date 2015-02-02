@@ -45,6 +45,7 @@ process.photonIdAnalyzer = cms.PSet(
   barrelRecHits = cms.InputTag('reducedEgamma','reducedEBRecHits'),
   endcapRecHits = cms.InputTag('reducedEgamma','reducedEERecHits'),
 
+  ## recomputeNoZsShapes = cms.untracked.bool(True),
 )
 
 addMiniTreeVars(process.photonIdAnalyzer.miniTreeCfg,
@@ -52,8 +53,10 @@ addMiniTreeVars(process.photonIdAnalyzer.miniTreeCfg,
                  
                  ("superCluster.eta","scEta"),
                  ("superCluster.rawEnergy","scRawEnergy"),
-                 ("userFloat('etrue')","etrue"),
-                 ("userFloat('dRMatch')","dRMatch"),
+                 ("? hasMatchedGenPhoton ? matchedGenPhoton.energy : 0","etrue"),
+                 ## ("userFloat('dRMatch')","dRMatch"),
+                 ("userFloat('genIso')","genIso"),
+                 ("userFloat('frixIso')","frixIso"),
                  ("userInt('seedRecoFlag')","seedRecoFlag"),
 
                 ## charged isolation
@@ -68,19 +71,23 @@ addMiniTreeVars(process.photonIdAnalyzer.miniTreeCfg,
                  "egChargedHadronIso" ,"egNeutralHadronIso","egPhotonIso" ,
                  ("userIso(0)" ,"phoIsoBlock"),
                  ("userIso(1)" ,"neuIsoBlock"),
-                 ("userIso(2)" ,"phoIsoVeto007"),
-                 ("userIso(3)" ,"phoIsoVeto015"),
-                 ("userIso(4)" ,"phoIsoBlockVeto015"),
-                 ("userIso(5)" ,"neuIsoBlockRing005"),
-                 ("userIso(6)" ,"neuIsoBlockRing010"),
-                 ("userIso(7)" ,"neuIsoBlockRing015"),
-                 ("userIso(8)" ,"neuIsoBlockRing020"),
-                 ("userIso(9)" ,"neuIsoBlockRing030"),
-                 ("userIso(10)","neuIsoRing005"),
-                 ("userIso(11)","neuIsoRing010"),
-                 ("userIso(12)","neuIsoRing015"),
-                 ("userIso(13)","neuIsoRing020"),
-                 ("userIso(14)","neuIsoRing030"),
+                 ("userIso(2)" ,"phoIsoVeto005"),
+                 ("userIso(3)" ,"phoIsoVeto006"),
+                 ("userIso(4)" ,"phoIsoVeto007"),
+                 ("userIso(5)" ,"phoIsoVeto008"),
+                
+                 ("userIso(7)"  ,"neuIsoBlockRing010"),
+                 ("userIso(8)"  ,"neuIsoBlockRing012"),
+                 ("userIso(9)"  ,"neuIsoBlockRing015"),
+                 ("userIso(10)" ,"neuIsoBlockRing020"),
+                 ("userIso(11)" ,"neuIsoBlockRing030"),
+
+                 ("userIso(12)" ,"neuIsoRing010"),
+                 ("userIso(13)" ,"neuIsoRing012"),
+                 ("userIso(14)" ,"neuIsoRing015"),
+                 ("userIso(15)" ,"neuIsoRing020"),
+                 ("userIso(16)" ,"neuIsoRing030"),
+
                  "passElectronVeto","hasPixelSeed",
                  ## cluster shapes
                  "e1x5",           "full5x5_e1x5",           
@@ -98,7 +105,7 @@ addMiniTreeVars(process.photonIdAnalyzer.miniTreeCfg,
                  "hadronicOverEm",
                  "hadTowDepth1OverEm",
                  "hadTowDepth2OverEm",
-                 "maxDR","maxDRDEta","maxDRDPhi","maxDRRawEnergy",
+                 ## "maxDR","maxDRDEta","maxDRDPhi","maxDRRawEnergy",
                  
                  "hadTowOverEm",
                  ## more cluster shapes

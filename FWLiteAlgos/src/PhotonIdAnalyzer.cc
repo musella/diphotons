@@ -12,6 +12,9 @@
 #include "Geometry/CaloTopology/interface/EcalEndcapHardcodedTopology.h"
 #include "RecoCaloTools/Navigation/interface/CaloNavigator.h"
 
+#include "flashgg/MicroAODAlgos/interface/PhotonIdUtils.h"
+#include "flashgg/MicroAODAlgos/interface/PhotonMCUtils.h"
+
 #include <map>
 
 
@@ -70,7 +73,8 @@ PhotonIdAnalyzer::PhotonIdAnalyzer(const edm::ParameterSet& cfg, TFileDirectory&
   hists_["matchExtraEnergy" ]    = fs.make<TH1F>("matchExtraEnergy"	, "matchExtraEnergy" ,  100,  0,    1.5);
 
 
-  
+  recomputeNoZsShapes_ = cfg.getUntrackedParameter<bool>("recomputeNoZsShapes",false);
+
   vector<ParameterSet> miniTreeCfg = cfg.getUntrackedParameter<vector<ParameterSet> >("miniTreeCfg",vector<ParameterSet>());
   dumpRecHits_ = cfg.getUntrackedParameter<bool>("dumpRecHits",false);
   if( ! miniTreeCfg.empty() ) {
@@ -87,10 +91,7 @@ PhotonIdAnalyzer::PhotonIdAnalyzer(const edm::ParameterSet& cfg, TFileDirectory&
 	  promptTree_ = bookTree("promptTree",fs);
 	  fakesTree_ = bookTree("fakesTree",fs);
   }
-  if( dumpRecHits_ ) {
-	  ecalHitEBColl_ = cfg.getParameter<edm::InputTag>("barrelRecHits");
-	  ecalHitEEColl_ = cfg.getParameter<edm::InputTag>("endcapRecHits");
-
+  if( dumpRecHits_ || recomputeNoZsShapes_ ) {
 	  // FIXME: memory leak
 	  CaloTopology * topology=new CaloTopology();
 	  EcalBarrelHardcodedTopology* ebTopology=new EcalBarrelHardcodedTopology();
@@ -100,6 +101,9 @@ PhotonIdAnalyzer::PhotonIdAnalyzer(const edm::ParameterSet& cfg, TFileDirectory&
 	  theSubdetTopologyEB_ = ebTopology;
 	  theSubdetTopologyEE_ = eeTopology;
 	  topology_ = topology;
+	  // 
+	  ecalHitEBColl_ = cfg.getParameter<edm::InputTag>("barrelRecHits");
+	  ecalHitEEColl_ = cfg.getParameter<edm::InputTag>("endcapRecHits");
   }
   
 }
@@ -396,7 +400,7 @@ PhotonIdAnalyzer::analyze(const edm::EventBase& event)
   event.getByLabel(vertexes_,vertexes);
   event.getByLabel(rhoFixedGrid_, rhoHandle );
   
-  if( dumpRecHits_ ) {
+  if( dumpRecHits_ || recomputeNoZsShapes_ ) {
 	  event.getByLabel(ecalHitEBColl_, EcalBarrelRecHits); 
 	  event.getByLabel(ecalHitEEColl_, EcalEndcapRecHits); 
   }
@@ -410,27 +414,38 @@ PhotonIdAnalyzer::analyze(const edm::EventBase& event)
   iprompt_ = 0;
   ifake_ = 0;
   rho_ = *rhoHandle;
+  PhotonIdUtils utils;
+  
   for(std::vector<Photon>::const_iterator ipho=photons->begin(); ipho!=photons->end(); ++ipho){
 	  
 	  Photon * pho = ipho->clone();
 
+	  if( recomputeNoZsShapes_ ) {
+		  utils.recomputeNonZsClusterShapes(*pho,EcalBarrelRecHits.product(),EcalEndcapRecHits.product(),topology_);
+	  }
+
 	  float scEta = pho->superCluster()->eta();
 	  if( fabs(scEta)>2.5 || (fabs(scEta)>1.4442 && fabs(scEta)<1.556 ) ) { continue; }
-
-	  GenMatchInfo match = doGenMatch(*pho,*packedGenParticles,0.1,15.,0.,0.,0.05
-					  /// ,weight_,
-					  /// hists_["matchMinDr"],hists_["matchRelPtOnePhoton"],
-					  /// hists_["matchRelPtIso"],hists_["matchRelPtNonIso"],
-					  /// hists_["matchNPartInCone"],hists_["matchExtraEnergy"]
-		  );
-	  /// cout << "match " << match << endl;
-	  genMatch.push_back( match );
-	  if( match.matched )  {
-		  pho->addUserFloat("etrue",match.matched->energy());
-	  } else {
-		  pho->addUserFloat("etrue",0.);
-	  }
-	  pho->addUserFloat("dRMatch",match.deltaR);
+	  
+	  ///// GenMatchInfo match = doGenMatch(*pho,*packedGenParticles,0.1,15.,0.,0.,0.05
+	  ///// 				  /// ,weight_,
+	  ///// 				  /// hists_["matchMinDr"],hists_["matchRelPtOnePhoton"],
+	  ///// 				  /// hists_["matchRelPtIso"],hists_["matchRelPtNonIso"],
+	  ///// 				  /// hists_["matchNPartInCone"],hists_["matchExtraEnergy"]
+	  ///// 	  );
+	  ///// /// cout << "match " << match << endl;
+	  ///// genMatch.push_back( match );
+	  ///// if( match.matched )  {
+	  ///// 	  pho->addUserFloat("etrue",match.matched->energy());
+	  ///// 	  float genIso = PhotonMCUtils::getIsoSum(*match.matched,*packedGenParticles,0.3);
+	  ///// 	  pho->addUserFloat("genIso",genIso);
+	  ///// 	  bool frixIso = PhotonMCUtils::frixioneIso(*match.matched,*packedGenParticles,0.3,1.,1.);
+	  ///// 	  pho->addUserFloat("frixIso",frixIso);
+	  ///// } else {
+	  ///// 	  pho->addUserFloat("etrue",0.);
+	  ///// 	  pho->addUserFloat("genIso",1.e+5);
+	  ///// }
+	  ///// pho->addUserFloat("dRMatch",match.deltaR);
 	  
 	  DetId seedId = pho->superCluster()->seed()->seed();
 	  // cout << " rechits " << pho->recHits()->size() << endl ;
@@ -475,7 +490,8 @@ PhotonIdAnalyzer::analyze(const edm::EventBase& event)
 
 	  fillTreeBranches(*pho,EcalBarrelRecHits.product(),EcalEndcapRecHits.product());
 	  
-	  if( match.match == kPrompt ) {
+	  /// if( match.match == kPrompt ) {
+	  if( pho->genMatchType() == Photon::kPrompt ) {
 		  if( iprompt_ ==0 ) { 
 			  hists_["promptPhotonPt" ]->Fill( pho->pt (), weight_ );
 			  hists_["promptPhotonEta"]->Fill( pho->eta(), weight_ );

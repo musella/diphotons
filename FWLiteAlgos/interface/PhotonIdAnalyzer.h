@@ -78,6 +78,8 @@ namespace diphotons {
 		int ipho_, iprompt_, ifake_;
 		float rho_;
 		
+		bool recomputeNoZsShapes_;
+
 		bool dumpRecHits_;
 		const CaloTopology * topology_;
 		const CaloSubdetectorTopology* theSubdetTopologyEB_;

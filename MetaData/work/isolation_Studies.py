@@ -24,7 +24,8 @@ process.SimpleMemoryCheck = cms.Service("SimpleMemoryCheck",
 
 process.source = cms.Source("PoolSource",
                             fileNames=cms.untracked.vstring(
-        "/store/relval/CMSSW_7_2_0/RelValH130GGgluonfusion_13/MINIAODSIM/PU25ns_PHYS14_25_V1_Phys14-v2/00000/1830E403-9F59-E411-9BAC-0025905A48BC.root"
+        "/store/relval/CMSSW_7_2_0/RelValTTbar_13/MINIAODSIM/PU25ns_PHYS14_25_V1_Phys14-v2/00000/603403B7-9E59-E411-B5E0-0026189438B3.root"
+        ## "/store/relval/CMSSW_7_2_0/RelValH130GGgluonfusion_13/MINIAODSIM/PU25ns_PHYS14_25_V1_Phys14-v2/00000/1830E403-9F59-E411-9BAC-0025905A48BC.root"
         ## "/store/mc/Spring14miniaod/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/MINIAODSIM/PU20bx25_POSTLS170_V5-v1/00000/02ACF78E-9621-E411-BD22-0025904B2ABC.root",
         ## "/store/mc/Spring14miniaod/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/MINIAODSIM/PU20bx25_POSTLS170_V5-v1/00000/0A9AA777-8521-E411-B528-0025904CC686.root",
         ## "/store/mc/Spring14miniaod/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/MINIAODSIM/PU20bx25_POSTLS170_V5-v1/00000/14AA7B7A-8521-E411-B204-0025904A862C.root",
@@ -37,13 +38,9 @@ process.source = cms.Source("PoolSource",
         ## "/store/mc/Spring14miniaod/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/MINIAODSIM/PU20bx25_POSTLS170_V5-v1/00000/305BE282-8521-E411-95B4-0025904B1284.root",
         )
                             )
+process.load("flashgg/MicroAODProducers/flashggMicroAODSequence_cff")
 
-process.load("flashgg/MicroAODProducers/flashggVertexMaps_cfi")
-process.load("flashgg/MicroAODProducers/flashggPhotons_cfi")
-process.load("flashgg/MicroAODProducers/flashggDiPhotons_cfi")
-process.load("flashgg/MicroAODProducers/flashggPreselectedDiPhotons_cfi")
-process.load("flashgg/MicroAODProducers/flashggJets_cfi")
-process.load("flashgg/MicroAODProducers/flashggPrunedGenParticles_cfi")
+process.flashggPhotons.copyExtraGenInfo = True
 
 process.flashggPhotons.extraCaloIsolations.extend([
         # photon and neutral iso w/ overlap removal
@@ -123,48 +120,27 @@ process.flashggPhotons.extraCaloIsolations.extend([
         ]
                                                   )
 
-process.eventCount = cms.EDProducer("EventCountProducer")
-process.weightsCount = cms.EDProducer("WeightsCountProducer",
-                                      generator=cms.InputTag("generator"),
-                                      pileupInfo=cms.InputTag("addPileupInfo"),
-                                      doObsPileup=cms.untracked.bool(True),
-                                      minObsPileup=cms.double(-0.5),
-                                      maxObsPileup=cms.double(100.5),
-                                      nbinsObsPileup=cms.int32(101),
-                                      )
-
-from flashgg.MicroAODProducers.flashggMicroAODOutputCommands_cff import microAODDefaultOutputCommand
+from flashgg.MicroAODProducers.flashggMicroAODOutputCommands_cff import microAODDefaultOutputCommand, microAODDebugOutputCommand
 
 process.out = cms.OutputModule("PoolOutputModule", fileName = cms.untracked.string('myOutputFile.root'),
                                outputCommands = microAODDefaultOutputCommand
                                )
 
-process.out.outputCommands.extend(["keep *_eventCount_*_*",
-                                   "keep *_weightsCount_*_*",
-                                   "keep *_prunedGenParticles_*_*",
-                                   "keep *_packedGenParticles_*_*",
+### process.out.outputCommands.extend( microAODDebugOutputCommand )
+process.out.outputCommands.extend([### "keep *_eventCount_*_*",
+                                   ### "keep *_weightsCount_*_*",
+                                   ### "keep *_prunedGenParticles_*_*",
+                                   ### "keep *_packedGenParticles_*_*",
                                    "keep *_reducedEgamma_reduced*RecHits_*",
+                                   "keep *_flashggDiPhotons_*_*"
                                    ]
                                   )
 
-### process.commissioning = cms.EDAnalyzer('flashggCommissioning',
-###                                        PhotonTag=cms.untracked.InputTag('flashggPhotons'),
-###                                        DiPhotonTag = cms.untracked.InputTag('flashggDiPhotons'),
-###                                        VertexTag=cms.untracked.InputTag('offlineSlimmedPrimaryVertices')
-### )
-
-## process.TFileService = cms.Service("TFileService",
-##                                    fileName = cms.string("tree.root")
-## )
-
-process.p = cms.Path(process.eventCount+process.weightsCount+
-                     ((process.flashggVertexMapUnique+process.flashggVertexMapNonUnique+process.flashggPrunedGenParticles)*
-                      process.flashggPhotons*
-                      process.flashggDiPhotons
-                      ## process.flashggPreselectedDiPhotons*
-                      ## process.flashggJets*
-                      ## process.commissioning
+process.p = cms.Path((process.eventCount+process.weightsCount
+                      +process.flashggVertexMapUnique+process.flashggVertexMapNonUnique+process.flashggElectrons
+                      +process.flashggMicroAODGenSequence
                       )
+                     *process.flashggPhotons*process.flashggDiPhotons
                      )
 
 process.e = cms.EndPath(process.out)

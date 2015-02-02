@@ -3,6 +3,7 @@
 <use   name="DataFormats/JetReco"/>
 <use   name="DataFormats/EcalRecHit"/>
 <use   name="flashgg/MicroAODFormats"/>
+<use   name="flashgg/MicroAODAlgos"/>
 <use   name="DataFormats/PatCandidates"/>
 <use   name="FWCore/Utilities"/>
 <use   name="FWCore/Framework"/>
