@@ -36,6 +36,7 @@ process.photonIdAnalyzer = cms.PSet(
   photons = cms.InputTag('flashggPhotons'), ## input for the simple example above
   packedGenParticles = cms.InputTag('packedGenParticles'),
   lumiWeight = cms.double(1.),
+  processId = cms.string(""),
   rhoFixedGrid = cms.InputTag('fixedGridRhoAll'),
   miniTreeCfg = cms.untracked.VPSet(
         ),
@@ -69,24 +70,59 @@ addMiniTreeVars(process.photonIdAnalyzer.miniTreeCfg,
                  
                  ## photon and neutral isolation
                  "egChargedHadronIso" ,"egNeutralHadronIso","egPhotonIso" ,
-                 ("userIso(0)" ,"phoIsoBlock"),
-                 ("userIso(1)" ,"neuIsoBlock"),
-                 ("userIso(2)" ,"phoIsoVeto005"),
-                 ("userIso(3)" ,"phoIsoVeto006"),
-                 ("userIso(4)" ,"phoIsoVeto007"),
-                 ("userIso(5)" ,"phoIsoVeto008"),
-                
-                 ("userIso(7)"  ,"neuIsoBlockRing010"),
-                 ("userIso(8)"  ,"neuIsoBlockRing012"),
-                 ("userIso(9)"  ,"neuIsoBlockRing015"),
-                 ("userIso(10)" ,"neuIsoBlockRing020"),
-                 ("userIso(11)" ,"neuIsoBlockRing030"),
-
-                 ("userIso(12)" ,"neuIsoRing010"),
-                 ("userIso(13)" ,"neuIsoRing012"),
-                 ("userIso(14)" ,"neuIsoRing015"),
-                 ("userIso(15)" ,"neuIsoRing020"),
-                 ("userIso(16)" ,"neuIsoRing030"),
+                 #### ("userIso(0)" ,"phoIsoBlock"),
+                 #### ("userIso(1)" ,"neuIsoBlock"),
+                 #### 
+                 #### ("userIso(2)" ,"phoIsoVeto005"),
+                 #### ("userIso(3)" ,"phoIsoVeto006"),
+                 #### ("userIso(4)" ,"phoIsoVeto007"),
+                 #### ("userIso(5)" ,"phoIsoVeto008"),
+                 #### ## ("userIso(6)" ,"phoIsoBlockVeto005"),
+                 #### 
+                 #### ("userIso(8) +userIso(9) +userIso(10)+userIso(11)"  ,"neuIsoBlockVeto010"),
+                 #### ("userIso(13)+userIso(14)+userIso(15)+userIso(16)"  ,"neuIsoVeto010"),
+                 #### 
+                 #### ("userIso(9) +userIso(10)+userIso(11)"  ,"neuIsoBlockVeto015"),
+                 #### ("userIso(14)+userIso(15)+userIso(16)"  ,"neuIsoVeto015"),
+                 #### 
+                 #### ### ("userIso(7)"  ,"neuIsoBlockRing010"),
+                 #### ### ("userIso(8)"  ,"neuIsoBlockRing012"),
+                 #### ### ("userIso(9)"  ,"neuIsoBlockRing015"),
+                 #### ### ("userIso(10)" ,"neuIsoBlockRing020"),
+                 #### ### ("userIso(11)" ,"neuIsoBlockRing030"),
+                 #### 
+                 #### ### ("userIso(12)" ,"neuIsoRing010"),
+                 #### ### ("userIso(13)" ,"neuIsoRing012"),
+                 #### ### ("userIso(14)" ,"neuIsoRing015"),
+                 #### ### ("userIso(15)" ,"neuIsoRing020"),
+                 #### ### ("userIso(16)" ,"neuIsoRing030"),
+                 #### 
+                 #### 
+                 #### ("userIso(2)"
+                 ####  "-(userIso(17)+userIso(18)+userIso(19)+userIso(20)+userIso(21)+userIso(22))"
+                 ####  "+(userIso(23)+userIso(24)+userIso(25)+userIso(26)+userIso(27)+userIso(28))",
+                 ####  "phoIsoHybrid005"),
+                 #### ("userIso(2)"
+                 ####  "-(userIso(18)+userIso(19)+userIso(20)+userIso(21)+userIso(22))"
+                 ####  "+(userIso(24)+userIso(25)+userIso(26)+userIso(27)+userIso(28))",
+                 ####  "phoIsoHybrid007"),
+                 #### ("userIso(2)"
+                 ####  "-(userIso(19)+userIso(20)+userIso(21)+userIso(22))"
+                 ####  "+(userIso(25)+userIso(26)+userIso(27)+userIso(28))",
+                 ####  "phoIsoHybrid008"),
+                 #### ("userIso(2)"
+                 ####  "-(userIso(20)+userIso(21)+userIso(22))"
+                 ####  "+(userIso(26)+userIso(27)+userIso(28))",
+                 ####  "phoIsoHybrid010"),
+                 #### ("userIso(2)"
+                 ####  "-(userIso(21)+userIso(22))"
+                 ####  "+(userIso(27)+userIso(28))",
+                 ####  "phoIsoHybrid025"),
+                 #### ("userIso(2)"
+                 ####  "-(userIso(22))"
+                 ####  "+(userIso(28))",
+                 ####  "phoIsoHybrid020"),
+                 
 
                  "passElectronVeto","hasPixelSeed",
                  ## cluster shapes
@@ -99,30 +135,34 @@ addMiniTreeVars(process.photonIdAnalyzer.miniTreeCfg,
                  "r1x5",           "full5x5_r1x5",           
                  "r2x5",           "full5x5_r2x5",           
                  "r9",             "full5x5_r9",             
+                 ("superCluster.etaWidth","etaWidth"),("superCluster.phiWidth","phiWidth"),
+                 ("sqrt(getSipip)","sigmaIphiIphi"),
+                 ("getSieip","covarianceIetaIphi"),
+
                  ## the hcal full_5x5 only differ in the denominator and so aren't really worth saving
-                 "hadronicDepth1OverEm",
-                 "hadronicDepth2OverEm",
+                 ## "hadronicDepth1OverEm",
+                 ## "hadronicDepth2OverEm",
                  "hadronicOverEm",
                  "hadTowDepth1OverEm",
                  "hadTowDepth2OverEm",
                  ## "maxDR","maxDRDEta","maxDRDPhi","maxDRRawEnergy",
                  
-                 "hadTowOverEm",
+                 ### "hadTowOverEm",
                  ## more cluster shapes
-                 ("getE2nd","e2nd"),
-                 ("getE2x5right","e2x5right"),
-                 ("getE2x5left","e2x5left"),
-                 ("getE2x5top","e2x5top"),
-                 ("getE2x5bottom","e2x5bottom"),
-                 ("getE2x5max","e2x5max"),
-                 ("getEright","eright"),
-                 ("getEleft","eleft"),
-                 ("getEtop","etop"),
-                 ("getEbottom","ebottom"),
-                 ("getE1x3","e1x3"),
+                 ## ("getE2nd","e2nd"),
+                 ## ("getE2x5right","e2x5right"),
+                 ## ("getE2x5left","e2x5left"),
+                 ## ("getE2x5top","e2x5top"),
+                 ## ("getE2x5bottom","e2x5bottom"),
+                 ## ("getE2x5max","e2x5max"),
+                 ## ("getEright","eright"),
+                 ## ("getEleft","eleft"),
+                 ## ("getEtop","etop"),
+                 ## ("getEbottom","ebottom"),
+                 ## ("getE1x3","e1x3"),
                  ("getS4","s4"),
-                 ("getESEffSigmaRR","eSEffSigmaRR"),
-
+                 ("getESEffSigmaRR","sigmaRR"),
+                 
                  ]
                 )
 

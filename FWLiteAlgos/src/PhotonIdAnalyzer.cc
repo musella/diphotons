@@ -49,6 +49,7 @@ PhotonIdAnalyzer::PhotonIdAnalyzer(const edm::ParameterSet& cfg, TFileDirectory&
   vertexes_(cfg.getParameter<edm::InputTag> ("vertexes")),
   rhoFixedGrid_(cfg.getParameter<edm::InputTag>("rhoFixedGrid")),
   lumiWeight_(cfg.getParameter<double>("lumiWeight")),
+  processId_(cfg.getParameter<string>("processId")),
   /// photonFunctor_(edm::TypeWithDict(edm::Wrapper<vector<Photon> >::typeInfo())),
   promptTree_(0), fakesTree_(0),
   topology_(0), theSubdetTopologyEB_(0), theSubdetTopologyEE_(0)
@@ -75,8 +76,13 @@ PhotonIdAnalyzer::PhotonIdAnalyzer(const edm::ParameterSet& cfg, TFileDirectory&
 
   recomputeNoZsShapes_ = cfg.getUntrackedParameter<bool>("recomputeNoZsShapes",false);
 
+  isSherpa_ = ( processId_.find("sherpa") != string::npos );
+
   vector<ParameterSet> miniTreeCfg = cfg.getUntrackedParameter<vector<ParameterSet> >("miniTreeCfg",vector<ParameterSet>());
   dumpRecHits_ = cfg.getUntrackedParameter<bool>("dumpRecHits",false);
+  dumpAllRechisInfo_ = cfg.getUntrackedParameter<bool>("dumpAllRechisInfo",false);
+  minPt_ = cfg.getUntrackedParameter<double>("minPt",100.);
+  
   if( ! miniTreeCfg.empty() ) {
 	  for( vector<ParameterSet>::iterator ivar=miniTreeCfg.begin(); ivar!=miniTreeCfg.end(); ++ivar ) {
 		  string method = ivar->getUntrackedParameter<string>("var");
@@ -89,7 +95,10 @@ PhotonIdAnalyzer::PhotonIdAnalyzer(const edm::ParameterSet& cfg, TFileDirectory&
 	  }
 	  miniTreeDefaults_ = miniTreeBuffers_;
 	  promptTree_ = bookTree("promptTree",fs);
+	  bool doDump = dumpRecHits_;
+	  dumpRecHits_ = false;
 	  fakesTree_ = bookTree("fakesTree",fs);
+	  dumpRecHits_ = doDump;
   }
   if( dumpRecHits_ || recomputeNoZsShapes_ ) {
 	  // FIXME: memory leak
@@ -117,13 +126,18 @@ TTree * PhotonIdAnalyzer::bookTree(const string & name, TFileDirectory& fs)
 	ret->Branch("ifake",&ifake_,"ifake/I");
 	ret->Branch("weight",&weight_,"weight/F");
 	ret->Branch("rho",&rho_,"rho/F");
+	ret->Branch("nvtx",&nvtx_,"nvtx/i");
+	ret->Branch("run",&run_,"run/i");
+	ret->Branch("event",&event_,"event/i");
+	ret->Branch("lumi",&lumi_,"lumi/i");
 	for(size_t ibr=0; ibr<miniTreeBuffers_.size(); ++ibr) {
 		/// cout << "miniTree branch "  << miniTreeBranches_[ibr] << endl;
 		ret->Branch(Form("%s",miniTreeBranches_[ibr].c_str()),&miniTreeBuffers_[ibr],Form("%s/F",miniTreeBranches_[ibr].c_str()));
 	}
 	
 	if( dumpRecHits_ ) {
-		TString tree5x5 = "amplit[25]/F:ieta[25]/I:iphi[25]/I:ix[25]/I:iy[25]/I:iz[25]/I:kSaturated[25]/I:kLeRecovered[25]/I:kNeighRecovered[25]/I";
+		TString tree5x5 = "kSaturated[25]/I:kLeRecovered[25]/I:kNeighRecovered[25]/I";
+		if(dumpAllRechisInfo_) { tree5x5 += ":amplit[25]/F:ieta[25]/I:iphi[25]/I:ix[25]/I:iy[25]/I:iz[25]/I"; }
 		ret->Branch("tree5x5",&recHitsInfo_,tree5x5);
 	}
 	
@@ -269,10 +283,12 @@ void PhotonIdAnalyzer::fillTreeBranches(const Photon & pho,
 					iNeigh++;
 				}
 			}
+			
 			if (iNeigh!=25) cout << "problem: not 25 crystals!  ==> " << iNeigh << endl;
 		}
-		
-
+		//// cout << "kSaturated ";
+		//// copy(&recHitsInfo_.kSaturated[0],&recHitsInfo_.kSaturated[24],ostream_iterator<int>(cout,","));
+		//// cout << endl;
 
 	}
 	
@@ -414,6 +430,11 @@ PhotonIdAnalyzer::analyze(const edm::EventBase& event)
   iprompt_ = 0;
   ifake_ = 0;
   rho_ = *rhoHandle;
+  nvtx_ = vertexes->size();
+  run_ = event.id().run();
+  lumi_ = event.id().luminosityBlock();
+  event_ = event.id().event();
+  
   PhotonIdUtils utils;
   
   for(std::vector<Photon>::const_iterator ipho=photons->begin(); ipho!=photons->end(); ++ipho){
@@ -427,28 +448,8 @@ PhotonIdAnalyzer::analyze(const edm::EventBase& event)
 	  float scEta = pho->superCluster()->eta();
 	  if( fabs(scEta)>2.5 || (fabs(scEta)>1.4442 && fabs(scEta)<1.556 ) ) { continue; }
 	  
-	  ///// GenMatchInfo match = doGenMatch(*pho,*packedGenParticles,0.1,15.,0.,0.,0.05
-	  ///// 				  /// ,weight_,
-	  ///// 				  /// hists_["matchMinDr"],hists_["matchRelPtOnePhoton"],
-	  ///// 				  /// hists_["matchRelPtIso"],hists_["matchRelPtNonIso"],
-	  ///// 				  /// hists_["matchNPartInCone"],hists_["matchExtraEnergy"]
-	  ///// 	  );
-	  ///// /// cout << "match " << match << endl;
-	  ///// genMatch.push_back( match );
-	  ///// if( match.matched )  {
-	  ///// 	  pho->addUserFloat("etrue",match.matched->energy());
-	  ///// 	  float genIso = PhotonMCUtils::getIsoSum(*match.matched,*packedGenParticles,0.3);
-	  ///// 	  pho->addUserFloat("genIso",genIso);
-	  ///// 	  bool frixIso = PhotonMCUtils::frixioneIso(*match.matched,*packedGenParticles,0.3,1.,1.);
-	  ///// 	  pho->addUserFloat("frixIso",frixIso);
-	  ///// } else {
-	  ///// 	  pho->addUserFloat("etrue",0.);
-	  ///// 	  pho->addUserFloat("genIso",1.e+5);
-	  ///// }
-	  ///// pho->addUserFloat("dRMatch",match.deltaR);
-	  
+	  if( pho->pt()<minPt_ ) { continue; }
 	  DetId seedId = pho->superCluster()->seed()->seed();
-	  // cout << " rechits " << pho->recHits()->size() << endl ;
 	  
 	  EcalRecHitCollection::const_iterator seedRh = pho->recHits()->find(seedId);
 	  if( seedRh != pho->recHits()->end() ) {
@@ -491,15 +492,14 @@ PhotonIdAnalyzer::analyze(const edm::EventBase& event)
 	  fillTreeBranches(*pho,EcalBarrelRecHits.product(),EcalEndcapRecHits.product());
 	  
 	  /// if( match.match == kPrompt ) {
-	  if( pho->genMatchType() == Photon::kPrompt ) {
+	  if( ( isSherpa_ && pho->hasMatchedGenPhoton() && pho->userFloat("genIso") < 5. ) || ( pho->genMatchType() == Photon::kPrompt ) ) {
 		  if( iprompt_ ==0 ) { 
 			  hists_["promptPhotonPt" ]->Fill( pho->pt (), weight_ );
 			  hists_["promptPhotonEta"]->Fill( pho->eta(), weight_ );
 			  hists_["promptPhotonPhi"]->Fill( pho->phi(), weight_ );
-			  if( promptTree_ ) {
-				  promptTree_->Fill();
-			  }
-
+		  }
+		  if( promptTree_ ) {
+			  promptTree_->Fill();
 		  }
 		  ++iprompt_;
 	  } else {

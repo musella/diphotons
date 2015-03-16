@@ -47,15 +47,15 @@ namespace diphotons {
 	protected:
 		struct RecHitsInfo {
 			
+			int kSaturated[25];
+			int kLeRecovered[25];
+			int kNeighRecovered[25];
 			float amplit[25];
 			int ieta[25];
 			int iphi[25];
 			int ix[25];
 			int iy[25];
 			int iz[25];
-			int kSaturated[25];
-			int kLeRecovered[25];
-			int kNeighRecovered[25];
 		};
 		
 		float getEventWeight(const edm::EventBase& event);
@@ -65,7 +65,10 @@ namespace diphotons {
 		std::map<std::string, TH1*> hists_;
 		// event weight
 		float lumiWeight_,weight_;
-		
+		double minPt_;
+		std::string processId_;
+		bool isSherpa_;
+
 		TTree * bookTree(const std::string & name, TFileDirectory& fs);
 		void fillTreeBranches(const flashgg::Photon & pho, 
 				      const EcalRecHitCollection * EcalBarrelRecHits, const EcalRecHitCollection * EcalEndcapRecHits);
@@ -77,10 +80,11 @@ namespace diphotons {
 		std::vector<float> miniTreeBuffers_, miniTreeDefaults_;
 		int ipho_, iprompt_, ifake_;
 		float rho_;
-		
+		unsigned int nvtx_,run_,event_,lumi_;
+
 		bool recomputeNoZsShapes_;
 
-		bool dumpRecHits_;
+		bool dumpRecHits_, dumpAllRechisInfo_;
 		const CaloTopology * topology_;
 		const CaloSubdetectorTopology* theSubdetTopologyEB_;
 		const CaloSubdetectorTopology* theSubdetTopologyEE_;

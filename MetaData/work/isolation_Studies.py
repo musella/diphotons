@@ -50,7 +50,7 @@ process.flashggPhotons.extraCaloIsolations.extend([
                  ),
         cms.PSet(overlapRemoval=cms.bool(True),
                  type=cms.int32(5), # neutral hadron, use str to enum 
-                 vetoRegions=cms.vdouble(0.3,0.1,0.,0.,0.1,0.,0.)
+                 vetoRegions=cms.vdouble(0.3,0.1,0.1,0.,0.,0.,0.)
                  ),
         
         # photon iso w/ veto cones
@@ -74,6 +74,7 @@ process.flashggPhotons.extraCaloIsolations.extend([
                  type=cms.int32(4), # photon, use str to enum 
                  vetoRegions=cms.vdouble(0.3,0.0,0.050,0.01,0.0,0.0,0.0)
                  ),
+
                 
         # netural iso rings
          cms.PSet(overlapRemoval=cms.bool(True),
@@ -82,19 +83,19 @@ process.flashggPhotons.extraCaloIsolations.extend([
                  ),
         cms.PSet(overlapRemoval=cms.bool(True),
                  type=cms.int32(5), # neutral hadron, use str to enum 
-                 vetoRegions=cms.vdouble(0.12,0.1,0.,0.1,0.,0.,0.)
+                 vetoRegions=cms.vdouble(0.12,0.1,0.1,0.,0.,0.,0.)
                  ),
         cms.PSet(overlapRemoval=cms.bool(True),
                  type=cms.int32(5), # neutral hadron, use str to enum 
-                 vetoRegions=cms.vdouble(0.15,0.12,0.,0.12,0.,0.,0.)
+                 vetoRegions=cms.vdouble(0.15,0.12,0.12,0.,0.,0.,0.)
                  ),
         cms.PSet(overlapRemoval=cms.bool(True),
                  type=cms.int32(5), # neutral hadron, use str to enum 
-                 vetoRegions=cms.vdouble(0.2,0.15,0.,0.15,0.,0.,0.)
+                 vetoRegions=cms.vdouble(0.2,0.15,0.15,0.,0.,0.,0.)
                  ),
         cms.PSet(overlapRemoval=cms.bool(True),
                  type=cms.int32(5), # neutral hadron, use str to enum 
-                 vetoRegions=cms.vdouble(0.3,0.2,0.,0.2,0.,0.,0.)
+                 vetoRegions=cms.vdouble(0.3,0.2,0.2,0.,0.,0.,0.)
                  ),
         
         cms.PSet(overlapRemoval=cms.bool(False),
@@ -103,20 +104,70 @@ process.flashggPhotons.extraCaloIsolations.extend([
                  ),
         cms.PSet(overlapRemoval=cms.bool(False),
                  type=cms.int32(5), # neutral hadron, use str to enum 
-                 vetoRegions=cms.vdouble(0.12,0.1,0.,0.1,0.,0.,0.)
+                 vetoRegions=cms.vdouble(0.12,0.1,0.1,0.,0.,0.,0.)
                  ),
         cms.PSet(overlapRemoval=cms.bool(False),
                  type=cms.int32(5), # neutral hadron, use str to enum 
-                 vetoRegions=cms.vdouble(0.15,0.12,0.,0.12,0.,0.,0.)
+                 vetoRegions=cms.vdouble(0.15,0.12,0.12,0.,0.,0.,0.)
                  ),
         cms.PSet(overlapRemoval=cms.bool(False),
                  type=cms.int32(5), # neutral hadron, use str to enum 
-                 vetoRegions=cms.vdouble(0.2,0.15,0.,0.15,0.,0.,0.)
+                 vetoRegions=cms.vdouble(0.2,0.15,0.15,0.,0.,0.,0.)
                  ),
         cms.PSet(overlapRemoval=cms.bool(False),
                  type=cms.int32(5), # neutral hadron, use str to enum 
-                 vetoRegions=cms.vdouble(0.3,0.2,0.,0.2,0.,0.,0.)
+                 vetoRegions=cms.vdouble(0.3,0.2,0.2,0.,0.,0.,0.)
                  ),
+
+        cms.PSet(overlapRemoval=cms.bool(True),
+                 type=cms.int32(4), # photon, use str to enum 
+                 vetoRegions=cms.vdouble(0.070,0.050,0.050,0.0,0.0,0.0,0.0)
+                 ),
+        cms.PSet(overlapRemoval=cms.bool(True),
+                 type=cms.int32(4), # photon, use str to enum 
+                 vetoRegions=cms.vdouble(0.080,0.070,0.070,0.0,0.0,0.0,0.0)
+                 ),
+        cms.PSet(overlapRemoval=cms.bool(True),
+                 type=cms.int32(4), # photon, use str to enum 
+                 vetoRegions=cms.vdouble(0.1,0.080,0.080,0.0,0.0,0.0,0.0)
+                 ),
+        cms.PSet(overlapRemoval=cms.bool(True),
+                 type=cms.int32(4), # photon, use str to enum 
+                 vetoRegions=cms.vdouble(0.15,0.1,0.1,0.0,0.0,0.0,0.0)
+                 ),
+        cms.PSet(overlapRemoval=cms.bool(True),
+                 type=cms.int32(4), # photon, use str to enum 
+                 vetoRegions=cms.vdouble(0.2,0.15,0.15,0.0,0.0,0.0,0.0)
+                 ),
+        cms.PSet(overlapRemoval=cms.bool(True),
+                 type=cms.int32(4), # photon, use str to enum 
+                 vetoRegions=cms.vdouble(0.3,0.2,0.2,0.0,0.0,0.0,0.0)
+                 ),
+        cms.PSet(overlapRemoval=cms.bool(False),
+                 type=cms.int32(4), # photon, use str to enum 
+                 vetoRegions=cms.vdouble(0.070,0.050,0.050,0.0,0.0,0.0,0.0)
+                 ),
+        cms.PSet(overlapRemoval=cms.bool(False),
+                 type=cms.int32(4), # photon, use str to enum 
+                 vetoRegions=cms.vdouble(0.080,0.070,0.070,0.0,0.0,0.0,0.0)
+                 ),
+        cms.PSet(overlapRemoval=cms.bool(False),
+                 type=cms.int32(4), # photon, use str to enum 
+                 vetoRegions=cms.vdouble(0.1,0.080,0.080,0.0,0.0,0.0,0.0)
+                 ),
+        cms.PSet(overlapRemoval=cms.bool(False),
+                 type=cms.int32(4), # photon, use str to enum 
+                 vetoRegions=cms.vdouble(0.15,0.1,0.1,0.0,0.0,0.0,0.0)
+                 ),
+        cms.PSet(overlapRemoval=cms.bool(False),
+                 type=cms.int32(4), # photon, use str to enum 
+                 vetoRegions=cms.vdouble(0.2,0.15,0.15,0.0,0.0,0.0,0.0)
+                 ),
+        cms.PSet(overlapRemoval=cms.bool(False),
+                 type=cms.int32(4), # photon, use str to enum 
+                 vetoRegions=cms.vdouble(0.3,0.2,0.2,0.0,0.0,0.0,0.0)
+                 ),
+
         ]
                                                   )
 
