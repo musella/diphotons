@@ -12,8 +12,8 @@
 #include "Geometry/CaloTopology/interface/EcalEndcapHardcodedTopology.h"
 #include "RecoCaloTools/Navigation/interface/CaloNavigator.h"
 
-#include "flashgg/MicroAODAlgos/interface/PhotonIdUtils.h"
-#include "flashgg/MicroAODAlgos/interface/PhotonMCUtils.h"
+#include "flashgg/MicroAOD/interface/PhotonIdUtils.h"
+#include "flashgg/MicroAOD/interface/PhotonMCUtils.h"
 
 #include <map>
 
@@ -485,7 +485,7 @@ PhotonIdAnalyzer::analyze(const edm::EventBase& event)
 
 	  for(size_t iv=0; iv<vertexes->size(); ++iv) {
 		  Ptr<Vertex> vtx(vertexes,iv);
-		  float iso = pho->getpfChgIso03WrtVtx(vtx,true);
+		  float iso = pho->pfChgIso03WrtVtx(vtx,true);
 		  pho->addUserFloat(Form("chgIsoWrtVtx%d",(int)iv), iso);
 	  }
 

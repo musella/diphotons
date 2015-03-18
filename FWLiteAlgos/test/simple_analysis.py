@@ -7,11 +7,11 @@ process = cms.Process("Analysis")
 
 process.load("diphotons.Analysis.highMassDiPhotons_cfi")
 
-from flashgg.MicroAODProducers.flashggPreselectedDiPhotons_cfi import flashggPreselectedDiPhotons
+from flashgg.MicroAOD.flashggPreselectedDiPhotons_cfi import flashggPreselectedDiPhotons
 process.kinDiPhotons = flashggPreselectedDiPhotons.clone(cut=cms.string(process.egLooseDiPhotons.cut._value))
 
-from flashgg.TagProducers.diphotonDumper_cfi import diphotonDumper 
-import flashgg.TagAlgos.dumperConfigTools as cfgTools
+from flashgg.Taggers.diphotonDumper_cfi import diphotonDumper 
+import flashgg.Taggers.dumperConfigTools as cfgTools
 
 diphotonDumper.dumpTrees = False
 diphotonDumper.dumpWorkspace = False

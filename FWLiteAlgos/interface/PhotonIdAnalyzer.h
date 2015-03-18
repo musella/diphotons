@@ -4,7 +4,7 @@
 #include "TH1.h"
 #include "TTree.h"
 #include "PhysicsTools/UtilAlgos/interface/BasicAnalyzer.h"
-#include "flashgg/MicroAODFormats/interface/Photon.h"
+#include "flashgg/DataFormats/interface/Photon.h"
 /// #include "PhysicsTools/FWLite/interface/ScannerHelpers.h"
 
 #include "CommonTools/Utils/interface/StringObjectFunction.h"

@@ -38,7 +38,7 @@ process.source = cms.Source("PoolSource",
         ## "/store/mc/Spring14miniaod/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola/MINIAODSIM/PU20bx25_POSTLS170_V5-v1/00000/305BE282-8521-E411-95B4-0025904B1284.root",
         )
                             )
-process.load("flashgg/MicroAODProducers/flashggMicroAODSequence_cff")
+process.load("flashgg/MicroAOD/flashggMicroAODSequence_cff")
 
 process.flashggPhotons.copyExtraGenInfo = True
 

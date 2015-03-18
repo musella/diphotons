@@ -13,7 +13,7 @@ int main(int argc, char* argv[])
   AutoLibraryLoader::enable();
   gSystem->Load("libDataFormatsFWLite.so");
   gSystem->Load("libDataFormatsPatCandidates.so");
-  gSystem->Load("libflashggMicroAODFormats.so"); 
+  gSystem->Load("libflashggDataFormats.so"); 
   
   // only allow one argument for this simple example which should be the
   // the python cfg file

@@ -1,5 +1,4 @@
 {
-    "__opts__": null, 
     "categories": [
         "isEB := abs(scEta)<1.5", 
         "isEE := abs(scEta)>1.5"
