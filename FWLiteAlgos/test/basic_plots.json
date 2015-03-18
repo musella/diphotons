@@ -1,0 +1,70 @@
+{
+    "drawopts" : ["Draw","e","hist","hist nostack"],
+    "legpos"  : [0.580,0.70,0.830,0.88],
+
+    "sig" : null,
+
+    "_bkg": [ 
+	      ["ggjet8000","Sherpa #gamma #gamma [8000:13000]",
+	      [["colors","kOrange"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",1],["legopt","f"]],
+	      { "ggjet8000:output_GGJets_M-8000To13000_Pt-50_13TeV-sherpa.root" : [] }
+	      ],
+	      ["ggjet4000","Sherpa #gamma #gamma [4000:8000]",
+	      [["colors","kYellow"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",1],["legopt","f"]],
+	      { "ggjet4000:output_GGJets_M-4000To8000_Pt-50_13TeV-sherpa.root" : [] }
+	      ],
+	      ["ggjet2000","Sherpa #gamma #gamma [2000:4000]",
+	      [["colors","kGreen"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",1],["legopt","f"]],
+	      { "ggjet2000:output_GGJets_M-2000To4000_Pt-50_13TeV-sherpa.root" : [] }
+	      ],
+	      ["ggjet1000","Sherpa #gamma #gamma [1000:2000]",
+	      [["colors","kBlue"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",1],["legopt","f"]],
+	      { "ggjet1000:output_GGJets_M-1000To2000_Pt-50_13TeV-sherpa.root" : [] }
+	      ],
+	      ["ggjet500","Sherpa #gamma #gamma [500:1000]",
+	      [["colors","kRed"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",1],["legopt","f"]],
+	      { "ggjet500:output_GGJets_M-500To1000_Pt-50_13TeV-sherpa.root" : [] }
+	      ]
+	  ],
+
+
+	
+    "bkg" : [
+	      ["gjet","#gamma j",
+	      [["colors","myColorA1"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",1],["legopt","f"],["SetFillColor","myColorA3tr"]],
+	      { "GJets-HT-100toInf_13TeV:output.root" : [] }
+	      ],
+
+	      ["ggjet","#gamma #gamma",
+	      [["colors","myColorB1"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",1],["legopt","f"],["SetFillColor","myColorB3tr"]],
+	      { "GGJets_M-200To13000-sherpa_13TeV:output.root" : [] }
+	      ]
+	     ],
+
+    "data": null,
+    "_bkg_file" : "_per_subproc_", 
+    "_sig_file" : "_per_subproc_", 
+    "data_file"  : "output.root",
+    "bkg_file"  : "output.root",
+    "sig_file"  : "output.root",
+
+    "categories": ["EBHighR9","EBLowR9","EEHighR9","EELowR9"], 
+	
+    "plots": [
+	      ["mass" ,[["Rebin",3],["ytitle","Events / %(binw)s GeV"],["xtitle","m_{#gamma #gamma} (GeV)"],["xrange",[300.0,6000.0]]],null,null]
+	      ],
+	      
+    "styles": { 
+	"*mass*" : [["logy",1e-5]]
+	},	 
+    "postproc" : {
+    },
+
+    "template": "id/histograms/%(sample)s_%(cat)s%(name)s",
+
+    "rootstyle_extra" : [
+    		  "TGaxis::SetMaxDigits(3);",
+		  "TH1::SetDefaultSumw2(1);"
+    ]
+    
+}

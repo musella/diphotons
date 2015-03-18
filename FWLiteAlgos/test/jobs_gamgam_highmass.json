@@ -1,0 +1,8 @@
+{
+    "processes" : {
+    	    "GGJets_M-8000To13000_Pt-50_13TeV-sherpa_only" : [
+		    "/GGJets_M-8000To13000_Pt-50_13TeV-sherpa"
+		    ]
+	    },
+    "cmdLine" : "campaign=ExoPhys14"
+}

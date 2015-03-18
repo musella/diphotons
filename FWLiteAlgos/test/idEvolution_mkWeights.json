@@ -1,0 +1,62 @@
+{
+    "__opts__": null, 
+    "aliases": [], 
+    "bkg": null, 
+    "bkg_file": null, 
+    "categories": [
+        "isEB := abs(scEta)<1.5", 
+        "isEE := abs(scEta)>1.5"
+    ], 
+    "data": null, 
+    "data_file": null, 
+    "dumpcfg": false, 
+    "fitMedian": false, 
+    "infile": "gam_jets_phys14_v51/output.root", 
+    "input_dir": null, 
+    "interactive": 0, 
+    "labels": {}, 
+    "legpos": [], 
+    "outdir": "/afs/cern.ch/user/m/musella/www/exo/phys_14_v2/rewei_v1", 
+    "plots": [], 
+    "postproc": {}, 
+    "reweight": null, 
+    "rhoCrorr": false, 
+    "rootstyle_extra": [], 
+    "save": false, 
+    "saveas": [
+        "convert_png", 
+        "root"
+    ], 
+    "savebw": false, 
+    "sig": null, 
+    "sig_file": null, 
+    "store": "absScEta", 
+    "styles": {}, 
+    "template": "%(name)s_%(cat)s_%(sample)s", 
+    "trees": [
+        "promptTree", 
+        "fakesTree"
+    ], 
+    "variables": [
+        "absScEta := scEta*((scEta>=0.)-(scEta<0.))[100,0.,2.5]", 
+        "pt[500,200,2000]"
+    ], 
+    "verbose": false, 
+    "weight": "weight*(pt>100)", 
+    "wread": false, 
+    "wrng": {
+        "isEB": [
+            0.000, 
+            1.500
+        ], 
+        "isEE": [
+            1.500, 
+            2.500
+        ]
+    }, 
+    "wvars": [
+        "pt", 
+        "absScEta"
+    ], 
+    "xvar": "pt[100000,200,2000]"
+}

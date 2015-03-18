@@ -1,0 +1,19 @@
+{
+    "__opts__": null, 
+    "categories": [
+        "isEB := abs(scEta)<1.5", 
+        "isEE := abs(scEta)>1.5"
+    ], 
+    "trees": [
+        "promptTree", 
+        "fakesTree"
+    ], 
+    "variables": [
+        "absScEta := scEta*((scEta>=0.)-(scEta<0.))[100,0.,2.5]", 
+        "pt[500,200,2000]",
+	"rho[1000,0,100]"
+    ], 
+    "xvar": "pt[100000,200,2000]",
+    "binningMaxErr" : 0.1,
+    "binningTarget" : 10
+}

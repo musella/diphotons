@@ -1,0 +1,44 @@
+{
+    "methods"    : [ "Cuts" ],
+	"aliases"    : ["phoIsoEA      := 0.31*(abs(scEta)>=2.2 && abs(scEta)<2.5)+0.21*(abs(scEta)<0.9)+0.22*(abs(scEta)>=2. && abs(scEta)<2.2)+0.14*(abs(scEta)>=1.5 && abs(scEta)<2.)+0.2*(abs(scEta)>=0.9 && abs(scEta)<1.5)",
+			"neuIsoEA := 0.15*(abs(scEta)>=2.2 && abs(scEta)<2.5)+0.04*(abs(scEta)<0.9)+0.037*(abs(scEta)>=2. && abs(scEta)<2.2)+0.046*(abs(scEta)>=1.5 && abs(scEta)<2.)+0.059*(abs(scEta)>=0.9 && abs(scEta)<1.5)"],
+	"variables"  : ["egCorrChargedHadronIso := TMath::Min(egChargedHadronIso,30.)" ,
+			"egCorrNeutralHadronIso := TMath::Min(egNeutralHadronIso - rho*neuIsoEA,30.)",
+			"egCorrPhotonIso        := TMath::Min(egPhotonIso - rho*phoIsoEA,30.)",
+			"BDTCShape_test_EE"
+			],
+	"settings" : { 
+	"Cuts" : "!H:!V:EffMethod=EffSel:FitMethod=GA:PopSize=300:VarProp[0]=FMin:VarProp[1]=FMin:VarProp[2]=FMin:VarProp[3]=FMax"
+	    },
+
+	    "files" : "tmvaCShape_test_EE_split.root",
+  "classes" : { 
+	  "Signal" : { 
+		"samples" : [
+                   ["promptTree",1,"Entry$ % 2 == 0",0,["tmvaphoIso_EE_split.root::promptTree",
+							"tmvachIso_EE_split.root::promptTree",
+							"tmvaneutIso_EE_split.root::promptTree"]],
+                   ["promptTree",1,"Entry$ % 2 == 1",1,["tmvaphoIso_EE_split.root::promptTree",
+							"tmvachIso_EE_split.root::promptTree",
+							"tmvaneutIso_EE_split.root::promptTree"]]
+	        ],
+		"weight" : "weight"
+		},
+	  "Background" : { 
+		"samples" : [
+                   ["fakesTree",1,"Entry$ % 2 == 0",0,["tmvaphoIso_EE_split.root::fakesTree",
+							"tmvachIso_EE_split.root::fakesTree",
+							"tmvaneutIso_EE_split.root::fakesTree"]],
+                   ["fakesTree",1,"Entry$ % 2 == 1",1,["tmvaphoIso_EE_split.root::fakesTree",
+							"tmvachIso_EE_split.root::fakesTree",
+							"tmvaneutIso_EE_split.root::fakesTree"]]
+	        ],
+		"weight" : "weight"
+		}
+	},
+
+    "categories" : [ 
+                   ],
+	"selection" : "1",
+	"label" : "BDTCuts_EE"
+}

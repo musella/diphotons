@@ -1,0 +1,42 @@
+{ 
+    "methods"    : [ "" ],
+    "variables"  : ["egChargedHadronIso" ,"egNeutralHadronIso","egPhotonIso","rho","pt"],
+    "spectators" : ["pt","eta","phi","r9","scEta","srewei","rewei",
+		    "rho"],
+
+    "categories" : [ 
+    		   [ "abs(scEta)<1.5",  "EB",  "sigmaRR" ],
+		   [ "abs(scEta)>1.5",  "EE",  ""        ]
+                   ],
+
+  "subcategories" : [ 
+        	    ],
+
+  "selection" : "pt > 200 && (r9>0.8||egChargedHadronIso<20||egChargedHadronIso/pt<0.3)",
+
+  "settings" : { 
+      "BDT" : "!H:!V:!CreateMVAPdfs:BoostType=AdaBoost:SeparationType=GiniIndex:nCuts=2000:MaxDepth=3:Shrinkage=1:NTrees=400:MinNodeSize=1:PruneMethod=nopruning",
+      "Cuts" : "!H:!V:EffMethod=EffSel:FitMethod=GA:PopSize=1000:VarProp[0]=FMin:VarProp[2]=FMin:VarProp[3]=FMin:VarProp[4]=FMin:VarProp[5]=FMin"
+  },
+
+  "classes" : { 
+	  "Signal" : { 
+		"samples" : [
+                   ["promptTree",1,"Entry$ % 2 == 0",0,"wei.root::promptTree_rewei"],
+                   ["promptTree",1,"Entry$ % 2 == 1",1,"wei.root::promptTree_rewei"]
+	        ],
+		"_weight" : "weight",
+		"weight" : "srewei*rewei"
+		},
+	  "Background" : { 
+		"samples" : [
+                   ["fakesTree",1,"Entry$ % 2 == 0",0,"wei.root::fakesTree_rewei"],
+                   ["fakesTree",1,"Entry$ % 2 == 1",1,"wei.root::fakesTree_rewei"]
+	        ],
+		"_weight" : "weight",
+		"weight" : "srewei*rewei*( ( 1./(((1.267+(-5.51085e-06*sq(pt-474.208)))*(pt<474.208))+(1.267*(pt>=474.208))) )*(abs(scEta)<1.5) + (abs(scEta)>1.5) )"
+		}
+	},
+
+	"label" : "photonId"
+}

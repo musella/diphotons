@@ -1,0 +1,85 @@
+{
+    "drawopts" : ["Draw,DrawRatio[0.7]","hist","hist","hist nostack"],
+    "legpos"  : [0.580,0.60,0.830,0.88],
+
+    "sig" : null,
+    "_bkg" : [
+	      ["kin","acceptance",
+	      [["colors","myColorB1"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","l"],["SetFillColor","myColorB3tr"]],
+	      { "kin" : [] }
+	      ]
+	      ],
+    "_data" : [
+	      ["id","ID",
+	      [["colors","myColorA1"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","l"],["SetFillColor","myColorA3tr"]],
+	      { "id" : [] }
+	      ]
+	     ],
+    "_bkg" : [
+	      ["kin","acceptance",
+	      [["colors","myColorB1"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","l"],["SetFillColor","myColorB3tr"]],
+	      { "isoKin" : [] }
+	      ]
+	      ],
+    "_data" : [
+	      ["id","ID",
+	      [["colors","myColorA1"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","l"],["SetFillColor","myColorA3tr"]],
+	      { "isoId" : [] }
+	      ]
+	     ],
+    "bkg" : [
+	      ["kin","All",
+	      [["colors","myColorB1"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","l"],["SetFillColor","myColorB3tr"]],
+	      { "id" : [] }
+	      ]
+	      ],
+    "data" : [
+	      ["id","Iso",
+	      [["colors","myColorA1"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","l"],["SetFillColor","myColorA3tr"]],
+	      { "isoId" : [] }
+	      ]
+
+	     ],
+    "_data" : [
+	      ["egid","ID",
+	      [["colors","myColorA1"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","l"],["SetFillColor","myColorA3tr"]],
+	      { "egid" : [] }
+	      ]
+
+	     ],
+
+    "data_file"  : "output.root",
+    "bkg_file"  : "output.root",
+    "sig_file"  : "output.root",
+
+    "categories": ["EBHighR9","EBLowR9","EEHighR9","EELowR9"], 
+	
+    "plots": [
+	      ["mass" ,[["Rebin",5],["ytitle","Events / %(binw)s GeV"],["xtitle","m_{#gamma #gamma} (GeV)"],["xrange",[300.0,5000.0]]],null,null],
+	      ["maxEta" ,[],null,null],
+	      ["minR9" ,[],null,null],
+	      ["leadChIso",[],null,null],
+	      ["leadPhoIso",[],null,null],
+	      ["leadNeutIso",[],null,null],
+	      ["leadHoE",[],null,null],
+	      ["leadPixSeed",[],null,null]
+	      ],
+	      
+    "styles": { 
+	"*mass*" : [["logy",1e-4]],
+	"*Iso*"  : [["logy",1e-4]],     
+	"*rat"   : ["SetGridy"],
+	"*ratioAAA" : [["ytitle","#varepsilon"],["applyTo",["GetYaxis",[["SetNdivisions",505]]]]],
+	"*ratio" : [["ytitle","purity"],["applyTo",["GetYaxis",[["SetNdivisions",505]]]]]
+	},	 
+    "postproc" : {
+    },
+
+    "template": "%(sample)s/histograms/GGJets_M-200To13000-sherpa_13TeV_%(cat)s%(name)s",
+
+    "rootstyle_extra" : [
+    		  "TGaxis::SetMaxDigits(3);",
+		  "TH1::SetDefaultSumw2(1);"
+    ]
+    
+}

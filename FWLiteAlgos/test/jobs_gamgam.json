@@ -1,0 +1,26 @@
+{
+    "processes" : {
+	    "GGJets_M-200To13000-sherpa" : [
+		    "/GGJets_M-200To500_Pt-50_13TeV-sherpa",
+		    "/GGJets_M-500To1000_Pt-50_13TeV-sherpa",
+		    "/GGJets_M-1000To2000_Pt-50_13TeV-sherpa",
+		    "/GGJets_M-2000To4000_Pt-50_13TeV-sherpa",
+		    "/GGJets_M-4000To8000_Pt-50_13TeV-sherpa",
+		    "/GGJets_M-8000To13000_Pt-50_13TeV-sherpa"
+					    ]
+
+	    },
+    "_processes" : {
+		"GJets-HT-100toInf" : [
+				       "/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola"
+				       ]
+
+	    },
+    "_processes" : {
+	    "GGJets_M-200To13000-sherpa" : [
+		    "/GGJets_M-200To500_Pt-50_13TeV-sherpa"
+		    ]
+		    },
+    "_cmdLine" : "campaign=ExoPhys14_v4",
+    "cmdLine" : "campaign=ExoPhys14_v45merged"
+}

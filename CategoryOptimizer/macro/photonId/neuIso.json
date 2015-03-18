@@ -1,0 +1,5 @@
+{ 
+    "variables"  : ["egNeutralHadronIso","rho","pt","scEta","scRawEnergy"],
+    "methods"    : [ "LD" ],
+    "label"      : "neutIso"
+}

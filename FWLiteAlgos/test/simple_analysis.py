@@ -13,13 +13,6 @@ process.kinDiPhotons = flashggPreselectedDiPhotons.clone(cut=cms.string(process.
 from flashgg.TagProducers.diphotonDumper_cfi import diphotonDumper 
 import flashgg.TagAlgos.dumperConfigTools as cfgTools
 
-## process.options = cms.untracked.PSet( wantSummary = cms.untracked.bool(True) )
-
-process.noGenIsokinDiPhotons = process.kinDiPhotons.clone()
-process.kinDiPhotons.cut     = "(%s)&& leadingPhoton.userFloat('genIso') < 10. && subLeadingPhoton.userFloat('genIso') < 10."% process.kinDiPhotons.cut._value    
-process.egLooseDiPhotons.cut = "(%s)&& leadingPhoton.userFloat('genIso') < 10. && subLeadingPhoton.userFloat('genIso') < 10."% process.egLooseDiPhotons.cut._value
-process.hcic4DiPhotons.cut   = "(%s)&& leadingPhoton.userFloat('genIso') < 10. && subLeadingPhoton.userFloat('genIso') < 10."% process.hcic4DiPhotons.cut._value   
-
 diphotonDumper.dumpTrees = False
 diphotonDumper.dumpWorkspace = False
 diphotonDumper.quietRooFit = True
@@ -97,7 +90,6 @@ process.source = cms.Source("PoolSource",
         )
 )
 
-
 process.TFileService = cms.Service("TFileService",
                                    fileName = cms.string("test.root")
 )
@@ -106,37 +98,36 @@ process.trigger=diphotonDumper.clone()
 process.id=diphotonDumper.clone()
 process.egid=diphotonDumper.clone(src=cms.InputTag("egLooseDiPhotons"))
 process.kin=diphotonDumper.clone(src=cms.InputTag("kinDiPhotons"))
-process.noGenIso=diphotonDumper.clone(src=cms.InputTag("noGenIsokinDiPhotons"))
 process.kin.dumpTrees = True
+
+process.isoKinDiphotons = process.kinDiPhotons.clone(src="kinDiPhotons",
+                                                     cut="leadingPhoton.userFloat('genIso') < 10. && subLeadingPhoton.userFloat('genIso') < 10.")
+process.isohCic4Diphotons = process.kinDiPhotons.clone(src="hcic4DiPhotons",
+                                                       cut="leadingPhoton.userFloat('genIso') < 10. && subLeadingPhoton.userFloat('genIso') < 10.")
+process.isoKin=diphotonDumper.clone(src=cms.InputTag("isoKinDiphotons"))
+process.isoId=diphotonDumper.clone(src=cms.InputTag("isohCic4Diphotons"))
+
+process.nonIsoKinDiphotons = process.kinDiPhotons.clone(src="kinDiPhotons",
+                                                        cut="leadingPhoton.userFloat('genIso') >= 10. || subLeadingPhoton.userFloat('gensIso') >= 10.")
+process.nonIsohCic4Diphotons = process.kinDiPhotons.clone(src="hcic4DiPhotons",
+                                                          cut="leadingPhoton.userFloat('genIso') >= 10. || subLeadingPhoton.userFloat('gensIso') >= 10.")
+process.nonIsoKin=diphotonDumper.clone(src=cms.InputTag("nonIsoKinDiphotons"))
+process.nonIsoId=diphotonDumper.clone(src=cms.InputTag("nonIsohCic4Diphotons"))
 
 process.load('HLTrigger.HLTfilters.hltHighLevel_cfi')
 process.hltHighLevel.HLTPaths = ["HLT_DoublePhoton85*","HLT_Photon250_NoHE*"]
 
 
 process.p1 = cms.Path(
-    (process.noGenIsokinDiPhotons+process.kinDiPhotons+process.hcic4DiPhotons)*(process.kin+process.noGenIso+process.id)
+    (process.kinDiPhotons  +process.isoKinDiphotons  +process.nonIsoKinDiphotons  )*(process.kin+process.isoKin+process.nonIsoKin) + 
+    (process.hcic4DiPhotons+process.isohCic4Diphotons+process.nonIsohCic4Diphotons)*((process.id +process.isoId +process.nonIsoId )
+                                                                                     +process.hltHighLevel*process.trigger)
     )
 
 process.p2 = cms.Path(
-    (process.kinDiPhotons+process.egLooseDiPhotons)*(process.egid)
+    process.kinDiPhotons*process.kin + process.egLooseDiPhotons*process.egid
     )
 
-process.p3 = cms.Path(process.hltHighLevel*
-                      process.trigger
-                      )
-
-
-
-
 from diphotons.MetaData.JobConfig import customize
-## customize.campaign = "isolation_studies"
 customize.setDefault("maxEvents",100)
 customize(process)
-
-### process.out = cms.OutputModule("PoolOutputModule", fileName = cms.untracked.string('myOutputFile.root'),
-###                                outputCommands = cms.untracked.vstring("drop *",
-###                                                             "keep *_kinDiPhotons_*_*",
-###                                                             "keep *_egLooseDiPhotons_*_*"
-###                                                             )
-###                                )
-### process.e = cms.EndPath(process.out)

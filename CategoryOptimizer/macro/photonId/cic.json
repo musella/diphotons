@@ -1,0 +1,40 @@
+{
+    "methods"    : [ "Cuts" ],
+	"aliases"    : ["phoIsoEA      := 0.31*(abs(scEta)>=2.2 && abs(scEta)<2.5)+0.21*(abs(scEta)<0.9)+0.22*(abs(scEta)>=2. && abs(scEta)<2.2)+0.14*(abs(scEta)>=1.5 && abs(scEta)<2.)+0.2*(abs(scEta)>=0.9 && abs(scEta)<1.5)",
+			"neuIsoEA := 0.15*(abs(scEta)>=2.2 && abs(scEta)<2.5)+0.04*(abs(scEta)<0.9)+0.037*(abs(scEta)>=2. && abs(scEta)<2.2)+0.046*(abs(scEta)>=1.5 && abs(scEta)<2.)+0.059*(abs(scEta)>=0.9 && abs(scEta)<1.5)"],
+	"variables"  : ["egCorrChargedHadronIso := TMath::Min(egChargedHadronIso,30.)" ,
+			"egCorrNeutralHadronIso := TMath::Min(egNeutralHadronIso - rho*neuIsoEA,30.)",
+			"egCorrPhotonIso        := TMath::Min(egPhotonIso - rho*phoIsoEA,30.)",
+			"full5x5_sigmaIetaIeta", 
+			"r9","hadronicOverEm"],
+	"settings" : { 
+	"Cuts" : "!H:!V:EffMethod=EffSel:FitMethod=GA:PopSize=300:VarProp[0]=FMin:VarProp[1]=FMin:VarProp[2]=FMin:VarProp[3]=FMin:VarProp[4]=FMax:VarProp[5]=FMin"
+	    },
+
+  "classes" : { 
+	  "Signal" : { 
+		"samples" : [
+                   ["promptTree",1,"Entry$ % 2 == 0",0,"wei.root::promptTree_rewei"],
+                   ["promptTree",1,"Entry$ % 2 == 1",1,"wei.root::promptTree_rewei"]
+	        ],
+		"_weight" : "weight",
+		"weight" : "srewei*rewei"
+		},
+	  "Background" : { 
+		"samples" : [
+                   ["fakesTree",1,"Entry$ % 2 == 0",0,"wei.root::fakesTree_rewei"],
+                   ["fakesTree",1,"Entry$ % 2 == 1",1,"wei.root::fakesTree_rewei"]
+	        ],
+		"_weight" : "weight",
+		"weight" : "srewei*rewei*( ( 1./(((1.267+(-5.51085e-06*sq(pt-474.208)))*(pt<474.208))+(1.267*(pt>=474.208))) )*(abs(scEta)<1.5) + (abs(scEta)>1.5) )"
+		}
+	},
+
+    "categories" : [ 
+    		   [ "abs(scEta)<1.5 && r9>0.94",  "EBHighR9",  "sigmaRR" ],
+    		   [ "abs(scEta)<1.5 && r9<0.94",  "EBLowR9",  "sigmaRR" ],
+		   [ "abs(scEta)>1.5 && r9>0.94",  "EEHighR9",  ""        ],
+		   [ "abs(scEta)>1.5 && r9<0.94",  "EELowR9",  ""        ]
+                   ],
+	"label" : "CiC4fullStat"
+	}
