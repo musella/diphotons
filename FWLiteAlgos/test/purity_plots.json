@@ -1,0 +1,76 @@
+{
+    "drawopts" : ["Draw,DrawRatio[0.7]","hist","hist","hist nostack"],
+    "legpos"  : [0.580,0.60,0.830,0.88],
+
+    "bkg" : [
+	      ["gjet","#gamma j",
+	      [["colors","myColorA1"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","l"],["SetFillColor","myColorA3tr"]],
+	      { "GJets-HT-100toInf_13TeV:output.root/id" : [] }
+	      ],
+
+	      ["ggjet_nonIso","non iso #gamma #gamma",
+	      [["colors","myColorC1"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","l"],["SetFillColor","myColorC3tr"]],
+	      { "GGJets_M-200To13000-sherpa_13TeV:output.root/nonIsoId" : [] }
+	      ],
+	      
+	      ["ggjet_iso","total",
+	      [["colors","kBlack"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","l"],["SetFillColor","kWhite"]],
+	      { "GGJets_M-200To13000-sherpa_13TeV:output.root/isoId" : [] }
+	      ]
+	      
+	     ],
+
+    "data" : [
+	      ["ggjet_iso","iso #gamma #gamma",
+	      [["colors","myColorB1"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","l"],["SetFillColor","myColorB3tr"]],
+	      { "GGJets_M-200To13000-sherpa_13TeV:output.root/isoId" : [] }
+	      ]
+	      
+	     ],
+	     
+
+    "sig" : null,
+
+    "data_file"  : "_per_subproc_",
+    "bkg_file"  : "_per_subproc_",
+    "sig_file"  : "output.root",
+
+    "_categories": ["EBHighR9","EBLowR9","EEHighR9","EELowR9"], 
+    "categories" : [],
+    "groups": {
+        "EB"       : ["EBHighR9","EBLowR9"],
+        "EE"       : ["EEHighR9","EELowR9"],
+        "EBHighR9" : ["EBHighR9"],
+	"EBLowR9"  : ["EBLowR9"],
+	"EEHighR9" : ["EEHighR9"],
+	"EELowR9"  : ["EELowR9"]
+	}, 
+	
+    "plots": [
+	      ["mass" ,[["Rebin",5],["ytitle","Events / %(binw)s GeV"],["xtitle","m_{#gamma #gamma} (GeV)"],["xrange",[300.0,5000.0]]],null,null],
+	      ["maxEta" ,[],null,null],
+	      ["minR9" ,[],null,null],
+	      ["leadChIso",[],null,null],
+	      ["leadPhoIso",[],null,null],
+	      ["leadNeutIso",[],null,null],
+	      ["leadHoE",[],null,null],
+	      ["leadPixSeed",[],null,null]
+	      ],
+	      
+    "styles": { 
+	"*mass*" : [["logy",1e-4]],
+	"*Iso*"  : [["logy",1e-4]],     
+	"*rat"   : ["SetGridy"],
+	"*ratio" : [["ytitle","purity"],["applyTo",["GetYaxis",[["SetNdivisions",505]]]]]
+	},	 
+    "postproc" : {
+    },
+
+    "template": "histograms/%(sample)s_%(cat)s%(name)s",
+
+    "rootstyle_extra" : [
+    		  "TGaxis::SetMaxDigits(3);",
+		  "TH1::SetDefaultSumw2(1);"
+    ]
+    
+}

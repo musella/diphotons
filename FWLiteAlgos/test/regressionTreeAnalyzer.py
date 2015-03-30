@@ -37,7 +37,7 @@ process.photonIdAnalyzer = cms.PSet(
   packedGenParticles = cms.InputTag('packedGenParticles'),
   lumiWeight = cms.double(1.),
   processId = cms.string(""),
-  rhoFixedGrid = cms.InputTag('fixedGridRhoAll'),
+  rho = cms.InputTag('fixedGridRhoAll'),
   miniTreeCfg = cms.untracked.VPSet(
         ),
   vertexes = cms.InputTag("offlineSlimmedPrimaryVertices"),
@@ -46,7 +46,16 @@ process.photonIdAnalyzer = cms.PSet(
   dumpAllRechisInfo = cms.untracked.bool(True),
   barrelRecHits = cms.InputTag('reducedEgamma','reducedEBRecHits'),
   endcapRecHits = cms.InputTag('reducedEgamma','reducedEERecHits'),
+
+  idleWatchdog = cms.PSet(checkEvery = cms.untracked.int32(1000),
+                          minIdleFraction = cms.untracked.double(0.3),
+                          tolerance = cms.untracked.int32(5)
+                          ),
   
+  mvas = cms.VPSet(),
+  mvaPreselection = cms.string("0"),
+  categories = cms.VPSet()
+
   ## dumpFakes = cms.untracked.bool(False),
 
   ## recomputeNoZsShapes = cms.untracked.bool(True),
@@ -84,20 +93,18 @@ addMiniTreeVars(process.photonIdAnalyzer.miniTreeCfg,
                                   
                  "hadTowOverEm",
                  ## more cluster shapes
-                 ("getE2x5right","e2x5Right"),
-                 ("getE2x5left","e2x5Left"),
-                 ("getE2x5top","e2x5Top"),
-                 ("getE2x5bottom","e2x5Bottom"),
-                 ("getE2x5max","e2x5Max"),
-                 ("getE1x3","e1x3"),
-                 ("getS4","s4"),
-                 ("getESEffSigmaRR","sigmaRR"),
-                 ("sqrt(getSipip)","sigmaIphiIphi"),
-                 ("getSieip","covarianceIetaIphi"),
-                 ("superCluster.etaWidth","etaWidth"),("superCluster.phiWidth","phiWidth"),
+                 ("e2x5right" ,"e2x5Right"  ),
+                 ("e2x5left"  ,"e2x5Left"   ),
+                 ("e2x5top"   ,"e2x5Top"    ),
+                 ("e2x5bottom","e2x5Bottom" ),
+                 ("e2x5max"   ,"e2x5Max"    ),
+                 ("e1x3"      ,"e1x3"       ),
+                 ("s4"        ,"s4"         ),
                  
-
-
+                 ("esEffSigmaRR","sigmaRR"),
+                 ("sqrt(spp)","sigmaIphiIphi"),
+                 ("sep","covarianceIetaIphi"),
+                 ("superCluster.etaWidth","etaWidth"),("superCluster.phiWidth","phiWidth"),
                  ]
                 )
 

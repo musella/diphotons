@@ -5,7 +5,10 @@
 #include "TTree.h"
 #include "PhysicsTools/UtilAlgos/interface/BasicAnalyzer.h"
 #include "flashgg/DataFormats/interface/Photon.h"
+#include "flashgg/MicroAOD/interface/PhotonMVAComputer.h"
 /// #include "PhysicsTools/FWLite/interface/ScannerHelpers.h"
+
+#include "flashgg/MetaData/interface/IdleWatchdog.h"
 
 #include "CommonTools/Utils/interface/StringObjectFunction.h"
 
@@ -69,6 +72,9 @@ namespace diphotons {
 		std::string processId_;
 		bool isSherpa_;
 
+		flashgg::PhotonMVAComputer mvaComputer_;
+		flashgg::IdleWatchdog watchdog_;
+		
 		TTree * bookTree(const std::string & name, TFileDirectory& fs);
 		void fillTreeBranches(const flashgg::Photon & pho, 
 				      const EcalRecHitCollection * EcalBarrelRecHits, const EcalRecHitCollection * EcalEndcapRecHits);

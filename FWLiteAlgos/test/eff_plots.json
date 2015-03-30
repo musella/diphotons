@@ -1,9 +1,9 @@
 {
-    "drawopts" : ["Draw,DrawRatio[0.7]","hist","hist","hist nostack"],
+    "drawopts" : ["Draw,DrawRatio[0.5]","hist","hist","hist nostack"],
     "legpos"  : [0.580,0.60,0.830,0.88],
 
     "sig" : null,
-    "_bkg" : [
+    "bkg" : [
 	      ["kin","acceptance",
 	      [["colors","myColorB1"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","l"],["SetFillColor","myColorB3tr"]],
 	      { "kin" : [] }
@@ -15,30 +15,23 @@
 	      { "id" : [] }
 	      ]
 	     ],
-    "_bkg" : [
+    "bkg" : [
 	      ["kin","acceptance",
 	      [["colors","myColorB1"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","l"],["SetFillColor","myColorB3tr"]],
 	      { "isoKin" : [] }
 	      ]
 	      ],
     "_data" : [
-	      ["id","ID",
+	      ["id","Cut-based ID",
 	      [["colors","myColorA1"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","l"],["SetFillColor","myColorA3tr"]],
 	      { "isoId" : [] }
 	      ]
 	     ],
-    "bkg" : [
-	      ["kin","All",
-	      [["colors","myColorB1"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","l"],["SetFillColor","myColorB3tr"]],
-	      { "id" : [] }
-	      ]
-	      ],
     "data" : [
-	      ["id","Iso",
+	      ["mva","MVA ID",
 	      [["colors","myColorA1"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","l"],["SetFillColor","myColorA3tr"]],
-	      { "isoId" : [] }
+	      { "mva" : [] }
 	      ]
-
 	     ],
     "_data" : [
 	      ["egid","ID",
@@ -52,10 +45,19 @@
     "bkg_file"  : "output.root",
     "sig_file"  : "output.root",
 
-    "categories": ["EBHighR9","EBLowR9","EEHighR9","EELowR9"], 
+    "_categories": ["EBHighR9","EBLowR9","EEHighR9","EELowR9"], 
+    "categories" : [],
+    "groups": {
+        "EB"       : ["EBHighR9","EBLowR9"],
+        "EE"       : ["EEHighR9","EELowR9"],
+        "EBHighR9" : ["EBHighR9"],
+	"EBLowR9"  : ["EBLowR9"],
+	"EEHighR9" : ["EEHighR9"],
+	"EELowR9"  : ["EELowR9"]
+	}, 
 	
     "plots": [
-	      ["mass" ,[["Rebin",5],["ytitle","Events / %(binw)s GeV"],["xtitle","m_{#gamma #gamma} (GeV)"],["xrange",[300.0,5000.0]]],null,null],
+	      ["mass" ,[["Rebin",5],["ytitle","Events / %(binw)s GeV"],["xtitle","m_{#gamma #gamma} (GeV)"],["xrange",[300.0,6000.0]]],null,null],
 	      ["maxEta" ,[],null,null],
 	      ["minR9" ,[],null,null],
 	      ["leadChIso",[],null,null],
@@ -69,8 +71,7 @@
 	"*mass*" : [["logy",1e-4]],
 	"*Iso*"  : [["logy",1e-4]],     
 	"*rat"   : ["SetGridy"],
-	"*ratioAAA" : [["ytitle","#varepsilon"],["applyTo",["GetYaxis",[["SetNdivisions",505]]]]],
-	"*ratio" : [["ytitle","purity"],["applyTo",["GetYaxis",[["SetNdivisions",505]]]]]
+	"*ratio" : [["ytitle","#varepsilon"],["applyTo",["GetYaxis",[["SetNdivisions",505],["SetRangeUser",[0.5,1.0]]]]]]
 	},	 
     "postproc" : {
     },

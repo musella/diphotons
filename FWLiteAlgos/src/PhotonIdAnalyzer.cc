@@ -15,6 +15,7 @@
 #include "flashgg/MicroAOD/interface/PhotonIdUtils.h"
 #include "flashgg/MicroAOD/interface/PhotonMCUtils.h"
 
+
 #include <map>
 
 
@@ -47,9 +48,11 @@ PhotonIdAnalyzer::PhotonIdAnalyzer(const edm::ParameterSet& cfg, TFileDirectory&
   photons_(cfg.getParameter<edm::InputTag>("photons")),
   packedGen_(cfg.getParameter<edm::InputTag>("packedGenParticles")),
   vertexes_(cfg.getParameter<edm::InputTag> ("vertexes")),
-  rhoFixedGrid_(cfg.getParameter<edm::InputTag>("rhoFixedGrid")),
+  rhoFixedGrid_(cfg.getParameter<edm::InputTag>("rho")),
   lumiWeight_(cfg.getParameter<double>("lumiWeight")),
   processId_(cfg.getParameter<string>("processId")),
+  mvaComputer_(cfg),
+  watchdog_(cfg.getParameter<edm::ParameterSet>("idleWatchdog")),
   /// photonFunctor_(edm::TypeWithDict(edm::Wrapper<vector<Photon> >::typeInfo())),
   promptTree_(0), fakesTree_(0),
   topology_(0), theSubdetTopologyEB_(0), theSubdetTopologyEE_(0)
@@ -100,6 +103,7 @@ PhotonIdAnalyzer::PhotonIdAnalyzer(const edm::ParameterSet& cfg, TFileDirectory&
 	  fakesTree_ = bookTree("fakesTree",fs);
 	  dumpRecHits_ = doDump;
   }
+  
   if( dumpRecHits_ || recomputeNoZsShapes_ ) {
 	  // FIXME: memory leak
 	  CaloTopology * topology=new CaloTopology();
@@ -301,7 +305,7 @@ PhotonIdAnalyzer::~PhotonIdAnalyzer()
 
 void PhotonIdAnalyzer::beginJob()
 {
-
+	watchdog_.reset();
 }
 
 /// everything that needs to be done after the event loop
@@ -401,6 +405,7 @@ GenMatchInfo doGenMatch(const Photon & pho, const vector<PackedGenParticle> & ge
 void 
 PhotonIdAnalyzer::analyze(const edm::EventBase& event)
 {
+  watchdog_.check();
   // Handle to the photon collection
   Handle<vector<Photon> > photons;
   Handle<vector<PackedGenParticle> > packedGenParticles;
@@ -436,11 +441,12 @@ PhotonIdAnalyzer::analyze(const edm::EventBase& event)
   event_ = event.id().event();
   
   PhotonIdUtils utils;
+  mvaComputer_.update(event);
   
   for(std::vector<Photon>::const_iterator ipho=photons->begin(); ipho!=photons->end(); ++ipho){
 	  
 	  Photon * pho = ipho->clone();
-
+	  
 	  if( recomputeNoZsShapes_ ) {
 		  utils.recomputeNonZsClusterShapes(*pho,EcalBarrelRecHits.product(),EcalEndcapRecHits.product(),topology_);
 	  }
@@ -488,6 +494,8 @@ PhotonIdAnalyzer::analyze(const edm::EventBase& event)
 		  float iso = pho->pfChgIso03WrtVtx(vtx,true);
 		  pho->addUserFloat(Form("chgIsoWrtVtx%d",(int)iv), iso);
 	  }
+
+	  mvaComputer_.fill(*pho);
 
 	  fillTreeBranches(*pho,EcalBarrelRecHits.product(),EcalEndcapRecHits.product());
 	  

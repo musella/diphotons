@@ -2,7 +2,7 @@
     "methods"    : [ "BDT" ],
 	"variables"  : [
 			"full5x5_sigmaIetaIeta", "etaWidth", "phiWidth", "covarianceIetaIphi",
-			"r9","scEta","scRawEnergy","hadronicOverEm"],
+			"r9","scEta","pt","s4","hadronicOverEm","rho"],
 	"settings" : { 
       "_BDT" : "!H:!V:!CreateMVAPdfs:BoostType=Grad:UseBaggedBoost:GradBaggingFraction=0.6:SeparationType=GiniIndex:nCuts=200:MaxDepth=10:Shrinkage=0.3:NTrees=1000:MinNodeSize=1e-1",
       "BDT" : "!H:!V:!CreateMVAPdfs:BoostType=AdaBoost:SeparationType=GiniIndex:nCuts=2000:MaxDepth=3:Shrinkage=1:NTrees=400:MinNodeSize=1:PruneMethod=nopruning"
@@ -12,5 +12,5 @@
     		   [ "abs(scEta)<1.5",  "EB",  "sigmaRR" ],
 		   [ "abs(scEta)>1.5",  "EE",  ""        ]
                    ],
-	"label" : "CShape_test"
+	"label" : "CShape"
 	}

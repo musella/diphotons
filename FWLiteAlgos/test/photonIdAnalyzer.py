@@ -32,12 +32,14 @@ process.fwliteOutput = cms.PSet(
       fileName = cms.string("output.root")      ## mandatory
 )
 
+from diphotons.Analysis.highMassMVAs_cff import cShapeMVA_EB, cShapeMVA_EE
+
 process.photonIdAnalyzer = cms.PSet(
   photons = cms.InputTag('flashggPhotons'), ## input for the simple example above
   packedGenParticles = cms.InputTag('packedGenParticles'),
   lumiWeight = cms.double(1.),
   processId = cms.string(""),
-  rhoFixedGrid = cms.InputTag('fixedGridRhoAll'),
+  rho = cms.InputTag('fixedGridRhoAll'),
   miniTreeCfg = cms.untracked.VPSet(
         ),
   vertexes = cms.InputTag("offlineSlimmedPrimaryVertices"),
@@ -45,12 +47,31 @@ process.photonIdAnalyzer = cms.PSet(
   dumpRecHits = cms.untracked.bool(True),
   barrelRecHits = cms.InputTag('reducedEgamma','reducedEBRecHits'),
   endcapRecHits = cms.InputTag('reducedEgamma','reducedEERecHits'),
+  
+  idleWatchdog = cms.PSet(checkEvery = cms.untracked.int32(100),
+                          minIdleFraction = cms.untracked.double(0.5),
+                          tolerance = cms.untracked.int32(5)
+                          ),
 
+  mvas = cms.VPSet(
+        cms.PSet(name=cms.string("cShapeMVA"), default=cms.double(-2.))
+        ),
+  mvaPreselection = cms.string("r9>0.8||egChargedHadronIso<20||egChargedHadronIso/pt<0.3"),
+  categories = cms.VPSet(
+        cms.PSet(cut=cms.string("abs(superCluster.eta)<1.5"),
+                 cShapeMVA = cShapeMVA_EB
+                 ),
+        cms.PSet(cut=cms.string("abs(superCluster.eta)>=1.5"),
+                 cShapeMVA = cShapeMVA_EE
+                 ),        
+        )
   ## recomputeNoZsShapes = cms.untracked.bool(True),
 )
 
 addMiniTreeVars(process.photonIdAnalyzer.miniTreeCfg,
                 ["phi","eta","pt","energy",
+                 
+                 ("userFloat('cShapeMVA')","cShapeMVA"),
                  
                  ("superCluster.eta","scEta"),
                  ("superCluster.rawEnergy","scRawEnergy"),
@@ -66,7 +87,7 @@ addMiniTreeVars(process.photonIdAnalyzer.miniTreeCfg,
                  ### ("userFloat('chgIsoWrtVtx2')","chgIsoWrtVtx2"),
                  ### ("userFloat('chgIsoWrtVtx3')","chgIsoWrtVtx3"),
                  ### ("userFloat('chgIsoWrtVtx4')","chgIsoWrtVtx4"),
-                 ("getpfChgIsoWrtWorstVtx03","chgIsoWrtWorstVtx"),
+                 ("pfChgIsoWrtWorstVtx03","chgIsoWrtWorstVtx"),
                  
                  ## photon and neutral isolation
                  "egChargedHadronIso" ,"egNeutralHadronIso","egPhotonIso" ,
@@ -136,8 +157,8 @@ addMiniTreeVars(process.photonIdAnalyzer.miniTreeCfg,
                  "r2x5",           "full5x5_r2x5",           
                  "r9",             "full5x5_r9",             
                  ("superCluster.etaWidth","etaWidth"),("superCluster.phiWidth","phiWidth"),
-                 ("sqrt(getSipip)","sigmaIphiIphi"),
-                 ("getSieip","covarianceIetaIphi"),
+                 ("sqrt(sipip)","sigmaIphiIphi"),
+                 ("sieip","covarianceIetaIphi"),
 
                  ## the hcal full_5x5 only differ in the denominator and so aren't really worth saving
                  ## "hadronicDepth1OverEm",
@@ -160,8 +181,8 @@ addMiniTreeVars(process.photonIdAnalyzer.miniTreeCfg,
                  ## ("getEtop","etop"),
                  ## ("getEbottom","ebottom"),
                  ## ("getE1x3","e1x3"),
-                 ("getS4","s4"),
-                 ("getESEffSigmaRR","sigmaRR"),
+                 "s4",
+                 ("esEffSigmaRR","sigmaRR"),
                  
                  ]
                 )

@@ -2,7 +2,7 @@
     "methods"    : [ "" ],
     "variables"  : ["egChargedHadronIso" ,"egNeutralHadronIso","egPhotonIso","rho","pt"],
     "spectators" : ["pt","eta","phi","r9","scEta","srewei","rewei",
-		    "rho"],
+		    "rho","egChargedHadronIso","egNeutralHadronIso","egPhotonIso"],
 
     "categories" : [ 
     		   [ "abs(scEta)<1.5",  "EB",  "sigmaRR" ],

@@ -8,7 +8,6 @@ process = cms.Process("Analysis")
 process.load("diphotons.Analysis.highMassDiPhotons_cfi")
 
 from flashgg.MicroAOD.flashggPreselectedDiPhotons_cfi import flashggPreselectedDiPhotons
-process.kinDiPhotons = flashggPreselectedDiPhotons.clone(cut=cms.string(process.egLooseDiPhotons.cut._value))
 
 from flashgg.Taggers.diphotonDumper_cfi import diphotonDumper 
 import flashgg.Taggers.dumperConfigTools as cfgTools
@@ -28,9 +27,13 @@ cfgTools.addCategories(diphotonDumper,
                        variables=["mass", 
                                   "leadPt                   :=leadingPhoton.pt",
                                   "subleadPt                :=subLeadingPhoton.pt",
+                                  "leadCShapeMVA            :=leadingPhoton.userFloat('cShapeMVA')",
+                                  "subleadCShapeMVA         :=subLeadingPhoton.userFloat('cShapeMVA')",
                                   "minR9                    :=min(leadingPhoton.r9,subLeadingPhoton.r9)",
                                   "maxEta                   :=max(abs(leadingPhoton.superCluster.eta),abs(leadingPhoton.superCluster.eta))",
-
+                                  
+                                  "leadBlockChIso   := leadingPhotonView.pfChIso03WrtChosenVtx", 
+                                  "leadChIso   := leadingPhoton.egChargedHadronIso", 
                                   "leadChIso   := leadingPhoton.egChargedHadronIso", 
                                   "leadPhoIso  := leadingPhoton.egPhotonIso", 
                                   "leadNeutIso := leadingPhoton.egNeutralHadronIso",
@@ -39,6 +42,7 @@ cfgTools.addCategories(diphotonDumper,
                                   "leadPixSeed := leadingPhoton.hasPixelSeed",
 
 
+                                  "subleadBlockChIso   := subLeadingPhotonView.pfChIso03WrtChosenVtx", 
                                   "subleadChIso   := subLeadingPhoton.egChargedHadronIso", 
                                   "subleadPhoIso  := subLeadingPhoton.egPhotonIso", 
                                   "subleadNeutIso := subLeadingPhoton.egNeutralHadronIso",
@@ -50,6 +54,7 @@ cfgTools.addCategories(diphotonDumper,
                                    "leadPt>>leadPt(145,100,3000)",
                                    "subleadPt>>subleadPt(145,100,3000)",
                                    
+                                   "leadBlockChIso>>leadBlockChIso(60,-10,50)",
                                    "leadChIso>>leadChIso(60,-10,50)",
                                    "leadPhoIso>>leadPhoIso(60,-10,50)",
                                    "leadNeutIso>>leadNeutIso(60,-10,50)",
@@ -57,6 +62,7 @@ cfgTools.addCategories(diphotonDumper,
                                    "leadSigmaIeIe>>leadSigmaIeIe(50,0,5.e-2)",
                                    "leadPixSeed>>leadPixSeed(2,-0.5,1.5)",
 
+                                   "subleadBlockChIso>>subleadBlockChIso(60,-10,50)",
                                    "subleadChIso>>subleadChIso(60,-10,50)",
                                    "subleadPhoIso>>subleadPhoIso(60,-10,50)",
                                    "subleadNeutIso>>subleadNeutIso(60,-10,50)",
@@ -96,38 +102,69 @@ process.TFileService = cms.Service("TFileService",
 
 process.trigger=diphotonDumper.clone()
 process.id=diphotonDumper.clone()
+
+process.triggerMva=diphotonDumper.clone(src=cms.InputTag("hmvaDiPhotons"))
+process.mva=diphotonDumper.clone(src=cms.InputTag("hmvaDiPhotons"))
+
 process.egid=diphotonDumper.clone(src=cms.InputTag("egLooseDiPhotons"))
+
 process.kin=diphotonDumper.clone(src=cms.InputTag("kinDiPhotons"))
 process.kin.dumpTrees = True
 
-process.isoKinDiphotons = process.kinDiPhotons.clone(src="kinDiPhotons",
+process.isoKinDiphotons = process.tmpKinDiPhotons.clone(src="kinDiPhotons",
                                                      cut="leadingPhoton.userFloat('genIso') < 10. && subLeadingPhoton.userFloat('genIso') < 10.")
-process.isohCic4Diphotons = process.kinDiPhotons.clone(src="hcic4DiPhotons",
+process.isohCic4Diphotons = process.tmpKinDiPhotons.clone(src="hcic4DiPhotons",
                                                        cut="leadingPhoton.userFloat('genIso') < 10. && subLeadingPhoton.userFloat('genIso') < 10.")
+process.isohmvaDiphotons = process.tmpKinDiPhotons.clone(src="hmvaDiPhotons",
+                                                         cut="leadingPhoton.userFloat('genIso') < 10. && subLeadingPhoton.userFloat('genIso') < 10.")
 process.isoKin=diphotonDumper.clone(src=cms.InputTag("isoKinDiphotons"))
 process.isoId=diphotonDumper.clone(src=cms.InputTag("isohCic4Diphotons"))
+process.isoMva=diphotonDumper.clone(src=cms.InputTag("isohmvaDiphotons"))
 
-process.nonIsoKinDiphotons = process.kinDiPhotons.clone(src="kinDiPhotons",
+process.nonIsoKinDiphotons = process.tmpKinDiPhotons.clone(src="kinDiPhotons",
                                                         cut="leadingPhoton.userFloat('genIso') >= 10. || subLeadingPhoton.userFloat('gensIso') >= 10.")
-process.nonIsohCic4Diphotons = process.kinDiPhotons.clone(src="hcic4DiPhotons",
+process.nonIsohCic4Diphotons = process.tmpKinDiPhotons.clone(src="hcic4DiPhotons",
+                                                          cut="leadingPhoton.userFloat('genIso') >= 10. || subLeadingPhoton.userFloat('gensIso') >= 10.")
+process.nonIsohmvaDiphotons = process.tmpKinDiPhotons.clone(src="hmvaDiPhotons",
                                                           cut="leadingPhoton.userFloat('genIso') >= 10. || subLeadingPhoton.userFloat('gensIso') >= 10.")
 process.nonIsoKin=diphotonDumper.clone(src=cms.InputTag("nonIsoKinDiphotons"))
 process.nonIsoId=diphotonDumper.clone(src=cms.InputTag("nonIsohCic4Diphotons"))
+process.nonIsoMva=diphotonDumper.clone(src=cms.InputTag("nonIsohmvaDiphotons"))
+
 
 process.load('HLTrigger.HLTfilters.hltHighLevel_cfi')
 process.hltHighLevel.HLTPaths = ["HLT_DoublePhoton85*","HLT_Photon250_NoHE*"]
 
 
-process.p1 = cms.Path(
-    (process.kinDiPhotons  +process.isoKinDiphotons  +process.nonIsoKinDiphotons  )*(process.kin+process.isoKin+process.nonIsoKin) + 
-    (process.hcic4DiPhotons+process.isohCic4Diphotons+process.nonIsohCic4Diphotons)*((process.id +process.isoId +process.nonIsoId )
-                                                                                     +process.hltHighLevel*process.trigger)
-    )
+process.watchDog = cms.EDAnalyzer("IdleWatchdog",
+                             minIdleFraction=cms.untracked.double(0.5),
+                             tolerance=cms.untracked.int32(10),
+                             checkEvery=cms.untracked.int32(100),
+                             )
 
-process.p2 = cms.Path(
-    process.kinDiPhotons*process.kin + process.egLooseDiPhotons*process.egid
-    )
+process.p1 = cms.Path(
+    ((process.tmpKinDiPhotons*process.kinDiPhotons)
+    *
+    (process.kin
+      + (process.isoKinDiphotons+process.nonIsoKinDiphotons)*(process.isoKin+process.nonIsoKin)
+      + process.egLooseDiPhotons*process.egid
+      + process.hmvaDiPhotons
+        * 
+        (process.mva 
+          + (process.isohmvaDiphotons+process.nonIsohmvaDiphotons)*(process.isoMva +process.nonIsoMva) 
+          + (process.hltHighLevel*process.triggerMva) 
+         )
+      + process.hcic4DiPhotons
+        *
+        (process.id 
+          + (process.isohCic4Diphotons+process.nonIsohCic4Diphotons)*(process.isoId +process.nonIsoId) 
+          + (process.hltHighLevel*process.trigger)
+        )
+    ))
+    * process.watchDog
+)
 
 from diphotons.MetaData.JobConfig import customize
 customize.setDefault("maxEvents",100)
+customize.setDefault("targetLumi",1.e+3)
 customize(process)

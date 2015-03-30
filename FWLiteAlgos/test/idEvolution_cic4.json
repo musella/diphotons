@@ -5,6 +5,8 @@
         "isEE := abs(scEta)>=1.5 && Entry$ % 2 == 1"
     ], 
     "categories": [
+        "isEB := abs(scEta)<1.5  && Entry$ % 2 == 1", 
+        "isEE := abs(scEta)>=1.5 && Entry$ % 2 == 1",
         "isEBHighR9 := abs(scEta)<1.5  && r9>0.94  && Entry$ % 2 == 1", 
         "isEBLowR9  := abs(scEta)<1.5  && r9<=0.94 && Entry$ % 2 == 1", 
         "isEEHighR9 := abs(scEta)>=1.5 && r9>0.94  && Entry$ % 2 == 1", 
@@ -25,6 +27,7 @@
         "absScEta := scEta*((scEta>=0.)-(scEta<0.))[100,0.,2.5]", 
         "pt[500,200,2000]",
 	"rho[1000,0,100]",
+	"corrChargedBlockIso  := chgIsoWrtVtx0[1000,-10,30]",
 	"egCorrChargedHadronIso := egChargedHadronIso[1000,-10,30]",
         "egCorrNeutralHadronIso := egNeutralHadronIso-rho*neuIsoEA[1000,-10,30]",
         "egCorrPhotonIso        := egPhotonIso-rho*phoIsoEA[1000,-10,30]",
@@ -33,7 +36,8 @@
         "hadronicOverEm         [1000,0,0.2]"
     ], 
     "efficiencies" : [
-    	"loose  := presel*(EBHighR9*EBHighR9Loose  + EBLowR9*EBLowR9Loose  + EEHighR9*EEHighR9Loose  + EELowR9*EELowR9Loose )",
+    	"loose     := presel*(EBHighR9*EBHighR9Loose  + EBLowR9*EBLowR9Loose  + EEHighR9*EEHighR9Loose  + EELowR9*EELowR9Loose )",
+    	"mvaLoose  := presel*(EB*EBMVALoose+EE*EEMVALoose)",
 	"pixVeto := !hasPixelSeed"
     ],
     "_efficiencies" : [
@@ -43,6 +47,8 @@
     ],
     "aliases" : [
         "presel   := (r9>0.8||egChargedHadronIso<20||egChargedHadronIso/pt<0.3)",
+        "EB       := abs(scEta)<1.5", 
+        "EE       := abs(scEta)>=1.5", 
         "EBHighR9 := abs(scEta)<1.5 && r9>0.94", 
         "EBLowR9  := abs(scEta)<1.5 && r9<=0.94", 
         "EEHighR9 := abs(scEta)>=1.5 && r9>0.94", 
@@ -50,6 +56,9 @@
 
 	"phoIsoEA      := 0.31*(abs(scEta)>=2.2 && abs(scEta)<2.5)+0.21*(abs(scEta)<0.9)+0.22*(abs(scEta)>=2. && abs(scEta)<2.2)+0.14*(abs(scEta)>=1.5 && abs(scEta)<2.)+0.2*(abs(scEta)>=0.9 && abs(scEta)<1.5)",
 	"neuIsoEA := 0.15*(abs(scEta)>=2.2 && abs(scEta)<2.5)+0.04*(abs(scEta)<0.9)+0.037*(abs(scEta)>=2. && abs(scEta)<2.2)+0.046*(abs(scEta)>=1.5 && abs(scEta)<2.)+0.059*(abs(scEta)>=0.9 && abs(scEta)<1.5)",
+
+	"EBMVALoose    := egCorrChargedHadronIso<12.8 && egCorrNeutralHadronIso<30. && egCorrPhotonIso<26. && cShapeMVA>2.89e-2",
+	"EEMVALoose    := egCorrChargedHadronIso<12.0 && egCorrNeutralHadronIso<30. && egCorrPhotonIso<19.6 && cShapeMVA>-2.34e-2",
 
 	"EBHighR9Loose  := egCorrChargedHadronIso<5.9529653208330275e+00 && egCorrNeutralHadronIso<2.7394252834954688e+01 && egCorrPhotonIso<2.8726974006639185e+00 && full5x5_sigmaIetaIeta<1.0462952318250056e-02 && hadronicOverEm<4.5264740499299572e-01",
 	"EBHighR9Medium := egCorrChargedHadronIso<5.9529653208330275e+00 && egCorrNeutralHadronIso<2.3419706283460663e+01 && egCorrPhotonIso<3.8921403631355114e+00 && full5x5_sigmaIetaIeta<1.0379369735861144e-02 && hadronicOverEm<3.1339752874148236e-01",

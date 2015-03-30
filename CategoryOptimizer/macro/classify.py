@@ -144,11 +144,12 @@ def main(o,args):
             fullTree = mkChain(getListOfFiles(o.indir,o.files), name, aliases)
             selTree = fullTree.CopyTree(tcut.GetTitle())
             if friend:
-                if type(friend) == str:
+                if type(friend) != list:
                     friends = [friend]
                 else:
                     friends = friend                
                 for ifr,friend in enumerate(friends):
+                    print friend
                     fname,tname = friend.split("::")
                     friend = mkChain(getListOfFiles(o.indir,fname),tname)
                     friend.AddFriend(fullTree)

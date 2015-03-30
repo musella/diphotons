@@ -32,35 +32,54 @@
     "bkg" : [
 	      ["gjet","#gamma j",
 	      [["colors","myColorA1"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",1],["legopt","f"],["SetFillColor","myColorA3tr"]],
-	      { "GJets-HT-100toInf_13TeV:output.root" : [] }
+	      { "GJets-HT-100toInf_13TeV:output.root/id" : [] }
 	      ],
 
-	      ["ggjet","#gamma #gamma",
+	      ["ggjet_nonIso","non iso #gamma #gamma",
+	      [["colors","myColorC1"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",1],["legopt","f"],["SetFillColor","myColorC3tr"]],
+	      { "GGJets_M-200To13000-sherpa_13TeV:output.root/nonIsoId" : [] }
+	      ],
+	      
+	      ["ggjet_iso","iso #gamma #gamma",
 	      [["colors","myColorB1"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",1],["legopt","f"],["SetFillColor","myColorB3tr"]],
-	      { "GGJets_M-200To13000-sherpa_13TeV:output.root" : [] }
+	      { "GGJets_M-200To13000-sherpa_13TeV:output.root/isoId" : [] }
 	      ]
+	      
 	     ],
 
     "data": null,
-    "_bkg_file" : "_per_subproc_", 
+    "bkg_file" : "_per_subproc_", 
     "_sig_file" : "_per_subproc_", 
     "data_file"  : "output.root",
-    "bkg_file"  : "output.root",
+    "_bkg_file"  : "output.root",
     "sig_file"  : "output.root",
 
-    "categories": ["EBHighR9","EBLowR9","EEHighR9","EELowR9"], 
+    "_categories": ["EBHighR9","EBLowR9","EEHighR9","EELowR9"], 
+    "categories" : [],
+    "groups": {
+        "EB"       : ["EBHighR9","EBLowR9"],
+        "EE"       : ["EEHighR9","EELowR9"],
+        "EBHighR9" : ["EBHighR9"],
+	"EBLowR9"  : ["EBLowR9"],
+	"EEHighR9" : ["EEHighR9"],
+	"EELowR9"  : ["EELowR9"]
+	}, 
 	
     "plots": [
-	      ["mass" ,[["Rebin",3],["ytitle","Events / %(binw)s GeV"],["xtitle","m_{#gamma #gamma} (GeV)"],["xrange",[300.0,6000.0]]],null,null]
+	      ["mass" ,[["Rebin",5],["ytitle","Events / %(binw)s GeV"],["xtitle","m_{#gamma #gamma} (GeV)"],["xrange",[300.0,6000.0]]],null,null],
+	      ["leadChIso" ,   [["ytitle","Events / %(binw)s GeV"],["xtitle","#gamma_{1} charged isolation (GeV)"],["xrange",[0,20]]],null,null],
+	      ["subleadChIso" ,[["ytitle","Events / %(binw)s GeV"],["xtitle","#gamma_{2} charged isolation (GeV)"],["xrange",[0,20]]],null,null]
 	      ],
 	      
     "styles": { 
-	"*mass*" : [["logy",1e-5]]
+	"*mass*" : [["logy",1e-5]],
+	"*Iso*"  : [["logy",1e-2]]
 	},	 
     "postproc" : {
     },
 
-    "template": "id/histograms/%(sample)s_%(cat)s%(name)s",
+    "_template": "id/histograms/%(sample)s_%(cat)s%(name)s",
+    "template": "histograms/%(sample)s_%(cat)s%(name)s",
 
     "rootstyle_extra" : [
     		  "TGaxis::SetMaxDigits(3);",
