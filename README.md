@@ -10,8 +10,9 @@ forked the flashgg and this repository.
 
 ```
 # change these to the values that you prefer
-PROJECT_AREA=EXO_7_2_1_patch4 
-CMSSW_VERSION=CMSSW_7_2_1_patch4
+PROJECT_AREA=EXO_7_2_2_patch2 
+CMSSW_VERSION=CMSSW_7_2_2_patch2
+FLASHGG_TAG=diphotonsPhys14AnV1
 
 # read github name from git config
 MY_GITHUB_NAME=$(git config --get user.github)
@@ -21,35 +22,24 @@ cd ${PROJECT_AREA}/src
 
 cmsenv 
 
-# flashgg dependencies
-
-# PU Jet ID
 cd ${CMSSW_BASE}/src
-git cms-addpkg RecoJets/JetProducers
-git cms-merge-topic -u musella:pileupjetid-for-flashgg-72x
-
-# event weight integration
-git cms-addpkg CommonTools/UtilAlgos
-git cms-addpkg DataFormats/Common
-git cms-merge-topic musella:topic-weights-count
-
-# # Photon regression
-# # does not work in 72x though
-# cd ${CMSSW_BASE}/src
-# mkdir HiggsAnalysis
-# cd HiggsAnalysis
-# git clone -b modified-hggpaperV6-for-flashgg https://github.com/sethzenz/GBRLikelihoodEGTools
-# git clone -b hggpaperV8 https://github.com/bendavid/GBRLikelihood 
+git cms-init
 
 # clone flashgg 
 cd ${CMSSW_BASE}/src
 git clone https://github.com/cms-analysis/flashgg.git
 
+cd flashgg
+git remote add musella git@github.com:musella/flashgg.git
+git fetch musella
+git co -b topic_${FLASHGG_TAG} ${FLASHGG_TAG} 
+
+bash ./setup.sh | tee setup.log
+
 # add your own fork as a remote. Skip if you dont have one
 cd flashgg 
 git remote add ${MY_GITHUB_NAME} git@github.com:${MY_GITHUB_NAME}/flashgg.git
 git fetch ${MY_GITHUB_NAME}
-
 
 # clone this repository
 cd ${CMSSW_BASE}/src
@@ -137,34 +127,19 @@ echo crabConfig_*.py | xargs -n 1 crab sub
 ## parallel 'crab sub {}' ::: crabConfig_*.py
 ```
 
-### Configuration for Phys14 studies
+### Configuration for Phys14 AN studies
 ```
 cmsenv
 
-# check out production tag diphotons-phys14-v1
-cd ${CMSSW_BASE}/src/flashgg
-# add musella to get tags
-git remote add musella git@github.com:musella/flashgg.git
-git fetch musella
-git co -b campaing_ExoPhys14 diphotonsPhys14V1
-# git cp cb657ec
-
-scram b -j 16
-
-# prepare crab config
-cd ${CMSSW_BASE}/src/flashgg/MetaData/work 
-source /cvmfs/cms.cern.ch/crab3/crab.sh
-voms-proxy-init --voms cms --valid 168:00
-
-cp -p  ${CMSSW_BASE}/src/diphotons/MetaData/work/campaigns/Phys14_samples.json campaigns/MyPhys14_samples.json
-ln -sf  ${CMSSW_BASE}/src/diphotons/MetaData/work/isolation_Studies.py .
+cp -p  ${CMSSW_BASE}/src/diphotons/MetaData/work/campaigns/AN_Phys14_samples.json campaigns/MyAN_Phys14_samples.json
+ln -sf  ${CMSSW_BASE}/src/diphotons/MetaData/work/analysis_microAOD.py .
 
 # edit list of samples to be actually submitted 
 emacs -nw campaigns/MyPhys14_samples.json
-./prepareCrabJobs.py -V diphotonsPhys14V1 -C ExoPhys14 -s campaigns/MyPhys14_samples.json -p isolation_Studies.py  --mkPilot
+./prepareCrabJobs.py -C ExoPhys14AN -s campaigns/AN_MyPhys14_samples.json -p analysis_microAOD.py  --mkPilot
 
 # submit pilot jobs
-cd ExoPhys14
+cd ExoPhys14AN
 echo pilot* | xargs -n 1 crab sub
 
 ```
