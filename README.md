@@ -131,11 +131,16 @@ echo crabConfig_*.py | xargs -n 1 crab sub
 ```
 cmsenv
 
+source /cvmfs/cms.cern.ch/crab3/crab.sh
+voms-proxy-init --voms cms --valid 168:00
+
+cd ${CMSSW_BASE}/src/flashgg/MetaData/work
+
 cp -p  ${CMSSW_BASE}/src/diphotons/MetaData/work/campaigns/AN_Phys14_samples.json campaigns/MyAN_Phys14_samples.json
 ln -sf  ${CMSSW_BASE}/src/diphotons/MetaData/work/analysis_microAOD.py .
 
 # edit list of samples to be actually submitted 
-emacs -nw campaigns/MyPhys14_samples.json
+emacs -nw campaigns/MyANPhys14_samples.json
 ./prepareCrabJobs.py -C ExoPhys14AN -s campaigns/AN_MyPhys14_samples.json -p analysis_microAOD.py  --mkPilot
 
 # submit pilot jobs
