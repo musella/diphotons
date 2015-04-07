@@ -4,41 +4,52 @@
 
     "sig" : null,
     "bkg" : [
-	      ["kin","acceptance",
+	      ["kinGenIso","acceptance",
 	      [["colors","myColorB1"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","l"],["SetFillColor","myColorB3tr"]],
-	      { "kin" : [] }
+	      { "kinGenIso" : [] }
 	      ]
 	      ],
-    "_data" : [
-	      ["id","ID",
-	      [["colors","myColorA1"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","l"],["SetFillColor","myColorA3tr"]],
-	      { "id" : [] }
-	      ]
-	     ],
-    "bkg" : [
-	      ["kin","acceptance",
+    "_bkg" : [
+	      ["cicNoNeuIsoGenIso","No Neutral Iso",
 	      [["colors","myColorB1"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","l"],["SetFillColor","myColorB3tr"]],
-	      { "isoKin" : [] }
+	      { "cicNoNeuIsoGenIso" : [] }
 	      ]
 	      ],
-    "_data" : [
-	      ["id","Cut-based ID",
-	      [["colors","myColorA1"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","l"],["SetFillColor","myColorA3tr"]],
-	      { "isoId" : [] }
+    "_bkg" : [
+	      ["cicNoChIsoGenIso","No Charged Iso",
+	      [["colors","myColorB1"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","l"],["SetFillColor","myColorB3tr"]],
+	      { "cicNoChIsoGenIso" : [] }
 	      ]
-	     ],
+	      ],
+    "_bkg" : [
+	      ["cicNoPhoIsoGenIso","No Photon Iso",
+	      [["colors","myColorB1"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","l"],["SetFillColor","myColorB3tr"]],
+	      { "cicNoPhoIsoGenIso" : [] }
+	      ]
+	      ],
+    "_bkg" : [
+	      ["cicNoEleVetoGenIso","No Ele Veto",
+	      [["colors","myColorB1"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","l"],["SetFillColor","myColorB3tr"]],
+	      { "cicNoEleVetoGenIso" : [] }
+	      ]
+	      ],
+    "_bkg" : [
+	      ["cicNoHoverEGenIso","No H/E",
+	      [["colors","myColorB1"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","l"],["SetFillColor","myColorB3tr"]],
+	      { "cicNoHoverEGenIso" : [] }
+	      ]
+	      ],
+    "_bkg" : [
+	      ["cicNoSigmaIetaIeta","No #sigma_{i#etai#eta}",
+	      [["colors","myColorB1"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","l"],["SetFillColor","myColorB3tr"]],
+	      { "cicNoSigmaIetaIeta" : [] }
+	      ]
+	      ],
     "data" : [
-	      ["mva","MVA ID",
+	      ["cic","Cut-based ID",
 	      [["colors","myColorA1"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","l"],["SetFillColor","myColorA3tr"]],
-	      { "mva" : [] }
+	      { "cicGenIso" : [] }
 	      ]
-	     ],
-    "_data" : [
-	      ["egid","ID",
-	      [["colors","myColorA1"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","l"],["SetFillColor","myColorA3tr"]],
-	      { "egid" : [] }
-	      ]
-
 	     ],
 
     "data_file"  : "output.root",
@@ -58,6 +69,12 @@
 	
     "plots": [
 	      ["mass" ,[["Rebin",5],["ytitle","Events / %(binw)s GeV"],["xtitle","m_{#gamma #gamma} (GeV)"],["xrange",[300.0,6000.0]]],null,null],
+	      ["leadPt" ,[["Rebin",5],["ytitle","Events / %(binw)s GeV"],["xtitle","p_{T}(#gamma 1) (GeV)"],["xrange",[100.0,6000.0]]],null,null],
+	      ["subleadPt" ,[["Rebin",5],["ytitle","Events / %(binw)s GeV"],["xtitle","p_{T}(#gamma 2) (GeV)"],["xrange",[100.0,6000.0]]],null,null]
+	      ],
+	      
+    "_plots": [
+	      ["mass" ,[["Rebin",5],["ytitle","Events / %(binw)s GeV"],["xtitle","m_{#gamma #gamma} (GeV)"],["xrange",[300.0,6000.0]]],null,null],
 	      ["maxEta" ,[],null,null],
 	      ["minR9" ,[],null,null],
 	      ["leadChIso",[],null,null],
@@ -76,7 +93,7 @@
     "postproc" : {
     },
 
-    "template": "%(sample)s/histograms/GGJets_M-200To13000-sherpa_13TeV_%(cat)s%(name)s",
+    "template": "%(sample)s/histograms/GGJets_M_200To13000_sherpa_13TeV_%(cat)s%(name)s",
 
     "rootstyle_extra" : [
     		  "TGaxis::SetMaxDigits(3);",

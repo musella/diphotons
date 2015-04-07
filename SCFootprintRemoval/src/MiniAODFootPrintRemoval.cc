@@ -92,10 +92,9 @@ void MiniAODFootprintRemoval::setup(const pat::Photon& photon, const edm::Event&
 				sorted[ reco::deltaR(*ptr,photon) ] = ptr;
 			}
 			auto itr = sorted.begin();
-			// auto closest = sorted.begin()->second;
-			while(itr != sorted.end() && associatedCandidates.size()<removePhotonsInMap_ ) {
-				if( closest->pdgId() == 22 ) {
-					associatedCandidates.push_back(closest);
+			while(itr != sorted.end() && (int)associatedCandidates.size()<removePhotonsInMap_ ) {
+				if( itr->second->pdgId() == 22 ) {
+					associatedCandidates.push_back(itr->second);
 				}
 			}
 		}

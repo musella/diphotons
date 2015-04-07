@@ -21,6 +21,7 @@
 			       ]
 	    },
 	  
-    	  "cmdLine" : "campaign=ExoPhys14_v45merged"
+    	  "_cmdLine" : "campaign=ExoPhys14_v45merged",
+    	  "cmdLine" : "campaign=ExoPhys14ANv1"
     
 }

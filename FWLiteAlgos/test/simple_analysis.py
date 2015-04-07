@@ -18,9 +18,9 @@ diphotonDumper.quietRooFit = True
 diphotonDumper.src=cms.InputTag("hcic4DiPhotons")
 cfgTools.addCategories(diphotonDumper,
                        [## cuts are applied in cascade
-                        ("EBHighR9","max(abs(leadingPhoton.superCluster.eta),abs(leadingPhoton.superCluster.eta))<1.4442"
+                        ("EBHighR9","max(abs(leadingPhoton.superCluster.eta),abs(subLeadingPhoton.superCluster.eta))<1.4442"
                          "&& min(leadingPhoton.r9,subLeadingPhoton.r9)>0.94",0),
-                        ("EBLowR9","max(abs(leadingPhoton.superCluster.eta),abs(leadingPhoton.superCluster.eta))<1.4442",0),
+                        ("EBLowR9","max(abs(leadingPhoton.superCluster.eta),abs(subLeadingPhoton.superCluster.eta))<1.4442",0),
                         ("EEHighR9","min(leadingPhoton.r9,subLeadingPhoton.r9)>0.94",0),
                         ("EELowR9","1",0),
                         ],
@@ -33,51 +33,63 @@ cfgTools.addCategories(diphotonDumper,
                                   "maxEta                   :=max(abs(leadingPhoton.superCluster.eta),abs(leadingPhoton.superCluster.eta))",
                                   
                                   "leadBlockChIso   := leadingPhotonView.pfChIso03WrtChosenVtx", 
+                                  "leadBlockPhoIso  := leadingPhotonView.pfPhoIso03", 
+                                  "leadRndConeChIso := leadingPhotonView.extraChgIsoWrtChoosenVtx('rnd03')",
+                                  "leadRndConePhoIso:= leadingPhoton.extraPhoIso('rnd03')",
+                                  
+
                                   "leadChIso   := leadingPhoton.egChargedHadronIso", 
                                   "leadChIso   := leadingPhoton.egChargedHadronIso", 
                                   "leadPhoIso  := leadingPhoton.egPhotonIso", 
                                   "leadNeutIso := leadingPhoton.egNeutralHadronIso",
                                   "leadHoE     := leadingPhoton.hadTowOverEm",
                                   "leadSigmaIeIe := (?leadingPhoton.r9>0.8||leadingPhoton.egChargedHadronIso<20||leadingPhoton.egChargedHadronIso/leadingPhoton.pt<0.3?leadingPhoton.full5x5_sigmaIetaIeta:leadingPhoton.sigmaIetaIeta)",
-                                  "leadPixSeed := leadingPhoton.hasPixelSeed",
+                                  "leadPixSeed  := leadingPhoton.hasPixelSeed",
+                                  "leadPassEleVeto := leadingPhoton.passElectronVeto",
 
 
                                   "subleadBlockChIso   := subLeadingPhotonView.pfChIso03WrtChosenVtx", 
+                                  "subleadBlockPhoIso  := subLeadingPhotonView.pfPhoIso03", 
+                                  "subleadRndConeChIso := subleadingPhotonView.extraChgIsoWrtChoosenVtx('rnd03')",
+                                  "subleadRndConePhoIso:= subleadingPhoton.extraPhoIso('rnd03')",
+                                  
                                   "subleadChIso   := subLeadingPhoton.egChargedHadronIso", 
                                   "subleadPhoIso  := subLeadingPhoton.egPhotonIso", 
                                   "subleadNeutIso := subLeadingPhoton.egNeutralHadronIso",
                                   "subleadHoE     := subLeadingPhoton.hadTowOverEm",
                                   "subleadSigmaIeIe := (?subLeadingPhoton.r9>0.8||subLeadingPhoton.egChargedHadronIso<20||subLeadingPhoton.egChargedHadronIso/subLeadingPhoton.pt<0.3?subLeadingPhoton.full5x5_sigmaIetaIeta:subLeadingPhoton.sigmaIetaIeta)",
                                   "subleadPixSeed := subLeadingPhoton.hasPixelSeed",
+                                  "subleadPassEleVeto := subLeadingPhoton.passElectronVeto",
                                   ],
                        histograms=["mass>>mass(1500,0,15000)",
                                    "leadPt>>leadPt(145,100,3000)",
                                    "subleadPt>>subleadPt(145,100,3000)",
                                    
                                    "leadBlockChIso>>leadBlockChIso(60,-10,50)",
+                                   "leadBlockPhoIso>>leadBlockPhoIso(60,-10,50)",
                                    "leadChIso>>leadChIso(60,-10,50)",
                                    "leadPhoIso>>leadPhoIso(60,-10,50)",
                                    "leadNeutIso>>leadNeutIso(60,-10,50)",
                                    "leadHoE>>leadHoE(40,0,0.2)",
                                    "leadSigmaIeIe>>leadSigmaIeIe(50,0,5.e-2)",
                                    "leadPixSeed>>leadPixSeed(2,-0.5,1.5)",
+                                   "subleadPassEleVeto>>subleadPassEleVeto(2,-0.5,1.5)",
 
                                    "subleadBlockChIso>>subleadBlockChIso(60,-10,50)",
+                                   "subleadBlockPhoIso>>subleadBlockPhoIso(60,-10,50)",
                                    "subleadChIso>>subleadChIso(60,-10,50)",
                                    "subleadPhoIso>>subleadPhoIso(60,-10,50)",
                                    "subleadNeutIso>>subleadNeutIso(60,-10,50)",
                                    "subleadHoE>>subleadHoE(40,0,0.2)",
                                    "subleadSigmaIeIe>>subleadSigmaIeIe(50,0,5.e-2)",
                                    "subleadPixSeed>>subleadPixSeed(2,-0.5,1.5)",
+                                   "subleadPassEleVeto>>subleadPassEleVeto(2,-0.5,1.5)",
                                    
                                    "subleadPt:leadPt>>ptSubVsLead(145,100,3000:145,100,3000)",
                                    "minR9>>minR9(110,0,1.1)",
                                    "maxEta>>maxEta(250,0,2.5)"
                                    ]
                        )
-
-
-
 
 
 process.load("FWCore.MessageService.MessageLogger_cfi")
