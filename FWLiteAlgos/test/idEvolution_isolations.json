@@ -1,0 +1,30 @@
+{
+    "categories": [
+        "isEB := abs(scEta)<1.5", 
+        "isEE := abs(scEta)>1.5"
+    ], 
+    "variables": [
+        "absScEta := scEta*((scEta>=0.)-(scEta<0.))[100,0.,2.5]", 
+        "pt[500,200,2000]",
+	
+	"rndConeChIso[60,-10,50]",
+	"stdChIso[60,-10,50]",
+	
+	"fprRndConeChIso[60,-10,50]",
+	"fprChIso[60,-10,50]",
+        
+	"rndConePhoIso[60,-10,50]",
+	"stdPhoIso[60,-10,50]",
+        
+	"fprRndConePhoIso[60,-10,50]",
+	"fprPhoIso[60,-10,50]",
+        
+	"fprRndNoMapConePhoIso[60,-10,50]",
+	"fprNoMapPhoIso[60,-10,50]",
+
+	"relStdPhoIso := stdPhoIso/pt[60,-0.1,2.]",
+	"relFprPhoIso := fprPhoIso/pt[60,-0.1,2.]",
+	"relFprNoMapPhoIso := fprNoMapPhoIso/pt[60,-0.1,2.]"
+    ], 
+    "weight": "weight*(pt>100)"
+}

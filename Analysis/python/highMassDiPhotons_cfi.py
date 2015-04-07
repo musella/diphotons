@@ -32,8 +32,6 @@ kinDiPhotons = cms.EDProducer(
 
 
 
-# single photon preselection is mickmicking as much as possible
-# what is documented in AN 2013/253 v8 page 41 table 18,
 egLooseDiPhotons = cms.EDFilter(
     "GenericDiPhotonCandidateSelector",
     src = cms.InputTag("kinDiPhotons"),
@@ -47,7 +45,7 @@ egLooseDiPhotons = cms.EDFilter(
         "egNeutralHadronIso",
         "hadTowOverEm",
         "(?r9>0.8||egChargedHadronIso<20||egChargedHadronIso/pt<0.3?full5x5_sigmaIetaIeta:sigmaIetaIeta)",
-        "hasPixelSeed-10" ## effectively remove cut
+        "! passElectronVeto"
         ),
     categories = cms.VPSet(
         cms.PSet(cut=cms.string("abs(superCluster.eta)<1.5"),
@@ -130,7 +128,7 @@ hcic4DiPhotons = cms.EDFilter(
         "egNeutralHadronIso",
         "hadTowOverEm",
         "(?r9>0.8||egChargedHadronIso<20||egChargedHadronIso/pt<0.3?full5x5_sigmaIetaIeta:sigmaIetaIeta)",
-        "hasPixelSeed-10" ## effectively remove cut
+        "! passElectronVeto"
         ),
     categories = cms.VPSet(
         cms.PSet(cut=cms.string("abs(superCluster.eta)<1.5 && r9>0.94"),
@@ -246,7 +244,7 @@ hmvaDiPhotons = cms.EDFilter(
         "egPhotonIso", 
         "egNeutralHadronIso",
         "userFloat('cShapeMVA')",
-        "hasPixelSeed-10" ## effectively remove cut
+        "! passElectronVeto"
         ),
     categories = cms.VPSet(
         cms.PSet(cut=cms.string("abs(superCluster.eta)<1.5"),

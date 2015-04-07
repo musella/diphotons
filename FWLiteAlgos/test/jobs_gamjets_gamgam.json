@@ -1,39 +1,39 @@
 {
-    "_processes" : {
-		"GJets-HT-100toInf" : [
-				       "/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola",
-				       "/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola",
-				       "/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola",
-				       "/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola"
-				       ]
-	    },
     "processes" : {
 	    "GGJets_M-200To13000-sherpa" : [
-		    "/GGJets_M-200To500_Pt-50_13TeV-sherpa",
-		    "/GGJets_M-500To1000_Pt-50_13TeV-sherpa",
-		    "/GGJets_M-1000To2000_Pt-50_13TeV-sherpa",
-		    "/GGJets_M-2000To4000_Pt-50_13TeV-sherpa",
-		    "/GGJets_M-4000To8000_Pt-50_13TeV-sherpa",
-		    "/GGJets_M-8000To13000_Pt-50_13TeV-sherpa"
+					    "/GGJets_M-200To500_Pt-50_13TeV-sherpa",
+					    "/GGJets_M-500To1000_Pt-50_13TeV-sherpa",
+					    "/GGJets_M-1000To2000_Pt-50_13TeV-sherpa",
+					    "/GGJets_M-2000To4000_Pt-50_13TeV-sherpa",
+					    "/GGJets_M-4000To8000_Pt-50_13TeV-sherpa",
+					    "/GGJets_M-8000To13000_Pt-50_13TeV-sherpa"
 					    ],
 		"GJets-HT-100toInf" : [
 				       "/GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola",
 				       "/GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola",
 				       "/GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola",
 				       "/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola"
-				       ]
+				       ],
+		
+                 "QCD-HT-100toInf" : [ 
+				      "/QCD_HT-100To250_13TeV-madgraph",
+				      "/QCD_HT_250To500_13TeV-madgraph",
+				      "/QCD_HT-500To1000_13TeV-madgraph",
+				      "/QCD_HT_1000ToInf_13TeV-madgraph"
+				       ],
+		
+		"RSGravToGG_kMpl-02_M-5000"  : ["RSGravToGG_kMpl-02_M-5000_Tune4C_13TeV-pythia8" ],
+		"RSGravToGG_kMpl-02_M-3000"  : ["RSGravToGG_kMpl-02_M-3000_Tune4C_13TeV-pythia8" ],
+		"RSGravToGG_kMpl-02_M-1500"  : ["RSGravToGG_kMpl-02_M-1500_Tune4C_13TeV-pythia8" ],
+		"RSGravToGG_kMpl-01_M-3000"  : ["RSGravToGG_kMpl-01_M-3000_Tune4C_13TeV-pythia8" ],
+		"RSGravToGG_kMpl-01_M-1500"  : ["RSGravToGG_kMpl-01_M-1500_Tune4C_13TeV-pythia8" ],
+		"RSGravToGG_kMpl-001_M-1500" : ["RSGravToGG_kMpl-001_M-1500_Tune4C_13TeV-pythia8"],
+		"RSGravToGG_kMpl-001_M-750"  : ["RSGravToGG_kMpl-001_M-750_Tune4C_13TeV-pythia8" ],
+		"RSGravToGG_kMpl-001_M-5000" : ["RSGravToGG_kMpl001_M_5000_Tune4C_13TeV_pythia8" ]
+		
 
 	    },
-    "_processes" : {
-		"GJets-HT-100toInf" : [
-				       "/GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola"
-				       ]
 
-	    },
-    "_processes" : {
-	    "GGJets_M-200To13000-sherpa" : [
-		    "/GGJets_M-200To500_Pt-50_13TeV-sherpa"
-		    ]
-		    },
-    "cmdLine" : "campaign=ExoPhys14_v45merged"
+	"cmdLine" : "campaign=ExoPhys14ANv1",
+    "_cmdLine" : "campaign=ExoPhys14_v45merged"
 }
