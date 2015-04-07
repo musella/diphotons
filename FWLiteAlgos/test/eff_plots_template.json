@@ -1,0 +1,68 @@
+{
+    "drawopts" : ["Draw,DrawRatio[0.5]","hist","hist","hist nostack"],
+    "legpos"  : [0.580,0.60,0.830,0.88],
+
+    "sig" : null,
+    "bkg" : [
+	      ["%(den)s","%(dentit)s",
+	      [["colors","myColorB1"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","l"],["SetFillColor","myColorB3tr"]],
+	      { "%(den)s" : [] }
+	      ]
+	      ],
+    "data" : [
+	      ["%(num)s","%(numtit)s",
+	      [["colors","myColorA1"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","l"],["SetFillColor","myColorA3tr"]],
+	      { "%(num)s" : [] }
+	      ]
+	     ],
+
+     "ratios" : [
+     	      ["kinGenIso"                ,"Acceptance"            ,"cicGenIso","Cut-based ID",""],
+              ["cicNoChIsoGenIso"         ,"No Charged Iso"        ,"cicGenIso","Full ID"   ,"chIsoNm1" ],
+              ["cicNoNeuIsoGenIso"        ,"No Neutral Iso"        ,"cicGenIso","Full ID"   ,"neuIsoNm1"],
+              ["cicNoPhoIsoGenIso"        ,"No Photon Iso"         ,"cicGenIso","Full ID"   ,"phoIsoNm1"],
+              ["cicNoEleVetoGenIso"       ,"No Electron Veto"      ,"cicGenIso","Full ID"   ,"eleVetoIsoNm1"],
+              ["cicNoSigmaIetaIetaGenIso" ,"No #sigma_{i#etai#eta}","cicGenIso","Full ID"   ,"sigmaIetaIetaNm1"],
+              ["cicNoHoverEGenIso"        ,"No H/E"                ,"cicGenIso","Full ID"   ,"hOverENm1"],
+              ["kinGenIso"                ,"Acceptance"            ,"kin"      ,"Acceptance No Gen Iso","genIsoEffNoId"],
+              ["cic"                      ,"All events"            ,"cicGenIso","Gen Iso"   ,"genIsoEff"]
+    ],
+
+    "data_file"  : "output.root",
+    "bkg_file"  : "output.root",
+    "sig_file"  : "output.root",
+
+    "_categories": ["EBHighR9","EBLowR9","EEHighR9","EELowR9"], 
+    "categories" : [],
+    "groups": {
+        "EB"       : ["EBHighR9","EBLowR9"],
+        "EE"       : ["EEHighR9","EELowR9"],
+        "EBHighR9" : ["EBHighR9"],
+	"EBLowR9"  : ["EBLowR9"],
+	"EEHighR9" : ["EEHighR9"],
+	"EELowR9"  : ["EELowR9"]
+	}, 
+	
+    "plots": [
+	      ["mass" ,[["Rebin",5],["ytitle","Events / %(binw)s GeV"],["xtitle","m_{#gamma #gamma} (GeV)"],["xrange",[300.0,6000.0]]],null,null],
+	      ["leadPt" ,[["Rebin",5],["ytitle","Events / %(binw)s GeV"],["xtitle","p_{T}(#gamma 1) (GeV)"],["xrange",[100.0,6000.0]]],null,null],
+	      ["subleadPt" ,[["Rebin",5],["ytitle","Events / %(binw)s GeV"],["xtitle","p_{T}(#gamma 2) (GeV)"],["xrange",[100.0,6000.0]]],null,null]
+	      ],
+	      	      
+    "styles": { 
+	"*mass*" : [["logy",1e-4]],
+	"*Iso*"  : [["logy",1e-4]],     
+	"*rat"   : ["SetGridy"],
+	"*ratio" : [["ytitle","#varepsilon"],["applyTo",["GetYaxis",[["SetNdivisions",505],["SetRangeUser",[0.5,1.0]]]]]]
+	},	 
+    "postproc" : {
+    },
+
+    "template": "%(sample)s/histograms/GGJets_M_200To13000_sherpa_13TeV_%(cat)s%(name)s",
+
+    "rootstyle_extra" : [
+    		  "TGaxis::SetMaxDigits(3);",
+		  "TH1::SetDefaultSumw2(1);"
+    ]
+    
+}
