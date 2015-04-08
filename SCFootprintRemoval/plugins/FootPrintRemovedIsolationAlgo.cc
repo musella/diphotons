@@ -61,7 +61,7 @@ namespace diphotons {
 				(typ == reco::PFCandidate::h0    && ! neutralVetos_.empty()); 
 		};
 		
-		virtual float caloIsolation(const edm::Ptr<pat::Photon> &, const edm::PtrVector<pat::PackedCandidate>&, reco::PFCandidate::ParticleType, const reco::Vertex * vtx=0);
+		virtual float caloIsolation(const edm::Ptr<pat::Photon> &, const std::vector<edm::Ptr<pat::PackedCandidate> >&, reco::PFCandidate::ParticleType, const reco::Vertex * vtx=0);
 		
 		virtual void end(pat::Photon &);
 		
@@ -124,7 +124,7 @@ namespace diphotons {
 		return 0.;
 	}
 	
-	float FootPrintRemovedIsolationAlgo::caloIsolation(const edm::Ptr<pat::Photon> & pho, const edm::PtrVector<pat::PackedCandidate>& ptrs, 
+	float FootPrintRemovedIsolationAlgo::caloIsolation(const edm::Ptr<pat::Photon> & pho, const std::vector<edm::Ptr<pat::PackedCandidate> >& ptrs, 
 						  reco::PFCandidate::ParticleType typ, const reco::Vertex * vtx)
 	{
 		if( typ == reco::PFCandidate::gamma && ! photonVetos_.empty() ) { 
