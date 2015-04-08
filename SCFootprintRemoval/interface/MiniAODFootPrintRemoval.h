@@ -1,7 +1,7 @@
 // -*- C++ -*-
 //
 // Ported to miniAOD from https://github.com/peruzzim/SCFootprintRemoval.git
-// 
+//
 
 #ifndef __MINIAODFOOTPRINTREMOVAL__HH__
 #define __MINIAODFOOTPRINTREMOVAL__HH__
@@ -31,65 +31,74 @@
 
 
 namespace diphotons {
-	//
-	// constants, enums and typedefs
-	//
-	typedef struct {
-		int nxtals;
-		std::vector<TVector3> xtalposition;
-		std::vector<float> xtaletawidth;
-		std::vector<float> xtalphiwidth;
-		std::vector<std::vector<TVector3> > xtalcorners;
-	} sc_xtal_information;
-	
-        //
-	// class declaration
-	//
-	
-	class MiniAODFootprintRemoval { // : public flashgg::OverlapRemovalAlgo {
-		
-	public:
-		
-	//    The constructor can take the following arguments from configuration (default value):
+    //
+    // constants, enums and typedefs
+    //
+    typedef struct {
+        int nxtals;
+        std::vector<TVector3> xtalposition;
+        std::vector<float> xtaletawidth;
+        std::vector<float> xtalphiwidth;
+        std::vector<std::vector<TVector3> > xtalcorners;
+    } sc_xtal_information;
+
+    //
+    // class declaration
+    //
+
+    class MiniAODFootprintRemoval   // : public flashgg::OverlapRemovalAlgo {
+    {
+
+    public:
+
+        //    The constructor can take the following arguments from configuration (default value):
         //
         //    isolation_cone_size_forSCremoval (0.4) : isolation cone used for PF Iso calculation
         //    tag_pfCandidates_forSCremoval ("particleFlow") : collection of PF candidates to use
         //    tag_jets ("ak5PFJets") : collection of PF jets to use for vetoing around random cone direction
         //    rechit_link_enlargement_forSCremoval (0.25) : enlargement of linear dimension of xtals for rechit matching
 
-		MiniAODFootprintRemoval(edm::ParameterSet iConfig);
-		~MiniAODFootprintRemoval();
-		
-		void setup(const pat::Photon& photon, const edm::Event& iEvent, const edm::EventSetup& iSetup);
-		
-		bool checkPFCandInFootprint(const pat::Photon& photon, const edm::Ptr<pat::PackedCandidate> & cand);
-		/// virtual bool operator()(const pat::Photon& photon, const edm::Ptr<pat::PackedCandidate> & pfcand);
-		
-		void setRotatioPhi(float x) { rotation_phi=x; };
-	private:
-		std::vector<edm::Ptr<pat::PackedCandidate> > associatedCandidates;
-		
-		TVector3 propagatePFCandToEcal(const edm::Ptr<pat::PackedCandidate> & cand, float position, bool isbarrel);
-		sc_xtal_information getSCXtalInfo(reco::SuperClusterRef sc);
-		bool checkMatchedPFCandidate(const edm::Ptr<pat::PackedCandidate> & pfcandindex);
-		
-		CaloSubdetectorGeometry *barrelGeometry;
-		CaloSubdetectorGeometry *endcapGeometry;
-		TGeoPara eegeom;
-		MagneticField *magField;
-		
-		reco::SuperClusterRef sc;
-		sc_xtal_information infos;
-		
-		double global_linkbyrechit_enlargement;
-		float rotation_phi;
-		int removePhotonsInMap_;
-		
-		static int findPFCandType(int id);
-		
-	};
-	
+        MiniAODFootprintRemoval( edm::ParameterSet iConfig );
+        ~MiniAODFootprintRemoval();
+
+        void setup( const pat::Photon &photon, const edm::Event &iEvent, const edm::EventSetup &iSetup );
+
+        bool checkPFCandInFootprint( const pat::Photon &photon, const edm::Ptr<pat::PackedCandidate> &cand );
+        /// virtual bool operator()(const pat::Photon& photon, const edm::Ptr<pat::PackedCandidate> & pfcand);
+
+        void setRotatioPhi( float x ) { rotation_phi = x; };
+    private:
+        std::vector<edm::Ptr<pat::PackedCandidate> > associatedCandidates;
+
+        TVector3 propagatePFCandToEcal( const edm::Ptr<pat::PackedCandidate> &cand, float position, bool isbarrel );
+        sc_xtal_information getSCXtalInfo( reco::SuperClusterRef sc );
+        bool checkMatchedPFCandidate( const edm::Ptr<pat::PackedCandidate> &pfcandindex );
+
+        CaloSubdetectorGeometry *barrelGeometry;
+        CaloSubdetectorGeometry *endcapGeometry;
+        TGeoPara eegeom;
+        MagneticField *magField;
+
+        reco::SuperClusterRef sc;
+        sc_xtal_information infos;
+
+        double global_linkbyrechit_enlargement;
+        float rotation_phi;
+        int removePhotonsInMap_;
+
+        static int findPFCandType( int id );
+
+    };
+
 }
 
 #endif
+
+// Local Variables:
+// mode:c++
+// indent-tabs-mode:nil
+// tab-width:4
+// c-basic-offset:4
+// End:
+// vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4
 

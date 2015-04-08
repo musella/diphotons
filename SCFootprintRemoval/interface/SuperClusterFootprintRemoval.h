@@ -2,7 +2,7 @@
 //
 // Package:    SuperClusterFootprintRemoval
 // Class:      SuperClusterFootprintRemoval
-// 
+//
 /**\class SuperClusterFootprintRemoval SuperClusterFootprintRemoval.cc PFIsolation/SuperClusterFootprintRemoval/plugins/SuperClusterFootprintRemoval.cc
 
  Description: Implements the algo for removal of PF clusters from the SC footprint
@@ -75,39 +75,40 @@
 //
 
 typedef struct {
-  int nxtals;
-  std::vector<TVector3> xtalposition;
-  std::vector<float> xtaletawidth;
-  std::vector<float> xtalphiwidth;
-  std::vector<std::vector<TVector3> > xtalcorners;
+    int nxtals;
+    std::vector<TVector3> xtalposition;
+    std::vector<float> xtaletawidth;
+    std::vector<float> xtalphiwidth;
+    std::vector<std::vector<TVector3> > xtalcorners;
 } sc_xtal_information;
 
 typedef struct {
-  float dR;
-  float dEta;
-  float dPhi;
+    float dR;
+    float dEta;
+    float dPhi;
 } angular_distances_struct;
 
 typedef struct {
-  float chargediso;
-  float chargediso_primvtx;
-  float neutraliso;
-  float photoniso;
-  float chargediso_rcone;
-  float chargediso_primvtx_rcone;
-  float neutraliso_rcone;
-  float photoniso_rcone;
-  float eta_rcone;
-  float phi_rcone;
-  bool  rcone_isOK;
-  std::vector<int> pfcandindex_footprint;
+    float chargediso;
+    float chargediso_primvtx;
+    float neutraliso;
+    float photoniso;
+    float chargediso_rcone;
+    float chargediso_primvtx_rcone;
+    float neutraliso_rcone;
+    float photoniso_rcone;
+    float eta_rcone;
+    float phi_rcone;
+    bool  rcone_isOK;
+    std::vector<int> pfcandindex_footprint;
 } PFIsolation_struct;
 
 //
 // class declaration
 //
 
-class SuperClusterFootprintRemoval {
+class SuperClusterFootprintRemoval
+{
 
 public:
 
@@ -118,44 +119,53 @@ public:
 //    tag_jets ("ak5PFJets") : collection of PF jets to use for vetoing around random cone direction
 //    rechit_link_enlargement_forSCremoval (0.25) : enlargement of linear dimension of xtals for rechit matching
 
-  SuperClusterFootprintRemoval(const edm::Event& iEvent, const edm::EventSetup& iSetup, edm::ParameterSet iConfig = edm::ParameterSet());
-  ~SuperClusterFootprintRemoval();
+    SuperClusterFootprintRemoval( const edm::Event &iEvent, const edm::EventSetup &iSetup, edm::ParameterSet iConfig = edm::ParameterSet() );
+    ~SuperClusterFootprintRemoval();
 
-  // Calculate the PF isolation around the object consisting of the SuperCluster sc. Component can be "neutral","charged" or "photon".
-  // The vertexforchargediso Ptr should be passed to tell with respect to which vertex we should cut on dxy (0.1 cm) and dz (0.2 cm) of the track associated to charged PF candidate (no cut applied if the Ptr is null). Ideally, this should be the vertex from which the object consisting of the SuperCluster sc comes from.
-  PFIsolation_struct PFIsolation(reco::SuperClusterRef sc_, edm::Ptr<reco::Vertex> vertexforchargediso = edm::Ptr<reco::Vertex>());
+    // Calculate the PF isolation around the object consisting of the SuperCluster sc. Component can be "neutral","charged" or "photon".
+    // The vertexforchargediso Ptr should be passed to tell with respect to which vertex we should cut on dxy (0.1 cm) and dz (0.2 cm) of the track associated to charged PF candidate (no cut applied if the Ptr is null). Ideally, this should be the vertex from which the object consisting of the SuperCluster sc comes from.
+    PFIsolation_struct PFIsolation( reco::SuperClusterRef sc_, edm::Ptr<reco::Vertex> vertexforchargediso = edm::Ptr<reco::Vertex>() );
 
 private:
 
-  PFIsolation_struct PFIsolation_worker(reco::SuperClusterRef sc_, edm::Ptr<reco::Vertex> vertexforchargediso = edm::Ptr<reco::Vertex>(), float rotation_phi=0, bool is_recursive_rcone=false);
-  TVector3 PropagatePFCandToEcal(int pfcandindex, float position, bool isbarrel);
-  sc_xtal_information GetSCXtalInfo(reco::SuperClusterRef sc);
-  bool CheckMatchedPFCandidate(int pfcandindex);
-  bool FindCloseJetsAndPhotons(float rotation_phi);
-  void RandomConeIsolation(edm::Ptr<reco::Vertex> vertexforchargediso = edm::Ptr<reco::Vertex>(), PFIsolation_struct *output=NULL);
-  bool CheckPFCandInFootprint(int pfcandindex, float rotation_phi);
-  angular_distances_struct GetPFCandHitDistanceFromSC(int pfcandindex, float rotation_phi);
+    PFIsolation_struct PFIsolation_worker( reco::SuperClusterRef sc_, edm::Ptr<reco::Vertex> vertexforchargediso = edm::Ptr<reco::Vertex>(), float rotation_phi = 0,
+                                           bool is_recursive_rcone = false );
+    TVector3 PropagatePFCandToEcal( int pfcandindex, float position, bool isbarrel );
+    sc_xtal_information GetSCXtalInfo( reco::SuperClusterRef sc );
+    bool CheckMatchedPFCandidate( int pfcandindex );
+    bool FindCloseJetsAndPhotons( float rotation_phi );
+    void RandomConeIsolation( edm::Ptr<reco::Vertex> vertexforchargediso = edm::Ptr<reco::Vertex>(), PFIsolation_struct *output = NULL );
+    bool CheckPFCandInFootprint( int pfcandindex, float rotation_phi );
+    angular_distances_struct GetPFCandHitDistanceFromSC( int pfcandindex, float rotation_phi );
 
-  CaloSubdetectorGeometry *barrelGeometry;
-  CaloSubdetectorGeometry *endcapGeometry;
-  TGeoPara eegeom;
-  MagneticField *magField;
-  TRandom3 *randomgen;
+    CaloSubdetectorGeometry *barrelGeometry;
+    CaloSubdetectorGeometry *endcapGeometry;
+    TGeoPara eegeom;
+    MagneticField *magField;
+    TRandom3 *randomgen;
 
-  reco::SuperClusterRef sc;
-  sc_xtal_information infos;
+    reco::SuperClusterRef sc;
+    sc_xtal_information infos;
 
-  edm::Handle<reco::PFCandidateCollection> pfCandidates;  
-  edm::Handle<reco::PhotonCollection> photonHandle;
-  edm::Handle<reco::PFJetCollection> jetHandle;
-  edm::Handle<reco::MuonCollection> muonHandle;
+    edm::Handle<reco::PFCandidateCollection> pfCandidates;
+    edm::Handle<reco::PhotonCollection> photonHandle;
+    edm::Handle<reco::PFJetCollection> jetHandle;
+    edm::Handle<reco::MuonCollection> muonHandle;
 
-  double global_linkbyrechit_enlargement;
-  double global_isolation_cone_size;
+    double global_linkbyrechit_enlargement;
+    double global_isolation_cone_size;
 
-  int FindPFCandType(int id);
-  
+    int FindPFCandType( int id );
+
 };
 
 #endif
+
+// Local Variables:
+// mode:c++
+// indent-tabs-mode:nil
+// tab-width:4
+// c-basic-offset:4
+// End:
+// vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4
 

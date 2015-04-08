@@ -17,96 +17,108 @@
 class CutAndCountModelBuiler;
 
 // ------------------------------------------------------------------------------------------------
-class CutAndCountModel : public AbsModel 
+class CutAndCountModel : public AbsModel
 {
 public:
-	CutAndCountModel(AbsModel::type_t type=AbsModel::sig) { type_ = type; };
-	
-	void addCategory(double counts) { categoryYields_.push_back(counts); };
+    CutAndCountModel( AbsModel::type_t type = AbsModel::sig ) { type_ = type; };
+
+    void addCategory( double counts ) { categoryYields_.push_back( counts ); };
 };
 
 // ------------------------------------------------------------------------------------------------
 class CutAndCountModelBuilder : public AbsModelBuilder
 {
 public:
-	CutAndCountModelBuilder(AbsModel::type_t type, TH1 * pdf, double norm, double min,  double max) :
-		model_(type),
-		norm_(norm), 
-		converter_(new HistoToTF1(Form("%s_integrator",pdf->GetName()),integrate1D(pdf)))
-		{
-		ranges_.push_back(std::make_pair(min,max));
-	};
-	
-	CutAndCountModelBuilder(AbsModel::type_t type, TH2 * pdf, double norm, double xmin, double xmax, 
-			       double ymin, double ymax)  : 
-		model_(type),
-		norm_(norm),
-		converter_(new SimpleHistoToTF2(Form("%s_integrator",pdf->GetName()),integrate2D(pdf)))
-		{
-		ranges_.push_back(std::make_pair(xmin,xmax));
-		ranges_.push_back(std::make_pair(ymin,ymax));
-	};
+    CutAndCountModelBuilder( AbsModel::type_t type, TH1 *pdf, double norm, double min,  double max ) :
+        model_( type ),
+        norm_( norm ),
+        converter_( new HistoToTF1( Form( "%s_integrator", pdf->GetName() ), integrate1D( pdf ) ) )
+    {
+        ranges_.push_back( std::make_pair( min, max ) );
+    };
 
-	~CutAndCountModelBuilder() {
-		delete converter_;
-	};
-	
-	AbsModel * getModel() { return &model_; };
-	void beginIntegration(double * boundaries) { 
-		lastIntegral_ = (*converter_)(boundaries,0);
-		model_.clear(); 
-	};
+    CutAndCountModelBuilder( AbsModel::type_t type, TH2 *pdf, double norm, double xmin, double xmax,
+                             double ymin, double ymax )  :
+        model_( type ),
+        norm_( norm ),
+        converter_( new SimpleHistoToTF2( Form( "%s_integrator", pdf->GetName() ), integrate2D( pdf ) ) )
+    {
+        ranges_.push_back( std::make_pair( xmin, xmax ) );
+        ranges_.push_back( std::make_pair( ymin, ymax ) );
+    };
 
-	void endIntegration() {};
-	
-	bool addBoundary(double * boundaries) {
-		bool ret = true;
-		double integral = (*converter_)(boundaries,0);
-		double norm = norm_*(integral - lastIntegral_);
-		if( norm == 0 ) { ret = false; }
-		model_.addCategory(norm);
-		lastIntegral_ = integral;
-		return ret;
-	};
-	
-	double getMin(int idim) { return ranges_[idim].first;  };
-	double getMax(int idim) { return ranges_[idim].second; };
-	
-	HistoConverter * getInputModel() { return converter_; };
-	
+    ~CutAndCountModelBuilder()
+    {
+        delete converter_;
+    };
+
+    AbsModel *getModel() { return &model_; };
+    void beginIntegration( double *boundaries )
+    {
+        lastIntegral_ = ( *converter_ )( boundaries, 0 );
+        model_.clear();
+    };
+
+    void endIntegration() {};
+
+    bool addBoundary( double *boundaries )
+    {
+        bool ret = true;
+        double integral = ( *converter_ )( boundaries, 0 );
+        double norm = norm_ * ( integral - lastIntegral_ );
+        if( norm == 0 ) { ret = false; }
+        model_.addCategory( norm );
+        lastIntegral_ = integral;
+        return ret;
+    };
+
+    double getMin( int idim ) { return ranges_[idim].first;  };
+    double getMax( int idim ) { return ranges_[idim].second; };
+
+    HistoConverter *getInputModel() { return converter_; };
+
 private:
-	CutAndCountModel model_;
-	double norm_, lastIntegral_;
-	std::vector<std::pair<double,double> > ranges_;
-	
-	HistoConverter * converter_;
+    CutAndCountModel model_;
+    double norm_, lastIntegral_;
+    std::vector<std::pair<double, double> > ranges_;
+
+    HistoConverter *converter_;
 };
 
 
 // ------------------------------------------------------------------------------------------------
-class NaiveCutAndCountFomProvider : public AbsFomProvider 
+class NaiveCutAndCountFomProvider : public AbsFomProvider
 {
 public:
-	NaiveCutAndCountFomProvider(ROOT::Math::IBaseFunctionMultiDim * denom=0) : own_(false), denom_(denom) {};
-	NaiveCutAndCountFomProvider(TF1 * denom) : own_(true), denom_(new TF1ToFunctor(denom)) {};
-	
-	~NaiveCutAndCountFomProvider() {
-		if( own_ ) { delete denom_; }
-	};
-	
-	double operator()  ( std::vector<AbsModel *> sig, std::vector<AbsModel *> bkg) const;
+    NaiveCutAndCountFomProvider( ROOT::Math::IBaseFunctionMultiDim *denom = 0 ) : own_( false ), denom_( denom ) {};
+    NaiveCutAndCountFomProvider( TF1 *denom ) : own_( true ), denom_( new TF1ToFunctor( denom ) ) {};
+
+    ~NaiveCutAndCountFomProvider()
+    {
+        if( own_ ) { delete denom_; }
+    };
+
+    double operator()( std::vector<AbsModel *> sig, std::vector<AbsModel *> bkg ) const;
 
 private:
-	bool own_;
-	ROOT::Math::IBaseFunctionMultiDim * denom_;
+    bool own_;
+    ROOT::Math::IBaseFunctionMultiDim *denom_;
 
 };
 
 // ------------------------------------------------------------------------------------------------
-class PoissonCutAndCountFomProvider : public AbsFomProvider 
+class PoissonCutAndCountFomProvider : public AbsFomProvider
 {
 public:
-	double operator()  ( std::vector<AbsModel *> sig, std::vector<AbsModel *> bkg) const;
+    double operator()( std::vector<AbsModel *> sig, std::vector<AbsModel *> bkg ) const;
 };
 
 #endif
+// Local Variables:
+// mode:c++
+// indent-tabs-mode:nil
+// tab-width:4
+// c-basic-offset:4
+// End:
+// vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4
+
