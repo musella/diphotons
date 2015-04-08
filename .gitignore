@@ -29,6 +29,13 @@
 
 # Backup files
 *~
+*.orig
+*.REMOTE.*
+*.LOCAL.*
+*.BACKUP.*
 
 # python compiled
 *.pyc
+__init__.py
+
+*/test/*/
