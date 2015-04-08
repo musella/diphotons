@@ -40,19 +40,21 @@ cfgTools.addCategories(diphotonDumper,
                        variables=["mass", 
                                   "leadPt                   :=leadingPhoton.pt",
                                   "subleadPt                :=subLeadingPhoton.pt",
-                                  "leadEta                   :=leadingPhoton.eta",
-                                  "subleadEta                :=subLeadingPhoton.eta",
-                                  "leadPhi                   :=leadingPhoton.phi",
-                                  "subleadPhi                :=subLeadingPhoton.phi",
+                                  "leadEta                  :=leadingPhoton.eta",
+                                  "subleadEta               :=subLeadingPhoton.eta",
+                                  "leadScEta                :=leadingPhoton.superCluster.eta",
+                                  "subleadScEta             :=subLeadingPhoton.superCluster.eta",
+                                  "leadPhi                  :=leadingPhoton.phi",
+                                  "subleadPhi               :=subLeadingPhoton.phi",
                                   "leadCShapeMVA            :=leadingPhoton.userFloat('cShapeMVA')",
                                   "subleadCShapeMVA         :=subLeadingPhoton.userFloat('cShapeMVA')",
                                   "minR9                    :=min(leadingPhoton.r9,subLeadingPhoton.r9)",
                                   "maxEta                   :=max(abs(leadingPhoton.superCluster.eta),abs(leadingPhoton.superCluster.eta))",
                                   
-                                  "leadBlockChIso   := leadingView.pfChIso03WrtChosenVtx", 
-                                  "leadBlockPhoIso  := leadingPhoton.pfPhoIso03", 
-                                  "leadRndConeChIso := leadingView.extraChIsoWrtChoosenVtx('rnd03')",
-                                  "leadRndConePhoIso:= leadingPhoton.extraPhoIso('rnd03')",
+                                  ## "leadBlockChIso   := leadingView.pfChIso03WrtChosenVtx", 
+                                  ## "leadBlockPhoIso  := leadingPhoton.pfPhoIso03", 
+                                  ## "leadRndConeChIso := leadingView.extraChIsoWrtChoosenVtx('rnd03')",
+                                  ## "leadRndConePhoIso:= leadingPhoton.extraPhoIso('rnd03')",
                                   
                                   "leadMatchType            :=leadingPhoton.genMatchType",
                                   "leadGenIso               :=leadingPhoton.userFloat('genIso')",
@@ -69,10 +71,10 @@ cfgTools.addCategories(diphotonDumper,
                                   "leadPassEleVeto := leadingPhoton.passElectronVeto",
                                   
                                   
-                                  "subleadBlockChIso   := subLeadingView.pfChIso03WrtChosenVtx", 
-                                  "subleadBlockPhoIso  := subLeadingPhoton.pfPhoIso03", 
-                                  "subleadRndConeChIso := subLeadingView.extraChIsoWrtChoosenVtx('rnd03')",
-                                  "subleadRndConePhoIso:= subLeadingPhoton.extraPhoIso('rnd03')",
+                                  ## "subleadBlockChIso   := subLeadingView.pfChIso03WrtChosenVtx", 
+                                  ## "subleadBlockPhoIso  := subLeadingPhoton.pfPhoIso03", 
+                                  ## "subleadRndConeChIso := subLeadingView.extraChIsoWrtChoosenVtx('rnd03')",
+                                  ## "subleadRndConePhoIso:= subLeadingPhoton.extraPhoIso('rnd03')",
                                   
                                   "subleadChIso   := subLeadingPhoton.egChargedHadronIso", 
                                   "subleadPhoIso  := subLeadingPhoton.egPhotonIso", 
@@ -85,22 +87,24 @@ cfgTools.addCategories(diphotonDumper,
                        histograms=["mass>>mass(1500,0,15000)",
                                    "leadPt>>leadPt(145,100,3000)",
                                    "subleadPt>>subleadPt(145,100,3000)",
-                                   
-                                   "leadBlockChIso>>leadBlockChIso(60,-10,50)",
-                                   "leadBlockPhoIso>>leadBlockPhoIso(60,-10,50)",
-                                   "leadChIso>>leadChIso(60,-10,50)",
-                                   "leadPhoIso>>leadPhoIso(60,-10,50)",
-                                   "leadNeutIso>>leadNeutIso(60,-10,50)",
+                                   "leadEta>>leadEta(55,-2.75,2.75)",
+                                   "subleadEta>>subleadEta(55,-2.75,2.75)",
+
+                                   ## "leadBlockChIso>>leadBlockChIso(120,-10,50)",
+                                   ## "leadBlockPhoIso>>leadBlockPhoIso(120,-10,50)",
+                                   "leadChIso>>leadChIso(120,-10,50)",
+                                   "leadPhoIso>>leadPhoIso(120,-10,50)",
+                                   "leadNeutIso>>leadNeutIso(120,-10,50)",
                                    "leadHoE>>leadHoE(40,0,0.2)",
                                    "leadSigmaIeIe>>leadSigmaIeIe(50,0,5.e-2)",
                                    "leadPixSeed>>leadPixSeed(2,-0.5,1.5)",
                                    "subleadPassEleVeto>>subleadPassEleVeto(2,-0.5,1.5)",
                                    
-                                   "subleadBlockChIso>>subleadBlockChIso(60,-10,50)",
-                                   "subleadBlockPhoIso>>subleadBlockPhoIso(60,-10,50)",
-                                   "subleadChIso>>subleadChIso(60,-10,50)",
-                                   "subleadPhoIso>>subleadPhoIso(60,-10,50)",
-                                   "subleadNeutIso>>subleadNeutIso(60,-10,50)",
+                                   ## "subleadBlockChIso>>subleadBlockChIso(120,-10,50)",
+                                   ## "subleadBlockPhoIso>>subleadBlockPhoIso(120,-10,50)",
+                                   "subleadChIso>>subleadChIso(120,-10,50)",
+                                   "subleadPhoIso>>subleadPhoIso(120,-10,50)",
+                                   "subleadNeutIso>>subleadNeutIso(120,-10,50)",
                                    "subleadHoE>>subleadHoE(40,0,0.2)",
                                    "subleadSigmaIeIe>>subleadSigmaIeIe(50,0,5.e-2)",
                                    "subleadPixSeed>>subleadPixSeed(2,-0.5,1.5)",
@@ -124,7 +128,8 @@ cfgTools.dumpOnly(minimalDumper,
 # input and output
 #
 process.source = cms.Source("PoolSource",
-                            fileNames=cms.untracked.vstring(## "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14ANv1/diphotonsPhys14AnV1/GGJets_M-1000To2000_Pt-50_13TeV-sherpa/ExoPhys14ANv1-diphotonsPhys14AnV1-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150330_192709/0000/diphotonsMicroAOD_1.root"
+                            fileNames=cms.untracked.vstring('/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v4/diphotonsPhys14V2/GGJets_M-500To1000_Pt-50_13TeV-sherpa/ExoPhys14_v4-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150204_005517/0000/myOutputFile_1.root'
+                                                            ## "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14ANv1/diphotonsPhys14AnV1/GGJets_M-1000To2000_Pt-50_13TeV-sherpa/ExoPhys14ANv1-diphotonsPhys14AnV1-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150330_192709/0000/diphotonsMicroAOD_1.root"
                                                             )
 )
 process.TFileService = cms.Service("TFileService",
@@ -219,4 +224,4 @@ customize.setDefault("targetLumi",1.e+3)
 # this will call customize(process), configure the analysis paths and make the process unscheduled
 analysis.customize(process,customize)
 
-print process.dumpPython()
+## print process.dumpPython()

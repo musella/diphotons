@@ -247,7 +247,7 @@ class DiPhotonAnalysis(object):
                                                                                    )
                                                                     )
                     )
-            setattr(process,dumperName+"NonGenIso",dumperTemplate.clone(src=cms.InputTag(diphoColl+"GenIso"), 
+            setattr(process,dumperName+"NonGenIso",dumperTemplate.clone(src=cms.InputTag(diphoColl+"NonGenIso"), 
                                                                      dumpTrees=cms.untracked.bool(dumpTrees),
                                                                      dumpWorkspace=cms.untracked.bool(dumpWorkspace),
                                                                      dumpHistos=cms.untracked.bool(dumpHistos),

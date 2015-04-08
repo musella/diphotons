@@ -1,6 +1,6 @@
 {
     "drawopts" : ["Draw","e","hist","hist nostack"],
-    "legpos"  : [0.580,0.70,0.830,0.88],
+    "legpos"  : [0.480,0.70,0.830,0.91],
 
     "sig" : null,
 
@@ -28,26 +28,106 @@
 	  ],
 
 
-	
-    "bkg" : [
-	      ["gjet","#gamma j",
-	      [["colors","myColorA1"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",1],["legopt","f"],["SetFillColor","myColorA3tr"]],
-	      { "GJets-HT-100toInf_13TeV:output.root/id" : [] }
-	      ],
-
-	      ["ggjet_nonIso","non iso #gamma #gamma",
-	      [["colors","myColorC1"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",1],["legopt","f"],["SetFillColor","myColorC3tr"]],
-	      { "GGJets_M-200To13000-sherpa_13TeV:output.root/nonIsoId" : [] }
-	      ],
-	      
-	      ["ggjet_iso","iso #gamma #gamma",
-	      [["colors","myColorB1"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",1],["legopt","f"],["SetFillColor","myColorB3tr"]],
-	      { "GGJets_M-200To13000-sherpa_13TeV:output.root/isoId" : [] }
+    "data" : [
+	      ["ggjet","Data",
+	      [["SetBinErrorOption",1],["colors","kBlack"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","pe"],["SetMarkerStyle","kFullCircle"],["SetFillColor","kWhite"]],
+	      { "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)s" : [], "QCD_HT_100toInf_13TeV:output.root/%(sel)s" : [], "GJets_HT_100toInf_13TeV:output.root/%(sel)s" : [] }
 	      ]
 	      
 	     ],
 
-    "data": null,
+    "bkg" : [
+	      ["gjet","#gamma j",
+	      [["colors","myColorA1"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",1],["legopt","f"],["SetFillColor","myColorA3tr"]],
+	      { "GJets_HT_100toInf_13TeV:output.root/%(sel)s" : [] }
+	      ],
+
+	      ["jetjet","j j",
+	      [["colors","myColorC1"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",1],["legopt","f"],["SetFillColor","myColorC3tr"]],
+	      { "QCD_HT_100toInf_13TeV:output.root/%(sel)s" : [] }
+	      ],
+	      
+	      ["ggjet_iso","#gamma #gamma",
+	      [["colors","myColorB1"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",1],["legopt","f"],["SetFillColor","myColorB3tr"]],
+	      { "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)s" : [] }
+	      ]
+	      
+	     ],
+
+    "_bkg" : [
+	      ["ggjet_nonIso","non iso #gamma #gamma",
+	      [["colors","myColorC1"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",1],["legopt","f"],["SetFillColor","myColorC3tr"]],
+	      { "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)sNonGenIso" : [] }
+	      ],
+	      
+	      ["ggjet_iso","iso #gamma #gamma",
+	      [["colors","myColorB1"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",1],["legopt","f"],["SetFillColor","myColorB3tr"]],
+	      { "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)sGenIso" : [] }
+	      ]
+    	      ],
+	      
+    "sig" : [
+	      ["rsg_02_5000","G #rightarrow #gamma #gamma (k/M_{PL}=0.2 M_{G}=5TeV)",
+	      [["colors","kAzure"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","f"],["SetFillColor","kWhite"]],
+	      { "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)s" : [], "QCD_HT_100toInf_13TeV:output.root/%(sel)s" : [], "GJets_HT_100toInf_13TeV:output.root/%(sel)s" : [], "RSGravToGG_kMpl_02_M_5000_13TeV:output.root/%(sel)s" : [] }
+	      ],
+	      
+	      ["rsg_01_3000","G #rightarrow #gamma #gamma (k/M_{PL}=0.1 M_{G}=3TeV)",
+	      [["colors","kOrange"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","f"],["SetFillColor","kWhite"]],
+	      { "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)s" : [], "QCD_HT_100toInf_13TeV:output.root/%(sel)s" : [], "GJets_HT_100toInf_13TeV:output.root/%(sel)s" : [], "RSGravToGG_kMpl_01_M_3000_13TeV:output.root/%(sel)s" : [] }
+	      ],
+	      
+	      ["rsg_01_1500","G #rightarrow #gamma #gamma (k/M_{PL}=0.1 M_{G}=1.5TeV)",
+	      [["colors","kMagenta"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","f"],["SetFillColor","kWhite"]],
+	      { "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)s" : [], "QCD_HT_100toInf_13TeV:output.root/%(sel)s" : [], "GJets_HT_100toInf_13TeV:output.root/%(sel)s" : [], "RSGravToGG_kMpl_01_M_1500_13TeV:output.root/%(sel)s" : [] }
+	      ]
+
+    ],
+
+    "_sig" : [
+	      ["rsg_02_5000","G #rightarrow #gamma #gamma (k/M_{PL}=0.2 M_{G}=5TeV)",
+	      [["colors","kRed"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","f"],["SetFillColor","kWhite"]],
+	      { "RSGravToGG_kMpl_02_M_5000_13TeV:output.root/%(sel)s" : [] }
+	      ],
+	      
+	      ["rsg_02_3000","G #rightarrow #gamma #gamma (k/M_{PL}=0.2 M_{G}=3TeV)",
+	      [["colors","kRed"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","f"],["SetFillColor","kWhite"]],
+	      { "RSGravToGG_kMpl_02_M_3000_13TeV:output.root/%(sel)s" : [] }
+	      ],
+	      
+	      ["rsg_02_1500","G #rightarrow #gamma #gamma (k/M_{PL}=0.2 M_{G}=1.5TeV)",
+	      [["colors","kRed"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","f"],["SetFillColor","kWhite"]],
+	      { "RSGravToGG_kMpl_02_M_1500_13TeV:output.root/%(sel)s" : [] }
+	      ],
+
+	      ["rsg_01_3000","G #rightarrow #gamma #gamma (k/M_{PL}=0.1 M_{G}=3TeV)",
+	      [["colors","kBlue"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","f"],["SetFillColor","kWhite"]],
+	      { "RSGravToGG_kMpl_01_M_3000_13TeV:output.root/%(sel)s" : [] }
+	      ],
+	      
+	      ["rsg_01_1500","G #rightarrow #gamma #gamma (k/M_{PL}=0.1 M_{G}=1.5TeV)",
+	      [["colors","kBlue"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","f"],["SetFillColor","kWhite"]],
+	      { "RSGravToGG_kMpl_01_M_1500_13TeV:output.root/%(sel)s" : [] }
+	      ],
+
+	      ["rsg_001_5000","G #rightarrow #gamma #gamma (k/M_{PL}=0.01 M_{G}=5TeV)",
+	      [["colors","kGreen"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","f"],["SetFillColor","kWhite"]],
+	      { "RSGravToGG_kMpl_001_M_5000_13TeV:output.root/%(sel)s" : [] }
+	      ],
+	      
+	      ["rsg_001_1500","G #rightarrow #gamma #gamma (k/M_{PL}=0.01 M_{G}=1.5TeV)",
+	      [["colors","kGreen"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","f"],["SetFillColor","kWhite"]],
+	      { "RSGravToGG_kMpl_001_M_1500_13TeV:output.root/%(sel)s" : [] }
+	      ],
+
+	      ["rsg_001_750","G #rightarrow #gamma #gamma (k/M_{PL}=0.01 M_{G}=0.75TeV)",
+	      [["colors","kGreen"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","f"],["SetFillColor","kWhite"]],
+	      { "RSGravToGG_kMpl_001_M_750_13TeV:output.root/%(sel)s" : [] }
+	      ]
+
+    ],
+
+    "_data": null,
     "bkg_file" : "_per_subproc_", 
     "_sig_file" : "_per_subproc_", 
     "data_file"  : "output.root",
@@ -66,19 +146,43 @@
 	}, 
 	
     "plots": [
-	      ["mass" ,[["Rebin",5],["ytitle","Events / %(binw)s GeV"],["xtitle","m_{#gamma #gamma} (GeV)"],["xrange",[300.0,6000.0]]],null,null],
-	      ["leadChIso" ,   [["ytitle","Events / %(binw)s GeV"],["xtitle","#gamma_{1} charged isolation (GeV)"],["xrange",[0,20]]],null,null],
-	      ["subleadChIso" ,[["ytitle","Events / %(binw)s GeV"],["xtitle","#gamma_{2} charged isolation (GeV)"],["xrange",[0,20]]],null,null]
+	      ["mass" ,[["Rebin",10],["ytitle","Events / %(binw)s GeV"],["xtitle","m_{#gamma #gamma} (GeV)"],["xrange",[300.0,6000.0]]],null,null,["data"]],
+	      ["leadPt" ,[["Rebin",5],["ytitle","Events / %(binw)s GeV"],["xtitle","p_{T}(#gamma 1) (GeV)"],["xrange",[100.0,6000.0]]],null,null],
+	      ["subleadPt" ,[["Rebin",5],["ytitle","Events / %(binw)s GeV"],["xtitle","p_{T}(#gamma 2) (GeV)"],["xrange",[100.0,6000.0]]],null,null],
+	      ["leadChIso" ,   [["ytitle","Events / %(binw)s GeV"],["xtitle","#gamma_{1} charged isolation (GeV)"],["xrange",[0,20]]],null,null,["sig"]],
+	      ["subleadChIso" ,[["ytitle","Events / %(binw)s GeV"],["xtitle","#gamma_{2} charged isolation (GeV)"],["xrange",[0,20]]],null,null,["sig"]],
+	      ["leadBlockChIso" ,   [["ytitle","Events / %(binw)s GeV"],["xtitle","#gamma_{1} charged isolation (GeV)"],["xrange",[0,20]]],null,null,["sig"]],
+	      ["subleadBlockChIso" ,[["ytitle","Events / %(binw)s GeV"],["xtitle","#gamma_{2} charged isolation (GeV)"],["xrange",[0,20]]],null,null,["sig"]],
+	      ["leadPhoIso" ,   [["ytitle","Events / %(binw)s GeV"],["xtitle","#gamma_{1} charged isolation (GeV)"],["xrange",[0,20]]],null,null,["sig"]],
+	      ["subleadPhoIso" ,[["ytitle","Events / %(binw)s GeV"],["xtitle","#gamma_{2} charged isolation (GeV)"],["xrange",[0,20]]],null,null,["sig"]],
+	      ["leadBlockPhoIso" ,   [["ytitle","Events / %(binw)s GeV"],["xtitle","#gamma_{1} charged isolation (GeV)"],["xrange",[0,20]]],null,null,["sig"]],
+	      ["subleadBlockPhoIso" ,[["ytitle","Events / %(binw)s GeV"],["xtitle","#gamma_{2} charged isolation (GeV)"],["xrange",[0,20]]],null,null,["sig"]]
+	      			    
 	      ],
+
+    "_selections" : [
+        ["kin","kinOnly"],
+        ["cic",""],
+        ["cicNoNeuIso","noNeuIso",["mass","leadBlockChIso","leadBlockPhoIso"]],
+        ["cicNoChIso","noChIso",["mass","leadBlockChIso","leadBlockPhoIso"]],
+        ["cicNoPhoIso","noPhoIso",["mass","leadBlockChIso","leadBlockPhoIso"]]
+    ],
+
+    "selections" : [
+        ["cicNoChIsoSingleSB","chIsoSingleSB"],
+        ["cicNoChIsoDoubleSB","chIsoDoubleSB"],
+        ["cicNoPhoIsoSingleSB","phoIsoSingleSB"],
+        ["cicNoPhoIsoDoubleSB","phoIsoDoubleSB"]
+    ],
 	      
     "styles": { 
 	"*mass*" : [["logy",1e-5]],
-	"*Iso*"  : [["logy",1e-2]]
+	"*Iso*"  : [["logy",1e-2]],
+	"*Pt*"  : [["logy",1e-2]]
 	},	 
     "postproc" : {
     },
 
-    "_template": "id/histograms/%(sample)s_%(cat)s%(name)s",
     "template": "histograms/%(sample)s_%(cat)s%(name)s",
 
     "rootstyle_extra" : [

@@ -17,15 +17,16 @@
 	     ],
 
      "ratios" : [
-     	      ["kinGenIso"                ,"Acceptance"            ,"cicGenIso","Cut-based ID",""],
-              ["cicNoChIsoGenIso"         ,"No Charged Iso"        ,"cicGenIso","Full ID"   ,"chIsoNm1" ],
-              ["cicNoNeuIsoGenIso"        ,"No Neutral Iso"        ,"cicGenIso","Full ID"   ,"neuIsoNm1"],
-              ["cicNoPhoIsoGenIso"        ,"No Photon Iso"         ,"cicGenIso","Full ID"   ,"phoIsoNm1"],
-              ["cicNoEleVetoGenIso"       ,"No Electron Veto"      ,"cicGenIso","Full ID"   ,"eleVetoIsoNm1"],
-              ["cicNoSigmaIetaIetaGenIso" ,"No #sigma_{i#etai#eta}","cicGenIso","Full ID"   ,"sigmaIetaIetaNm1"],
-              ["cicNoHoverEGenIso"        ,"No H/E"                ,"cicGenIso","Full ID"   ,"hOverENm1"],
-              ["kinGenIso"                ,"Acceptance"            ,"kin"      ,"Acceptance No Gen Iso","genIsoEffNoId"],
-              ["cic"                      ,"All events"            ,"cicGenIso","Gen Iso"   ,"genIsoEff"]
+     	      ["kinGenIso"                ,"Acceptance"             ,"cicGenIso"         ,"Cut-based ID"                  ,""],
+              ["cicNoChIsoGenIso"         ,"No Charged Iso"         ,"cicGenIso"         ,"Full ID"                       ,"chIsoNm1" ],
+              ["cicNoNeuIsoGenIso"        ,"No Neutral Iso"         ,"cicGenIso"         ,"Full ID"                       ,"neuIsoNm1"],
+              ["kinGenIso"                ,"Acceptance"             ,"cicNoNeuIsoGenIso" ,"Cut-based ID (no Neu Iso cut)" ,"neuIsoEff"],
+              ["cicNoPhoIsoGenIso"        ,"No Photon Iso"          ,"cicGenIso"         ,"Full ID"                       ,"phoIsoNm1"],
+              ["cicNoEleVetoGenIso"       ,"No Electron Veto"       ,"cicGenIso"         ,"Full ID"                       ,"eleVetoIsoNm1"],
+              ["cicNoSigmaIetaIetaGenIso" ,"No #sigma_{i#etai#eta}" ,"cicGenIso"         ,"Full ID"                       ,"sigmaIetaIetaNm1"],
+              ["cicNoHoverEGenIso"        ,"No H/E"                 ,"cicGenIso"         ,"Full ID"                       ,"hOverENm1"],
+              ["kinGenIso"                ,"Acceptance"             ,"kin"               ,"Acceptance No Gen Iso"         ,"genIsoEffNoId"],
+              ["cic"                      ,"All events"             ,"cicGenIso"         ,"Gen Iso"                       ,"genIsoEff"]
     ],
 
     "data_file"  : "output.root",
