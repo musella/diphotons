@@ -226,7 +226,7 @@ class IdEvolution(PlotApp):
         global ROOT, style_utils
         import ROOT
         import pyrapp.style_utils as style_utils
-        ROOT.gSystem.Load("libdiphotonsCategoryOptimizer")
+        ROOT.gSystem.Load("libdiphotonsUtils")
         
         self.setStyle("*quantile*", [ ("SetLineWidth",2), ("SetMarkerSize",2) ] )
         

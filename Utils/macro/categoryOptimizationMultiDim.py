@@ -729,7 +729,7 @@ AbsFomProvider * fom = new %s;
 def main(options,args):
     
     ROOT.gSystem.SetIncludePath("-I$ROOTSYS/include -I$ROOFITSYS/include")
-    ROOT.gSystem.Load("libdiphotonsCategoryOptimizer")
+    ROOT.gSystem.Load("libdiphotonsUtils")
 
     ROOT.gStyle.SetOptStat(0)
 

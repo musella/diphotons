@@ -165,7 +165,7 @@ fggManageSamples.py -m diphotons -C ExoPhys14 list
 #### Run
 
 ```
-cd FWLiteAlgos/test
+cd Analysis/config
 cp -p jobs_gamjets_gamgam.json myjobs.json
 emacs -nw photonIdAnalyzer.py myjobs.json
 
