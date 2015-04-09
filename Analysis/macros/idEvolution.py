@@ -1,6 +1,6 @@
 #!/bin/env python
 
-from pyrapp import *
+from diphotons.Utils.pyrapp import *
 from optparse import OptionParser, make_option
 
 from copy import copy
@@ -225,7 +225,7 @@ class IdEvolution(PlotApp):
         
         global ROOT, style_utils
         import ROOT
-        import pyrapp.style_utils as style_utils
+        import diphotons.Utils.pyrapp.style_utils as style_utils
         ROOT.gSystem.Load("libdiphotonsUtils")
         
         self.setStyle("*quantile*", [ ("SetLineWidth",2), ("SetMarkerSize",2) ] )

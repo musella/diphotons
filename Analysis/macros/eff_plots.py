@@ -1,6 +1,6 @@
 #!/bin/env python
 
-from pyrapp import *
+from diphotons.Utils.pyrapp import *
 from optparse import OptionParser, make_option
 from copy import deepcopy as copy
 import os
