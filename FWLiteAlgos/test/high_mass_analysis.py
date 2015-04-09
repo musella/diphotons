@@ -51,10 +51,10 @@ cfgTools.addCategories(diphotonDumper,
                                   "minR9                    :=min(leadingPhoton.r9,subLeadingPhoton.r9)",
                                   "maxEta                   :=max(abs(leadingPhoton.superCluster.eta),abs(leadingPhoton.superCluster.eta))",
                                   
-                                  ## "leadBlockChIso   := leadingView.pfChIso03WrtChosenVtx", 
-                                  ## "leadBlockPhoIso  := leadingPhoton.pfPhoIso03", 
-                                  ## "leadRndConeChIso := leadingView.extraChIsoWrtChoosenVtx('rnd03')",
-                                  ## "leadRndConePhoIso:= leadingPhoton.extraPhoIso('rnd03')",
+                                  "leadBlockChIso   := leadingView.pfChIso03WrtChosenVtx", 
+                                  "leadBlockPhoIso  := leadingPhoton.pfPhoIso03", 
+                                  "leadRndConeChIso := leadingView.extraChIsoWrtChoosenVtx('rnd03')",
+                                  "leadRndConePhoIso:= leadingPhoton.extraPhoIso('rnd03')",
                                   
                                   "leadMatchType            :=leadingPhoton.genMatchType",
                                   "leadGenIso               :=leadingPhoton.userFloat('genIso')",
@@ -71,10 +71,10 @@ cfgTools.addCategories(diphotonDumper,
                                   "leadPassEleVeto := leadingPhoton.passElectronVeto",
                                   
                                   
-                                  ## "subleadBlockChIso   := subLeadingView.pfChIso03WrtChosenVtx", 
-                                  ## "subleadBlockPhoIso  := subLeadingPhoton.pfPhoIso03", 
-                                  ## "subleadRndConeChIso := subLeadingView.extraChIsoWrtChoosenVtx('rnd03')",
-                                  ## "subleadRndConePhoIso:= subLeadingPhoton.extraPhoIso('rnd03')",
+                                  "subleadBlockChIso   := subLeadingView.pfChIso03WrtChosenVtx", 
+                                  "subleadBlockPhoIso  := subLeadingPhoton.pfPhoIso03", 
+                                  "subleadRndConeChIso := subLeadingView.extraChIsoWrtChoosenVtx('rnd03')",
+                                  "subleadRndConePhoIso:= subLeadingPhoton.extraPhoIso('rnd03')",
                                   
                                   "subleadChIso   := subLeadingPhoton.egChargedHadronIso", 
                                   "subleadPhoIso  := subLeadingPhoton.egPhotonIso", 
@@ -142,7 +142,7 @@ process.TFileService = cms.Service("TFileService",
 #
 from diphotons.Analysis.DiPhotonAnalysis import DiPhotonAnalysis
 analysis = DiPhotonAnalysis(diphotonDumper,
-                            massCut=500.,ptLead=200.,ptSublead=200.,scaling=False, ## kinematic cuts
+                            massCut=200.,ptLead=100.,ptSublead=100.,scaling=False, ## kinematic cuts
                             computeMVA=False,
                             genIsoDefinition=("userFloat('genIso')",10.),
                             dataTriggers=["HLT_DoublePhoton85*","HLT_Photon250_NoHE*"],

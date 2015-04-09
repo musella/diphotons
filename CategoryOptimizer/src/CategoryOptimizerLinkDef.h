@@ -2,8 +2,10 @@
 #include "../interface/FunctionHelpers.h"
 #include "../interface/NaiveCategoryOptimization.h"
 #include "../interface/SimpleShapeCategoryOptimization.h"
+#include "../interface/DataSetFiller.h"
 
 
+#pragma link C++ defined_in "../interface/DataSetFiller.h";
 #pragma link C++ defined_in "../interface/CategoryOptimizer.h";
 #pragma link C++ defined_in "../interface/FunctionHelpers.h";
 #pragma link C++ defined_in "../interface/NaiveCategoryOptimization.h";
