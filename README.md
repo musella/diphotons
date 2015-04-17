@@ -192,7 +192,10 @@ JSON files containing list of processes.
 
 Macros are stored in `Analysis/macros`.
 
-They tipically come with associated JSON file for configuration.
+They tipically come with associated JSON file for configuration. Python macros are run as:
+`./macroName.py --load macroConfig.json [additional options, typilcally --input-dir <input dir> -O <output dir>]`
+
+The `--help` option gives a list of supported options, while the `--dumpConfig` dumps all options in JSON format (useful to record a particular configuration).
 
 - `Analysis/macros/idEvolution.py`: photon ID studies. Runs on the output of `Analysis/config/photonIdAnalyer.py` or `photonIdDumper.py`.
 - `Analysis/macros/basic_plots.py`: basic di-photon plots. Runs on the output of `Analysis/config/high_mass_analysis.py`.
