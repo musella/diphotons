@@ -30,7 +30,7 @@ cfgTools.addCategories(diphotonDumper,
                                   "leadCShapeMVA            :=leadingPhoton.userFloat('cShapeMVA')",
                                   "subleadCShapeMVA         :=subLeadingPhoton.userFloat('cShapeMVA')",
                                   "minR9                    :=min(leadingPhoton.r9,subLeadingPhoton.r9)",
-                                  "maxEta                   :=max(abs(leadingPhoton.superCluster.eta),abs(leadingPhoton.superCluster.eta))",
+                                  "maxEta                   :=max(abs(leadingPhoton.superCluster.eta),abs(subLeadingPhoton.superCluster.eta))",
                                   
                                   "leadBlockChIso   := leadingPhotonView.pfChIso03WrtChosenVtx", 
                                   "leadBlockPhoIso  := leadingPhotonView.pfPhoIso03", 

@@ -2,9 +2,15 @@ import FWCore.ParameterSet.Config as cms
 import FWCore.ParameterSet.VarParsing as VarParsing
 
 from flashgg.MicroAOD.flashggPreselectedDiPhotons_cfi import flashggPreselectedDiPhotons as simpleTemplate
+singlePhoSimpleTemplate = cms.EDFilter("PhotonCandidateSelector",src = cms.InputTag("flashggPhotons"),)
+
 from diphotons.Analysis.diphotonsWithMVA_cfi import diphotonsWithMVA
 
 from HLTrigger.HLTfilters.hltHighLevel_cfi import hltHighLevel
+
+import sys
+
+
 
 # -------------------------------------------------------------------------------------------------------------------------
 class DiPhotonAnalysis(object):
@@ -15,11 +21,12 @@ class DiPhotonAnalysis(object):
                  genIsoDefinition=("userFloat('genIso')",10.),
                  dataTriggers=["HLT_DoublePhoton85*","HLT_Photon250_NoHE*"],
                  mcTriggers=["HLT_DoublePhoton85*","HLT_Photon250_NoHE*"],
-                 askTriggerOnMc=False):
+                 askTriggerOnMc=False,sortTemplate=False,singlePhoDumperTemplate=False):
         
         super(DiPhotonAnalysis,self).__init__()
         
         self.dumperTemplate = dumperTemplate
+        self.singlePhoDumperTemplate = singlePhoDumperTemplate
         self.massCut = massCut
         self.ptLead  = ptLead
         self.ptSublead  = ptSublead
@@ -30,16 +37,21 @@ class DiPhotonAnalysis(object):
         self.askTriggerOnMc = askTriggerOnMc
         
         self.analysisSelections = []
+        self.photonSelections = []
         self.splitByIso = []
         self.splitDumpers = []
         
-        if scaling:
-            self.scalingFunc = "*%f/mass" % massCut
+        if sortTemplate:
+            self.sortTemplate = sortTemplate.clone()
+        else:
+            self.sortTemplate = cms.EDFilter("DiPhotonCandidateSorter",maxNumber=cms.uint32(1))
         
+        if scaling:
+            self.scalingFunc = "*(%f)/mass" % massCut
+
         self.isoCut = {}
         if genIsoDefinition:
             self.isoCut["genIsoVar"] = genIsoDefinition[0]
-
             self.isoCut["genIsoCut"] = genIsoDefinition[1]
     
     
@@ -84,7 +96,7 @@ class DiPhotonAnalysis(object):
         
         print jobConfig.processId, jobConfig.processType, self.splitByIso, splitByIso
         ## add execution paths for analysis selections
-        for coll,dumper in self.analysisSelections:
+        for coll,dumper in self.analysisSelections+self.photonSelections:
             if not self.useDumper(process,dumper,splitByIso): 
                 continue
             self.addPath(process,dumper,trg)
@@ -109,10 +121,14 @@ class DiPhotonAnalysis(object):
                 for modName in path.moduleNames():
                     print modName, 
                     module = getattr(process,modName)
+                    print "(",
                     if hasattr(module,"src"):
                         src = getattr(module,"src").getModuleLabel()
-                        print "(src=%s)" % src,
+                        print "src=%s" % src,
                         selectors.append( src  )
+                    if hasattr(module,"dumpTrees"):
+                        print "dumpTrees=%s" % str(getattr(module,"dumpTrees"))
+                    print ")",
                 print
             print
             
@@ -120,11 +136,14 @@ class DiPhotonAnalysis(object):
             print "Selectors :"
             print "------------------------------------------------------------------------------------"
             for selName in selectors:
-                selector = getattr(process,selName)
+                selector = getattr(process,selName)                
                 print
-                print selector, " = cms.PSet("
+                print selector, ' = cms.EDFilter("%s",' % selector._TypedParameterizable__type
                 if hasattr(selector,"src"):
-                    print "  src =", getattr(selector,"src")
+                    src = getattr(selector,"src")
+                    print "  src =", src
+                    if hasattr(process,src.getModuleLabel()) and not src.getModuleLabel() in selectors:
+                        selectors.append( src.getModuleLabel() )
                 if hasattr(selector,"cut"):
                     print "  cut =", getattr(selector,"cut")
                 if hasattr(selector,"ignore"):
@@ -145,6 +164,11 @@ class DiPhotonAnalysis(object):
             
         ## unscheduled execution: cmsRun will figure out the dependencies
         process.options = cms.untracked.PSet( allowUnscheduled = cms.untracked.bool(True) )
+
+        if jobConfig.dumpPython != "":
+            pyout = open(jobConfig.dumpPython,"w+")
+            pyout.write( process.dumpPython() )
+            pyout.close()
         
         
     # ----------------------------------------------------------------------------------------------------------------------
@@ -176,7 +200,7 @@ class DiPhotonAnalysis(object):
             template = diphotonsWithMVA.clone(src=cms.InputTag("tmpKinDiphotons"))
         
         self.analysisSelections += self.addDiphoSelection(process,"kin",template,dumperTemplate,
-                                                          dumpTrees=dumpTrees,dumpWorkspace=dumpWorkspace,dumpHistos=dumpHistos,splitByIso=splitByIso)
+                                                          dumpTrees=dumpTrees,dumpWorkspace=dumpWorkspace,dumpHistos=dumpHistos,splitByIso=splitByIso,selectN=10000)
         
         
     # ----------------------------------------------------------------------------------------------------------------------
@@ -189,16 +213,18 @@ class DiPhotonAnalysis(object):
         """
     
         if not hasattr(process,"kinDiPhotons"):
-            modules += addKinematicSelection(process,dumpTrees=False,dumperTemplate=dumperTemplate)
+            self.addKinematicSelection(process,dumpTrees=False,dumperTemplate=dumperTemplate)
             
         template = selectorTemplate.clone(src=cms.InputTag("kinDiPhotons"))
-        self.analysisSelections += self.addDiphoSelection(process,label,template,dumperTemplate=dumperTemplate,splitByIso=splitByIso)
+        self.analysisSelections += self.addDiphoSelection(process,label,template,dumperTemplate=dumperTemplate,splitByIso=splitByIso,
+                                                          dumpTrees=dumpTrees,dumpHistos=dumpHistos)
         if nMinusOne:
             self.analysisSelections += self.addNMinusOneDiphoSelections(process,label,template,nMinusOne,
                                                                         dumperTemplate=dumperTemplate,splitByIso=splitByIso)
     
     # ----------------------------------------------------------------------------------------------------------------------
-    def addDiphoSelection(self,process,label,selectorTemplate,dumperTemplate=None,dumpTrees=False,dumpWorkspace=False,dumpHistos=True,splitByIso=False):
+    def addDiphoSelection(self,process,label,selectorTemplate,dumperTemplate=None,dumpTrees=False,dumpWorkspace=False,dumpHistos=True,splitByIso=False,
+                          selectN=False):
         """
         Add diphoton producer and dumper to the process
         """
@@ -212,7 +238,13 @@ class DiPhotonAnalysis(object):
         dumperName = label
         
         ## register diphoton selector and associated dumper
-        setattr(process,diphoColl,selectorTemplate.clone())
+        setattr(process,"all"+diphoColl,selectorTemplate.clone())
+        if selectN:
+            setattr(process,diphoColl,self.sortTemplate.clone(src=cms.InputTag("all"+diphoColl),
+                                                              maxNumber=cms.uint32(selectN),
+                                                              ))
+        else:
+            setattr(process,diphoColl,self.sortTemplate.clone(src=cms.InputTag("all"+diphoColl)))            
         setattr(process,dumperName,dumperTemplate.clone(src=cms.InputTag(diphoColl), 
                                                         dumpTrees=cms.untracked.bool(dumpTrees),
                                                         dumpWorkspace=cms.untracked.bool(dumpWorkspace),
@@ -227,7 +259,8 @@ class DiPhotonAnalysis(object):
         if splitByIso:
             self.splitByIso.append(dumperName)
             setattr(process,diphoColl+"GenIso",simpleTemplate.clone(src=cms.InputTag(diphoColl),
-                                                                 cut=cms.string("    leadingPhoton.%(genIsoVar)s < %(genIsoCut)f"
+                                                                 cut=cms.string("leadingPhoton.genMatchType == 1 && subLeadingPhoton.genMatchType == 1 "
+                                                                                " && leadingPhoton.%(genIsoVar)s < %(genIsoCut)f"
                                                                                 " && subLeadingPhoton.%(genIsoVar)s < %(genIsoCut)f" 
                                                                                 % self.isoCut
                                                                                 )
@@ -241,8 +274,9 @@ class DiPhotonAnalysis(object):
                     )
             
             setattr(process,diphoColl+"NonGenIso",simpleTemplate.clone(src=cms.InputTag(diphoColl),
-                                                                    cut=cms.string("    leadingPhoton.%(genIsoVar)s < %(genIsoCut)f"
-                                                                                   " || subLeadingPhoton.%(genIsoVar)s < %(genIsoCut)f"
+                                                                    cut=cms.string("leadingPhoton.genMatchType != 1 || subLeadingPhoton.genMatchType == 1 "
+                                                                                   " || leadingPhoton.%(genIsoVar)s >= %(genIsoCut)f"
+                                                                                   " || subLeadingPhoton.%(genIsoVar)s >= %(genIsoCut)f"
                                                                                    % self.isoCut
                                                                                    )
                                                                     )
@@ -273,12 +307,16 @@ class DiPhotonAnalysis(object):
         for settings in nMinusOne:
             if len(settings) == 7:
                 ignore,invert,ilabel,dumpTrees,dumpWorkspace,dumpHistos,doSplitByIso = settings
+                if hasattr(selectorTemplate,"ignore"):
+                    ignore += selectorTemplate.ignore;
                 nMinus1Template = selectorTemplate.clone(ignore=cms.vint32(ignore),
                                                          invert=cms.vint32(invert[0]),
                                                          invertNtimes=cms.int32(invert[1]),
                                                          )
             else:
                 ignore,ilabel,dumpTrees,dumpWorkspace,dumpHistos = settings[:5]
+                if hasattr(selectorTemplate,"ignore"):
+                    ignore += selectorTemplate.ignore;
                 nMinus1Template = selectorTemplate.clone(ignore=cms.vint32(ignore))
                 if len(settings) == 0:
                     doSplitByIso = settings[5]
@@ -289,11 +327,165 @@ class DiPhotonAnalysis(object):
                                               dumpTrees=dumpTrees,
                                               dumpWorkspace=dumpWorkspace,
                                               dumpHistos=dumpHistos,
-                                              splitByIso=doSplitByIso
+                                              splitByIso=doSplitByIso,
+                                              dumperTemplate=dumperTemplate
                                               )
             
         return modules
+
+    # ----------------------------------------------------------------------------------------------------------------------
+    def addPhotonKinematicSelection(self,process,dumperTemplate=None,
+                                    dumpTrees=True,dumpWorkspace=False,dumpHistos=True,splitByIso=True):
+        """
+        Add signle photon kinematic selection to the process    
+        """
+        if not dumperTemplate:
+            dumperTemplate = self.dumperTemplate
+        
+        template = singlePhoSimpleTemplate.clone(src=cms.InputTag("flashggPhotons"),
+                                        cut = cms.string(
+                " pt > %(ptSublead)f"
+                " && abs(superCluster.eta)<2.5 && ( abs(superCluster.eta)<1.4442 || abs(superCluster.eta)>1.566)"
+                % { "ptSublead" : self.ptSublead,
+                    }
+                )
+                                        )
+        
+        if self.computeMVA:
+            sys.exit("MVA computation not supported for signle photon selection. Plase do something about it.",-1)
+            
+        self.photonSelections += self.addPhoSelection(process,"kin",template,dumperTemplate,
+                                                      dumpTrees=dumpTrees,dumpWorkspace=dumpWorkspace,dumpHistos=dumpHistos,splitByIso=splitByIso,selectN=10000)
+        
+        
+    # ----------------------------------------------------------------------------------------------------------------------
+    def addPhotonAnalysisSelection(self,process,label,selectorTemplate,
+                     nMinusOne=None,dumperTemplate=None,
+                     dumpTrees=False,dumpWorkspace=False,dumpHistos=True,splitByIso=True):
+        """
+        Add analysis selection to the process.
+        Also adds the kinematic selection in case it hasn't been, but no tree is asked for it.
+        """
     
+        if not hasattr(process,"kinPhotons"):
+            self.addPhotonKinematicSelection(process,dumpTrees=False,dumperTemplate=dumperTemplate)
+            
+        template = selectorTemplate.clone(src=cms.InputTag("kinPhotons"))
+        self.photonSelections += self.addPhoSelection(process,label,template,dumperTemplate=dumperTemplate,splitByIso=splitByIso,
+                                                          dumpTrees=dumpTrees,dumpHistos=dumpHistos)
+        if nMinusOne:
+            self.photonSelections += self.addNMinusOnePhoSelections(process,label,template,nMinusOne,
+                                                                    dumperTemplate=dumperTemplate,splitByIso=splitByIso)
+    
+
+    # ----------------------------------------------------------------------------------------------------------------------
+    def addPhoSelection(self,process,label,selectorTemplate,dumperTemplate=None,dumpTrees=False,dumpWorkspace=False,dumpHistos=True,splitByIso=False,
+                        selectN=False):
+        """
+        Add single photon producer and dumpoer to the process
+        """
+        
+        modules = []
+        if not dumperTemplate:
+            dumperTemplate = self.singlePhoDumperTemplate
+            
+        phoColl  = "%sPhotons" % label
+        dumperName = "%sSinglePho" % label
+        
+        ## register photon selector and associated dumper
+        setattr(process,"all"+phoColl,selectorTemplate.clone())
+        if selectN:
+            setattr(process,phoColl,self.sortTemplate.clone(src=cms.InputTag("all"+phoColl),
+                                                              maxNumber=cms.uint32(selectN),
+                                                              ))
+        else:
+            setattr(process,phoColl,self.sortTemplate.clone(src=cms.InputTag("all"+phoColl)))            
+        setattr(process,dumperName,dumperTemplate.clone(src=cms.InputTag(phoColl), 
+                                                        dumpTrees=cms.untracked.bool(dumpTrees),
+                                                        dumpWorkspace=cms.untracked.bool(dumpWorkspace),
+                                                        dumpHistos=cms.untracked.bool(dumpHistos),
+                                                        )
+                )
+        
+        dumper = getattr(process,dumperName)
+        modules.append( (phoColl,dumperName) )
+        
+        ## split into isolated and non isolated parts
+        if splitByIso:
+            self.splitByIso.append(dumperName)
+            setattr(process,phoColl+"GenIso",singlePhoSimpleTemplate.clone(src=cms.InputTag(phoColl),
+                                                                    cut=cms.string("genMatchType == 1 "
+                                                                                   " && %(genIsoVar)s < %(genIsoCut)f"
+                                                                                   % self.isoCut
+                                                                                   )
+                                                                    )
+                    )
+            setattr(process,dumperName+"GenIso",dumperTemplate.clone(src=cms.InputTag(phoColl+"GenIso"), 
+                                                                     dumpTrees=cms.untracked.bool(dumpTrees),
+                                                                     dumpWorkspace=cms.untracked.bool(dumpWorkspace),
+                                                                     dumpHistos=cms.untracked.bool(dumpHistos),
+                                                                     )
+                    )
+            
+            setattr(process,phoColl+"NonGenIso",singlePhoSimpleTemplate.clone(src=cms.InputTag(phoColl),
+                                                                       cut=cms.string("genMatchType != 1 "
+                                                                                      " || leadingPhoton >= %(genIsoCut)f"
+                                                                                      % self.isoCut
+                                                                                      )
+                                                                       )
+                    )
+            setattr(process,dumperName+"NonGenIso",dumperTemplate.clone(src=cms.InputTag(phoColl+"NonGenIso"), 
+                                                                        dumpTrees=cms.untracked.bool(dumpTrees),
+                                                                        dumpWorkspace=cms.untracked.bool(dumpWorkspace),
+                                                                        dumpHistos=cms.untracked.bool(dumpHistos),
+                                                                        )
+                    )
+            
+            modules.append( (phoColl+"GenIso",dumperName+"GenIso"))
+            modules.append( (phoColl+"NonGenIso",dumperName+"NonGenIso"))
+            self.splitDumpers.extend( [dumperName+"GenIso",dumperName+"NonGenIso"] )
+            
+        return modules
+
+
+    # ----------------------------------------------------------------------------------------------------------------------
+    def addNMinusOnePhoSelections(self,process,label,selectorTemplate,nMinusOne,dumperTemplate=None,splitByIso=False):
+        """
+        Add photon producer n-1 selection and corresponding dumper to the process
+        """
+        modules = []
+        if not dumperTemplate:
+            dumperTemplate = self.singlePhoDumperTemplate
+
+        for settings in nMinusOne:
+            if len(settings) == 7:
+                ignore,invert,ilabel,dumpTrees,dumpWorkspace,dumpHistos,doSplitByIso = settings
+                if hasattr(selectorTemplate,"ignore"):
+                    ignore += selectorTemplate.ignore;
+                nMinus1Template = selectorTemplate.clone(ignore=cms.vint32(ignore),
+                                                         invert=cms.vint32(invert[0]),
+                                                         invertNtimes=cms.int32(invert[1]),
+                                                         )
+            else:
+                ignore,ilabel,dumpTrees,dumpWorkspace,dumpHistos = settings[:5]
+                if hasattr(selectorTemplate,"ignore"):
+                    ignore += selectorTemplate.ignore;
+                nMinus1Template = selectorTemplate.clone(ignore=cms.vint32(ignore))
+                if len(settings) == 0:
+                    doSplitByIso = settings[5]
+                else:
+                    doSplitByIso = splitByIso
+                
+            modules += self.addPhoSelection(process,"%s%s" % (label,ilabel),nMinus1Template,
+                                            dumpTrees=dumpTrees,
+                                            dumpWorkspace=dumpWorkspace,
+                                            dumpHistos=dumpHistos,
+                                            splitByIso=doSplitByIso,
+                                            dumperTemplate=dumperTemplate
+                                              )
+            
+        return modules
+
     # ----------------------------------------------------------------------------------------------------------------------
     def addTriggeredDumpers(self,process,dumperTemplate=None,splitByIso=False):
         
@@ -301,6 +493,9 @@ class DiPhotonAnalysis(object):
             if not self.useDumper(process,dumper,splitByIso):
                 continue
             self.addTriggeredDumper(process,coll,dumperTemplate)
+            
+        if len(self.photonSelections) > 0:
+            sys.exit("Triggered dumpers not supported for single photon selection. Plase do something about it.",-1)
             
     # ----------------------------------------------------------------------------------------------------------------------
     def addTriggeredDumper(self,process,label,dumperTemplate=None):

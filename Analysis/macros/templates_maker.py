@@ -128,8 +128,14 @@ class TemplatesApp(PlotApp):
             truth_selection = fit["truth_selection"]
             template_binning = array.array('d',fit["template_binning"])
             templates       = fit["templates"]
-            
+            variables       = fit.get("dataset_variables",[])
+
             fulllist = varlist.Clone()
+            for var in variables:
+                vname, binning = self.getVar(var)
+                rooVar = self.buildRooVar(vname,binning)
+                fulllist.add(rooVar)
+            
             for dim in range(ndim):
                 dimVar = self.buildRooVar("template%sDim%d" % (name,dim),template_binning)
                 fulllist.add( dimVar )
@@ -243,7 +249,11 @@ class TemplatesApp(PlotApp):
 
     ## ------------------------------------------------------------------------------------------------------------
     def buildRooVar(self,name,binning):
-        rooVar = ROOT.RooRealVar(name,name,0.)
+        if name in self.aliases_:
+            title = self.aliases_[name]
+        else:
+            title = name
+        rooVar = ROOT.RooRealVar(name,title,0.)
         if len(binning) > 0:
             rooVar.setMin(binning[0])
             rooVar.setMax(binning[-1])
@@ -257,6 +267,14 @@ class TemplatesApp(PlotApp):
     def buildDatasets(self,trees,name,fitname,fit,categories,fulllist,weight,preselection):
         """ Build per-category RooDataSet starting from trees
         """
+        # define loop over legs
+        legs = [""]
+        redef = []        
+        if "legs" in fit:
+            legs = fit["legs"]
+            redef = [ fulllist[ivar].GetTitle()  for ivar in range(fulllist.getSize() ) ]
+        print redef
+
         ## fill datasets
         for catname,cfg in categories.iteritems():
             filler = ROOT.DataSetFiller( "%s_%s_%s" % (name,fitname,catname), "%s_%s_%s" % (name,fitname,catname), fulllist, weight )
@@ -266,9 +284,6 @@ class TemplatesApp(PlotApp):
             
             ## filling directives
             fill  = cfg["fill"]
-            legs = [""]
-            if "legs" in fit:
-                legs = fit["legs"]
 
             ## loop over directives 
             for cut,variables in fill.iteritems():
@@ -276,6 +291,9 @@ class TemplatesApp(PlotApp):
                 firstVar = fulllist.getSize()-len(variables)
                 ## loop over all legs
                 for leg in legs:
+                    ## adapt the definition of all variables
+                    for ired, red in enumerate(redef):
+                        filler.vars()[ired].SetTitle(red % {"leg" : leg})
                     ## adapt the definition of the template variables
                     for ivar,var in enumerate(variables):
                         filler.vars()[firstVar+ivar].SetTitle(var % {"leg" : leg})
@@ -292,6 +310,10 @@ class TemplatesApp(PlotApp):
                         ##   or outside of the range of any variable in fulllist
                         filler.fillFromTree(tree,twei)
             
+            # restore variables definition
+            for ired, red in enumerate(redef):
+                fulllist[ired].SetTitle(red)
+                
             ## and we are done
             dataset = filler.get()
             self.workspace_.rooImport(dataset)

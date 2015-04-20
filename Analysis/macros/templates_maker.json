@@ -1,6 +1,6 @@
 {
     "_preselection" : "abs(leadScEta) < 1.5 || abs(subleadScEta) < 1.5",
-    "preselection" : "1",
+    "preselection" : "leadChIso < 15. && subleadChIso < 15.",
     "selection"    : "cicNoChIso",
     
     "aliases"  : [ 
@@ -13,11 +13,15 @@
 	       "subleadPrompt := subleadGenIso < 10. && subleadMatchType == 1",
 	       "subleadFake   := ! subleadPrompt"
     ],
-     
+
+    "dataset_variables" : ["mass","rho","nvtx"],
+    "weight_expression" : "weight",
+	
     "fits" : {
 	"2D" : {
 	    "ndim"       : 2,
 	    "bins"       : [ "mass", [500.0,1300.0] ],
+            "dataset_variables" : ["leadPt","subleadPt","leadEta","subleadEta"],
             "_template_binning" : [ -10.0, 0.0, 1.0, 1.5, 2.0, 2.5, 3.0, 5.0, 10.0, 15.0 ],
             "template_binning" : [ -1.0, 0.0, 1.0, 15.0 ],
 	    "components" : [ "pp", "pf", "ff" ],
@@ -80,6 +84,7 @@
 	"1D" : {
 	    "ndim"       : 1,
 	    "bins"       : [ "mass", [500.0,1300.0] ],
+            "dataset_variables" : ["pt := %(leg)sPt","eta := %(leg)sEta"],
             "_template_binning" : [ -10.0, 0.0, 1.0, 1.5, 2.0, 2.5, 3.0, 5.0, 10.0, 15.0 ],
             "template_binning" : [ -1.0, 0.0, 1.0, 15.0 ],
 	    "components" : ["p", "f"],
@@ -153,9 +158,6 @@
 	     "QCD_HT_100toInf_13TeV:output.root/%(sel)s"
 	    ],
 
-    "dataset_variables" : ["mass","leadPt","subleadPt"],
-    "weight_expression" : "weight",
-	
    "_categories": ["EBHighR9","EBLowR9","EEHighR9","EELowR9"], 
     "categories" : [],
     "groups": {

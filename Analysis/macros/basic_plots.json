@@ -37,16 +37,16 @@
 	     ],
 
     "bkg" : [
-	      ["gjet","#gamma j",
-	      [["colors","myColorA1"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",1],["legopt","f"],["SetFillColor","myColorA3tr"]],
-	      { "GJets_HT_100toInf_13TeV:output.root/%(sel)s" : [] }
-	      ],
-
 	      ["jetjet","j j",
 	      [["colors","myColorC1"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",1],["legopt","f"],["SetFillColor","myColorC3tr"]],
 	      { "QCD_HT_100toInf_13TeV:output.root/%(sel)s" : [] }
 	      ],
 	      
+	      ["gjet","#gamma j",
+	      [["colors","myColorA1"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",1],["legopt","f"],["SetFillColor","myColorA3tr"]],
+	      { "GJets_HT_100toInf_13TeV:output.root/%(sel)s" : [] }
+	      ],
+
 	      ["ggjet_iso","#gamma #gamma",
 	      [["colors","myColorB1"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",1],["legopt","f"],["SetFillColor","myColorB3tr"]],
 	      { "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)s" : [] }
@@ -146,7 +146,7 @@
 	}, 
 	
     "plots": [
-	      ["mass" ,[["Rebin",10],["ytitle","Events / %(binw)s GeV"],["xtitle","m_{#gamma #gamma} (GeV)"],["xrange",[300.0,6000.0]]],null,null,["data"]],
+	      ["mass" ,[["Rebin",10],["ytitle","Events / %(binw)s GeV"],["xtitle","m_{#gamma #gamma} (GeV)"],["xrange",[100.0,6000.0]]],null,null,["data"]],
 	      ["leadPt" ,[["Rebin",5],["ytitle","Events / %(binw)s GeV"],["xtitle","p_{T}(#gamma 1) (GeV)"],["xrange",[100.0,6000.0]]],null,null],
 	      ["subleadPt" ,[["Rebin",5],["ytitle","Events / %(binw)s GeV"],["xtitle","p_{T}(#gamma 2) (GeV)"],["xrange",[100.0,6000.0]]],null,null],
 	      ["leadChIso" ,   [["ytitle","Events / %(binw)s GeV"],["xtitle","#gamma_{1} charged isolation (GeV)"],["xrange",[0,20]]],null,null,["sig"]],
@@ -160,7 +160,7 @@
 	      			    
 	      ],
 
-    "_selections" : [
+    "selections" : [
         ["kin","kinOnly"],
         ["cic",""],
         ["cicNoNeuIso","noNeuIso",["mass","leadBlockChIso","leadBlockPhoIso"]],
@@ -168,7 +168,7 @@
         ["cicNoPhoIso","noPhoIso",["mass","leadBlockChIso","leadBlockPhoIso"]]
     ],
 
-    "selections" : [
+    "_selections" : [
         ["cicNoChIsoSingleSB","chIsoSingleSB"],
         ["cicNoChIsoDoubleSB","chIsoDoubleSB"],
         ["cicNoPhoIsoSingleSB","phoIsoSingleSB"],

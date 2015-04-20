@@ -41,9 +41,12 @@ class BasicPlot(PlotApp):
                 sel,out,plotsel = selection
                 
             replacements = { "sel" : sel }
-            data = self.replaceIn(data_template,replacements)
-            bkg = self.replaceIn(bkg_template,replacements)
-            sig = self.replaceIn(sig_template,replacements)
+            if data_template:
+                options.data = self.replaceIn(data_template,replacements)
+            if bkg_template:
+                options.bkg = self.replaceIn(bkg_template,replacements)
+            if sig_template:
+                options.sig = self.replaceIn(sig_template,replacements)
             output = os.path.join(outdir,out % replacements)
             
             if plotsel:
@@ -52,9 +55,6 @@ class BasicPlot(PlotApp):
                 theplots = plots_template
 
             options.outdir = output
-            options.data = data
-            options.bkg  = bkg
-            options.sig  = sig
             options.plots = theplots
             try:
                 os.mkdir(options.outdir)
