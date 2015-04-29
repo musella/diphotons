@@ -4,6 +4,8 @@
 <use   name="roottmva"/>
 <use   name="rootmath"/>
 <use   name="rootrflx"/>
+<use   name="boost"/>
+<Flags CXXFLAGS="-ggdb"/>
 <export>
   <lib   name="1"/>
 </export>

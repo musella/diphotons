@@ -165,7 +165,12 @@
         ["cic",""],
         ["cicNoNeuIso","noNeuIso",["mass","leadBlockChIso","leadBlockPhoIso"]],
         ["cicNoChIso","noChIso",["mass","leadBlockChIso","leadBlockPhoIso"]],
-        ["cicNoPhoIso","noPhoIso",["mass","leadBlockChIso","leadBlockPhoIso"]]
+        ["cicNoPhoIso","noPhoIso",["mass","leadBlockChIso","leadBlockPhoIso"]],
+        ["cicNoChIsoSingleSB","chIsoSingleSB",["mass","leadBlockChIso","leadBlockPhoIso"]],
+        ["cicNoChIsoDoubleSB","chIsoDoubleSB",["mass","leadBlockChIso","leadBlockPhoIso"]],
+        ["cicNoPhoIsoSingleSB","phoIsoSingleSB",["mass","leadBlockChIso","leadBlockPhoIso"]],
+        ["cicNoPhoIsoDoubleSB","phoIsoDoubleSB",["mass","leadBlockChIso","leadBlockPhoIso"]]
+
     ],
 
     "_selections" : [

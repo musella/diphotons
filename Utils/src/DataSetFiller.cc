@@ -3,25 +3,50 @@
 
 #include "TTreeFormula.h"
 
+#include <iostream>
+using namespace std;
 
-DataSetFiller::DataSetFiller(const char * name, const char * title, const RooArgList & variables, const char *weightVarName) :
+DataSetFiller::DataSetFiller(const char * name, const char * title, const RooArgList & variables, const char *weightVarName, bool fillTree) :
     vars_(variables),
-    dataset_(new RooDataSet(name,title,RooArgSet(variables),weightVarName))
+    dataset_(new RooDataSet(name,title,RooArgSet(variables),weightVarName)),
+    tree_(0)
 {
-    
-
+    if( fillTree ) {
+        std::string vars;
+        size_t nvar = vars_.getSize();
+        for(size_t ivar=0; ivar<nvar; ++ivar) {
+            RooRealVar &var = dynamic_cast<RooRealVar &>( vars_[ivar] );
+            if( ! vars.empty() ) { vars += ":"; }
+            vars += var.GetName();
+        }
+        tree_ = new TNtuple(Form("tree_%s",name),Form("tree_%s",name),vars.c_str());
+        // cout << vars << endl;
+        treeBuf_.resize(nvar);
+    }
 }
 
-void DataSetFiller::fillFromTree(TTree * tree, const char * weightExpr)
+
+DataSetFiller::DataSetFiller(RooDataSet * dset) :
+    vars_(*(dset->get())),
+    dataset_(dset),
+    tree_(0)
+{
+}
+
+void DataSetFiller::fillFromTree(TTree * tree, const char * weightExpr, bool ignoreExpr)
 {
     size_t nvar = vars_.getSize();
     std::vector<TTreeFormula *> formulas(nvar);
+    TTreeFormula * weight = (weightExpr != 0 ? new TTreeFormula("weight",weightExpr,tree) : 0);
     for(size_t ivar=0; ivar<nvar; ++ivar){
         RooRealVar &var = dynamic_cast<RooRealVar &>( vars_[ivar] );
-        formulas[ivar] = new TTreeFormula( var.GetName(), var.GetTitle(), tree );
+        if( std::string(var.GetName()) == "weight" ) { 
+            formulas[ivar] = weight;
+        } else {
+            formulas[ivar] = new TTreeFormula( var.GetName(), (ignoreExpr ? var.GetName() : var.GetTitle()), tree );
+        }
     }
     
-    TTreeFormula * weight = (weightExpr != 0 ? new TTreeFormula("weight",weightExpr,tree) : 0);
 
     for(int iev=0; iev<tree->GetEntries(); ++iev) {
         tree->GetEntry(iev);
@@ -36,16 +61,21 @@ void DataSetFiller::fillFromTree(TTree * tree, const char * weightExpr)
             RooRealVar & var = dynamic_cast<RooRealVar &>( vars_[ivar] );
             if( (var.hasMin() && val < var.getMin()) || (var.hasMax() && val > var.getMax()) ) { keep = false; break; }
             var.setVal( val  );
+            if( tree_ ) { treeBuf_[ivar] = val; }
         }
         if( keep ) {
-            dataset_->add( RooArgSet(vars_), wei );
+            if( tree_ ) { 
+                tree_->Fill( &treeBuf_[0] );
+            } else { 
+                dataset_->add( RooArgSet(vars_), wei );
+            }
         }
     }
     
     for(size_t ivar=0; ivar<nvar; ++ivar){
         delete formulas[ivar];
     }
-    if( weight ) { delete weight; }
+    //// if( weight ) { delete weight; }
 }
 
 // Local Variables:

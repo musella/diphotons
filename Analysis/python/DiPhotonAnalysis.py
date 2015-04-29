@@ -2,7 +2,7 @@ import FWCore.ParameterSet.Config as cms
 import FWCore.ParameterSet.VarParsing as VarParsing
 
 from flashgg.MicroAOD.flashggPreselectedDiPhotons_cfi import flashggPreselectedDiPhotons as simpleTemplate
-singlePhoSimpleTemplate = cms.EDFilter("PhotonCandidateSelector",src = cms.InputTag("flashggPhotons"),)
+singlePhoSimpleTemplate = cms.EDFilter("PhotonSelector",src = cms.InputTag("flashggPhotons"),)
 
 from diphotons.Analysis.diphotonsWithMVA_cfi import diphotonsWithMVA
 
@@ -200,7 +200,7 @@ class DiPhotonAnalysis(object):
             template = diphotonsWithMVA.clone(src=cms.InputTag("tmpKinDiphotons"))
         
         self.analysisSelections += self.addDiphoSelection(process,"kin",template,dumperTemplate,
-                                                          dumpTrees=dumpTrees,dumpWorkspace=dumpWorkspace,dumpHistos=dumpHistos,splitByIso=splitByIso,selectN=10000)
+                                                          dumpTrees=dumpTrees,dumpWorkspace=dumpWorkspace,dumpHistos=dumpHistos,splitByIso=splitByIso,selectN=False)
         
         
     # ----------------------------------------------------------------------------------------------------------------------
@@ -355,7 +355,7 @@ class DiPhotonAnalysis(object):
             sys.exit("MVA computation not supported for signle photon selection. Plase do something about it.",-1)
             
         self.photonSelections += self.addPhoSelection(process,"kin",template,dumperTemplate,
-                                                      dumpTrees=dumpTrees,dumpWorkspace=dumpWorkspace,dumpHistos=dumpHistos,splitByIso=splitByIso,selectN=10000)
+                                                      dumpTrees=dumpTrees,dumpWorkspace=dumpWorkspace,dumpHistos=dumpHistos,splitByIso=splitByIso,selectN=False)
         
         
     # ----------------------------------------------------------------------------------------------------------------------
@@ -393,13 +393,10 @@ class DiPhotonAnalysis(object):
         dumperName = "%sSinglePho" % label
         
         ## register photon selector and associated dumper
-        setattr(process,"all"+phoColl,selectorTemplate.clone())
         if selectN:
-            setattr(process,phoColl,self.sortTemplate.clone(src=cms.InputTag("all"+phoColl),
-                                                              maxNumber=cms.uint32(selectN),
-                                                              ))
+            sys.exit("selectN not supported for single photon selection. Plase do something about it.",-1)
         else:
-            setattr(process,phoColl,self.sortTemplate.clone(src=cms.InputTag("all"+phoColl)))            
+            setattr(process,phoColl,selectorTemplate.clone())
         setattr(process,dumperName,dumperTemplate.clone(src=cms.InputTag(phoColl), 
                                                         dumpTrees=cms.untracked.bool(dumpTrees),
                                                         dumpWorkspace=cms.untracked.bool(dumpWorkspace),
@@ -429,7 +426,7 @@ class DiPhotonAnalysis(object):
             
             setattr(process,phoColl+"NonGenIso",singlePhoSimpleTemplate.clone(src=cms.InputTag(phoColl),
                                                                        cut=cms.string("genMatchType != 1 "
-                                                                                      " || leadingPhoton >= %(genIsoCut)f"
+                                                                                      " || %(genIsoVar)s >= %(genIsoCut)f"
                                                                                       % self.isoCut
                                                                                       )
                                                                        )

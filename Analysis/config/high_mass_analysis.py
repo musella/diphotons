@@ -30,6 +30,8 @@ diphotonDumper.processId = "test"
 diphotonDumper.dumpTrees = False
 diphotonDumper.dumpWorkspace = False
 diphotonDumper.quietRooFit = True
+diphotonDumper.maxCandPerEvent=1
+diphotonDumper.nameTemplate = "$PROCESS_$SQRTS_$LABEL_$SUBCAT"
 cfgTools.addCategories(diphotonDumper,
                        [## cuts are applied in cascade
                         ## ("all","1"),
@@ -129,12 +131,19 @@ cfgTools.addCategories(diphotonDumper,
 
 minimalDumper = diphotonDumper.clone()
 cfgTools.dumpOnly(minimalDumper,
-                  ["mass","leadPt","subleadPt","leadEta","subleadEta",
-                   "leadBlockPhoIso","subleadBlockPhoIso","leadBlockChIso","leadBlockChIso",
-                   "leadRndConePhoIso","subleadRndConePhoIso","leadRndConeChIso","leadRndConeChIso",
-                   "leadMatchType","leadGenIso","subleadMatchType","subleadGenIso",
-                   "leadPhoIsoEA","subleadPhoIsoEA","leadPhoIso","subleadPhoIso",
-                   "leadChIso","subleadChIso","leadScEta","subleadScEta","leadSigmaIeIe","subleadSigmaIeIe",
+                  ["mass",
+                   "leadPt","leadEta","leadScEta","leadPhi",
+                   "subleadPt","subleadEta","subleadScEta","subleadPhi",
+                   "leadBlockPhoIso","subleadBlockPhoIso",
+                   "leadBlockChIso","subleadBlockChIso",
+                   "leadRndConePhoIso","leadRndConeChIso",
+                   "subleadRndConePhoIso","subleadRndConeChIso",
+                   "leadMatchType","leadGenIso",
+                   "subleadMatchType","subleadGenIso",
+                   "leadPhoIsoEA","subleadPhoIsoEA",
+                   "leadPhoIso","subleadPhoIso",
+                   "leadChIso","subleadChIso",
+                   "leadSigmaIeIe","subleadSigmaIeIe",
                    ])
 
 
@@ -143,10 +152,12 @@ photonDumper.processId = "test"
 photonDumper.dumpTrees = False
 photonDumper.dumpWorkspace = False
 photonDumper.quietRooFit = True
+photonDumper.maxCandPerEvent=2
+photonDumper.nameTemplate = "$PROCESS_$SQRTS_$LABEL_$SUBCAT"
 cfgTools.addCategories(photonDumper,
                        [## cuts are applied in cascade
                         ("EBHighR9","abs(superCluster.eta)<1.4442 && r9>0.94",0),
-                        ("EBLowR9", "abs(superCluster.eta)>1.4442",0),
+                        ("EBLowR9", "abs(superCluster.eta)<1.4442",0),
                         ("EEHighR9","r9>0.94",0),
                         ("EELowR9","1",0),
                         ],
@@ -157,9 +168,9 @@ cfgTools.addCategories(photonDumper,
                                   "phoScEta                :=superCluster.eta",
                                   "phoPhi                  :=phi",
                                   
-                                  "phoBlockChIso   := pfChIso03WrtVtx0", 
+                                  "phoBlockChIso   := pfChgIso03WrtVtx0", 
                                   "phoBlockPhoIso  := pfPhoIso03", 
-                                  "phoRndConeChIso := extraChIsoWrtVtx0('rnd03')",
+                                  "phoRndConeChIso := extraChgIsoWrtVtx0('rnd03')",
                                   "phoRndConePhoIso:= extraPhoIso('rnd03')",
                                   
                                   "phoPhoIsoEA :=  map( abs(superCluster.eta) :: 0.,0.9,1.5,2.0,2.2,3. :: 0.21,0.2,0.14,0.22,0.31 )",
@@ -192,7 +203,7 @@ cfgTools.addCategories(photonDumper,
 
 minimalPhotonDumper = photonDumper.clone()
 cfgTools.dumpOnly(minimalPhotonDumper,
-                  ["leadPt","leadEta",
+                  ["leadPt","leadEta","leadPhi",
                    "leadBlockPhoIso","leadBlockChIso",
                    "leadRndConePhoIso","leadRndConeChIso","leadRndConeChIso",
                    "leadMatchType","leadGenIso",
@@ -205,7 +216,7 @@ cfgTools.dumpOnly(minimalPhotonDumper,
 #
 process.source = cms.Source("PoolSource",
                             fileNames=cms.untracked.vstring(## '/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v4/diphotonsPhys14V2/GGJets_M-500To1000_Pt-50_13TeV-sherpa/ExoPhys14_v4-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150204_005517/0000/myOutputFile_1.root'
-                                                            ## "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14ANv1/diphotonsPhys14AnV1/GGJets_M-1000To2000_Pt-50_13TeV-sherpa/ExoPhys14ANv1-diphotonsPhys14AnV1-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150330_192709/0000/diphotonsMicroAOD_1.root"
+        "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14ANv1/diphotonsPhys14AnV1/GGJets_M-1000To2000_Pt-50_13TeV-sherpa/ExoPhys14ANv1-diphotonsPhys14AnV1-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150330_192709/0000/diphotonsMicroAOD_1.root"
                                                             )
 )
 process.TFileService = cms.Service("TFileService",
@@ -238,7 +249,7 @@ from diphotons.Analysis.highMassCiCDiPhotons_cfi import highMassCiCDiPhotons
 analysis.addAnalysisSelection(process,"cic",highMassCiCDiPhotons,dumpTrees=True,dumpWorkspace=False,dumpHistos=True,splitByIso=True,
                               dumperTemplate=minimalDumper,
                               nMinusOne=[(0,"NoChIso",        True, False,True), ## removeIndex(es), label, dumpTree, dumpWorkspace, dumpHistos
-                                         (1,"NoPhoIso",       True, False,True),
+                                         (1,"NoPhoIso",       False, False,True),
                                          (2,"NoNeuIso",       False,False,True),
                                          (3,"NoHoverE",       False,False,True),
                                          (4,"NoSigmaIetaIeta",False,False,True),
@@ -247,21 +258,21 @@ analysis.addAnalysisSelection(process,"cic",highMassCiCDiPhotons,dumpTrees=True,
                                          ## removeIndex, (ignoreIndex(es),ingnoreNtimes), dumpTree, dumpWorkspace, dumpHistos, splitByIso
                                          (0,(4,1),"NoChIsoSingleSB",  True, False,True,False),
                                          (0,(4,2),"NoChIsoDoubleSB",  True, False,True,False),
-                                         (1,(4,1),"NoPhoIsoSingleSB",  True, False,True,False),
-                                         (1,(4,2),"NoPhoIsoDoubleSB",  True, False,True,False),
+                                         (1,(4,1),"NoPhoIsoSingleSB",  False, False,True,False),
+                                         (1,(4,2),"NoPhoIsoDoubleSB",  False, False,True,False),
                                          ]
                               )
 
 # signle photon
 from diphotons.Analysis.highMassCiCPhotons_cfi import highMassCiCPhotons
-analysis.addPhotonAnalysisSelection(process,"cic",highMassCiCPhotons,dumpTrees=True,dumpWorkspace=False,dumpHistos=True,splitByIso=True,
-                                    dumperTemplate=minimalDumper,
+analysis.addPhotonAnalysisSelection(process,"cic",highMassCiCPhotons,dumpTrees=False,dumpWorkspace=False,dumpHistos=True,splitByIso=True,
+                                    dumperTemplate=photonDumper,
                                     nMinusOne=[(0,"NoChIso",        True, False,True), ## removeIndex(es), label, dumpTree, dumpWorkspace, dumpHistos
-                                               (1,"NoPhoIso",       True, False,True),
+                                               (1,"NoPhoIso",       False, False,True),
                                                ## Sidebands
                                                ## removeIndex, (ignoreIndex(es),ingnoreNtimes), dumpTree, dumpWorkspace, dumpHistos, splitByIso
                                                (0,(4,1),"NoChIsoSB",  True, False,True,False),
-                                               (1,(4,1),"NoPhoIsoSB",  True, False,True,False)
+                                               (1,(4,1),"NoPhoIsoSB",  False, False,True,False)
                                                ]
                               )
 

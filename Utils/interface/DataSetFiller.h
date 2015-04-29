@@ -5,25 +5,30 @@
 #include "RooArgList.h"
 
 #include "TTree.h"
+#include "TNtuple.h"
 
 class DataSetFiller 
 {
 public:
-    DataSetFiller(const char * name, const char * title, const RooArgList & variables, const char *weightVarName=0);
+    DataSetFiller(const char * name, const char * title, const RooArgList & variables, const char *weightVarName=0, bool fillTree=false);
+    DataSetFiller(RooDataSet * dset);
     
-    void fillFromTree(TTree * tree, const char * weightExpr=0);
+    void fillFromTree(TTree * tree, const char * weightExpr=0, bool ignoreExpr=false);
     RooArgList & vars() { return vars_; };
     
     RooDataSet * get() { return dataset_; }
+    TTree * getTree() { return tree_; }
     
 private:
     RooArgList vars_;
     RooDataSet * dataset_;
-
+    TNtuple * tree_;
+    std::vector<float> treeBuf_;
 
 };
 
-
+#include <list>
+typedef std::list<RooAbsData *> RooDataSetList;
 
 #endif // _DataSetFiller_h_
 
