@@ -101,11 +101,12 @@
         "2D" : {
             "ndim"       : 2,                                                                "#" : "number of dimensions for the template  ",
             "bins"       : [ "mass", [500.0,1300.0] ],                                       "#" : "kinematic bins in which the fit is run ",
-            "template_binning" : [ -1.0, 0.0, 1.0, 15.0 ],                                   "#" : "template varaible binning              ",
+            "template_binning" : [ -1.0, 0.0, 1.0, 4.0, 15.0 ],                                   "#" : "template varaible binning              ",
             "_template_binning" : [ -10.0, 0.0, 1.0, 1.5, 2.0, 2.5, 3.0, 5.0, 10.0, 15.0 ],
 
             "components" : [ "pp", "pf", "ff" ],                                             "#" : "list of fit components                 ",
             "dataset_variables" : ["mass","leadPt","subleadPt","leadEta","subleadEta"],      "#" : "additional variables to be stored      ",
+            "store_trees" : true,	
 
             "#" :"categories in which to split the fit       ",
             "#" :"format is <fit-category-name>: { <config> }",
@@ -194,7 +195,7 @@
 				       "phoGenIso := %(leg)sGenIso", "phoMatchType := %(leg)sMatchType"
 				       ],
             "_template_binning" : [ -10.0, 0.0, 1.0, 1.5, 2.0, 2.5, 3.0, 5.0, 10.0, 15.0 ],
-            "template_binning" : [ -1.0, 0.0, 1.0, 15.0 ],
+            "template_binning" : [ -1.0, 0.0, 1.0, 4.0, 15.0 ],
             "components" : ["p", "f"],
 	    "_selection"  : "kin",
             "store_trees" : true,	
@@ -285,7 +286,7 @@
             "bins"       : [ "phoPt", [100,6000] ],
 		"dataset_variables" : ["phoPt","phoEta","phoPhi","phoEnergy := phoPt*cosh(phoEta)","phoSigmaIeIe","phoGenIso","phoMatchType","rho","nvtx"],
             "_template_binning" : [ -10.0, 0.0, 1.0, 1.5, 2.0, 2.5, 3.0, 5.0, 10.0, 15.0 ],
-            "template_binning" : [ -1.0, 0.0, 1.0, 15.0 ],
+	    "template_binning" : [ -1.0, 0.0, 1.0, 4.0, 15.0 ],
             "store_trees"  : true,
             "selection"    : "cicNoChIsoSinglePho",
             "_preselection" : "phoChIso < 15.",
@@ -362,7 +363,7 @@
     "#" : "---------------------------------------------------------------------------------------------------------------------",
     "#" : "Template mixing                                                                                                      ",
     "#" : "---------------------------------------------------------------------------------------------------------------------",
-    "mix" : { 
+    "_mix" : { 
 	"1D2D" : {
 	    "target" : "2D",
 		"ptLeadMin" : 100.0, "ptSubleadMin" : 100.0, "massMin" : 200.0,
@@ -377,8 +378,8 @@
 		    "EBEE" : { "legs" : ["EBEE","EEEB"], "maxEvents" : 100000 },
 		    "EBEEx" : { "legs" : ["EBEB","EEEB"], "maxEvents" : 100000 }
 		}
-	},
-	    
+	}
+    }, "mix" : { 
 	"singlePho2D" : {
 	    "target" : "2D",
 		"ptLeadMin" : 100.0, "ptSubleadMin" : 100.0, "massMin" : 200.0,
@@ -388,13 +389,27 @@
 		    "ff" : [ "singlePho:f1", "singlePho:f2" ]
 		    }, 
 		"replace" : "pho",
+		"match" : { "nvtx" : 2  },
 		"fill_categories" : {
-		"EBEB" : { "legs" : ["EB","EB"], "rndswap" : true, "maxEvents" : 100000 },
-		"EBEE" : { "legs" : ["EB","EE"], "maxEvents" : 100000 }
+		"EBEB" : { "legs" : ["EB","EB"], "rndswap" : true, "maxEvents" : 2500000 },
+		"EBEE" : { "legs" : ["EB","EE"], "maxEvents" : 1300000 }
 		}
 	}
     },
-	    
+
+    "comparisons" : {
+	"fit2DTruth" : { "fit" : "2D",
+		"templates" : ["mix:singlePho2D"],
+		"doDataMc" : false, "doMcTruth" : true,
+		"splitByBin" : false
+		},
+	"fit1DTruth" : { "fit" : "1D",
+		"templates" : ["singlePho"],
+		"doDataMc" : false, "doMcTruth" : true,
+		"splitByBin" : false
+		}
+    },
+      
 
     "rootstyle_extra" : [
                   "TGaxis::SetMaxDigits(3);",

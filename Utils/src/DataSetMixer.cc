@@ -110,7 +110,7 @@ struct Cache {
 void DataSetMixer::fillFromTree(TTree * tree1, TTree * tree2,
                                 const char *pT1, const char *eta1, const char *phi1, const char *energy1, 
                                 const char *pT2, const char *eta2, const char *phi2, const char *energy2,
-                                RooArgList matchVars, bool rndSwap, int maxEvents, float matchEff
+                                const RooArgList & matchVars, bool rndSwap, int maxEvents, float matchEff
                       )
 {
     // book TTres formula for dataset variables

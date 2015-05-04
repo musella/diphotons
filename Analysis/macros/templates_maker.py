@@ -77,6 +77,10 @@ class TemplatesApp(PlotApp):
                                     default=None,
                                     help="Output file.",
                                     ),
+                        make_option("--store-new-only",dest="store_new_only",action="store_true",
+                                    default=False,
+                                    help="Only store new objects in output file.",
+                                    ),
                         make_option("--mc-file",dest="mc_file",action="store",type="string",
                                     default=None,help="default: %default"),
                         ]
@@ -91,7 +95,8 @@ class TemplatesApp(PlotApp):
         self.cache_ = {}
         self.store_ = {}
         self.rename_ = False
-        
+        self.store_new_ = False
+
         ## load ROOT (and libraries)
         global ROOT, style_utils
         import ROOT
@@ -109,6 +114,9 @@ class TemplatesApp(PlotApp):
 
         printLevel = ROOT.RooMsgService.instance().globalKillBelow()
         ROOT.RooMsgService.instance().setGlobalKillBelow(RooFit.FATAL)
+
+        if options.store_new_only:
+            self.store_new_ = True
 
         if not options.output_file:
             if options.read_ws: 
@@ -199,8 +207,18 @@ class TemplatesApp(PlotApp):
         print    
         print "--------------------------------------------------------------------------------------------------------------------------"
 
+        if self.store_new_:
+            self.store_input_ = self.store_
+            self.store_ = {}
+            
+            self.workspace_input_ = self.workspace_
+            self.workspace_ = ROOT.RooWorkspace("wtemplates","wtemplates")
+            self.workspace_.rooImport = getattr(self.workspace_,"import")
+            
+
     ## ------------------------------------------------------------------------------------------------------------
     def compareTemplates(self,options,args):
+        
         pass
 
     ## ------------------------------------------------------------------------------------------------------------
@@ -299,7 +317,7 @@ class TemplatesApp(PlotApp):
                 legs = [""]
                 if "legs" in fit:
                     legs = fit["legs"]
-                self.buildRooDataSet(mcTrees,"mc_truth_%s" % truth,name,fit,categories,fulllist,weight,cut.GetTitle(),storeTrees)
+                self.buildRooDataSet(mcTrees,"mctruth_%s" % truth,name,fit,categories,fulllist,weight,cut.GetTitle(),storeTrees)
             
                         
             print
@@ -310,7 +328,7 @@ class TemplatesApp(PlotApp):
                 
                 breakDown = 0.
                 for truth in truth_selection.keys():
-                    count = self.rooData("mc_truth_%s_%s_%s" % (truth,name,cat) ).sumEntries()
+                    count = self.rooData("mctruth_%s_%s_%s" % (truth,name,cat) ).sumEntries()
                     breakDown += count
                     catCounts[truth] = count
                 print cat, " ".join( "%s : %1.4g" % (key,val) for key,val in catCounts.iteritems() ),
@@ -383,7 +401,13 @@ class TemplatesApp(PlotApp):
                 print comp, ":", " ".join(source)
                 sources[comp] = [ s.split(":") for s in source ]
             print
-            
+
+            matchVars = ROOT.RooArgList() # FIXME
+            for var,thr in mix["match"].iteritems():
+                var = self.buildRooVar(var,[])
+                var.setVal(thr)
+                matchVars.add(var)
+
             for cat, fill in fill_categories.iteritems():
                 print
                 print "Filling category :", cat
@@ -414,7 +438,6 @@ class TemplatesApp(PlotApp):
                                                ptLeadMin, ptSubleadMin, massMin,
                                                "weight", "weight", True,                                               
                                                )
-                    matchVars = ROOT.RooArgList() # FIXME
                     mixer.fillFromTree(tree1,tree2,pt,eta,phi,energy,pt,eta,phi,energy,matchVars,rndswap,maxEvents,matchEff)
                     
                     dataset = mixer.get()
@@ -437,8 +460,11 @@ class TemplatesApp(PlotApp):
     ## ------------------------------------------------------------------------------------------------------------
     def rooData(self,name,autofill=True):
         if name in self.cache_:
-            return self.cache_[name]
+            return self.cache_[name]        
         dataset = self.workspace_.data(name)
+        if not dataset and self.store_new_:
+            dataset = self.workspace_input_.data(name)
+            
         if autofill and dataset.sumEntries() == 0. and "tree_%s" % name in self.store_:
             tree = self.store_["tree_%s" % name]
             dataset = dataset.emptyClone()
@@ -451,11 +477,15 @@ class TemplatesApp(PlotApp):
     def treeData(self,name):
         if "tree_%s" % name in self.store_:
             return self.store_["tree_%s" % name]
+        elif self.store_new_ and "tree_%s" % name in self.store_input_:
+            return self.store_input_["tree_%s" % name]
         return None
         
     ## ------------------------------------------------------------------------------------------------------------
     def dsetVars(self,name):
         st = self.workspace_.set("variables_%s" %name)
+        if not st and self.store_new_:
+            st = self.workspace_input_.set("variables_%s" %name)
         return st
 
     ## ------------------------------------------------------------------------------------------------------------
