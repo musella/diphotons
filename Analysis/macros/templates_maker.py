@@ -378,19 +378,34 @@ class TemplatesApp(PlotApp):
             print "Mixing templates %s" % name
             print 
 
-            ## target          = options.fits[mix["target"]]
-            ndim            = 2
-            ## ndim            = target["ndim"]
+            targetName      = mix["target"]
+            targetFit       = options.fits[targetName]
+            ndim            = targetFit["ndim"]
             ## categories      = target["categories"]
+            
             ptLeadMin       = mix["ptLeadMin"]
             ptSubleadMin    = mix["ptSubleadMin"]
             massMin         = mix["massMin"]
+            mixType         = mix.get("type","simple") 
+
             pt              = mix["pt"]
             eta             = mix["eta"]
             phi             = mix["phi"]
             energy          = mix["energy"]
             replace         = mix["replace"]
             fill_categories = mix["fill_categories"]
+            
+            if mixType == "simple":
+                matchVars = ROOT.RooArgList() # FIXME
+                for var,thr in mix["match"].iteritems():
+                    var = self.buildRooVar(var,[])
+                    var.setVal(thr)
+                    matchVars.add(var)
+
+            elif mixType == "kdtree":
+                pass
+            else:
+                sys.exit(-1,"Uknown event mixing type %s" % mixType)
   
             if ndim != 2:
                 sys.exit(-1,"can only do event mixing with two objects")
@@ -401,12 +416,6 @@ class TemplatesApp(PlotApp):
                 print comp, ":", " ".join(source)
                 sources[comp] = [ s.split(":") for s in source ]
             print
-
-            matchVars = ROOT.RooArgList() # FIXME
-            for var,thr in mix["match"].iteritems():
-                var = self.buildRooVar(var,[])
-                var.setVal(thr)
-                matchVars.add(var)
 
             for cat, fill in fill_categories.iteritems():
                 print
@@ -425,12 +434,9 @@ class TemplatesApp(PlotApp):
                     if len(legs) != ndim:
                         sys.exit(-1,"number of legs does not match number of dimensions for dataset mixing")
                     rndswap     = fill.get("rndswap",False)
-                    maxEvents   = fill.get("maxEvents",-1)
-                    matchEffMap = fill.get("matchEff",{})
-                    matchEff    = matchEffMap.get(comp,1.)
                     
                     print "legs  :", " ".join(legnams)
-                    print "maxEvents :", maxEvents, "rndswap :", rndswap, "mathcEffMap"
+                    print "type  :", mixType
                     
                     (tree1, vars1), (tree2, vars2)  = legs
                     mixer = ROOT.DataSetMixer( "template_mix_%s_%s_%s" % ( comp, name, cat),"template_mix_%s_%s_%s" % ( comp, name, cat),
@@ -438,7 +444,46 @@ class TemplatesApp(PlotApp):
                                                ptLeadMin, ptSubleadMin, massMin,
                                                "weight", "weight", True,                                               
                                                )
-                    mixer.fillFromTree(tree1,tree2,pt,eta,phi,energy,pt,eta,phi,energy,matchVars,rndswap,maxEvents,matchEff)
+                    
+                    if mixType == "simple":
+                        maxEvents   = fill.get("maxEvents",-1)
+                        matchEffMap = fill.get("matchEff",{})
+                        matchEff    = matchEffMap.get(comp,1.)
+                        print "maxEvents :", maxEvents, "rndswap :", rndswap, "mathcEffMap"
+                        mixer.fillFromTree(tree1,tree2,pt,eta,phi,energy,pt,eta,phi,energy,matchVars,rndswap,maxEvents,matchEff)
+                        
+                    elif mixType == "kdtree":
+                        targetCat       = fill.get("targetCat",cat)
+                        nNeigh          = fill.get("nNeigh",10)
+                        useCdfDistance  = fill.get("useCdfDistance",False)
+                        targetWeight    = fill.get("targetWeight","weight")
+                        dataname        = "data_%s_%s" % (targetName,targetCat)                        
+                        target          = self.treeData(dataname)
+                    
+
+                        matchVars1   = ROOT.RooArgList()
+                        matchVars2   = ROOT.RooArgList()
+                        targetMatch1 = ROOT.RooArgList()
+                        targetMatch2 = ROOT.RooArgList()
+                        
+                        for var in fill["match1"]:
+                            var = self.buildRooVar(var,[])
+                            matchVars1.add(var)
+                        for var in fill["match2"]:
+                            var = self.buildRooVar(var,[])
+                            matchVars2.add(var)
+                        for var in fill["target1"]:
+                            var = self.buildRooVar(var,[])
+                            targetMatch1.add(var)
+                        for var in fill["target2"]:
+                            var = self.buildRooVar(var,[])
+                            targetMatch2.add(var)
+                            
+                        print "target :", dataname
+                        print "rndswap :", rndswap, "useCdfDistance :", useCdfDistance, "nNeigh :", nNeigh
+                        mixer.fillLikeTarget(target,targetMatch1,targetMatch1,targetWeight,tree1,tree2,
+                                             pt,eta,phi,energy,pt,eta,phi,energy,
+                                             matchVars1,matchVars2,rndswap,nNeigh,useCdfDistance)
                     
                     dataset = mixer.get()
                     self.workspace_.rooImport(dataset,ROOT.RooFit.RecycleConflictNodes())

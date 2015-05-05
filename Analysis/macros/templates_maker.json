@@ -77,7 +77,7 @@
     "#" : "Fit definition                                                                                                       ",
     "#" : "---------------------------------------------------------------------------------------------------------------------",
 
-    "dataset_variables" : ["rho","nvtx"],     "#" :"list of variables to be put in the dataset (other than the template ones)",
+    "dataset_variables" : ["rho","nvtx","run","event"],     "#" :"list of variables to be put in the dataset (other than the template ones)",
     "weight_expression" : "weight",           "#" :"event weight expression  ",
 
     "#" : "List of aliases. Used to define variables/simplify expressions selection.",
@@ -379,7 +379,7 @@
 		    "EBEEx" : { "legs" : ["EBEB","EEEB"], "maxEvents" : 100000 }
 		}
 	}
-    }, "mix" : { 
+    }, "_mix" : { 
 	"singlePho2D" : {
 	    "target" : "2D",
 		"ptLeadMin" : 100.0, "ptSubleadMin" : 100.0, "massMin" : 200.0,
@@ -395,6 +395,38 @@
 		"EBEE" : { "legs" : ["EB","EE"], "maxEvents" : 1300000 }
 		}
 	}
+    }, "mix" : { 
+	"kDSinglePho2D" : {
+	    "target" : "2D",
+		"ptLeadMin" : 100.0, "ptSubleadMin" : 100.0, "massMin" : 200.0,
+		"pt" : "phoPt", "eta" : "phoEta", "phi" : "phoPhi", "energy" : "phoEnergy",
+		"sources" : { 
+		    "pf" : [ "singlePho:p", "singlePho:f" ],
+		    "ff" : [ "singlePho:f1", "singlePho:f2" ]
+		    }, 
+		"replace" : "pho",
+		"type" : "kdtree",
+		    
+		"fill_categories" : {
+		    "EBEB" : { "legs" : ["EB","EB"], "rndswap" : true, "nNeigh" : 10,
+			    "useCdfDistance" : true,
+			    "match1"  : ["nvtx","phoPt"    ,"TMath::Abs(phoEta)"    ], 
+			    "match2"  : ["nvtx","phoPt"    ,"TMath::Abs(phoEta)"    ], 
+			    "target1" : ["nvtx","leadPt"   ,"TMath::Abs(leadEta)"   ], 
+			    "target2" : ["nvtx","subleadPt","TMath::Abs(subleadEta)"]
+			    },
+		    "EBEE" : { "legs" : ["EB","EE"], "nNeigh" : 10,
+			    "useCdfDistance" : true,
+			    "match1"  : ["nvtx","phoPt"                                                                                                           ,"TMath::Abs(phoEta)"    ], 
+			    "match2"  : ["nvtx","phoPt"                                                                                                           ,"TMath::Abs(phoEta)"    ], 
+			    "target1" : ["nvtx","(TMath::Abs(leadEta)<TMath::Abs(subleadEta))*leadPt    + (TMath::Abs(leadEta)>=TMath::Abs(subleadEta))*subleadPt",
+					 "TMath::Min(TMath::Abs(leadEta),TMath::Abs(subleadEta))"   ], 
+			    "target2" : ["nvtx","(TMath::Abs(leadEta)<TMath::Abs(subleadEta))*subleadPt + (TMath::Abs(leadEta)>=TMath::Abs(subleadEta))*leadPt   ",
+					 "TMath::Max(TMath::Abs(leadEta),TMath::Abs(subleadEta))"]
+			    }
+		}
+	}
+
     },
 
     "comparisons" : {

@@ -24,6 +24,16 @@ public:
                       const char *pT2, const char *eta2, const char *phi2, const char *energy2,
                       const RooArgList & matchVars, bool rndSwap, int maxEvents=-1, float matchEff=1.
                       );
+
+    void fillLikeTarget(TTree * target,
+                        const RooArgList & targetVars1, const RooArgList & targetVars2, 
+                        std::string  targetWeight,
+                        TTree * tree1, TTree * tree2,
+                        const char *pT1, const char *eta1, const char *phi1, const char *energy1, 
+                        const char *pT2, const char *eta2, const char *phi2, const char *energy2,
+                        const RooArgList & matchVars1, const RooArgList & matchVars2,
+                        bool rndSwap, int nNeigh=10, bool useCdfDistance=false
+        );
     
     RooArgList & vars() { return vars_; };
     
