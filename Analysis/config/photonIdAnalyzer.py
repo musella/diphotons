@@ -17,7 +17,7 @@ def addMiniTreeVars(miniTreeCfg,lst):
         args = [var]
         if type(var) == list or type(var) == tuple:
             args = var
-        if len(args) == and ":=" in args[0]:
+        if len(args) == 1 and ":=" in args[0]:
             args = [ a.lstrip(" ").rstrip(" ") for a in args[0].split(":=") ]
         addMiniTreeVar(miniTreeCfg,*args)
         
