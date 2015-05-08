@@ -147,4 +147,3 @@ addMiniTreeVars(process.photonIdAnalyzer.miniTreeCfg,
 from diphotons.MetaData.JobConfig import customize
 customize.setDefault("maxEvents",500)
 customize(process)
-
