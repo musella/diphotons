@@ -332,7 +332,7 @@ void DataSetMixer::fillLikeTarget(TTree * target,
     
     // loop over 2nd tree and store kinematics and variables
     cout << "DataSetMixer: loop over 2nd leg ...";
-    fillCache(cache2,tree2,2.,ptSubleadMin_,ptLeadMin_,fourVec2,formulas2,match2,weight2,&cacheMatch2,(useCdfDistance?&matchHisto2:0));
+    fillCache(cache2,tree2,1.,ptSubleadMin_,ptLeadMin_,fourVec2,formulas2,match2,weight2,&cacheMatch2,(useCdfDistance?&matchHisto2:0));
     cout << "done. Selected " << cache2.size() << " entries "<< endl;
 	
     std::vector<HistoConverter *> cdfs1, cdfs2;
@@ -380,6 +380,12 @@ void DataSetMixer::fillLikeTarget(TTree * target,
         eval(target1,targetMatch1);
         eval(target2,targetMatch2);
 
+        // FIXME decouple swap in matching and template filling
+        bool swap = rndSwap && ientry % 2 == 0;
+        if( swap ) {
+            std::swap(target1,target2);
+        }
+
         float wei = ( weightTarget != 0 ? weightTarget->EvalInstance() : 1. );
         if( useCdfDistance ) {
             for(size_t idim=0; idim<target1.size(); ++idim) {
@@ -404,10 +410,10 @@ void DataSetMixer::fillLikeTarget(TTree * target,
             auto & obj1 = cache1[neigh1[ip]];
             auto & obj2 = cache2[neigh2[ip]];
             
-            bool swap = rndSwap && ientry % 2 == 0;
-            auto & leg1 = ( swap ? obj1 : obj2 );
-            auto & leg2 = ( swap ? obj2 : obj1 );
-            
+            bool reswap = rndSwap && gRandom->Uniform()>=0.5;
+            auto & leg1 = ( reswap ? obj1 : obj2 );
+            auto & leg2 = ( reswap ? obj2 : obj1 );
+
             TLorentzVector sum = obj1.p4 + obj2.p4;
             addEntry(leg1,leg2,sum,nvar,dataset_,tree_,vars_,treeBuf_,wei);        
             ++ientry;
