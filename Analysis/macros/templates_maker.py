@@ -4,7 +4,6 @@ from diphotons.Utils.pyrapp import *
 from optparse import OptionParser, make_option
 from copy import deepcopy as copy
 import os, json
-
 from pprint import pprint
 
 import array
@@ -98,11 +97,13 @@ class TemplatesApp(PlotApp):
         self.store_new_ = False
 
         ## load ROOT (and libraries)
-        global ROOT, style_utils
+        global ROOT, style_utils, RooFit
         import ROOT
+        from ROOT import RooFit
         import diphotons.Utils.pyrapp.style_utils as style_utils
         ROOT.gSystem.Load("libdiphotonsUtils")
-    
+         
+        ROOT.gStyle.SetOptStat(111111)
     ## ------------------------------------------------------------------------------------------------------------
     def __call__(self,options,args):
         """ 
@@ -111,7 +112,7 @@ class TemplatesApp(PlotApp):
         ## load ROOT style
         self.loadRootStyle()
         from ROOT import RooFit
-
+        ROOT.gStyle.SetOptStat(111111)
         printLevel = ROOT.RooMsgService.instance().globalKillBelow()
         ROOT.RooMsgService.instance().setGlobalKillBelow(RooFit.FATAL)
 
@@ -217,11 +218,65 @@ class TemplatesApp(PlotApp):
             
 
     ## ------------------------------------------------------------------------------------------------------------
+   #MQ compare truth templates with rcone and sideband templates
     def compareTemplates(self,options,args):
-        
-        pass
+        print "Compare truth templates with rcone and sideband templates"
+        for name, comparison in options.comparisons.iteritems():
+            print "Comparison %s" % name
+            fitname=comparison["fit"]
+            fit=options.fits[fitname]
+            components=comparison.get("components",fit["components"])
+            for comp in components:
+                if type(comp) == str or type(comp)==unicode:
+                    compname = comp
+                    templatesls = comparison["templates"]
+                else:
+                    compname, templatesls = comp
 
-    ## ------------------------------------------------------------------------------------------------------------
+                for cat in fit["categories"]:
+                    truth = self.rooData("mctruth_%s_%s_%s" % (comp,fitname,cat) )
+                    print truth.GetName()
+                    templates = []
+                    for template,mapping in templatesls.iteritems():
+                        if "mix" in template:
+                             mixname = template.split(":")[-1]
+                             templatename= "template_mix_%s_%s_%s" % (compname,mixname,mapping.get(cat,cat))
+                        else:
+                             templatename= "template_%s_%s_%s" % (compname,template,mapping.get(cat,cat))
+                        print templatename
+                        tempdata = self.rooData(templatename)
+                        templates.append(tempdata)
+                    self.keep(truth)
+                    self.keep(templates)
+                    
+                    for idim in range(fit["ndim"]):
+                        print "templateNdim%dDim%d" % ( fit["ndim"],idim)
+                        canv_allm = ROOT.TCanvas("compiso_%s_%s_%s_%s" % (fitname,comp,cat,idim))
+                        canv_allm.cd()
+                    #self.workspace_.Print()
+                        isovar=self.workspace_.var("templateNdim1Dim0")
+                        template_binning = array.array('d',comparison.get("template_binning",fit["template_binning"]))
+                        templatebins=ROOT.RooBinning(len(template_binning)-1,template_binning,"templatebins" )
+                        isovar.setBinning(templatebins)
+                        print isovar
+                        isoframe=isovar.frame();
+                        isoframe.SetTitle("compiso_%s_%s_%s_%s" % (fitname,comp,cat,idim))
+                        i=0
+                        for temp in templates:
+                            i+=2
+                            temp.plotOn(isoframe,RooFit.Rescale(1./temp.sumEntries()),RooFit.Binning(templatebins),RooFit.MarkerStyle(20),RooFit.MarkerColor(ROOT.kGreen+i),RooFit.LineColor(ROOT.kGreen+i),RooFit.Name(temp.GetTitle()));
+                        truth.plotOn(isoframe,RooFit.Rescale(1./(truth.sumEntries())),RooFit.Binning(templatebins),RooFit.MarkerStyle(20),RooFit.MarkerColor(ROOT.kRed),RooFit.LineColor(ROOT.kRed),RooFit.Name("truth"));
+                        ROOT.gStyle.SetOptStat(1111)
+                        isoframe.Draw()
+                        ROOT.gStyle.SetOptStat(1111)
+                        isoframe.SetAxisRange(1e-3,1,"Y");
+
+                    #self.keep( [canv_allm, truthallm_iso] )
+                        self.keep( [canv_allm] )
+                        self.autosave(True)
+
+
+## ------------------------------------------------------------------------------------------------------------
     def prepareTruthFit(self,options,args):
         self.saveWs(options)
 

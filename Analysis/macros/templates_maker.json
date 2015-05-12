@@ -11,7 +11,7 @@
     "#" : "Dataset definition                                                                                                   ",
     "#" : "---------------------------------------------------------------------------------------------------------------------",
     "#" : "  %(sel)s is replaced with the appropriate string                                                                    ",
-    "#" : "  fromat is <sample-name>:[[input-file][/file-folder]]                                                               ",
+    "#" : "  fromat is <sample-name>:[[input-file][/file-folder]] order irrelevant                                                               ",
 	
     "#" : "data to be fit                                                                                                       ",
     "data" : [
@@ -280,7 +280,7 @@
         },
 
         "singlePho" : {
-            "#" : "signle photon: looks at signle photon selection",
+            "#" : "single photon: looks at single photon selection",
 
             "ndim"       : 1,
             "bins"       : [ "phoPt", [100,6000] ],
@@ -429,16 +429,25 @@
 
     },
 
-    "comparisons" : {
+    "_comparisons" : {
 	"fit2DTruth" : { "fit" : "2D",
-		"templates" : ["mix:singlePho2D"],
+		"templates" : { "mix:kDSinglePho2D" : {} },
+                "components": [ "pf","ff", 
+                                ["pp",{ "2D" : {}}]  
+                ],
 		"doDataMc" : false, "doMcTruth" : true,
 		"splitByBin" : false
-		},
+		}
+     }, "comparisons" : { 
 	"fit1DTruth" : { "fit" : "1D",
-		"templates" : ["singlePho"],
+                "components" : [ "f","p"  ],
+                "templates" : { "1D" : {}  },
+		"_templates" : {"singlePho" : { "EBEB" : "EB", "EBEE" : "EB", "EEEB" : "EE"  }
+                                ,"1D" : {} 
+                            },
 		"doDataMc" : false, "doMcTruth" : true,
-		"splitByBin" : false
+		"splitByBin" : false,
+                "template_binning" : [ -1.0, 0.0,0.1, 1.0, 4.0,9.0, 15.0 ]
 		}
     },
       
