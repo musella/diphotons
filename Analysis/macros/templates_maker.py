@@ -23,7 +23,7 @@ class TemplatesApp(PlotApp):
     """
     
     ## ------------------------------------------------------------------------------------------------------------
-    def __init__(self):
+    def __init__(self,option_list=[],option_groups=[]):
         """ 
         Constructor
         """
@@ -82,9 +82,12 @@ class TemplatesApp(PlotApp):
                                     ),
                         make_option("--mc-file",dest="mc_file",action="store",type="string",
                                     default=None,help="default: %default"),
+                        make_option("--only-subset",dest="only_subset",action="callback",type="string", callback=optpars_utils.ScratchAppend(),
+                                    default=[],help="default: %default"),
+                        
                         ]
                       )
-            ])
+            ]+option_groups,option_list=option_list)
         
         ## initialize data members
         self.trees_ = {}
@@ -115,6 +118,14 @@ class TemplatesApp(PlotApp):
         ROOT.gStyle.SetOptStat(111111)
         printLevel = ROOT.RooMsgService.instance().globalKillBelow()
         ROOT.RooMsgService.instance().setGlobalKillBelow(RooFit.FATAL)
+        
+        if len(options.only_subset)>0:
+            subset = {}
+            for name,fit in options.fits.iteritems():
+                if not name in options.only_subset:
+                    continue
+                subset[name] = fit
+            options.fits = subset
 
         if options.store_new_only:
             self.store_new_ = True
@@ -201,10 +212,15 @@ class TemplatesApp(PlotApp):
         print "Datasets :"
         print "---------------------------------------------------------"
         alldata = self.workspace_.allData()
+        ntoys = 0
         for dset in alldata:
             name = dset.GetName()
-            print name.ljust(30), ":", ("%d" % dset.sumEntries()).rjust(8)
-
+            if name.startswith("toy"):
+                ntoys += 1
+            else:
+                print name.ljust(30), ":", ("%d" % dset.sumEntries()).rjust(8)
+        print 
+        print "Number of toys : %d"         % ntoys
         print    
         print "--------------------------------------------------------------------------------------------------------------------------"
 
@@ -604,12 +620,13 @@ class TemplatesApp(PlotApp):
         if not dataset and self.store_new_:
             dataset = self.workspace_input_.data(name)
             
-        if autofill and dataset.sumEntries() == 0. and "tree_%s" % name in self.store_:
-            tree = self.store_["tree_%s" % name]
-            dataset = dataset.emptyClone()
-            self.cache_[name] = dataset
-            filler = ROOT.DataSetFiller(dataset)
-            filler.fillFromTree(tree,"weight",True)
+        if autofill and dataset.sumEntries() == 0.:
+            tree = self.treeData(name)
+            if tree:
+                dataset = dataset.emptyClone()
+                self.cache_[name] = dataset
+                filler = ROOT.DataSetFiller(dataset)
+                filler.fillFromTree(tree,"weight",True)            
         return dataset
 
     ## ------------------------------------------------------------------------------------------------------------
@@ -672,6 +689,7 @@ class TemplatesApp(PlotApp):
         else:
             title = name
         rooVar = ROOT.RooRealVar(name,title,0.)
+        rooVar.setConstant(False)
         if len(binning) > 0:
             rooVar.setMin(binning[0])
             rooVar.setMax(binning[-1])

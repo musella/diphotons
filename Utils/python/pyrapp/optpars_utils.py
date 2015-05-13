@@ -12,7 +12,6 @@ class ScratchAppend:
         if self.cold:
             del target[:]
             self.cold = False
-        print value
         if type(value) == str and "," in value:
             for v in value.split(","):
                 target.append(self.typ(v))
