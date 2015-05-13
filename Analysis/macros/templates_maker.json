@@ -84,8 +84,8 @@
     "aliases"  : [ 
                "leadIsEB    := abs(leadScEta) < 1.5",
                "subleadIsEB := abs(subleadScEta) < 1.5",
-               "leadIsSB    := leadIsEB    && (leadSigmaIeIe    > 0.012) || !leadIsEB    && (leadSigmaIeIe>0.03   )",
-               "subleadIsSB := subleadIsEB && (subleadSigmaIeIe > 0.012) || !subleadIsEB && (subleadSigmaIeIe>0.03)",
+               "leadIsSB    := leadIsEB    && (leadSigmaIeIe    > 0.012) || !leadIsEB    && (leadSigmaIeIe>0.035   )",
+               "subleadIsSB := subleadIsEB && (subleadSigmaIeIe > 0.012) || !subleadIsEB && (subleadSigmaIeIe>0.035)",
                "leadPrompt    := leadGenIso < 10. && leadMatchType == 1",
                "leadFake      := ! leadPrompt",
                "subleadPrompt := subleadGenIso < 10. && subleadMatchType == 1",
@@ -429,20 +429,18 @@
 
     },
 
-    "_comparisons" : {
+    "comparisons" : {
 	"fit2DTruth" : { "fit" : "2D",
 		"templates" : { "mix:kDSinglePho2D" : {} },
-                "components": [ "pf","ff", 
+                "components": ["pf","ff" , 
                                 ["pp",{ "2D" : {}}]  
                 ],
 		"doDataMc" : false, "doMcTruth" : true,
 		"splitByBin" : false
-		}
-     }, "comparisons" : { 
+		},
 	"fit1DTruth" : { "fit" : "1D",
-                "components" : [ "f","p"  ],
-                "templates" : { "1D" : {}  },
-		"_templates" : {"singlePho" : { "EBEB" : "EB", "EBEE" : "EB", "EEEB" : "EE"  }
+                "components" : [ "f","p" ],
+		"templates" : {"singlePho" : { "EBEB" : "EB", "EBEE" : "EB", "EEEB" : "EE"  }
                                 ,"1D" : {} 
                             },
 		"doDataMc" : false, "doMcTruth" : true,
