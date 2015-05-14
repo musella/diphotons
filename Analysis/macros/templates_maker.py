@@ -217,8 +217,8 @@ class TemplatesApp(PlotApp):
             self.workspace_.rooImport = getattr(self.workspace_,"import")
             
 
-    ## ------------------------------------------------------------------------------------------------------------
-   #MQ compare truth templates with rcone and sideband templates
+        ## ------------------------------------------------------------------------------------------------------------
+        #MQ compare truth templates with rcone and sideband templates
     def compareTemplates(self,options,args):
         print "Compare truth templates with rcone and sideband templates"
         for name, comparison in options.comparisons.iteritems():
@@ -230,12 +230,11 @@ class TemplatesApp(PlotApp):
             for comp in components:
                 if type(comp) == str or type(comp)==unicode:
                     compname = comp
-                    templatesls = comparison["templates"]
+                    templatesls= comparison["templates"]
                 else:
                     compname, templatesls = comp
-
                 for cat in fit["categories"]:
-                    print "mctruth_%s_%s_%s" % (compname,fitname,cat)
+                    print cat
                     truth = self.rooData("mctruth_%s_%s_%s" % (compname,fitname,cat) )
                     print truth.GetName()
                     templates = []
@@ -250,81 +249,78 @@ class TemplatesApp(PlotApp):
                         templates.append(tempdata)
                     self.keep(truth)
                     self.keep(templates)
-                    
+                    d1=True
+                    append=False
+                    print "1d and 2d projection"
                     for idim in range(fit["ndim"]):
                         print "templateNdim%dDim%d" % ( fit["ndim"],idim)
-                        title = "compiso_%s_%s_%s_templateNdim%dDim%d" % (fitname,compname,cat,fit["ndim"],idim)
-                        canv_allm = ROOT.TCanvas(title,title)
-                        canv_allm.Draw()
-                        pad2=ROOT.TPad("pad2", "pad2", 0, 0.0, 1, 0.15)
-                        pad1 = ROOT.TPad("pad1", "pad1", 0., 0.0, 1., 1.0)
-                        pad1.SetBottomMargin(0)
-                        pad1.SetLogy()
-                        pad1.Draw()
-                        pad1.cd()
-                        leg = ROOT.TLegend(0.5,0.6,0.9,0.9)
-                        leg.SetFillColor(ROOT.kWhite) 
-                    #self.workspace_.Print()
-                        isovar=self.workspace_.var("templateNdim%dDim%d" % ( fit["ndim"],idim))
-                        template_binning = array.array('d',comparison.get("template_binning",fit["template_binning"]))
-                        templatebins=ROOT.RooBinning(len(template_binning)-1,template_binning,"templatebins" )
-                        isovar.setBinning(templatebins)
-                        print isovar
-                        isoframe=isovar.frame()
-                        isoframe.SetTitle(title)
-                        truth.plotOn(isoframe,RooFit.Rescale(1./truth.sumEntries()),RooFit.Binning(templatebins),RooFit.MarkerStyle(20),RooFit.MarkerColor(ROOT.kRed+1),RooFit.LineColor(ROOT.kRed+1),RooFit.Name(truth.GetTitle()))
-                        i=0
-                        for temp in templates:
-                            i+=2
-                            temp.plotOn(isoframe,RooFit.Rescale(1./temp.sumEntries()),RooFit.Binning(templatebins),RooFit.MarkerStyle(20),RooFit.MarkerColor(ROOT.kGreen+i),RooFit.LineColor(ROOT.kGreen+i),RooFit.Name(temp.GetTitle()))
-                        isoframe.Draw()
-                        leg.AddEntry(truth.GetTitle(),truth.GetTitle(),"l")  
-                        for temp in templates:
-                          leg.AddEntry(temp.GetTitle(),temp.GetTitle(),"l");
-                        leg.Draw()
-                        isoframe.SetAxisRange(1e-3,20,"Y")
-                        isoarg=ROOT.RooArgList("isoarg")
-                        isoarg.add(isovar)
-                        truthHisto=ROOT.TH1F("%sHisto" % truth.GetTitle(),"%sHisto" % truth.GetTitle(),len(template_binning)-1,template_binning)
-                        truth.fillHistogram(truthHisto,isoarg)
-                        j=0
-                        pad2.SetBottomMargin(0.3)
-                        pad2.Draw()
-                        pad2.cd()
-                        pad2.Update()
-                        #for temp in templates:
-                        #    j+=2
-                        tempHisto=ROOT.TH1F("%sHisto" % templates[0].GetTitle(),"%sHisto" % templates[0].GetTitle(),len(template_binning)-1,template_binning)
-                        temp.fillHistogram(tempHisto,isoarg)
-                        tempHisto.Divide(truthHisto)
-                        tempHisto.SetLineColor(ROOT.kGreen+2)
-                        tempHisto.SetMarkerColor(ROOT.kGreen+2)
-                        #if j==2:
-                        tempHisto.Draw()
-                        #else:
-                         #   tempHisto.Draw("SAME")
-                     #   self.keep(tempHisto)
-                        tempHisto.GetXaxis().SetLimits(min(template_binning),max(template_binning))
-                        tempHisto.GetYaxis().SetLimits(0.1,10.)
-                        tempHisto.GetYaxis().SetNdivisions(5)
-                        tempHisto.GetYaxis().SetTitleFont(43)
-                        tempHisto.GetYaxis().SetTitleOffset(1.05)
-                        tempHisto.GetYaxis().SetLabelFont(43)
-                        tempHisto.GetYaxis().SetLabelSize(15)
-                        tempHisto.GetXaxis().SetTitleSize(15)
-                        tempHisto.GetXaxis().SetTitleFont(43)
-                        tempHisto.GetXaxis().SetTitleOffset(4.)
-                        tempHisto.GetXaxis().SetLabelFont(43)
-                        tempHisto.GetXaxis().SetLabelSize(15)
-                        tempHisto.GetXaxis().SetTitle("templateNdim%dDim%d" % ( fit["ndim"],idim))
-                        ROOT.gStyle.SetOptStat(0)
-                        ROOT.gStyle.SetOptTitle(0)
-                    self.keep( [canv_allm] )
-                    self.autosave(True)
-
+                        tit = "compiso_%s_%s_%s_templateNdim%dDim%d" % (fitname,compname,cat,fit["ndim"],idim)
+                        temp_binning = array.array('d',comparison.get("template_binning",fit["template_binning"]))
+                        self.plotHistos(truth,templates,tit,temp_binning,d1,append)
 
 ## ------------------------------------------------------------------------------------------------------------
-    #def plotHistos(self,histlist,d1):
+    def plotHistos(self,truthtemp,templs,title,template_binning,d1,append):
+        if d1:
+            canv_allm = ROOT.TCanvas(title,title)
+            canv_allm.Draw()
+            pad2=ROOT.TPad("pad2", "pad2", 0, 0.0, 1, 0.15)
+            pad1 = ROOT.TPad("pad1", "pad1", 0., 0.0, 1., 1.0)
+            pad1.SetBottomMargin(0)
+            pad1.SetLogy()
+            pad1.Draw()
+            pad1.cd()
+            leg = ROOT.TLegend(0.5,0.6,0.9,0.9)
+            leg.SetFillColor(ROOT.kWhite)
+            templatebins=ROOT.RooBinning(len(template_binning)-1,template_binning,"templatebins" )
+            isovar=self.workspace_.var(title[-17:])
+            isovar.setBinning(templatebins)
+            print isovar
+            isoframe=isovar.frame()
+            isoframe.SetTitle(title)
+            truthtemp.plotOn(isoframe,RooFit.Rescale(1./truthtemp.sumEntries()),RooFit.Binning(templatebins),RooFit.MarkerStyle(20),RooFit.MarkerColor(ROOT.kRed+1),RooFit.LineColor(ROOT.kRed+1),RooFit.Name(truthtemp.GetTitle()))
+            i=0
+            for temp in templs:
+                i+=1
+                temp.plotOn(isoframe,RooFit.Rescale(1./temp.sumEntries()),RooFit.Binning(templatebins),RooFit.MarkerStyle(20),RooFit.MarkerColor(ROOT.kGreen+i),RooFit.LineColor(ROOT.kGreen+i),RooFit.Name(temp.GetTitle()))
+            isoframe.Draw()
+            leg.AddEntry(truthtemp.GetTitle(),truthtemp.GetTitle(),"l")  
+            for temp in templs:
+              leg.AddEntry(temp.GetTitle(),temp.GetTitle(),"l");
+            leg.Draw()
+            isoframe.SetAxisRange(1e-3,20,"Y")
+            isoarg=ROOT.RooArgList("isoarg")
+            isoarg.add(isovar)
+            truthHisto=ROOT.TH1F("%sHisto" % truthtemp.GetTitle(),"%sHisto" % truthtemp.GetTitle(),len(template_binning)-1,template_binning)
+            truthtemp.fillHistogram(truthHisto,isoarg)
+            histlist=[truthHisto]
+            j=0
+            pad2.SetBottomMargin(0.3)
+            pad2.Draw()
+            pad2.cd()
+            pad2.Update()
+            tempHisto=ROOT.TH1F("%sHisto" % templs[0].GetTitle(),"%sHisto" % templs[0].GetTitle(),len(template_binning)-1,template_binning)
+            temp.fillHistogram(tempHisto,isoarg)
+            tempHisto.Divide(truthHisto)
+            tempHisto.SetLineColor(ROOT.kGreen+2)
+            tempHisto.SetMarkerColor(ROOT.kGreen+2)
+            tempHisto.GetXaxis().SetLimits(min(template_binning),max(template_binning))
+            tempHisto.GetYaxis().SetLimits(0.1,10.)
+            tempHisto.GetYaxis().SetNdivisions(5)
+            tempHisto.GetYaxis().SetTitleFont(43)
+            tempHisto.GetYaxis().SetTitleOffset(1.05)
+            tempHisto.GetYaxis().SetLabelFont(43)
+            tempHisto.GetYaxis().SetLabelSize(15)
+            tempHisto.GetXaxis().SetTitleSize(15)
+            tempHisto.GetXaxis().SetTitleFont(43)
+            tempHisto.GetXaxis().SetTitleOffset(4.)
+            tempHisto.GetXaxis().SetLabelFont(43)
+            tempHisto.GetXaxis().SetLabelSize(15)
+            tempHisto.GetXaxis().SetTitle(title[-17:])
+            ROOT.gStyle.SetOptStat(0)
+            ROOT.gStyle.SetOptTitle(0)
+            self.keep( [canv_allm] )
+            self.autosave(True)
+            
 
 ## ------------------------------------------------------------------------------------------------------------
     def prepareTruthFit(self,options,args):
