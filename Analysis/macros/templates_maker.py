@@ -254,7 +254,8 @@ class TemplatesApp(PlotApp):
                     for idim in range(fit["ndim"]):
                         print "templateNdim%dDim%d" % ( fit["ndim"],idim)
                         title = "compiso_%s_%s_%s_templateNdim%dDim%d" % (fitname,compname,cat,fit["ndim"],idim)
-                        canv_allmlog = ROOT.TCanvas("%slog" %(title),"%slog"%title)
+                        canv_allm = ROOT.TCanvas(title,title)
+                        canv_allm.Draw()
                         pad2=ROOT.TPad("pad2", "pad2", 0, 0.0, 1, 0.15)
                         pad1 = ROOT.TPad("pad1", "pad1", 0., 0.0, 1., 1.0)
                         pad1.SetBottomMargin(0)
@@ -270,7 +271,7 @@ class TemplatesApp(PlotApp):
                         isovar.setBinning(templatebins)
                         print isovar
                         isoframe=isovar.frame()
-                        isoframe.SetTitle("%slog" % title)
+                        isoframe.SetTitle(title)
                         truth.plotOn(isoframe,RooFit.Rescale(1./truth.sumEntries()),RooFit.Binning(templatebins),RooFit.MarkerStyle(20),RooFit.MarkerColor(ROOT.kRed+1),RooFit.LineColor(ROOT.kRed+1),RooFit.Name(truth.GetTitle()))
                         i=0
                         for temp in templates:
@@ -282,38 +283,48 @@ class TemplatesApp(PlotApp):
                           leg.AddEntry(temp.GetTitle(),temp.GetTitle(),"l");
                         leg.Draw()
                         isoframe.SetAxisRange(1e-3,20,"Y")
-                        pad1.Update()
                         isoarg=ROOT.RooArgList("isoarg")
                         isoarg.add(isovar)
                         truthHisto=ROOT.TH1F("%sHisto" % truth.GetTitle(),"%sHisto" % truth.GetTitle(),len(template_binning)-1,template_binning)
                         truth.fillHistogram(truthHisto,isoarg)
-                        truthHisto.GetXaxis().SetLimits(min(template_binning),max(template_binning))
-                        truthHisto.GetYaxis().SetLimits(0.1,10.)
                         j=0
                         pad2.SetBottomMargin(0.3)
-                        pad2.SetTicks(0,2)
-                        pad2.SetTicky()
                         pad2.Draw()
                         pad2.cd()
                         pad2.Update()
-                        ROOT.gStyle.SetOptStat(111111)
+                        #for temp in templates:
+                        #    j+=2
+                        tempHisto=ROOT.TH1F("%sHisto" % templates[0].GetTitle(),"%sHisto" % templates[0].GetTitle(),len(template_binning)-1,template_binning)
+                        temp.fillHistogram(tempHisto,isoarg)
+                        tempHisto.Divide(truthHisto)
+                        tempHisto.SetLineColor(ROOT.kGreen+2)
+                        tempHisto.SetMarkerColor(ROOT.kGreen+2)
+                        #if j==2:
+                        tempHisto.Draw()
+                        #else:
+                         #   tempHisto.Draw("SAME")
+                     #   self.keep(tempHisto)
+                        tempHisto.GetXaxis().SetLimits(min(template_binning),max(template_binning))
+                        tempHisto.GetYaxis().SetLimits(0.1,10.)
+                        tempHisto.GetYaxis().SetNdivisions(5)
+                        tempHisto.GetYaxis().SetTitleFont(43)
+                        tempHisto.GetYaxis().SetTitleOffset(1.05)
+                        tempHisto.GetYaxis().SetLabelFont(43)
+                        tempHisto.GetYaxis().SetLabelSize(15)
+                        tempHisto.GetXaxis().SetTitleSize(15)
+                        tempHisto.GetXaxis().SetTitleFont(43)
+                        tempHisto.GetXaxis().SetTitleOffset(4.)
+                        tempHisto.GetXaxis().SetLabelFont(43)
+                        tempHisto.GetXaxis().SetLabelSize(15)
+                        tempHisto.GetXaxis().SetTitle("templateNdim%dDim%d" % ( fit["ndim"],idim))
+                        ROOT.gStyle.SetOptStat(0)
                         ROOT.gStyle.SetOptTitle(0)
-                        for temp in templates:
-                            j+=2
-                            tempHisto=ROOT.TH1F("%sHisto" % temp.GetTitle(),"%sHisto" % temp.GetTitle(),len(template_binning)-1,template_binning)
-                            temp.fillHistogram(tempHisto,isoarg)
-                            tempHisto.Divide(truthHisto)
-                            tempHisto.SetLineColor(ROOT.kGreen+j)
-                            tempHisto.SetMarkerColor(ROOT.kGreen+j)
-                            if j==2:
-                                tempHisto.Draw()
-                            else:
-                                tempHisto.Draw("SAME")
-                         #   self.keep(tempHisto)
-                        pad2.Update()
-                        self.keep( [canv_allmlog] )
-                        self.autosave(True)
+                    self.keep( [canv_allm] )
+                    self.autosave(True)
 
+
+## ------------------------------------------------------------------------------------------------------------
+    #def plotHistos(self,histlist,d1):
 
 ## ------------------------------------------------------------------------------------------------------------
     def prepareTruthFit(self,options,args):
