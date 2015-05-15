@@ -82,8 +82,14 @@ class BiasApp(TemplatesApp):
                                     ),
                         make_option("--fit",dest="fit",action="store",type="string",
                                     default="2D",
-                                    help="Fit to consider")
-                        
+                                    help="Fit to consider"),
+                        make_option("--analyze-bias",dest="analyze_bias",action="store_true",default=False),
+                        make_option("--bias-files",dest="bias_files",action="callback",type="string",callback=optpars_utils.ScratchAppend(str),
+                                    default=[]
+                                    ),
+                        make_option("--bias-labels",dest="bias_labels",action="callback",type="string",callback=optpars_utils.ScratchAppend(str),
+                                    default=[]
+                                    ),                        
                         ]
                  )
                 ]
@@ -121,7 +127,7 @@ class BiasApp(TemplatesApp):
 
         if options.store_new_only:
             self.store_new_ = True
-
+        
         if not options.output_file:
             if options.read_ws: 
                 options.output_file = options.read_ws
@@ -130,7 +136,7 @@ class BiasApp(TemplatesApp):
         
         if options.read_ws:
             self.readWs(options,args)
-        else:
+        elif not options.analyze_bias:
             self.prepareTemplates(options,args)
 
         
@@ -140,6 +146,9 @@ class BiasApp(TemplatesApp):
         if options.fit_toys:
             self.fitToys(options,args)
 
+        if options.analyze_bias:
+            self.analyzeBias(options,args)
+            
     ## ------------------------------------------------------------------------------------------------------------
     def throwToys(self,options,args):
         
@@ -161,11 +170,13 @@ class BiasApp(TemplatesApp):
                 
                 reduced = dset.reduce(ROOT.RooArgSet(roobs))
                 binned = reduced.binnedClone()
+                
                 if options.throw_from_model:
                     print "Throwing toys from fit to full dataset"
 
-                    pdf = self.buildPdf(model,"%s%s" % (comp,cat), roobs )
-                    norm = self.buildRooVar("norm_%s_%s%s" %  (model,comp,cat), [] )
+                    pdf = self.buildPdf(model,"full_%s%s" % (comp,cat), roobs )
+                    norm = self.buildRooVar("full_norm_%s_%s%s" %  (model,comp,cat), [], importToWs=False )
+                    norm.setVal(dset.sumEntries())
                     extpdf = ROOT.RooExtendPdf("ext_%s_%s%s" %  (model,comp,cat),"ext_%s_%s%s" %  (model,comp,cat),pdf,norm)
                     extpdf.fitTo(binned,ROOT.RooFit.Strategy(2))
                     extpdf.fitTo(reduced,ROOT.RooFit.Strategy(1))
@@ -177,7 +188,6 @@ class BiasApp(TemplatesApp):
                     while var:
                         var.setConstant(True)
                         var = itr.Next()
-                    self.workspace_.rooImport(pdf)
                     
                     frame = roobs.frame()
                     binned.plotOn(frame)
@@ -194,14 +204,15 @@ class BiasApp(TemplatesApp):
                     canv.Divide(1,2)
                     
                     canv.cd(1)
-                    ROOT.gPad.SetPad(0.,0.3,1.,1.)
+                    ROOT.gPad.SetPad(0.,0.35,1.,1.)
                     ROOT.gPad.SetLogy()
                     ROOT.gPad.SetLogx()
 
                     canv.cd(2)
-                    ROOT.gPad.SetPad(0.,0.,1.,0.3)
+                    ROOT.gPad.SetPad(0.,0.,1.,0.35)
                     
                     canv.cd(1)
+                    frame.GetXaxis().SetMoreLogLabels()
                     frame.GetYaxis().SetLabelSize( frame.GetYaxis().GetLabelSize() * canv.GetWh() / ROOT.gPad.GetWh() )
                     frame.GetYaxis().SetRangeUser( 1.e-6,50. )
                     frame.Draw()
@@ -209,25 +220,41 @@ class BiasApp(TemplatesApp):
                     canv.cd(2)
                     ROOT.gPad.SetGridy()
                     ROOT.gPad.SetLogx()
-                    resid.Draw()
-                    resid.GetYaxis().SetTitleSize( frame.GetYaxis().GetTitleSize() * 7./3. )
-                    resid.GetYaxis().SetLabelSize( frame.GetYaxis().GetLabelSize() * 7./3. )
-                    resid.GetXaxis().SetTitleSize( frame.GetXaxis().GetTitleSize() * 7./3. )
-                    resid.GetXaxis().SetLabelSize( frame.GetXaxis().GetLabelSize() * 7./3. )
+                    resid.GetXaxis().SetMoreLogLabels()
+                    resid.GetYaxis().SetTitleSize( frame.GetYaxis().GetTitleSize() * 6.5/3.5 )
+                    resid.GetYaxis().SetTitleOffset( frame.GetYaxis().GetTitleOffset() * 6.5/3.5 )
+                    resid.GetYaxis().SetLabelSize( frame.GetYaxis().GetLabelSize() * 6.5/3.5 )
+                    resid.GetXaxis().SetTitleSize( frame.GetXaxis().GetTitleSize() * 6.5/3.5 )
+                    resid.GetXaxis().SetLabelSize( frame.GetXaxis().GetLabelSize() * 6.5/3.5 )
                     resid.GetYaxis().SetTitle("pull")
-
+                    resid.GetYaxis().SetRangeUser( -5., 5. )
+                    resid.Draw()
+                    
                     
                     self.keep(canv)
                     self.autosave(True)
                     
                 else:
                     pdf = ROOT.RooHistPdf(treename,treename,ROOT.RooArgSet(roobs),binned)
+                    norm = self.buildRooVar("norm_%s" %  treename, [], importToWs=False )
+                    norm.setVal(dset.sumEntries())
+                    print norm.getVal()
+                    extpdf = ROOT.RooExtendPdf("ext_%s" %  treename, "ext_%s" %  treename, pdf, norm)
+                    print norm.getVal(), extpdf.expectedEvents(ROOT.RooArgSet())
+                    
+                pdf.SetName("pdf_%s" % treename)
+                norm.SetName("norm_%s" % treename)
+                norm.setVal(dset.sumEntries()*options.lumi_factor)
+                ## extpdf.SetName("geneator_%s" % treename)
+                self.workspace_.rooImport(pdf)
+                self.workspace_.rooImport(norm)
                 
-                norm = dset.sumEntries()*options.lumi_factor
+                tnorm = dset.sumEntries()*options.lumi_factor
+                print tnorm, norm.getVal()
                 ntoys = options.n_toys
 
                 for toy in range(ntoys):
-                    data = pdf.generate(ROOT.RooArgSet(roobs),ROOT.gRandom.Poisson(norm)) ## 
+                    data = pdf.generate(ROOT.RooArgSet(roobs),ROOT.gRandom.Poisson(tnorm)) ## 
                     if options.binned_toys: data=data.binnedClone()
                     toyname = "toy_%s%s_%d" % (comp,cat,toy)
                     data.SetName(toyname)
@@ -309,7 +336,7 @@ class BiasApp(TemplatesApp):
         fitname = options.fit
         fit = options.fits[fitname]
         
-        roobs = self.buildRooVar(*(self.getVar(options.observable)))
+        roobs = self.buildRooVar(*(self.getVar(options.observable)), recycle=True)
         roobs.setRange("fitRange",*options.fit_range)
         roobs.setRange("fullRange",roobs.getMin(),roobs.getMax())
         testRanges = []
@@ -318,7 +345,7 @@ class BiasApp(TemplatesApp):
             print rname, options.test_ranges[2*itest:2*itest+2]
             roobs.setRange( rname, *options.test_ranges[2*itest:2*itest+2] )
             testRanges.append( (rname,options.test_ranges[2*itest:2*itest+2]) )
-            
+        
         roowe = self.buildRooVar("weight",[])
         
         fitops = ( ROOT.RooFit.PrintLevel(-1),ROOT.RooFit.Warnings(False),ROOT.RooFit.NumCPU(4),ROOT.RooFit.Minimizer("Minuit2") )
@@ -328,7 +355,6 @@ class BiasApp(TemplatesApp):
                 comp = "%s_" % comp
             for cat in fit["categories"]:
                 pdf = self.buildPdf(model,"%s%s" % (comp,cat), roobs )
-                print comp,model
                 
                 biases = {}
                 for testRange in testRanges:
@@ -336,19 +362,33 @@ class BiasApp(TemplatesApp):
                     ntp = ROOT.TNtuple("tree_bias_%s%s_%s_%s" % (comp,cat,model,rname),"tree_bias_%s%s_%s_%s" % (comp,cat,model,rname),"toy:truth:fit:minos:errhe:errp:errm:bias" )
                     biases[rname] = ntp
                     self.store_[ntp.GetName()] = ntp
-
-
+                    
+                ## generator = self.rooPdf("geneator_mctruth_%s%s_%s" % (comp,fitname,cat))
+                generator = self.rooPdf("pdf_mctruth_%s%s_%s" % (comp,fitname,cat))
+                print generator
+                gnorm     = self.buildRooVar("norm_mctruth_%s%s_%s" % (comp,fitname,cat), [], recycle=True)
+                gnorm.Print()
+                
+                trueNorms = {}
+                pobs  = generator.getDependents(ROOT.RooArgSet(roobs))[roobs.GetName()]
+                pobs.setRange("fullRange",roobs.getBinning("fullRange").lowBound(),roobs.getBinning("fullRange").highBound())
+                renorm = generator.createIntegral(ROOT.RooArgSet(pobs),"").getVal() / gnorm.getVal() ## / generator.expectedEvents(ROOT.RooArgSet(pobs))
+                ## renorm = 1. / gnorm.getVal() ## / generator.expectedEvents(ROOT.RooArgSet(pobs))
+                for test in testRanges:
+                    testRange,testLim = test
+                    pobs.setRange(testRange,roobs.getBinning(testRange).lowBound(),roobs.getBinning(testRange).highBound())
+                    trueNorms[testRange] = generator.createIntegral(ROOT.RooArgSet(pobs),testRange).getVal()/renorm
+                print trueNorms
+                
                 for toy in xrange(options.first_toy,options.first_toy+options.n_toys):
                     toyname = "toy_%s%s_%d" % (comp,cat,toy)
                     dset = self.rooData(toyname)
-                    dset.Print()
                     pdft = pdf.Clone()
                     
                     if options.plot_toys_fits:
                         frame = roobs.frame()
                         pdff = pdf.Clone()
-                        pdff.fitTo(dset,ROOT.RooFit.Range("fullRange"),*fitops) ## ,ROOT.RooFit.PrintLevel(3),ROOT.RooFit.Verbose(True))
-                        
+                        pdff.fitTo(dset,ROOT.RooFit.Range("fullRange"),*fitops) ## ,ROOT.RooFit.PrintLevel(3),ROOT.RooFit.Verbose(True))                        
                         pdff.plotOn(frame,ROOT.RooFit.LineColor(ROOT.kGreen),ROOT.RooFit.Range("fullRange"))
                      
                     pdft.fitTo(dset,ROOT.RooFit.Range("fitRange"),*fitops)
@@ -374,16 +414,12 @@ class BiasApp(TemplatesApp):
                         roonorm.setRange(0.,1.e+7)
 
                         integral = pdft.createIntegral(ROOT.RooArgSet(roobs),ROOT.RooArgSet(roobs),testRange)
-                        truenorm = dset.sumEntries("%s>= %f && %s <=%f" % ( roobs.GetName(), testLim[0], roobs.GetName(), testLim[1] ))
                         nomnorm = integral.getVal()*dset.sumEntries()
                         roonorm.setVal(nomnorm)
-
-                        ## print truenorm, nomnorm, roonorm.getVal(), roonorm.getErrorHi(), roonorm.getErrorLo()
-                        
+                        truenorm = trueNorms[testRange] ## *dset.sumEntries()
+                        print roonorm.getVal(), truenorm
                         epdf = ROOT.RooExtendPdf(iname,iname,pdf,roonorm,testRange)
                         
-                        ## epdf.fitTo(dset,ROOT.RooFit.Range(testRange),ROOT.RooFit.Minos(),*fitops)
-                        ## epdf.fitTo(dset,ROOT.RooFit.Range(testRange),*(fitops+(ROOT.RooFit.Strategy(0),ROOT.RooFit.Hesse(False))))
                         if options.exclude_test_range:
                             edset = dset.reduce("%s< %f || %s >%f" % ( roobs.GetName(), testLim[0], roobs.GetName(), testLim[1] ))
                         else:
@@ -463,13 +499,77 @@ class BiasApp(TemplatesApp):
         self.saveWs(options,fout)
 
     ## ------------------------------------------------------------------------------------------------------------
+    def analyzeBias(self,options,args):
+        
+        summary = {}
+        
+        ROOT.gStyle.SetOptStat(1111)
+        ROOT.gStyle.SetOptFit(1)
+        
+        for fname,label in zip(options.bias_files,options.bias_labels):
+            fin = self.open(fname)
+            for key in ROOT.TIter(fin.GetListOfKeys()):
+                name = key.GetName()
+                if name.startswith("tree_bias"):
+                    toks = name.split("_",5)[2:]                    
+                    comp,cat,model,rng = toks
+                    tree = key.ReadObj()
+                    toks.append(label)
+                    
+                    nlabel = "_".join(toks)
+
+                    tree.Draw("bias>>h_bias_%s(501,-5.005,5.005)" % nlabel )
+                    hb = ROOT.gDirectory.Get("h_bias_%s" % ("_".join(toks)))
+                    hb.Fit("gaus","L+Q")
+                    
+                    canv = ROOT.TCanvas(nlabel,nlabel)
+                    canv.cd()
+                    hb.Draw()
+                    
+                    self.keep( [canv,hb] )
+                    self.autosave(True)
+                    
+                    gaus = hb.GetListOfFunctions().At(0)
+                    prb = array.array('d',[0.5])
+                    med = array.array('d',[0.])
+                    hb.GetQuantiles(len(prb),med,prb)
+                    
+                    tree.Draw("abs(bias)>>h_coverage_%s(501,0,5.01)" % ("_".join(toks)) )
+                    hc = ROOT.gDirectory.Get("h_coverage_%s" % nlabel )
+                    
+                    prb = array.array('d',[0.683])
+                    qtl = array.array('d',[0.])
+                    hc.GetQuantiles(len(prb),qtl,prb)
+                                        
+                    summary[nlabel] = [ gaus.GetParameter(1), gaus.GetParError(1), gaus.GetParameter(2), gaus.GetParError(2),
+                                        med[0], qtl[0] ]
+                
+        
+        keys = sorted(summary.keys())
+        maxl = 0
+        for key in keys:
+            maxl = max(len(key),maxl)
+        summarystr = ""
+        for key in keys:
+            val = summary[key]
+            summarystr += ("%s, " % key).ljust(maxl+3)
+            for v in val: 
+                summarystr += ("%1.3g," %v).rjust(9)
+            summarystr += "\n"
+        print summarystr
+        summaryf = open("%s/README.txt" % options.outdir,"w+")
+        summaryf.write(summarystr)
+        summaryf.close()
+        
+        
+    ## ------------------------------------------------------------------------------------------------------------
     def buildPdf(self,model,name,xvar,order=0):
         
         pdf = None
         if model == "dijet":
             pname = "dijet_%s" % name
-            linc = self.buildRooVar("%s_lin" % pname,[])
-            logc = self.buildRooVar("%s_log" % pname,[])
+            linc = self.buildRooVar("%s_lin" % pname,[], importToWs=False)
+            logc = self.buildRooVar("%s_log" % pname,[], importToWs=False)
             linc.setVal(4.)
             logc.setVal(-10.)
             

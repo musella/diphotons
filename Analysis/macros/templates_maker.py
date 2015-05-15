@@ -234,7 +234,7 @@ class TemplatesApp(PlotApp):
             
 
     ## ------------------------------------------------------------------------------------------------------------
-   #MQ compare truth templates with rcone and sideband templates
+    #MQ compare truth templates with rcone and sideband templates
     def compareTemplates(self,options,args):
         print "Compare truth templates with rcone and sideband templates"
         for name, comparison in options.comparisons.iteritems():
@@ -612,6 +612,14 @@ class TemplatesApp(PlotApp):
         for var,vdef in self.aliases_.iteritems():
             tree.SetAlias(var,vdef)
     
+
+    ## ------------------------------------------------------------------------------------------------------------
+    def rooPdf(self,name):
+        pdf = self.workspace_.pdf(name)
+        if not pdf and self.store_new_:
+            pdf = self.workspace_input_.pdf(name)            
+        return pdf
+
     ## ------------------------------------------------------------------------------------------------------------
     def rooData(self,name,autofill=True):
         if name in self.cache_:
@@ -683,19 +691,28 @@ class TemplatesApp(PlotApp):
         return name,xbins
 
     ## ------------------------------------------------------------------------------------------------------------
-    def buildRooVar(self,name,binning):
-        if name in self.aliases_:
-            title = self.aliases_[name]
-        else:
-            title = name
-        rooVar = ROOT.RooRealVar(name,title,0.)
-        rooVar.setConstant(False)
+    def buildRooVar(self,name,binning,importToWs=True,recycle=False):
+        rooVar = None
+        if recycle:
+            rooVar = self.workspace_.var(name)
+            if not rooVar and self.store_new_:
+                rooVar = self.workspace_input_.var(name)
+            print rooVar
+        if not rooVar:
+            if name in self.aliases_:
+                title = self.aliases_[name]
+            else:
+                title = name
+            rooVar = ROOT.RooRealVar(name,title,0.)
+            rooVar.setConstant(False)
+            
         if len(binning) > 0:
             rooVar.setMin(binning[0])
             rooVar.setMax(binning[-1])
             rooVar.setVal(0.5*(binning[0]+binning[-1]))
             rooVar.setBinning(ROOT.RooBinning(len(binning)-1,binning))
-        self.workspace_.rooImport(rooVar,ROOT.RooFit.RecycleConflictNodes())
+        if importToWs:
+            self.workspace_.rooImport(rooVar,ROOT.RooFit.RecycleConflictNodes())
         self.keep(rooVar) ## make sure the variable is not destroyed by the garbage collector
         return rooVar
 
@@ -760,7 +777,6 @@ class TemplatesApp(PlotApp):
                 tree = filler.getTree()
                 self.store_[tree.GetName()] = tree
                 
-            ## dataset.Print()
 
     ## ------------------------------------------------------------------------------------------------------------
     def prepareTrees(self,name,selection,doPrint=False,printHeader=""): 
