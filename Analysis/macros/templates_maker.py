@@ -222,6 +222,7 @@ class TemplatesApp(PlotApp):
         #MQ compare truth templates with rcone and sideband templates
     def compareTemplates(self,options,args):
         print "Compare truth templates with rcone and sideband templates"
+        ROOT.TH1F.SetDefaultSumw2(True)
         for name, comparison in options.comparisons.iteritems():
             if name.startswith("_"): continue
             print "Comparison %s" % name
@@ -262,9 +263,25 @@ class TemplatesApp(PlotApp):
                     self.keep(templates)
                     print "1d and 2d projection" 
                     for idim in range(fit["ndim"]):
+                        histls=[]
+                        isovar=self.workspace_.var("templateNdim%dDim%d" % ( fit["ndim"],idim))
+                        isovar.setBinning(templatebins)
+                        isoarg=ROOT.RooArgList("isoarg")
+                        isoarg.add(isovar)
                         print "templateNdim%dDim%d" % ( fit["ndim"],idim)
                         tit = "compiso_%s_%s_%s_templateNdim%dDim%d" % (fitname,compname,cat,fit["ndim"],idim)
-                        self.plotComp(truth,templates,tit,templatebins,template_binning,True)
+                        truthHisto=ROOT.TH1F("%s_%sH" % (truth.GetTitle(),tit[-5:]),"%sH" % truth.GetTitle(),len(template_binning)-1,template_binning)
+                        truth.fillHistogram(truthHisto,isoarg)
+                        histls.append(truthHisto)
+                        for temp in templates:
+                            tempHisto=ROOT.TH1F("%s_%sHisto" % (temp.GetTitle(),tit[-5:]),"%s_%sH" % (temp.GetTitle(),tit[-17:]),len(template_binning)-1,template_binning)
+                            #tempRooDataHist=ROOT.RooDataHist("tempRooDataHist","tempRooDataHist",isoarg)
+                            #tempRooDataHist.add(temp)
+                            #tempHisto=tempRooDataHist.createHistogram("%s_%sHisto" % (temp.GetTitle(),tit[-5:]),isovar)
+                            temp.fillHistogram(tempHisto,isoarg)
+                            histls.append(tempHisto)
+                        self.plotHistos(histls,tit,template_binning,True)
+                    return
                     if fit["ndim"]>1:
                         print "roll out" 
                        # truth2d=truth.createHistogram("templateNdim2Dim0","templateNdim2dDim1","","truth2d")
@@ -306,41 +323,10 @@ class TemplatesApp(PlotApp):
 
 
 ## ------------------------------------------------------------------------------------------------------------
-    def plotComp(self,truthtemp,templs,title,templatebins,template_binning,d1):
-            isovar=self.workspace_.var(title[-17:])
-            print isovar
-            isoframe=isovar.frame()
-            isoframe.SetTitle(title)
-            isoframe.GetXaxis().SetLimits(-0.5,max(template_binning))
-            isoarg=ROOT.RooArgList("isoarg")
-            isoarg.add(isovar)
-            truthtemp.plotOn(isoframe,RooFit.Rescale(1./truthtemp.sumEntries()),RooFit.Binning(templatebins),RooFit.MarkerStyle(20),RooFit.MarkerColor(ROOT.kRed+1),RooFit.LineColor(ROOT.kRed+1),RooFit.Name(truthtemp.GetTitle()))
-            truthHisto=ROOT.TH1F("%s_%sHisto" % (truthtemp.GetTitle(),title[-5:]),"%sH" % truthtemp.GetTitle(),len(template_binning)-1,template_binning)
-            truthtemp.fillHistogram(truthHisto,isoarg)
-            if d1:
-                truthHisto.Scale(1.0/truthHisto.Integral())
-            histlist=[]
-            histlist.append(truthHisto)
-            i=0
-            for temp in templs:
-                i+=1
-                temp.plotOn(isoframe,RooFit.Rescale(1./temp.sumEntries()),RooFit.Binning(templatebins),RooFit.MarkerStyle(20),RooFit.MarkerColor(ROOT.kGreen+i),RooFit.LineColor(ROOT.kGreen+i),RooFit.Name(temp.GetTitle()))
-                tempHisto=ROOT.TH1F("%s_%sHisto" % (temp.GetTitle(),title[-5:]),"%s_%sH" % (temp.GetTitle(),title[-17:]),len(template_binning)-1,template_binning)
-                temp.fillHistogram(tempHisto,isoarg)
-                if d1:
-                    tempHisto.Scale(1.0/tempHisto.Integral())
-                histlist.append(tempHisto)
-                print tempHisto
-            if d1:
-                print "length ", len(histlist)
-                self.plotHistos(isoframe,histlist,title,template_binning)
-            #else:
-             #  return histlist
-## ------------------------------------------------------------------------------------------------------------
 
-    def plotHistos(self,isoframe,histlist,title,template_bins):
-        ROOT.TH1F.SetDefaultSumw2(True)
-        leg = ROOT.TLegend(0.5,0.6,0.9,0.9)
+    def plotHistos(self,histlist,title,template_bins,dim1):
+        ROOT.gStyle.SetOptStat(111111)
+        leg = ROOT.TLegend(0.4,0.7,0.9,0.9)
         leg.SetFillColor(ROOT.kWhite)
         canv_allm = ROOT.TCanvas(title,title)
         canv_allm.Draw()
@@ -350,45 +336,42 @@ class TemplatesApp(PlotApp):
         pad1.SetLogy()
         pad1.Draw()
         pad1.cd()
-        if type(isoframe)==ROOT.RooPlot:
-            print "isoframe"
-            isoframe.SetAxisRange(1e-3,20,"Y")
-            isoframe.Draw()
-        elif isinstance (isoframe,bool):
-            print "here"
+        histlist[0].SetMarkerColor(ROOT.kRed)
+        histlist[0].SetLineColor(ROOT.kRed)
+        histlist[1].Draw()
+        histlist[0].SetStats()
         for i in range(0,len(histlist)):
-            #histlist[i].Draw("SAME")
-            histlist[i].GetXaxis().SetLimits(-0.5,max(template_bins))
+            histlist[i].GetXaxis().SetRangeUser(-0.1,max(template_bins))
+            if dim1:
+                histlist[i].Scale(1.0/histlist[i].Integral())  
             if i>0:
                 histlist[i].SetLineColor(ROOT.kGreen+i)
                 histlist[i].SetMarkerColor(ROOT.kGreen+i)
-            elif i==0:
-                histlist[0].SetAxisRange(1e-3,20,"Y")
-                histlist[0].SetMarkerColor(ROOT.kRed)
-                histlist[0].SetLineColor(ROOT.kRed)
+            histlist[i].Draw("SAME")
             histlist[i].SetMarkerStyle(20)
-            leg.AddEntry(histlist[i].GetTitle(),histlist[i].GetTitle(),"l")  
+            leg.AddEntry(histlist[i],histlist[i].GetTitle(),"l")  
         leg.Draw()
+        canv_allm.Update()
         pad2.SetBottomMargin(0.3)
-        pad2.Draw()
+        pad2.Draw() 
         pad2.cd()
-        histlist[1].Divide(histlist[0])
-        histlist[1].SetLineColor(ROOT.kGreen+1)
-        histlist[1].SetMarkerColor(ROOT.kGreen+1)
-        histlist[1].GetXaxis().SetLimits(-0.5,max(template_bins))
-        histlist[1].GetYaxis().SetNdivisions(5)
-        histlist[1].GetYaxis().SetTitleFont(43)
-        histlist[1].GetYaxis().SetTitleOffset(1.05)
-        histlist[1].GetYaxis().SetLabelFont(43)
-        histlist[1].GetYaxis().SetLabelSize(15)
-        histlist[1].GetXaxis().SetTitleSize(15)
-        histlist[1].GetXaxis().SetTitleFont(43)
-        histlist[1].GetXaxis().SetTitleOffset(9.)
-        histlist[1].GetXaxis().SetLabelFont(43)
-        histlist[1].GetXaxis().SetLabelSize(15)
-        histlist[1].GetXaxis().SetTitle(title[-17:])
-        histlist[1].Draw()
-        histlist[1].GetXaxis().SetLimits(-0.5,max(template_bins))
+        ratio=histlist[1].Clone("ratio")
+        ratio.Divide(histlist[0])
+        ratio.SetLineColor(ROOT.kGreen+1)
+        ratio.SetMarkerColor(ROOT.kGreen+1)
+        ratio.GetYaxis().SetNdivisions(5)
+        ratio.GetYaxis().SetTitleFont(43)
+        ratio.GetYaxis().SetTitleOffset(1.05)
+        ratio.GetYaxis().SetLabelFont(43)
+        ratio.GetYaxis().SetLabelSize(15)
+        ratio.GetXaxis().SetTitleSize(15)
+        ratio.GetXaxis().SetTitleFont(43)
+        ratio.GetXaxis().SetTitleOffset(9.)
+        ratio.GetXaxis().SetLabelFont(43)
+        ratio.GetXaxis().SetLabelSize(15)
+        ratio.GetXaxis().SetTitle(title[-17:])
+        ratio.Draw()
+        ratio.GetXaxis().SetRangeUser(-0.1,max(template_bins))
         ROOT.gStyle.SetOptStat(0)
         ROOT.gStyle.SetOptTitle(0)
         self.keep( [canv_allm] )
