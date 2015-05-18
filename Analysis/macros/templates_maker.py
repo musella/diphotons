@@ -242,15 +242,14 @@ class TemplatesApp(PlotApp):
                     setargs.add(mass)
                     template_binning = array.array('d',comparison.get("template_binning",fit["template_binning"]))
                     templatebins=ROOT.RooBinning(len(template_binning)-1,template_binning,"templatebins" )
+                    templates = []
                     for idim in range(fit["ndim"]):
-                        isovar=self.workspace_.var("templateNdim%dDim%d" % ( fit["ndim"],idim))
-                        isovar.setBinning(templatebins)
-                        setargs.add(isovar)
+                        setargs.add(self.workspace_.var("templateNdim%dDim%d" % ( fit["ndim"],idim)) )
                     truthname= "mctruth_%s_%s_%s" % (compname,fitname,cat)
                     truth = self.reducedRooData(truthname,setargs,False)
                     print truth.GetName()
+                    templates.append(truth)
             ########### templates
-                    templates = []
                     for template,mapping in templatesls.iteritems():
                         if "mix" in template:
                              mixname = template.split(":")[-1]
@@ -264,62 +263,51 @@ class TemplatesApp(PlotApp):
                     print "1d and 2d projection" 
                     for idim in range(fit["ndim"]):
                         histls=[]
-                        isovar=self.workspace_.var("templateNdim%dDim%d" % ( fit["ndim"],idim))
-                        isovar.setBinning(templatebins)
                         isoarg=ROOT.RooArgList("isoarg")
-                        isoarg.add(isovar)
+                        isoarg.add(self.workspace_.var("templateNdim%dDim%d" % ( fit["ndim"],idim)) )
                         print "templateNdim%dDim%d" % ( fit["ndim"],idim)
                         tit = "compiso_%s_%s_%s_templateNdim%dDim%d" % (fitname,compname,cat,fit["ndim"],idim)
-                        truthHisto=ROOT.TH1F("%s_%sH" % (truth.GetTitle(),tit[-5:]),"%sH" % truth.GetTitle(),len(template_binning)-1,template_binning)
-                        truth.fillHistogram(truthHisto,isoarg)
-                        histls.append(truthHisto)
+                        #truthHisto=ROOT.TH1F("%s_%s_H" % (truth.GetTitle(),tit[-5:]),"%s_%s_H" % (truth.GetTitle(),tit[-5:]),len(template_binning)-1,template_binning)
+                        #truth.fillHistogram(truthHisto,isoarg)
+                        #histls.append(truthHisto)
                         for temp in templates:
-                            tempHisto=ROOT.TH1F("%s_%sHisto" % (temp.GetTitle(),tit[-5:]),"%s_%sH" % (temp.GetTitle(),tit[-17:]),len(template_binning)-1,template_binning)
-                            #tempRooDataHist=ROOT.RooDataHist("tempRooDataHist","tempRooDataHist",isoarg)
-                            #tempRooDataHist.add(temp)
-                            #tempHisto=tempRooDataHist.createHistogram("%s_%sHisto" % (temp.GetTitle(),tit[-5:]),isovar)
+                            tempHisto=ROOT.TH1F("%s_%s_H" % (temp.GetTitle(),tit[-5:]),"%s_%s_H" % (temp.GetTitle(),tit[-5:]),len(template_binning)-1,template_binning)
                             temp.fillHistogram(tempHisto,isoarg)
                             histls.append(tempHisto)
                         self.plotHistos(histls,tit,template_binning,True)
-                    return
                     if fit["ndim"]>1:
+                        histlistapp=[]
                         print "roll out" 
-                       # truth2d=truth.createHistogram("templateNdim2Dim0","templateNdim2dDim1","","truth2d")
-                        isoframe=False
                         tempapp_binning=template_binning[:]
                         for j in range (1,4):
                             for i in range(0, len(template_binning)):
                                 tempapp_binning.append((template_binning[-1]+2)*j+template_binning[i])
                         print tempapp_binning
+                        isovar1=setargs.find("templateNdim2Dim0")
+                        isovar2=setargs.find("templateNdim2Dim1")
+                        #truth1dapp=ROOT.TH1F("truth1dapp%s_%s_%s" %(fitname,compname,cat),"truth2d%s_%s_%s" %(fitname,compname,cat),4*(len(template_binning)-1),tempapp_binning)
+                        #truth2d=truth.createHistogram(isovar1,isovar2,"","truth2d%s_%s_%s" %(fitname,compname,cat))
+                        #print truth2d
+                        #for x1 in range(0,len(template_binning)-1):
+                         #   for x2 in range(0,len(template_binning)-1):
+                         #       truth1dapp.Fill(truth2d.GetBinContent(x1,x2))
+                        #histlistapp.append(truth1dapp)
+                        for temp in templates:
+                            temp1dapp=ROOT.TH1F("temp1dapp%s" %(temp.GetName()),"temp1dapp%s" %(temp.GetName()),4*(len(template_binning)-1),tempapp_binning)
+                            temp2d=temp.createHistogram(isovar1,isovar2,"","temp2d%s" %(temp.GetName()))
+                            print temp
+                            for x1 in range(0,len(template_binning)-1):
+                                for x2 in range(0,len(template_binning)-1):
+                                    temp1dapp.Fill(temp2d.GetBinContent(x1,x2))
+                            histlistapp.append(temp1dapp)
+                        titleapp="%s_append" % tit
+                        tit = "compiso_%s_%s_%s_append" % (fitname,compname,cat)
+                        print histlistapp #TODO add temp
+                        self.keep(histlistapp)
+                        self.plotHistos(histlistapp,titleapp,tempapp_binning,False)
+        
                 #self.saveWs(options)
                 return
-                        #histapp=ROOT.TH1F("histapp","histapp",4*(len(temp_binning)-1),tempapp_binning)
-                        #for x,y in range(0,len(temp_binning)-1):
-                         #    truth2d.GetBinContent(x,y)
-                          #   histapp.Fill(bin)
-                          #  #for bin in hist1:
-                           #     hist1.GetBinContent(bin)
-                            #    histapp.Fill(bin+temp_binning[len(temp_binning)])
-                          # if idim==0:
-                        #histls0=self.plotComp(truth,templates,tit,temp_binning,False,append)
-                         #   if idim==1:
-                          #      histls1=self.plotComp(truth,templates,tit,temp_binning,False,append)
-                           # for i in range(0, len(temp_binning)):
-                            #    tempapp_binning.append(temp_binning[-1]+temp_binning[i])
-                       #     print tempapp_binning
-                       # else:
-                       # self.keep(histls0)
-                       # self.keep(histls1)
-                #    histlistapp=[]
-                    #if append:
-                        #fill histos
-                     #   histapp=ROOT.TH1F("histapp%","histapp",2*(len(temp_binning)-1),tempapp_binning)
-                        #for hist0,hist1 in histls0,histls1:
-                      #  for hist in histls0:
-                           # histlistapp.append(histapp)
-                       # titleapp="%s_append" % tit
-                        #self.plotHistos(histapplist,titleapp,tempapp_binning,False,append)
-        
 
 
 ## ------------------------------------------------------------------------------------------------------------
@@ -342,8 +330,8 @@ class TemplatesApp(PlotApp):
         histlist[0].SetStats()
         for i in range(0,len(histlist)):
             histlist[i].GetXaxis().SetRangeUser(-0.1,max(template_bins))
-            if dim1:
-                histlist[i].Scale(1.0/histlist[i].Integral())  
+           # if dim1:
+            histlist[i].Scale(1.0/histlist[i].Integral())  
             if i>0:
                 histlist[i].SetLineColor(ROOT.kGreen+i)
                 histlist[i].SetMarkerColor(ROOT.kGreen+i)
@@ -672,6 +660,8 @@ class TemplatesApp(PlotApp):
                 data.SetName("reduced_%s" % name)
         self.workspace_.rooImport(data)
         return data
+         #   self.workspace_.rooImport(data)
+        #    return data
     ## ------------------------------------------------------------------------------------------------------------
     def rooData(self,name,autofill=True,rooset=None):
         if name in self.cache_:
