@@ -332,11 +332,12 @@ class TemplatesApp(PlotApp):
                         print histlistapp 
                         self.keep(histlistapp)
                         self.plotHistos(histlistapp,titleapp,tempapp_binning,False)
-                    self.keep( [c1] )
-                    self.autosave(True)
+                    if fit["ndim"]>1:
+                        self.keep( [c1] )
+                        self.autosave(True)
             ########outside category loop
         #######outside components loop
-        #self.saveWs(options,fout)
+        self.saveWs(options)
 
 
 ## ------------------------------------------------------------------------------------------------------------
