@@ -69,7 +69,8 @@ void addEntry(Cache & leg1,Cache & leg2, TLorentzVector & sum, size_t nvar, RooD
               std::vector<float> & treeBuf, float wei=1.)
 {        
     // set variables
-    float weight = sqrt(leg1.weight*leg2.weight)*wei;
+    //float weight = sqrt(leg1.weight*leg2.weight)*wei;
+    float weight = (leg1.weight*leg2.weight)*wei;
     for(size_t ivar=0; ivar<nvar; ++ivar) {
         if( tree ) {
             treeBuf[ivar] = leg1.vars[ivar];

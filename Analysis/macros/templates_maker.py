@@ -103,6 +103,7 @@ class TemplatesApp(PlotApp):
         global ROOT, style_utils, RooFit
         import ROOT
         from ROOT import RooFit
+        from ROOT import RooAbsData
         import diphotons.Utils.pyrapp.style_utils as style_utils
         ROOT.gSystem.Load("libdiphotonsUtils")
          
@@ -236,7 +237,9 @@ class TemplatesApp(PlotApp):
     ## ------------------------------------------------------------------------------------------------------------
     #MQ compare truth templates with rcone and sideband templates
     def compareTemplates(self,options,args):
+        ROOT.gStyle.SetPalette(1)
         print "Compare truth templates with rcone and sideband templates"
+        ROOT.TH1F.SetDefaultSumw2(True)
         for name, comparison in options.comparisons.iteritems():
             if name.startswith("_"): continue
             print "Comparison %s" % name
@@ -246,90 +249,174 @@ class TemplatesApp(PlotApp):
             for comp in components:
                 if type(comp) == str or type(comp)==unicode:
                     compname = comp
-                    templatesls = comparison["templates"]
+                    templatesls= comparison["templates"]
                 else:
                     compname, templatesls = comp
-
                 for cat in fit["categories"]:
-                    print "mctruth_%s_%s_%s" % (compname,fitname,cat)
-                    truth = self.rooData("mctruth_%s_%s_%s" % (compname,fitname,cat) )
-                    print truth.GetName()
+                    print cat
+                    setargs=ROOT.RooArgSet("setargs")
+                    mass=self.workspace_.var("mass")
+                    setargs.add(mass)
+                    print setargs.find("mass")
+                    template_binning = array.array('d',comparison.get("template_binning",fit["template_binning"]))
+                    templatebins=ROOT.RooBinning(len(template_binning)-1,template_binning,"templatebins" )
+        ########## list to store templates for each category
                     templates = []
+                    for idim in range(fit["ndim"]):
+                        setargs.add(self.workspace_.var("templateNdim%dDim%d" % ( fit["ndim"],idim)) )
+                    truthname= "mctruth_%s_%s_%s" % (compname,fitname,cat)
+                    truth = self.reducedRooData(truthname,setargs,False)
+                    print truth.GetName()
+                    templates.append(truth)
+            ########### loop over templates
                     for template,mapping in templatesls.iteritems():
                         if "mix" in template:
                              mixname = template.split(":")[-1]
                              templatename= "template_mix_%s_%s_%s" % (compname,mixname,mapping.get(cat,cat))
                         else:
                              templatename= "template_%s_%s_%s" % (compname,template,mapping.get(cat,cat))
-                        print templatename
-                        tempdata = self.rooData(templatename)
+                        tempdata = self.reducedRooData(templatename,setargs,False)
                         templates.append(tempdata)
-                    self.keep(truth)
+                        print tempdata.GetName()
                     self.keep(templates)
-                    
+                    print "1d and 2d projection" 
+            ##############loop over 2 legs
                     for idim in range(fit["ndim"]):
-                        print "templateNdim%dDim%d" % ( fit["ndim"],idim)
-                        title = "compiso_%s_%s_%s_templateNdim%dDim%d" % (fitname,compname,cat,fit["ndim"],idim)
-                        canv_allmlog = ROOT.TCanvas("%slog" %(title),"%slog"%title)
-                        pad2=ROOT.TPad("pad2", "pad2", 0, 0.0, 1, 0.15)
-                        pad1 = ROOT.TPad("pad1", "pad1", 0., 0.0, 1., 1.0)
-                        pad1.SetBottomMargin(0)
-                        pad1.SetLogy()
-                        pad1.Draw()
-                        pad1.cd()
-                        leg = ROOT.TLegend(0.5,0.6,0.9,0.9)
-                        leg.SetFillColor(ROOT.kWhite) 
-                    #self.workspace_.Print()
-                        isovar=self.workspace_.var("templateNdim%dDim%d" % ( fit["ndim"],idim))
-                        template_binning = array.array('d',comparison.get("template_binning",fit["template_binning"]))
-                        templatebins=ROOT.RooBinning(len(template_binning)-1,template_binning,"templatebins" )
-                        isovar.setBinning(templatebins)
-                        print isovar
-                        isoframe=isovar.frame()
-                        isoframe.SetTitle("%slog" % title)
-                        truth.plotOn(isoframe,RooFit.Rescale(1./truth.sumEntries()),RooFit.Binning(templatebins),RooFit.MarkerStyle(20),RooFit.MarkerColor(ROOT.kRed+1),RooFit.LineColor(ROOT.kRed+1),RooFit.Name(truth.GetTitle()))
-                        i=0
-                        for temp in templates:
-                            i+=2
-                            temp.plotOn(isoframe,RooFit.Rescale(1./temp.sumEntries()),RooFit.Binning(templatebins),RooFit.MarkerStyle(20),RooFit.MarkerColor(ROOT.kGreen+i),RooFit.LineColor(ROOT.kGreen+i),RooFit.Name(temp.GetTitle()))
-                        isoframe.Draw()
-                        leg.AddEntry(truth.GetTitle(),truth.GetTitle(),"l")  
-                        for temp in templates:
-                          leg.AddEntry(temp.GetTitle(),temp.GetTitle(),"l");
-                        leg.Draw()
-                        isoframe.SetAxisRange(1e-3,20,"Y")
-                        pad1.Update()
+                        histls=[]
                         isoarg=ROOT.RooArgList("isoarg")
-                        isoarg.add(isovar)
-                        truthHisto=ROOT.TH1F("%sHisto" % truth.GetTitle(),"%sHisto" % truth.GetTitle(),len(template_binning)-1,template_binning)
-                        truth.fillHistogram(truthHisto,isoarg)
-                        truthHisto.GetXaxis().SetLimits(min(template_binning),max(template_binning))
-                        truthHisto.GetYaxis().SetLimits(0.1,10.)
-                        j=0
-                        pad2.SetBottomMargin(0.3)
-                        pad2.SetTicks(0,2)
-                        pad2.SetTicky()
-                        pad2.Draw()
-                        pad2.cd()
-                        pad2.Update()
-                        ROOT.gStyle.SetOptStat(111111)
-                        ROOT.gStyle.SetOptTitle(0)
-                        for temp in templates:
-                            j+=2
-                            tempHisto=ROOT.TH1F("%sHisto" % temp.GetTitle(),"%sHisto" % temp.GetTitle(),len(template_binning)-1,template_binning)
-                            temp.fillHistogram(tempHisto,isoarg)
-                            tempHisto.Divide(truthHisto)
-                            tempHisto.SetLineColor(ROOT.kGreen+j)
-                            tempHisto.SetMarkerColor(ROOT.kGreen+j)
-                            if j==2:
-                                tempHisto.Draw()
-                            else:
-                                tempHisto.Draw("SAME")
-                         #   self.keep(tempHisto)
-                        pad2.Update()
-                        self.keep( [canv_allmlog] )
-                        self.autosave(True)
+                        isoarg.add(self.workspace_.var("templateNdim%dDim%d" % ( fit["ndim"],idim)) )
 
+                        print "templateNdim%dDim%d" % ( fit["ndim"],idim)
+                        tit = "compiso_%s_%s_%s_templateNdim%dDim%d" % (fitname,compname,cat,fit["ndim"],idim)
+                        for temp in templates:
+                            tempHisto=ROOT.TH1F("%s_%s_H" % (temp.GetTitle(),tit[-5:]),"%s_%s_H" % (temp.GetTitle(),tit[-5:]),len(template_binning)-1,template_binning)
+                            temp.fillHistogram(tempHisto,isoarg)
+                            histls.append(tempHisto)
+                        for hist in histls:
+                            hist.Scale(1.0/hist.Integral())  
+                        self.plotHistos(histls,tit,template_binning,True)
+              ##########roll out for combine tool per category
+                    if fit["ndim"]>1:
+                        pad_it=0
+                        c1=ROOT.TCanvas("d2hist_%s" % cat,"2d hists per category",1000,1000) 
+                        c1.Divide(1,2)
+                        histlistapp=[]
+                        print "roll out" 
+                        tempapp_binning=template_binning[:]
+                        print len(template_binning)
+                        for j in range (1,(len(template_binning)-1)):
+                            for i in range(0, len(template_binning)):
+                                tempapp_binning.append((template_binning[-1]+1)*j+template_binning[i])
+                        print "tempapp_binning", tempapp_binning
+                        print "len(tempapp_binning)",len(tempapp_binning)
+                        print "max(tempapp_binning)",max(tempapp_binning)
+                        isovar1=setargs.find("templateNdim2Dim0")
+                        isovar2=setargs.find("templateNdim2Dim1")
+                        print isovar1
+                        print isovar2
+                        histlsY=[]
+                        histlsX=[]
+                        for temp in templates:
+                            pad_it+=1
+                            temp1dapp=ROOT.TH1F("temp1dapp%s" %(temp.GetName()[6:]),"temp1dapp%s" %(temp.GetName()[6:]),len(tempapp_binning)-1,tempapp_binning)
+                            temp2d=temp.createHistogram(isovar1,isovar2,"","temp2d%s" % (temp.GetName()))
+                            temp2d.SetBins((len(template_binning)-1),template_binning,(len(template_binning)-1),template_binning)
+                           # temp2d.Scale(1./temp2d.Integral())
+                            c1.cd(pad_it)
+                            ROOT.gPad.SetLogz()
+                           # temp2d.Draw("TEXT E")
+                            temp2d.Draw("COLZ")
+                            temp2d.GetZaxis().SetRangeUser(1e-6,1)
+
+                            
+                            temp2dx=temp2d.ProjectionX("%s_X" %temp.GetTitle(),0, len(template_binning)-1)
+                            temp2dx.SetTitle("%s_X" %temp.GetTitle())
+                            temp2dy=temp2d.ProjectionY("%s_Y" %temp.GetTitle(),0, len(template_binning)-1)
+                    ###### draw projections as a check
+                            histlsX.append(temp2dx)
+                            temp2dy.SetTitle("%s_Y" %temp.GetTitle())
+                            histlsY.append(temp2dy)
+                            bin=0
+                            for x1 in range(1,len(template_binning)):
+                                for x2 in range(1,len(template_binning)):
+                                    binCont= temp2d.GetBinContent(x1,x2)
+                                    bin+=1
+                                    temp1dapp.SetBinContent(bin,binCont)
+                            histlistapp.append(temp1dapp)
+                        titleapp = "compiso_%s_%s_%s_append" % (fitname,compname,cat)
+                        self.plotHistos(histlsX,"%s_X" %tit[:-18],template_binning,True)
+                        self.plotHistos(histlsY,"%s_Y" %tit[:-18],template_binning,True)
+                        print histlsX
+                        print histlsY
+                        print histlistapp 
+                        self.keep(histlistapp)
+                        self.plotHistos(histlistapp,titleapp,tempapp_binning,False)
+                    if fit["ndim"]>1:
+                        self.keep( [c1] )
+                        self.autosave(True)
+            ########outside category loop
+        #######outside components loop
+     #   self.saveWs(options)
+
+
+## ------------------------------------------------------------------------------------------------------------
+
+    def plotHistos(self,histlist,title,template_bins,dim1):
+        ROOT.gStyle.SetOptStat(111111)
+        leg = ROOT.TLegend(0.4,0.65,0.8,0.75)
+        leg.SetTextSize(0.02)
+        leg.SetFillColor(ROOT.kWhite)
+        canv_allm = ROOT.TCanvas(title,title)
+        canv_allm.Draw()
+        pad2=ROOT.TPad("pad2", "pad2", 0, 0.0, 1, 0.15)
+        pad1 = ROOT.TPad("pad1", "pad1", 0., 0.0, 1., 1.0)
+        pad1.SetBottomMargin(0)
+        pad1.SetLogy()
+        pad1.Draw()
+        pad1.cd()
+        histlist[0].SetMarkerColor(ROOT.kRed)
+        histlist[0].SetLineColor(ROOT.kRed)
+        histlist[0].Draw()
+        histlist[0].GetXaxis().SetLimits(-0.1,max(template_bins))
+        histlist[0].SetStats()
+        for i in range(0,len(histlist)):
+            histlist[i].GetXaxis().SetLimits(-0.1,max(template_bins))
+           # if dim1:
+            if i>0:
+                histlist[i].SetLineColor(ROOT.kGreen+i)
+                histlist[i].SetMarkerColor(ROOT.kGreen+i)
+            histlist[i].Draw("SAME")
+            histlist[0].GetXaxis().SetLimits(-0.1,max(template_bins))
+            histlist[i].SetMarkerStyle(20)
+            leg.AddEntry(histlist[i],histlist[i].GetTitle(),"l")  
+        leg.Draw()
+        canv_allm.Update()
+        pad2.SetBottomMargin(0.3)
+        pad2.Draw() 
+        pad2.cd()
+        ratio=histlist[1].Clone("ratio")
+        ratio.Divide(histlist[0])
+        ratio.SetLineColor(ROOT.kGreen+1)
+        ratio.SetMarkerColor(ROOT.kGreen+1)
+        ratio.GetYaxis().SetNdivisions(5)
+        ratio.GetYaxis().SetTitleFont(43)
+        ratio.GetYaxis().SetTitleOffset(1.05)
+        ratio.GetYaxis().SetLabelFont(43)
+        ratio.GetYaxis().SetLabelSize(15)
+        ratio.GetXaxis().SetTitleSize(15)
+        ratio.GetXaxis().SetTitleFont(43)
+        ratio.GetXaxis().SetTitleOffset(9.)
+        ratio.GetXaxis().SetLabelFont(43)
+        ratio.GetXaxis().SetLabelSize(15)
+        ratio.GetXaxis().SetTitle(title[-17:])
+        ratio.Draw()
+        histlist[0].GetXaxis().SetLimits(-0.1,max(template_bins))
+        #ratio.GetXaxis().SetRangeUser(-0.1,max(template_bins))
+        ROOT.gStyle.SetOptStat(0)
+        ROOT.gStyle.SetOptTitle(0)
+        self.keep( [canv_allm] )
+        self.autosave(True)
+        
 
 ## ------------------------------------------------------------------------------------------------------------
     def prepareTruthFit(self,options,args):
@@ -614,27 +701,50 @@ class TemplatesApp(PlotApp):
     
 
     ## ------------------------------------------------------------------------------------------------------------
+
+    def reducedRooData(self,name,rooset,binned):
+        data = self.rooData("reduced_%s" % name)
+        if not data:
+            print "create rooData"
+            data = self.rooData(name,rooset=rooset)
+            if binned:
+                data = data.binnedClone("reduced_%s" % name,"reduced_%s" % name)
+            else:
+                data.SetName("reduced_%s" % name)
+        self.workspace_.rooImport(data)
+        return data
+         #   self.workspace_.rooImport(data)
+        #    return data
+    ## ------------------------------------------------------------------------------------------------------------
+
     def rooPdf(self,name):
         pdf = self.workspace_.pdf(name)
         if not pdf and self.store_new_:
             pdf = self.workspace_input_.pdf(name)            
         return pdf
 
+
     ## ------------------------------------------------------------------------------------------------------------
-    def rooData(self,name,autofill=True):
+    def rooData(self,name,autofill=True,rooset=None):
         if name in self.cache_:
             return self.cache_[name]        
         dataset = self.workspace_.data(name)
         if not dataset and self.store_new_:
             dataset = self.workspace_input_.data(name)
-            
-        if autofill and dataset.sumEntries() == 0.:
-            tree = self.treeData(name)
-            if tree:
+        #    dataset.reduced()
+        if not dataset:
+            return dataset
+        if autofill and dataset.sumEntries() == 0. and "tree_%s" % name in self.store_:
+            tree = self.store_["tree_%s" % name]
+            if rooset:
+                dataset = dataset.reduce(RooFit.SelectVars(rooset))
+            else:
                 dataset = dataset.emptyClone()
-                self.cache_[name] = dataset
-                filler = ROOT.DataSetFiller(dataset)
-                filler.fillFromTree(tree,"weight",True)            
+            self.cache_[name] = dataset
+            filler = ROOT.DataSetFiller(dataset)
+            filler.fillFromTree(tree,"weight",True)
+        elif rooset:
+            dataset = dataset.reduce(rooset)
         return dataset
 
     ## ------------------------------------------------------------------------------------------------------------

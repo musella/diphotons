@@ -33,6 +33,7 @@ DataSetFiller::DataSetFiller(RooDataSet * dset) :
 {
 }
 
+//void DataSetFiller::fillFromTree(TTree * tree, const char * weightExpr, bool ignoreExpr, bool reduced)
 void DataSetFiller::fillFromTree(TTree * tree, const char * weightExpr, bool ignoreExpr)
 {
     size_t nvar = vars_.getSize();
@@ -42,7 +43,9 @@ void DataSetFiller::fillFromTree(TTree * tree, const char * weightExpr, bool ign
         RooRealVar &var = dynamic_cast<RooRealVar &>( vars_[ivar] );
         if( std::string(var.GetName()) == "weight" ) { 
             formulas[ivar] = weight;
-        } else {
+//  } else if(reduced &&( (std::string(var.GetName()) == "templateNdim2Dim0") ||(std::string(var.GetName()) == "templateNdim2Dim1")||(std::string(var.GetName()) == "templateNdim1Dim0"))){
+  //          formulas[ivar] = new TTreeFormula( var.GetName(), (ignoreExpr ? var.GetName() : var.GetTitle()), tree );
+        } else{
             formulas[ivar] = new TTreeFormula( var.GetName(), (ignoreExpr ? var.GetName() : var.GetTitle()), tree );
         }
     }
@@ -66,7 +69,7 @@ void DataSetFiller::fillFromTree(TTree * tree, const char * weightExpr, bool ign
         if( keep ) {
             if( tree_ ) { 
                 tree_->Fill( &treeBuf_[0] );
-            } else { 
+            } else {
                 dataset_->add( RooArgSet(vars_), wei );
             }
         }

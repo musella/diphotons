@@ -101,11 +101,11 @@
         "2D" : {
             "ndim"       : 2,                                                                "#" : "number of dimensions for the template  ",
             "bins"       : [ "mass", [500.0,1300.0] ],                                       "#" : "kinematic bins in which the fit is run ",
-            "template_binning" : [ -1.0, 0.0, 1.0, 4.0, 15.0 ],                                   "#" : "template varaible binning              ",
+            "template_binning" : [ 0.0,0.1, 1.0, 4.0,9.0, 15.0 ],                                   "#" : "template varaible binning              ",
             "_template_binning" : [ -10.0, 0.0, 1.0, 1.5, 2.0, 2.5, 3.0, 5.0, 10.0, 15.0 ],
 
             "components" : [ "pp", "pf", "ff" ],                                             "#" : "list of fit components                 ",
-            "dataset_variables" : ["mass","leadPt","subleadPt","leadEta","subleadEta"],      "#" : "additional variables to be stored      ",
+            "dataset_variables" : ["mass [-1.0,0.0,20.0,50.0,100.0,200.0,500.0,13000.0]","leadPt","subleadPt","leadEta","subleadEta"],      "#" : "additional variables to be stored      ",
             "store_trees" : true,	
 
             "#" :"categories in which to split the fit       ",
@@ -190,12 +190,12 @@
             "#" : "1D fit: same as above, with (possible) additional loop over legs",
             "ndim"       : 1,
             "bins"       : [ "mass", [500.0,1300.0] ],
-		"dataset_variables" : ["mass","phoPt := %(leg)sPt","phoEta := %(leg)sEta", "phoPhi := %(leg)sPhi","phoEnergy := %(leg)sPt*cosh(%(leg)sEta)",
+		"dataset_variables" : ["mass [-1.0,0.0,20.0,50.0,100.0,200.0,500.0,13000.0]","phoPt := %(leg)sPt","phoEta := %(leg)sEta", "phoPhi := %(leg)sPhi","phoEnergy := %(leg)sPt*cosh(%(leg)sEta)",
 				       "phoSigmaIeIe := %(leg)sSigmaIeIe",
 				       "phoGenIso := %(leg)sGenIso", "phoMatchType := %(leg)sMatchType"
 				       ],
             "_template_binning" : [ -10.0, 0.0, 1.0, 1.5, 2.0, 2.5, 3.0, 5.0, 10.0, 15.0 ],
-            "template_binning" : [ -1.0, 0.0, 1.0, 4.0, 15.0 ],
+            "template_binning" : [-1.0, 0.0,0.1, 1.0, 4.0,9.0, 15.0 ],
             "components" : ["p", "f"],
 	    "_selection"  : "kin",
             "store_trees" : true,	
@@ -286,7 +286,7 @@
             "bins"       : [ "phoPt", [100,6000] ],
 		"dataset_variables" : ["phoPt","phoEta","phoPhi","phoEnergy := phoPt*cosh(phoEta)","phoSigmaIeIe","phoGenIso","phoMatchType","rho","nvtx"],
             "_template_binning" : [ -10.0, 0.0, 1.0, 1.5, 2.0, 2.5, 3.0, 5.0, 10.0, 15.0 ],
-	    "template_binning" : [ -1.0, 0.0, 1.0, 4.0, 15.0 ],
+	    "template_binning" : [-1.0,  0.0,0.1, 1.0, 4.0,9.0, 15.0 ],
             "store_trees"  : true,
             "selection"    : "cicNoChIsoSinglePho",
             "_preselection" : "phoChIso < 15.",
@@ -432,11 +432,12 @@
     "comparisons" : {
 	"fit2DTruth" : { "fit" : "2D",
 		"templates" : { "mix:kDSinglePho2D" : {} },
-                "components": ["pf","ff" , 
+                "components": [ "pf","ff",
                                 ["pp",{ "2D" : {}}]  
                 ],
 		"doDataMc" : false, "doMcTruth" : true,
-		"splitByBin" : false
+		"splitByBin" : false,
+                "template_binning" : [ 0.0,0.1, 1.0, 4.0,9.0, 15.0 ]
 		},
 	"fit1DTruth" : { "fit" : "1D",
                 "components" : [ "f","p" ],
@@ -445,7 +446,7 @@
                             },
 		"doDataMc" : false, "doMcTruth" : true,
 		"splitByBin" : false,
-                "template_binning" : [ -1.0, 0.0,0.1, 1.0, 4.0,9.0, 15.0 ]
+                "template_binning" : [ 0.0,0.1, 1.0, 4.0,9.0, 15.0 ]
 		}
     },
       
