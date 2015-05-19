@@ -257,6 +257,7 @@ class TemplatesApp(PlotApp):
                     setargs=ROOT.RooArgSet("setargs")
                     mass=self.workspace_.var("mass")
                     setargs.add(mass)
+                    print setargs.find("mass")
                     template_binning = array.array('d',comparison.get("template_binning",fit["template_binning"]))
                     templatebins=ROOT.RooBinning(len(template_binning)-1,template_binning,"templatebins" )
         ########## list to store templates for each category
@@ -311,6 +312,8 @@ class TemplatesApp(PlotApp):
                         print "max(tempapp_binning)",max(tempapp_binning)
                         isovar1=setargs.find("templateNdim2Dim0")
                         isovar2=setargs.find("templateNdim2Dim1")
+                        print isovar1
+                        print isovar2
                         histlsY=[]
                         histlsX=[]
                         for temp in templates:
@@ -318,7 +321,7 @@ class TemplatesApp(PlotApp):
                             temp1dapp=ROOT.TH1F("temp1dapp%s" %(temp.GetName()[6:]),"temp1dapp%s" %(temp.GetName()[6:]),len(tempapp_binning)-1,tempapp_binning)
                             temp2d=temp.createHistogram(isovar1,isovar2,"","temp2d%s" % (temp.GetName()))
                             temp2d.SetBins((len(template_binning)-1),template_binning,(len(template_binning)-1),template_binning)
-                            temp2d.Scale(1./temp2d.Integral())
+                           # temp2d.Scale(1./temp2d.Integral())
                             c1.cd(pad_it)
                             ROOT.gPad.SetLogz()
                            # temp2d.Draw("TEXT E")
@@ -326,9 +329,9 @@ class TemplatesApp(PlotApp):
                             temp2d.GetZaxis().SetRangeUser(1e-6,1)
 
                             
-                            temp2dx=temp2d.ProjectionX("%s_X" %temp.GetTitle(),0, len(template_binning))
+                            temp2dx=temp2d.ProjectionX("%s_X" %temp.GetTitle(),0, len(template_binning)-1)
                             temp2dx.SetTitle("%s_X" %temp.GetTitle())
-                            temp2dy=temp2d.ProjectionY("%s_Y" %temp.GetTitle(),0, len(template_binning))
+                            temp2dy=temp2d.ProjectionY("%s_Y" %temp.GetTitle(),0, len(template_binning)-1)
                     ###### draw projections as a check
                             histlsX.append(temp2dx)
                             temp2dy.SetTitle("%s_Y" %temp.GetTitle())
@@ -353,7 +356,7 @@ class TemplatesApp(PlotApp):
                         self.autosave(True)
             ########outside category loop
         #######outside components loop
-        self.saveWs(options)
+     #   self.saveWs(options)
 
 
 ## ------------------------------------------------------------------------------------------------------------
@@ -728,7 +731,7 @@ class TemplatesApp(PlotApp):
         dataset = self.workspace_.data(name)
         if not dataset and self.store_new_:
             dataset = self.workspace_input_.data(name)
-            dataset.reduced()
+        #    dataset.reduced()
         if not dataset:
             return dataset
         if autofill and dataset.sumEntries() == 0. and "tree_%s" % name in self.store_:
