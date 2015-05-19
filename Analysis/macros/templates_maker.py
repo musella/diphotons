@@ -221,6 +221,7 @@ class TemplatesApp(PlotApp):
         ## ------------------------------------------------------------------------------------------------------------
         #MQ compare truth templates with rcone and sideband templates
     def compareTemplates(self,options,args):
+        ROOT.gStyle.SetPalette(1)
         print "Compare truth templates with rcone and sideband templates"
         ROOT.TH1F.SetDefaultSumw2(True)
         for name, comparison in options.comparisons.iteritems():
@@ -242,6 +243,7 @@ class TemplatesApp(PlotApp):
                     setargs.add(mass)
                     template_binning = array.array('d',comparison.get("template_binning",fit["template_binning"]))
                     templatebins=ROOT.RooBinning(len(template_binning)-1,template_binning,"templatebins" )
+        ########## list to store templates for each category
                     templates = []
                     for idim in range(fit["ndim"]):
                         setargs.add(self.workspace_.var("templateNdim%dDim%d" % ( fit["ndim"],idim)) )
@@ -249,7 +251,7 @@ class TemplatesApp(PlotApp):
                     truth = self.reducedRooData(truthname,setargs,False)
                     print truth.GetName()
                     templates.append(truth)
-            ########### templates
+            ########### loop over templates
                     for template,mapping in templatesls.iteritems():
                         if "mix" in template:
                              mixname = template.split(":")[-1]
@@ -261,60 +263,88 @@ class TemplatesApp(PlotApp):
                         print tempdata.GetName()
                     self.keep(templates)
                     print "1d and 2d projection" 
+            ##############loop over 2 legs
                     for idim in range(fit["ndim"]):
                         histls=[]
                         isoarg=ROOT.RooArgList("isoarg")
                         isoarg.add(self.workspace_.var("templateNdim%dDim%d" % ( fit["ndim"],idim)) )
+
                         print "templateNdim%dDim%d" % ( fit["ndim"],idim)
                         tit = "compiso_%s_%s_%s_templateNdim%dDim%d" % (fitname,compname,cat,fit["ndim"],idim)
-                        #truthHisto=ROOT.TH1F("%s_%s_H" % (truth.GetTitle(),tit[-5:]),"%s_%s_H" % (truth.GetTitle(),tit[-5:]),len(template_binning)-1,template_binning)
-                        #truth.fillHistogram(truthHisto,isoarg)
-                        #histls.append(truthHisto)
                         for temp in templates:
                             tempHisto=ROOT.TH1F("%s_%s_H" % (temp.GetTitle(),tit[-5:]),"%s_%s_H" % (temp.GetTitle(),tit[-5:]),len(template_binning)-1,template_binning)
                             temp.fillHistogram(tempHisto,isoarg)
                             histls.append(tempHisto)
+                        for hist in histls:
+                            hist.Scale(1.0/hist.Integral())  
                         self.plotHistos(histls,tit,template_binning,True)
+              ##########roll out for combine tool per category
                     if fit["ndim"]>1:
+                        pad_it=0
+                        c1=ROOT.TCanvas("d2hist_%s" % cat,"2d hists per category",1000,1000) 
+                        c1.Divide(1,2)
                         histlistapp=[]
                         print "roll out" 
                         tempapp_binning=template_binning[:]
-                        for j in range (1,4):
+                        print len(template_binning)
+                        for j in range (1,(len(template_binning)-1)):
                             for i in range(0, len(template_binning)):
-                                tempapp_binning.append((template_binning[-1]+2)*j+template_binning[i])
-                        print tempapp_binning
+                                tempapp_binning.append((template_binning[-1]+1)*j+template_binning[i])
+                        print "tempapp_binning", tempapp_binning
+                        print "len(tempapp_binning)",len(tempapp_binning)
+                        print "max(tempapp_binning)",max(tempapp_binning)
                         isovar1=setargs.find("templateNdim2Dim0")
                         isovar2=setargs.find("templateNdim2Dim1")
-                        #truth1dapp=ROOT.TH1F("truth1dapp%s_%s_%s" %(fitname,compname,cat),"truth2d%s_%s_%s" %(fitname,compname,cat),4*(len(template_binning)-1),tempapp_binning)
-                        #truth2d=truth.createHistogram(isovar1,isovar2,"","truth2d%s_%s_%s" %(fitname,compname,cat))
-                        #print truth2d
-                        #for x1 in range(0,len(template_binning)-1):
-                         #   for x2 in range(0,len(template_binning)-1):
-                         #       truth1dapp.Fill(truth2d.GetBinContent(x1,x2))
-                        #histlistapp.append(truth1dapp)
+                        histlsY=[]
+                        histlsX=[]
                         for temp in templates:
-                            temp1dapp=ROOT.TH1F("temp1dapp%s" %(temp.GetName()),"temp1dapp%s" %(temp.GetName()),4*(len(template_binning)-1),tempapp_binning)
-                            temp2d=temp.createHistogram(isovar1,isovar2,"","temp2d%s" %(temp.GetName()))
-                            print temp
-                            for x1 in range(0,len(template_binning)-1):
-                                for x2 in range(0,len(template_binning)-1):
-                                    temp1dapp.Fill(temp2d.GetBinContent(x1,x2))
+                            pad_it+=1
+                            temp1dapp=ROOT.TH1F("temp1dapp%s" %(temp.GetName()[6:]),"temp1dapp%s" %(temp.GetName()[6:]),len(tempapp_binning)-1,tempapp_binning)
+                            temp2d=temp.createHistogram(isovar1,isovar2,"","temp2d%s" % (temp.GetName()))
+                            temp2d.SetBins((len(template_binning)-1),template_binning,(len(template_binning)-1),template_binning)
+                            temp2d.Scale(1./temp2d.Integral())
+                            c1.cd(pad_it)
+                            ROOT.gPad.SetLogz()
+                           # temp2d.Draw("TEXT E")
+                            temp2d.Draw("COLZ")
+                            temp2d.GetZaxis().SetRangeUser(1e-6,1)
+
+                            
+                            temp2dx=temp2d.ProjectionX("%s_X" %temp.GetTitle(),0, len(template_binning))
+                            temp2dx.SetTitle("%s_X" %temp.GetTitle())
+                            temp2dy=temp2d.ProjectionY("%s_Y" %temp.GetTitle(),0, len(template_binning))
+                    ###### draw projections as a check
+                            histlsX.append(temp2dx)
+                            temp2dy.SetTitle("%s_Y" %temp.GetTitle())
+                            histlsY.append(temp2dy)
+                            bin=0
+                            for x1 in range(1,len(template_binning)):
+                                for x2 in range(1,len(template_binning)):
+                                    binCont= temp2d.GetBinContent(x1,x2)
+                                    bin+=1
+                                    temp1dapp.SetBinContent(bin,binCont)
                             histlistapp.append(temp1dapp)
-                        titleapp="%s_append" % tit
-                        tit = "compiso_%s_%s_%s_append" % (fitname,compname,cat)
-                        print histlistapp #TODO add temp
+                        titleapp = "compiso_%s_%s_%s_append" % (fitname,compname,cat)
+                        self.plotHistos(histlsX,"%s_X" %tit[:-18],template_binning,True)
+                        self.plotHistos(histlsY,"%s_Y" %tit[:-18],template_binning,True)
+                        print histlsX
+                        print histlsY
+                        print histlistapp 
                         self.keep(histlistapp)
                         self.plotHistos(histlistapp,titleapp,tempapp_binning,False)
-        
-                #self.saveWs(options)
-                return
+                    self.keep( [c1] )
+                    self.autosave(True)
+            ########outside category loop
+        #######outside components loop
+        #self.saveWs(options,fout)
 
 
 ## ------------------------------------------------------------------------------------------------------------
 
     def plotHistos(self,histlist,title,template_bins,dim1):
         ROOT.gStyle.SetOptStat(111111)
-        leg = ROOT.TLegend(0.4,0.7,0.9,0.9)
+        leg = ROOT.TLegend(0.4,0.65,0.8,0.75)
+        leg.SetTextSize(0.02)
         leg.SetFillColor(ROOT.kWhite)
         canv_allm = ROOT.TCanvas(title,title)
         canv_allm.Draw()
@@ -326,16 +356,17 @@ class TemplatesApp(PlotApp):
         pad1.cd()
         histlist[0].SetMarkerColor(ROOT.kRed)
         histlist[0].SetLineColor(ROOT.kRed)
-        histlist[1].Draw()
+        histlist[0].Draw()
+        histlist[0].GetXaxis().SetLimits(-0.1,max(template_bins))
         histlist[0].SetStats()
         for i in range(0,len(histlist)):
-            histlist[i].GetXaxis().SetRangeUser(-0.1,max(template_bins))
+            histlist[i].GetXaxis().SetLimits(-0.1,max(template_bins))
            # if dim1:
-            histlist[i].Scale(1.0/histlist[i].Integral())  
             if i>0:
                 histlist[i].SetLineColor(ROOT.kGreen+i)
                 histlist[i].SetMarkerColor(ROOT.kGreen+i)
             histlist[i].Draw("SAME")
+            histlist[0].GetXaxis().SetLimits(-0.1,max(template_bins))
             histlist[i].SetMarkerStyle(20)
             leg.AddEntry(histlist[i],histlist[i].GetTitle(),"l")  
         leg.Draw()
@@ -359,7 +390,8 @@ class TemplatesApp(PlotApp):
         ratio.GetXaxis().SetLabelSize(15)
         ratio.GetXaxis().SetTitle(title[-17:])
         ratio.Draw()
-        ratio.GetXaxis().SetRangeUser(-0.1,max(template_bins))
+        histlist[0].GetXaxis().SetLimits(-0.1,max(template_bins))
+        #ratio.GetXaxis().SetRangeUser(-0.1,max(template_bins))
         ROOT.gStyle.SetOptStat(0)
         ROOT.gStyle.SetOptTitle(0)
         self.keep( [canv_allm] )
