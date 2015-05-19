@@ -260,70 +260,6 @@ class BiasApp(TemplatesApp):
                     data.SetName(toyname)
                     data.SetTitle(toyname)
                     self.workspace_.rooImport(data)
-                
-                #### print treename
-                #### tree = self.treeData( treename )
-                #### treobs = ROOT.TTreeFormula(roobs.GetName(),roobs.GetTitle(),tree)
-                #### trewei = ROOT.TTreeFormula(roowe.GetName(),roowe.GetTitle(),tree)
-                #### 
-                #### tree.Draw("1>>hsum(1,0,2)","weight","goff")
-                #### nev  = tree.GetEntries()
-                #### hsum = ROOT.gDirectory.Get("hsum")
-                #### norm = hsum.Integral()
-                #### 
-                #### ntoys = int(nev/norm)
-                #### print norm,ntoys,nev
-                #### 
-                #### if options.split_mc >= 0:
-                ####     ntoys = options.split_mc
-                #### 
-                ### evlist = range(nev)
-                ### random.shuffle(evlist)
-                ### 
-                ### toy = -1
-                ### data = None
-                ### maxwei = 0.
-                ### for iev in xrange(tree.GetEntries()):
-                ###     tree.GetEntry(iev)
-                ###     wei = trewei.EvalInstance()
-                ###     maxwei = max(wei,maxwei)
-                ### 
-                ### print "maximum weight : %f" % maxwei
-                ###     
-                ### nev = 0 
-                ### discarded = []
-                ### while toy < ntoys:
-                ###     for jev in xrange(len(evlist)):
-                ###         iev = evlist[jev]
-                ###         nev += 1
-                ###         if toy == -1 or data.sumEntries() >= norm:
-                ###             toy += 1
-                ###             print "\nfilling toy : %d" % toy
-                ###             if data:
-                ###                 data.Print("V")
-                ###                 self.workspace_.rooImport(data)                                
-                ###             toyname = "toy%s_%s_%d" % (comp,cat,toy)
-                ###             data = ROOT.RooDataHist(toyname,toyname,ROOT.RooArgSet(roobs))
-                ###             if toy != 0:
-                ###                 break
-                ### 
-                ###         tree.GetEntry(iev)
-                ###         wei = trewei.EvalInstance() / maxwei
-                ###         if ROOT.gRandom.Uniform() > wei:
-                ###             continue
-                ###         else:
-                ###             discarded.append(iev)
-                ### 
-                ###         print "%1.2f\r" % ( data.sumEntries()/ float(nev)),
-                ###     
-                ###         val = treobs.EvalInstance()
-                ###         roobs.setVal(val)
-                ###         data.add(ROOT.RooArgSet(roobs),1.)
-                ###     
-                ###     print len(evlist)
-                ###     evlist = evlist[jev:]+discarded
-                ###     if len(evlist) < 1:
-                ###         break
                     
         self.saveWs(options)
 
@@ -363,7 +299,6 @@ class BiasApp(TemplatesApp):
                     biases[rname] = ntp
                     self.store_[ntp.GetName()] = ntp
                     
-                ## generator = self.rooPdf("geneator_mctruth_%s%s_%s" % (comp,fitname,cat))
                 generator = self.rooPdf("pdf_mctruth_%s%s_%s" % (comp,fitname,cat))
                 print generator
                 gnorm     = self.buildRooVar("norm_mctruth_%s%s_%s" % (comp,fitname,cat), [], recycle=True)
@@ -372,8 +307,7 @@ class BiasApp(TemplatesApp):
                 trueNorms = {}
                 pobs  = generator.getDependents(ROOT.RooArgSet(roobs))[roobs.GetName()]
                 pobs.setRange("fullRange",roobs.getBinning("fullRange").lowBound(),roobs.getBinning("fullRange").highBound())
-                renorm = generator.createIntegral(ROOT.RooArgSet(pobs),"").getVal() / gnorm.getVal() ## / generator.expectedEvents(ROOT.RooArgSet(pobs))
-                ## renorm = 1. / gnorm.getVal() ## / generator.expectedEvents(ROOT.RooArgSet(pobs))
+                renorm = generator.createIntegral(ROOT.RooArgSet(pobs),"").getVal() / gnorm.getVal()
                 for test in testRanges:
                     testRange,testLim = test
                     pobs.setRange(testRange,roobs.getBinning(testRange).lowBound(),roobs.getBinning(testRange).highBound())
@@ -388,7 +322,7 @@ class BiasApp(TemplatesApp):
                     if options.plot_toys_fits:
                         frame = roobs.frame()
                         pdff = pdf.Clone()
-                        pdff.fitTo(dset,ROOT.RooFit.Range("fullRange"),*fitops) ## ,ROOT.RooFit.PrintLevel(3),ROOT.RooFit.Verbose(True))                        
+                        pdff.fitTo(dset,ROOT.RooFit.Range("fullRange"),*fitops)
                         pdff.plotOn(frame,ROOT.RooFit.LineColor(ROOT.kGreen),ROOT.RooFit.Range("fullRange"))
                      
                     pdft.fitTo(dset,ROOT.RooFit.Range("fitRange"),*fitops)
@@ -416,7 +350,7 @@ class BiasApp(TemplatesApp):
                         integral = pdft.createIntegral(ROOT.RooArgSet(roobs),ROOT.RooArgSet(roobs),testRange)
                         nomnorm = integral.getVal()*dset.sumEntries()
                         roonorm.setVal(nomnorm)
-                        truenorm = trueNorms[testRange] ## *dset.sumEntries()
+                        truenorm = trueNorms[testRange]
                         print roonorm.getVal(), truenorm
                         epdf = ROOT.RooExtendPdf(iname,iname,pdf,roonorm,testRange)
                         
@@ -440,16 +374,12 @@ class BiasApp(TemplatesApp):
                         
                         nomnorm = roonorm.getVal()
                         
-                        ## print truenorm, nomnorm, roonorm.getVal(), roonorm.getErrorHi(), roonorm.getErrorLo()
-                        
                         minim.hesse()
-                        ### print truenorm, nomnorm, roonorm.getVal(), roonorm.getErrorHi(), roonorm.getErrorLo()
                         hesseerr = roonorm.getError()
                         fiterrh = roonorm.getErrorHi()
                         fiterrl = roonorm.getErrorLo()
                         minos = minim.minos(ROOT.RooArgSet(roonorm))
                         if minos == 0:
-                            ### print truenorm, nomnorm, roonorm.getVal(), roonorm.getErrorHi(), roonorm.getErrorLo()
                             if roonorm.getErrorHi() != 0.:
                                 fiterrh = roonorm.getErrorHi()
                             if roonorm.getErrorLo() != 0.:
@@ -578,7 +508,6 @@ class BiasApp(TemplatesApp):
             
             roolist = ROOT.RooArgList( xvar, linc, logc )
             pdf = ROOT.RooGenericPdf( pname, pname, "pow(@0,@1+@2*log(@0))", roolist )
-            ## pdf = ROOT.RooGenericPdf( pname, pname, "pow(@0,@1)", roolist )
             
             self.keep( [pdf,linc,logc] )
 
