@@ -13,7 +13,7 @@ public:
     DataSetFiller(const char * name, const char * title, const RooArgList & variables, const char *weightVarName=0, bool fillTree=false);
     DataSetFiller(RooDataSet * dset);
     
-    void fillFromTree(TTree * tree, const char * weightExpr=0, bool ignoreExpr=false);
+    void fillFromTree(TTree * tree, const char * weightExpr=0, bool ignoreExpr=false );
     RooArgList & vars() { return vars_; };
     
     RooDataSet * get() { return dataset_; }

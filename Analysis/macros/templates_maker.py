@@ -23,7 +23,7 @@ class TemplatesApp(PlotApp):
     """
     
     ## ------------------------------------------------------------------------------------------------------------
-    def __init__(self):
+    def __init__(self,option_list=[],option_groups=[]):
         """ 
         Constructor
         """
@@ -82,9 +82,12 @@ class TemplatesApp(PlotApp):
                                     ),
                         make_option("--mc-file",dest="mc_file",action="store",type="string",
                                     default=None,help="default: %default"),
+                        make_option("--only-subset",dest="only_subset",action="callback",type="string", callback=optpars_utils.ScratchAppend(),
+                                    default=[],help="default: %default"),
+                        
                         ]
                       )
-            ])
+            ]+option_groups,option_list=option_list)
         
         ## initialize data members
         self.trees_ = {}
@@ -116,6 +119,14 @@ class TemplatesApp(PlotApp):
         ROOT.gStyle.SetOptStat(111111)
         printLevel = ROOT.RooMsgService.instance().globalKillBelow()
         ROOT.RooMsgService.instance().setGlobalKillBelow(RooFit.FATAL)
+        
+        if len(options.only_subset)>0:
+            subset = {}
+            for name,fit in options.fits.iteritems():
+                if not name in options.only_subset:
+                    continue
+                subset[name] = fit
+            options.fits = subset
 
         if options.store_new_only:
             self.store_new_ = True
@@ -202,10 +213,15 @@ class TemplatesApp(PlotApp):
         print "Datasets :"
         print "---------------------------------------------------------"
         alldata = self.workspace_.allData()
+        ntoys = 0
         for dset in alldata:
             name = dset.GetName()
-            print name.ljust(30), ":", ("%d" % dset.sumEntries()).rjust(8)
-
+            if name.startswith("toy"):
+                ntoys += 1
+            else:
+                print name.ljust(30), ":", ("%d" % dset.sumEntries()).rjust(8)
+        print 
+        print "Number of toys : %d"         % ntoys
         print    
         print "--------------------------------------------------------------------------------------------------------------------------"
 
@@ -218,8 +234,8 @@ class TemplatesApp(PlotApp):
             self.workspace_.rooImport = getattr(self.workspace_,"import")
             
 
-        ## ------------------------------------------------------------------------------------------------------------
-        #MQ compare truth templates with rcone and sideband templates
+    ## ------------------------------------------------------------------------------------------------------------
+    #MQ compare truth templates with rcone and sideband templates
     def compareTemplates(self,options,args):
         ROOT.gStyle.SetPalette(1)
         print "Compare truth templates with rcone and sideband templates"
@@ -682,6 +698,7 @@ class TemplatesApp(PlotApp):
     
 
     ## ------------------------------------------------------------------------------------------------------------
+
     def reducedRooData(self,name,rooset,binned):
         data = self.rooData("reduced_%s" % name)
         if not data:
@@ -695,6 +712,15 @@ class TemplatesApp(PlotApp):
         return data
          #   self.workspace_.rooImport(data)
         #    return data
+    ## ------------------------------------------------------------------------------------------------------------
+
+    def rooPdf(self,name):
+        pdf = self.workspace_.pdf(name)
+        if not pdf and self.store_new_:
+            pdf = self.workspace_input_.pdf(name)            
+        return pdf
+
+
     ## ------------------------------------------------------------------------------------------------------------
     def rooData(self,name,autofill=True,rooset=None):
         if name in self.cache_:
@@ -772,18 +798,28 @@ class TemplatesApp(PlotApp):
         return name,xbins
 
     ## ------------------------------------------------------------------------------------------------------------
-    def buildRooVar(self,name,binning):
-        if name in self.aliases_:
-            title = self.aliases_[name]
-        else:
-            title = name
-        rooVar = ROOT.RooRealVar(name,title,0.)
+    def buildRooVar(self,name,binning,importToWs=True,recycle=False):
+        rooVar = None
+        if recycle:
+            rooVar = self.workspace_.var(name)
+            if not rooVar and self.store_new_:
+                rooVar = self.workspace_input_.var(name)
+            print rooVar
+        if not rooVar:
+            if name in self.aliases_:
+                title = self.aliases_[name]
+            else:
+                title = name
+            rooVar = ROOT.RooRealVar(name,title,0.)
+            rooVar.setConstant(False)
+            
         if len(binning) > 0:
             rooVar.setMin(binning[0])
             rooVar.setMax(binning[-1])
             rooVar.setVal(0.5*(binning[0]+binning[-1]))
             rooVar.setBinning(ROOT.RooBinning(len(binning)-1,binning))
-        self.workspace_.rooImport(rooVar,ROOT.RooFit.RecycleConflictNodes())
+        if importToWs:
+            self.workspace_.rooImport(rooVar,ROOT.RooFit.RecycleConflictNodes())
         self.keep(rooVar) ## make sure the variable is not destroyed by the garbage collector
         return rooVar
 
@@ -848,7 +884,6 @@ class TemplatesApp(PlotApp):
                 tree = filler.getTree()
                 self.store_[tree.GetName()] = tree
                 
-            ## dataset.Print()
 
     ## ------------------------------------------------------------------------------------------------------------
     def prepareTrees(self,name,selection,doPrint=False,printHeader=""): 
