@@ -256,7 +256,14 @@ class TemplatesApp(PlotApp):
                     print cat
                     massargs=ROOT.RooArgSet("massargs")
                     isoargs=ROOT.RooArgSet("isoargs")
-                    massargs.add(self.buildRooVar("mass",[],recycle=True))
+                    #mass_binning = array.array('d',comparison.get("mass_binning",fit["mass_binning"]))
+                    massbins=ROOT.RooBinning(0.,13000) 
+                    massbins.addUniform(80,0.,400)
+                    massbins.addUniform(26,400,3000)
+                    massbins.addUniform(1,3000,7000)
+                    massRoovar=self.buildRooVar("mass",[],recycle=True)
+                    massRoovar.setBinning(massbins)
+                    massargs.add(massRoovar)
                     template_binning = array.array('d',comparison.get("template_binning",fit["template_binning"]))
                     templatebins=ROOT.RooBinning(len(template_binning)-1,template_binning,"templatebins" )
         ########## list to store templates for each category
@@ -281,17 +288,11 @@ class TemplatesApp(PlotApp):
                         print tempdata.GetName()
                     self.keep(templates)
         ##########split in massbins
-                 #   if splitByBin:
-                  #      print "splitByBin"
-                   #     for temp in templates:
-                           #truthHisto=ROOT.TH1F("%s_%s_H" % (truth.GetTitle(),tit[-5:]),"%s_%s_H" % (truth.GetTitle(),tit[-5:]),len(template_binning)-1,template_binning)
-                                                   #truth.fillHistogram(truthHisto,isoarg)
-                                                   #histls.append(truthHisto)
-                        #self.massquantiles(diphomass_data,prob,dpmq); 
-                      #  self.massquantiles(diphomass_data); 
-                      #  for(int k=0;k<=nq;k++)
-                       # cout << "prob " << prob[k] << " diphomass " << dpmq[k]  << endl; 
-                    
+                    splitByBin=comparison.get("splitByBin")
+                    if splitByBin:
+                        diphomass=self.massquantiles(templates[1],massargs,10,0,10.) #TODO get data dataset, put number os massbins in json file
+                        #get title for cat and comp
+                        print diphomass
                     
                     print "1d and 2d projection" 
             ##############loop over 2 legs
@@ -385,6 +386,37 @@ class TemplatesApp(PlotApp):
      #   self.saveWs(options)
 
 
+## ------------------------------------------------------------------------------------------------------------
+
+    def massquantiles(self,dataset,massargs,nq,startbin,ntot):
+        print "splitByBin"
+        massH=ROOT.TH1F("massH","massH",100,0.,130000.)
+        dataset.fillHistogram(massH,ROOT.RooArgList(massargs)) 
+        print "define mass bins " 
+        massH.Scale(1.0/massH.Integral())
+        prob = array.array('d',[])
+        dpmq = array.array('d',[0.,0.,0.,0.,0.,0.,0.,0.,0.,0.])
+        for i in range(0,nq):
+            prob.append((i+startbin+1)/ntot)
+        massH.GetQuantiles(nq,dpmq,prob)
+        #show the original histogram in the top pad
+        cq=ROOT.TCanvas("cq","mass quantiles",10,10,700,900)
+        cq.Divide(1,2)
+        cq.cd(1)
+        ROOT.gPad.SetLogy()
+        massH.Draw()
+        #show the quantiles in the bottom pad
+        cq.cd(2)
+        gr =ROOT.TGraph(nq,prob,dpmq)
+        ROOT.gPad.SetLogy()
+        gr.SetMarkerStyle(21)
+        gr.Draw("alp")
+        self.keep( [cq] )
+        self.autosave(True)
+#
+        for  k in range(0,nq):
+            print "prob " ,prob[k] ," diphomass " , dpmq[k]  
+        return dpmq
 ## ------------------------------------------------------------------------------------------------------------
 
     def plotHistos(self,histlist,title,template_bins,dim1):
