@@ -237,7 +237,7 @@ class TemplatesApp(PlotApp):
     ## ------------------------------------------------------------------------------------------------------------
     #MQ compare truth templates with rcone and sideband templates
     def compareTemplates(self,options,args):
-        ROOT.gStyle.SetPalette(1)
+        #ROOT.gStyle.SetPalette(1)
         print "Compare truth templates with rcone and sideband templates"
         ROOT.TH1F.SetDefaultSumw2(True)
         for name, comparison in options.comparisons.iteritems():
@@ -254,18 +254,19 @@ class TemplatesApp(PlotApp):
                     compname, templatesls = comp
                 for cat in fit["categories"]:
                     print cat
-                    setargs=ROOT.RooArgSet("setargs")
-                    mass=self.workspace_.var("mass")
-                    setargs.add(mass)
-                    print setargs.find("mass")
+                    massargs=ROOT.RooArgSet("massargs")
+                    isoargs=ROOT.RooArgSet("isoargs")
+                    massargs.add(self.buildRooVar("mass",[],recycle=True))
                     template_binning = array.array('d',comparison.get("template_binning",fit["template_binning"]))
                     templatebins=ROOT.RooBinning(len(template_binning)-1,template_binning,"templatebins" )
         ########## list to store templates for each category
                     templates = []
                     for idim in range(fit["ndim"]):
-                        setargs.add(self.workspace_.var("templateNdim%dDim%d" % ( fit["ndim"],idim)) )
+                        isoargs.add(self.buildRooVar("templateNdim%dDim%d" % ( fit["ndim"],idim),template_binning,recycle=True))
+                    setargs=ROOT.RooArgSet(massargs,isoargs)
+                    setargs.add(self.buildRooVar("weight",[],recycle=True))
                     truthname= "mctruth_%s_%s_%s" % (compname,fitname,cat)
-                    truth = self.reducedRooData(truthname,setargs,False)
+                    truth = self.reducedRooData(truthname,setargs,False,sel="weight <5.",redo=True)
                     print truth.GetName()
                     templates.append(truth)
             ########### loop over templates
@@ -275,25 +276,41 @@ class TemplatesApp(PlotApp):
                              templatename= "template_mix_%s_%s_%s" % (compname,mixname,mapping.get(cat,cat))
                         else:
                              templatename= "template_%s_%s_%s" % (compname,template,mapping.get(cat,cat))
-                        tempdata = self.reducedRooData(templatename,setargs,False)
+                        tempdata = self.reducedRooData(templatename,setargs,False,sel="weight <1",redo=True)
                         templates.append(tempdata)
                         print tempdata.GetName()
                     self.keep(templates)
+        ##########split in massbins
+                 #   if splitByBin:
+                  #      print "splitByBin"
+                   #     for temp in templates:
+                           #truthHisto=ROOT.TH1F("%s_%s_H" % (truth.GetTitle(),tit[-5:]),"%s_%s_H" % (truth.GetTitle(),tit[-5:]),len(template_binning)-1,template_binning)
+                                                   #truth.fillHistogram(truthHisto,isoarg)
+                                                   #histls.append(truthHisto)
+                        #self.massquantiles(diphomass_data,prob,dpmq); 
+                      #  self.massquantiles(diphomass_data); 
+                      #  for(int k=0;k<=nq;k++)
+                       # cout << "prob " << prob[k] << " diphomass " << dpmq[k]  << endl; 
+                    
+                    
                     print "1d and 2d projection" 
             ##############loop over 2 legs
                     for idim in range(fit["ndim"]):
                         histls=[]
-                        isoarg=ROOT.RooArgList("isoarg")
-                        isoarg.add(self.workspace_.var("templateNdim%dDim%d" % ( fit["ndim"],idim)) )
+                        isoarg1d=ROOT.RooArgList("isoarg")
+                        #isoarg.add(self.workspace_.var("templateNdim%dDim%d" % ( fit["ndim"],idim)) )
+                        isoarg1d.add(self.buildRooVar("templateNdim%dDim%d" % ( fit["ndim"],idim),template_binning,recycle=True))
 
-                        print "templateNdim%dDim%d" % ( fit["ndim"],idim)
+                        
                         tit = "compiso_%s_%s_%s_templateNdim%dDim%d" % (fitname,compname,cat,fit["ndim"],idim)
+                        print tit
                         for temp in templates:
                             tempHisto=ROOT.TH1F("%s_%s_H" % (temp.GetTitle(),tit[-5:]),"%s_%s_H" % (temp.GetTitle(),tit[-5:]),len(template_binning)-1,template_binning)
-                            temp.fillHistogram(tempHisto,isoarg)
+                            temp.fillHistogram(tempHisto,isoarg1d)
                             histls.append(tempHisto)
                         for hist in histls:
-                            hist.Scale(1.0/hist.Integral())  
+                            hist.Scale(1.0/hist.Integral())
+                        print "plot 1d histos"
                         self.plotHistos(histls,tit,template_binning,True)
               ##########roll out for combine tool per category
                     if fit["ndim"]>1:
@@ -305,23 +322,25 @@ class TemplatesApp(PlotApp):
                         tempapp_binning=template_binning[:]
                         print len(template_binning)
                         for j in range (1,(len(template_binning)-1)):
-                            for i in range(0, len(template_binning)):
-                                tempapp_binning.append((template_binning[-1]+1)*j+template_binning[i])
+                            for i in range(1, len(template_binning)):
+                               # tempapp_binning.append((template_binning[-1]+1)*j+template_binning[i])
+                                tempapp_binning.append((template_binning[-1])*j+template_binning[i])
+                        isoList=ROOT.RooArgList(isoargs)
                         print "tempapp_binning", tempapp_binning
                         print "len(tempapp_binning)",len(tempapp_binning)
                         print "max(tempapp_binning)",max(tempapp_binning)
                         isovar1=setargs.find("templateNdim2Dim0")
                         isovar2=setargs.find("templateNdim2Dim1")
-                        print isovar1
+                        isovar1.Print("V")
                         print isovar2
                         histlsY=[]
                         histlsX=[]
                         for temp in templates:
                             pad_it+=1
                             temp1dapp=ROOT.TH1F("temp1dapp%s" %(temp.GetName()[6:]),"temp1dapp%s" %(temp.GetName()[6:]),len(tempapp_binning)-1,tempapp_binning)
-                            temp2d=temp.createHistogram(isovar1,isovar2,"","temp2d%s" % (temp.GetName()))
-                            temp2d.SetBins((len(template_binning)-1),template_binning,(len(template_binning)-1),template_binning)
-                           # temp2d.Scale(1./temp2d.Integral())
+                            temp2d=ROOT.TH2F("temp2d%s" % (temp.GetName()),"temp2d%s" % (temp.GetName()),len(template_binning)-1,template_binning,len(template_binning)-1,template_binning)
+                            temp.fillHistogram(temp2d,ROOT.RooArgList(isoargs))
+                            temp2d.Scale(1./temp2d.Integral())
                             c1.cd(pad_it)
                             ROOT.gPad.SetLogz()
                            # temp2d.Draw("TEXT E")
@@ -329,9 +348,9 @@ class TemplatesApp(PlotApp):
                             temp2d.GetZaxis().SetRangeUser(1e-6,1)
 
                             
-                            temp2dx=temp2d.ProjectionX("%s_X" %temp.GetTitle(),0, len(template_binning)-1)
+                            temp2dx=temp2d.ProjectionX("%s_X" %temp.GetTitle())
                             temp2dx.SetTitle("%s_X" %temp.GetTitle())
-                            temp2dy=temp2d.ProjectionY("%s_Y" %temp.GetTitle(),0, len(template_binning)-1)
+                            temp2dy=temp2d.ProjectionY("%s_Y" %temp.GetTitle())
                     ###### draw projections as a check
                             histlsX.append(temp2dx)
                             temp2dy.SetTitle("%s_Y" %temp.GetTitle())
@@ -344,8 +363,8 @@ class TemplatesApp(PlotApp):
                                     temp1dapp.SetBinContent(bin,binCont)
                             histlistapp.append(temp1dapp)
                         titleapp = "compiso_%s_%s_%s_append" % (fitname,compname,cat)
-                        self.plotHistos(histlsX,"%s_X" %tit[:-18],template_binning,True)
-                        self.plotHistos(histlsY,"%s_Y" %tit[:-18],template_binning,True)
+                        self.plotHistos(histlsX,"%s_X" %tit[:-18],template_binning,False)
+                        self.plotHistos(histlsY,"%s_Y" %tit[:-18],template_binning,False)
                         print histlsX
                         print histlsY
                         print histlistapp 
@@ -362,59 +381,71 @@ class TemplatesApp(PlotApp):
 ## ------------------------------------------------------------------------------------------------------------
 
     def plotHistos(self,histlist,title,template_bins,dim1):
-        ROOT.gStyle.SetOptStat(111111)
-        leg = ROOT.TLegend(0.4,0.65,0.8,0.75)
-        leg.SetTextSize(0.02)
+      #  ROOT.gStyle.SetOptStat(111111)
+        leg = ROOT.TLegend(0.35,0.8,0.9,0.9)
+        leg.SetTextSize(0.03)
+        leg.SetTextFont(42);
         leg.SetFillColor(ROOT.kWhite)
-        canv_allm = ROOT.TCanvas(title,title)
-        canv_allm.Draw()
-        pad2=ROOT.TPad("pad2", "pad2", 0, 0.0, 1, 0.15)
-        pad1 = ROOT.TPad("pad1", "pad1", 0., 0.0, 1., 1.0)
-        pad1.SetBottomMargin(0)
-        pad1.SetLogy()
-        pad1.Draw()
-        pad1.cd()
+        canv = ROOT.TCanvas(title,title)
+        canv.Divide(1,2)
+        canv.cd(1)
+       # pad1 = ROOT.TPad("pad1", "pad1", 0., 0.15, 1., 1.0)
+        ROOT.gPad.SetPad(0., 0.3, 1., 1.0)
+       # pad1.SetBottomMargin(0.1)
+        ROOT.gPad.SetLogy()
+        canv.cd(2)
+        ROOT.gPad.SetPad(0., 0., 1., 0.3)
+        #pad2=ROOT.TPad("pad2", "pad2", 0, 0.0, 1, 0.15)
+        canv.cd(1)
+        #pad1.Draw()
+        #pad1.cd()
         histlist[0].SetMarkerColor(ROOT.kRed)
         histlist[0].SetLineColor(ROOT.kRed)
-        histlist[0].Draw()
+        histlist[0].Draw("hist")
         histlist[0].GetXaxis().SetLimits(-0.1,max(template_bins))
-        histlist[0].SetStats()
+        #histlist[0].SetStats()
+        histlist[0].GetYaxis().SetLabelSize( histlist[0].GetYaxis().GetLabelSize() * canv.GetWh() / ROOT.gPad.GetWh() )
+        if dim1:
+            histlist[0].GetXaxis().SetTitle(title[-17:])
+        else:
+            histlist[0].GetXaxis().SetTitle("charged isolation")
         for i in range(0,len(histlist)):
             histlist[i].GetXaxis().SetLimits(-0.1,max(template_bins))
-           # if dim1:
             if i>0:
                 histlist[i].SetLineColor(ROOT.kGreen+i)
                 histlist[i].SetMarkerColor(ROOT.kGreen+i)
-            histlist[i].Draw("SAME")
+                histlist[i].Draw("E SAME")
             histlist[0].GetXaxis().SetLimits(-0.1,max(template_bins))
             histlist[i].SetMarkerStyle(20)
             leg.AddEntry(histlist[i],histlist[i].GetTitle(),"l")  
         leg.Draw()
-        canv_allm.Update()
-        pad2.SetBottomMargin(0.3)
-        pad2.Draw() 
-        pad2.cd()
+        #canv.Update()
+        canv.cd(2)
+        #pad2.SetTopMargin(0)
+        #pad2.SetBottomMargin(0.55)
+        #pad2.Draw() 
+        #pad2.cd()
         ratio=histlist[1].Clone("ratio")
         ratio.Divide(histlist[0])
         ratio.SetLineColor(ROOT.kGreen+1)
         ratio.SetMarkerColor(ROOT.kGreen+1)
-        ratio.GetYaxis().SetNdivisions(5)
-        ratio.GetYaxis().SetTitleFont(43)
-        ratio.GetYaxis().SetTitleOffset(1.05)
-        ratio.GetYaxis().SetLabelFont(43)
-        ratio.GetYaxis().SetLabelSize(15)
-        ratio.GetXaxis().SetTitleSize(15)
-        ratio.GetXaxis().SetTitleFont(43)
-        ratio.GetXaxis().SetTitleOffset(9.)
-        ratio.GetXaxis().SetLabelFont(43)
-        ratio.GetXaxis().SetLabelSize(15)
-        ratio.GetXaxis().SetTitle(title[-17:])
+        #ratio.GetYaxis().SetNdivisions(5)
+        ratio.GetYaxis().SetTitleSize( histlist[0].GetYaxis().GetTitleSize() * 6.5/3.5 )
+        ratio.GetYaxis().SetLabelSize( histlist[0].GetYaxis().GetLabelSize() * 6.5/3.5 )
+        ratio.GetYaxis().SetTitleOffset( histlist[0].GetYaxis().GetTitleOffset() * 6.5/3.5 )
+       # ratio.GetYaxis().SetTitleOffset(1.05 )
+        ratio.GetXaxis().SetTitleSize( histlist[0].GetXaxis().GetTitleSize() * 6.5/3.5 )
+        ratio.GetXaxis().SetLabelSize( histlist[0].GetXaxis().GetLabelSize() * 6.5/3.5 )
+        if dim1:
+            ratio.GetXaxis().SetTitle(title[-17:])
+        else:
+            ratio.GetXaxis().SetTitle("charged isolation")
         ratio.Draw()
-        histlist[0].GetXaxis().SetLimits(-0.1,max(template_bins))
-        #ratio.GetXaxis().SetRangeUser(-0.1,max(template_bins))
+        ratio.GetYaxis().SetTitle("ratio")
+        ratio.GetXaxis().SetLimits(-0.1,max(template_bins))
         ROOT.gStyle.SetOptStat(0)
-        ROOT.gStyle.SetOptTitle(0)
-        self.keep( [canv_allm] )
+      #  ROOT.gStyle.SetOptTitle(0)
+        self.keep( [canv] )
         self.autosave(True)
         
 
@@ -702,19 +733,17 @@ class TemplatesApp(PlotApp):
 
     ## ------------------------------------------------------------------------------------------------------------
 
-    def reducedRooData(self,name,rooset,binned):
+    def reducedRooData(self,name,rooset,binned,weight="weight",sel=None,redo=None):
         data = self.rooData("reduced_%s" % name)
-        if not data:
+        if not data or redo:
             print "create rooData"
-            data = self.rooData(name,rooset=rooset)
+            data = self.rooData(name,rooset=rooset,weight=weight,sel=sel)
             if binned:
                 data = data.binnedClone("reduced_%s" % name,"reduced_%s" % name)
             else:
                 data.SetName("reduced_%s" % name)
         self.workspace_.rooImport(data)
         return data
-         #   self.workspace_.rooImport(data)
-        #    return data
     ## ------------------------------------------------------------------------------------------------------------
 
     def rooPdf(self,name):
@@ -725,13 +754,12 @@ class TemplatesApp(PlotApp):
 
 
     ## ------------------------------------------------------------------------------------------------------------
-    def rooData(self,name,autofill=True,rooset=None):
+    def rooData(self,name,autofill=True,rooset=None,weight="weight",sel=None):
         if name in self.cache_:
             return self.cache_[name]        
         dataset = self.workspace_.data(name)
         if not dataset and self.store_new_:
             dataset = self.workspace_input_.data(name)
-        #    dataset.reduced()
         if not dataset:
             return dataset
         if autofill and dataset.sumEntries() == 0. and "tree_%s" % name in self.store_:
@@ -742,9 +770,18 @@ class TemplatesApp(PlotApp):
                 dataset = dataset.emptyClone()
             self.cache_[name] = dataset
             filler = ROOT.DataSetFiller(dataset)
-            filler.fillFromTree(tree,"weight",True)
+            cut=ROOT.TCut(weight)
+            if sel:
+                cut *=sel
+                print cut.GetTitle()
+            filler.fillFromTree(tree,cut.GetTitle(),True)
         elif rooset:
-            dataset = dataset.reduce(rooset)
+            if sel:
+                print sel
+                dataset.Print()
+                dataset = dataset.reduce(rooset,sel)
+            else:
+                dataset = dataset.reduce(rooset)
         return dataset
 
     ## ------------------------------------------------------------------------------------------------------------
