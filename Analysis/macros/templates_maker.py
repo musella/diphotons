@@ -276,7 +276,7 @@ class TemplatesApp(PlotApp):
                              templatename= "template_mix_%s_%s_%s" % (compname,mixname,mapping.get(cat,cat))
                         else:
                              templatename= "template_%s_%s_%s" % (compname,template,mapping.get(cat,cat))
-                        tempdata = self.reducedRooData(templatename,setargs,False,sel="weight <1",redo=True)
+                        tempdata = self.reducedRooData(templatename,setargs,False,sel="weight <5.",redo=True)
                         templates.append(tempdata)
                         print tempdata.GetName()
                     self.keep(templates)
@@ -307,6 +307,8 @@ class TemplatesApp(PlotApp):
                         for temp in templates:
                             tempHisto=ROOT.TH1F("%s_%s_H" % (temp.GetTitle(),tit[-5:]),"%s_%s_H" % (temp.GetTitle(),tit[-5:]),len(template_binning)-1,template_binning)
                             temp.fillHistogram(tempHisto,isoarg1d)
+                            for bin in range(1,len(template_binning) ):
+                                tempHisto.SetBinContent(bin,tempHisto.GetBinContent(bin)/(tempHisto.GetBinWidth(bin)))
                             histls.append(tempHisto)
                         for hist in histls:
                             hist.Scale(1.0/hist.Integral())
@@ -331,8 +333,6 @@ class TemplatesApp(PlotApp):
                         print "max(tempapp_binning)",max(tempapp_binning)
                         isovar1=setargs.find("templateNdim2Dim0")
                         isovar2=setargs.find("templateNdim2Dim1")
-                        isovar1.Print("V")
-                        print isovar2
                         histlsY=[]
                         histlsX=[]
                         for temp in templates:
@@ -340,6 +340,11 @@ class TemplatesApp(PlotApp):
                             temp1dapp=ROOT.TH1F("temp1dapp%s" %(temp.GetName()[6:]),"temp1dapp%s" %(temp.GetName()[6:]),len(tempapp_binning)-1,tempapp_binning)
                             temp2d=ROOT.TH2F("temp2d%s" % (temp.GetName()),"temp2d%s" % (temp.GetName()),len(template_binning)-1,template_binning,len(template_binning)-1,template_binning)
                             temp.fillHistogram(temp2d,ROOT.RooArgList(isoargs))
+                            for bin1 in range(1,len(template_binning)):
+                                for bin2 in range(1,len(template_binning)):
+                                    binCont= temp2d.GetBinContent(bin1,bin2)
+                                    binCont=binCont/(temp2d.GetXaxis().GetBinWidth(bin1)*temp2d.GetYaxis().GetBinWidth(bin2))
+                                    temp2d.SetBinContent(bin1,bin2,binCont)
                             temp2d.Scale(1./temp2d.Integral())
                             c1.cd(pad_it)
                             ROOT.gPad.SetLogz()
@@ -356,8 +361,8 @@ class TemplatesApp(PlotApp):
                             temp2dy.SetTitle("%s_Y" %temp.GetTitle())
                             histlsY.append(temp2dy)
                             bin=0
-                            for x1 in range(1,len(template_binning)):
-                                for x2 in range(1,len(template_binning)):
+                            for x1 in range(1,len(template_binning)+1):
+                                for x2 in range(1,len(template_binning)+1):
                                     binCont= temp2d.GetBinContent(x1,x2)
                                     bin+=1
                                     temp1dapp.SetBinContent(bin,binCont)
@@ -390,11 +395,11 @@ class TemplatesApp(PlotApp):
         canv.Divide(1,2)
         canv.cd(1)
        # pad1 = ROOT.TPad("pad1", "pad1", 0., 0.15, 1., 1.0)
-        ROOT.gPad.SetPad(0., 0.3, 1., 1.0)
+        ROOT.gPad.SetPad(0., 0.35, 1., 1.0)
        # pad1.SetBottomMargin(0.1)
         ROOT.gPad.SetLogy()
         canv.cd(2)
-        ROOT.gPad.SetPad(0., 0., 1., 0.3)
+        ROOT.gPad.SetPad(0., 0., 1., 0.35)
         #pad2=ROOT.TPad("pad2", "pad2", 0, 0.0, 1, 0.15)
         canv.cd(1)
         #pad1.Draw()
@@ -443,6 +448,7 @@ class TemplatesApp(PlotApp):
         ratio.Draw()
         ratio.GetYaxis().SetTitle("ratio")
         ratio.GetXaxis().SetLimits(-0.1,max(template_bins))
+        ratio.GetYaxis().SetRangeUser(0.5,1.5)
         ROOT.gStyle.SetOptStat(0)
       #  ROOT.gStyle.SetOptTitle(0)
         self.keep( [canv] )
@@ -760,10 +766,15 @@ class TemplatesApp(PlotApp):
         dataset = self.workspace_.data(name)
         if not dataset and self.store_new_:
             dataset = self.workspace_input_.data(name)
+        dataset.Print()
         if not dataset:
             return dataset
-        if autofill and dataset.sumEntries() == 0. and "tree_%s" % name in self.store_:
-            tree = self.store_["tree_%s" % name]
+        print self.store_
+        if autofill and dataset.sumEntries() == 0.:
+            tree = self.treeData(name)
+            if not tree: 
+                return dset
+            print "autofill"
             if rooset:
                 dataset = dataset.reduce(RooFit.SelectVars(rooset))
             else:
@@ -773,12 +784,9 @@ class TemplatesApp(PlotApp):
             cut=ROOT.TCut(weight)
             if sel:
                 cut *=sel
-                print cut.GetTitle()
             filler.fillFromTree(tree,cut.GetTitle(),True)
         elif rooset:
             if sel:
-                print sel
-                dataset.Print()
                 dataset = dataset.reduce(rooset,sel)
             else:
                 dataset = dataset.reduce(rooset)
