@@ -731,11 +731,16 @@ class TemplatesApp(PlotApp):
         dataset = self.workspace_.data(name)
         if not dataset and self.store_new_:
             dataset = self.workspace_input_.data(name)
+        dataset.Print()
         #    dataset.reduced()
         if not dataset:
             return dataset
-        if autofill and dataset.sumEntries() == 0. and "tree_%s" % name in self.store_:
-            tree = self.store_["tree_%s" % name]
+        print self.store_
+        if autofill and dataset.sumEntries() == 0.:
+            tree = self.treeData(name)
+            if not tree: 
+                return dset
+            print "autofill"
             if rooset:
                 dataset = dataset.reduce(RooFit.SelectVars(rooset))
             else:
