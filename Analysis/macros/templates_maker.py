@@ -266,7 +266,7 @@ class TemplatesApp(PlotApp):
                     setargs=ROOT.RooArgSet(massargs,isoargs)
                     setargs.add(self.buildRooVar("weight",[],recycle=True))
                     truthname= "mctruth_%s_%s_%s" % (compname,fitname,cat)
-                    truth = self.reducedRooData(truthname,setargs,False,sel="weight <5.",redo=True)
+                    truth = self.reducedRooData(truthname,setargs,False,sel="weight <5.",redo=False)
                     print truth.GetName()
                     templates.append(truth)
             ########### loop over templates
@@ -276,7 +276,7 @@ class TemplatesApp(PlotApp):
                              templatename= "template_mix_%s_%s_%s" % (compname,mixname,mapping.get(cat,cat))
                         else:
                              templatename= "template_%s_%s_%s" % (compname,template,mapping.get(cat,cat))
-                        tempdata = self.reducedRooData(templatename,setargs,False,sel="weight <5.",redo=True)
+                        tempdata = self.reducedRooData(templatename,setargs,False,sel="weight <5.",redo=False)
                         templates.append(tempdata)
                         print tempdata.GetName()
                     self.keep(templates)
@@ -322,16 +322,12 @@ class TemplatesApp(PlotApp):
                         histlistapp=[]
                         print "roll out" 
                         tempapp_binning=template_binning[:]
-                        print len(template_binning)
-                        for j in range (1,(len(template_binning)-1)):
-                            for i in range(1, len(template_binning)):
-                               # tempapp_binning.append((template_binning[-1]+1)*j+template_binning[i])
-                                tempapp_binning.append((template_binning[-1])*j+template_binning[i])
+                        tempapp_binning = array.array('d',[])
+                        for j in range (0,(len(template_binning)-1)*(len(template_binning)-1)+1):
+                            tempapp_binning.append(j)
                         isoList=ROOT.RooArgList(isoargs)
                         print "tempapp_binning", tempapp_binning
                         print "len(tempapp_binning)",len(tempapp_binning)
-                        print "max(tempapp_binning)",max(tempapp_binning)
-                        isovar1=setargs.find("templateNdim2Dim0")
                         isovar2=setargs.find("templateNdim2Dim1")
                         histlsY=[]
                         histlsX=[]
@@ -348,7 +344,6 @@ class TemplatesApp(PlotApp):
                             temp2d.Scale(1./temp2d.Integral())
                             c1.cd(pad_it)
                             ROOT.gPad.SetLogz()
-                           # temp2d.Draw("TEXT E")
                             temp2d.Draw("COLZ")
                             temp2d.GetZaxis().SetRangeUser(1e-6,1)
 
@@ -361,10 +356,17 @@ class TemplatesApp(PlotApp):
                             temp2dy.SetTitle("%s_Y" %temp.GetTitle())
                             histlsY.append(temp2dy)
                             bin=0
-                            for x1 in range(1,len(template_binning)+1):
-                                for x2 in range(1,len(template_binning)+1):
-                                    binCont= temp2d.GetBinContent(x1,x2)
+                            #  to loop over all bins (< len(template_binning))
+                            for b in range(1,len(template_binning)):
+                              #  to loop up to inclusively b
+                                for x in range(1,b+1):
                                     bin+=1
+                                    binCont= temp2d.GetBinContent(x,b)
+                                    temp1dapp.SetBinContent(bin,binCont)
+                                    #to count down to 1 = "> 0" (0 not taken)
+                                for y in range (b-1,0,-1):
+                                    bin+=1
+                                    binCont= temp2d.GetBinContent(b,y)
                                     temp1dapp.SetBinContent(bin,binCont)
                             histlistapp.append(temp1dapp)
                         titleapp = "compiso_%s_%s_%s_append" % (fitname,compname,cat)
@@ -394,16 +396,11 @@ class TemplatesApp(PlotApp):
         canv = ROOT.TCanvas(title,title)
         canv.Divide(1,2)
         canv.cd(1)
-       # pad1 = ROOT.TPad("pad1", "pad1", 0., 0.15, 1., 1.0)
         ROOT.gPad.SetPad(0., 0.35, 1., 1.0)
-       # pad1.SetBottomMargin(0.1)
         ROOT.gPad.SetLogy()
         canv.cd(2)
         ROOT.gPad.SetPad(0., 0., 1., 0.35)
-        #pad2=ROOT.TPad("pad2", "pad2", 0, 0.0, 1, 0.15)
         canv.cd(1)
-        #pad1.Draw()
-        #pad1.cd()
         histlist[0].SetMarkerColor(ROOT.kRed)
         histlist[0].SetLineColor(ROOT.kRed)
         histlist[0].Draw("hist")
@@ -424,21 +421,14 @@ class TemplatesApp(PlotApp):
             histlist[i].SetMarkerStyle(20)
             leg.AddEntry(histlist[i],histlist[i].GetTitle(),"l")  
         leg.Draw()
-        #canv.Update()
         canv.cd(2)
-        #pad2.SetTopMargin(0)
-        #pad2.SetBottomMargin(0.55)
-        #pad2.Draw() 
-        #pad2.cd()
         ratio=histlist[1].Clone("ratio")
         ratio.Divide(histlist[0])
         ratio.SetLineColor(ROOT.kGreen+1)
         ratio.SetMarkerColor(ROOT.kGreen+1)
-        #ratio.GetYaxis().SetNdivisions(5)
         ratio.GetYaxis().SetTitleSize( histlist[0].GetYaxis().GetTitleSize() * 6.5/3.5 )
         ratio.GetYaxis().SetLabelSize( histlist[0].GetYaxis().GetLabelSize() * 6.5/3.5 )
         ratio.GetYaxis().SetTitleOffset( histlist[0].GetYaxis().GetTitleOffset() * 6.5/3.5 )
-       # ratio.GetYaxis().SetTitleOffset(1.05 )
         ratio.GetXaxis().SetTitleSize( histlist[0].GetXaxis().GetTitleSize() * 6.5/3.5 )
         ratio.GetXaxis().SetLabelSize( histlist[0].GetXaxis().GetLabelSize() * 6.5/3.5 )
         if dim1:
