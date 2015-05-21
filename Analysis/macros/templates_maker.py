@@ -134,6 +134,8 @@ class TemplatesApp(PlotApp):
         if not options.output_file:
             if options.read_ws: 
                 options.output_file = options.read_ws
+                if options.store_new_only:
+                    options.output_file = options.output_file.replace(".root","_new.root")
             else : 
                 options.output_file = "templates.root"
         
@@ -731,11 +733,9 @@ class TemplatesApp(PlotApp):
         dataset = self.workspace_.data(name)
         if not dataset and self.store_new_:
             dataset = self.workspace_input_.data(name)
-        dataset.Print()
         #    dataset.reduced()
         if not dataset:
             return dataset
-        print self.store_
         if autofill and dataset.sumEntries() == 0.:
             tree = self.treeData(name)
             if not tree: 
@@ -812,7 +812,6 @@ class TemplatesApp(PlotApp):
             rooVar = self.workspace_.var(name)
             if not rooVar and self.store_new_:
                 rooVar = self.workspace_input_.var(name)
-            print rooVar
         if not rooVar:
             if name in self.aliases_:
                 title = self.aliases_[name]
