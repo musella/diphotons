@@ -17,6 +17,7 @@ output=$1 && shift
 toy=$1 && shift
 ntoys=$1 && shift
 
+
 outname=$(basename $output)
 outdir=$(dirname $output)
 
@@ -25,7 +26,7 @@ $mydir/bkg_bias.py --n-toys $ntoys \
     --components pp --models dijet \
     --read-ws $input  -o $outname \
     --fit-toys \
-    --fit-range 300,3000 --saveas png --test-range 1000,3000 --test-range 500,600 --test-range 600,800 --test-range 800,1000 --first-toy $toy \
+    --fit-range 300,3000 --saveas png --test-range 1000,3000 --test-range 500,550 --test-range 550,600 --test-range 600,650 --test-range 650,700 --test-range 700,750 --test-range 750,800 --test-range 800,900 --test-range 900,1000 --first-toy $toy \
     $@
 
 
