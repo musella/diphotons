@@ -274,7 +274,7 @@ class DiPhotonAnalysis(object):
                     )
             
             setattr(process,diphoColl+"NonGenIso",simpleTemplate.clone(src=cms.InputTag(diphoColl),
-                                                                    cut=cms.string("leadingPhoton.genMatchType != 1 || subLeadingPhoton.genMatchType == 1 "
+                                                                    cut=cms.string("leadingPhoton.genMatchType != 1 || subLeadingPhoton.genMatchType != 1 "
                                                                                    " || leadingPhoton.%(genIsoVar)s >= %(genIsoCut)f"
                                                                                    " || subLeadingPhoton.%(genIsoVar)s >= %(genIsoCut)f"
                                                                                    % self.isoCut

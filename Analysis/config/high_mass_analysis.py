@@ -135,6 +135,7 @@ cfgTools.dumpOnly(minimalDumper,
                    "leadPhoIso","subleadPhoIso",
                    "leadChIso","subleadChIso",
                    "leadSigmaIeIe","subleadSigmaIeIe",
+                   "leadHoE","subleadHoE",
                    ])
 
 
