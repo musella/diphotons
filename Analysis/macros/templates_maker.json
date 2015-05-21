@@ -432,21 +432,20 @@
     "comparisons" : {
 	"fit2DTruth" : { "fit" : "2D",
 		"templates" : { "mix:kDSinglePho2D" : {} },
-                "components": [ "pf","ff",
-                                ["pp",{ "2D" : {}}]  
+                "components": [ "pf"
                 ],
 		"doDataMc" : false, "doMcTruth" : true,
-		"splitByBin" : false,
-                "template_binning" : [ 0.0,0.1, 1.0, 4.0,9.0, 15.0 ]
+		"splitByBin" : true,
+                "template_binning" : [ 0.0,0.1, 1.0, 4.0,9.0,15.0]
 		},
-	"fit1DTruth" : { "fit" : "1D",
+	"_fit1DTruth" : { "fit" : "1D",
                 "components" : [ "f","p" ],
 		"templates" : {"singlePho" : { "EBEB" : "EB", "EBEE" : "EB", "EEEB" : "EE"  }
                                 ,"1D" : {} 
                             },
 		"doDataMc" : false, "doMcTruth" : true,
-		"splitByBin" : false,
-                "template_binning" : [ 0.0,0.1, 1.0, 4.0,9.0, 15.0 ]
+		"splitByBin" : true,
+                "template_binning" : [ 0.0,0.1, 1.0, 4.0,9.0,15.0 ]
 		}
     },
       
