@@ -273,7 +273,7 @@ class TemplatesApp(PlotApp):
                     setargs=ROOT.RooArgSet(massargs,isoargs)
                     setargs.add(self.buildRooVar("weight",[],recycle=True))
                     truthname= "mctruth_%s_%s_%s" % (compname,fitname,cat)
-                    truth = self.reducedRooData(truthname,setargs,False,sel="weight <5.",redo=False)
+                    truth = self.reducedRooData(truthname,setargs,False,sel="weight <5.",redo=True)
                     print truth.GetName()
                     templates.append(truth)
             ########### loop over templates
@@ -283,7 +283,7 @@ class TemplatesApp(PlotApp):
                              templatename= "template_mix_%s_%s_%s" % (compname,mixname,mapping.get(cat,cat))
                         else:
                              templatename= "template_%s_%s_%s" % (compname,template,mapping.get(cat,cat))
-                        tempdata = self.reducedRooData(templatename,setargs,False,sel="weight <5.",redo=False)
+                        tempdata = self.reducedRooData(templatename,setargs,False,sel="weight <5.",redo=True)
                         templates.append(tempdata)
                         print tempdata.GetName()
                     self.keep(templates)
@@ -317,24 +317,25 @@ class TemplatesApp(PlotApp):
                         self.plotHistos(histls,tit,template_binning,True)
               ##########roll out for combine tool per category
                     if fit["ndim"]>1:
+                        self.histounroll(templates)
+ 
                         pad_it=0
                         c1=ROOT.TCanvas("d2hist_%s" % cat,"2d hists per category",1000,1000) 
                         c1.Divide(1,2)
-                        histlistapp=[]
+                        histlistunroll=[]
                         print "roll out" 
-                        tempapp_binning=template_binning[:]
-                        tempapp_binning = array.array('d',[])
+                        tempunroll_binning=template_binning[:]
+                        tempunroll_binning = array.array('d',[])
                         for j in range (0,(len(template_binning)-1)*(len(template_binning)-1)+1):
-                            tempapp_binning.append(j)
+                            tempunroll_binning.append(j)
                         isoList=ROOT.RooArgList(isoargs)
-                        print "tempapp_binning", tempapp_binning
-                        print "len(tempapp_binning)",len(tempapp_binning)
-                        isovar2=setargs.find("templateNdim2Dim1")
+                        print "tempunroll_binning", tempunroll_binning
+                        print "len(tempunroll_binning)",len(tempunroll_binning)
                         histlsY=[]
                         histlsX=[]
                         for temp in templates:
                             pad_it+=1
-                            temp1dapp=ROOT.TH1F("temp1dapp%s" %(temp.GetName()[6:]),"temp1dapp%s" %(temp.GetName()[6:]),len(tempapp_binning)-1,tempapp_binning)
+                            temp1dunroll=ROOT.TH1F("temp1dunroll%s" %(temp.GetName()[6:]),"temp1dunroll%s" %(temp.GetName()[6:]),len(tempunroll_binning)-1,tempunroll_binning)
                             temp2d=ROOT.TH2F("temp2d%s" % (temp.GetName()),"temp2d%s" % (temp.GetName()),len(template_binning)-1,template_binning,len(template_binning)-1,template_binning)
                             temp.fillHistogram(temp2d,ROOT.RooArgList(isoargs))
                             for bin1 in range(1,len(template_binning)):
@@ -363,21 +364,21 @@ class TemplatesApp(PlotApp):
                                 for x in range(1,b+1):
                                     bin+=1
                                     binCont= temp2d.GetBinContent(x,b)
-                                    temp1dapp.SetBinContent(bin,binCont)
+                                    temp1dunroll.SetBinContent(bin,binCont)
                                     #to count down to 1 = "> 0" (0 not taken)
                                 for y in range (b-1,0,-1):
                                     bin+=1
                                     binCont= temp2d.GetBinContent(b,y)
-                                    temp1dapp.SetBinContent(bin,binCont)
-                            histlistapp.append(temp1dapp)
-                        titleapp = "compiso_%s_%s_%s_append" % (fitname,compname,cat)
+                                    temp1dunroll.SetBinContent(bin,binCont)
+                            histlistunroll.append(temp1dunroll)
+                        titleunroll = "compiso_%s_%s_%s_unroll" % (fitname,compname,cat)
                         self.plotHistos(histlsX,"%s_X" %tit[:-18],template_binning,False)
                         self.plotHistos(histlsY,"%s_Y" %tit[:-18],template_binning,False)
                         print histlsX
                         print histlsY
-                        print histlistapp 
-                        self.keep(histlistapp)
-                        self.plotHistos(histlistapp,titleapp,tempapp_binning,False)
+                        print histlistunroll
+                        self.keep(histlistunroll)
+                        self.plotHistos(histlistunroll,titleunroll,tempunroll_binning,False)
                     if fit["ndim"]>1:
                         self.keep( [c1] )
                         self.autosave(True)
@@ -389,8 +390,8 @@ class TemplatesApp(PlotApp):
 ## ------------------------------------------------------------------------------------------------------------
 
     def massquantiles(self,dataset,massargs,nq,startbin,ntot):
-        print "splitByBin"
-        massH=ROOT.TH1F("massH","massH",100,0.,130000.)
+        print "splitByBin for dataset", dataset.GetName()
+        massH=ROOT.TH1F("%smassH"% dataset.GetName()[-17:],"%smassH"% dataset.GetName()[-17:],10,0.,130000.)
         dataset.fillHistogram(massH,ROOT.RooArgList(massargs)) 
         print "define mass bins " 
         massH.Scale(1.0/massH.Integral())
@@ -400,7 +401,7 @@ class TemplatesApp(PlotApp):
             prob.append((i+startbin+1)/ntot)
         massH.GetQuantiles(nq,dpmq,prob)
         #show the original histogram in the top pad
-        cq=ROOT.TCanvas("cq","mass quantiles",10,10,700,900)
+        cq=ROOT.TCanvas("cq_%s" %dataset.GetName()[-17:],"mass quantiles",10,10,700,900)
         cq.Divide(1,2)
         cq.cd(1)
         ROOT.gPad.SetLogy()
