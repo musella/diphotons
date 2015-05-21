@@ -105,7 +105,7 @@
             "_template_binning" : [ -10.0, 0.0, 1.0, 1.5, 2.0, 2.5, 3.0, 5.0, 10.0, 15.0 ],
 
             "components" : [ "pp", "pf", "ff" ],                                             "#" : "list of fit components                 ",
-            "dataset_variables" : ["mass [-1.0,0.0,20.0,50.0,100.0,200.0,500.0,13000.0]","leadPt","subleadPt","leadEta","subleadEta"],      "#" : "additional variables to be stored      ",
+            "dataset_variables" : ["mass [-1.0,0.0,20.0,50.0,100.0,200.0,500.0,13000.0]","leadPt","subleadPt","leadEta","subleadEta", "leadMatchType", "subleadMatchType"],      "#" : "additional variables to be stored      ",
             "store_trees" : true,	
 
             "#" :"categories in which to split the fit       ",
@@ -138,7 +138,7 @@
             "truth_selection" : {
                 "pp" : "leadPrompt  && subleadPrompt",
                     "pf" : "(leadPrompt && subleadFake) || (subleadPrompt && leadFake)",
-                    "ff" : "leadFake    && subleadFake"
+                    "ff" : "leadFake    && subleadFake && ( leadMatchType != 0 || subleadMatchType != 0)"
             },
 
             "#" :"Template creation.                      ",
