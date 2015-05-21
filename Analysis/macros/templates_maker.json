@@ -430,22 +430,27 @@
     },
 
     "comparisons" : {
-	"fit2DTruth" : { "fit" : "2D",
+	"_fit2DTruth" : { "fit" : "2D",
 		"templates" : { "mix:kDSinglePho2D" : {} },
-                "components": [ "pf"
+                "components": [ 
+				["pp",{ "2D" : {}}]
                 ],
 		"doDataMc" : false, "doMcTruth" : true,
 		"splitByBin" : true,
-                "template_binning" : [ 0.0,0.1, 1.0, 4.0,9.0,15.0]
+                "template_binning" : [ 0.0,0.1, 1.0, 4.0,9.0,15.0],
+				"mass_binning" :[0.0,300.0,350.0,400.0,500.0,600.0,800.0,13000.0],
+				"mass_split":[10,10,0]
 		},
-	"_fit1DTruth" : { "fit" : "1D",
+	"fit1DTruth" : { "fit" : "1D",
                 "components" : [ "f","p" ],
 		"templates" : {"singlePho" : { "EBEB" : "EB", "EBEE" : "EB", "EEEB" : "EE"  }
                                 ,"1D" : {} 
                             },
 		"doDataMc" : false, "doMcTruth" : true,
 		"splitByBin" : true,
-                "template_binning" : [ 0.0,0.1, 1.0, 4.0,9.0,15.0 ]
+                "template_binning" : [ 0.0,0.1, 1.0, 4.0,9.0,15.0 ],
+				"mass_binning" :[0.0,300.0,350.0,400.0,500.0,600.0,800.0,13000.0],
+				"mass_split":[10,10,0]
 		}
     },
       

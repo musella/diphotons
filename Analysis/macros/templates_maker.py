@@ -134,6 +134,8 @@ class TemplatesApp(PlotApp):
         if not options.output_file:
             if options.read_ws: 
                 options.output_file = options.read_ws
+                if options.store_new_only:
+                    options.output_file = options.output_file.replace(".root","_new.root")
             else : 
                 options.output_file = "templates.root"
         
@@ -270,7 +272,8 @@ class TemplatesApp(PlotApp):
                     setargs.add(self.buildRooVar("weight",[],recycle=True))
                     print setargs
                     truthname= "mctruth_%s_%s_%s" % (compname,fitname,cat)
-                    truth = self.reducedRooData(truthname,setargs,False,sel="weight <5.",redo=False)
+                    print truthname 
+                    truth = self.reducedRooData(truthname,setargs,False,sel="weight <5.",redo=True)
                     print truth.GetName()
                     templates.append(truth)
             ########### loop over templates
@@ -286,39 +289,62 @@ class TemplatesApp(PlotApp):
                     self.keep(templates)
         ##########split in massbins
                     splitByBin=comparison.get("splitByBin")
+                    masserror = array.array('d',[])
+                    templates_massc=[]
                     if splitByBin:
-                        diphomass=self.massquantiles(templates[1],massargs,mass_binning,10,0,10.) #TODO get data dataset, put number os massbins in json file
-                        #get title for cat and comp
+                        mass_split=comparison.get("mass_split")
+                        print "mass splitting: ntot bins, ntot for run, startbin",mass_split, " dataset : " , "data_2D_%s" % cat
+                        #dset = self.workspace_.data("data_2D_%s" % cat)
+                        dset_data = self.reducedRooData("data_2D_EBEB",setargs,False,sel="weight <5.",redo=True)
+                        print dset_data
+                        diphomass=self.massquantiles(dset_data,massargs,mass_binning,mass_split) 
                         print diphomass
-                    
-                    print "1d and 2d projection" 
-            ##############loop over 2 legs
-                    for idim in range(fit["ndim"]):
-                        histls=[]
-                        isoarg1d=ROOT.RooArgList("isoarg")
-                        #isoarg.add(self.workspace_.var("templateNdim%dDim%d" % ( fit["ndim"],idim)) )
-                        isoarg1d.add(self.buildRooVar("templateNdim%dDim%d" % ( fit["ndim"],idim),template_binning,recycle=True))
-
+                    else:
+                        print "integrated over whole mass spectrum"
+                        mass_split=[1,1,0]
+                    for mb in range(mass_split[2],mass_split[1]):
                         
-                        tit = "compiso_%s_%s_%s_templateNdim%dDim%d" % (fitname,compname,cat,fit["ndim"],idim)
-                        print tit
+                        cut=ROOT.TCut("mass>%d && mass<%d"% (diphomass[mb],diphomass[mb+1]))
+                        cut_s= "%1.0f_%2.0f"% (diphomass[mb],diphomass[mb+1])
+                        print cut_s
+                        dset_massc = dset_data.Clone("dset_massc%u_%u"%(mb,mass_split[2]))
+                        dset_massc.reduce(cut.GetTitle())
+                        print dset_massc
                         for temp in templates:
-                            tempHisto=ROOT.TH1F("%s_%s_H" % (temp.GetTitle(),tit[-5:]),"%s_%s_H" % (temp.GetTitle(),tit[-5:]),len(template_binning)-1,template_binning)
-                            temp.fillHistogram(tempHisto,isoarg1d)
-                            for bin in range(1,len(template_binning) ):
-                                tempHisto.SetBinContent(bin,tempHisto.GetBinContent(bin)/(tempHisto.GetBinWidth(bin)))
-                            histls.append(tempHisto)
-                        for hist in histls:
-                            hist.Scale(1.0/hist.Integral())
-                        print "plot 1d histos"
-                        self.plotHistos(histls,tit,template_binning,True)
-              ##########roll out for combine tool per category
-                    if fit["ndim"]>1:
-                        self.histounroll(templates,template_binning)
-            ########outside category loop
-        #######outside components loop
-       # self.saveWs(options)
-## ------------------------------------------------------------------------------------------------------------
+                            temp_massc = temp.Clone("%s_massc%u_%u"%(templatename,mb,mass_split[2]))
+                            temp_massc.reduce(cut.GetTitle())
+                            templates_massc.append(temp_massc)
+                        print temp_massc
+                        diphomass[mb]=(diphomass[mb]+diphomass[mb+1])/2.
+                        masserror.append((diphomass[mb+1]-diphomass[mb])/2.)
+                        print diphomass[mb]
+                        print masserror[mb]
+
+                ##############loop over 2 legs
+                        for idim in range(fit["ndim"]):
+                            histls=[]
+                            isoarg1d=ROOT.RooArgList("isoarg")
+                            #isoarg.add(self.workspace_.var("templateNdim%dDim%d" % ( fit["ndim"],idim)) )
+                            isoarg1d.add(self.buildRooVar("templateNdim%dDim%d" % ( fit["ndim"],idim),template_binning,recycle=True))                
+                            tit = "compiso_%s_%s_%s_templateNdim%dDim%d" % (fitname,compname,cat,fit["ndim"],idim)
+                            print tit
+                            for temp in templates_massc:
+                                tempHisto=ROOT.TH1F("%s_%s_H" % (temp.GetTitle(),tit[-5:]),"%s_%s_H" % (temp.GetTitle(),tit[-5:]),len(template_binning)-1,template_binning)
+                                temp.fillHistogram(tempHisto,isoarg1d)
+                                for bin in range(1,len(template_binning) ):
+                                    tempHisto.SetBinContent(bin,tempHisto.GetBinContent(bin)/(tempHisto.GetBinWidth(bin)))
+                                histls.append(tempHisto)
+                            for hist in histls:
+                                hist.Scale(1.0/hist.Integral())
+                            print "plot 1d histos"
+                            self.plotHistos(histls,tit,template_binning,True)
+                  ##########roll out for combine tool per category
+                        if fit["ndim"]>1:
+                            self.histounroll(templates_massc,template_binning)
+                ########outside category loop
+            #######outside components loop
+            #self.saveWs(options)
+    ## ------------------------------------------------------------------------------------------------------------
 
     def histounroll(self,templatelist, template_binning):
         pad_it=0
@@ -335,7 +361,7 @@ class TemplatesApp(PlotApp):
         print "len(tempunroll_binning)",len(tempunroll_binning)
         histlsY=[]
         histlsX=[]
-        for temp in templates:
+        for temp in templatelist:
             pad_it+=1
             temp1dunroll=ROOT.TH1F("temp1dunroll%s" %(temp.GetName()[6:]),"temp1dunroll%s" %(temp.GetName()[6:]),len(tempunroll_binning)-1,tempunroll_binning)
             temp2d=ROOT.TH2F("temp2d%s" % (temp.GetName()),"temp2d%s" % (temp.GetName()),len(template_binning)-1,template_binning,len(template_binning)-1,template_binning)
@@ -386,33 +412,33 @@ class TemplatesApp(PlotApp):
 
 ## ------------------------------------------------------------------------------------------------------------
 
-    def massquantiles(self,dataset,massargs,mass_binning,nq,startbin,ntot):
+    def massquantiles(self,dataset,massargs,mass_binning,mass_split):
         print "splitByBin for dataset", dataset.GetName()
-        massH=ROOT.TH1F("%smassH"% dataset.GetName()[-17:],"%smassH"% dataset.GetName()[-17:],len(mass_binning)-1,mass_binning)
+        massH=ROOT.TH1F("%s_massH" % dataset.GetName()[-17:],"%s_massH" % dataset.GetName()[-17:],len(mass_binning)-1,mass_binning)
         dataset.fillHistogram(massH,ROOT.RooArgList(massargs)) 
         print "define mass bins " 
         massH.Scale(1.0/massH.Integral())
         prob = array.array('d',[])
-        dpmq = array.array('d',[0.,0.,0.,0.,0.,0.,0.,0.,0.,0.])
-        for i in range(0,nq):
-            prob.append((i+startbin+1)/ntot)
-        massH.GetQuantiles(nq,dpmq,prob)
+        dpmq = array.array('d',[0.0 for i in range((mass_split[1]+1))])
+        for i in range(0,mass_split[1]+1):
+            prob.append((i+float(mass_split[2]))/mass_split[0])
+        massH.GetQuantiles(mass_split[1]+1,dpmq,prob)
         #show the original histogram in the top pad
-        cq=ROOT.TCanvas("cq_%s" %dataset.GetName()[-17:],"mass quantiles",10,10,700,900)
+        cq=ROOT.TCanvas("cq_%s" %dataset.GetName()[-19:],"mass quantiles",10,10,700,900)
         cq.Divide(1,2)
         cq.cd(1)
         ROOT.gPad.SetLogy()
         massH.Draw()
         #show the quantiles in the bottom pad
         cq.cd(2)
-        gr =ROOT.TGraph(nq,prob,dpmq)
+        gr =ROOT.TGraph(mass_split[1],prob,dpmq)
         ROOT.gPad.SetLogy()
         gr.SetMarkerStyle(21)
         gr.Draw("alp")
         self.keep( [cq] )
         self.autosave(True)
 #
-        for  k in range(0,nq):
+        for  k in range(0,len(dpmq)):
             print "prob " ,prob[k] ," diphomass " , dpmq[k]  
         return dpmq
 ## ------------------------------------------------------------------------------------------------------------
@@ -786,10 +812,8 @@ class TemplatesApp(PlotApp):
         dataset = self.workspace_.data(name)
         if not dataset and self.store_new_:
             dataset = self.workspace_input_.data(name)
-        dataset.Print()
         if not dataset:
             return dataset
-        print self.store_
         if autofill and dataset.sumEntries() == 0.:
             tree = self.treeData(name)
             if not tree: 
@@ -872,7 +896,6 @@ class TemplatesApp(PlotApp):
             rooVar = self.workspace_.var(name)
             if not rooVar and self.store_new_:
                 rooVar = self.workspace_input_.var(name)
-            print rooVar
         if not rooVar:
             if name in self.aliases_:
                 title = self.aliases_[name]
