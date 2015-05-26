@@ -258,8 +258,9 @@ class TemplatesApp(PlotApp):
                     print cat
                     massargs=ROOT.RooArgSet("massargs")
                     isoargs=ROOT.RooArgSet("isoargs")
-                    mass_binning = array.array('d',comparison.get("mass_binning"))
-                    mass=self.buildRooVar("mass",mass_binning,recycle=True)
+                    #mass_binning = array.array('d',comparison.get("mass_binning"))
+                    mass_var,mass_b=self.getVar(comparison.get("mass_binning"))
+                    mass=self.buildRooVar(mass_var,mass_b,recycle=True)
                     massargs.add(mass)
                     template_binning = array.array('d',comparison.get("template_binning"))
                     templatebins=ROOT.RooBinning(len(template_binning)-1,template_binning,"templatebins" )
@@ -270,11 +271,8 @@ class TemplatesApp(PlotApp):
                     isoargs.Print()
                     setargs=ROOT.RooArgSet(massargs,isoargs)
                     setargs.add(self.buildRooVar("weight",[],recycle=True))
-                    print setargs
                     truthname= "mctruth_%s_%s_%s" % (compname,fitname,cat)
-                    print truthname 
                     truth = self.reducedRooData(truthname,setargs,False,sel="weight <5.",redo=True)
-                    print truth.GetName()
                     templates.append(truth)
             ########### loop over templates
                     for template,mapping in templatesls.iteritems():
@@ -285,52 +283,50 @@ class TemplatesApp(PlotApp):
                              templatename= "template_%s_%s_%s" % (compname,template,mapping.get(cat,cat))
                         tempdata = self.reducedRooData(templatename,setargs,False,sel="weight <5.",redo=True)
                         templates.append(tempdata)
-                        print tempdata.GetName()
-                    self.keep(templates)
+                    #    print tempdata.GetName()
+                    print "templates list: ", templates
         ##########split in massbins
                     splitByBin=comparison.get("splitByBin")
                     masserror = array.array('d',[])
-                    templates_massc=[]
                     if splitByBin:
                         mass_split=comparison.get("mass_split")
                         print "mass splitting: ntot bins, ntot for run, startbin",mass_split, " dataset : " , "data_2D_%s" % cat
-                        #dset = self.workspace_.data("data_2D_%s" % cat)
                         dset_data = self.reducedRooData("data_2D_EBEB",setargs,False,sel="weight <5.",redo=True)
-                        print dset_data
-                        diphomass=self.massquantiles(dset_data,massargs,mass_binning,mass_split) 
-                        print diphomass
+                        diphomass=self.massquantiles(dset_data,massargs,mass_b,mass_split) 
                     else:
                         print "integrated over whole mass spectrum"
                         mass_split=[1,1,0]
                     for mb in range(mass_split[2],mass_split[1]):
                         
-                        cut=ROOT.TCut("mass>%d && mass<%d"% (diphomass[mb],diphomass[mb+1]))
+                        cut=ROOT.TCut("mass>%f && mass<%f"% (diphomass[mb],diphomass[mb+1]))
                         cut_s= "%1.0f_%2.0f"% (diphomass[mb],diphomass[mb+1])
-                        print cut_s
-                        dset_massc = dset_data.Clone("dset_massc%u_%u"%(mb,mass_split[2]))
+                        print cut.GetTitle()
+                        print "massbin: ", cut_s
+                        dset_massc = dset_data.Clone("dset_data_mb_%s"%cut_s)
                         dset_massc.reduce(cut.GetTitle())
                         print dset_massc
-                        for temp in templates:
-                            temp_massc = temp.Clone("%s_massc%u_%u"%(templatename,mb,mass_split[2]))
-                            temp_massc.reduce(cut.GetTitle())
+                        templates_massc=[]
+                        for temp_m in templates:
+                            temp_massc =temp_m.reduce(cut.GetTitle())
+                            temp_massc.SetNameTitle("%s_mb_%s"%(temp_m.GetName(),cut_s),"%s_mb_%s"%(temp_m.GetName(),cut_s))
                             templates_massc.append(temp_massc)
-                        print temp_massc
+                            print "templates_massc" ,temp_massc.GetName()
+                            print "templates_massc", temp_massc.GetTitle()
+                        print "templates_massc" ,templates_massc
                         diphomass[mb]=(diphomass[mb]+diphomass[mb+1])/2.
                         masserror.append((diphomass[mb+1]-diphomass[mb])/2.)
-                        print diphomass[mb]
-                        print masserror[mb]
-
+                        print "diphoton mass", diphomass[mb], " with bin width ",masserror[mb]
                 ##############loop over 2 legs
-                        for idim in range(fit["ndim"]):
+                        for id in range(fit["ndim"]):
                             histls=[]
                             isoarg1d=ROOT.RooArgList("isoarg")
-                            #isoarg.add(self.workspace_.var("templateNdim%dDim%d" % ( fit["ndim"],idim)) )
-                            isoarg1d.add(self.buildRooVar("templateNdim%dDim%d" % ( fit["ndim"],idim),template_binning,recycle=True))                
-                            tit = "compiso_%s_%s_%s_templateNdim%dDim%d" % (fitname,compname,cat,fit["ndim"],idim)
+                            isoarg1d.add(self.buildRooVar("templateNdim%dDim%d" % ( fit["ndim"],id),template_binning,recycle=True))                
+                            tit = "compiso_%s_%s_%s_mb_%s_templateNdim%dDim%d" % (fitname,compname,cat,cut_s,fit["ndim"],id)
                             print tit
-                            for temp in templates_massc:
-                                tempHisto=ROOT.TH1F("%s_%s_H" % (temp.GetTitle(),tit[-5:]),"%s_%s_H" % (temp.GetTitle(),tit[-5:]),len(template_binning)-1,template_binning)
-                                temp.fillHistogram(tempHisto,isoarg1d)
+                            for tm in templates_massc:
+                                tempHisto=ROOT.TH1F("%s_dim%d_%d_H" % (tm.GetTitle(),fit["ndim"],id),"%s_dim%d_%d_H" % (tm.GetTitle(),fit["ndim"],id),len(template_binning)-1,template_binning)
+                                tm.fillHistogram(tempHisto,isoarg1d)
+                                print tempHisto.GetName()
                                 for bin in range(1,len(template_binning) ):
                                     tempHisto.SetBinContent(bin,tempHisto.GetBinContent(bin)/(tempHisto.GetBinWidth(bin)))
                                 histls.append(tempHisto)
@@ -340,13 +336,13 @@ class TemplatesApp(PlotApp):
                             self.plotHistos(histls,tit,template_binning,True)
                   ##########roll out for combine tool per category
                         if fit["ndim"]>1:
-                            self.histounroll(templates_massc,template_binning)
+                            self.histounroll(templates_massc,template_binning,isoargs,cat)
                 ########outside category loop
             #######outside components loop
             #self.saveWs(options)
     ## ------------------------------------------------------------------------------------------------------------
 
-    def histounroll(self,templatelist, template_binning):
+    def histounroll(self,templatelist, template_binning,isoargs,cat):
         pad_it=0
         c1=ROOT.TCanvas("d2hist_%s" % cat,"2d hists per category",1000,1000) 
         c1.Divide(1,2)
@@ -356,16 +352,15 @@ class TemplatesApp(PlotApp):
         tempunroll_binning = array.array('d',[])
         for j in range (0,(len(template_binning)-1)*(len(template_binning)-1)+1):
             tempunroll_binning.append(j)
-        isoList=ROOT.RooArgList(isoargs)
         print "tempunroll_binning", tempunroll_binning
         print "len(tempunroll_binning)",len(tempunroll_binning)
         histlsY=[]
         histlsX=[]
-        for temp in templatelist:
+        for tempur in templatelist:
             pad_it+=1
-            temp1dunroll=ROOT.TH1F("temp1dunroll%s" %(temp.GetName()[6:]),"temp1dunroll%s" %(temp.GetName()[6:]),len(tempunroll_binning)-1,tempunroll_binning)
-            temp2d=ROOT.TH2F("temp2d%s" % (temp.GetName()),"temp2d%s" % (temp.GetName()),len(template_binning)-1,template_binning,len(template_binning)-1,template_binning)
-            temp.fillHistogram(temp2d,ROOT.RooArgList(isoargs))
+            temp1dunroll=ROOT.TH1F("temp1dunroll%s" %(tempur.GetName()[17:]),"temp1dunroll%s" %(tempur.GetName()[17:]),len(tempunroll_binning)-1,tempunroll_binning)
+            temp2d=ROOT.TH2F("temp2d%s" % (tempur.GetName()),"temp2d%s" % (tempur.GetName()),len(template_binning)-1,template_binning,len(template_binning)-1,template_binning)
+            tempur.fillHistogram(temp2d,ROOT.RooArgList(isoargs))
             for bin1 in range(1,len(template_binning)):
                 for bin2 in range(1,len(template_binning)):
                     binCont= temp2d.GetBinContent(bin1,bin2)
@@ -376,12 +371,12 @@ class TemplatesApp(PlotApp):
             ROOT.gPad.SetLogz()
             temp2d.Draw("COLZ")
             temp2d.GetZaxis().SetRangeUser(1e-6,1)
-            temp2dx=temp2d.ProjectionX("%s_X" %temp.GetTitle())
-            temp2dx.SetTitle("%s_X" %temp.GetTitle())
-            temp2dy=temp2d.ProjectionY("%s_Y" %temp.GetTitle())
+            temp2dx=temp2d.ProjectionX("%s_X" %tempur.GetTitle())
+            temp2dx.SetTitle("%s_X" %tempur.GetTitle())
+            temp2dy=temp2d.ProjectionY("%s_Y" %tempur.GetTitle())
     ###### draw projections as a check
             histlsX.append(temp2dx)
-            temp2dy.SetTitle("%s_Y" %temp.GetTitle())
+            temp2dy.SetTitle("%s_Y" %tempur.GetTitle())
             histlsY.append(temp2dy)
             bin=0
             #  to loop over all bins (< len(template_binning))
@@ -397,9 +392,9 @@ class TemplatesApp(PlotApp):
                     binCont= temp2d.GetBinContent(b,y)
                     temp1dunroll.SetBinContent(bin,binCont)
             histlistunroll.append(temp1dunroll)
-        titleunroll = "compiso_%s_%s_%s_unroll" % (fitname,compname,cat)
-        self.plotHistos(histlsX,"%s_X" %tit[:-18],template_binning,False)
-        self.plotHistos(histlsY,"%s_Y" %tit[:-18],template_binning,False)
+        titleunroll = "%s_unroll" % (tempur.GetTitle())
+        self.plotHistos(histlsX,"%s_X" %tempur.GetTitle()[:-18],template_binning,False)
+        self.plotHistos(histlsY,"%s_Y" %tempur.GetTitle()[:-18],template_binning,False)
         print histlsX
         print histlsY
         print histlistunroll
@@ -424,7 +419,7 @@ class TemplatesApp(PlotApp):
             prob.append((i+float(mass_split[2]))/mass_split[0])
         massH.GetQuantiles(mass_split[1]+1,dpmq,prob)
         #show the original histogram in the top pad
-        cq=ROOT.TCanvas("cq_%s" %dataset.GetName()[-19:],"mass quantiles",10,10,700,900)
+        cq=ROOT.TCanvas("cq_%s" %dataset.GetName()[-20:],"mass quantiles",10,10,700,900)
         cq.Divide(1,2)
         cq.cd(1)
         ROOT.gPad.SetLogy()
@@ -786,14 +781,14 @@ class TemplatesApp(PlotApp):
     ## ------------------------------------------------------------------------------------------------------------
 
     def reducedRooData(self,name,rooset,binned,weight="weight",sel=None,redo=None):
-        data = self.rooData("reduced_%s" % name)
+        data = self.rooData("r_%s" % name)
         if not data or redo:
             print "create rooData"
             data = self.rooData(name,rooset=rooset,weight=weight,sel=sel)
             if binned:
-                data = data.binnedClone("reduced_%s" % name,"reduced_%s" % name)
+                data = data.binnedClone("r_%s" % name,"r_%s" % name)
             else:
-                data.SetName("reduced_%s" % name)
+                data.SetName("r_%s" % name)
         self.workspace_.rooImport(data)
         return data
     ## ------------------------------------------------------------------------------------------------------------
