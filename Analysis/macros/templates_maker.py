@@ -327,15 +327,14 @@ class TemplatesApp(PlotApp):
                                 print tempHisto.GetName()
                                 for bin in range(1,len(template_binning) ):
                                     tempHisto.SetBinContent(bin,tempHisto.GetBinContent(bin)/(tempHisto.GetBinWidth(bin)))
+                                    tempHisto.SetBinError(bin,tempHisto.GetBinError(bin)/(tempHisto.GetBinWidth(bin)))
+                                tempHisto.Scale(1.0/tempHisto.Integral())
                                 histls.append(tempHisto)
-                            for hist in histls:
-                                hist.Scale(1.0/hist.Integral())
                             print "plot 1d histos"
                             self.plotHistos(histls,tit,template_binning,True)
                   ##########roll out for combine tool per category
                         if fit["ndim"]>1:
                             self.histounroll(templates_massc,template_binning,isoargs,cat)
-                        return
                 ########outside category loop
             #######outside components loop
             #self.saveWs(options)
@@ -360,23 +359,33 @@ class TemplatesApp(PlotApp):
             temp1dunroll=ROOT.TH1F("temp1dunroll%s" %(tempur.GetName()),"temp1dunroll%s" %(tempur.GetName()),len(tempunroll_binning)-1,tempunroll_binning)
             temp2d=ROOT.TH2F("temp2d%s" % (tempur.GetName()),"temp2d%s" % (tempur.GetName()),len(template_binning)-1,template_binning,len(template_binning)-1,template_binning)
             tempur.fillHistogram(temp2d,ROOT.RooArgList(isoargs))
-            for bin1 in range(1,len(template_binning)):
-                for bin2 in range(1,len(template_binning)):
-                    binCont= temp2d.GetBinContent(bin1,bin2)
-                    binCont=binCont/(temp2d.GetXaxis().GetBinWidth(bin1)*temp2d.GetYaxis().GetBinWidth(bin2))
-                    temp2d.SetBinContent(bin1,bin2,binCont)
-            temp2d.Scale(1./temp2d.Integral())
-            c1.cd(pad_it)
-            ROOT.gPad.SetLogz()
-            temp2d.Draw("COLZ")
-            temp2d.GetZaxis().SetRangeUser(1e-6,1)
             temp2dx=temp2d.ProjectionX("%s_X" %tempur.GetName())
+            temp2dx.Scale(1./temp2dx.Integral())
             temp2dx.SetTitle("%s_X" %tempur.GetTitle())
             temp2dy=temp2d.ProjectionY("%s_Y" %tempur.GetName())
+            temp2dy.Scale(1./temp2dy.Integral())
     ###### draw projections as a check
             histlsX.append(temp2dx)
             temp2dy.SetTitle("%s_Y" %tempur.GetTitle())
             histlsY.append(temp2dy)
+            print "new loop"
+            for bin1 in range(1,len(template_binning)):
+                for bin2 in range(1,len(template_binning)):
+                    binCont=0.
+                    binErr=0.
+                    area=0.
+                    binCont= temp2d.GetBinContent(bin1,bin2)
+                    area=(temp2d.GetXaxis().GetBinWidth(bin1))*(temp2d.GetYaxis().GetBinWidth(bin2))
+                    #area=1.
+                    temp2d.SetBinContent(bin1,bin2,binCont/area)
+                    binErr=temp2d.GetBinError(bin1,bin2)
+                    print binCont
+                    temp2d.SetBinError(bin1,bin2,binErr/area)
+            temp2d.Scale(1./temp2d.Integral())
+            c1.cd(pad_it)
+            ROOT.gPad.SetLogz()
+            temp2d.Draw("COLZ")
+            temp2d.GetZaxis().SetRangeUser(1e-8,1)
             bin=0
             #  to loop over all bins (< len(template_binning))
             for b in range(1,len(template_binning)):
