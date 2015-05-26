@@ -272,7 +272,7 @@ class TemplatesApp(PlotApp):
                     setargs=ROOT.RooArgSet(massargs,isoargs)
                     setargs.add(self.buildRooVar("weight",[],recycle=True))
                     truthname= "mctruth_%s_%s_%s" % (compname,fitname,cat)
-                    truth = self.reducedRooData(truthname,setargs,False,sel="weight <5.",redo=True)
+                    truth = self.reducedRooData(truthname,setargs,False,sel="weight <5.",redo=False)
                     templates.append(truth)
             ########### loop over templates
                     for template,mapping in templatesls.iteritems():
@@ -281,21 +281,25 @@ class TemplatesApp(PlotApp):
                              templatename= "template_mix_%s_%s_%s" % (compname,mixname,mapping.get(cat,cat))
                         else:
                              templatename= "template_%s_%s_%s" % (compname,template,mapping.get(cat,cat))
-                        tempdata = self.reducedRooData(templatename,setargs,False,sel="weight <5.",redo=True)
+                        tempdata = self.reducedRooData(templatename,setargs,False,sel="weight <5.",redo=False)
                         templates.append(tempdata)
                     #    print tempdata.GetName()
                     print "templates list: ", templates
         ##########split in massbins
                     splitByBin=comparison.get("splitByBin")
                     masserror = array.array('d',[])
+                    dset_data = self.reducedRooData("data_2D_%s" %cat,setargs,False,sel="weight <5.",redo=True)
                     if splitByBin:
                         mass_split=comparison.get("mass_split")
                         print "mass splitting: ntot bins, ntot for run, startbin",mass_split, " dataset : " , "data_2D_%s" % cat
-                        dset_data = self.reducedRooData("data_2D_EBEB",setargs,False,sel="weight <5.",redo=True)
                         diphomass=self.massquantiles(dset_data,massargs,mass_b,mass_split) 
+                        diphomass[mb]=(diphomass[mb]+diphomass[mb+1])/2.
+                        masserror.append((diphomass[mb+1]-diphomass[mb])/2.)
+                        print "diphoton mass", diphomass[mb], " with bin width ",masserror[mb]
                     else:
                         print "integrated over whole mass spectrum"
                         mass_split=[1,1,0]
+                        diphomass = array.array('d',[0.,13000.])
                     for mb in range(mass_split[2],mass_split[1]):
                         
                         cut=ROOT.TCut("mass>%f && mass<%f"% (diphomass[mb],diphomass[mb+1]))
@@ -310,12 +314,6 @@ class TemplatesApp(PlotApp):
                             temp_massc =temp_m.reduce(cut.GetTitle())
                             temp_massc.SetNameTitle("%s_mb_%s"%(temp_m.GetName(),cut_s),"%s_mb_%s"%(temp_m.GetName(),cut_s))
                             templates_massc.append(temp_massc)
-                            print "templates_massc" ,temp_massc.GetName()
-                            print "templates_massc", temp_massc.GetTitle()
-                        print "templates_massc" ,templates_massc
-                        diphomass[mb]=(diphomass[mb]+diphomass[mb+1])/2.
-                        masserror.append((diphomass[mb+1]-diphomass[mb])/2.)
-                        print "diphoton mass", diphomass[mb], " with bin width ",masserror[mb]
                 ##############loop over 2 legs
                         for id in range(fit["ndim"]):
                             histls=[]
@@ -337,6 +335,7 @@ class TemplatesApp(PlotApp):
                   ##########roll out for combine tool per category
                         if fit["ndim"]>1:
                             self.histounroll(templates_massc,template_binning,isoargs,cat)
+                        return
                 ########outside category loop
             #######outside components loop
             #self.saveWs(options)
@@ -358,7 +357,7 @@ class TemplatesApp(PlotApp):
         histlsX=[]
         for tempur in templatelist:
             pad_it+=1
-            temp1dunroll=ROOT.TH1F("temp1dunroll%s" %(tempur.GetName()[17:]),"temp1dunroll%s" %(tempur.GetName()[17:]),len(tempunroll_binning)-1,tempunroll_binning)
+            temp1dunroll=ROOT.TH1F("temp1dunroll%s" %(tempur.GetName()),"temp1dunroll%s" %(tempur.GetName()),len(tempunroll_binning)-1,tempunroll_binning)
             temp2d=ROOT.TH2F("temp2d%s" % (tempur.GetName()),"temp2d%s" % (tempur.GetName()),len(template_binning)-1,template_binning,len(template_binning)-1,template_binning)
             tempur.fillHistogram(temp2d,ROOT.RooArgList(isoargs))
             for bin1 in range(1,len(template_binning)):
@@ -371,9 +370,9 @@ class TemplatesApp(PlotApp):
             ROOT.gPad.SetLogz()
             temp2d.Draw("COLZ")
             temp2d.GetZaxis().SetRangeUser(1e-6,1)
-            temp2dx=temp2d.ProjectionX("%s_X" %tempur.GetTitle())
+            temp2dx=temp2d.ProjectionX("%s_X" %tempur.GetName())
             temp2dx.SetTitle("%s_X" %tempur.GetTitle())
-            temp2dy=temp2d.ProjectionY("%s_Y" %tempur.GetTitle())
+            temp2dy=temp2d.ProjectionY("%s_Y" %tempur.GetName())
     ###### draw projections as a check
             histlsX.append(temp2dx)
             temp2dy.SetTitle("%s_Y" %tempur.GetTitle())
@@ -393,8 +392,8 @@ class TemplatesApp(PlotApp):
                     temp1dunroll.SetBinContent(bin,binCont)
             histlistunroll.append(temp1dunroll)
         titleunroll = "%s_unroll" % (tempur.GetTitle())
-        self.plotHistos(histlsX,"%s_X" %tempur.GetTitle()[:-18],template_binning,False)
-        self.plotHistos(histlsY,"%s_Y" %tempur.GetTitle()[:-18],template_binning,False)
+        self.plotHistos(histlsX,"%s_X" %tempur.GetTitle(),template_binning,False)
+        self.plotHistos(histlsY,"%s_Y" %tempur.GetTitle(),template_binning,False)
         print histlsX
         print histlsY
         print histlistunroll
@@ -423,12 +422,15 @@ class TemplatesApp(PlotApp):
         cq.Divide(1,2)
         cq.cd(1)
         ROOT.gPad.SetLogy()
+        massH.GetXaxis().SetTitle("diphoton mass [GeV]")
         massH.Draw()
         #show the quantiles in the bottom pad
         cq.cd(2)
-        gr =ROOT.TGraph(mass_split[1],prob,dpmq)
+        gr =ROOT.TGraph(mass_split[1]+1,prob,dpmq)
         ROOT.gPad.SetLogy()
         gr.SetMarkerStyle(21)
+        gr.GetXaxis().SetTitle("quantiles")
+        gr.GetYaxis().SetTitle("diphoton mass [GeV]")
         gr.Draw("alp")
         self.keep( [cq] )
         self.autosave(True)
@@ -451,6 +453,7 @@ class TemplatesApp(PlotApp):
         ROOT.gPad.SetLogy()
         canv.cd(2)
         ROOT.gPad.SetPad(0., 0., 1., 0.35)
+        ROOT.gPad.SetGridy()
         canv.cd(1)
         histlist[0].SetMarkerColor(ROOT.kRed)
         histlist[0].SetLineColor(ROOT.kRed)
