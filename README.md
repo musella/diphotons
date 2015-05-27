@@ -10,8 +10,8 @@ forked the flashgg and this repository.
 
 ```
 # change these to the values that you prefer
-PROJECT_AREA=EXO_7_4_0_pre8 
-CMSSW_VERSION=CMSSW_7_4_0_pre8 
+PROJECT_AREA=EXO_7_4_0_pre9 
+CMSSW_VERSION=CMSSW_7_4_0_pre9 
 ## FLASHGG_TAG=diphotonsPhys14AnV1
 
 # read github name from git config
