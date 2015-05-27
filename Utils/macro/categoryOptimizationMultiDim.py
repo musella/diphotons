@@ -17,7 +17,8 @@ objs = []
 def loadSettings(cfgs,dest,macros):
     for cfg in cfgs.split(","):
         cf = open(cfg)
-        settings = json.loads(cf.read() % macros)
+        cont = cf.read() % macros
+        settings = json.loads(cont)
         for k,v in settings.iteritems():
             attr  = getattr(dest,k,None)
             if attr and type(attr) == list:                
@@ -43,7 +44,7 @@ def getBoundaries(ndim,ncat,optimizer, summary, overwrite=False):
     objs.append((boundaries,selections))
 
 # -----------------------------------------------------------------------------------------------------------
-def optmizeCats(optimizer,ws,ndim,rng,args,readBack=False,reduce=False,refit=0,settings=None):
+def optmizeCats(optimizer,ws,ndim,rng,args,readBack=False,doReduce=False,refit=0,settings=None):
     
     summary = {}
     if readBack:
@@ -51,11 +52,14 @@ def optmizeCats(optimizer,ws,ndim,rng,args,readBack=False,reduce=False,refit=0,s
             sin = open("%s/cat_opt.json" % options.cont,"r")
             summary = json.loads(sin.read())
             sin.close()
+            print summary
             if options.maxcat or options.mincat:
+                print "reading"
                 tmp = {}
-                for ncat,val in summary.iteritems():
+                for ncat,val in summary.iteritems():                    
                     if options.maxcat and int(ncat) > options.maxcat or options.mincat and int(ncat) < options.mincat:
                         continue
+                    print ncat, val
                     tmp[int(ncat)] = val
                 summary = tmp
         except Exception as e:
@@ -65,19 +69,19 @@ def optmizeCats(optimizer,ws,ndim,rng,args,readBack=False,reduce=False,refit=0,s
     print "\n---------------------------------------------"
     print "Fitting"
     print 
-    for iter in rng:
-        if iter in summary:
-            boundaries = numpy.array([float(b) for b in summary[iter]["boundaries"]])
+    for itr in rng:
+        if itr in summary:
+            boundaries = numpy.array([float(b) for b in summary[itr]["boundaries"]])
             aargs = args+(boundaries,)
-            optimizer.optimizeNCat(iter,*aargs)
+            optimizer.optimizeNCat(itr,*aargs)
         else:
-            optimizer.optimizeNCat(iter,*args)
-        getBoundaries(ndim,iter, optimizer, summary, True )
+            optimizer.optimizeNCat(itr,*args)
+        getBoundaries(ndim,itr, optimizer, summary, True )
 
     for ncat,val in summary.iteritems():
         printBoundaries(ndim,val["boundaries"],val["fom"],val.get("selections",None))
         
-    if reduce:
+    if doReduce:
         print "\n---------------------------------------------"
         print "Reducing"
         print 
@@ -93,8 +97,8 @@ def optmizeCats(optimizer,ws,ndim,rng,args,readBack=False,reduce=False,refit=0,s
             maxncat = max(int(ncat),maxncat)
         rng = range(1,maxncat+1)
         summary = {}
-        for iter in rng:
-            getBoundaries(ndim,iter, optimizer, summary )
+        for itr in rng:
+            getBoundaries(ndim,itr, optimizer, summary )
 
     if refit > 0:
         print "\n---------------------------------------------"
@@ -103,9 +107,11 @@ def optmizeCats(optimizer,ws,ndim,rng,args,readBack=False,reduce=False,refit=0,s
         for irefit in range(refit):
             for ncat,val in summary.iteritems():
                 boundaries = numpy.array([float(b) for b in val["boundaries"]])
+                print ncat, val, boundaries
                 if optimizer.nOrthoCuts() > 0:
                     if "selections" in val:
                         for isel in range(len(val["selections"])):
+                            print isel,val["selections"][isel]
                             optimizer.setOrthoCut(isel, float(val["selections"][isel]))
                 ncat=int(ncat)
                 ## setSelections(optimizer,summary)
@@ -118,8 +124,8 @@ def optmizeCats(optimizer,ws,ndim,rng,args,readBack=False,reduce=False,refit=0,s
             rng = sorted( set(rng) )
             summary = {}
         
-            for iter in rng:
-                getBoundaries(ndim,iter, optimizer, summary )
+            for itr in rng:
+                getBoundaries(ndim,itr, optimizer, summary )
         
     for ncat,val in summary.iteritems():
         printBoundaries(ndim,val["boundaries"],val["fom"],val.get("selections",None))
@@ -165,7 +171,7 @@ def mergeTrees(tfile,sel,outname,trees,aliases):
         print "Tree found in input file ", outname, tryread
         out = tryread.CopyTree("")
     else:
-        for name,selection in trees:
+        for name,selection in trees:            
             tree=tfile.Get(name)
             for aname, definition in aliases:
                 tree.SetAlias( aname,definition )
@@ -176,6 +182,8 @@ def mergeTrees(tfile,sel,outname,trees,aliases):
                 clone = tree.CopyTree(selection)
                 tree = clone
             tlist.Add(tree)
+            print tree, tree.GetEntries()
+            ## tlist.Print()
         out=ROOT.TTree.MergeTrees(tlist)
         
     out.SetName(outname)
@@ -384,6 +392,7 @@ def optimizeMultiDim(options,args):
     optimizer = ROOT.CategoryOptimizer( minimizer, ndim )
     for isel in range(sellist.getSize()):
         sel = sellist[isel]
+        print sel.GetName(), options.fix        
         if sel.GetName() in options.fix:
             optimizer.addFixedOrthoCut(sel.GetName(),sel.getVal())
         else:
@@ -509,13 +518,15 @@ def optimizeMultiDim(options,args):
     ## fom       = ROOT.SimpleShapeFomProvider(nsubcats)
     
     ## Configurable from command line
-    if not options.fom.endswith(")"):
-        optimization.fom += "()"
-    fomBooking = """int nsubcats = %d;
-AbsFomProvider * fom = new %s;
-""" % ( nsubcats, options.fom)
-    ROOT.gROOT.ProcessLine(fomBooking)
-    fom = ROOT.gROOT.Get("fom")
+    ### if not options.fom.endswith(")"):
+    ###     optimization.fom += "()"
+    ### fomBooking = """int nsubcats = %d;
+    ###              AbsFomProvider * fom = new %s;
+    ### """ % ( nsubcats, options.fom)
+    ### print fomBooking
+    ### ROOT.gROOT.ProcessLine(fomBooking)
+    ### fom = ROOT.fom
+    fom = ROOT.SimpleShapeFomProvider(nsubcats)
     for sigModel in signals:
         sigModel.getModel().setMu(mu)
     fom.addPOI(mu)
@@ -732,7 +743,7 @@ def main(options,args):
     ROOT.gSystem.Load("libdiphotonsUtils")
 
     ROOT.gStyle.SetOptStat(0)
-
+    
     ROOT.RooMsgService.instance().setGlobalKillBelow(ROOT.RooFit.FATAL)
     ROOT.RooMsgService.instance().setSilentMode(True)
     ws = optimizeMultiDim(options,args)

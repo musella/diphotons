@@ -541,7 +541,7 @@ void appendData( RooDataHist &dest, RooDataHist &src )
 double SimpleShapeFomProvider::operator()( std::vector<AbsModel *> sig, std::vector<AbsModel *> bkg ) const
 {
 
-    std::cout << "SimpleShapeFomProvider::operator() useRooSimultaneous_=" << useRooSimultaneous_ << std::endl;
+    /// std::cout << "SimpleShapeFomProvider::operator() useRooSimultaneous_=" << useRooSimultaneous_ << std::endl;
 
     float ret;
 
@@ -604,9 +604,9 @@ double SimpleShapeFomProvider::operator()( std::vector<AbsModel *> sig, std::vec
             if( sig[iSig]->getCategoryPdf( icat )->expectedEvents( 0 ) <= 0 ) {
                 return 1e+5;
             }
-            //if( debug_ ) {
-            std::cout << "    " << sig[iSig]->name() << " (subcat " << iSubcat << "): " << sig[iSig]->getCategoryYield( icat ) << "\n" ;
-            //}
+            if( debug_ ) {
+                std::cout << "    " << sig[iSig]->name() << " (subcat " << iSubcat << "): " << sig[iSig]->getCategoryYield( icat ) << "\n" ;
+            }
             /// std::cout << sig[iSig]->getCategoryPdf(icat)->expectedEvents(0)
             /// 	  << " " << sig[iSig]->getCategoryYield(icat) << std::endl;
             if( buildPdf ) {
@@ -616,9 +616,9 @@ double SimpleShapeFomProvider::operator()( std::vector<AbsModel *> sig, std::vec
         for( size_t iBkg = 0; iBkg < bkg.size(); iBkg++ ) {
             size_t iSubcat = iBkg % nSubcats_;
             ntot[iSubcat] += bkg[iBkg]->getCategoryYield( icat );
-            //if( debug_ ) {
-            std::cout << "    " << bkg[iBkg]->name() << " (subcat " << iSubcat << "): " << bkg[iBkg]->getCategoryYield( icat ) << "\n";
-            //}
+            if( debug_ ) {
+                std::cout << "    " << bkg[iBkg]->name() << " (subcat " << iSubcat << "): " << bkg[iBkg]->getCategoryYield( icat ) << "\n";
+            }
             /// std::cout << bkg[iBkg]->getCategoryPdf(icat)->expectedEvents(0)
             /// 	  << " " << bkg[iBkg]->getCategoryYield(icat) << std::endl;
             if( buildPdf ) {
@@ -635,9 +635,9 @@ double SimpleShapeFomProvider::operator()( std::vector<AbsModel *> sig, std::vec
             }
         }
 
-        for( size_t iSubcat = 0; iSubcat < nSubcats_; iSubcat++ ) {
-            std::cout << "Throwing Asymov " << iSubcat << " " << nSubcats_*icat + iSubcat << " " << ntot[iSubcat] << " " <<  &asimovs[nSubcats_ * icat + iSubcat] << " " <<
-                      &pdfs[nSubcats_ * icat + iSubcat] << std::endl;
+        for( size_t iSubcat = 0; iSubcat < nSubcats_; iSubcat++ ) {            
+            //// std::cout << "Throwing Asymov " << iSubcat << " " << nSubcats_*icat + iSubcat << " " << ntot[iSubcat] << " " <<  &asimovs[nSubcats_ * icat + iSubcat] << " " <<
+            ////           &pdfs[nSubcats_ * icat + iSubcat] << std::endl;
 
             throwAsimov( ntot[iSubcat], &asimovs[nSubcats_ * icat + iSubcat], &pdfs[nSubcats_ * icat + iSubcat], sig[0]->getX() );
             roocat.defineType( Form( "cat_%d_%d", ( int )icat, ( int )iSubcat ) );
@@ -724,7 +724,7 @@ double SimpleShapeFomProvider::operator()( std::vector<AbsModel *> sig, std::vec
         }
     }
 
-    std::cout << "poi number " << pois_.size() << endl;
+    /// std::cout << "poi number " << pois_.size() << endl;
 
     double Mes = 0;
     bool *sconverged = new bool[ncat];
@@ -740,7 +740,7 @@ double SimpleShapeFomProvider::operator()( std::vector<AbsModel *> sig, std::vec
 
         for( size_t ibin = 0; ibin < ncat; ibin++ ) {
 
-            std::cout << "Bin " << ibin << std::endl;
+            /// std::cout << "Bin " << ibin << std::endl;
 
             // S+B fit
             for( size_t ipoi = 0; ipoi < pois_.size(); ++ipoi ) {
@@ -759,7 +759,7 @@ double SimpleShapeFomProvider::operator()( std::vector<AbsModel *> sig, std::vec
                 }
             }
             double minNllsb = nlli[ibin]->getVal();
-            std::cout << "mu=1 minNll=" << minNllsb << " poi0=" << pois_[0]->getVal() << " sconverged=" << sconverged[ibin] << std::endl;
+            /// std::cout << "mu=1 minNll=" << minNllsb << " poi0=" << pois_[0]->getVal() << " sconverged=" << sconverged[ibin] << std::endl;
 
             // 0.8*S+B fit
             for( size_t ipoi = 0; ipoi < pois_.size(); ++ipoi ) {
@@ -778,7 +778,7 @@ double SimpleShapeFomProvider::operator()( std::vector<AbsModel *> sig, std::vec
                 }
             }
             double minNllsb08 = nlli[ibin]->getVal();
-            std::cout << "mu=0.8 minNll=" << minNllsb08 << " poi0=" << pois_[0]->getVal() << " s08converged=" << s08converged[ibin] << std::endl;
+            /// std::cout << "mu=0.8 minNll=" << minNllsb08 << " poi0=" << pois_[0]->getVal() << " s08converged=" << s08converged[ibin] << std::endl;
 
             // 1.2*S+B fit
             for( size_t ipoi = 0; ipoi < pois_.size(); ++ipoi ) {
@@ -797,7 +797,7 @@ double SimpleShapeFomProvider::operator()( std::vector<AbsModel *> sig, std::vec
                 }
             }
             double minNllsb12 = nlli[ibin]->getVal();
-            std::cout << "mu=1.2 minNll=" << minNllsb12 << " poi0=" << pois_[0]->getVal() << " s12converged=" << s12converged[ibin] << std::endl;
+            /// std::cout << "mu=1.2 minNll=" << minNllsb12 << " poi0=" << pois_[0]->getVal() << " s12converged=" << s12converged[ibin] << std::endl;
 
             // B-only fit
             for( size_t ipoi = 0; ipoi < pois_.size(); ++ipoi ) {
@@ -816,19 +816,19 @@ double SimpleShapeFomProvider::operator()( std::vector<AbsModel *> sig, std::vec
                 }
             }
             double minNllb = nlli[ibin]->getVal();
-            std::cout << "mu=0 minNll=" << minNllb << " poi0=" << pois_[0]->getVal() << " bconverged=" << bconverged[ibin] << std::endl;
+            /// std::cout << "mu=0 minNll=" << minNllb << " poi0=" << pois_[0]->getVal() << " bconverged=" << bconverged[ibin] << std::endl;
 
 
             double qA = -2.*( minNllb - minNllsb );
-            std::cout << "qA=" << qA << std::endl;
+            // std::cout << "qA=" << qA << std::endl;
 
             double qA08 = -2.*( minNllb - minNllsb08 );
-            std::cout << "qA08=" << qA08 << std::endl;
+            // std::cout << "qA08=" << qA08 << std::endl;
 
             double qA12 = -2.*( minNllb - minNllsb12 );
-            std::cout << "qA12=" << qA12 << std::endl;
+            // std::cout << "qA12=" << qA12 << std::endl;
 
-            std::cout << "Parabola computation with matrix inversion" << std::endl;
+            // std::cout << "Parabola computation with matrix inversion" << std::endl;
 
             TMatrixD nllval( 3, 1 );
             nllval[0][0] = qA08;
@@ -849,7 +849,7 @@ double SimpleShapeFomProvider::operator()( std::vector<AbsModel *> sig, std::vec
 
             TMatrixD Result( 3, 1 );
             Result = matrix * nllval;
-            std::cout << "a=" << Result[0][0] << " b=" << Result[1][0] << " c=" << Result[2][0] << std::endl;
+            /// std::cout << "a=" << Result[0][0] << " b=" << Result[1][0] << " c=" << Result[2][0] << std::endl;
 
             double val_old = 100;
             double x1 = 0, x2 = 0;
@@ -861,24 +861,24 @@ double SimpleShapeFomProvider::operator()( std::vector<AbsModel *> sig, std::vec
                 //std::cout << "Fit    mu="<<x<<" val="<<val<<std::endl;
                 if( val_old > qA + 1 && val < qA + 1 ) {
                     x1 = x;
-                    std::cout << "x1=" << x << std::endl;
+                    /// std::cout << "x1=" << x << std::endl;
                 }
                 if( val_old < qA + 1 && val > qA + 1 ) {
                     x2 = x;
-                    std::cout << "x2=" << x << std::endl;
+                    /// std::cout << "x2=" << x << std::endl;
                 }
                 val_old = val;
             }
             double DeltaMu = ( x2 - x1 ) / 2.;
-            std::cout << "Bin " << ibin << " MuError=" << DeltaMu << std::endl;
+            /// std::cout << "Bin " << ibin << " MuError=" << DeltaMu << std::endl;
             MuError[ibin] = DeltaMu;
         }
 
         //Compute the measure
         /// double Sum = 0;
-        std::cout << "This iteration summary:" << std::endl;
+        // std::cout << "This iteration summary:" << std::endl;
         for( size_t i = 0; i < ncat; i++ ) {
-            std::cout << "Bin " << i << " MuError=" << MuError[i] << std::endl;
+            /// std::cout << "Bin " << i << " MuError=" << MuError[i] << std::endl;
             for( size_t j = 0; j < i; j++ ) {
                 //if (abs(MuError[i] - MuError[j])>Mes) Mes = abs(MuError[i] - MuError[j]);
                 Mes += ( MuError[i] - MuError[j] ) * ( MuError[i] - MuError[j] );
@@ -888,7 +888,7 @@ double SimpleShapeFomProvider::operator()( std::vector<AbsModel *> sig, std::vec
         //Mes /= Sum;
         //Mes *= 1000.;
         Mes = -1. / Mes;
-        std::cout << "Mesure = " << Mes << std::endl;
+        /// std::cout << "Mesure = " << Mes << std::endl;
 
         ret = Mes;
     }
@@ -912,7 +912,7 @@ double SimpleShapeFomProvider::operator()( std::vector<AbsModel *> sig, std::vec
             }
         }
         double minNllsb = nll->getVal();
-        std::cout << "mu=1 minNll=" << minNllsb << " poi0=" << pois_[0]->getVal() << " sconverged=" << sconvergedSignif << std::endl;
+        /// std::cout << "mu=1 minNll=" << minNllsb << " poi0=" << pois_[0]->getVal() << " sconverged=" << sconvergedSignif << std::endl;
 
 
         std::vector<RooPlot *> frames;
@@ -945,12 +945,12 @@ double SimpleShapeFomProvider::operator()( std::vector<AbsModel *> sig, std::vec
             }
         }
         double minNllb = nll->getVal();
-        std::cout << "mu=0 minNll=" << minNllb << " poi0=" << pois_[0]->getVal() << " bconvergedSignif=" << bconvergedSignif << std::endl;
+        /// std::cout << "mu=0 minNll=" << minNllb << " poi0=" << pois_[0]->getVal() << " bconvergedSignif=" << bconvergedSignif << std::endl;
 
 
         double qA = -2.*( minNllb - minNllsb );
-        std::cout << "qA=" << qA << std::endl;
-        std::cout << "S = " << -sqrt( -qA ) << std::endl;
+        //// std::cout << "qA=" << qA << std::endl;
+        //// std::cout << "S = " << -sqrt( -qA ) << std::endl;
         Mes = qA;
 
 
@@ -988,7 +988,7 @@ double SimpleShapeFomProvider::operator()( std::vector<AbsModel *> sig, std::vec
     }
 
 
-    std::cout << "ret=" << ret << std::endl;
+    /// std::cout << "ret=" << ret << std::endl;
 
 
     bool Sconverged = 1;

@@ -1,0 +1,125 @@
+{ 
+    "#" : "This is a JSON file to configure categoryOptimizationMultiDim.py script",
+        "#" : "Comments are not supported in JSON.",
+        "#" : "The trick here is to encapsulate them as well formatted input with key #",
+        "#" : "Configuration items are commented prepending an # to the name (any other character would work)",
+        
+        "###" : "----------------------------------------------------------------------------------------------",
+        "observable"          : ["mass",[250,5000,150],3000],
+        "_settings"            : [["floatLast",[1]],["setScan",[100,1,2]]],
+        "settings"            : [["floatLast",[0]],["setScan",[100,1,1]]],
+        
+        "###" : "----------------------------------------------------------------------------------------------",
+        "##" : "Define extra variables",
+        "aliases"             : [ 
+				 "ebHoE := TMath::Max( (abs(leadScEta) < 1.5)*leadHoE, (abs(subleadScEta) < 1.5)*subleadHoE )",
+				 "eeHoE := TMath::Max( (abs(leadScEta) > 1.5)*leadHoE, (abs(subleadScEta) > 1.5)*subleadHoE )",
+				 "ebChIso := TMath::Max( (abs(leadScEta) < 1.5)*leadChIso, (abs(subleadScEta) < 1.5)*subleadChIso )",
+				 "eeChIso := TMath::Max( (abs(leadScEta) > 1.5)*leadChIso, (abs(subleadScEta) > 1.5)*subleadChIso )",
+				 "ebPhoIso := TMath::Max( (abs(leadScEta) < 1.5)*(leadPhoIso-leadPhoIsoEA*rho), (abs(subleadScEta) < 1.5)*(subleadPhoIso-subleadPhoIsoEA*rho) )",
+				 "eePhoIso := TMath::Max( (abs(leadScEta) > 1.5)*(leadPhoIso-leadPhoIsoEA*rho), (abs(subleadScEta) > 1.5)*(subleadPhoIso-subleadPhoIsoEA*rho) )",
+				 "leadEB := abs(leadScEta) < 1.5",
+				 "subleadEB := abs(subleadScEta) < 1.5",
+				 "r9Min := TMath::Min(subleadR9,leadR9)",
+				 "ebSigmaIeIe := TMath::Max( (abs(leadScEta) < 1.5)*leadSigmaIeIe, (abs(subleadScEta) < 1.5)*subleadSigmaIeIe )",
+				 "eeSigmaIeIe := TMath::Max( (abs(leadScEta) > 1.5)*leadSigmaIeIe, (abs(subleadScEta) > 1.5)*subleadSigmaIeIe )"
+				  ],
+        
+        "###" : "----------------------------------------------------------------------------------------------",
+        "###" : "Minimize photon ID MVA fixing sM/M", 
+        "###" : "---------------------------------------------------------------------------------------------",
+        "##" : "Minimization settings: one cut on categorization variables + additional selection cuts",
+        "selection"          : "mass > 250 && leadPt > 100 && subleadPt > 100 && ebSigmaIeIe < 0.0105 && eeSigmaIeIe < 0.028 && ebHoE < 0.05 && eeHoE < 0.05",
+        "range"              : [1],
+        "_range"              : [],
+        
+        "subcategories"      : [["EBEB","leadEB && subleadEB"],
+                                 ["EBEE","!(leadEB || subleadEB)"]
+                                 ],
+
+        "##" : "Split Barrel / Endcaps",
+        "_variables"          : [["-ebChIso",[-10,0.01,0.1],-5]
+				],
+        "variables"          : [["minR9",[0,1.2,0.01],0]
+				],
+        "selectioncuts"      : [["-ebHoE",[-0.1,0.01,0.0005],-0.05],
+				["-eeHoE",[-0.1,0.01,0.0005],-0.05],
+				["-ebChIso",[-10,0.01,0.1],-5],
+				["-eeChIso",[-10,0.01,0.1],-5],
+				["-ebPhoIso",[-10,0.01,0.1],-5],
+				["-eePhoIso",[-10,0.01,0.1],-5]
+				],
+        "##" : "Split also High/Low R9",
+        "#variables"          : [["eelmva",[-0.2,1,0.02],0],
+                                 ["eehmva",[-0.2,1,0.02],0]                   
+                                 ],
+        "#selectioncuts"      : [["eblmva",[-0.2,1,0.01],0],
+                                 ["ebhmva",[-0.2,1,0.01],0]
+                                 ],
+        
+        "###" : "----------------------------------------------------------------------------------------------",
+        "###" : "Signal and background processes",
+        "###" : "----------------------------------------------------------------------------------------------",
+        "signals"             : {
+	"sig"       : [		
+		       ["kinGenIso/trees/RSGravToGG_kMpl_02_M_1500_13TeV_EBHighR9","1"],
+		       ["kinGenIso/trees/RSGravToGG_kMpl_02_M_1500_13TeV_EBLowR9","1"],
+		       ["kinGenIso/trees/RSGravToGG_kMpl_02_M_1500_13TeV_EEHighR9","1"],
+		       ["kinGenIso/trees/RSGravToGG_kMpl_02_M_1500_13TeV_EELowR9","1"]
+				]
+            },
+        
+        "_backgrounds"         : { 
+	    "pp"                 : [
+				    ["kinGenIso/trees/GGJets_M_200To13000_sherpa_13TeV_EBHighR9","1"],
+				    ["kinGenIso/trees/GGJets_M_200To13000_sherpa_13TeV_EBLowR9","1"],
+				    ["kinGenIso/trees/GGJets_M_200To13000_sherpa_13TeV_EEHighR9","1"],
+				    ["kinGenIso/trees/GGJets_M_200To13000_sherpa_13TeV_EELowR9","1"],
+				    ["kinNonGenIso/trees/GGJets_M_200To13000_sherpa_13TeV_EBHighR9","1"],
+				    ["kinNonGenIso/trees/GGJets_M_200To13000_sherpa_13TeV_EBLowR9","1"],
+				    ["kinNonGenIso/trees/GGJets_M_200To13000_sherpa_13TeV_EEHighR9","1"],
+				    ["kinNonGenIso/trees/GGJets_M_200To13000_sherpa_13TeV_EELowR9","1"]
+				    ],
+		"non_pp"             : [
+					["kin/trees/GJets_HT_100toInf_13TeV_EBHighR9","1"],
+					["kin/trees/GJets_HT_100toInf_13TeV_EBLowR9","1"],
+					["kin/trees/GJets_HT_100toInf_13TeV_EEHighR9","1"],
+					["kin/trees/GJets_HT_100toInf_13TeV_EELowR9","1"],
+					["kin/trees/QCD_HT_100toInf_13TeV_EBHighR9","1"],
+					["kin/trees/QCD_HT_100toInf_13TeV_EBLowR9","1"],
+					["kin/trees/QCD_HT_100toInf_13TeV_EEHighR9","1"],
+					["kin/trees/QCD_HT_100toInf_13TeV_EELowR9","1"]
+					]
+
+		},
+        "backgrounds"         : { 
+	    "pp"                 : [
+				    ["kinGenIso/trees/GGJets_M_200To13000_sherpa_13TeV_EBHighR9","1"],
+				    ["kinGenIso/trees/GGJets_M_200To13000_sherpa_13TeV_EBLowR9","1"],
+				    ["kinGenIso/trees/GGJets_M_200To13000_sherpa_13TeV_EEHighR9","1"],
+				    ["kinGenIso/trees/GGJets_M_200To13000_sherpa_13TeV_EELowR9","1"],
+				    ["kinNonGenIso/trees/GGJets_M_200To13000_sherpa_13TeV_EBHighR9","1"],
+				    ["kinNonGenIso/trees/GGJets_M_200To13000_sherpa_13TeV_EBLowR9","1"],
+				    ["kinNonGenIso/trees/GGJets_M_200To13000_sherpa_13TeV_EEHighR9","1"],
+				    ["kinNonGenIso/trees/GGJets_M_200To13000_sherpa_13TeV_EELowR9","1"]
+				    ],
+		"non_pp"             : [
+					["kin/trees/GJets_HT_100toInf_13TeV_EBHighR9","weight < 5."],
+					["kin/trees/GJets_HT_100toInf_13TeV_EBLowR9", "weight < 5."],
+					["kin/trees/GJets_HT_100toInf_13TeV_EEHighR9","weight < 5."],
+					["kin/trees/GJets_HT_100toInf_13TeV_EELowR9", "weight < 5."]
+					]
+		},
+	    
+	    "weights"             : { "pp" : "weight", "non_pp" : "weight", "sig" : "weight/10."  
+		    },
+	    "##" : "'Ultraviolet' cutoff in number of events",
+		"minevents"           : { "pp" : 0.1, "non_pp" : 0.01, "sig" : 0.1  },
+		
+		"###" : "----------------------------------------------------------------------------------------------",
+		    "##" : "When loading previous steps only look at ncat in [1:1]",
+		    "mincat"              : 1,
+		    "maxcat"              : 1,
+		    "#" : "No direct cutoff on categorization variable (see below for minevents)",
+		    "cutoff"              : 0.0
+}
