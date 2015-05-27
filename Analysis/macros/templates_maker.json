@@ -70,6 +70,7 @@
     "treeName": "trees/%(sample)s_%(cat)s",
 
     "preselection" : "leadChIso < 15. && subleadChIso < 15.",   "#" : "preselection cut applied to all trees",
+    "_preselection" : "leadChIso < 5. && subleadChIso < 5. && leadHoE < 0.05 && subleadHoE < 0.05",   "#" : "preselection cut applied to all trees",
     "selection"    : "cicNoChIso",                              "#" : "nominal selection",
         
     "#" : "---------------------------------------------------------------------------------------------------------------------",

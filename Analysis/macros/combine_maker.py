@@ -11,14 +11,14 @@ import array
 
 from getpass import getuser
 
-from combine_maker import CombineApp
+from templates_maker import TemplatesApp
 
 import random
 
 from math import sqrt
 
 ## ----------------------------------------------------------------------------------------------------------------------------------------
-class BiasApp(CombineApp):
+class CombineApp(TemplatesApp):
     """
     Class to handle template fitting.
     Takes care of preparing templates starting from TTrees.
@@ -26,69 +26,24 @@ class BiasApp(CombineApp):
     """
     
     ## ------------------------------------------------------------------------------------------------------------
-    def __init__(self):
+    def __init__(self,option_list=[],option_groups=[]):
         
-        super(BiasApp,self).__init__(
+        super(CombineApp,self).__init__(
             option_groups=[
-                ("Bias study options", [
-                        make_option("--throw-toys",dest="throw_toys",action="store_true",default=False,
-                                    help="Throw toy MC",
+                ("Combine workspace options", [
+                        make_option("--fit-name",dest="fit_name",action="store",type="string",
+                                    default="2D",
+                                    help="Fit to consider"),
+                        make_option("--observable",dest="observable",action="store",type="string",
+                                    default="mass[235,300,5000]",
+                                    help="Observable used in the fit default : [%default]",
                                     ),
-                        make_option("--binned-toys",dest="binned_toys",action="store_true",default=False,
-                                    help="Use binned toys",
-                                    ),
-                        make_option("--throw-from-model",dest="throw_from_model",action="store_true",default=False,
-                                    help="Throw toys from fit to full dataset",
-                                    ),
-                        make_option("--lumi-factor",dest="lumi_factor",action="store",default=1.,type="float",
-                                    help="Luminosity normalization factor",
-                                    ),
-                        make_option("--fit-toys",dest="fit_toys",action="store_true",default=False,
-                                    help="Fit toy MC",
-                                    ),
-                        make_option("--approx-minos",dest="approx_minos",action="store_true",default=False,
-                                    help="Use approximate minos errors",
-                                    ),
-                        make_option("--plot-toys-fits",dest="plot_toys_fits",action="store_true",default=False,
-                                    help="Make plots with fit results",
-                                    ),
-                        make_option("--n-toys",dest="n_toys",action="store",type="int",default=False,
-                                    help="Number of toys",
-                                    ),
-                        make_option("--first-toy",dest="first_toy",action="store",type="int",default=False,
-                                    help="First toy to fit",
-                                    ),
-                        make_option("--components",dest="components",action="callback",type="string",
-                                    callback=optpars_utils.ScratchAppend(),
-                                    default=[""],
-                                    help="MC truth components to be considered in the fit default : [%default]",
-                                    ),
-                        make_option("--models",dest="models",action="callback",type="string",
-                                    callback=optpars_utils.ScratchAppend(),
-                                    default=[""],
-                                    help="Background models to use default : [%default]",
-                                    ),
-                        make_option("--fit-range",dest="fit_range",action="callback",type="string",callback=optpars_utils.ScratchAppend(float),
-                                    default=[300,500],
-                                    help="Observable range for the fit region : [%default]",
-                                    ),
-                        make_option("--test-range",dest="test_ranges",action="callback",type="string",callback=optpars_utils.ScratchAppend(float),
-                                    default=[1000.,5000.],
-                                    help="Observable range for the test region : [%default]",
-                                    ),
-                        make_option("--exclude-test-range",dest="exclude_test_range",action="store_true",default=False,
-                                    help="Exclude test range from fit",
-                                    ),
-                        make_option("--analyze-bias",dest="analyze_bias",action="store_true",default=False),
-                        make_option("--bias-files",dest="bias_files",action="callback",type="string",callback=optpars_utils.ScratchAppend(str),
-                                    default=[]
-                                    ),
-                        make_option("--bias-labels",dest="bias_labels",action="callback",type="string",callback=optpars_utils.ScratchAppend(str),
-                                    default=[]
+                        make_option("--fit-background",dest="fit_backround",action="store_true",default=False,
+                                    help="Fit background",
                                     ),                        
                         ]
                  )
-                ]
+                ]+option_groups,option_list=option_list
             )
         
         ## load ROOT (and libraries)
@@ -100,18 +55,18 @@ class BiasApp(CombineApp):
         self.pdfPars_ = ROOT.RooArgSet()
 
     def __call__(self,options,args):
+        
+
         ## load ROOT style
         self.loadRootStyle()
         ROOT.TGaxis.SetMaxDigits(3)
         from ROOT import RooFit
-
+        
         printLevel = ROOT.RooMsgService.instance().globalKillBelow()
         ROOT.RooMsgService.instance().setGlobalKillBelow(RooFit.FATAL)
 
         options.only_subset = [options.fit_name]
-        if options.analyze_bias:        
-            options.skip_templates = True
-
+        
         self.setup(options,args)
         
         if options.throw_toys:
@@ -121,7 +76,7 @@ class BiasApp(CombineApp):
             self.fitToys(options,args)
 
         if options.analyze_bias:
-            self.analyzeBias(options,args)
+            self.analyzeCombine(options,args)
             
     ## ------------------------------------------------------------------------------------------------------------
     def throwToys(self,options,args):
@@ -415,7 +370,7 @@ class BiasApp(CombineApp):
         self.saveWs(options,fout)
 
     ## ------------------------------------------------------------------------------------------------------------
-    def analyzeBias(self,options,args):
+    def analyzeCombine(self,options,args):
         
         summary = {}
         
@@ -767,5 +722,5 @@ class BiasApp(CombineApp):
 # -----------------------------------------------------------------------------------------------------------
 # actual main
 if __name__ == "__main__":
-    app = BiasApp()
+    app = CombineApp()
     app.run()
