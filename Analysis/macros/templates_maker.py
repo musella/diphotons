@@ -138,7 +138,7 @@ class TemplatesApp(PlotApp):
         
         if options.read_ws:
             self.readWs(options,args)
-        elif not self.skip_templates:
+        elif not options.skip_templates:
             self.prepareTemplates(options,args)
 
 

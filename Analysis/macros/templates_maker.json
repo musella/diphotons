@@ -25,7 +25,6 @@
     "#" : "data used for template making",
     "templates" : [
                "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)s",
-               "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)sNonGenIso",
                "QCD_HT_100toInf_13TeV:output.root/%(sel)s",
                "GJets_HT_100toInf_13TeV:output.root/%(sel)s"            
              ],
@@ -33,6 +32,7 @@
      "#" : "mc dataset",
      "mc" : [
              "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)sGenIso",
+               "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)sNonGenIso",
                "QCD_HT_100toInf_13TeV:output.root/%(sel)s",
                "GJets_HT_100toInf_13TeV:output.root/%(sel)s"            
             ],

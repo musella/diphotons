@@ -16,8 +16,8 @@
 				 "eeHoE := TMath::Max( (abs(leadScEta) > 1.5)*leadHoE, (abs(subleadScEta) > 1.5)*subleadHoE )",
 				 "ebChIso := TMath::Max( (abs(leadScEta) < 1.5)*leadChIso, (abs(subleadScEta) < 1.5)*subleadChIso )",
 				 "eeChIso := TMath::Max( (abs(leadScEta) > 1.5)*leadChIso, (abs(subleadScEta) > 1.5)*subleadChIso )",
-				 "ebPhoIso := TMath::Max( (abs(leadScEta) < 1.5)*(leadPhoIso-leadPhoIsoEA*rho), (abs(subleadScEta) < 1.5)*(subleadPhoIso-subleadPhoIsoEA*rho) )",
-				 "eePhoIso := TMath::Max( (abs(leadScEta) > 1.5)*(leadPhoIso-leadPhoIsoEA*rho), (abs(subleadScEta) > 1.5)*(subleadPhoIso-subleadPhoIsoEA*rho) )",
+				 "ebPhoIso := TMath::Max( (abs(leadScEta) < 1.5)*(leadPhoIso-leadPhoIsoEA*rho-2.e-3*leadPt), (abs(subleadScEta) < 1.5)*(subleadPhoIso-subleadPhoIsoEA*rho-2.e-3*subleadPt) )",
+				 "eePhoIso := TMath::Max( (abs(leadScEta) > 1.5)*(leadPhoIso-leadPhoIsoEA*rho-2.e-3*leadPt), (abs(subleadScEta) > 1.5)*(subleadPhoIso-subleadPhoIsoEA*rho-2.e-3*subleadPt) )",
 				 "leadEB := abs(leadScEta) < 1.5",
 				 "subleadEB := abs(subleadScEta) < 1.5",
 				 "r9Min := TMath::Min(subleadR9,leadR9)",
@@ -42,8 +42,10 @@
 				],
         "variables"          : [["minR9",[0,1.2,0.01],0]
 				],
-        "selectioncuts"      : [["-ebHoE",[-0.1,0.01,0.0005],-0.05],
-				["-eeHoE",[-0.1,0.01,0.0005],-0.05],
+        "_selectioncuts"      : [["-ebHoE",[-0.1,0.01,0.0005],-0.05],
+				["-eeHoE",[-0.1,0.01,0.0005],-0.05]
+				 ],
+        "selectioncuts"      : [
 				["-ebChIso",[-10,0.01,0.1],-5],
 				["-eeChIso",[-10,0.01,0.1],-5],
 				["-ebPhoIso",[-10,0.01,0.1],-5],
@@ -62,10 +64,10 @@
         "###" : "----------------------------------------------------------------------------------------------",
         "signals"             : {
 	"sig"       : [		
-		       ["kinGenIso/trees/RSGravToGG_kMpl_02_M_1500_13TeV_EBHighR9","1"],
-		       ["kinGenIso/trees/RSGravToGG_kMpl_02_M_1500_13TeV_EBLowR9","1"],
-		       ["kinGenIso/trees/RSGravToGG_kMpl_02_M_1500_13TeV_EEHighR9","1"],
-		       ["kinGenIso/trees/RSGravToGG_kMpl_02_M_1500_13TeV_EELowR9","1"]
+		       ["kinGenIso/trees/RSGravToGG_kMpl_02_M_5000_13TeV_EBHighR9","1"],
+		       ["kinGenIso/trees/RSGravToGG_kMpl_02_M_5000_13TeV_EBLowR9","1"],
+		       ["kinGenIso/trees/RSGravToGG_kMpl_02_M_5000_13TeV_EEHighR9","1"],
+		       ["kinGenIso/trees/RSGravToGG_kMpl_02_M_5000_13TeV_EELowR9","1"]
 				]
             },
         
@@ -93,25 +95,15 @@
 
 		},
         "backgrounds"         : { 
-	    "pp"                 : [
-				    ["kinGenIso/trees/GGJets_M_200To13000_sherpa_13TeV_EBHighR9","1"],
-				    ["kinGenIso/trees/GGJets_M_200To13000_sherpa_13TeV_EBLowR9","1"],
-				    ["kinGenIso/trees/GGJets_M_200To13000_sherpa_13TeV_EEHighR9","1"],
-				    ["kinGenIso/trees/GGJets_M_200To13000_sherpa_13TeV_EELowR9","1"],
-				    ["kinNonGenIso/trees/GGJets_M_200To13000_sherpa_13TeV_EBHighR9","1"],
-				    ["kinNonGenIso/trees/GGJets_M_200To13000_sherpa_13TeV_EBLowR9","1"],
-				    ["kinNonGenIso/trees/GGJets_M_200To13000_sherpa_13TeV_EEHighR9","1"],
-				    ["kinNonGenIso/trees/GGJets_M_200To13000_sherpa_13TeV_EELowR9","1"]
-				    ],
 		"non_pp"             : [
-					["kin/trees/GJets_HT_100toInf_13TeV_EBHighR9","weight < 5."],
-					["kin/trees/GJets_HT_100toInf_13TeV_EBLowR9", "weight < 5."],
-					["kin/trees/GJets_HT_100toInf_13TeV_EEHighR9","weight < 5."],
-					["kin/trees/GJets_HT_100toInf_13TeV_EELowR9", "weight < 5."]
+					["kin/trees/GJets_HT_100toInf_13TeV_EBHighR9","1"],
+					["kin/trees/GJets_HT_100toInf_13TeV_EBLowR9", "1"],
+					["kin/trees/GJets_HT_100toInf_13TeV_EEHighR9","1"],
+					["kin/trees/GJets_HT_100toInf_13TeV_EELowR9", "1"]
 					]
 		},
 	    
-	    "weights"             : { "pp" : "weight", "non_pp" : "weight", "sig" : "weight/10."  
+	    "weights"             : { "pp" : "10.*weight", "non_pp" : "10.*weight", "sig" : "weight"  
 		    },
 	    "##" : "'Ultraviolet' cutoff in number of events",
 		"minevents"           : { "pp" : 0.1, "non_pp" : 0.01, "sig" : 0.1  },
