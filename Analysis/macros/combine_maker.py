@@ -32,10 +32,10 @@ class CombineApp(TemplatesApp):
             option_groups=[
                 ("Combine workspace options", [
                         make_option("--fit-name",dest="fit_name",action="store",type="string",
-                                    default="2D",
+                                    default="cic",
                                     help="Fit to consider"),
                         make_option("--observable",dest="observable",action="store",type="string",
-                                    default="mass[235,300,5000]",
+                                    default="mgg[235,300,5000]",
                                     help="Observable used in the fit default : [%default]",
                                     ),
                         make_option("--fit-background",dest="fit_backround",action="store_true",default=False,
@@ -54,11 +54,11 @@ class CombineApp(TemplatesApp):
                         make_option("--sources",dest="sources",action="callback",type="string",
                                     callback=optpars_utils.ScratchAppend(),
                                     default=["data"],
-                                    help="MC truth components to be considered in the fit default : [%default]",
+                                    help="Source dataset to use for the bkg fit default : [%default]",
                                     ),
                         make_option("--data-source",dest="data_source",action="store",type="string",
                                     default="data",
-                                    help="MC truth components to be considered in the fit default : [%default]",
+                                    help="Dataset to be used as 'data' default : [%default]",
                                     ),
                         
                         ]
@@ -143,13 +143,12 @@ class CombineApp(TemplatesApp):
                 ## build pdf
                 pdf = self.buildPdf(model,"model_%s%s" % (comp,cat), roobs )
                 pdf.SetName("model_%s%s" % (comp,cat))
-                norm = self.buildRooVar("norm_%s" %  (pdf.GetName()), [], importToWs=False ) ## normalization has to be called norm_<pdfname> or combine won't find it
+                norm = self.buildRooVar("%s_norm" %  (pdf.GetName()), [], importToWs=False ) ## normalization has to be called <pdfname>_norm or combine won't find it
                 norm.setVal(reduced.sumEntries())
                 extpdf = ROOT.RooExtendPdf("ext_%s" % pdf.GetName(),"ext_%s" %  pdf.GetName(),pdf,norm)
                 extpdf.fitTo(binned,ROOT.RooFit.Strategy(2))
-                ## extpdf.fitTo(reduced,ROOT.RooFit.Strategy(1))
-            
-
+                extpdf.fitTo(reduced,ROOT.RooFit.Strategy(1))
+                
                 ## FIXME: set normalization to expected number of events in signal region
                 ## ok as long as we data as source
 
