@@ -62,7 +62,8 @@
     "#" :  "groups of categories can be defined to resum some of the categories",
     "groups": {
         "EBEB"       : ["EBHighR9","EBLowR9"],
-        "notEBEB"    : ["EEHighR9","EELowR9"]
+        "notEBEB"    : ["EEHighR9","EELowR9"],
+        "eta_inclusive"    : ["EBHighR9","EBLowR9","EEHighR9","EELowR9"]
         }, 
 
     "#" : "how to compose the tree name starting from sub-pieces       ",
@@ -290,7 +291,7 @@
             "store_trees"  : true,
             "selection"    : "cicNoChIsoSinglePho",
             "_preselection" : "phoChIso < 15.",
-            "preselection" : "1.",
+            "preselection" : "phoPt >150.",
             "components" : ["p", "f"],
             "categories" : { 
                 "EB" : { 
@@ -300,8 +301,12 @@
                 "EE" : {
                     "src" : "notEBEB",
                         "fill" : { "1" : ["phoChIso"] }
-
-                }
+                
+                },
+                "eta_inclusive" :{
+                        "src" : "eta_inclusive",
+                            "fill" : { "1" : ["phoChIso"] }
+				}
             },
             "truth_selection" : {
                 "p" : "phoPrompt",
@@ -432,22 +437,24 @@
     "comparisons" : {
 	"fit2DTruth" : { "fit" : "2D",
 		"templates" : { "mix:kDSinglePho2D" : {} },
-                "components": [ 
-				["pp",{ "2D" : {}}]
+                "components": ["ff","pf",
+                     ["pp",{ "2D" : {}}] 
                 ],
+                "prepfit": false,
 		"doDataMc" : false, "doMcTruth" : true,
-		"splitByBin" : true,
+		"splitByBin" : false,
                 "template_binning" : [ 0.0,0.1, 1.0, 4.0,9.0,15.0],
 				"mass_binning" :"mass[13000,0.0,13000.0]",
-				"mass_split":[10,2,0]
+				"mass_split":[5,5,0]
 		},
 	"_fit1DTruth" : { "fit" : "1D",
                 "components" : [ "f","p" ],
 		"templates" : {"singlePho" : { "EBEB" : "EB", "EBEE" : "EB", "EEEB" : "EE"  }
                                 ,"1D" : {} 
                             },
+                "prepfit": false,
 		"doDataMc" : false, "doMcTruth" : true,
-		"splitByBin" : true,
+		"splitByBin" : false,
                 "template_binning" : [ 0.0,0.1, 1.0, 4.0,9.0,15.0 ],
 				"mass_binning" :"mass[13000,0.0,13000.0]",
 				"mass_split":[10,10,0]
