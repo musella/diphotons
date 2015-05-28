@@ -837,7 +837,6 @@ class TemplatesApp(PlotApp):
             tree = self.treeData(name)
             if not tree: 
                 return dset
-            print "autofill"
             if rooset:
                 dataset = dataset.reduce(RooFit.SelectVars(rooset))
             else:

@@ -17,4 +17,9 @@
 - `./bkg_bias.py --analyze-bias --bias-files bias_study_toys_from_mc_cmp_to_gen_5fb_1000/toys.root --bias-labels mc --bias-files bias_study_toys_from_fit_cmp_to_gen_5fb_1000/toys.root --bias-labels fit -O ~/www/exo/phys_14_anv1/bkg_model_v0/5fb`
 
 
+## Preparing combine inputs
+
+### Background model
+- ` ./combine_maker.py --load templates_maker.json --fit-name cic --input-dir full_analysis_anv1_v16  -o full_analysis_anv1_v16/final_ws.root`
+- ` ./combine_maker.py --fit-name cic  --fit-background  --read-ws full_analysis_anv1_v16/final_ws.root -O ~/www/exo/test -o full_analysis_anv1_v16/bkg_ws.root`
 

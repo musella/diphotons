@@ -58,16 +58,6 @@ class BiasApp(CombineApp):
                         make_option("--first-toy",dest="first_toy",action="store",type="int",default=False,
                                     help="First toy to fit",
                                     ),
-                        make_option("--components",dest="components",action="callback",type="string",
-                                    callback=optpars_utils.ScratchAppend(),
-                                    default=[""],
-                                    help="MC truth components to be considered in the fit default : [%default]",
-                                    ),
-                        make_option("--models",dest="models",action="callback",type="string",
-                                    callback=optpars_utils.ScratchAppend(),
-                                    default=[""],
-                                    help="Background models to use default : [%default]",
-                                    ),
                         make_option("--fit-range",dest="fit_range",action="callback",type="string",callback=optpars_utils.ScratchAppend(float),
                                     default=[300,500],
                                     help="Observable range for the fit region : [%default]",
@@ -97,8 +87,6 @@ class BiasApp(CombineApp):
         import diphotons.Utils.pyrapp.style_utils as style_utils
         ROOT.gSystem.Load("libdiphotonsUtils")
         
-        self.pdfPars_ = ROOT.RooArgSet()
-
     def __call__(self,options,args):
         ## load ROOT style
         self.loadRootStyle()
@@ -599,169 +587,8 @@ class BiasApp(CombineApp):
         summaryf = open("%s/README.txt" % options.outdir,"w+")
         summaryf.write(summarystr)
         summaryf.close()
+
         
-        
-    ## ------------------------------------------------------------------------------------------------------------
-    def buildPdf(self,model,name,xvar,order=0):
-        
-        pdf = None
-        if model == "dijet":
-            pname = "dijet_%s" % name
-            linc = self.buildRooVar("%s_lin" % pname,[], importToWs=False)
-            logc = self.buildRooVar("%s_log" % pname,[], importToWs=False)
-            ## linc.setVal(4.)
-            ## logc.setVal(-10.)
-            linc.setVal(5.)
-            logc.setVal(-1.)
-            
-            self.pdfPars_.add(linc)
-            self.pdfPars_.add(logc)
-            
-            roolist = ROOT.RooArgList( xvar, linc, logc )
-            pdf = ROOT.RooGenericPdf( pname, pname, "pow(@0,@1+@2*log(@0))", roolist )
-            
-            self.keep( [pdf,linc,logc] )
-        elif model == "moddijet":
-            pname = "moddijet_%s" % name
-            lina = self.buildRooVar("%s_lina" % pname,[], importToWs=False)
-            loga = self.buildRooVar("%s_loga" % pname,[], importToWs=False)
-            linb = self.buildRooVar("%s_linb" % pname,[], importToWs=False)
-            sqrb = self.buildRooVar("%s_sqrb" % pname,[], importToWs=False)
-            lina.setVal(5.)
-            loga.setVal(-1.)
-            linb.setVal(0.1)
-            sqrb.setVal(1./13.e+3)
-            sqrb.setConstant(1)
-            
-            
-            self.pdfPars_.add(lina)
-            self.pdfPars_.add(loga)
-            self.pdfPars_.add(linb)
-            self.pdfPars_.add(sqrb)
-            
-            roolist = ROOT.RooArgList( xvar, lina, loga, linb, sqrb )
-            pdf = ROOT.RooGenericPdf( pname, pname, "pow(@0,@1+@2*log(@0))*pow(1.-@0*@4,@3)", roolist )
-            
-            self.keep( [pdf,lina,loga, linb, sqrb] )
-        elif model == "expow":
-            
-            pname = "expow_%s" % name
-            lam = self.buildRooVar("%s_lambda" % pname,[], importToWs=False)
-            alp = self.buildRooVar("%s_alpha"  % pname,[], importToWs=False)
-            lam.setVal(0.)
-            alp.setVal(-4.)
-            
-            self.pdfPars_.add(alp)
-            self.pdfPars_.add(lam)
-            
-            roolist = ROOT.RooArgList( xvar, lam, alp )
-            pdf = ROOT.RooGenericPdf( pname, pname, "exp(@1*@0)*pow(@0,@2)", roolist )
-            
-            self.keep( [pdf,lam,alp] )
-
-        elif model == "expow2":
-            
-            pname = "expow2_%s" % name
-            lam0 = self.buildRooVar("%s_lambda0" % pname,[], importToWs=False)
-            lam1 = self.buildRooVar("%s_lambda1" % pname,[], importToWs=False)
-            alp = self.buildRooVar("%s_alpha"  % pname,[], importToWs=False)
-            lam0.setVal(0.)
-            lam1.setVal(0.)
-            alp.setVal(2.)
-            
-            self.pdfPars_.add(alp)
-            self.pdfPars_.add(lam0)
-            self.pdfPars_.add(lam1)
-            
-            ## hmax = ROOT.RooFormulaVar("%s_hmax" %pname, "( -@0/(4.*@1)>300. && -@0/(4.*@1)<3500.) ? @0*@0/ (4.*@1)  :TMath::Max(@1+2@2*300.,@1+2@2*3500.)", ROOT.RooArgList(lam0,lam1) )
-            ## hmax = ROOT.RooFormulaVar("%s_hmax" %pname, "@1 != 0. ? @0*@0/ (4.*@1) : 0.", ROOT.RooArgList(lam0,lam1) )
-            bla = ROOT.RooArgList(lam0,lam1)
-            ## hmax = ROOT.RooFormulaVar("%s_hmax" %pname,"( @1 != 0. ? (-@0/(4.*@1)>300. && -@0/(4.*@1)<3500. ? @0*@0/(4.*@1+@1) : TMath::Max(@0*3500+2*@1*3500.*3500,@0*3500+2*@1*300.*300)) : @0*3500.)", bla )
-            hmax = ROOT.RooFormulaVar("%s_hmax" %pname,"( @1 != 0. ? (-@0/(4.*@1)>300. && -@0/(4.*@1)<3500. ? @0*@0/(4.*@1+@1) : TMath::Max(@0*3500+2*@1*3500.*3500,@0*3500+2*@1*300.*300)) : @0*3500.)", bla )
-            ## hmax = ROOT.RooFormulaVar("%s_hmax" %pname,"( @1 != 0. ? TMath::Max(@0*3500+2*@1*3500.*3500,@0*3500+2*@1*300.*300) : @0*3500.)", bla )
-            roolist = ROOT.RooArgList( xvar, lam0, lam1, alp, hmax )
-            ## pdf = ROOT.RooGenericPdf( pname, pname, "exp( (@1*@0+2.*@2*@0*@0 < -@3 ? @1*@0 : 2*@2*@0*@0-@3) +@2*@0*@0   )*pow(@0,@3)", roolist )
-            ## pdf = ROOT.RooGenericPdf( pname, pname, "exp( @1*@0+@2*@0*@0   )*pow(@0, -@3*@3 - TMath::Max(TMath::Abs(@1+2*@2*3500.),TMath::Abs(@1+2*@2*30.)) )", roolist )
-            pdf = ROOT.RooGenericPdf( pname, pname, "exp( @1*@0+@2*@0*@0   )*pow(@0, -@3*@3 + @4  )", roolist )
-            ## pdf = ROOT.RooGenericPdf( pname, pname, "exp( (@1*3500.+2.*@2*3500.*3500. < -@3 ? @1*@0 : (2*@2*3500.*3500.-@3)*@0/3500. ) +@2*@0*@0   )*pow(@0,@3)", roolist )
-            
-            self.keep( [pdf,lam0,lam1,alp,hmax] )
-
-        elif model == "invpow":
-            
-            pname = "invpol_%s" % name
-            slo = self.buildRooVar("%s_slo" % pname,[], importToWs=False)
-            alp = self.buildRooVar("%s_alp" % pname,[], importToWs=False)
-            slo.setVal(2.e-3)
-            alp.setVal(-7.)
-            
-            self.pdfPars_.add(slo)
-            self.pdfPars_.add(alp)
-            
-            roolist = ROOT.RooArgList( xvar, slo, alp )
-            pdf = ROOT.RooGenericPdf( pname, pname, "pow(1+@0*@1,@2)", roolist )
-            
-            self.keep( [pdf,slo,alp] )
-
-        elif model == "invpowlog":
-            
-            pname = "invpol_%s" % name
-            slo = self.buildRooVar("%s_slo" % pname,[], importToWs=False)
-            alp = self.buildRooVar("%s_alp" % pname,[], importToWs=False)
-            bet = self.buildRooVar("%s_bet" % pname,[], importToWs=False)
-            slo.setVal(1.e-3)
-            alp.setVal(-4.)
-            bet.setVal(0.)
-            
-            self.pdfPars_.add(slo)
-            self.pdfPars_.add(alp)
-            self.pdfPars_.add(bet)
-            
-            roolist = ROOT.RooArgList( xvar, slo, alp, bet )
-            pdf = ROOT.RooGenericPdf( pname, pname, "pow(1+@0*@1,@2+@3*log(@0))", roolist )
-            
-            self.keep( [pdf,slo,alp,bet] )
-
-        elif model == "invpowlin":
-            
-            pname = "invpol_%s" % name
-            slo = self.buildRooVar("%s_slo" % pname,[], importToWs=False)
-            alp = self.buildRooVar("%s_alp" % pname,[], importToWs=False)
-            bet = self.buildRooVar("%s_bet" % pname,[], importToWs=False)
-            slo.setVal(1.e-3)
-            alp.setVal(-4.)
-            bet.setVal(0.)
-            
-            self.pdfPars_.add(slo)
-            self.pdfPars_.add(alp)
-            self.pdfPars_.add(bet)
-            
-            roolist = ROOT.RooArgList( xvar, slo, alp, bet )
-            pdf = ROOT.RooGenericPdf( pname, pname, "pow(1+@0*@1,@2+@3*@0)", roolist )
-            
-            self.keep( [pdf,slo,alp,bet] )
-
-        elif model == "invpow2":
-            
-            pname = "invpol2_%s" % name
-            slo = self.buildRooVar("%s_slo" % pname,[], importToWs=False)
-            qua = self.buildRooVar("%s_qua" % pname,[], importToWs=False)
-            alp = self.buildRooVar("%s_alp" % pname,[], importToWs=False)
-            slo.setVal(1.e-4)
-            qua.setVal(1.e-6)
-            alp.setVal(-4.)
-            
-            self.pdfPars_.add(slo)
-            self.pdfPars_.add(qua)
-            self.pdfPars_.add(alp)
-            
-            roolist = ROOT.RooArgList( xvar, slo, qua, alp )
-            pdf = ROOT.RooGenericPdf( pname, pname, "pow(1+@1*@0+@2*@0*@0,@3)", roolist )
-            
-            self.keep( [pdf,slo,qua,alp] )
-
-            
-        return pdf
       
     
 # -----------------------------------------------------------------------------------------------------------

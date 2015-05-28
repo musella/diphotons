@@ -1,3 +1,4 @@
+
 { 
     "#" : "This is a JSON file to configure categoryOptimizationMultiDim.py script",
         "#" : "Comments are not supported in JSON.",
@@ -7,6 +8,7 @@
         "###" : "----------------------------------------------------------------------------------------------",
         "observable"          : ["mass",[250,5000,150],3000],
         "_settings"            : [["floatLast",[1]],["setScan",[100,1,2]]],
+        "_settings"            : [["floatLast",[0]],["setScan",[100,1,1]]],
         "settings"            : [["floatLast",[0]],["setScan",[100,1,1]]],
         
         "###" : "----------------------------------------------------------------------------------------------",
@@ -14,10 +16,12 @@
         "aliases"             : [ 
 				 "ebHoE := TMath::Max( (abs(leadScEta) < 1.5)*leadHoE, (abs(subleadScEta) < 1.5)*subleadHoE )",
 				 "eeHoE := TMath::Max( (abs(leadScEta) > 1.5)*leadHoE, (abs(subleadScEta) > 1.5)*subleadHoE )",
-				 "ebChIso := TMath::Max( (abs(leadScEta) < 1.5)*leadChIso, (abs(subleadScEta) < 1.5)*subleadChIso )",
-				 "eeChIso := TMath::Max( (abs(leadScEta) > 1.5)*leadChIso, (abs(subleadScEta) > 1.5)*subleadChIso )",
-				 "ebPhoIso := TMath::Max( (abs(leadScEta) < 1.5)*(leadPhoIso-leadPhoIsoEA*rho-2.e-3*leadPt), (abs(subleadScEta) < 1.5)*(subleadPhoIso-subleadPhoIsoEA*rho-2.e-3*subleadPt) )",
-				 "eePhoIso := TMath::Max( (abs(leadScEta) > 1.5)*(leadPhoIso-leadPhoIsoEA*rho-2.e-3*leadPt), (abs(subleadScEta) > 1.5)*(subleadPhoIso-subleadPhoIsoEA*rho-2.e-3*subleadPt) )",
+				 "lebChIso := TMath::Log( 1 + TMath::Max( (abs(leadScEta) < 1.5)*leadChIso, (abs(subleadScEta) < 1.5)*subleadChIso ) )",
+				 "leeChIso := TMath::Log( 1 + TMath::Max( (abs(leadScEta) > 1.5)*leadChIso, (abs(subleadScEta) > 1.5)*subleadChIso ) )",
+				 "leadCorrPhoIso    := TMath::Max( (leadPhoIso-leadPhoIsoEA*rho-2.e-3*leadPt), -5)",
+				 "subleadCorrPhoIso := TMath::Max( (subleadPhoIso-subleadPhoIsoEA*rho-2.e-3*subleadPt), -5)",
+				 "ebPhoIso := TMath::Max( (abs(leadScEta) < 1.5)*leadCorrPhoIso-5*(abs(leadScEta) > 1.5), (abs(subleadScEta) < 1.5)*subleadCorrPhoIso-5*(abs(subleadScEta) > 1.5))",
+				 "eePhoIso := TMath::Max( (abs(leadScEta) > 1.5)*leadCorrPhoIso-5*(abs(leadScEta) < 1.5), (abs(subleadScEta) > 1.5)*subleadCorrPhoIso-5*(abs(subleadScEta) < 1.5)) ",
 				 "leadEB := abs(leadScEta) < 1.5",
 				 "subleadEB := abs(subleadScEta) < 1.5",
 				 "r9Min := TMath::Min(subleadR9,leadR9)",
@@ -34,7 +38,7 @@
         "_range"              : [],
         
         "subcategories"      : [["EBEB","leadEB && subleadEB"],
-                                 ["EBEE","!(leadEB || subleadEB)"]
+                                 ["EBEE","!(leadEB && subleadEB) && leadEB != subleadEB"]
                                  ],
 
         "##" : "Split Barrel / Endcaps",
@@ -43,13 +47,15 @@
         "variables"          : [["minR9",[0,1.2,0.01],0]
 				],
         "_selectioncuts"      : [["-ebHoE",[-0.1,0.01,0.0005],-0.05],
-				["-eeHoE",[-0.1,0.01,0.0005],-0.05]
+				 ["-eeHoE",[-0.1,0.01,0.0005],-0.05],
+				["-ebChIso",[-5,0.001,0.1],-3],
+				["-eeChIso",[-5,0.001,0.1],-3]
 				 ],
         "selectioncuts"      : [
-				["-ebChIso",[-10,0.01,0.1],-5],
-				["-eeChIso",[-10,0.01,0.1],-5],
-				["-ebPhoIso",[-10,0.01,0.1],-5],
-				["-eePhoIso",[-10,0.01,0.1],-5]
+				["-lebChIso",[-6,0.01,0.1],-3],
+				["-leeChIso",[-6,0.01,0.1],-3],
+				["-ebPhoIso",[-10,5,0.1],-5],
+				["-eePhoIso",[-10,5,0.1],-5]
 				],
         "##" : "Split also High/Low R9",
         "#variables"          : [["eelmva",[-0.2,1,0.02],0],
@@ -64,10 +70,10 @@
         "###" : "----------------------------------------------------------------------------------------------",
         "signals"             : {
 	"sig"       : [		
-		       ["kinGenIso/trees/RSGravToGG_kMpl_02_M_5000_13TeV_EBHighR9","1"],
-		       ["kinGenIso/trees/RSGravToGG_kMpl_02_M_5000_13TeV_EBLowR9","1"],
-		       ["kinGenIso/trees/RSGravToGG_kMpl_02_M_5000_13TeV_EEHighR9","1"],
-		       ["kinGenIso/trees/RSGravToGG_kMpl_02_M_5000_13TeV_EELowR9","1"]
+		       ["kinGenIso/trees/RSGravToGG_kMpl_001_M_750_13TeV_EBHighR9","1"],
+		       ["kinGenIso/trees/RSGravToGG_kMpl_001_M_750_13TeV_EBLowR9","1"],
+		       ["kinGenIso/trees/RSGravToGG_kMpl_001_M_750_13TeV_EEHighR9","1"],
+		       ["kinGenIso/trees/RSGravToGG_kMpl_001_M_750_13TeV_EELowR9","1"]
 				]
             },
         
@@ -95,6 +101,16 @@
 
 		},
         "backgrounds"         : { 
+	    "pp"                 : [
+				    ["kinGenIso/trees/GGJets_M_200To13000_sherpa_13TeV_EBHighR9","1"],
+				    ["kinGenIso/trees/GGJets_M_200To13000_sherpa_13TeV_EBLowR9","1"],
+				    ["kinGenIso/trees/GGJets_M_200To13000_sherpa_13TeV_EEHighR9","1"],
+				    ["kinGenIso/trees/GGJets_M_200To13000_sherpa_13TeV_EELowR9","1"],
+				    ["kinNonGenIso/trees/GGJets_M_200To13000_sherpa_13TeV_EBHighR9","1"],
+				    ["kinNonGenIso/trees/GGJets_M_200To13000_sherpa_13TeV_EBLowR9","1"],
+				    ["kinNonGenIso/trees/GGJets_M_200To13000_sherpa_13TeV_EEHighR9","1"],
+				    ["kinNonGenIso/trees/GGJets_M_200To13000_sherpa_13TeV_EELowR9","1"]
+				    ],
 		"non_pp"             : [
 					["kin/trees/GJets_HT_100toInf_13TeV_EBHighR9","1"],
 					["kin/trees/GJets_HT_100toInf_13TeV_EBLowR9", "1"],
@@ -106,7 +122,7 @@
 	    "weights"             : { "pp" : "10.*weight", "non_pp" : "10.*weight", "sig" : "weight"  
 		    },
 	    "##" : "'Ultraviolet' cutoff in number of events",
-		"minevents"           : { "pp" : 0.1, "non_pp" : 0.01, "sig" : 0.1  },
+		"minevents"           : { "pp" : 0.0001, "non_pp" : 0.0001, "sig" : 0.001  },
 		
 		"###" : "----------------------------------------------------------------------------------------------",
 		    "##" : "When loading previous steps only look at ncat in [1:1]",
