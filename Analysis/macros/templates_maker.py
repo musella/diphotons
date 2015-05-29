@@ -412,7 +412,7 @@ class TemplatesApp(PlotApp):
                 for x in range(1,b+1):
                     bin+=1
                     binC= temp2d.GetBinContent(x,b)
-                    print binC, "bin width" ,temp1dunroll.GetBinWidth(bin)
+               #     print binC, "bin width" ,temp1dunroll.GetBinWidth(bin)
                     binE= temp2d.GetBinError(x,b)
                     temp1dunroll.SetBinContent(bin,binC)
                     temp1dunroll.SetBinError(bin,binE)
@@ -421,7 +421,7 @@ class TemplatesApp(PlotApp):
                     bin+=1
                     binC= temp2d.GetBinContent(b,y)
                     binE= temp2d.GetBinError(b,y)
-                    print binC, "bin width" ,temp1dunroll.GetBinWidth(bin)
+                #    print binC, "bin width" ,temp1dunroll.GetBinWidth(bin)
                     temp1dunroll.SetBinContent(bin,binC)
                     temp1dunroll.SetBinError(bin,binE)
             histlistunroll.append(temp1dunroll)
@@ -750,7 +750,7 @@ class TemplatesApp(PlotApp):
                     if len(legs) != ndim:
                         sys.exit(-1,"number of legs does not match number of dimensions for dataset mixing")
                     rndswap     = fill.get("rndswap",False)
-                    rndmatch     = fill.get("rndmatch",False)
+                    rndmatch     = fill.get("rndmatch",0.)
                     
                     print "legs  :", " ".join(legnams)
                     print "type  :", mixType
@@ -798,6 +798,7 @@ class TemplatesApp(PlotApp):
                             
                         print "target :", dataname
                         print "rndswap :", rndswap, " rndmatch :", rndmatch," useCdfDistance :", useCdfDistance, "nNeigh :", nNeigh
+                        print "target :", target
                         mixer.fillLikeTarget(target,targetMatch1,targetMatch1,targetWeight,tree1,tree2,
                                              pt,eta,phi,energy,pt,eta,phi,energy,
                                              matchVars1,matchVars2,rndswap,rndmatch,nNeigh,useCdfDistance)
@@ -1050,7 +1051,6 @@ class TemplatesApp(PlotApp):
             ## replace %(sel)s keyword with choosen selection
             replacements = { "sel" : selection }
             samples = [ s % replacements for s in samplesTmpl ]
-            
             ## initialize list of trees: one entry per category
             self.trees_[key] = {}
             
