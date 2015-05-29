@@ -43,8 +43,6 @@ void DataSetFiller::fillFromTree(TTree * tree, const char * weightExpr, bool ign
         RooRealVar &var = dynamic_cast<RooRealVar &>( vars_[ivar] );
         if( std::string(var.GetName()) == "weight" ) { 
             formulas[ivar] = weight;
-//  } else if(reduced &&( (std::string(var.GetName()) == "templateNdim2Dim0") ||(std::string(var.GetName()) == "templateNdim2Dim1")||(std::string(var.GetName()) == "templateNdim1Dim0"))){
-  //          formulas[ivar] = new TTreeFormula( var.GetName(), (ignoreExpr ? var.GetName() : var.GetTitle()), tree );
         } else{
             formulas[ivar] = new TTreeFormula( var.GetName(), (ignoreExpr ? var.GetName() : var.GetTitle()), tree );
         }

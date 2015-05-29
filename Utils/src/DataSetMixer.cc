@@ -295,7 +295,7 @@ void DataSetMixer::fillLikeTarget(TTree * target,
                                   const char *pT1, const char *eta1, const char *phi1, const char *energy1, 
                                   const char *pT2, const char *eta2, const char *phi2, const char *energy2,
                                   const RooArgList & matchVars1, const RooArgList & matchVars2,
-                                  bool rndSwap, int nNeigh, bool useCdfDistance
+                                  bool rndSwap,float rndMatch, int nNeigh, bool useCdfDistance
         )
 {
     
@@ -305,7 +305,6 @@ void DataSetMixer::fillLikeTarget(TTree * target,
     TTreeFormula * weight2      = (!weight2_.empty()? new TTreeFormula("weight2",weight2_.c_str(),tree2) : 0);
     TTreeFormula * weightTarget = (!targetWeight.empty() ? new TTreeFormula("weightTarget",targetWeight.c_str(),target) : 0);
     /// cout << targetWeight << " " << weightTarget << endl;
-
     fillFormulas(vars_,tree1,formulas1);
     fillFormulas(vars_,tree2,formulas2);
 
@@ -327,12 +326,12 @@ void DataSetMixer::fillLikeTarget(TTree * target,
     std::vector<TH1 *> matchHisto1(matchVars1.getSize(),0), matchHisto2(matchVars2.getSize(),0);
     
     // loop over 1st tree and store kinematics and variables
-    cout << "DataSetMixer: loop over 1st leg ...";
+    cout << "DataSetMixer: loop over 1st tree/leg ...";
     fillCache(cache1,tree1,1.,ptSubleadMin_,ptLeadMin_,fourVec1,formulas1,match1,weight1,&cacheMatch1,(useCdfDistance?&matchHisto1:0));
     cout << "done. Selected " << cache1.size() << " entries "<< endl;
     
     // loop over 2nd tree and store kinematics and variables
-    cout << "DataSetMixer: loop over 2nd leg ...";
+    cout << "DataSetMixer: loop over 2nd tree/leg ...";
     fillCache(cache2,tree2,1.,ptSubleadMin_,ptLeadMin_,fourVec2,formulas2,match2,weight2,&cacheMatch2,(useCdfDistance?&matchHisto2:0));
     cout << "done. Selected " << cache2.size() << " entries "<< endl;
 	
@@ -382,9 +381,15 @@ void DataSetMixer::fillLikeTarget(TTree * target,
         eval(target2,targetMatch2);
 
         // FIXME decouple swap in matching and template filling
-        bool swap = rndSwap && ientry % 2 == 0;
+        //bool swap = rndSwap && ientry % 2 == 0;
+        //bool rndmatch = rndMatch && ientry % 2 == 0;
+        TKDTreeIF *mtree1=kdtree1, *mtree2=kdtree2;
+        std::vector<Cache> *mcache1=&cache1, *mcache2=&cache2; 
+        //bool swap = (rndMatch ) && ientry % 2 == 0;
+        bool swap = (rndMatch!=0.0? gRandom->Uniform()> rndMatch: false );
         if( swap ) {
-            std::swap(target1,target2);
+            std::swap(mtree1,mtree2);
+            std::swap(mcache1,mcache2);
         }
         
         float wei = ( weightTarget != 0 ? weightTarget->EvalInstance() : 1. );
@@ -395,8 +400,8 @@ void DataSetMixer::fillLikeTarget(TTree * target,
             }
         }
         
-        kdtree1->FindNearestNeighbors(&target1[0],nNeigh,&neigh1[0],&dist1[0]);
-        kdtree2->FindNearestNeighbors(&target2[0],nNeigh,&neigh2[0],&dist2[0]);
+        mtree1->FindNearestNeighbors(&target1[0],nNeigh,&neigh1[0],&dist1[0]);
+        mtree2->FindNearestNeighbors(&target2[0],nNeigh,&neigh2[0],&dist2[0]);
         
         std::shuffle(std::begin(neigh1), std::end(neigh1), engine);
         std::shuffle(std::begin(neigh2), std::end(neigh2), engine);
@@ -408,8 +413,8 @@ void DataSetMixer::fillLikeTarget(TTree * target,
                 }
                 continue;
             }
-            auto & obj1 = cache1[neigh1[ip]];
-            auto & obj2 = cache2[neigh2[ip]];
+            auto & obj1 = (*mcache1)[neigh1[ip]];
+            auto & obj2 = (*mcache2)[neigh2[ip]];
             
             bool reswap = rndSwap && gRandom->Uniform()>=0.5;
             auto & leg1 = ( reswap ? obj1 : obj2 );
