@@ -418,7 +418,7 @@ double CategoryOptimizer::optimizeNCat( int ncat, const double *cutoffs, bool dr
                     if( idim != parToDim.end() ) {
                         xp[jstep] = transformations_[idim->second]->eval( x[jstep] );
                     }
-                    if( y[jstep] > 0 ) {
+                    if( y[jstep] >= 0 ) {
                         int dir = jstep > nstep / 2 ? -1 : 1;
                         int kstep = jstep + dir;
                         while( kstep < ( int )nstep && kstep >= 0 ) {

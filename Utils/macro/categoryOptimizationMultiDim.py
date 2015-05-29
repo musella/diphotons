@@ -71,7 +71,11 @@ def optmizeCats(optimizer,ws,ndim,rng,args,readBack=False,doReduce=False,refit=0
     print 
     for itr in rng:
         if itr in summary:
-            boundaries = numpy.array([float(b) for b in summary[itr]["boundaries"]])
+            val = summary[itr]
+            if "selections" in val:
+                for isel in range(len(val["selections"])):
+                    optimizer.setOrthoCut(isel, float(val["selections"][isel]))
+            boundaries = numpy.array([float(b) for b in val["boundaries"]])
             aargs = args+(boundaries,)
             optimizer.optimizeNCat(itr,*aargs)
         else:
