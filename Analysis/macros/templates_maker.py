@@ -41,6 +41,8 @@ class TemplatesApp(PlotApp):
                                     default={},help="List of templates fits to be performed. Categories, componentd and templates can be specified."),
                         make_option("--mix",dest="mix",action="callback",callback=optpars_utils.Load(),type="string",
                                     default={},help="Configuration for event mixing."),
+                        make_option("--skip-templates",dest="skip_templates",action="store_true",
+                                    default=False,help="Skip templates generation (even if not reading back from ws)"),
                         make_option("--dataset-variables",dest="dataset_variables",action="callback",callback=optpars_utils.ScratchAppend(),type="string",
                                     default=[],help="List of variables to be added to dataets."),
                         make_option("--weight-expression",dest="weight_expression",action="store",type="string",
@@ -107,18 +109,13 @@ class TemplatesApp(PlotApp):
         ROOT.gSystem.Load("libdiphotonsUtils")
          
         ROOT.gStyle.SetOptStat(111111)
+
     ## ------------------------------------------------------------------------------------------------------------
-    def __call__(self,options,args):
+    def setup(self,options,args):
         """ 
-        Main method. Called automatically by PyRoot class.
+        Read input trees and generate new datasets/trees if required
         """
-        ## load ROOT style
-        self.loadRootStyle()
-        from ROOT import RooFit
-        ROOT.gStyle.SetOptStat(111111)
-        printLevel = ROOT.RooMsgService.instance().globalKillBelow()
-        ROOT.RooMsgService.instance().setGlobalKillBelow(RooFit.FATAL)
-        
+
         if len(options.only_subset)>0:
             subset = {}
             for name,fit in options.fits.iteritems():
@@ -140,8 +137,23 @@ class TemplatesApp(PlotApp):
         
         if options.read_ws:
             self.readWs(options,args)
-        else:
+        elif not options.skip_templates:
             self.prepareTemplates(options,args)
+
+
+    ## ------------------------------------------------------------------------------------------------------------
+    def __call__(self,options,args):
+        """ 
+        Main method. Called automatically by PyRoot class.
+        """
+        ## load ROOT style
+        self.loadRootStyle()
+        from ROOT import RooFit
+        ROOT.gStyle.SetOptStat(111111)
+        printLevel = ROOT.RooMsgService.instance().globalKillBelow()
+        ROOT.RooMsgService.instance().setGlobalKillBelow(RooFit.FATAL)
+        
+        self.setup(options,args)
         
         if options.mix_templates:
             self.mixTemplates(options,args)
@@ -154,7 +166,7 @@ class TemplatesApp(PlotApp):
         
         if options.prepare_nominal_fit:
             self.prepareNominalFit(options,args)
-
+        
 
     ## ------------------------------------------------------------------------------------------------------------
     def openOut(self,options):
@@ -856,7 +868,6 @@ class TemplatesApp(PlotApp):
             tree = self.treeData(name)
             if not tree: 
                 return dset
-            print "autofill"
             if rooset:
                 dataset = dataset.reduce(RooFit.SelectVars(rooset))
             else:

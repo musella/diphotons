@@ -20,6 +20,7 @@
                "QCD_HT_100toInf_13TeV:output.root/%(sel)s",
                "GJets_HT_100toInf_13TeV:output.root/%(sel)s"            
              ],
+    "#" : "FIXME: put back GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)sNonGenIso into the list of samples",	     
 
     "#" : "data used for template making",
     "templates" : [
@@ -31,7 +32,7 @@
      "#" : "mc dataset",
      "mc" : [
              "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)sGenIso",
-             "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)sNonGenIso",
+               "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)sNonGenIso",
                "QCD_HT_100toInf_13TeV:output.root/%(sel)s",
                "GJets_HT_100toInf_13TeV:output.root/%(sel)s"            
             ],
@@ -61,6 +62,10 @@
     "categories" : [],
     "#" :  "groups of categories can be defined to resum some of the categories",
     "groups": {
+        "EBHighR9"   : ["EBHighR9"],
+        "EBLowR9"    : ["EBLowR9"],
+        "EEHighR9"   : ["EEHighR9"],
+        "EELowR9"    : ["EELowR9"],
         "EBEB"       : ["EBHighR9","EBLowR9"],
         "notEBEB"    : ["EEHighR9","EELowR9"],
         "eta_inclusive"    : ["EBHighR9","EBLowR9","EEHighR9","EELowR9"]
@@ -71,9 +76,10 @@
     "#" : " %(cat)s is replaced with the category name                 ", 
     "treeName": "trees/%(sample)s_%(cat)s",
 
-    "preselection" : "leadChIso < 15. && subleadChIso < 15. && mass > 300." ,   "#" : "preselection cut applied to all trees",
+    "preselection" : "leadChIso < 15. && subleadChIso < 15. && mass > 250",   "#" : "preselection cut applied to all trees",
+    "_preselection" : "leadChIso < 5. && subleadChIso < 5. && leadHoE < 0.05 && subleadHoE < 0.05",   "#" : "preselection cut applied to all trees",
     "selection"    : "cicNoChIso",                              "#" : "nominal selection",
-        
+    
     "#" : "---------------------------------------------------------------------------------------------------------------------",
     "#" : "Fit definition                                                                                                       ",
     "#" : "---------------------------------------------------------------------------------------------------------------------",
@@ -94,13 +100,76 @@
                "subleadPrompt := subleadGenIso < 10. && subleadMatchType == 1",
                "subleadFake   := ! subleadPrompt",
                "phoPrompt := phoGenIso < 10. && phoMatchType == 1",
-               "phoFake   := ! phoPrompt"
+               "phoFake   := ! phoPrompt",
+	       "mgg := mass"
     ],
 
     "#" :"List of fits.",
     "#" :"General form is <fit-name> : { <fit-config> }",
         
     "fits" : {
+        "cic" : {
+            "ndim"       : 2,                                                                "#" : "number of dimensions for the template  ",
+            "bins"       : [ "mass", [500.0,1300.0] ],                                       "#" : "kinematic bins in which the fit is run ",
+            "template_binning" : [ 0.0,0.1, 1.0, 4.0,9.0, 15.0 ],                                   "#" : "template varaible binning              ",
+            "_template_binning" : [ -10.0, 0.0, 1.0, 1.5, 2.0, 2.5, 3.0, 5.0, 10.0, 15.0 ],
+
+            "selection"    : "cic",
+            "components" : [ "pp", "pf", "ff" ],                                             "#" : "list of fit components                 ",
+            "dataset_variables" : ["mgg","mass [-1.0,0.0,20.0,50.0,100.0,200.0,500.0,13000.0]","leadPt","subleadPt","leadEta","subleadEta", "leadMatchType", "subleadMatchType"],      "#" : "additional variables to be stored      ",
+            "store_trees" : true,	
+
+            "#" :"categories in which to split the fit       ",
+            "#" :"format is <fit-category-name>: { <config> }",
+            "categories" : {
+                "EBHighR9" : { 
+                    "src"  : "EBHighR9", "#" : "dataset category (or group) to use as input.",
+                     "#" :"instruction for how to fill the templates                                                                     ",
+                     "#" :" format is <condition> : [ <list-of-expressions> ]. the lenght of <list-of-expressions> has to be exactly ndim",
+
+                     "#" :"Pseudo-random-swap.                    ",
+                     "#" :" For even events order is lead,sublead.",
+                     "#" :" For odd events sublead,lead           ",
+                     "fill" : { 
+                     "TMath::Even(event)" :[ "leadChIso", "subleadChIso" ],
+                         "! TMath::Even(event)" :[ "subleadChIso", "leadChIso" ]
+                      }
+                }, 
+                "EBLowR9" : { 
+                    "src"  : "EBLowR9", "#" : "dataset category (or group) to use as input.",
+                     "#" :"instruction for how to fill the templates                                                                     ",
+                     "#" :" format is <condition> : [ <list-of-expressions> ]. the lenght of <list-of-expressions> has to be exactly ndim",
+
+                     "#" :"Pseudo-random-swap.                    ",
+                     "#" :" For even events order is lead,sublead.",
+                     "#" :" For odd events sublead,lead           ",
+                     "fill" : { 
+                     "TMath::Even(event)" :[ "leadChIso", "subleadChIso" ],
+                         "! TMath::Even(event)" :[ "subleadChIso", "leadChIso" ]
+                      }
+                }, 
+                "EEHighR9" : { "src" : "EEHighR9" ,
+                        "#" : "Here first photon is barrel, second is endcap",
+                        "fill" : { 
+                        "leadIsEB && ! subleadIsEB" :[ "leadChIso", "subleadChIso" ],
+                            "! leadIsEB && subleadIsEB" :[ "subleadChIso", "leadChIso" ]
+                       }
+                },
+                "EELowR9" : { "src" : "EELowR9" ,
+                        "#" : "Here first photon is barrel, second is endcap",
+                        "fill" : { 
+                        "leadIsEB && ! subleadIsEB" :[ "leadChIso", "subleadChIso" ],
+                            "! leadIsEB && subleadIsEB" :[ "subleadChIso", "leadChIso" ]
+                       }
+                } 
+            }, 
+		"truth_selection" : {
+		    "pp" : "leadPrompt  && subleadPrompt",
+			"pf" : "(leadPrompt && subleadFake) || (subleadPrompt && leadFake)",
+                    "ff" : "leadFake    && subleadFake && ( leadMatchType != 0 || subleadMatchType != 0)"
+			},
+	    "templates" : {}
+	},	
         "2D" : {
             "ndim"       : 2,                                                                "#" : "number of dimensions for the template  ",
             "bins"       : [ "mass", [500.0,1300.0] ],                                       "#" : "kinematic bins in which the fit is run ",
@@ -133,7 +202,7 @@
                         "leadIsEB && ! subleadIsEB" :[ "leadChIso", "subleadChIso" ],
                             "! leadIsEB && subleadIsEB" :[ "subleadChIso", "leadChIso" ]
                        }
-                } 
+                }
             },
             
             "#" :"MC truth selection.                                      ",
