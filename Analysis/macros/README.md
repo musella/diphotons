@@ -1,3 +1,19 @@
+## Control plots
+
+### Event selection monitoring
+`./control_plots.sh full_analysis_anv1_v18 ~/www/exo/phys_14_anv1`
+
+## Templates generation
+
+## Merge trees and fill template variables
+`./templates_maker.py --load templates_maker.json --input-dir full_analysis_anv1_v18 -o full_analysis_anv1_v18/templates.root`
+
+## Event mixing
+`./templates_maker.py --load templates_maker.json --read-ws full_analysis_anv1_v18/templates.root --mix-templates`
+
+## Comparison plots
+
+
 ## Bkg bias study
 
 ### Preparing input
