@@ -5,7 +5,6 @@ from optparse import OptionParser, make_option
 from copy import deepcopy as copy
 import os, json
 from pprint import pprint
-
 import array
 
 from getpass import getuser
@@ -326,6 +325,7 @@ class TemplatesApp(PlotApp):
                             isoarg1d=ROOT.RooArgList("isoarg")
                             isoarg1d.add(self.buildRooVar("templateNdim%dDim%d" % ( fit["ndim"],id),template_binning,recycle=True))                
                             tit = "compiso_%s_%s_%s_mb_%s_templateNdim%dDim%d" % (fitname,compname,cat,cut_s,fit["ndim"],id)
+                            print
                             print tit
                             for tm in templates_massc:
                                 print "tm.GetName()",tm.GetName()
@@ -344,6 +344,7 @@ class TemplatesApp(PlotApp):
                         diphomass[mb]=(diphomass[mb]+diphomass[mb+1])/2.
                         masserror.append((diphomass[mb+1]-diphomass[mb])/2.)
                         if fit["ndim"]>1:
+                            print
                             self.histounroll(templates_massc,template_binning,isoargs,cat,prepfit)
 
                 ########outside category loop
@@ -742,11 +743,14 @@ class TemplatesApp(PlotApp):
                         sname,scomp = src
                         legname = "template_%s_%s_%s" % (scomp,sname,leg)
                         legnams.append( legname )
+                        print legname
                         dset = self.rooData(legname,False)
+                        print dset
                         legs.append( (self.treeData(legname),ROOT.RooArgList(self.dsetVars(legname)) ) )
                     if len(legs) != ndim:
                         sys.exit(-1,"number of legs does not match number of dimensions for dataset mixing")
                     rndswap     = fill.get("rndswap",False)
+                    rndmatch     = fill.get("rndmatch",False)
                     
                     print "legs  :", " ".join(legnams)
                     print "type  :", mixType
@@ -793,10 +797,10 @@ class TemplatesApp(PlotApp):
                             targetMatch2.add(var)
                             
                         print "target :", dataname
-                        print "rndswap :", rndswap, "useCdfDistance :", useCdfDistance, "nNeigh :", nNeigh
+                        print "rndswap :", rndswap, " rndmatch :", rndmatch," useCdfDistance :", useCdfDistance, "nNeigh :", nNeigh
                         mixer.fillLikeTarget(target,targetMatch1,targetMatch1,targetWeight,tree1,tree2,
                                              pt,eta,phi,energy,pt,eta,phi,energy,
-                                             matchVars1,matchVars2,rndswap,nNeigh,useCdfDistance)
+                                             matchVars1,matchVars2,rndswap,rndmatch,nNeigh,useCdfDistance)
                     
                     dataset = mixer.get()
                     self.workspace_.rooImport(dataset,ROOT.RooFit.RecycleConflictNodes())
