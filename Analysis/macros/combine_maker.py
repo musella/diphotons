@@ -147,7 +147,7 @@ class CombineApp(TemplatesApp):
                 norm.setVal(reduced.sumEntries())
                 extpdf = ROOT.RooExtendPdf("ext_%s" % pdf.GetName(),"ext_%s" %  pdf.GetName(),pdf,norm)
                 extpdf.fitTo(binned,ROOT.RooFit.Strategy(2))
-                ## extpdf.fitTo(reduced,ROOT.RooFit.Strategy(1))
+                extpdf.fitTo(reduced,ROOT.RooFit.Strategy(2))
             
 
                 ## FIXME: set normalization to expected number of events in signal region
