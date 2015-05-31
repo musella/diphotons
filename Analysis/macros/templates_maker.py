@@ -289,7 +289,6 @@ class TemplatesApp(PlotApp):
                     setargs.add(self.buildRooVar("weight",[],recycle=True))
                     truthname= "mctruth_%s_%s_%s" % (compname,fitname,cat)
                     truth = self.reducedRooData(truthname,setargs,False,redo=ReDo)
-                    #truth = self.reducedRooData(truthname,setargs,False,redo=False)
                     templates.append(truth)
             ########### loop over templates
                     for template,mapping in templatesls.iteritems():
@@ -362,6 +361,7 @@ class TemplatesApp(PlotApp):
                         if fit["ndim"]>1:
                             print
                             self.histounroll(templates_massc,template_binning,isoargs,cat,prepfit)
+                            
 
                 ########outside category loop
             #######outside components loop
@@ -416,6 +416,9 @@ class TemplatesApp(PlotApp):
                         temp2d.SetBinError(bin1,bin2,binErr)
                     tempunroll_binning.append(sum)
                         
+            templateNdim2d_unroll=self.buildRooVar("templateNdim2d_unroll",tempunroll_binning,recycle=True)
+            unrollvar=ROOT.RooArgList(templateNdim2d_unroll) 
+            print templateNdim2d_unroll
             c1.cd(pad_it)
             ROOT.gPad.SetLogz()
             temp2d.Draw("COLZ")
@@ -442,15 +445,19 @@ class TemplatesApp(PlotApp):
                     temp1dunroll.SetBinContent(bin,binC)
                     temp1dunroll.SetBinError(bin,binE)
             histlistunroll.append(temp1dunroll)
+            print
+            roodatahist_1dunroll=ROOT.RooDataHist("hist_%s" % temp1dunroll.GetName(),"hist_%s" % temp1dunroll.GetName(),unrollvar, temp1dunroll)
+            print roodatahist_1dunroll
+            self.keep( [roodatahist_1dunroll] )
+            self.store_[temp1dunroll.GetName()] = roodatahist_1dunroll
         titleunroll = "%s_unroll" % (tempur.GetTitle())
         print histlsX
         print histlsY
         print histlistunroll
-        self.keep(histlistunroll)
         if not prepfit:
             self.plotHistos(histlsX,"%s_X" %tempur.GetTitle(),template_binning,False)
             self.plotHistos(histlsY,"%s_Y" %tempur.GetTitle(),template_binning,False)
-            self.plotHistos(histlstunroll,titleunroll,tempunroll_binning,False)
+            self.plotHistos(histlistunroll,titleunroll,tempunroll_binning,False)
             self.keep( [c1] )
         self.autosave(True)
 
