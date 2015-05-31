@@ -257,6 +257,10 @@ class TemplatesApp(PlotApp):
             print "Comparison %s" % name
             prepfit=comparison["prepfit"] 
             print "prep fit? " ,prepfit
+            ReDo=comparison["redo"] 
+            print "ReDo? " ,ReDo
+            weight_cut=comparison["weight_cut"] 
+            print "weight_cut: " ,weight_cut
             fitname=comparison["fit"]
             fit=options.fits[fitname]
             components=comparison.get("components",fit["components"])
@@ -284,7 +288,7 @@ class TemplatesApp(PlotApp):
                     setargs=ROOT.RooArgSet(massargs,isoargs)
                     setargs.add(self.buildRooVar("weight",[],recycle=True))
                     truthname= "mctruth_%s_%s_%s" % (compname,fitname,cat)
-                    truth = self.reducedRooData(truthname,setargs,False,sel="weight < 5.",redo=True)
+                    truth = self.reducedRooData(truthname,setargs,False,redo=ReDo)
                     #truth = self.reducedRooData(truthname,setargs,False,redo=False)
                     templates.append(truth)
             ########### loop over templates
@@ -294,7 +298,7 @@ class TemplatesApp(PlotApp):
                              templatename= "template_mix_%s_%s_%s" % (compname,mixname,mapping.get(cat,cat))
                         else:
                              templatename= "template_%s_%s_%s" % (compname,template,mapping.get(cat,cat))
-                        tempdata = self.reducedRooData(templatename,setargs,False,sel="weight <5.",redo=False)
+                        tempdata = self.reducedRooData(templatename,setargs,False,sel=weight_cut,redo=ReDo)
                         templates.append(tempdata)
                     print "templates list: ", templates
         ##########split in massbins
@@ -306,7 +310,7 @@ class TemplatesApp(PlotApp):
                     else:
                         catd=cat
                     print catd
-                    dset_data = self.reducedRooData("data_2D_%s" %catd,setargs,False,redo=False)
+                    dset_data = self.reducedRooData("data_2D_%s" %catd,setargs,False,redo=ReDo)
                     if splitByBin:
                         mass_split=comparison.get("mass_split")
                         print "mass splitting: ntot bins, ntot for run, startbin",mass_split, " dataset : " , "data_2D_%s" % catd
@@ -361,6 +365,7 @@ class TemplatesApp(PlotApp):
 
                 ########outside category loop
             #######outside components loop
+        if prepfit:
             self.saveWs(options)
     ## ------------------------------------------------------------------------------------------------------------
 
@@ -445,7 +450,7 @@ class TemplatesApp(PlotApp):
         if not prepfit:
             self.plotHistos(histlsX,"%s_X" %tempur.GetTitle(),template_binning,False)
             self.plotHistos(histlsY,"%s_Y" %tempur.GetTitle(),template_binning,False)
-            self.plotHistos(histlistunroll,titleunroll,tempunroll_binning,False)
+            self.plotHistos(histlstunroll,titleunroll,tempunroll_binning,False)
             self.keep( [c1] )
         self.autosave(True)
 
@@ -516,8 +521,8 @@ class TemplatesApp(PlotApp):
         for i in range(0,len(histlist)):
             histlist[i].GetXaxis().SetLimits(-0.1,max(template_bins))
             if i>0:
-                histlist[i].SetLineColor(ROOT.kBlue+i)
-                histlist[i].SetMarkerColor(ROOT.kBlue+i)
+                histlist[i].SetLineColor(ROOT.kAzure+i)
+                histlist[i].SetMarkerColor(ROOT.kAzure+i)
                 histlist[i].SetMarkerStyle(20)
                 histlist[i].Draw("E SAME")
             histlist[0].GetXaxis().SetLimits(-0.1,max(template_bins))
@@ -526,8 +531,8 @@ class TemplatesApp(PlotApp):
         canv.cd(2)
         ratio=histlist[1].Clone("ratio")
         ratio.Divide(histlist[0])
-        ratio.SetLineColor(ROOT.kBlue+1)
-        ratio.SetMarkerColor(ROOT.kBlue+1)
+        ratio.SetLineColor(ROOT.kAzure+1)
+        ratio.SetMarkerColor(ROOT.kAzure+1)
         ratio.GetYaxis().SetTitleSize( histlist[0].GetYaxis().GetTitleSize() * 6.5/3.5 )
         ratio.GetYaxis().SetLabelSize( histlist[0].GetYaxis().GetLabelSize() * 6.5/3.5 )
         ratio.GetYaxis().SetTitleOffset( histlist[0].GetYaxis().GetTitleOffset() * 6.5/3.5 )

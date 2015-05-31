@@ -513,6 +513,8 @@
 
     "comparisons" : {
 	"fit2DTruth" : { "fit" : "2D",
+                "redo": "True",
+                "weight_cut": "weight < 5.",
 		"templates" : { "mix:kDSinglePho2D" : {} },
                 "components": ["pf","ff",
 					["pp",{ "2D" : {}}]
@@ -524,7 +526,9 @@
 				"mass_binning" :"mass[13000,0.0,13000.0]",
 				"mass_split":[5,5,0]
 		},
-	"_fit1DTruth" : { "fit" : "1D",
+	"fit1DTruth" : { "fit" : "1D",
+                "redo": "True",
+                "weight_cut": "weight < 5.",
                 "components" : [ "f","p" ],
 		"templates" : {"singlePho" : { "EBEB" : "EB", "EBEE" : "EB", "EEEB" : "EE"  }
                                 ,"1D" : {} 
