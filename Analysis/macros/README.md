@@ -1,3 +1,19 @@
+## Control plots
+
+### Event selection monitoring
+`./control_plots.sh full_analysis_anv1_v18 ~/www/exo/phys_14_anv1`
+
+## Templates generation
+
+## Merge trees and fill template variables
+`./templates_maker.py --load templates_maker.json --input-dir full_analysis_anv1_v18 -o full_analysis_anv1_v18/templates.root`
+
+## Event mixing
+`./templates_maker.py --load templates_maker.json --read-ws full_analysis_anv1_v18/templates.root --mix-templates`
+
+## Comparison plots
+
+
 ## Bkg bias study
 
 ### Preparing input
@@ -20,6 +36,6 @@
 ## Preparing combine inputs
 
 ### Background model
-- ` ./combine_maker.py --load templates_maker.json --fit-name cic --input-dir full_analysis_anv1_v16  -o full_analysis_anv1_v16/final_ws.root`
-- ` ./combine_maker.py --fit-name cic  --fit-background  --read-ws full_analysis_anv1_v16/final_ws.root -O ~/www/exo/test -o full_analysis_anv1_v16/bkg_ws.root`
+- `./combine_maker.py --load templates_maker.json --fit-name cic --input-dir ~musella/public/workspace/exo/full_analysis_anv1_v14  -o full_analysis_anv1_v14_final_ws.root`
+- `./combine_maker.py --fit-name cic  --fit-background  --read-ws full_analysis_anv1_v14_final_ws.root -O ~/www/test_bkg_fit -o full_analysis_anv1_v14_bkg_ws.root`
 

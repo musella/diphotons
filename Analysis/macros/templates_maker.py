@@ -789,7 +789,9 @@ class TemplatesApp(PlotApp):
                     elif mixType == "kdtree":
                         targetCat       = fill.get("targetCat",cat)
                         nNeigh          = fill.get("nNeigh",10)
+                        nMinNeigh       = fill.get("nMinNeigh",nNeigh)
                         useCdfDistance  = fill.get("useCdfDistance",False)
+                        matchWithThreshold  = fill.get("matchWithThreshold",False)
                         targetWeight    = fill.get("targetWeight","weight")
                         dataname        = "data_%s_%s" % (targetName,targetCat)                        
                         target          = self.treeData(dataname)
@@ -807,18 +809,20 @@ class TemplatesApp(PlotApp):
                             var = self.buildRooVar(var,[])
                             matchVars2.add(var)
                         for var in fill["target1"]:
-                            var = self.buildRooVar(var,[])
+                            var = self.buildRooVar(*(self.getVar(var)))
                             targetMatch1.add(var)
                         for var in fill["target2"]:
-                            var = self.buildRooVar(var,[])
+                            var = self.buildRooVar(*(self.getVar(var)))
                             targetMatch2.add(var)
                             
                         print "target :", dataname
-                        print "rndswap :", rndswap, " rndmatch :", rndmatch," useCdfDistance :", useCdfDistance, "nNeigh :", nNeigh
+                        print "rndswap :", rndswap, " rndmatch :", rndmatch," useCdfDistance :", useCdfDistance, "matchWithThreshold :", matchWithThreshold
+                        print "nNeigh :", nNeigh, "nMinNeigh :", nMinNeigh
                         print "target :", target
-                        mixer.fillLikeTarget(target,targetMatch1,targetMatch1,targetWeight,tree1,tree2,
+                        mixer.fillLikeTarget(target,targetMatch1,targetMatch2,targetWeight,tree1,tree2,
                                              pt,eta,phi,energy,pt,eta,phi,energy,
-                                             matchVars1,matchVars2,rndswap,rndmatch,nNeigh,useCdfDistance)
+                                             matchVars1,matchVars2,rndswap,rndmatch,nNeigh,nMinNeigh,
+                                             useCdfDistance,matchWithThreshold)
                     
                     dataset = mixer.get()
                     self.workspace_.rooImport(dataset,ROOT.RooFit.RecycleConflictNodes())
@@ -957,12 +961,15 @@ class TemplatesApp(PlotApp):
                 title = name
             rooVar = ROOT.RooRealVar(name,title,0.)
             rooVar.setConstant(False)
-            
+
         if len(binning) > 0:
-            rooVar.setMin(binning[0])
-            rooVar.setMax(binning[-1])
-            rooVar.setVal(0.5*(binning[0]+binning[-1]))
-            rooVar.setBinning(ROOT.RooBinning(len(binning)-1,binning))
+            if len(binning)==1:
+                rooVar.setVal(binning[0])                
+            else:
+                rooVar.setMin(binning[0])
+                rooVar.setMax(binning[-1])
+                rooVar.setVal(0.5*(binning[0]+binning[-1]))
+                rooVar.setBinning(ROOT.RooBinning(len(binning)-1,binning))
         if importToWs:
             self.workspace_.rooImport(rooVar,ROOT.RooFit.RecycleConflictNodes())
         self.keep(rooVar) ## make sure the variable is not destroyed by the garbage collector
