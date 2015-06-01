@@ -418,22 +418,24 @@
 		"fill_categories" : {
 		    "EBEB" : { "legs" : ["EB","EB"], "rndswap" : true,"rndmatch":0.8, "nNeigh" : 10, "nMinNeigh" : 10, "matchWithThreshold" : false,
 			    "useCdfDistance" : true,
-			    "match1"  : ["nvtx","phoPt"    ,"phoScEta"    ], 
-			    "match2"  : ["nvtx","phoPt"    ,"phoScEta"    ], 
-			    "target1" : ["nvtx","leadPt"   ,"leadScEta[0.1]"   ], 
-			    "target2" : ["nvtx","subleadPt","subleadScEta[0.1]"]
+			    "match1"  : ["nvtx","log(phoPt)"    ,"TMath::Abs(phoScEta)"    ], 
+			    "match2"  : ["nvtx","log(phoPt)"    ,"TMath::Abs(phoScEta)"    ], 
+			    "target1" : ["nvtx","log(leadPt)"   ,"TMath::Abs(leadScEta)[0.2]"   ], 
+			    "target2" : ["nvtx","log(subleadPt)","TMath::Abs(subleadScEta)[0.2]"]
 			    },
-			"EBEE" : { "legs" : ["eta_inclusive","eta_inclusive"], "rndmatch":0.5,"nNeigh" : 100, "nMinNeigh" : 10,
-			    "useCdfDistance" : true, "matchWithThreshold" : true,
-			    "match1"  : ["nvtx","phoPt" ,"TMath::Abs(phoScEta)"    ], 
-			    "match2"  : ["nvtx","phoPt" ,"TMath::Abs(phoScEta)"    ], 
+			"EBEE" : { "legs" : ["eta_inclusive","eta_inclusive"], "rndmatch":0.5,"nNeigh" : 10, "nMinNeigh" : 10,
+			    "useCdfDistance" : true, "matchWithThreshold" : false,
+			    "match1"  : ["nvtx","log(phoPt)" ,"TMath::Abs(phoScEta)","TMath::Abs(phoScEta)<1.5"    ], 
+			    "match2"  : ["nvtx","log(phoPt)" ,"TMath::Abs(phoScEta)","TMath::Abs(phoScEta)<1.5"    ], 
 			    "target1" : ["nvtx",
-					 "(TMath::Abs(leadScEta)<TMath::Abs(subleadScEta))*leadPt       + (TMath::Abs(leadScEta)>=TMath::Abs(subleadScEta))*subleadPt",
-					 "(TMath::Abs(leadScEta)<TMath::Abs(subleadScEta))*TMath::Abs(leadScEta)    + (TMath::Abs(leadScEta)>=TMath::Abs(subleadScEta))*TMath::Abs(subleadScEta)[0.3]"
+					 "log((TMath::Abs(leadScEta)<TMath::Abs(subleadScEta))*leadPt       + (TMath::Abs(leadScEta)>=TMath::Abs(subleadScEta))*subleadPt)",
+					 "(TMath::Abs(leadScEta)<TMath::Abs(subleadScEta))*TMath::Abs(leadScEta)    + (TMath::Abs(leadScEta)>=TMath::Abs(subleadScEta))*TMath::Abs(subleadScEta)",
+					 "((TMath::Abs(leadScEta)<TMath::Abs(subleadScEta))*TMath::Abs(leadScEta)    + (TMath::Abs(leadScEta)>=TMath::Abs(subleadScEta))*TMath::Abs(subleadScEta))<1.5"
 					 ],
 			    "target2" : ["nvtx",
-					 "(TMath::Abs(leadScEta)<TMath::Abs(subleadScEta))*subleadPt    + (TMath::Abs(leadScEta)>=TMath::Abs(subleadScEta))*leadPt",
-					 "(TMath::Abs(leadScEta)<TMath::Abs(subleadScEta))*TMath::Abs(subleadScEta) + (TMath::Abs(leadScEta)>=TMath::Abs(subleadScEta))*TMath::Abs(leadScEta)[0.3]"
+					 "log((TMath::Abs(leadScEta)<TMath::Abs(subleadScEta))*subleadPt    + (TMath::Abs(leadScEta)>=TMath::Abs(subleadScEta))*leadPt)",
+					 "(TMath::Abs(leadScEta)<TMath::Abs(subleadScEta))*TMath::Abs(subleadScEta) + (TMath::Abs(leadScEta)>=TMath::Abs(subleadScEta))*TMath::Abs(leadScEta)[0.3]",
+					 "((TMath::Abs(leadScEta)<TMath::Abs(subleadScEta))*TMath::Abs(subleadScEta) + (TMath::Abs(leadScEta)>=TMath::Abs(subleadScEta))*TMath::Abs(leadScEta))<1.5"
 					 ]
 			    }
 		}
@@ -444,13 +446,14 @@
     "comparisons" : {
 	"fit2DTruth" : { "fit" : "2D",
 		"templates" : { "mix:kDSinglePho2D" : {} },
-                "components": ["pf","ff",
-					["pp",{ "2D" : {}}]
+                "components": [["pp",{"2D" : {}}],
+			       "pf",
+			       "ff"
                 ],
                 "prepfit": false,
 		"doDataMc" : false, "doMcTruth" : true,
 		"splitByBin" : false,
-                "template_binning" : [ 0.0,0.1, 1.0, 4.0,9.0,15.0],
+                "template_binning" : [ 0.0,0.1,5.0,15.0],
 				"mass_binning" :"mass[13000,0.0,13000.0]",
 				"mass_split":[5,5,0]
 		},

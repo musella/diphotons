@@ -39,6 +39,8 @@ public:
     };
     virtual HistoConverter *clone() const = 0;
 
+    TGraph * graph() { return g_; }
+
 protected:
     TSpline *sp_;
     TH1   *hist_;
