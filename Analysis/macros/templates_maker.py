@@ -248,8 +248,17 @@ class TemplatesApp(PlotApp):
             
 
     ## ------------------------------------------------------------------------------------------------------------
-    #MQ compare truth templates with rcone and sideband templates
+    
     def compareTemplates(self,options,args):
+        fout = self.openOut(options)
+        fout.Print()
+        fout.cd()
+        self.doCompareTemplates(options,args)
+        self.saveWs(options,fout)
+    
+    ## ------------------------------------------------------------------------------------------------------------
+    #MQ compare truth templates with rcone and sideband templates
+    def doCompareTemplates(self,options,args):
         print "Compare truth templates with rcone and sideband templates"
         ROOT.TH1F.SetDefaultSumw2(True)
         for name, comparison in options.comparisons.iteritems():
@@ -365,8 +374,6 @@ class TemplatesApp(PlotApp):
 
                 ########outside category loop
             #######outside components loop
-        if prepfit:
-            self.saveWs(options)
     ## ------------------------------------------------------------------------------------------------------------
 
     def histounroll(self,templatelist, template_binning,isoargs,cat,prepfit):
@@ -415,10 +422,10 @@ class TemplatesApp(PlotApp):
                         temp2d.SetBinContent(bin1,bin2,binCont)
                         temp2d.SetBinError(bin1,bin2,binErr)
                     tempunroll_binning.append(sum)
-                        
-            templateNdim2d_unroll=self.buildRooVar("templateNdim2d_unroll",tempunroll_binning,recycle=True)
-            unrollvar=ROOT.RooArgList(templateNdim2d_unroll) 
-            print templateNdim2d_unroll
+            if prepfit:
+                templateNdim2d_unroll=self.buildRooVar("templateNdim2d_unroll",tempunroll_binning,recycle=True)
+                unrollvar=ROOT.RooArgList(templateNdim2d_unroll) 
+                print templateNdim2d_unroll
             c1.cd(pad_it)
             ROOT.gPad.SetLogz()
             temp2d.Draw("COLZ")
@@ -445,11 +452,10 @@ class TemplatesApp(PlotApp):
                     temp1dunroll.SetBinContent(bin,binC)
                     temp1dunroll.SetBinError(bin,binE)
             histlistunroll.append(temp1dunroll)
-            print
-            roodatahist_1dunroll=ROOT.RooDataHist("hist_%s" % temp1dunroll.GetName(),"hist_%s" % temp1dunroll.GetName(),unrollvar, temp1dunroll)
-            print roodatahist_1dunroll
-            self.keep( [roodatahist_1dunroll] )
-            self.store_[temp1dunroll.GetName()] = roodatahist_1dunroll
+            if prepfit:
+                roodatahist_1dunroll=ROOT.RooDataHist("hist_%s" % temp1dunroll.GetName(),"hist_%s" % temp1dunroll.GetName(),unrollvar, temp1dunroll)
+                print roodatahist_1dunroll
+                self.keep( [roodatahist_1dunroll] )
         titleunroll = "%s_unroll" % (tempur.GetTitle())
         print histlsX
         print histlsY
@@ -560,13 +566,86 @@ class TemplatesApp(PlotApp):
         
 
 ## ------------------------------------------------------------------------------------------------------------
-    def prepareTruthFit(self,options,args):
+    def prepareTruthFit(self,options,args): 
         self.saveWs(options)
 
     ## ------------------------------------------------------------------------------------------------------------
     def prepareNominalFit(self,options,args):
-        self.saveWs(options)
+        fout = self.openOut(options)
+        fout.Print()
+        fout.cd()
+        self.doNominalFit(options,args)
+        self.saveWs(options,fout)
     
+    ## ------------------------------------------------------------------------------------------------------------
+    def doNominalFit(self,options,args):
+        #add data in json file
+        for name, nomFit in options.nominalFit.iteritems():
+            if name.startswith("_"): continue
+            fitname=nomFit["fit"]
+            fit=options.fits[fitname]
+            obsls=ROOT.RooArgList("obsls")
+            obsls.add(self.getVar(nomFit.get("observable")))
+            #add rooformula for purity estimate fsig
+#	  RooRealVar *j1=NULL;RooFormulaVar *fsig1=NULL;
+#	  j1 = new RooRealVar("j1","j1",0.5,0,1);
+#	  fsig1 = new RooFormulaVar("fsig1","fsig1","j1",RooArgList(*j1));
+            #automatically binning from this variable imported?
+            print "nominal fit with: ", name, " observable : ", nomFit.get("observable")
+            roodatahists=nomFit.get("histos",fit["components"])
+            #data=nomFit.get("data")
+            return
+            print roodatahists
+            hist_EB=[]
+            hist_nEB=[]
+            #components pp pf and ffshould be in histo
+            for histo in roodatahists:
+                print histo
+                print component #TODO implemented
+            # eg 3 components for EBEB and EBEE x 
+                for cat in fit["categories"]:
+                    if cat=="EBEB": hist_EB.append(histo)
+                    elif cat=="EBEE": hist_EE.append(histo)
+                    else: print "not right category"
+            rooHistPdfs=ROOT.RooArgList("rooPdfs")
+            for (compEB,compEE) in zip(histo_EB, histo_EE):
+                rooHist_comp=ROOT.RooArgList(compEB,compEE)
+                rooHistPdf=ROOT.RooHistPdf("pdf_%s"% component,"pdf_%s"% component,obsls,rooHist_comp)
+                rooHistPdfs.add(rooHistPdf)
+            fit2dpdf=ROOT.RooAddPdf("fit2dpf_%s" % name,"fit2dpdf_%s" % name,rooHistPdfs,RooArgList(*fsig1),False)
+          #save roofitresult in outputfile
+            fitresult = fit2dpdf.fitTo(data, RooFit.NumCPU(8), RooFit.Extended(False),RooFit.SumW2Error(False),RooFit.Verbose(False),RooFit.Save(True))
+#	  firstpass1.Print()
+          #self.plotFit()#TODO also implement 2d option 
+    ## ------------------------------------------------------------------------------------------------------------
+    def plotFit(self,roovar,rooaddpdf,components,data,unroll_binning,title,log):
+        b=ROOT.TLatex()
+        b.SetNDC()
+        b.SetTextSize(0.06)
+        b.SetTextColor(ROOT.kRed)
+        cFit = ROOT.TCanvas("cFit","cFit",1200,800)
+        leg =ROOT.TLegend(0.15,0.8,0.35,0.9)
+        cFit.cd(1)
+        if log:
+            cFit.SetLogy()
+        frame = roovar.frame(RooFit.Title(title))
+        data.plotOn(frame,RooFit.Binning(unroll_binning),RooFit.Name("data"))
+        rooaddpdf.plotOn(frame,RooFit.Name("fit"))
+        if len(components)>2:
+            rooaddpdf.plotOn(frame,RooFit.Components(components[0]),RooFit.LineStyle(kDashed),RooFit.LineColor(kRed),RooFit.Name("pp"))
+            rooaddpdf.plotOn(frame,RooFit.Components(components[1]),RooFit.LineStyle(kDashed),RooFit.LineColor(kCyan+1),RooFit.Name("pf"))
+            rooaddpdf.plotOn(frame,RooFit.Components(components[2]),RooFit.LineStyle(kDashed),RooFit.LineColor(kBlack),RooFit.Name("ff"))
+        frame.Draw()
+        leg.AddEntry("fit","fit","l")
+        if len(components)>2:
+            leg.AddEntry("pp","prompt-prompt ","l")
+            leg.AddEntry("pf","prompt-fake ","l")
+            leg.AddEntry("pp","fake-fake ","l")
+        leg.SetFillColor(ROOT.kWhite) 
+        leg.Draw()
+        #b.DrawLatex(0.55,0.7,"PRELIMINARY")
+        self.keep([cFit])
+
     ## ------------------------------------------------------------------------------------------------------------
     def prepareTemplates(self,options,args):
         
