@@ -446,7 +446,7 @@
     "comparisons" : {
 	"fit2DTruth" : { "fit" : "2D",
 		"templates" : { "mix:kDSinglePho2D" : {} },
-                "components": ["pf"
+                "components": ["pf","ff",  ["pp",{ "2D" : {}}] 
                 ],
                 "prepfit": true,
                 "weight_cut": "weight < 5.",
@@ -474,9 +474,14 @@
     },
       
    "nominalFit":{
-        "3_components":{  "fit" : "2D", 
-                "histos": {"SinglePho": {} },
-                "observable": "templateNdim2d_unroll"
+        "3_components":{
+                "dimensions" :"2D", 
+                "observable": "templateNdim2d_unroll[0.0, 0.010000000000000002, 0.5, 1.5, 1.99, 26.000000000000004, 75.0, 76.0, 125.0, 225.0]",
+                "components": ["pp","pf","ff"],
+                "categories": ["EBEB","EBEE"],
+                "data": "unrolled_data", 
+                "template": "unrolled_template",
+                "massbins":""
          }
     }, 
     "rootstyle_extra" : [
