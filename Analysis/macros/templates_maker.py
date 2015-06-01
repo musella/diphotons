@@ -41,6 +41,8 @@ class TemplatesApp(PlotApp):
                                     default={},help="List of templates fits to be performed. Categories, componentd and templates can be specified."),
                         make_option("--mix",dest="mix",action="callback",callback=optpars_utils.Load(),type="string",
                                     default={},help="Configuration for event mixing."),
+                        make_option("--comparisons",dest="comparisons",action="callback",callback=optpars_utils.Load(),type="string",
+                                    default={},help="Configuration for templates comparison."),
                         make_option("--skip-templates",dest="skip_templates",action="store_true",
                                     default=False,help="Skip templates generation (even if not reading back from ws)"),
                         make_option("--dataset-variables",dest="dataset_variables",action="callback",callback=optpars_utils.ScratchAppend(),type="string",
@@ -190,9 +192,11 @@ class TemplatesApp(PlotApp):
             fout = self.openOut(options)
         fout.cd()
         cfg = { "fits"   : options.fits,
-                "stored" : self.store_.keys() 
+                "mix"    : options.mix,
+                "comparisons"    : options.comparisons,
+                "stored" : self.store_.keys(),
                 }
-
+        
         print "--------------------------------------------------------------------------------------------------------------------------"
         print "saving output"
         print 
@@ -231,7 +235,12 @@ class TemplatesApp(PlotApp):
         self.workspace_.rooImport = getattr(self.workspace_,"import")
         for name in cfg["stored"]:
             self.store_[name]=fin.Get(name)
-                
+            
+        if not options.mix_templates:
+            options.mix = cfg.get("mix",{})
+        if not options.compare_templates:
+            options.comparisons = cfg.get("comparisons",{})
+        
         print "Fits :"
         print "---------------------------------------------------------"
         for key,val in options.fits.iteritems():
