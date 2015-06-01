@@ -6,6 +6,7 @@
 #include "TTreeFormula.h"
 #include "TLorentzVector.h"
 
+#include "TCanvas.h"
 #include "TRandom3.h"
 #include "TKDTree.h"
 #include "TH1F.h"
@@ -175,16 +176,25 @@ void fillCache(std::vector<Cache> & target, TTree *source, float frac, float ptS
         std::vector<std::vector<float>> bins(pdfs.size());
         std::vector<sorted_dataset_type::iterator> idx(pdfs.size());
         std::vector<float> count(pdfs.size(),0.);
-        float res = 1.e-2;
-        float step = totwei * res;        
+        float totcount = 0.;
+        float res = 1.e-4;
+        float maxfr  = res*10.;
+        for(auto count : pdfs[0] ) {
+            if( count.first / totwei < maxfr ) {
+                totcount += count.first;
+            }
+        }
+        float step = totcount * res;        
         for(size_t ip=0; ip<pdfs.size(); ++ip) {
             idx[ip] = pdfs[ip].begin();
             bins[ip].push_back(idx[ip]->second);
         }
-        for(float prob=step; prob<totwei; prob+=step) {
+        for(float prob=step; prob<totcount; prob+=step) {
             for(size_t ip=0; ip<pdfs.size(); ++ip) {
                 while(count[ip] < prob && idx[ip] != pdfs[ip].end()) {
-                    count[ip] += idx[ip]->first;                    
+                    if( idx[ip]->first / totwei < maxfr ) {
+                        count[ip] += idx[ip]->first;         
+                    }
                     ++idx[ip];
                 }
                 if( idx[ip] != pdfs[ip].end()) {
@@ -349,9 +359,23 @@ void DataSetMixer::fillLikeTarget(TTree * target,
     if( useCdfDistance ) { 
         for(size_t idim=0; idim<matchHisto1.size(); ++idim) {
             cdfs1.push_back( cdf(matchHisto1[idim],matchHisto1[idim]->GetXaxis()->GetXmin(),matchHisto1[idim]->GetXaxis()->GetXmax()) );
+            TCanvas canv(Form("cdf_%s_%s_%lu",tree1->GetName(),target->GetName(),idim),Form("cdf_%s_%s_%lu",tree1->GetName(),target->GetName(),idim));
+            canv.Divide(2,1);
+            canv.cd(1);
+            cdfs1.back()->graph()->Draw("apl");
+            canv.cd(2);
+            matchHisto1[idim]->Draw("hist");
+            canv.SaveAs(Form("%s.png",canv.GetName()));
         }
         for(size_t idim=0; idim<matchHisto2.size(); ++idim) {
             cdfs2.push_back( cdf(matchHisto2[idim],matchHisto2[idim]->GetXaxis()->GetXmin(),matchHisto2[idim]->GetXaxis()->GetXmax()) );
+            TCanvas canv(Form("cdf_%s_%s_%lu",tree2->GetName(),target->GetName(),idim),Form("cdf_%s_%s_%lu",tree2->GetName(),target->GetName(),idim));
+            canv.Divide(2,1);
+            canv.cd(1);
+            cdfs2.back()->graph()->Draw("apl");
+            canv.cd(2);
+            matchHisto1[idim]->Draw("hist");
+            canv.SaveAs(Form("%s.png",canv.GetName()));
         }
     }
 

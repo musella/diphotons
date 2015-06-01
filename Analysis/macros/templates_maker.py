@@ -81,6 +81,10 @@ class TemplatesApp(PlotApp):
                                     default=False,
                                     help="Only store new objects in output file.",
                                     ),
+                        make_option("--store-inputs",dest="store_inputs",action="store_true",
+                                    default=False,
+                                    help="Store all used input datasets.",
+                                    ),
                         make_option("--mc-file",dest="mc_file",action="store",type="string",
                                     default=None,help="default: %default"),
                         make_option("--only-subset",dest="only_subset",action="callback",type="string", callback=optpars_utils.ScratchAppend(),
@@ -123,10 +127,11 @@ class TemplatesApp(PlotApp):
                     continue
                 subset[name] = fit
             options.fits = subset
-
+        
         if options.store_new_only:
             self.store_new_ = True
-
+            self.store_inputs_ = options.store_inputs
+            
         if not options.output_file:
             if options.read_ws: 
                 options.output_file = options.read_ws
@@ -187,15 +192,31 @@ class TemplatesApp(PlotApp):
         cfg = { "fits"   : options.fits,
                 "stored" : self.store_.keys() 
                 }
-        
+
+        print "--------------------------------------------------------------------------------------------------------------------------"
+        print "saving output"
+        print 
         ROOT.TObjString( json.dumps( cfg,indent=4,sort_keys=True) ).Write("cfg")
+        
+        nobjs = len(self.store_.keys())
+        nprint = int(nobjs/20)
+        if nprint == 0:
+            nprint = 1
+        iobj  = 0
         for key,val in self.store_.iteritems():
             val.CloneTree().Write(key,ROOT.TObject.kWriteDelete)
+            iobj += 1
+            if iobj % nprint == 1:
+                print "written %d / %d trees" % ( iobj, nobjs )
+        print "writing workspace ...",
         self.workspace_.Write()
+        print "done"
         fout.Close()
         
         if self.rename_:
             os.rename( *self.rename_ )
+        print "--------------------------------------------------------------------------------------------------------------------------"
+        print
 
     ## ------------------------------------------------------------------------------------------------------------
     def readWs(self,options,args):
@@ -286,7 +307,7 @@ class TemplatesApp(PlotApp):
                     massargs.Print()
                     template_binning = array.array('d',comparison.get("template_binning"))
                     templatebins=ROOT.RooBinning(len(template_binning)-1,template_binning,"templatebins" )
-        ########## list to store templates for each category
+                    ## list to store templates for each category
                     templates = []
                     for idim in range(fit["ndim"]):
                         isoargs.add(self.buildRooVar("templateNdim%dDim%d" % ( fit["ndim"],idim),template_binning,recycle=True))
@@ -296,7 +317,7 @@ class TemplatesApp(PlotApp):
                     truthname= "mctruth_%s_%s_%s" % (compname,fitname,cat)
                     truth = self.reducedRooData(truthname,setargs,False,redo=ReDo)
                     templates.append(truth)
-            ########### loop over templates
+                    ## loop over templates
                     for template,mapping in templatesls.iteritems():
                         if "mix" in template:
                              mixname = template.split(":")[-1]
@@ -306,7 +327,7 @@ class TemplatesApp(PlotApp):
                         tempdata = self.reducedRooData(templatename,setargs,False,sel=weight_cut,redo=ReDo)
                         templates.append(tempdata)
                     #print "templates list: ", templates
-        ##########split in massbins
+                    ##------------------- split in massbins
                     splitByBin=comparison.get("splitByBin")
                     masserror = array.array('d',[])
                     
@@ -339,14 +360,15 @@ class TemplatesApp(PlotApp):
                             temp_massc.Print()
                             temp_massc.SetNameTitle("%s_mb_%s"%(temp_m.GetName(),cut_s),"%s_mb_%s"%(temp_m.GetName(),cut_s))
                             templates_massc.append(temp_massc)
-                ##############loop over 2 legs
+                        ## loop over 2 legs
                         for id in range(fit["ndim"]):
                             histls=[]
                             isoarg1d=ROOT.RooArgList("isoarg")
                             isoarg1d.add(self.buildRooVar("templateNdim%dDim%d" % ( fit["ndim"],id),template_binning,recycle=True))                
                             tit = "compiso_%s_%s_%s_mb_%s_templateNdim%dDim%d" % (fitname,compname,cat,cut_s,fit["ndim"],id)
                             for tm in templates_massc:
-                                tempHisto=ROOT.TH1F("%s_dim%d_%d_H" % (tm.GetName(),fit["ndim"],id),"%s_dim%d_%d_H" % (tm.GetName(),fit["ndim"],id),len(template_binning)-1,template_binning)
+                                tempHisto=ROOT.TH1F("%s_dim%d_%d_H" % (tm.GetName(),fit["ndim"],id),
+                                                    "%s_dim%d_%d_H" % (tm.GetName(),fit["ndim"],id),len(template_binning)-1,template_binning)
                                 tm.fillHistogram(tempHisto,isoarg1d)
                                 tempHisto.Scale(1.0/tempHisto.Integral())
                                 for bin in range(1,len(template_binning) ):
@@ -356,7 +378,7 @@ class TemplatesApp(PlotApp):
                             if not prepfit:
                                 print "plot 1d histos"
                                 self.plotHistos(histls,tit,template_binning,True)
-                  ##########roll out for combine tool per category
+                        ## roll out for combine tool per category
                         diphomass[mb]=(diphomass[mb]+diphomass[mb+1])/2.
                         masserror.append((diphomass[mb+1]-diphomass[mb])/2.)
                         if fit["ndim"]>1:
@@ -366,7 +388,6 @@ class TemplatesApp(PlotApp):
                                 datals=[]
                                 datals.append(dset_massc)
                                 self.histounroll(datals,template_binning,isoargs,cat,prepfit)
-                            
 
                 ########outside category loop
             #######outside components loop
@@ -394,7 +415,7 @@ class TemplatesApp(PlotApp):
             temp2dx.SetTitle("%s_X" %tempur.GetTitle())
             temp2dy=temp2d.ProjectionY("%s_Y" %tempur.GetName())
             temp2dy.Scale(1./temp2dy.Integral())
-    ###### draw projections as a check
+            ## draw projections as a check
             histlsX.append(temp2dx)
             temp2dy.SetTitle("%s_Y" %tempur.GetTitle())
             histlsY.append(temp2dy)
@@ -432,11 +453,11 @@ class TemplatesApp(PlotApp):
       #      print "tempunroll_binning", tempunroll_binning
        #     print "len(tempunroll_binning)",len(tempunroll_binning)
             for b in range(1,len(template_binning)):
-              #  to loop up to inclusively b
+                #  to loop up to inclusively b
                 for x in range(1,b+1):
                     bin+=1
                     binC= temp2d.GetBinContent(x,b)
-               #     print binC, "bin width" ,temp1dunroll.GetBinWidth(bin)
+                    #     print binC, "bin width" ,temp1dunroll.GetBinWidth(bin)
                     binE= temp2d.GetBinError(x,b)
                     temp1dunroll.SetBinContent(bin,binC)
                     temp1dunroll.SetBinError(bin,binE)
@@ -445,7 +466,7 @@ class TemplatesApp(PlotApp):
                     bin+=1
                     binC= temp2d.GetBinContent(b,y)
                     binE= temp2d.GetBinError(b,y)
-                #    print binC, "bin width" ,temp1dunroll.GetBinWidth(bin)
+                    #    print binC, "bin width" ,temp1dunroll.GetBinWidth(bin)
                     temp1dunroll.SetBinContent(bin,binC)
                     temp1dunroll.SetBinError(bin,binE)
             histlistunroll.append(temp1dunroll)
@@ -496,10 +517,11 @@ class TemplatesApp(PlotApp):
         gr.Draw("alp")
         self.keep( [cq] )
         self.autosave(True)
-#
+        #
         for  k in range(0,len(dpmq)):
             print "prob " ,prob[k] ," diphomass " , dpmq[k]  
         return dpmq
+
 ## ------------------------------------------------------------------------------------------------------------
 
     def plotHistos(self,histlist,title,template_bins,dim1):
@@ -558,7 +580,7 @@ class TemplatesApp(PlotApp):
         ratio.GetXaxis().SetLimits(-0.1,max(template_bins))
         ratio.GetYaxis().SetRangeUser(0.5,1.5)
         ROOT.gStyle.SetOptStat(0)
-      #  ROOT.gStyle.SetOptTitle(0)
+        #  ROOT.gStyle.SetOptTitle(0)
         self.keep( [canv] )
         self.autosave(True)
         
@@ -918,7 +940,6 @@ class TemplatesApp(PlotApp):
     
 
     ## ------------------------------------------------------------------------------------------------------------
-
     def reducedRooData(self,name,rooset,binned,weight="weight",sel=None,redo=False):
         data = self.rooData("r_%s" % name)
         if not data or redo:
@@ -946,8 +967,12 @@ class TemplatesApp(PlotApp):
         dataset = self.workspace_.data(name)
         if not dataset and self.store_new_:
             dataset = self.workspace_input_.data(name)
+            if self.store_inputs_ and dataset:
+                self.workspace_.rooImport(dataset)
+
         if not dataset:
             return dataset
+
         if autofill and dataset.sumEntries() == 0.:
             tree = self.treeData(name)
             if not tree: 
@@ -961,12 +986,15 @@ class TemplatesApp(PlotApp):
             cut=ROOT.TCut(weight)
             if sel:
                 cut *=sel
-            filler.fillFromTree(tree,cut.GetTitle(),True)
-        elif rooset:
-            if sel:
+            filler.fillFromTree(tree,cut.GetTitle(),True)          
+        elif sel or rooset:
+            if rooset and sel:
                 dataset = dataset.reduce(rooset,sel)
-            else:
+            elif rooset:
                 dataset = dataset.reduce(rooset)
+            elif sel:
+                dataset = dataset.reduce(sel)
+        
         return dataset
 
     ## ------------------------------------------------------------------------------------------------------------
@@ -974,7 +1002,10 @@ class TemplatesApp(PlotApp):
         if "tree_%s" % name in self.store_:
             return self.store_["tree_%s" % name]
         elif self.store_new_ and "tree_%s" % name in self.store_input_:
-            return self.store_input_["tree_%s" % name]
+            rt = self.store_input_["tree_%s" % name]
+            if self.store_inputs_:
+                self.store_["tree_%s" % name] = rt
+            return rt
         return None
         
     ## ------------------------------------------------------------------------------------------------------------
@@ -982,6 +1013,8 @@ class TemplatesApp(PlotApp):
         st = self.workspace_.set("variables_%s" %name)
         if not st and self.store_new_:
             st = self.workspace_input_.set("variables_%s" %name)
+            if self.store_inputs_:
+                self.workspace_.defineSet("variables_%s" %name,st)
         return st
 
     ## ------------------------------------------------------------------------------------------------------------
