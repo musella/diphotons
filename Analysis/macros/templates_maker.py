@@ -250,26 +250,23 @@ class TemplatesApp(PlotApp):
     ## ------------------------------------------------------------------------------------------------------------
     
     def compareTemplates(self,options,args):
- #       fout = self.openOut(options)
-  #      fout.Print()
-   #     fout.cd()
-    #    self.doCompareTemplates(options,args)
-     #   self.saveWs(options,fout)
+        fout = self.openOut(options)
+        fout.Print()
+        fout.cd()
+        self.doCompareTemplates(options,args)
+        self.saveWs(options,fout)
     
     ## ------------------------------------------------------------------------------------------------------------
     #MQ compare truth templates with rcone and sideband templates
-    #def doCompareTemplates(self,options,args):
+    def doCompareTemplates(self,options,args):
         print "Compare truth templates with rcone and sideband templates"
         ROOT.TH1F.SetDefaultSumw2(True)
         for name, comparison in options.comparisons.iteritems():
             if name.startswith("_"): continue
             print "Comparison %s" % name
             prepfit=comparison["prepfit"] 
-            print "prep fit? " ,prepfit
             ReDo=comparison["redo"] 
-            print "ReDo? " ,ReDo
             weight_cut=comparison["weight_cut"] 
-            print "weight_cut: " ,weight_cut
             fitname=comparison["fit"]
             fit=options.fits[fitname]
             components=comparison.get("components",fit["components"])
@@ -308,7 +305,7 @@ class TemplatesApp(PlotApp):
                              templatename= "template_%s_%s_%s" % (compname,template,mapping.get(cat,cat))
                         tempdata = self.reducedRooData(templatename,setargs,False,sel=weight_cut,redo=ReDo)
                         templates.append(tempdata)
-                    print "templates list: ", templates
+                    #print "templates list: ", templates
         ##########split in massbins
                     splitByBin=comparison.get("splitByBin")
                     masserror = array.array('d',[])
@@ -323,8 +320,8 @@ class TemplatesApp(PlotApp):
                         mass_split=comparison.get("mass_split")
                         print "mass splitting: ntot bins, ntot for run, startbin",mass_split, " dataset : " , "data_2D_%s" % catd
                         diphomass=self.massquantiles(dset_data,massargs,mass_b,mass_split) 
-                        print "integrated over whole mass spectrum"
                     else:
+                        print "integrated over whole mass spectrum"
                         mass_split=[1,1,0]
                         diphomass = array.array('d',[0.,13000.])
                     for mb in range(mass_split[2],mass_split[1]):
@@ -332,10 +329,9 @@ class TemplatesApp(PlotApp):
                         cut=ROOT.TCut("mass>%f && mass<%f"% (diphomass[mb],diphomass[mb+1]))
                         cut_s= "%1.0f_%2.0f"% (diphomass[mb],diphomass[mb+1])
                         print cut.GetTitle()
-                        print "massbin: ", cut_s
                         dset_massc = dset_data.Clone("dset_data_%s_mb_%s"%(catd,cut_s))
                         dset_massc.reduce(cut.GetTitle())
-                        print dset_massc
+   #                     print dset_massc
                         templates_massc=[]
                         for temp_m in templates:
                             #temp_massc =temp_m.reduce(cut.GetTitle())
@@ -349,13 +345,9 @@ class TemplatesApp(PlotApp):
                             isoarg1d=ROOT.RooArgList("isoarg")
                             isoarg1d.add(self.buildRooVar("templateNdim%dDim%d" % ( fit["ndim"],id),template_binning,recycle=True))                
                             tit = "compiso_%s_%s_%s_mb_%s_templateNdim%dDim%d" % (fitname,compname,cat,cut_s,fit["ndim"],id)
-                            print
-                            print tit
                             for tm in templates_massc:
-                                print "tm.GetName()",tm.GetName()
                                 tempHisto=ROOT.TH1F("%s_dim%d_%d_H" % (tm.GetName(),fit["ndim"],id),"%s_dim%d_%d_H" % (tm.GetName(),fit["ndim"],id),len(template_binning)-1,template_binning)
                                 tm.fillHistogram(tempHisto,isoarg1d)
-                                print tempHisto.GetName()
                                 tempHisto.Scale(1.0/tempHisto.Integral())
                                 for bin in range(1,len(template_binning) ):
                                     tempHisto.SetBinContent(bin,tempHisto.GetBinContent(bin)/(tempHisto.GetBinWidth(bin)))
@@ -378,7 +370,7 @@ class TemplatesApp(PlotApp):
 
                 ########outside category loop
             #######outside components loop
-        self.saveWs(options)
+    #    self.saveWs(options)
     ## ------------------------------------------------------------------------------------------------------------
 
     def histounroll(self,templatelist, template_binning,isoargs,cat,prepfit):
@@ -390,8 +382,8 @@ class TemplatesApp(PlotApp):
         tempunroll_binning = array.array('d',[])
         histlsY=[]
         histlsX=[]
-        print"len(template_binning)", len(template_binning)
-        print"template_binning", template_binning
+    #    print"len(template_binning)", len(template_binning)
+     #   print"template_binning", template_binning
 
         for tempur in templatelist:
             pad_it+=1
@@ -437,8 +429,8 @@ class TemplatesApp(PlotApp):
             temp2d.GetZaxis().SetRangeUser(1e-8,1)
             bin=0
             temp1dunroll=ROOT.TH1F("unrolled_%s" %(tempur.GetName()),"unrolled_%s" %(tempur.GetName()),len(tempunroll_binning)-1,tempunroll_binning)
-            print "tempunroll_binning", tempunroll_binning
-            print "len(tempunroll_binning)",len(tempunroll_binning)
+      #      print "tempunroll_binning", tempunroll_binning
+       #     print "len(tempunroll_binning)",len(tempunroll_binning)
             for b in range(1,len(template_binning)):
               #  to loop up to inclusively b
                 for x in range(1,b+1):
@@ -462,10 +454,11 @@ class TemplatesApp(PlotApp):
                 print roodatahist_1dunroll
                 self.workspace_.rooImport(roodatahist_1dunroll,ROOT.RooFit.RecycleConflictNodes())
         titleunroll = "%s_unroll" % (tempur.GetTitle())
-        print histlsX
-        print histlsY
-        print histlistunroll
+       # print histlsX
+       # print histlsY
+       # print histlistunroll
         if not prepfit:
+       # if len(histlistunroll) >1:
             self.plotHistos(histlsX,"%s_X" %tempur.GetTitle(),template_binning,False)
             self.plotHistos(histlsY,"%s_Y" %tempur.GetTitle(),template_binning,False)
             self.plotHistos(histlistunroll,titleunroll,tempunroll_binning,False)
@@ -476,10 +469,10 @@ class TemplatesApp(PlotApp):
 ## ------------------------------------------------------------------------------------------------------------
 
     def massquantiles(self,dataset,massargs,mass_binning,mass_split):
-        print "splitByBin for dataset", dataset.GetName()
+        #print "splitByBin for dataset", dataset.GetName()
         massH=ROOT.TH1F("%s_massH" % dataset.GetName()[-17:],"%s_massH" % dataset.GetName()[-17:],len(mass_binning)-1,mass_binning)
         dataset.fillHistogram(massH,ROOT.RooArgList(massargs)) 
-        print "define mass bins " 
+       # print "define mass bins " 
         massH.Scale(1.0/massH.Integral())
         prob = array.array('d',[])
         dpmq = array.array('d',[0.0 for i in range((mass_split[1]+1))])
@@ -929,7 +922,7 @@ class TemplatesApp(PlotApp):
     def reducedRooData(self,name,rooset,binned,weight="weight",sel=None,redo=False):
         data = self.rooData("r_%s" % name)
         if not data or redo:
-            print "create rooData"
+        #    print "create rooData"
             data = self.rooData(name,rooset=rooset,weight=weight,sel=sel)
             if binned:
                 data = data.binnedClone("r_%s" % name,"r_%s" % name)

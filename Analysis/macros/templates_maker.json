@@ -444,7 +444,7 @@
     "comparisons" : {
 	"fit2DTruth" : { "fit" : "2D",
 		"templates" : { "mix:kDSinglePho2D" : {} },
-                "components": ["pf","ff"
+                "components": ["pf"
                 ],
                 "prepfit": true,
                 "weight_cut": "weight < 5.",
@@ -471,7 +471,12 @@
 		}
     },
       
-
+   "nominalFit":{
+        "3_components":{  "fit" : "2D", 
+                "histos": {"SinglePho": {} },
+                "observable": "templateNdim2d_unroll"
+         }
+    }, 
     "rootstyle_extra" : [
                   "TGaxis::SetMaxDigits(3);",
                   "TH1::SetDefaultSumw2(1);"
