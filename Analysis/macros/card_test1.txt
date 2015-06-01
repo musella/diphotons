@@ -1,0 +1,21 @@
+# TestV1 - 13TeV
+---------------------------------------------
+imax *
+jmax *
+kmax *
+------------
+
+shapes sig    EBHighR9      HighMassGG_m1500_001.root              w_all:mggSig_cat0
+shapes bkg    EBHighR9      full_analysis_anv1_v14_bkg_ws.root     wtemplates:model_bkg_EBHighR9
+shapes data_obs   EBHighR9      full_analysis_anv1_v14_bkg_ws.root     wtemplates:data_EBHighR9
+------------
+bin              EBHighR9
+observation      -1
+------------
+bin              EBHighR9 EBHighR9
+process          sig      bkg
+process          0        1
+rate             0.36     1  
+------------
+lumi    lnN    1.04    -
+
