@@ -35,7 +35,7 @@ class CombineApp(TemplatesApp):
                                     default="cic",
                                     help="Fit to consider"),
                         make_option("--observable",dest="observable",action="store",type="string",
-                                    default="mgg[235,300,5000]",
+                                    default="mgg[3250,500,6000]",
                                     help="Observable used in the fit default : [%default]",
                                     ),
                         make_option("--fit-background",dest="fit_backround",action="store_true",default=False,
@@ -93,6 +93,83 @@ class CombineApp(TemplatesApp):
 
         if options.fit_backround:
             self.fitBackground(options,args)
+            
+            ## Generate datacard
+         
+            datacard = open("dataCard_"+options.output_file.replace("root","txt"),"w+")
+            datacard.write("""
+----------------------------------------------------------------------------------------------------------------------------------
+imax * number of channels
+jmax * number of backgrounds
+kmax * number of nuisance parameters (source of systematic uncertainties)
+----------------------------------------------------------------------------------------------------------------------------------\n""")
+        
+            fitname = options.fit_name
+            fit = options.fits[fitname]
+            icat = 0
+            for cat in fit["categories"]:
+                datacard.write("shapes sig".ljust(20))
+                datacard.write((" %s  HighMassGG_m1500_001.root" % cat).ljust(50))
+                datacard.write("w_all:mggSig_cat%d\n" % icat)
+                icat+=1
+                datacard.write("shapes bkg".ljust(20))
+                datacard.write((" %s  %s" % (cat,options.output_file)).ljust(50))
+                datacard.write("wtemplates:model_bkg_%s\n" % cat) 
+                
+                datacard.write("shapes data_obs".ljust(20))
+                datacard.write((" %s  %s" % (cat,options.output_file)).ljust(50))
+                datacard.write("wtemplates:data_%s\n" % cat) 
+
+            datacard.write("----------------------------------------------------------------------------------------------------------------------------------\n")
+            datacard.write("bin".ljust(20))
+            for cat in fit["categories"]:
+                datacard.write((" %s".ljust(15) % cat))
+            datacard.write("\n")
+
+            datacard.write("observation".ljust(20))
+            for cat in fit["categories"]:
+                  datacard.write(" -1".ljust(15) )
+            datacard.write("\n")
+            
+
+            datacard.write("----------------------------------------------------------------------------------------------------------------------------------\n")
+        
+            datacard.write("bin".ljust(20))
+            for cat in fit["categories"]:
+                    datacard.write((" %s" % cat).ljust(15) )
+                    datacard.write((" %s" % cat).ljust(15) )
+            datacard.write("\n")
+
+
+            datacard.write("process".ljust(20))
+            for cat in fit["categories"]:
+                    datacard.write(" sig".ljust(15) )
+                    datacard.write(" bkg".ljust(15) )
+            datacard.write("\n")
+        
+            datacard.write("process".ljust(20))
+            for cat in fit["categories"]:
+                    datacard.write(" 0".ljust(15) )
+                    datacard.write(" 1".ljust(15) )
+            datacard.write("\n")
+            
+            datacard.write("rate".ljust(20))
+            for cat in fit["categories"]:
+                    datacard.write(" 0.36".ljust(15) )
+                    datacard.write(" 1".ljust(15) )
+            datacard.write("\n")
+            
+            datacard.write("----------------------------------------------------------------------------------------------------------------------------------\n")
+        
+            datacard.write("lumi  lnN".ljust(20))
+            for cat in fit["categories"]:
+                    datacard.write(" 1.04".ljust(15) )
+                    datacard.write(" -".ljust(15) )
+            datacard.write("\n")
+
+            datacard.write("----------------------------------------------------------------------------------------------------------------------------------\n\n")
+        
+
         
     ## ------------------------------------------------------------------------------------------------------------
     def fitBackground(self,options,args):
