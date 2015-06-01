@@ -35,7 +35,7 @@ class CombineApp(TemplatesApp):
                                     default="cic",
                                     help="Fit to consider"),
                         make_option("--observable",dest="observable",action="store",type="string",
-                                    default="mgg[3250,500,6000]",
+                                    default="mgg[5000,500,6000]",
                                     help="Observable used in the fit default : [%default]",
                                     ),
                         make_option("--fit-background",dest="fit_backround",action="store_true",default=False,
@@ -95,7 +95,7 @@ class CombineApp(TemplatesApp):
             self.fitBackground(options,args)
             
             ## Generate datacard
-         
+            
             datacard = open("dataCard_"+options.output_file.replace("root","txt"),"w+")
             datacard.write("""
 ----------------------------------------------------------------------------------------------------------------------------------
@@ -178,6 +178,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         fit = options.fits[fitname]
         
         roobs = self.buildRooVar(*(self.getVar(options.observable)), recycle=False, importToWs=True)
+        roobs.setBins(5000,"cache")
         roobs.setRange("fullRange",roobs.getMin(),roobs.getMax())
         roowe = self.buildRooVar("weight",[])        
         rooset = ROOT.RooArgSet(roobs,roowe)
@@ -194,6 +195,9 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             reduced.SetName("data_%s"% (cat))
             self.workspace_.rooImport(reduced)
         
+            binned = reduced.binnedClone("binned_data_%s" % cat)
+            self.workspace_.rooImport(binned)
+
         ## prepare background fit components
         for comp,model,source in zip(options.components,options.models,options.sources):
             
@@ -224,7 +228,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 norm.setVal(reduced.sumEntries())
                 extpdf = ROOT.RooExtendPdf("ext_%s" % pdf.GetName(),"ext_%s" %  pdf.GetName(),pdf,norm)
                 extpdf.fitTo(binned,ROOT.RooFit.Strategy(2))
-                extpdf.fitTo(reduced,ROOT.RooFit.Strategy(2))
+                ## extpdf.fitTo(reduced,ROOT.RooFit.Strategy(1))
             
 
                 ## FIXME: set normalization to expected number of events in signal region
