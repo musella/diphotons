@@ -250,15 +250,15 @@ class TemplatesApp(PlotApp):
     ## ------------------------------------------------------------------------------------------------------------
     
     def compareTemplates(self,options,args):
-        fout = self.openOut(options)
-        fout.Print()
-        fout.cd()
-        self.doCompareTemplates(options,args)
-        self.saveWs(options,fout)
+ #       fout = self.openOut(options)
+  #      fout.Print()
+   #     fout.cd()
+    #    self.doCompareTemplates(options,args)
+     #   self.saveWs(options,fout)
     
     ## ------------------------------------------------------------------------------------------------------------
     #MQ compare truth templates with rcone and sideband templates
-    def doCompareTemplates(self,options,args):
+    #def doCompareTemplates(self,options,args):
         print "Compare truth templates with rcone and sideband templates"
         ROOT.TH1F.SetDefaultSumw2(True)
         for name, comparison in options.comparisons.iteritems():
@@ -370,10 +370,15 @@ class TemplatesApp(PlotApp):
                         if fit["ndim"]>1:
                             print
                             self.histounroll(templates_massc,template_binning,isoargs,cat,prepfit)
+                            if prepfit:
+                                datals=[]
+                                datals.append(dset_massc)
+                                self.histounroll(datals,template_binning,isoargs,cat,prepfit)
                             
 
                 ########outside category loop
             #######outside components loop
+        self.saveWs(options)
     ## ------------------------------------------------------------------------------------------------------------
 
     def histounroll(self,templatelist, template_binning,isoargs,cat,prepfit):
@@ -431,7 +436,7 @@ class TemplatesApp(PlotApp):
             temp2d.Draw("COLZ")
             temp2d.GetZaxis().SetRangeUser(1e-8,1)
             bin=0
-            temp1dunroll=ROOT.TH1F("temp1dunroll%s" %(tempur.GetName()),"temp1dunroll%s" %(tempur.GetName()),len(tempunroll_binning)-1,tempunroll_binning)
+            temp1dunroll=ROOT.TH1F("unrolled_%s" %(tempur.GetName()),"unrolled_%s" %(tempur.GetName()),len(tempunroll_binning)-1,tempunroll_binning)
             print "tempunroll_binning", tempunroll_binning
             print "len(tempunroll_binning)",len(tempunroll_binning)
             for b in range(1,len(template_binning)):
@@ -453,9 +458,9 @@ class TemplatesApp(PlotApp):
                     temp1dunroll.SetBinError(bin,binE)
             histlistunroll.append(temp1dunroll)
             if prepfit:
-                roodatahist_1dunroll=ROOT.RooDataHist("hist_%s" % temp1dunroll.GetName(),"hist_%s" % temp1dunroll.GetName(),unrollvar, temp1dunroll)
+                roodatahist_1dunroll=ROOT.RooDataHist("H%s" % temp1dunroll.GetName(),"H%s" % temp1dunroll.GetName(),unrollvar, temp1dunroll)
                 print roodatahist_1dunroll
-                self.keep( [roodatahist_1dunroll] )
+                self.workspace_.rooImport(roodatahist_1dunroll,ROOT.RooFit.RecycleConflictNodes())
         titleunroll = "%s_unroll" % (tempur.GetTitle())
         print histlsX
         print histlsY
@@ -465,7 +470,7 @@ class TemplatesApp(PlotApp):
             self.plotHistos(histlsY,"%s_Y" %tempur.GetTitle(),template_binning,False)
             self.plotHistos(histlistunroll,titleunroll,tempunroll_binning,False)
             self.keep( [c1] )
-        self.autosave(True)
+            self.autosave(True)
 
 
 ## ------------------------------------------------------------------------------------------------------------
@@ -587,36 +592,27 @@ class TemplatesApp(PlotApp):
             obsls=ROOT.RooArgList("obsls")
             obsls.add(self.getVar(nomFit.get("observable")))
             #add rooformula for purity estimate fsig
-#	  RooRealVar *j1=NULL;RooFormulaVar *fsig1=NULL;
-#	  j1 = new RooRealVar("j1","j1",0.5,0,1);
-#	  fsig1 = new RooFormulaVar("fsig1","fsig1","j1",RooArgList(*j1));
+            jpp = ROOT.RooRealVar("jpp","jpp",0.3,0,1)
+            jpf = ROOT.RooRealVar("jpf","jpf",0.3,0,1)
+            fpurity = ROOT.RooFormulaVar("fpurity","fpurity","jpp+jpf ",RooFit.RooArgList(jpp,jpf))
             #automatically binning from this variable imported?
             print "nominal fit with: ", name, " observable : ", nomFit.get("observable")
             roodatahists=nomFit.get("histos",fit["components"])
-            #data=nomFit.get("data")
             return
             print roodatahists
-            hist_EB=[]
-            hist_nEB=[]
+            hist_Eta=[]
             #components pp pf and ffshould be in histo
-            for histo in roodatahists:
-                print histo
-                print component #TODO implemented
-            # eg 3 components for EBEB and EBEE x 
-                for cat in fit["categories"]:
-                    if cat=="EBEB": hist_EB.append(histo)
-                    elif cat=="EBEE": hist_EE.append(histo)
-                    else: print "not right category"
-            rooHistPdfs=ROOT.RooArgList("rooPdfs")
-            for (compEB,compEE) in zip(histo_EB, histo_EE):
-                rooHist_comp=ROOT.RooArgList(compEB,compEE)
-                rooHistPdf=ROOT.RooHistPdf("pdf_%s"% component,"pdf_%s"% component,obsls,rooHist_comp)
-                rooHistPdfs.add(rooHistPdf)
-            fit2dpdf=ROOT.RooAddPdf("fit2dpf_%s" % name,"fit2dpdf_%s" % name,rooHistPdfs,RooArgList(*fsig1),False)
+            for cat in fit["categories"]:
+                rooHistPdfs=ROOT.RooArgList("rooPdfs")
+                for histo in roodatahists:
+                    print histo
+                    rooHistPdf=ROOT.RooHistPdf("pdf_%s"% histo.GetName(),"pdf_%s"% histo_GetName(),obsls,rooHist_comp)
+                    rooHistPdfs.add(rooHistPdf)
+                fit2dpdf=ROOT.RooAddPdf("fit2dpf_%s" % cat,"fit2dpdf_%s" % cat,rooHistPdfs,RooArgList(fpurity),False)
           #save roofitresult in outputfile
-            fitresult = fit2dpdf.fitTo(data, RooFit.NumCPU(8), RooFit.Extended(False),RooFit.SumW2Error(False),RooFit.Verbose(False),RooFit.Save(True))
-#	  firstpass1.Print()
-          #self.plotFit()#TODO also implement 2d option 
+                fitresult = fit2dpdf.fitTo(data, RooFit.NumCPU(8), RooFit.Extended(False),RooFit.SumW2Error(False),RooFit.Verbose(False),RooFit.Save(True))
+                fitresult.Print()
+                #self.plotFit()#TODO also implement 2d option 
     ## ------------------------------------------------------------------------------------------------------------
     def plotFit(self,roovar,rooaddpdf,components,data,unroll_binning,title,log):
         b=ROOT.TLatex()
