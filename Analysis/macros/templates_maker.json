@@ -450,7 +450,9 @@
 			       "pf",
 			       "ff"
                 ],
-                "prepfit": false,
+                "prepfit": true,
+                "weight_cut": "weight < 5.",
+		"redo" : true,
 		"doDataMc" : false, "doMcTruth" : true,
 		"splitByBin" : false,
                 "template_binning" : [ 0.0,0.1,5.0,15.0],
@@ -462,7 +464,9 @@
 		"templates" : {"singlePho" : { "EBEB" : "EB", "EBEE" : "EB", "EEEB" : "EE"  }
                                 ,"1D" : {} 
                             },
-                "prepfit": false,
+                "prepfit": true,
+		"redo" : true,
+        "weight_cut": "weight < 5.",
 		"doDataMc" : false, "doMcTruth" : true,
 		"splitByBin" : false,
                 "template_binning" : [ 0.0,0.1, 1.0, 4.0,9.0,15.0 ],
@@ -478,3 +482,4 @@
     ]
     
 }
+
