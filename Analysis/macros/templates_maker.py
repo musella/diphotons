@@ -32,8 +32,9 @@ class TemplatesApp(PlotApp):
                                     default="",
                                     help="Preselection cuts to be applied."),
                         make_option("--selection",dest="selection",action="store",type="string",
-                                    default="",
                                     help="(Di-)Photon selection to be used for analysis. In dataset definition it replaces '%(sel)s'."),                
+                        make_option("--fit-categories",dest="fit_categories",action="callback",type="string",callback=optpars_utils.ScratchAppend(),help="sets specific category for fit",default=["EBEB","EBEE"]),
+                        make_option("--fit-massbins",dest="fit_massbins",action="callback",type="string",callback=optpars_utils.ScratchAppend(),help="sets massbins for fit or templates comparison",default=["1","1","0"]),
                         make_option("--aliases",dest="aliases",action="callback",type="string",callback=optpars_utils.ScratchAppend(),
                                     default=[],
                                     help="List of aliases to be defined for each tree. They can be used for selection or variable definition"),
@@ -337,13 +338,12 @@ class TemplatesApp(PlotApp):
                     else:
                         catd=cat
                     dset_data = self.reducedRooData("data_2D_%s" %catd,setargs,False,redo=ReDo)
-                    if splitByBin:
-                        mass_split=comparison.get("mass_split")
+                    mass_split= [int(x) for x in options.fit_massbins]
+                    if mass_split[0]>1:
                         print "mass splitting: ntot bins, ntot for run, startbin",mass_split, " dataset : " , "data_2D_%s" % catd
                         diphomass=self.massquantiles(dset_data,massargs,mass_b,mass_split) 
                     else:
                         print "integrated over whole mass spectrum"
-                        mass_split=[1,1,0]
                         diphomass = array.array('d',[0.,13000.])
                     for mb in range(mass_split[2],mass_split[1]):
                         
@@ -607,6 +607,8 @@ class TemplatesApp(PlotApp):
             jpf = ROOT.RooRealVar("jpf","jpf",0.3,0,1)
             fpp= ROOT.RooFormulaVar("fpp","fpp","jpp ",ROOT.RooArgList(jpp))
             fpf= ROOT.RooFormulaVar("fpf","fpf","jpf ",ROOT.RooArgList(jpf))
+            fpp2= ROOT.RooFormulaVar("fpp2","fpp2","jpp ",ROOT.RooArgList(jpp))
+            fpf2= ROOT.RooFormulaVar("fpf2","fpf2","jpf ",ROOT.RooArgList(jpf))
             print "nominal fit with: ", name, " observable : ", nomFit.get("observable")
             components=nomFit.get("components")
             tempname=nomFit.get("template")
@@ -614,7 +616,9 @@ class TemplatesApp(PlotApp):
             dim=nomFit.get("dimensions")
             hist_Eta=[]
             #TODO add massbinning
-            for cat in nomFit["categories"]:
+            categories = options.fit_categories
+            massbins= [int(x) for x in options.fit_massbins]
+            for cat in categories:
                 rooHistPdfs=[]
                 data = self.rooData("%s_%s_mb_0_13000"%(dataname,cat))
                 print data
@@ -624,12 +628,32 @@ class TemplatesApp(PlotApp):
                     rooHistPdf=ROOT.RooHistPdf("pdf_%s"% histo.GetName(),"pdf_%s"% histo.GetName(),ROOT.RooArgSet(obsls),histo)
                     rooHistPdfs.append(rooHistPdf)
                 print rooHistPdfs
-                #TODO loop and fill rooaddpdf
-                fitUnrolledPdf=ROOT.RooAddPdf("fitUnrolledPdf_%s" % cat,"fitUnrolledPdf_%s" % cat,ROOT.RooArgList(rooHistPdfs[0],rooHistPdfs[1],rooHistPdfs[2]),ROOT.RooArgList(fpp,fpf),False)
+                fitUnrolledPdf_mcstudies=ROOT.RooAddPdf("fitUnrolledPdf_mcstudies_%s" % cat,"fitUnrolledPdf_mcstudies_%s" % cat,ROOT.RooArgList(rooHistPdfs[0],rooHistPdfs[1],rooHistPdfs[2]),ROOT.RooArgList(fpp,fpf),False)
+                fitUnrolledPdf_fordata=ROOT.RooAddPdf("fitUnrolledPdf_fordata_%s" % cat,"fitUnrolledPdf_fordata_%s" % cat,ROOT.RooArgList(rooHistPdfs[0],rooHistPdfs[1],rooHistPdfs[2]),ROOT.RooArgList(fpp2,fpf2),False)
           #save roofitresult in outputfile
-                fitresult = fitUnrolledPdf.fitTo(data, RooFit.NumCPU(8), RooFit.Extended(False),RooFit.SumW2Error(False),RooFit.Verbose(False),RooFit.Save(True))
-                fitresult.Print()
-                self.plotFit(observable,rooHistPdfs,data,components,var_b,cat,log=True)#TODO also implement 2d option 
+                fit_mcstudies = fitUnrolledPdf_mcstudies.fitTo(data, RooFit.NumCPU(8), RooFit.Extended(False),RooFit.SumW2Error(False),RooFit.Verbose(False),RooFit.Save(True))
+                fit_fordata = fitUnrolledPdf_fordata.fitTo(data, RooFit.NumCPU(8), RooFit.Extended(False),RooFit.SumW2Error(True),RooFit.Verbose(False),RooFit.Save(True))
+                fit_fordata.Print()
+                pu_pp=fpp2.getVal()
+                puerr_pp=fpp.getPropagatedError(fit_mcstudies)
+                pullerr_pp=fpp2.getPropagatedError(fit_fordata)
+                pu_pf=fpf2.getVal()
+                puerr_pf=fpf.getPropagatedError(fit_mcstudies)
+                pullerr_pf=fpf2.getPropagatedError(fit_fordata)
+               # fitresult= {} TODO for all masses
+                
+#ML fit to weighted dataset: SumW2Error takes statistics of dataset into account, scales with number of events in dataset
+#By default the fit is executed through the MINUIT commands MINOS, HESSE and MINOS in succession 
+#fit to binned data now because of histounrolled?
+                
+               # ntp = ROOT.TNtuple("tree_fitresult_%s_%s_%s_%s" % (comp,dim,cat),"tree_fitresult_%s_%s_%s" % (comp,dim,cat),"purity:erro_sumw2off:err_sumw2on:massbin:masserror" )
+               # self.store_[ntp.GetName()] = ntp
+               # ntp.Fill(pu_pp,puerr_pp,pullerr_pp,pu_pf,puerr_pf,pullerr_pf )
+               #TODO plot with ntuple according to bkg_bias
+               #TODO plot also with rooplot
+               #TODO implement mas binningg
+               #TODO category and massbins in command line, schon fuer preptemplates
+        #        self.plotFit(observable,rooHistPdfs,data,components,var_b,cat,log=True)#TODO also implement 2d option  
     ## ------------------------------------------------------------------------------------------------------------
     def plotFit(self,roovar,rooaddpdf,data,components,unroll_binning,cat,log):
         b=ROOT.TLatex()
