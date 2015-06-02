@@ -201,6 +201,9 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             reduced.SetName("data_%s"% (cat))
             self.workspace_.rooImport(reduced)
         
+            binned = reduced.binnedClone("binned_data_%s" % cat)
+            self.workspace_.rooImport(binned)
+
         ## prepare background fit components
         for comp,model,source in zip(options.components,options.models,options.sources):
             
@@ -231,8 +234,9 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 norm.setVal(reduced.sumEntries())
                 extpdf = ROOT.RooExtendPdf("ext_%s" % pdf.GetName(),"ext_%s" %  pdf.GetName(),pdf,norm)
                 extpdf.fitTo(binned,ROOT.RooFit.Strategy(2))
-                extpdf.fitTo(reduced,ROOT.RooFit.Strategy(1))
-                
+                ## extpdf.fitTo(reduced,ROOT.RooFit.Strategy(1))
+            
+
                 ## FIXME: set normalization to expected number of events in signal region
                 ## ok as long as we data as source
 
