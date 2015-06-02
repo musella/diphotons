@@ -299,7 +299,8 @@ class TemplatesApp(PlotApp):
                 else:
                     compname, templatesls = comp
                 for cat in fit["categories"]:
-                    print cat
+                    print
+                    print cat, compname
                     massargs=ROOT.RooArgSet("massargs")
                     isoargs=ROOT.RooArgSet("isoargs")
                     mass_var,mass_b=self.getVar(comparison.get("mass_binning"))
@@ -328,36 +329,31 @@ class TemplatesApp(PlotApp):
                             templatename=( "reduced_template_%s_2D_%s" % (compname,mapping.get(cat,cat)))
                             tempdata.SetName(templatename)
                     templates.append(tempdata)
-                    #print "templates list: ", templates
+#                    print "templates list: ", templates
                     ##------------------- split in massbins
-                    splitByBin=comparison.get("splitByBin")
                     masserror = array.array('d',[])
                     
-                    if cat=="EEEB":#TODO implement in json file
-                        catd="EBEE"
-                    else:
-                        catd=cat
+                    if cat=="EEEB": catd="EBEE"#TODO implement in json file
+                    else: catd=cat
                     dset_data = self.reducedRooData("data_2D_%s" %catd,setargs,False,redo=ReDo)
                     mass_split= [int(x) for x in options.fit_massbins]
-                    if mass_split[0]>1:
-                        print "mass splitting: ntot bins, ntot for run, startbin",mass_split, " dataset : " , "data_2D_%s" % catd
-                        diphomass=self.massquantiles(dset_data,massargs,mass_b,mass_split) 
-                    else:
-                        print "integrated over whole mass spectrum"
-                        diphomass = array.array('d',[0.,13000.])
+                    diphomass=self.massquantiles(dset_data,massargs,mass_b,mass_split) 
                     for mb in range(mass_split[2],mass_split[1]):
                         
                         cut=ROOT.TCut("mass>%f && mass<%f"% (diphomass[mb],diphomass[mb+1]))
                         cut_s= "%1.0f_%2.0f"% (diphomass[mb],diphomass[mb+1])
                         print cut.GetTitle()
-                        dset_massc = dset_data.Clone("data_%s_mb_%s"%(catd,cut_s))
+                        dset_massc = dset_data.Clone("%s_mb_%s"%(dset_data.GetName()[8:],cut_s))
+                     #   print dset_massc
                         dset_massc.reduce(cut.GetTitle())
                         templates_massc=[]
                         for temp_m in templates:
-                            temp_massc =temp_m
+                            temp_massc = temp_m.Clone("%s_mb_%s"%(temp_m.GetName()[8:],cut_s))
+                            temp_massc.reduce(cut.GetTitle())
                             temp_massc.Print()
-                            temp_massc.SetNameTitle("%s_mb_%s"%(temp_m.GetName()[8:],cut_s),"%s_mb_%s"%(temp_m.GetName()[8:],cut_s))
                             templates_massc.append(temp_massc)
+                        print templates_massc
+
                         ## loop over 2 legs
                         for id in range(fit["ndim"]):
                             histls=[]
@@ -377,15 +373,15 @@ class TemplatesApp(PlotApp):
                                 print "plot 1d histos"
                                 self.plotHistos(histls,tit,template_binning,True)
                         ## roll out for combine tool per category
-                        diphomass[mb]=(diphomass[mb]+diphomass[mb+1])/2.
-                        masserror.append((diphomass[mb+1]-diphomass[mb])/2.)
+                   #     diphomass[mb]=(diphomass[mb]+diphomass[mb+1])/2.
+                    #    masserror.append((diphomass[mb+1]-diphomass[mb])/2.)
                         if fit["ndim"]>1:
                             print
-                            self.histounroll(templates_massc,template_binning,isoargs,comp,cat,cut_s,prepfit)
+                            self.histounroll(templates_massc,template_binning,isoargs,compname,cat,cut_s,prepfit)
                             if prepfit:
                                 datals=[]
                                 datals.append(dset_massc)
-                                self.histounroll(datals,template_binning,isoargs,comp,cat,cut_s,prepfit)
+                                self.histounroll(datals,template_binning,isoargs,compname,cat,cut_s,prepfit)
 
                 ########outside category loop
             #######outside components loop
@@ -397,25 +393,25 @@ class TemplatesApp(PlotApp):
         c1=ROOT.TCanvas("d2hist_%s" % cat,"2d hists per category",1000,1000) 
         c1.Divide(1,2)
         histlistunroll=[]
+        print
         print "roll out" 
         tempunroll_binning = array.array('d',[])
         histlsY=[]
         histlsX=[]
     #    print"len(template_binning)", len(template_binning)
      #   print"template_binning", template_binning
-
         for tempur in templatelist:
             pad_it+=1
             temp2d=ROOT.TH2F("d2%s" % (tempur.GetName()),"d2%s" % (tempur.GetName()),len(template_binning)-1,template_binning,len(template_binning)-1,template_binning)
             tempur.fillHistogram(temp2d,ROOT.RooArgList(isoargs))
             temp2dx=temp2d.ProjectionX("%s_X" %tempur.GetName())
             temp2dx.Scale(1./temp2dx.Integral())
-            temp2dx.SetTitle("%s_X" %tempur.GetTitle())
+            temp2dx.SetTitle("%s_X" %tempur.GetName())
             temp2dy=temp2d.ProjectionY("%s_Y" %tempur.GetName())
             temp2dy.Scale(1./temp2dy.Integral())
             ## draw projections as a check
             histlsX.append(temp2dx)
-            temp2dy.SetTitle("%s_Y" %tempur.GetTitle())
+            temp2dy.SetTitle("%s_Y" %tempur.GetName())
             histlsY.append(temp2dy)
             temp2d.Scale(1./temp2d.Integral())
             tempunroll_binning = array.array('d',[])
@@ -446,9 +442,9 @@ class TemplatesApp(PlotApp):
             temp2d.Draw("COLZ")
             temp2d.GetZaxis().SetRangeUser(1e-8,1)
             bin=0
-            temp1dunroll=ROOT.TH1F("hist","hist",len(tempunroll_binning)-1,tempunroll_binning)
-            print "tempunroll_binning", tempunroll_binning
-            print "len(tempunroll_binning)",len(tempunroll_binning)
+            temp1dunroll=ROOT.TH1F("hist_%s" % (tempur.GetName()),"hist_%s"% (tempur.GetName()),len(tempunroll_binning)-1,tempunroll_binning)
+    #        print "tempunroll_binning", tempunroll_binning
+     #       print "len(tempunroll_binning)",len(tempunroll_binning)
             for b in range(1,len(template_binning)):
                 #  to loop up to inclusively b
                 for x in range(1,b+1):
@@ -471,15 +467,15 @@ class TemplatesApp(PlotApp):
                 roodatahist_1dunroll=ROOT.RooDataHist("unrolled_%s" % (tempur.GetName()),"unrolled_%s" %(tempur.GetName()),unrollvar, temp1dunroll)
                 print roodatahist_1dunroll
                 self.workspace_.rooImport(roodatahist_1dunroll,ROOT.RooFit.RecycleConflictNodes())
-        titleunroll = "%s_unrolled" % (tempur.GetTitle())
        # print histlsX
        # print histlsY
        # print histlistunroll
-        if not prepfit:
-       # if len(histlistunroll) >1:
-            self.plotHistos(histlsX,"%s_X" %tempur.GetTitle(),template_binning,False)
-            self.plotHistos(histlsY,"%s_Y" %tempur.GetTitle(),template_binning,False)
-            self.plotHistos(histlistunroll,titleunroll,tempunroll_binning,False)
+       # if not prepfit:
+        if len(histlistunroll) >1:
+            title="histo_%s_%s_%s" %(comp,cat,mcut_s)
+            self.plotHistos(histlsX,"%s_X" %title,template_binning,False)
+            self.plotHistos(histlsY,"%s_Y" %title,template_binning,False)
+            self.plotHistos(histlistunroll,"%s_unrolled" % (title),tempunroll_binning,False)
             self.keep( [c1] )
             self.autosave(True)
 
@@ -488,7 +484,8 @@ class TemplatesApp(PlotApp):
 
     def massquantiles(self,dataset,massargs,mass_binning,mass_split):
         #print "splitByBin for dataset", dataset.GetName()
-        massH=ROOT.TH1F("%s_massH" % dataset.GetName()[-17:],"%s_massH" % dataset.GetName()[-17:],len(mass_binning)-1,mass_binning)
+        #massH=ROOT.TH1F("%s_massH" % dataset.GetName()[-17:],"%s_massH" % dataset.GetName()[-17:],len(mass_binning)-1,mass_binning)
+        massH=ROOT.TH1F("%s_massH" % dataset.GetName(),"%s_massH" % dataset.GetName(),len(mass_binning)-1,mass_binning)
         dataset.fillHistogram(massH,ROOT.RooArgList(massargs)) 
        # print "define mass bins " 
         massH.Scale(1.0/massH.Integral())
@@ -614,75 +611,89 @@ class TemplatesApp(PlotApp):
             tempname=nomFit.get("template")
             dataname=nomFit.get("data")
             dim=nomFit.get("dimensions")
+            mass_var,mass_b=self.getVar(nomFit.get("mass_binning"))
+            mass=self.buildRooVar(mass_var,mass_b,recycle=True)
             hist_Eta=[]
-            #TODO add massbinning
             categories = options.fit_categories
-            massbins= [int(x) for x in options.fit_massbins]
+            mass_split= [int(x) for x in options.fit_massbins]
             for cat in categories:
-                rooHistPdfs=[]
-                data = self.rooData("%s_%s_mb_0_13000"%(dataname,cat))
-                print data
-                for comp in nomFit["components"]:
-                    print cat,comp
-                    histo = self.rooData("%s_%s_%s_%s_mb_0_13000"%(tempname, comp,dim,cat))
-                    rooHistPdf=ROOT.RooHistPdf("pdf_%s"% histo.GetName(),"pdf_%s"% histo.GetName(),ROOT.RooArgSet(obsls),histo)
-                    rooHistPdfs.append(rooHistPdf)
-                print rooHistPdfs
-                fitUnrolledPdf_mcstudies=ROOT.RooAddPdf("fitUnrolledPdf_mcstudies_%s" % cat,"fitUnrolledPdf_mcstudies_%s" % cat,ROOT.RooArgList(rooHistPdfs[0],rooHistPdfs[1],rooHistPdfs[2]),ROOT.RooArgList(fpp,fpf),False)
-                fitUnrolledPdf_fordata=ROOT.RooAddPdf("fitUnrolledPdf_fordata_%s" % cat,"fitUnrolledPdf_fordata_%s" % cat,ROOT.RooArgList(rooHistPdfs[0],rooHistPdfs[1],rooHistPdfs[2]),ROOT.RooArgList(fpp2,fpf2),False)
-          #save roofitresult in outputfile
-                fit_mcstudies = fitUnrolledPdf_mcstudies.fitTo(data, RooFit.NumCPU(8), RooFit.Extended(False),RooFit.SumW2Error(False),RooFit.Verbose(False),RooFit.Save(True))
-                fit_fordata = fitUnrolledPdf_fordata.fitTo(data, RooFit.NumCPU(8), RooFit.Extended(False),RooFit.SumW2Error(True),RooFit.Verbose(False),RooFit.Save(True))
-                fit_fordata.Print()
-                pu_pp=fpp2.getVal()
-                puerr_pp=fpp.getPropagatedError(fit_mcstudies)
-                pullerr_pp=fpp2.getPropagatedError(fit_fordata)
-                pu_pf=fpf2.getVal()
-                puerr_pf=fpf.getPropagatedError(fit_mcstudies)
-                pullerr_pf=fpf2.getPropagatedError(fit_fordata)
-               # fitresult= {} TODO for all masses
+                if cat=="EEEB": catd="EBEE"
+                else:catd=cat
+                dset_data = self.reducedRooData("data_2D_%s" %catd,ROOT.RooArgSet(mass),False,redo=False)
                 
-#ML fit to weighted dataset: SumW2Error takes statistics of dataset into account, scales with number of events in dataset
-#By default the fit is executed through the MINUIT commands MINOS, HESSE and MINOS in succession 
-#fit to binned data now because of histounrolled?
-                
-               # ntp = ROOT.TNtuple("tree_fitresult_%s_%s_%s_%s" % (comp,dim,cat),"tree_fitresult_%s_%s_%s" % (comp,dim,cat),"purity:erro_sumw2off:err_sumw2on:massbin:masserror" )
-               # self.store_[ntp.GetName()] = ntp
-               # ntp.Fill(pu_pp,puerr_pp,pullerr_pp,pu_pf,puerr_pf,pullerr_pf )
-               #TODO plot with ntuple according to bkg_bias
-               #TODO plot also with rooplot
-               #TODO implement mas binningg
-               #TODO category and massbins in command line, schon fuer preptemplates
-        #        self.plotFit(observable,rooHistPdfs,data,components,var_b,cat,log=True)#TODO also implement 2d option  
-    ## ------------------------------------------------------------------------------------------------------------
-    def plotFit(self,roovar,rooaddpdf,data,components,unroll_binning,cat,log):
+                fitresult= {}
+                for mb in range(mass_split[2],mass_split[1]):
+                    rooHistPdfs=[]
+                    diphomass=self.massquantiles(dset_data,mass,mass_b,mass_split) 
+                    cut=ROOT.TCut("mass>%f && mass<%f"% (diphomass[mb],diphomass[mb+1]))
+                    cut_s=None
+                    cut_s= "%1.0f_%2.0f"% (diphomass[mb],diphomass[mb+1])
+                    print
+                    print cut.GetTitle()
+                    data = self.rooData("%s_%s_%s_mb_%s"%(dataname,dim,cat,cut_s))
+                    print data
+                    for comp in nomFit["components"]:
+                        print cat,comp
+                        histo = self.rooData("%s_%s_%s_%s_mb_%s"%(tempname, comp,dim,cat,cut_s))
+                        rooHistPdf=ROOT.RooHistPdf("pdf_%s"% histo.GetName(),"pdf_%s"% histo.GetName(),ROOT.RooArgSet(obsls),histo)
+                        rooHistPdfs.append(rooHistPdf)
+                    print rooHistPdfs
+                    fitUnrolledPdf_mcstudies=ROOT.RooAddPdf("fitUnrolledPdf_mcstudies_%s_mb_%s" % (cat,cut_s),"fitUnrolledPdf_mcstudies_%s_mb_%s" % (cat,cut_s),ROOT.RooArgList(rooHistPdfs[0],rooHistPdfs[1],rooHistPdfs[2]),ROOT.RooArgList(fpp,fpf),False)
+                    fitUnrolledPdf_fordata=ROOT.RooAddPdf("fitUnrolledPdf_fordata_%s_mb_%s" % (cat,cut_s),"fitUnrolledPdf_fordata_%s_mb_%s" % (cat,cut_s),ROOT.RooArgList(rooHistPdfs[0],rooHistPdfs[1],rooHistPdfs[2]),ROOT.RooArgList(fpp2,fpf2),False)
+              #save roofitresult in outputfile
+                    fit_mcstudies = fitUnrolledPdf_mcstudies.fitTo(data, RooFit.NumCPU(8), RooFit.Extended(False),RooFit.SumW2Error(False),RooFit.Verbose(False),RooFit.Save(True))
+                    fit_fordata = fitUnrolledPdf_fordata.fitTo(data, RooFit.NumCPU(8), RooFit.Extended(False),RooFit.SumW2Error(True),RooFit.Verbose(False),RooFit.Save(True))
+              #      fit_fordata.Print()
+                    pu_pp=fpp2.getVal()
+                    puerr_pp=fpp.getPropagatedError(fit_mcstudies)
+                    pullerr_pp=fpp2.getPropagatedError(fit_fordata)
+                    pu_pf=fpf2.getVal()
+                    puerr_pf=fpf.getPropagatedError(fit_mcstudies)
+                    pullerr_pf=fpf2.getPropagatedError(fit_fordata)
+                    massbin=(diphomass[mb]+diphomass[mb+1])/2.
+                    masserror=(diphomass[mb+1]-diphomass[mb])/2.
+                    
+    #ML fit to weighted dataset: SumW2Error takes statistics of dataset into account, scales with number of events in dataset
+    #fit to binned data now because of histounrolled?
+                    
+                    ntp = ROOT.TNtuple("tree_fitresult_%s_%s_%s" % (dim,cat,cut_s),"tree_fitresult_%s_%s_%s" % (dim,cat,cut_s),"purity_pp:error_pp_sumw2off:error_pp_sumw2on:purity_pf:error_pf_sumw2off:error_pf_sumw2on:massbin:masserror" )
+                    self.store_[ntp.GetName()] = ntp
+                    ntp.Fill(pu_pp,puerr_pp,pullerr_pp,pu_pf,puerr_pf,pullerr_pf,massbin,masserror )
+                   #TODO plot with ntuple according to bkg_bias
+                    self.plotFit(observable,fitUnrolledPdf_mcstudies,rooHistPdfs,data,components,var_b,cat,log=True) 
+        ## ------------------------------------------------------------------------------------------------------------
+    def plotFit(self,roovar,rooaddpdf,roopdfs,data,components,unroll_binning,cat,log):
         b=ROOT.TLatex()
         b.SetNDC()
         b.SetTextSize(0.06)
         b.SetTextColor(ROOT.kRed)
-        cFit = ROOT.TCanvas("cFit","cFit",1200,800)
-        leg =ROOT.TLegend(0.15,0.8,0.35,0.9)
+        cFit = ROOT.TCanvas("c%s_%s" %(rooaddpdf.GetName(),log),"cFit",1200,800)
+        leg =ROOT.TLegend(0.5,0.8,0.35,0.9)
+        leg.SetTextSize(0.03)
+        leg.SetTextFont(42);
+        leg.SetFillColor(ROOT.kWhite)
         cFit.cd(1)
         if log:
             cFit.SetLogy()
-        print unroll_binning
+        binning=ROOT.RooBinning(len(unroll_binning)-1,unroll_binning)
+        print binning
         frame = roovar.frame(RooFit.Title("1d fit for category %s"% cat))
-        data.plotOn(frame,RooFit.Binning(RooAbsBinning(unroll_binning)),RooFit.Name("data"))
+        data.plotOn(frame,RooFit.Binning(binning),RooFit.Name("data"))
         rooaddpdf.plotOn(frame,RooFit.Name("fit"))
         if len(components)>2:
-            rooaddpdf.plotOn(frame,RooFit.Components(components[0]),RooFit.LineStyle(kDashed),RooFit.LineColor(kRed),RooFit.Name("pp"))
-            rooaddpdf.plotOn(frame,RooFit.Components(components[1]),RooFit.LineStyle(kDashed),RooFit.LineColor(kCyan+1),RooFit.Name("pf"))
-            rooaddpdf.plotOn(frame,RooFit.Components(components[2]),RooFit.LineStyle(kDashed),RooFit.LineColor(kBlack),RooFit.Name("ff"))
+            rooaddpdf.plotOn(frame,RooFit.Components(roopdfs[0].GetName()),RooFit.LineStyle(ROOT.kDashed),RooFit.LineColor(ROOT.kRed),RooFit.Name("pp"))
+            rooaddpdf.plotOn(frame,RooFit.Components(roopdfs[1].GetName()),RooFit.LineStyle(ROOT.kDashed),RooFit.LineColor(ROOT.kCyan+1),RooFit.Name("pf"))
+            rooaddpdf.plotOn(frame,RooFit.Components(roopdfs[2].GetName()),RooFit.LineStyle(ROOT.kDashed),RooFit.LineColor(ROOT.kBlack),RooFit.Name("ff"))
         frame.Draw()
         leg.AddEntry("fit","fit","l")
         if len(components)>2:
             leg.AddEntry("pp","prompt-prompt ","l")
             leg.AddEntry("pf","prompt-fake ","l")
-            leg.AddEntry("pp","fake-fake ","l")
-        leg.SetFillColor(ROOT.kWhite) 
+            leg.AddEntry("ff","fake-fake ","l")
         leg.Draw()
         #b.DrawLatex(0.55,0.7,"PRELIMINARY")
         self.keep([cFit])
+        self.autosave(True)
 
     ## ------------------------------------------------------------------------------------------------------------
     def prepareTemplates(self,options,args):

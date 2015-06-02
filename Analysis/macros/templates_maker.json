@@ -452,10 +452,8 @@
                 "weight_cut": "weight < 5.",
 		"redo" : true,
 		"doDataMc" : false, "doMcTruth" : true,
-		"splitByBin" : false,
-                "template_binning" : [ 0.0,0.1,5.0,15.0],
-				"mass_binning" :"mass[13000,0.0,13000.0]",
-				"mass_split":[5,5,0]
+        "template_binning" : [ 0.0,0.1,5.0,15.0],
+		"mass_binning" :"mass[13000,0.0,13000.0]"
 		},
 	"_fit1DTruth" : { "fit" : "1D",
                 "components" : [ "f","p" ],
@@ -466,10 +464,8 @@
 		"redo" : true,
         "weight_cut": "weight < 5.",
 		"doDataMc" : false, "doMcTruth" : true,
-		"splitByBin" : false,
-                "template_binning" : [ 0.0,0.1, 1.0, 4.0,9.0,15.0 ],
-				"mass_binning" :"mass[13000,0.0,13000.0]",
-				"mass_split":[10,10,0]
+        "template_binning" : [ 0.0,0.1, 1.0, 4.0,9.0,15.0 ],
+		"mass_binning" :"mass[13000,0.0,13000.0]"
 		}
     },
       
@@ -480,7 +476,7 @@
                 "components": ["pp","pf","ff"],
                 "data": "unrolled_data", 
                 "template": "unrolled_template",
-                "massbins":""
+				"mass_binning" :"mass[13000,0.0,13000.0]"
          }
     }, 
     "rootstyle_extra" : [
