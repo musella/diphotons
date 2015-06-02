@@ -472,13 +472,23 @@
    "nominalFit":{
         "3_components":{
                 "dimensions" :"2D", 
-                "observable": "templateNdim2d_unroll[0.0, 0.010000000000000002, 0.5, 1.5, 1.99, 26.000000000000004, 75.0, 76.0, 125.0, 225.0]",
+                "observable": "templateNdim2d_unroll",
                 "components": ["pp","pf","ff"],
                 "data": "unrolled_data", 
+                "_template": "unrolled_template",
+                "_template": "unrolled_mctruth",
+		"mass_binning" :"mass[13000,0.0,13000.0]"
+         },
+        "2_components":{
+                "dimensions" :"2D", 
+                "observable": "templateNdim2d_unroll",
+                "components": ["pp","pf"],
+                "data": "unrolled_data", 
                 "template": "unrolled_template",
-				"mass_binning" :"mass[13000,0.0,13000.0]"
-         }
-    }, 
+                "_template": "unrolled_mctruth",
+		"mass_binning" :"mass[13000,0.0,13000.0]"
+        }
+    },
     "rootstyle_extra" : [
                   "TGaxis::SetMaxDigits(3);",
                   "TH1::SetDefaultSumw2(1);"
