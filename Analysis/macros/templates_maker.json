@@ -37,6 +37,34 @@
                "GJets_HT_100toInf_13TeV:output.root/%(sel)s"            
             ],
 
+     "#" : "mc dataset",
+     "signals" : {
+     	       	 "grav_001_750" : ["RSGravToGG_kMpl_001_M_750_13TeV:output.root/%(sel)sGenIso",
+		       		  "RSGravToGG_kMpl_001_M_750_13TeV:output.root/%(sel)sNonGenIso"
+		       		  ],
+     	       	 "grav_001_1500" : ["RSGravToGG_kMpl_001_M_1500_13TeV:output.root/%(sel)sGenIso",
+		       		  "RSGravToGG_kMpl_001_M_1500_13TeV:output.root/%(sel)sNonGenIso"
+		       		  ],
+      	       	 "grav_01_1500" : ["RSGravToGG_kMpl_01_M_1500_13TeV:output.root/%(sel)sGenIso",
+		       		  "RSGravToGG_kMpl_01_M_1500_13TeV:output.root/%(sel)sNonGenIso"
+		       		  ],
+      	       	 "grav_02_1500" : ["RSGravToGG_kMpl_02_M_1500_13TeV:output.root/%(sel)sGenIso",
+		       		  "RSGravToGG_kMpl_02_M_1500_13TeV:output.root/%(sel)sNonGenIso"
+		       		  ],
+     	       	 "grav_02_3000" : ["RSGravToGG_kMpl_02_M_3000_13TeV:output.root/%(sel)sGenIso",
+		       		  "RSGravToGG_kMpl_02_M_3000_13TeV:output.root/%(sel)sNonGenIso"
+		       		  ],
+     	       	 "grav_01_3000" : ["RSGravToGG_kMpl_01_M_3000_13TeV:output.root/%(sel)sGenIso",
+		       		  "RSGravToGG_kMpl_01_M_3000_13TeV:output.root/%(sel)sNonGenIso"
+		       		  ],
+     	       	 "grav_02_5000" : ["RSGravToGG_kMpl_02_M_5000_13TeV:output.root/%(sel)sGenIso",
+		       		  "RSGravToGG_kMpl_02_M_5000_13TeV:output.root/%(sel)sNonGenIso"
+		       		  ],
+     	       	 "grav_001_5000" : ["RSGravToGG_kMpl_001_M_5000_13TeV:output.root/%(sel)sGenIso",
+		       		  "RSGravToGG_kMpl_001_M_5000_13TeV:output.root/%(sel)sNonGenIso"
+		       		  ]
+            },
+
     "_data" : [
                "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)sGenIso",
                "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)sNonGenIso"
@@ -161,7 +189,8 @@
                             "! leadIsEB && subleadIsEB" :[ "subleadChIso", "leadChIso" ]
                        }
                 } 
-            }, 
+            },
+	    "signals" : "__all__", 
 		"truth_selection" : {
 		    "pp" : "leadPrompt  && subleadPrompt",
 			"pf" : "(leadPrompt && subleadFake) || (subleadPrompt && leadFake)",

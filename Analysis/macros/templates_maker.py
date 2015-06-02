@@ -686,6 +686,8 @@ class TemplatesApp(PlotApp):
         self.datasets_["data"] = self.openDataset(None,options.data_file,options.infile,options.data)
         self.datasets_["mc"]   = self.openDataset(None,options.mc_file,options.infile,options.mc)
         self.datasets_["templates"]   = self.openDataset(None,options.data_file,options.infile,options.templates)
+        for name,trees in options.signals.iteritems():
+            self.datasets_[name] = self.openDataset(None,options.mc_file,options.infile,trees)        
         # used by parent class PlotApp to read in objects
         self.template_ = options.treeName
         
@@ -722,6 +724,10 @@ class TemplatesApp(PlotApp):
             components      = fit["components"]
             categories      = fit["categories"]
             truth_selection = fit["truth_selection"]
+            signals         = fit.get("signals",[])
+            if signals == "__all__":
+                signals = options.signals.keys()
+                fit["signals"] = signals
             template_binning = array.array('d',fit["template_binning"])
             templates       = fit["templates"]
             storeTrees      = fit.get("store_trees",False)
@@ -729,7 +735,7 @@ class TemplatesApp(PlotApp):
             preselection    = fit.get("preselection",options.preselection)
             
             variables       = fit.get("dataset_variables",[])
-
+            
             fulllist = varlist.Clone()
             for var in variables:
                 vname, binning = self.getVar(var)
@@ -756,6 +762,11 @@ class TemplatesApp(PlotApp):
             mcTrees =  self.prepareTrees("mc",selection,options.verbose,"MC trees")
             self.buildRooDataSet(mcTrees,"mc",name,fit,categories,fulllist,weight,preselection,storeTrees)
             
+            ## prepare signal
+            for sig in signals:
+                sigTrees =  self.prepareTrees(sig,selection,options.verbose,"Signal %s trees" % sig)
+                self.buildRooDataSet(sigTrees,sig,name,fit,categories,fulllist,weight,preselection,storeTrees)
+            
             ## prepare truth templates
             for truth,sel in truth_selection.iteritems():
                 cut = ROOT.TCut(preselection)
@@ -765,7 +776,7 @@ class TemplatesApp(PlotApp):
                     legs = fit["legs"]
                 self.buildRooDataSet(mcTrees,"mctruth_%s" % truth,name,fit,categories,fulllist,weight,cut.GetTitle(),storeTrees)
             
-                        
+                
             print
             ## sanity check
             for cat in categories.keys():
