@@ -1,0 +1,8 @@
+{
+	    "pp" : { 
+	    	 "shape":"data", "norm":"mctruth_pp"
+	    },
+	    "pf" : { 
+	    	 "shape":"mctruth_pf", "norm":"mctruth_pf"
+	    }	    
+}
