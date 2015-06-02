@@ -21,11 +21,11 @@
 
 ### Background model
 - `./combine_maker.py --load templates_maker.json --fit-name cic --input-dir ~musella/public/workspace/exo/full_analysis_anv1_v14  -o full_analysis_anv1_v14_final_ws.root`
-- `./combine_maker.py --fit-name cic  --fit-background  --read-ws full_analysis_anv1_v14_final_ws.root -O ~/www/test_bkg_fit -o full_analysis_anv1_v14_bkg_ws.root`
+- `./combine_maker.py --fit-name cic  --fit-background   --observable mgg[5000,300,6000] --read-ws full_analysis_anv1_v14_final_ws.root -O ~/www/test_bkg_fit -o full_analysis_anv1_v14_bkg_ws.root`
 
 ### Running combine tool 
 
 ### Significance
-- `combine -M ProfileLikelihood --expectSignal 1 --significance -t -1 card_test1.txt`
+- `combine -M ProfileLikelihood --expectSignal 1 --significance -t -1 dataCard_full_analysis_anv1_v14_bkg_ws.txt`
 ### Limits
-- `combine -M Asymptotic -t -1 --run expected card_test1.txt`
+- `combine -M Asymptotic -t -1 --run expected dataCard_full_analysis_anv1_v14_bkg_ws.txt`
