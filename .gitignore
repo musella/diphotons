@@ -41,3 +41,7 @@ __init__.py
 */test/*/
 */macros/*/
 */config/*/
+*/macros/*.png
+*/macros/*.pdf
+*/macros/*.eps
+*/macros/*.root
