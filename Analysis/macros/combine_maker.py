@@ -40,9 +40,12 @@ class CombineApp(TemplatesApp):
                                     ),
                         make_option("--fit-background",dest="fit_backround",action="store_true",default=False,
                                     help="Fit background",
-                                    ),
+                                    ),                        
                         make_option("--norm-as-fractions",dest="norm_as_fractions",action="store_true",default=False,
                                     help="Parametrize background components normalization as fractions",
+                                    ),
+                        make_option("--nuisance-fractions",dest="nuisance_fractions",action="store_true",default=False,
+                                    help="Add nuisance parameters for component fractions",
                                     ),
                         make_option("--bkg-shapes",dest="bkg_shapes",action="callback",callback=optpars_utils.Load(scratch=True),
                                     type="string",
@@ -108,28 +111,39 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             fitname = options.fit_name
             fit = options.fits[fitname]
             icat = 0
-            for cat in fit["categories"]:
+            sidebands = list(fit["sidebands"].keys())
+            categories = list(fit["categories"].keys())            
+            for cat in categories:
                 datacard.write("shapes sig".ljust(20))
                 datacard.write((" %s  HighMassGG_m1500_001.root" % cat).ljust(50))
-                datacard.write("w_all:mggSig_cat%d\n" % icat)
+                datacard.write(" w_all:mggSig_cat%d\n" % icat)
                 icat+=1
                 for comp in options.components:
                     datacard.write(("shapes %s" % comp).ljust(20))
                     datacard.write((" %s  %s" % (cat,options.output_file)).ljust(50))
-                    datacard.write("wtemplates:model_bkg_%s\n" % cat) 
+                    datacard.write(" wtemplates:model_%s_%s\n" % (comp,cat) )  
                 
                 datacard.write("shapes data_obs".ljust(20))
                 datacard.write((" %s  %s" % (cat,options.output_file)).ljust(50))
-                datacard.write("wtemplates:data_%s\n" % cat) 
+                datacard.write(" wtemplates:data_%s\n" % cat) 
+            
+            for cat in sidebands:                
+                for comp in  fit["sidebands"][cat]:
+                    datacard.write(("shapes %s" % comp).ljust(20))
+                    datacard.write((" %s  %s" % (cat,options.output_file)).ljust(50))
+                    datacard.write(" wtemplates:model_%s_%s\n" % (comp,cat) )  
+                datacard.write("shapes data_obs".ljust(20))
+                datacard.write((" %s  %s" % (cat,options.output_file)).ljust(50))
+                datacard.write(" wtemplates:data_%s\n" % cat)                 
 
             datacard.write("----------------------------------------------------------------------------------------------------------------------------------\n")
             datacard.write("bin".ljust(20))
-            for cat in fit["categories"]:
+            for cat in categories+sidebands:
                 datacard.write((" %s".ljust(15) % cat))
             datacard.write("\n")
 
             datacard.write("observation".ljust(20))
-            for cat in fit["categories"]:
+            for cat in categories+sidebands:
                   datacard.write(" -1".ljust(15) )
             datacard.write("\n")
             
@@ -137,44 +151,73 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             datacard.write("----------------------------------------------------------------------------------------------------------------------------------\n")
         
             datacard.write("bin".ljust(20))
-            for cat in fit["categories"]:
+            for cat in categories:
                     datacard.write((" %s" % cat).ljust(15) )
                     for comp in options.components:
                         datacard.write((" %s" % cat).ljust(15) )
+            for cat in sidebands:                
+                for comp in  fit["sidebands"][cat]:
+                    datacard.write((" %s" % cat).ljust(15) )                    
             datacard.write("\n")
 
 
             datacard.write("process".ljust(20))
-            for cat in fit["categories"]:
+            for cat in categories:
                     datacard.write(" sig".ljust(15) )
                     for comp in options.components:
                         datacard.write((" %s" % comp).ljust(15) )
+            for cat in sidebands:                
+                for comp in  fit["sidebands"][cat]:
+                    datacard.write((" %s" % comp).ljust(15) )                    
             datacard.write("\n")
         
             datacard.write("process".ljust(20))
-            for cat in fit["categories"]:
+            icomp = {}
+            for cat in categories:
                     datacard.write(" 0".ljust(15) )
                     i = 0
                     for comp in options.components:
                         i+=1
+                        icomp[comp] = i
                         datacard.write((" %d" % i).ljust(15) )
+            for cat in sidebands:                
+                for comp in  fit["sidebands"][cat]:
+                    if comp in icomp:
+                        j = icomp[comp]
+                    else:
+                        i+=1
+                        j = i
+                    datacard.write((" %d" % j).ljust(15) )
             datacard.write("\n")
             
             datacard.write("rate".ljust(20))
-            for cat in fit["categories"]:
-                    datacard.write(" 0.36".ljust(15) )
-                    for comp in options.components:
-                        datacard.write(" 1".ljust(15) )
+            for cat in categories:
+                datacard.write(" 0.36".ljust(15) )
+                for comp in options.components:
+                    datacard.write(" 1".ljust(15) )
+            for cat in sidebands:                
+                for comp in  fit["sidebands"][cat]:                    
+                    datacard.write(" 1".ljust(15) )
             datacard.write("\n")
             
             datacard.write("----------------------------------------------------------------------------------------------------------------------------------\n")
         
+            # normalization nuisances
             datacard.write("lumi  lnN".ljust(20))
-            for cat in fit["categories"]:
+            for cat in categories:
                     datacard.write(" 1.04".ljust(15) )
+                    for comp in options.components:
+                        datacard.write(" -".ljust(15) )
+            for cat in sidebands:                
+                for comp in  fit["sidebands"][cat]:                    
                     datacard.write(" -".ljust(15) )
             datacard.write("\n")
-
+            
+            # other nuisance parameters
+            datacard.write("\n")
+            for param in fit["params"]:
+                datacard.write("param %s %1.3g %1.3g\n" % param )            
+            
             datacard.write("----------------------------------------------------------------------------------------------------------------------------------\n\n")
         
 
@@ -197,6 +240,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         
         ## build and import data dataset
         ndata = {}
+        rooNdata = {}
+        sidebands = {}
         for cat in fit["categories"]:
             treename = "%s_%s_%s" % (options.data_source,options.fit_name,cat)
             
@@ -207,6 +252,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             reduced = dset.reduce(RooFit.SelectVars(rooset),RooFit.Range("fullRange")) ## FIXME: roobs range
             reduced.SetName("data_%s"% (cat))
             ndata[cat] = reduced.sumEntries()
+            rooNdata[cat] = self.buildRooVar("%s_norm" % cat,[],recycle=False,importToWs=False)
+            rooNdata[cat].setVal(ndata[cat])
             self.workspace_.rooImport(reduced)
             
             binned = reduced.binnedClone("binned_data_%s" % cat)
@@ -218,7 +265,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
 
         ## prepare background fit components
         print
-        
+        fit["params"] = []
+
         ## loop over categories to fit background
         for cat in fit["categories"]:
             
@@ -240,7 +288,16 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     setme.append(comp)
                     fractions[comp] = frac
                     rooformula.append("@%d"%icomp)
-                    roolist.add(frac)
+                    if options.nuisance_fractions:
+                        nuis = self.buildRooVar("%s%s_frac_nuis" % (comp,cat), [], importToWs=False )
+                        nuis.setVal(0.)
+                        nuis.setConstant(True)
+                        fit["params"].append( (nuis.GetName(), nuis.getVal(), 0.) )
+                        nuisfrac = ROOT.RooFormulaVar("%s%s_nuisanced_frac" % (comp,cat),"%s%s_nuisanced_frac" % (comp,cat),"@0*(1.+@1)",ROOT.RooArgList(frac,nuis) )
+                        roolist.add(nuisfrac)
+                        self.keep( [nuis,nuisfrac] )
+                    else:
+                        roolist.add(frac)
                 comp = options.components[-1]
                 if comp != "":
                     comp = "%s_" % comp
@@ -256,7 +313,6 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 add_sideband = opts.get("add_sideband",False)
                 weight_cut = opts.get("weight_cut",None)
                 
-                
                 print "component : " , comp
                 print "model :", model
                 if comp != "":
@@ -268,6 +324,10 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 # and normalization
                 catnsource = nsource_cats.get(cat,cat)
                 ntreename = "%s_%s_%s" % (nsource,options.fit_name,catnsource)
+
+                if add_sideband and not catsource in sidebands:
+                    sidebands[catsource] = set()
+                
                 
                 dset  = self.rooData(treename)
                 ndset = self.rooData(ntreename)                
@@ -292,9 +352,10 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 if add_sideband: 
                     ## if we want to take background shape from sideband in data, book 
                     ##    the pdf such that coefficients are the same for the signal region and sideband shapes
-                    pdf = self.buildPdf(model,"model_control_%s%s" % (add_sideband,catsource), roobs )
-                    sbpdf = self.buildPdf(model,"model_control_%s%s" % (add_sideband,catsource), roobs )
-                    sbpdf.SetName("model_control_%s%s" % (add_sideband,catsource))
+                    pdf = self.buildPdf(model,"model_%s_%s_control" % (add_sideband,catsource), roobs )
+                    sbpdf = self.buildPdf(model,"model_%s_%s_control" % (add_sideband,catsource), roobs )
+                    sbpdf.SetName("model_%s_%s_control" % (add_sideband,catsource))
+                    sidebands[catsource].add(add_sideband)
                 else:
                     pdf = self.buildPdf(model,"model_%s%s" % (comp,cat), roobs )                    
                 pdf.SetName("model_%s%s" % (comp,cat))
@@ -302,7 +363,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 ## normalization has to be called <pdfname>_norm or combine won't find it
                 if options.norm_as_fractions:
                     norm = ROOT.RooFormulaVar("%s_norm" %  (pdf.GetName()),"%s_norm" %  (pdf.GetName()),
-                                              "@0*@1",ROOT.RooArgList(ROOT.RooFit.RooConst(ndata[cat]),fractions[comp]))
+                                              ## "@0*@1",ROOT.RooArgList(ROOT.RooFit.RooConst(ndata[cat]),fractions[comp]))
+                                              "@0*@1",ROOT.RooArgList(rooNdata[cat],fractions[comp]))
                 else:
                     norm = self.buildRooVar("%s_norm" %  (pdf.GetName()), [], importToWs=False ) 
                     norm.setVal(reduced.sumEntries())
@@ -379,13 +441,13 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 ## self.workspace_.rooImport(norm)
                 self.workspace_.rooImport(reduced)
                 
-                # import pdf for sidebands
+                # import pdf and data for sidebands
                 if add_sideband:
                     if weight_cut:
                         reduced = uncut
                         binned  = binned_uncut
-                    reduced.SetName("data_control_%s" % catsource)
-                    binned.SetName("binned_data_control_%s" % catsource)
+                    reduced.SetName("data_%s_control" % catsource)
+                    binned.SetName("binned_data_%s_control" % catsource)
                     self.workspace_.rooImport(reduced)
                     self.workspace_.rooImport(binned)
                     self.workspace_.rooImport(sbnorm)
@@ -393,11 +455,15 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             
                 print
             
-            if options.norm_as_fractions:
-                for me in setme:
-                    fractions[me].setConstant(False)
+            ### if options.norm_as_fractions:
+            ###     for me in setme:
+            ###         fractions[me].setConstant(False)
             for me in importme:
                 self.workspace_.rooImport(*me)
+
+        fit["sidebands"] = {}
+        for nam,val in sidebands.iteritems():
+            fit["sidebands"]["%s_control" % nam] = list(val)
         # done
         self.saveWs(options)
         
