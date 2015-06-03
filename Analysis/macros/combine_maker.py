@@ -38,8 +38,18 @@ class CombineApp(TemplatesApp):
                                     default="mgg[5000,500,6000]",
                                     help="Observable used in the fit default : [%default]",
                                     ),
-                        make_option("--fit-background",dest="fit_backround",action="store_true",default=False,
+                        make_option("--fit-background",dest="fit_background",action="store_true",default=False,
                                     help="Fit background",
+                                    ),
+                        make_option("--generate-signal-dataset",dest="generate_signal_dataset",action="store_true",default=False,
+                                    help="Generate signal dataset",
+                                    ),
+                        make_option("--signal-name",dest="signal_name",action="store",type="string",
+                                    default="grav_001_1500",
+                                    help="Signal name"),
+                        make_option("--output-file-signal","-os",dest="output_file_signal",action="store",type="string",
+                                    default=None,
+                                    help="Output file for signal.",
                                     ),
                         make_option("--components",dest="components",action="callback",type="string",
                                     callback=optpars_utils.ScratchAppend(),
@@ -59,6 +69,9 @@ class CombineApp(TemplatesApp):
                         make_option("--data-source",dest="data_source",action="store",type="string",
                                     default="data",
                                     help="Dataset to be used as 'data' default : [%default]",
+                                    ),
+                        make_option("--generate-datacard",dest="generate_datacard",action="store_true",default=False,
+                                    help="Generate datacard",
                                     ),
                         
                         ]
@@ -91,93 +104,103 @@ class CombineApp(TemplatesApp):
         options.store_new_only=True
         self.setup(options,args)
 
-        if options.fit_backround:
+        if options.fit_background:
             self.fitBackground(options,args)
             
-            ## Generate datacard
-         
-            datacard = open("dataCard_"+options.output_file.replace("root","txt"),"w+")
-            datacard.write("""
+        if options.generate_signal_dataset:
+            self.generateSignalDataset(options,args)
+            
+        if options.generate_dataset:
+            self.generateDatacard(options,args)
+                
+                
+  
+    ## ------------------------------------------------------------------------------------------------------------
+    def generateDatacard(self,options,args):
+        
+        datacard = open("dataCard_"+options.output_file.replace("root","txt"),"w+")
+        datacard.write("""
+## Signal %s
+##
 ----------------------------------------------------------------------------------------------------------------------------------
 imax * number of channels
 jmax * number of backgrounds
 kmax * number of nuisance parameters (source of systematic uncertainties)
-----------------------------------------------------------------------------------------------------------------------------------\n""")
+----------------------------------------------------------------------------------------------------------------------------------\n""" % options.signal_name)
         
-            fitname = options.fit_name
-            fit = options.fits[fitname]
-            cats = [1,0,3,2]
-            icat = 0
-            for cat in fit["categories"]:
-                datacard.write("shapes sig".ljust(20))
-                datacard.write((" %s  HighMassGG_m1500_001.root" % cat).ljust(50))
-                datacard.write("w_all:mggSig_cat%d\n" % cats[icat])
-                icat+=1
-                for comp in options.components:
-                    datacard.write(("shapes %s" % comp).ljust(20))
-                    datacard.write((" %s  %s" % (cat,options.output_file)).ljust(50))
-                    datacard.write("wtemplates:model_bkg_%s\n" % cat) 
-                
-                datacard.write("shapes data_obs".ljust(20))
+        fitname = options.fit_name
+        fit = options.fits[fitname]
+        cats = [1,0,3,2]
+        icat = 0
+        for cat in fit["categories"]:
+            datacard.write("shapes sig".ljust(20))
+            datacard.write((" %s  %s" % (cat,options.output_file_signal)).ljust(50))
+            datacard.write("w_all:mggSig_cat%d\n" % cats[icat])
+            icat+=1
+            for comp in options.components:
+                datacard.write(("shapes %s" % comp).ljust(20))
                 datacard.write((" %s  %s" % (cat,options.output_file)).ljust(50))
-                datacard.write("wtemplates:data_%s\n" % cat) 
-
-            datacard.write("----------------------------------------------------------------------------------------------------------------------------------\n")
-            datacard.write("bin".ljust(20))
-            for cat in fit["categories"]:
-                datacard.write((" %s".ljust(15) % cat))
-            datacard.write("\n")
-
-            datacard.write("observation".ljust(20))
-            for cat in fit["categories"]:
-                  datacard.write(" -1".ljust(15) )
-            datacard.write("\n")
+                datacard.write("wtemplates:model_bkg_%s\n" % cat) 
             
+            datacard.write("shapes data_obs".ljust(20))
+            datacard.write((" %s  %s" % (cat,options.output_file)).ljust(50))
+            datacard.write("wtemplates:data_%s\n" % cat) 
 
-            datacard.write("----------------------------------------------------------------------------------------------------------------------------------\n")
+        datacard.write("----------------------------------------------------------------------------------------------------------------------------------\n")
+        datacard.write("bin".ljust(20))
+        for cat in fit["categories"]:
+            datacard.write((" %s".ljust(15) % cat))
+        datacard.write("\n")
+
+        datacard.write("observation".ljust(20))
+        for cat in fit["categories"]:
+              datacard.write(" -1".ljust(15) )
+        datacard.write("\n")
         
-            datacard.write("bin".ljust(20))
-            for cat in fit["categories"]:
-                    datacard.write((" %s" % cat).ljust(15) )
-                    for comp in options.components:
-                        datacard.write((" %s" % cat).ljust(15) )
-            datacard.write("\n")
+
+        datacard.write("----------------------------------------------------------------------------------------------------------------------------------\n")
+        
+        datacard.write("bin".ljust(20))
+        for cat in fit["categories"]:
+                datacard.write((" %s" % cat).ljust(15) )
+                for comp in options.components:
+                datacard.write((" %s" % cat).ljust(15) )
+        datacard.write("\n")
 
 
-            datacard.write("process".ljust(20))
-            for cat in fit["categories"]:
-                    datacard.write(" sig".ljust(15) )
-                    for comp in options.components:
-                        datacard.write((" %s" % comp).ljust(15) )
-            datacard.write("\n")
+        datacard.write("process".ljust(20))
+        for cat in fit["categories"]:
+                datacard.write(" sig".ljust(15) )
+                for comp in options.components:
+                datacard.write((" %s" % comp).ljust(15) )
+        datacard.write("\n")
         
-            datacard.write("process".ljust(20))
-            for cat in fit["categories"]:
-                    datacard.write(" 0".ljust(15) )
-                    i = 0
-                    for comp in options.components:
-                        i+=1
-                        datacard.write((" %d" % i).ljust(15) )
-            datacard.write("\n")
-            
-            datacard.write("rate".ljust(20))
-            for cat in fit["categories"]:
-                    datacard.write(" 1".ljust(15) )
-                    for comp in options.components:
-                        datacard.write(" 1".ljust(15) )
-            datacard.write("\n")
-            
-            datacard.write("----------------------------------------------------------------------------------------------------------------------------------\n")
+        datacard.write("process".ljust(20))
+        for cat in fit["categories"]:
+                datacard.write(" 0".ljust(15) )
+                i = 0
+                for comp in options.components:
+                i+=1
+                datacard.write((" %d" % i).ljust(15) )
+        datacard.write("\n")
         
-            datacard.write("lumi  lnN".ljust(20))
-            for cat in fit["categories"]:
-                    datacard.write(" 1.04".ljust(15) )
-                    datacard.write(" -".ljust(15) )
-            datacard.write("\n")
+        datacard.write("rate".ljust(20))
+        for cat in fit["categories"]:
+                datacard.write(" 1".ljust(15) )
+                for comp in options.components:
+                datacard.write(" 1".ljust(15) )
+        datacard.write("\n")
+        
+        datacard.write("----------------------------------------------------------------------------------------------------------------------------------\n")
+        
+        datacard.write("lumi  lnN".ljust(20))
+        for cat in fit["categories"]:
+                datacard.write(" 1.04".ljust(15) )
+                datacard.write(" -".ljust(15) )
+        datacard.write("\n")
 
-            datacard.write("----------------------------------------------------------------------------------------------------------------------------------\n\n")
-        
-    ## ------------------------------------------------------------------------------------------------------------
+        datacard.write("----------------------------------------------------------------------------------------------------------------------------------\n\n")
+      
     def fitBackground(self,options,args):
         
         fitname = options.fit_name
@@ -210,6 +233,104 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             ## can have one model per background component
             if comp != "":
                 comp = "%s_" % comp
+            
+            ## loop over categories to fit background
+            for cat in fit["categories"]:
+                                
+                treename = "%s_%s_%s" % (source,options.fit_name,cat)
+                
+                print treename
+                dset = self.rooData(treename)
+                dset.Print()
+                
+                dset.Print()
+                reduced = dset.reduce(RooFit.SelectVars(rooset),RooFit.Range("fullRange"))
+                reduced.SetName("source_dataset_%s%s"% (comp,cat))
+                binned = reduced.binnedClone()
+                reduced.Print()
+                binned.Print()
+                
+                ## build pdf
+                pdf = self.buildPdf(model,"model_%s%s" % (comp,cat), roobs )
+                pdf.SetName("model_%s%s" % (comp,cat))
+                norm = self.buildRooVar("%s_norm" %  (pdf.GetName()), [], importToWs=False ) ## normalization has to be called <pdfname>_norm or combine won't find it
+                norm.setVal(reduced.sumEntries())
+                extpdf = ROOT.RooExtendPdf("ext_%s" % pdf.GetName(),"ext_%s" %  pdf.GetName(),pdf,norm)
+                extpdf.fitTo(binned,ROOT.RooFit.Strategy(2))
+                ## extpdf.fitTo(reduced,ROOT.RooFit.Strategy(1))
+            
+
+                ## FIXME: set normalization to expected number of events in signal region
+                ## ok as long as we data as source
+
+                ## plot the fit result
+                frame = roobs.frame()
+                binned.plotOn(frame)
+                extpdf.plotOn(frame)
+                ## self.keep( [binned,extpdf] )
+
+                hist   = frame.getObject(int(frame.numItems()-2))
+                fitc   = frame.getObject(int(frame.numItems()-1))
+                hresid = frame.residHist(hist.GetName(),fitc.GetName(),True)
+                ## self.keep( [hist, fitc, hresid] )
+                resid  = roobs.frame()
+                resid.addPlotable(hresid,"PE")
+                
+                canv = ROOT.TCanvas("bkg_fit_%s%s" % (comp,cat), "bkg_fit_%s%s" % (comp,cat) )
+                canv.Divide(1,2)
+                
+                canv.cd(1)
+                ROOT.gPad.SetPad(0.,0.35,1.,1.)
+                ROOT.gPad.SetLogy()
+                ROOT.gPad.SetLogx()
+                
+                canv.cd(2)
+                ROOT.gPad.SetPad(0.,0.,1.,0.35)
+                
+                canv.cd(1)
+                frame.GetXaxis().SetMoreLogLabels()
+                frame.GetYaxis().SetLabelSize( frame.GetYaxis().GetLabelSize() * canv.GetWh() / ROOT.gPad.GetWh() )
+                frame.GetYaxis().SetRangeUser( 1.e-6,50. )
+                frame.Draw()
+                
+                canv.cd(2)
+                ROOT.gPad.SetGridy()
+                ROOT.gPad.SetLogx()
+                resid.GetXaxis().SetMoreLogLabels()
+                resid.GetYaxis().SetTitleSize( frame.GetYaxis().GetTitleSize() * 6.5/3.5 )
+                resid.GetYaxis().SetTitleOffset( frame.GetYaxis().GetTitleOffset() * 6.5/3.5 )
+                resid.GetYaxis().SetLabelSize( frame.GetYaxis().GetLabelSize() * 6.5/3.5 )
+                resid.GetXaxis().SetTitleSize( frame.GetXaxis().GetTitleSize() * 6.5/3.5 )
+                resid.GetXaxis().SetLabelSize( frame.GetXaxis().GetLabelSize() * 6.5/3.5 )
+                resid.GetYaxis().SetTitle("pull")
+                resid.GetYaxis().SetRangeUser( -5., 5. )
+                resid.Draw()
+                
+                # this will actually save the plots
+                self.keep(canv)
+                self.autosave(True)
+                
+                # import everything to the workspace
+                self.workspace_.rooImport(pdf)
+                self.workspace_.rooImport(norm)
+                self.workspace_.rooImport(reduced)
+                
+        # done
+        self.saveWs(options)
+        
+    def generateSignalDataset(self,options,args):
+        
+        signalname = options.signal_name
+        sig = options.signals[signalname]
+        
+        roobs = self.buildRooVar(*(self.getVar(options.observable)), recycle=False, importToWs=True)
+        roobs.setBins(5000,"cache")
+        roobs.setRange("fullRange",roobs.getMin(),roobs.getMax())
+        roowe = self.buildRooVar("weight",[])        
+        rooset = ROOT.RooArgSet(roobs,roowe)
+
+        ## prepare signal
+        for signal in options.signals:
             
             ## loop over categories to fit background
             for cat in fit["categories"]:
