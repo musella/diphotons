@@ -502,7 +502,9 @@
 
     "comparisons" : {
 	"fit2DTruth" : { "fit" : "2D",
-		"templates" : { "mix:kDSinglePho2D" : {} },
+		"templates" : { "mix:kDSinglePho2D" : {} ,
+                                "2D":{}
+                },
                 "components": ["pf","ff",  ["pp",{ "2D" : {}}] 
                 ],
                 "prepfit": true,
@@ -534,7 +536,7 @@
                 "data": "unrolled_data", 
 		"mass_binning" :"mass[13000,0.0,13000.0]"
          },
-        "2_components":{
+        "_2_components":{
                 "dimensions" :"2D", 
                 "observable": "templateNdim2d_unroll",
                 "components": ["pp","pf"],
@@ -544,6 +546,7 @@
     },
    "plotPurity":{
                 "treename":"fitresult_unrolled",
+                "tree_truth":"tree_mctruth_purity",
                 "dimensions" :"2D" 
     },
     "rootstyle_extra" : [
