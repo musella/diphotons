@@ -599,7 +599,7 @@ class TemplatesApp(PlotApp):
     
     ## ------------------------------------------------------------------------------------------------------------
     def doNominalFit(self,options,args):
-        #add data in json file
+        ROOT.TH1F.SetDefaultSumw2(True)
         for name, nomFit in options.nominalFit.iteritems():
             if name.startswith("_"): continue
             obsls=ROOT.RooArgList("obsls")
@@ -617,7 +617,6 @@ class TemplatesApp(PlotApp):
             print
             print "nominal fit with: ", name, " observable : ", nomFit.get("observable")
             tempname=options.fit_templates[0]
-            #tempname="unrolled_template"
             dataname=nomFit.get("data")
             dim=nomFit.get("dimensions")
             mass_var,mass_b=self.getVar(nomFit.get("mass_binning"))
@@ -677,6 +676,7 @@ class TemplatesApp(PlotApp):
                     self.plotFit(observable,fitUnrolledPdf,rooHistPdfs,data,components,cat,log=False)
         ## -----------------------------------------------------------------------------------------------------------
     def plotFit(self,roovar,rooaddpdf,roopdfs,data,components,cat,log):
+        ROOT.TH1F.SetDefaultSumw2(True)
         b=ROOT.TLatex()
         b.SetNDC()
         b.SetTextSize(0.06)
@@ -726,7 +726,7 @@ class TemplatesApp(PlotApp):
             g_pullpf=ROOT.TGraphErrors(tree_template.GetEntries())
             h_pullpp=ROOT.TH1F("h_pullpp","h_pullpp",10,-5.,5.)
             h_pullpf=ROOT.TH1F("h_pullpf","h_pullpf",10,-5.,5.)
-            if tree_mctruth.GetEntries()!=tree_template.GetEntries(): break
+            if tree_mctruth.GetEntries()!=tree_template.GetEntries():print "number of entries in trees dont agree"
             for mb in range(0,tree_mctruth.GetEntries()):
                 tree_mctruth.GetEntry(mb)
                 tree_template.GetEntry(mb)
@@ -758,6 +758,7 @@ class TemplatesApp(PlotApp):
     ## ------------------------------------------------------------------------------------------------------------
     def pullFunction(self,g_pull,h_pull,cat,comp):
         leg = ROOT.TLegend(0.5,0.8,0.9,0.9)
+        print "cpull_%s_%s" % (comp,cat)
         cpull = ROOT.TCanvas("cpull_%s_%s" % (comp,cat),"cpull_%s_%s" % (comp,cat))
         cpull.Divide(1,2)
         cpull.cd(1)
