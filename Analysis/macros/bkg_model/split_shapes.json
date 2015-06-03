@@ -1,0 +1,23 @@
+{
+	    "pp" : { 
+	    	 "shape":"data", "norm":"mctruth_pp"
+	    },
+	    "pf" : { 
+	    	 "shape":"template_pf", "norm":"mctruth_pf",
+		 "shape_cats" : {  
+		 	      "EBHighR9" : "EBLowR9",
+			      "EEHighR9" : "EELowR9"
+		  },
+		  "add_sideband" : "pf",
+		  "weight_cut"   : "1"
+	    },	    
+	    "ff" : { 
+	    	 "shape":"template_pf", "norm":"mctruth_ff",
+		 "shape_cats" : {  
+		 	      "EBHighR9" : "EBLowR9",
+			      "EEHighR9" : "EELowR9"
+		  },
+		  "add_sideband" : "pf",
+		  "weight_cut"   : "1"
+	    }	    
+}

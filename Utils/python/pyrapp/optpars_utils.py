@@ -20,11 +20,22 @@ class ScratchAppend:
                                                     
 # -----------------------------------------------------------------------------
 class Load:
+    def __init__(self,scratch=False,empty={}):
+        self.cold = True
+        self.scratch = scratch
+        self.empty = empty
+    
     def __call__(self,option, opt_str, value, parser, *args, **kwargs):
+        if self.scratch and self.cold:
+            setattr(parser.values,option.dest,self.empty)
+            self.cold = False
+            
         if option.dest == "__opts__":
             dest = parser.values
         else:
             dest = getattr(parser.values,option.dest)
+        
+            
         if type(dest) == dict:
             setter = dict.__setitem__
             getter = dict.get

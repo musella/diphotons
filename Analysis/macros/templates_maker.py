@@ -46,6 +46,8 @@ class TemplatesApp(PlotApp):
                                     default={},help="List of templates fits to be performed. Categories, componentd and templates can be specified."),
                         make_option("--mix",dest="mix",action="callback",callback=optpars_utils.Load(),type="string",
                                     default={},help="Configuration for event mixing."),
+                        make_option("--comparisons",dest="comparisons",action="callback",callback=optpars_utils.Load(),type="string",
+                                    default={},help="Configuration for templates comparison."),
                         make_option("--skip-templates",dest="skip_templates",action="store_true",
                                     default=False,help="Skip templates generation (even if not reading back from ws)"),
                         make_option("--dataset-variables",dest="dataset_variables",action="callback",callback=optpars_utils.ScratchAppend(),type="string",
@@ -197,9 +199,11 @@ class TemplatesApp(PlotApp):
             fout = self.openOut(options)
         fout.cd()
         cfg = { "fits"   : options.fits,
-                "stored" : self.store_.keys() 
+                "mix"    : options.mix,
+                "comparisons"    : options.comparisons,
+                "stored" : self.store_.keys(),
                 }
-
+        
         print "--------------------------------------------------------------------------------------------------------------------------"
         print "saving output"
         print 
@@ -238,7 +242,12 @@ class TemplatesApp(PlotApp):
         self.workspace_.rooImport = getattr(self.workspace_,"import")
         for name in cfg["stored"]:
             self.store_[name]=fin.Get(name)
-                
+            
+        if not options.mix_templates:
+            options.mix = cfg.get("mix",{})
+        if not options.compare_templates:
+            options.comparisons = cfg.get("comparisons",{})
+        
         print "Fits :"
         print "---------------------------------------------------------"
         for key,val in options.fits.iteritems():
@@ -852,6 +861,8 @@ class TemplatesApp(PlotApp):
         self.datasets_["data"] = self.openDataset(None,options.data_file,options.infile,options.data)
         self.datasets_["mc"]   = self.openDataset(None,options.mc_file,options.infile,options.mc)
         self.datasets_["templates"]   = self.openDataset(None,options.data_file,options.infile,options.templates)
+        for name,trees in options.signals.iteritems():
+            self.datasets_[name] = self.openDataset(None,options.mc_file,options.infile,trees)        
         # used by parent class PlotApp to read in objects
         self.template_ = options.treeName
         
@@ -888,6 +899,10 @@ class TemplatesApp(PlotApp):
             components      = fit["components"]
             categories      = fit["categories"]
             truth_selection = fit["truth_selection"]
+            signals         = fit.get("signals",[])
+            if signals == "__all__":
+                signals = options.signals.keys()
+                fit["signals"] = signals
             template_binning = array.array('d',fit["template_binning"])
             templates       = fit["templates"]
             storeTrees      = fit.get("store_trees",False)
@@ -895,7 +910,7 @@ class TemplatesApp(PlotApp):
             preselection    = fit.get("preselection",options.preselection)
             
             variables       = fit.get("dataset_variables",[])
-
+            
             fulllist = varlist.Clone()
             for var in variables:
                 vname, binning = self.getVar(var)
@@ -922,6 +937,11 @@ class TemplatesApp(PlotApp):
             mcTrees =  self.prepareTrees("mc",selection,options.verbose,"MC trees")
             self.buildRooDataSet(mcTrees,"mc",name,fit,categories,fulllist,weight,preselection,storeTrees)
             
+            ## prepare signal
+            for sig in signals:
+                sigTrees =  self.prepareTrees(sig,selection,options.verbose,"Signal %s trees" % sig)
+                self.buildRooDataSet(sigTrees,sig,name,fit,categories,fulllist,weight,preselection,storeTrees)
+            
             ## prepare truth templates
             for truth,sel in truth_selection.iteritems():
                 cut = ROOT.TCut(preselection)
@@ -931,7 +951,7 @@ class TemplatesApp(PlotApp):
                     legs = fit["legs"]
                 self.buildRooDataSet(mcTrees,"mctruth_%s" % truth,name,fit,categories,fulllist,weight,cut.GetTitle(),storeTrees)
             
-                        
+                
             print
             ## sanity check
             for cat in categories.keys():
@@ -1124,16 +1144,17 @@ class TemplatesApp(PlotApp):
     
 
     ## ------------------------------------------------------------------------------------------------------------
-    def reducedRooData(self,name,rooset,binned,weight="weight",sel=None,redo=False):
-        data = self.rooData("reduced_%s" % name)
+    def reducedRooData(self,name,rooset,binned=False,weight="weight",sel=None,redo=False,importToWs=True):
+        data = self.rooData("r_%s" % name)
         if not data or redo:
-        #    print "create rooData"
-            data = self.rooData(name,rooset=rooset,weight=weight,sel=sel)
+            print "create rooData"
+            data = self.rooData(name,rooset=rooset,weight=weight,sel=sel,redo=redo)
             if binned:
                 data = data.binnedClone("reduced_%s" % name,"r_%s" % name)
             else:
                 data.SetName("reduced_%s" % name)
-        self.workspace_.rooImport(data)
+        if importToWs:
+            self.workspace_.rooImport(data)
         return data
     ## ------------------------------------------------------------------------------------------------------------
 
@@ -1145,8 +1166,8 @@ class TemplatesApp(PlotApp):
 
 
     ## ------------------------------------------------------------------------------------------------------------
-    def rooData(self,name,autofill=True,rooset=None,weight="weight",sel=None):
-        if name in self.cache_:
+    def rooData(self,name,autofill=True,rooset=None,weight="weight",sel=None,redo=False):
+        if name in self.cache_ and not redo:
             return self.cache_[name]        
         dataset = self.workspace_.data(name)
         if not dataset and self.store_new_:
@@ -1164,8 +1185,9 @@ class TemplatesApp(PlotApp):
             if rooset:
                 dataset = dataset.reduce(RooFit.SelectVars(rooset))
             else:
-                dataset = dataset.emptyClone()
-            self.cache_[name] = dataset
+                dataset = dataset.emptyClone()                
+            if not redo:
+                self.cache_[name] = dataset
             filler = ROOT.DataSetFiller(dataset)
             cut=ROOT.TCut(weight)
             if sel:
