@@ -546,7 +546,7 @@
     },
    "plotPurity":{
                 "treename":"fitresult_unrolled",
-                "tree_truth":"tree_mctruth_purity",
+                "treetruth":"truth_purity",
                 "dimensions" :"2D" 
     },
     "rootstyle_extra" : [
