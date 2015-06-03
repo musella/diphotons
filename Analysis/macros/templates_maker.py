@@ -35,9 +35,13 @@ class TemplatesApp(PlotApp):
                                     help="(Di-)Photon selection to be used for analysis. In dataset definition it replaces '%(sel)s'."),                
                         make_option("--fit-categories",dest="fit_categories",action="callback",type="string",callback=optpars_utils.ScratchAppend(),help="sets specific category for fit",default=["EBEB","EBEE"]),
                         make_option("--fit-massbins",dest="fit_massbins",action="callback",type="string",callback=optpars_utils.ScratchAppend(),help="sets massbins for fit or templates comparison",default=["1","1","0"]),
+                        make_option("--fit-templates",dest="fit_templates",action="callback",type="string",callback=optpars_utils.ScratchAppend(),help="get templates for fit",default=["unrolled_template"]),
                         make_option("--aliases",dest="aliases",action="callback",type="string",callback=optpars_utils.ScratchAppend(),
                                     default=[],
                                     help="List of aliases to be defined for each tree. They can be used for selection or variable definition"),
+                        make_option("--plot-purity",dest="plot_purity",action="store_true",default=False,
+                                    help="Plot purities",
+                                    ),
                         make_option("--fits",dest="fits",action="callback",callback=optpars_utils.Load(),type="string",
                                     default={},help="List of templates fits to be performed. Categories, componentd and templates can be specified."),
                         make_option("--mix",dest="mix",action="callback",callback=optpars_utils.Load(),type="string",
@@ -57,7 +61,7 @@ class TemplatesApp(PlotApp):
                                     help="Prepare fit using MC truth templates",
                                     ),
                         make_option("--nominal-fit",dest="nominal_fit",action="store_true",default=False,
-                                    help="Do fit using nominal templates.",
+                                    help="do fit templates",
                                     ),
                         make_option("--do-reweight",dest="do_reweight",action="store_true",default=False,
                                     help="Reweight templates to data.",
@@ -172,6 +176,8 @@ class TemplatesApp(PlotApp):
         
         if options.nominal_fit:
             self.nominalFit(options,args)
+        if options.plot_purity:
+            self.plotPurity(options,args)
         
 
     ## ------------------------------------------------------------------------------------------------------------
@@ -610,7 +616,8 @@ class TemplatesApp(PlotApp):
                 pu_estimates.add(fpf)
             print
             print "nominal fit with: ", name, " observable : ", nomFit.get("observable")
-            tempname=nomFit.get("template")
+            tempname=options.fit_templates[0]
+            #tempname="unrolled_template"
             dataname=nomFit.get("data")
             dim=nomFit.get("dimensions")
             mass_var,mass_b=self.getVar(nomFit.get("mass_binning"))
@@ -622,8 +629,7 @@ class TemplatesApp(PlotApp):
                 if cat=="EEEB": catd="EBEE"
                 else:catd=cat
                 dset_data = self.reducedRooData("data_2D_%s" %catd,ROOT.RooArgSet(mass),False,redo=False)
-                
-                ntp = ROOT.TNtuple("tree_fitresult_%s_comp%u_%s" % (dim,len(components),cat),"tree_fitresult_%s_comp%u_%s" % (dim,len(components),cat),"purity_pp:error_pp_sumw2off:error_pp_sumw2on:purity_pf:error_pf_sumw2off:error_pf_sumw2on:massbin:masserror" )
+                ntp = ROOT.TNtuple("tree_fitresult_%s_%s_%s" % (tempname,dim,cat),"tree_fitresult_%s_%s_%s" % (tempname,dim,cat),"purity_pp:error_pp_sumw2off:error_pp_sumw2on:purity_pf:error_pf_sumw2off:error_pf_sumw2on:massbin:masserror" )
                 self.store_[ntp.GetName()] = ntp
                 for mb in range(mass_split[2],mass_split[1]):
                     rooHistPdfs=[]
@@ -638,12 +644,13 @@ class TemplatesApp(PlotApp):
                     ArgListPdf=ROOT.RooArgList()
                     for comp in nomFit["components"]:
                         print cat,comp
-                        histo = self.rooData("%s_%s_%s_%s_mb_%s"%(tempname, comp,dim,cat,cut_s))
+                        print "%s_%s_%s_%s_mb_%s"%(tempname,comp, dim,cat,cut_s)
+                        histo = self.rooData("%s_%s_%s_%s_mb_%s"%(tempname,comp, dim,cat,cut_s))
                         rooHistPdf=ROOT.RooHistPdf("pdf_%s"% histo.GetName(),"pdf_%s"% histo.GetName(),ROOT.RooArgSet(obsls),histo)
                         rooHistPdfs.append(rooHistPdf)
                         ArgListPdf.add(rooHistPdf)
                     print rooHistPdfs
-                    fitUnrolledPdf=ROOT.RooAddPdf("fitUnrolledPdf_%s_mb_%s" % (cat,cut_s),"fitUnrolledPdf_%s_mb_%s" % (cat,cut_s),ArgListPdf,pu_estimates,False)
+                    fitUnrolledPdf=ROOT.RooAddPdf("fitPdfs_%s_%s_mb_%s" % (tempname,dim,cut_s),"fitPdfs_%s_%s_mb_%s" % (tempname,dim,cut_s),ArgListPdf,pu_estimates,False)
               #save roofitresult in outputfile
                     fit_mcstudies = fitUnrolledPdf.fitTo(data, RooFit.NumCPU(8), RooFit.Extended(False),RooFit.SumW2Error(True),RooFit.Verbose(False),RooFit.Save(True))
                     pu_pp=fpp.getVal()
@@ -665,12 +672,9 @@ class TemplatesApp(PlotApp):
                     massbin=(diphomass[mb]+diphomass[mb+1])/2.
                     masserror=(diphomass[mb+1]-diphomass[mb])/2.
                     
-                    ntp = ROOT.TNtuple("tree_fitresult_%s_%s_%s" % (dim,cat,cut_s),"tree_fitresult_%s_%s_%s" % (dim,cat,cut_s),"purity_pp:error_pp_sumw2off:error_pp_sumw2on:purity_pf:error_pf_sumw2off:error_pf_sumw2on:massbin:masserror" )
                     ntp.Fill(pu_pp,puerr_pp,pullerr_pp,pu_pf,puerr_pf,pullerr_pf,massbin,masserror )
                     self.plotFit(observable,fitUnrolledPdf,rooHistPdfs,data,components,cat,log=True) 
                     self.plotFit(observable,fitUnrolledPdf,rooHistPdfs,data,components,cat,log=False)
-                #TODO plot with ntuple according to bkg_bias
-                self.plot_purity(ntp)
         ## -----------------------------------------------------------------------------------------------------------
     def plotFit(self,roovar,rooaddpdf,roopdfs,data,components,cat,log):
         b=ROOT.TLatex()
@@ -705,8 +709,99 @@ class TemplatesApp(PlotApp):
         self.autosave(True)
 
     ## ------------------------------------------------------------------------------------------------------------
-    def plot_purity(self,ntup):
-       return 
+    def plotPurity(self,options,args):
+        treename=options.plotPurity["treename"]
+        dim=options.plotPurity["dimensions"]
+        categories = options.fit_categories
+        for cat in categories:
+            tree_mctruth=self.treeData("%s_mctruth_%s_%s"%(treename, dim, cat))
+            tree_template=self.treeData("%s_template_%s_%s"%(treename, dim, cat))
+            g_mctruthpp=ROOT.TGraphErrors(tree_mctruth.GetEntries())
+            g_templatepp=ROOT.TGraphErrors(tree_template.GetEntries())
+            g_ratiopp=ROOT.TGraphErrors(tree_template.GetEntries())
+            g_mctruthpf=ROOT.TGraphErrors(tree_mctruth.GetEntries())
+            g_templatepf=ROOT.TGraphErrors(tree_template.GetEntries())
+            g_ratiopf=ROOT.TGraphErrors(tree_template.GetEntries())
+            if tree_mctruth.GetEntries()!=tree_template.GetEntries(): break
+            for mb in range(0,tree_mctruth.GetEntries()):
+                tree_mctruth.GetEntry(mb)
+                tree_template.GetEntry(mb)
+                print tree_mctruth.purity_pp ,tree_template.purity_pp
+                print tree_mctruth.purity_pf ,tree_template.purity_pf
+                g_mctruthpp.SetPoint(mb,tree_mctruth.massbin,tree_mctruth.purity_pp)
+                g_mctruthpp.SetPointError(mb,tree_mctruth.masserror,tree_mctruth.error_pp_sumw2on)
+                g_templatepp.SetPoint(mb,tree_template.massbin,tree_template.purity_pp)
+                g_templatepp.SetPointError(mb,tree_template.masserror,tree_template.error_pp_sumw2on)
+                g_ratiopp.SetPoint(mb,tree_template.massbin,tree_template.purity_pp/tree_mctruth.purity_pp)
+                g_ratiopp.SetPoint(mb,tree_template.massbin,tree_template.error_pp_sumw2on)
+                if tree_mctruth.purity_pp!=0.:
+                    g_mctruthpf.SetPoint(mb,tree_mctruth.massbin,tree_mctruth.purity_pf)
+                    g_mctruthpf.SetPointError(mb,tree_mctruth.masserror,tree_mctruth.error_pf_sumw2on)
+                    g_templatepf.SetPoint(mb,tree_template.massbin,tree_template.purity_pf)
+                    g_templatepf.SetPointError(mb,tree_template.masserror,tree_template.error_pf_sumw2on)
+                    g_ratiopf.SetPoint(mb,tree_template.massbin,tree_template.error_pf_sumw2on)
+            if g_mctruthpf.GetN()!=0.:
+                self.plotPurityMassbins(g_mctruthpp,g_templatepp,g_ratiopp,cat,g_mctruthpf,g_templatepf,g_ratiopf)
+            else: 
+                self.plotPurityMassbins(g_mctruthpp,g_templatepp,g_ratiopp,cat)
+    ## ------------------------------------------------------------------------------------------------------------
+    def plotPurityMassbins(self,g_mctruthpp,g_templatepp,g_ratiopp,cat,g_mctruthpf=None,g_templatepf=None,g_ratiopf=None):
+            leg = ROOT.TLegend(0.5,0.8,0.9,0.9)
+            cpu = ROOT.TCanvas("cpu_%s" % cat,"cpu_%s" %cat)
+            cpu.Divide(1,2)
+            cpu.cd(1)
+            ROOT.gPad.SetPad(0., 0.35, 1., 1.0)
+            cpu.cd(2)
+            ROOT.gPad.SetPad(0., 0., 1., 0.35)
+            ROOT.gPad.SetGridy()
+            cpu.cd(1)
+            g_mctruthpp.SetMarkerColor(ROOT.kRed)
+            g_templatepp.SetMarkerColor(ROOT.kBlue+1)
+            g_mctruthpp.SetLineColor(ROOT.kRed)
+            g_templatepp.SetLineColor(ROOT.kBlue+1)
+            g_mctruthpp.SetMarkerStyle(20)
+            g_templatepp.SetMarkerStyle(20)
+            g_mctruthpp.GetXaxis().SetTitle("Diphoton mass [GeV]")
+            g_mctruthpp.GetYaxis().SetTitle("purity")
+            g_mctruthpp.GetYaxis().SetRangeUser(0.,1.)
+            g_mctruthpp.Draw("AP")
+            g_templatepp.Draw("P SAME")
+            leg.AddEntry(g_mctruthpp,"purity pp mctruth","lp")  
+            leg.AddEntry(g_templatepp,"purity pp template","lp")  
+            if g_mctruthpf!=None:
+                g_mctruthpf.SetMarkerColor(ROOT.kOrange+7)
+                g_templatepf.SetMarkerColor(ROOT.kBlack)
+                g_mctruthpf.SetLineColor(ROOT.kOrange+7)
+                g_templatepf.SetLineColor(ROOT.kBlack)
+                g_mctruthpf.SetMarkerStyle(20)
+                g_templatepf.SetMarkerStyle(20)
+                g_mctruthpf.Draw("P SAME")
+                g_templatepf.Draw("P SAME")
+                leg.AddEntry(g_mctruthpf,"purity pf mctruth","lp")  
+                leg.AddEntry(g_templatepf,"purity pf template","pl")  
+                
+            leg.Draw()
+            cpu.cd(2)
+            g_ratiopp.SetMarkerStyle(20)
+            g_ratiopp.SetMarkerColor(g_templatepp.GetMarkerColor())
+            g_ratiopp.SetLineColor(g_templatepp.GetLineColor())
+            g_ratiopp.GetXaxis().SetTitle("Diphoton mass [GeV]")
+            g_ratiopp.GetYaxis().SetTitle("ratio")
+            g_ratiopp.GetYaxis().SetRangeUser(-1.5,1.5)
+            g_ratiopp.GetYaxis().SetTitleSize( g_mctruthpp.GetYaxis().GetTitleSize() * 6.5/3.5 )
+            g_ratiopp.GetYaxis().SetLabelSize( g_mctruthpp.GetYaxis().GetLabelSize() * 6.5/3.5 )
+            g_ratiopp.GetYaxis().SetTitleOffset(g_mctruthpp.GetYaxis().GetTitleOffset() * 6.5/3.5 )
+            g_ratiopp.GetXaxis().SetTitleSize( g_mctruthpp.GetXaxis().GetTitleSize() * 6.5/3.5 )
+            g_ratiopp.GetXaxis().SetLabelSize( g_mctruthpp.GetXaxis().GetLabelSize() * 6.5/3.5 )
+            g_ratiopp.Draw("AP")
+            if g_mctruthpf!=None:
+                g_ratiopf.SetMarkerStyle(20)
+                g_ratiopf.SetMarkerColor(g_templatepf.GetMarkerColor())
+                g_ratiopf.SetLineColor(g_templatepf.GetLineColor())
+                g_ratiopf.Draw("P SAME")
+                self.keep( [g_mctruthpf,g_templatepf,g_ratiopf] )
+            self.keep( [cpu,g_mctruthpp,g_templatepp,g_ratiopp] )
+            self.autosave(True)
     ## ------------------------------------------------------------------------------------------------------------
     def prepareTemplates(self,options,args):
         

@@ -475,8 +475,6 @@
                 "observable": "templateNdim2d_unroll",
                 "components": ["pp","pf","ff"],
                 "data": "unrolled_data", 
-                "_template": "unrolled_template",
-                "_template": "unrolled_mctruth",
 		"mass_binning" :"mass[13000,0.0,13000.0]"
          },
         "2_components":{
@@ -484,10 +482,12 @@
                 "observable": "templateNdim2d_unroll",
                 "components": ["pp","pf"],
                 "data": "unrolled_data", 
-                "template": "unrolled_template",
-                "_template": "unrolled_mctruth",
 		"mass_binning" :"mass[13000,0.0,13000.0]"
         }
+    },
+   "plotPurity":{
+                "treename":"fitresult_unrolled",
+                "dimensions" :"2D" 
     },
     "rootstyle_extra" : [
                   "TGaxis::SetMaxDigits(3);",
