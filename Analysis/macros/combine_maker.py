@@ -113,9 +113,10 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 datacard.write((" %s  HighMassGG_m1500_001.root" % cat).ljust(50))
                 datacard.write("w_all:mggSig_cat%d\n" % icat)
                 icat+=1
-                datacard.write("shapes bkg".ljust(20))
-                datacard.write((" %s  %s" % (cat,options.output_file)).ljust(50))
-                datacard.write("wtemplates:model_bkg_%s\n" % cat) 
+                for comp in options.components:
+                    datacard.write(("shapes %s" % comp).ljust(20))
+                    datacard.write((" %s  %s" % (cat,options.output_file)).ljust(50))
+                    datacard.write("wtemplates:model_bkg_%s\n" % cat) 
                 
                 datacard.write("shapes data_obs".ljust(20))
                 datacard.write((" %s  %s" % (cat,options.output_file)).ljust(50))
@@ -138,26 +139,32 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             datacard.write("bin".ljust(20))
             for cat in fit["categories"]:
                     datacard.write((" %s" % cat).ljust(15) )
-                    datacard.write((" %s" % cat).ljust(15) )
+                    for comp in options.components:
+                        datacard.write((" %s" % cat).ljust(15) )
             datacard.write("\n")
 
 
             datacard.write("process".ljust(20))
             for cat in fit["categories"]:
                     datacard.write(" sig".ljust(15) )
-                    datacard.write(" bkg".ljust(15) )
+                    for comp in options.components:
+                        datacard.write((" %s" % comp).ljust(15) )
             datacard.write("\n")
         
             datacard.write("process".ljust(20))
             for cat in fit["categories"]:
                     datacard.write(" 0".ljust(15) )
-                    datacard.write(" 1".ljust(15) )
+                    i = 0
+                    for comp in options.components:
+                        i+=1
+                        datacard.write((" %d" % i).ljust(15) )
             datacard.write("\n")
             
             datacard.write("rate".ljust(20))
             for cat in fit["categories"]:
                     datacard.write(" 0.36".ljust(15) )
-                    datacard.write(" 1".ljust(15) )
+                    for comp in options.components:
+                        datacard.write(" 1".ljust(15) )
             datacard.write("\n")
             
             datacard.write("----------------------------------------------------------------------------------------------------------------------------------\n")

@@ -42,6 +42,6 @@
 ### Running combine tool 
 
 ### Significance
-- `combine -M ProfileLikelihood --expectedSignal 1 --significance -t -1 --run expected card_test1.txt`
+- `combine -M ProfileLikelihood --expectSignal 1 --significance -t -1 card_test1.txt`
 ### Limits
 - `combine -M Asymptotic -t -1 --run expected card_test1.txt`
