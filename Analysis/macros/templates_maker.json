@@ -139,8 +139,8 @@
         "cic" : {
             "ndim"       : 2,                                                                "#" : "number of dimensions for the template  ",
             "bins"       : [ "mass", [500.0,1300.0] ],                                       "#" : "kinematic bins in which the fit is run ",
-            "template_binning" : [ 0.0,0.1, 1.0, 4.0,9.0, 15.0 ],                                   "#" : "template varaible binning              ",
-
+            "template_binning" : [ 0.0, 0.1, 5.0, 15.0 ],                                    "#" : "template varaible binning              ",
+		
             "selection"    : "cic",
             "components" : [ "pp", "pf", "ff" ],                                             "#" : "list of fit components                 ",
             "dataset_variables" : ["mgg","mass [-1.0,0.0,20.0,50.0,100.0,200.0,500.0,13000.0]","leadPt","subleadPt","leadEta","subleadEta", "leadMatchType", "subleadMatchType"],      "#" : "additional variables to be stored      ",
@@ -196,7 +196,35 @@
 			"pf" : "(leadPrompt && subleadFake) || (subleadPrompt && leadFake)",
                     "ff" : "leadFake    && subleadFake && ( leadMatchType != 0 || subleadMatchType != 0)"
 			},
-	    "templates" : {}
+            "templates" : {
+                "pf" : { 
+		        "sel"  : "cicNoChIsoSingleSB", 
+                        "#" : "pseudo-random swap, but taking care to take the random cone isolation for the signal-region photon",
+                        "#" : "  and the photon isolation for the side-band one                                                  ",
+                        "fill_categories" : { 
+                        "EBHighR9" :{ "leadIsSB && TMath::Even(event)" :    [ "leadChIso", "subleadRndConeChIso" ],
+                                "leadIsSB && ! TMath::Even(event)" :    [ "subleadRndConeChIso", "leadChIso" ],
+                                "subleadIsSB && ! TMath::Even(event)" : [ "subleadChIso", "leadRndConeChIso" ],
+                                "subleadIsSB && ! TMath::Even(event)" : [ "leadRndConeChIso", "subleadChIso" ]
+                        },
+                        "EBLowR9" :{ "leadIsSB && TMath::Even(event)" :    [ "leadChIso", "subleadRndConeChIso" ],
+                                "leadIsSB && ! TMath::Even(event)" :    [ "subleadRndConeChIso", "leadChIso" ],
+                                "subleadIsSB && ! TMath::Even(event)" : [ "subleadChIso", "leadRndConeChIso" ],
+                                "subleadIsSB && ! TMath::Even(event)" : [ "leadRndConeChIso", "subleadChIso" ]
+                        },
+                        "EEHighR9" :{ "leadIsEB && ! subleadIsEB &&      leadIsSB" : [ "leadRndConeChIso", "subleadChIso" ], 
+                                "leadIsEB && ! subleadIsEB &&    ! leadIsSB" : [ "leadChIso", "subleadRndConeChIso" ], 
+                                "! leadIsEB && subleadIsEB &&   subleadIsSB" : [ "subleadChIso", "leadRndConeChIso" ], 
+                                "! leadIsEB && subleadIsEB && ! subleadIsSB" : [ "subleadChIso", "leadRndConeChIso" ]
+                                },
+                        "EELowR9" :{ "leadIsEB && ! subleadIsEB &&      leadIsSB" : [ "leadRndConeChIso", "subleadChIso" ], 
+                                "leadIsEB && ! subleadIsEB &&    ! leadIsSB" : [ "leadChIso", "subleadRndConeChIso" ], 
+                                "! leadIsEB && subleadIsEB &&   subleadIsSB" : [ "subleadChIso", "leadRndConeChIso" ], 
+                                "! leadIsEB && subleadIsEB && ! subleadIsSB" : [ "subleadChIso", "leadRndConeChIso" ]
+				}
+                        }			
+		    }
+	    }
 	},	
         "2D" : {
             "ndim"       : 2,                                                                "#" : "number of dimensions for the template  ",

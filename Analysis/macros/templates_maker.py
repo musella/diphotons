@@ -969,16 +969,17 @@ class TemplatesApp(PlotApp):
     
 
     ## ------------------------------------------------------------------------------------------------------------
-    def reducedRooData(self,name,rooset,binned,weight="weight",sel=None,redo=False):
+    def reducedRooData(self,name,rooset,binned=False,weight="weight",sel=None,redo=False,importToWs=True):
         data = self.rooData("r_%s" % name)
         if not data or redo:
             print "create rooData"
-            data = self.rooData(name,rooset=rooset,weight=weight,sel=sel)
+            data = self.rooData(name,rooset=rooset,weight=weight,sel=sel,redo=redo)
             if binned:
                 data = data.binnedClone("r_%s" % name,"r_%s" % name)
             else:
                 data.SetName("r_%s" % name)
-        self.workspace_.rooImport(data)
+        if importToWs:
+            self.workspace_.rooImport(data)
         return data
     ## ------------------------------------------------------------------------------------------------------------
 
@@ -990,8 +991,8 @@ class TemplatesApp(PlotApp):
 
 
     ## ------------------------------------------------------------------------------------------------------------
-    def rooData(self,name,autofill=True,rooset=None,weight="weight",sel=None):
-        if name in self.cache_:
+    def rooData(self,name,autofill=True,rooset=None,weight="weight",sel=None,redo=False):
+        if name in self.cache_ and not redo:
             return self.cache_[name]        
         dataset = self.workspace_.data(name)
         if not dataset and self.store_new_:
@@ -1009,8 +1010,9 @@ class TemplatesApp(PlotApp):
             if rooset:
                 dataset = dataset.reduce(RooFit.SelectVars(rooset))
             else:
-                dataset = dataset.emptyClone()
-            self.cache_[name] = dataset
+                dataset = dataset.emptyClone()                
+            if not redo:
+                self.cache_[name] = dataset
             filler = ROOT.DataSetFiller(dataset)
             cut=ROOT.TCut(weight)
             if sel:
