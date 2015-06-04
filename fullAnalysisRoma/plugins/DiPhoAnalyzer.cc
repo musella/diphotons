@@ -343,6 +343,11 @@ void DiPhoAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
 	if (!leadSelel || !subleadSelel) continue;  
 	// chiara: end comment x efficiencies
 
+	// candidates with two photons in EE discarded 
+	float minEta = leadScEta;
+	if (fabs(subleadScEta)<fabs(leadScEta)) minEta = subleadScEta;
+	if (fabs(minEta)>1.5) continue;
+
 	selectedDipho.push_back(theDiphoton);    
       }
 
@@ -359,7 +364,7 @@ void DiPhoAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
 	  float leadPt    = diphoPtr->leadingPhoton()->et();
 	  float subleadPt = diphoPtr->subLeadingPhoton()->et();
 
-	  if (leadPt<200 || subleadPt<200) continue;             // chiara: x ana: 80; x phys14: 200; x sinc 100
+	  if (leadPt<100 || subleadPt<100) continue;           
 
 	  kineDipho.push_back(theDiphoton);
 	}
@@ -375,7 +380,7 @@ void DiPhoAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
 	    Ptr<flashgg::DiPhotonCandidate> diphoPtr = diPhotons->ptrAt( theDiphoton );
 	    
 	    float thisSystemMgg = diphoPtr->mass();
-	    if (thisSystemMgg<500 ) continue;    // chiara: x ana: 300; x phys14: 500; x sinc 200 
+	    if (thisSystemMgg<250 ) continue; 
 
 	    massDipho.push_back(theDiphoton);
 	  }
@@ -438,6 +443,7 @@ void DiPhoAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
 		int vtxIndex;
 		float vtxX, vtxY, vtxZ;
 		int genmatch1, genmatch2;
+		int iMatch1, iMatch2; 
 		float genmgg;
 		float geniso1, geniso2;
 		float genVtxX, genVtxY, genVtxZ;   
@@ -528,6 +534,8 @@ void DiPhoAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
 		}
 	      	
 		//-------> photons, MC truth match
+		iMatch1   = -999;   
+		iMatch2   = -999;   
 		genmatch1 = -999;
 		genmatch2 = -999;
 		geniso1   = -999.;
@@ -542,6 +550,7 @@ void DiPhoAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
 		      auto igen = genPhotons[j].ptr();
 		      if ( igen->status() != 1 || igen->pdgId() != 22 ) continue; 
 		      if ( fabs(igen->eta()-candDiphoPtr->leadingPhoton()->matchedGenPhoton()->eta())<0.001 && fabs(igen->phi()-candDiphoPtr->leadingPhoton()->matchedGenPhoton()->phi())<0.001 ) {
+			iMatch1 = j;
 			auto & extra = genPhotons[j];
 			geniso1 = extra.genIso();
 			break;
@@ -555,6 +564,7 @@ void DiPhoAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
 		      auto igen = genPhotons[j].ptr();
 		      if ( igen->status() != 1 || igen->pdgId() != 22 ) continue; 
 		      if ( fabs(igen->eta()-candDiphoPtr->subLeadingPhoton()->matchedGenPhoton()->eta())<0.001 && fabs(igen->phi()-candDiphoPtr->subLeadingPhoton()->matchedGenPhoton()->phi())<0.001 ) {
+			iMatch2 = j;
 			auto & extra = genPhotons[j];
 			geniso2 = extra.genIso();
 			break;
@@ -590,7 +600,7 @@ void DiPhoAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
 
 		//--------> gen level mgg for signal samples
 		genmgg = -999.;
-		if (sampleID>99) {  // signal only 
+		if (sampleID>99) {  // signal samples
 
 		  for( unsigned int genLoop = 0 ; genLoop < genParticles->size(); genLoop++ ) {
 		    
@@ -628,8 +638,41 @@ void DiPhoAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
 		      break;
 		    }
 		  }
-		}
+		} else {  // background samples, Riccardo
+		  
+		  if( (iMatch1 != -999) && (iMatch2 != -999) ) {  
 
+		    genmgg = -4999.;
+		    
+		    const auto & genPhotons = *genPhotonsHandle; 
+		    auto igen1 = genPhotons[iMatch1].ptr();   
+		    auto igen2 = genPhotons[iMatch2].ptr();   
+
+		    if( (igen1->pdgId() == 22) && ( igen2->pdgId() == 22) ) { 
+		      
+		      genmgg = -5999.; 
+
+		      if( (igen1->status()==1) && ( igen2->status()==1) ) {  
+
+			float ptd1  = igen1->pt(); 
+			float ptd2  = igen2->pt(); 
+			float etad1 = igen1->eta();  
+			float etad2 = igen2->eta();  
+			float phid1 = igen1->phi(); 
+			float phid2 = igen2->phi(); 
+
+			TLorentzVector *myGenD1 = new TLorentzVector(0,0,0,0);  
+			TLorentzVector *myGenD2 = new TLorentzVector(0,0,0,0);  
+			myGenD1->SetPtEtaPhiM(ptd1, etad1, phid1, 0.);   
+			myGenD2->SetPtEtaPhiM(ptd2, etad2, phid2, 0.);   
+			genmgg = (*myGenD1+*myGenD2).M();
+		      }
+		    }
+		  } else {
+		    genmgg = -6999.;
+		  }
+		}
+	      
 		// Variables for the tree
 		treeDipho_.run = run;
 		treeDipho_.event = event;
@@ -914,29 +957,28 @@ bool DiPhoAnalyzer::isGammaSelected( float rho, float pt, float sceta, float r9,
   int r9class  = r9<0.94;                   
   int theclass = 2.*etaclass + r9class;                  
 
-  // cuts - hardcoded
-  float chiso_cut[4]  = { 5.95, 7.08, 6.10, 5.07 };     
-  float phoiso_cut[4] = { 2.87, 5.47, 5.98, 3.44 };  
-  // float nhiso_cut[4]  = { 27.4, 30.0, 30.0, 15.0 };  
-  float sieie_cut[4]  = { 1.05e-02, 1.05e-02, 2.82e-02, 2.8e-02 };
-  float hoe_cut[4]    = { 4.53e-01, 2.12e-01, 6.3e-02, 7.8e-02 };
+  // cuts - hardcoded, v1
+  float chiso_cut[4]     = { 5., 5., 5., 5. };     
+  float phoiso_cut[4]    = { 1., 1., 0., 0. };  
+  float sieie_cut[4]     = { 1.05e-02, 1.05e-02, 2.82e-02, 2.80e-02 };                                                                       
+  float sieie_infCut[4]  = { 0.001, 0.001, 0.001, 0.001 };
+  float hoe_cut[4]       = { 0.05, 0.05, 0.05, 0.05 };
   
   // effective areas - hardcoded 
-  float chIsoAE[5] = { 0.00,0.000,0.00,0.00,0.00 };
-  float phIsoAE[5] = { 0.21,0.200,0.14,0.22,0.31 };
-  // float nhIsoAE[5] = { 0.04,0.059,0.05,0.05,0.15 };
+  float phIsoAE[5] = { 0.21,0.20,0.14,0.22,0.31 };
 
   // EA corrections 
-  int theEAregion = effectiveAreaRegion(sceta);
-  float corrChIso = chiso - rho*chIsoAE[theEAregion];
-  float corrPhIso = phoiso - rho*phIsoAE[theEAregion];
-  // float corrNhIso = nhiso - rho*nhIsoAE[theEAregion];   
+  int theEAregion  = effectiveAreaRegion(sceta);   
+  float corrPhIso1 = phoiso - rho*phIsoAE[theEAregion];
 
-  if (corrChIso > chiso_cut[theclass])  return false;
+  // pT correction
+  float corrPhIso = corrPhIso1 - 0.002*pt;
+
+  if (chiso > chiso_cut[theclass])      return false;
   if (corrPhIso > phoiso_cut[theclass]) return false;
-  // if (corrNhIso > nhiso_cut[theclass])  return false;
+  if (hoe > hoe_cut[theclass])          return false;
   if (sieie > sieie_cut[theclass])      return false;
-  if (hoe> hoe_cut[theclass])           return false;
+  if (sieie < sieie_infCut[theclass])   return false;
 
   // electron veto 
   if (!passElectronVeto) return false;
@@ -949,7 +991,7 @@ int DiPhoAnalyzer::effectiveAreaRegion(float sceta) {
   int theEAregion = 999;
   if (fabs(sceta)<=0.9) theEAregion = 0;
   if (fabs(sceta)<=1.5 && fabs(sceta)>0.9)  theEAregion = 1;
-  if (fabs(sceta)<=2.0 && fabs(sceta)>1.5)  theEAregion = 2;
+  if (fabs(sceta)<=2.0 && fabs(sceta)>1.5)  theEAregion = 2;   
   if (fabs(sceta)<=2.2 && fabs(sceta)>2.0)  theEAregion = 3;
   if (fabs(sceta)<=2.5 && fabs(sceta)>2.2)  theEAregion = 4;
   return theEAregion;
