@@ -304,7 +304,7 @@ void DiPhoAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
 
 	int theDiphoton = preselDipho[diphotonlooper];
 	Ptr<flashgg::DiPhotonCandidate> diphoPtr = diPhotons->ptrAt( theDiphoton );
-	
+
 	// chiara: init comment x efficiencies
 	std::vector<float> leadCovnoZS    = lazyToolnoZS->localCovariances(*(diphoPtr->leadingPhoton()->superCluster()->seed())) ;
 	std::vector<float> subleadCovnoZS = lazyToolnoZS->localCovariances(*(diphoPtr->subLeadingPhoton()->superCluster()->seed())) ;
@@ -341,12 +341,12 @@ void DiPhoAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
 	bool  subleadOkEleV = diphoPtr->subLeadingPhoton()->passElectronVeto();
 	bool  subleadSelel  = isGammaSelected( rho, subleadPt, subleadScEta, subleadR9noZS, subleadChIso, subleadNeuIso, subleadPhoIso, subleadHoE, subleadSieienoZS, subleadOkEleV);  
 	if (!leadSelel || !subleadSelel) continue;  
-	// chiara: end comment x efficiencies
 
 	// candidates with two photons in EE discarded 
 	float minEta = leadScEta;
 	if (fabs(subleadScEta)<fabs(leadScEta)) minEta = subleadScEta;
 	if (fabs(minEta)>1.5) continue;
+	// chiara: end comment x efficiencies
 
 	selectedDipho.push_back(theDiphoton);    
       }
