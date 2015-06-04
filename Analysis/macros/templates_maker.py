@@ -642,14 +642,7 @@ class TemplatesApp(PlotApp):
                 ntp = ROOT.TNtuple("tree_fitresult_%s_%s_%s" % (tempname,dim,cat),"tree_fitresult_%s_%s_%s" % (tempname,dim,cat),"purity_pp:error_pp_sumw2off:error_pp_sumw2on:purity_pf:error_pf_sumw2off:error_pf_sumw2on:correlation:massbin:masserror" )
                 self.store_[ntp.GetName()] = ntp
                 for mb in range(mass_split[2],mass_split[1]):
-                    jpp = ROOT.RooRealVar("jpp","jpp",0.5,0,1)
-                    jpf = ROOT.RooRealVar("jpf","jpf",0.3,0,1)
-                    fpp= ROOT.RooFormulaVar("fpp","fpp","jpp ",ROOT.RooArgList(jpp))
-                    pu_estimates=ROOT.RooArgList(fpp)
-                    if len(components)>2: 
-                        fpf= ROOT.RooFormulaVar("fpf","fpf","jpf ",ROOT.RooArgList(jpf))
-                        pu_estimates.add(fpf)
-                    rooHistPdfs=[]
+                    #print massbin and get data
                     cut=ROOT.TCut("mass>%f && mass<%f"% (diphomass[mb],diphomass[mb+1]))
                     cut_s=None
                     cut_s= "%1.0f_%2.0f"% (diphomass[mb],diphomass[mb+1])
@@ -658,6 +651,18 @@ class TemplatesApp(PlotApp):
                     data = self.rooData("%s_%s_%s_mb_%s"%(dataname,dim,cat,cut_s))
                     print data.sumEntries()
                     data.Print()
+                    #define fit parameters
+                    jpp = ROOT.RooRealVar("jpp","jpp",0.5,0,1)
+                    jpf = ROOT.RooRealVar("jpf","jpf",0.3,0,1)
+                    jnorm = ROOT.RooRealVar("jnorm","jnorm",data.sumEntries())
+                   # fpp= ROOT.RooFormulaVar("fpp","fpp","jpp ",ROOT.RooArgList(jpp))
+                    fpp= ROOT.RooFormulaVar("fpp","fpp","jnorm*jpp ",ROOT.RooArgList(jnorm,jpp))
+                    pu_estimates=ROOT.RooArgList(fpp)
+                    if len(components)>2: 
+                        #fpf= ROOT.RooFormulaVar("fpf","fpf","jpf ",ROOT.RooArgList(jpf))
+                        fpf= ROOT.RooFormulaVar("fpf","fpf","jnorm*jpf ",ROOT.RooArgList(jnorm,jpf))
+                        pu_estimates.add(fpf)
+                    rooHistPdfs=[]
                     ArgListPdf=ROOT.RooArgList()
                     for comp in nomFit["components"]:
                         print cat,comp
@@ -669,7 +674,7 @@ class TemplatesApp(PlotApp):
                     print rooHistPdfs
                     fitUnrolledPdf=ROOT.RooAddPdf("fitPdfs_%s_%s_%s_mb_%s" % (tempname,cat,dim,cut_s),"fitPdfs_%s_%s_%s_mb_%s" % (tempname,cat,dim,cut_s),ArgListPdf,pu_estimates,False)
               #save roofitresult in outputfile
-                    fit_mcstudies = fitUnrolledPdf.fitTo(data, RooFit.NumCPU(8), RooFit.Extended(False),RooFit.SumW2Error(True),RooFit.Verbose(False),RooFit.Save(True))
+                    fit_mcstudies = fitUnrolledPdf.fitTo(data, RooFit.NumCPU(8), RooFit.Extended(True),RooFit.SumW2Error(True),RooFit.Verbose(False),RooFit.Save(True))
                     pu_pp=fpp.getVal()
                     pullerr_pp=fpp.getPropagatedError(fit_mcstudies)
                     if len(components)>2:
@@ -681,7 +686,7 @@ class TemplatesApp(PlotApp):
                         pullerr_pf=0.
     #ML fit to weighted dataset: SumW2Error takes statistics of dataset into account, scales with number of events in datasetif ON good for MC comparison, takes limited statistics of MC dataset into account
   #  if OUT treated as if it would be data- for data MC comparison
-                    fit_fordata = fitUnrolledPdf.fitTo(data, RooFit.NumCPU(8), RooFit.Extended(False),RooFit.SumW2Error(False),RooFit.Verbose(False),RooFit.Save(True))
+                    fit_fordata = fitUnrolledPdf.fitTo(data, RooFit.NumCPU(8), RooFit.Extended(True),RooFit.SumW2Error(False),RooFit.Verbose(False),RooFit.Save(True))
                     puerr_pp=fpp.getPropagatedError(fit_fordata)
                     if len(components)>2:
                         puerr_pf=fpf.getPropagatedError(fit_fordata)
@@ -743,11 +748,14 @@ class TemplatesApp(PlotApp):
                 tree_truthpp=self.treeData("%s_pp_%s_%s"%(treetruthname, dim, cat))
                 tree_truthpf=self.treeData("%s_pf_%s_%s"%(treetruthname, dim, cat))
                 tree_truthff=self.treeData("%s_ff_%s_%s"%(treetruthname, dim, cat))
-                
+                if tree_truthff!=None:
+                    g_truthff=ROOT.TGraphErrors(tree_truthff.GetEntries())
+                else:
+                    g_truthff=ROOT.TGraphErrors()
+                    print "no truth ff component"
                 g_mctruthpp=ROOT.TGraphErrors(tree_mctruth.GetEntries())
                 g_truthpp=ROOT.TGraphErrors(tree_truthpp.GetEntries())
                 g_truthpf=ROOT.TGraphErrors(tree_truthpf.GetEntries())
-                g_truthff=ROOT.TGraphErrors(tree_truthff.GetEntries())
                 g_templatepp=ROOT.TGraphErrors(tree_template.GetEntries())
                 g_ratiopp=ROOT.TGraphErrors(tree_template.GetEntries())
                 g_pullpp=ROOT.TGraphErrors(tree_template.GetEntries())
@@ -764,15 +772,17 @@ class TemplatesApp(PlotApp):
                     tree_template.GetEntry(mb)
                     tree_truthpp.GetEntry(mb)
                     tree_truthpf.GetEntry(mb)
-                    tree_truthff.GetEntry(mb)
+                    if tree_truthff!=None:
+                        tree_truthff.GetEntry(mb)
                     
                     g_truthpp.SetPoint(mb,tree_truthpp.massbin,tree_truthpp.frac_pu)
                     # set poisson error for truth information
                     g_truthpp.SetPointError(mb,tree_truthpp.masserror,0.)
                     g_truthpf.SetPoint(mb,tree_truthpf.massbin,tree_truthpf.frac_pu)
                     g_truthpf.SetPointError(mb,tree_truthpf.masserror,0.)
-                    g_truthff.SetPoint(mb,tree_truthff.massbin,tree_truthff.frac_pu)
-                    g_truthff.SetPointError(mb,tree_truthff.masserror,0.)
+                    if tree_truthff!=None:
+                        g_truthff.SetPoint(mb,tree_truthff.massbin,tree_truthff.frac_pu)
+                        g_truthff.SetPointError(mb,tree_truthff.masserror,0.)
                     
                     g_mctruthpp.SetPoint(mb,tree_mctruth.massbin,tree_mctruth.purity_pp)
                     g_mctruthpp.SetPointError(mb,tree_mctruth.masserror,tree_mctruth.error_pp_sumw2on)
