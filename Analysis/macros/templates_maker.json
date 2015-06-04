@@ -65,22 +65,6 @@
 		       		  ]
             },
 
-    "_data" : [
-               "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)sGenIso",
-               "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)sNonGenIso"
-             ],
-
-    "#" : "data used for template making",
-    "_templates" : [
-               "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)s"
-             ],
-             
-     "#" : "mc dataset",
-     "_mc" : [
-             "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)sGenIso",
-             "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)sNonGenIso"
-            ],
-
     "#" : "file names for different datasets. Files folder can be specified by --input-dir on the command line",
     "data_file"  : "output.root",
     "mc_file"    : "output.root",
@@ -105,7 +89,6 @@
     "treeName": "trees/%(sample)s_%(cat)s",
 
     "preselection" : "leadChIso < 15. && subleadChIso < 15. && mass > 250",   "#" : "preselection cut applied to all trees",
-    "_preselection" : "leadChIso < 5. && subleadChIso < 5. && leadHoE < 0.05 && subleadHoE < 0.05",   "#" : "preselection cut applied to all trees",
     "selection"    : "cicNoChIso",                              "#" : "nominal selection",
     
     "#" : "---------------------------------------------------------------------------------------------------------------------",
