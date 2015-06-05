@@ -1,3 +1,5 @@
+# Wild notes to keep track of command line options needed for the different analysis tasks
+
 ## Control plots
 
 ### Event selection monitoring
@@ -38,6 +40,12 @@
 ### Background model
 - `./combine_maker.py --load templates_maker.json --fit-name cic --input-dir ~musella/public/workspace/exo/full_analysis_anv1_v14  -o full_analysis_anv1_v14_final_ws.root`
 - `./combine_maker.py --fit-name cic  --fit-background   --observable mgg[5000,300,6000] --read-ws full_analysis_anv1_v14_final_ws.root -O ~/www/test_bkg_fit -o full_analysis_anv1_v14_bkg_ws.root`
+
+### Per-component background model
+- `./combine_maker.py --fit-name cic  --fit-background   --observable mgg[5700,300,6000] --read-ws full_analysis_anv1_v18_final_ws.root -O ~/www/test_bkg_fit -o full_analysis_anv1_v18_bkg_ws.root  --bkg-shapes bkg_model/split_shapes.json`
+
+### Per-component background model with constrained purities
+- `./combine_maker.py --fit-name cic  --fit-background   --observable mgg[5700,300,6000] --read-ws full_analysis_anv1_v18_final_ws.root -O ~/www/test_bkg_fit -o full_analysis_anv1_v18_bkg_ws.root   --norm-as-fractions --nuisance-fractions-covariance bkg_model/split_covariance.json --bkg-shapes bkg_model/split_shapes.json`
 
 ### Running combine tool 
 

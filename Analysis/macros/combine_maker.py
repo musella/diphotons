@@ -592,9 +592,14 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             
                 print
                 
+            if options.norm_as_fractions:
+                for comp in setme:
+                    me = fractions[comp]
+                    print "fraction %s : %1.3g" % ( me.GetName(), me.getVal() )
             # import all variables
             for me in importme:
                 self.workspace_.rooImport(*me)
+                
                 
         # keep track of nuisance parameters
         fit["sidebands"] = {}

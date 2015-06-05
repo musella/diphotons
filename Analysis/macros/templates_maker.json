@@ -209,6 +209,54 @@
 		    }
 	    }
 	},	
+        "cic2" : {
+            "ndim"       : 2,                                                                "#" : "number of dimensions for the template  ",
+            "bins"       : [ "mass", [500.0,1300.0] ],                                       "#" : "kinematic bins in which the fit is run ",
+            "template_binning" : [ 0.0, 0.1, 5.0, 15.0 ],                                    "#" : "template varaible binning              ",
+		
+            "selection"    : "cic",
+            "components" : [ "pp", "pf", "ff" ],                                             "#" : "list of fit components                 ",
+            "dataset_variables" : ["mgg","mass [-1.0,0.0,20.0,50.0,100.0,200.0,500.0,13000.0]","leadPt","subleadPt","leadEta","subleadEta", "leadMatchType", "subleadMatchType"],      "#" : "additional variables to be stored      ",
+            "store_trees" : true,	
+            "categories" : {
+                "EBEB" : { 
+                    "src"  : "EBEB",
+                     "fill" : { 
+                         "TMath::Even(event)" :[ "leadChIso", "subleadChIso" ],
+                         "! TMath::Even(event)" :[ "subleadChIso", "leadChIso" ]
+                      }
+                }, 
+                "EBEE" : { "src" : "notEBEB" ,
+                        "fill" : { 
+                        "leadIsEB && ! subleadIsEB" :[ "leadChIso", "subleadChIso" ],
+                            "! leadIsEB && subleadIsEB" :[ "subleadChIso", "leadChIso" ]
+                       }
+                }
+            },
+	    "signals" : "__all__", 
+		"truth_selection" : {
+		    "pp" : "leadPrompt  && subleadPrompt",
+			"pf" : "(leadPrompt && subleadFake) || (subleadPrompt && leadFake)",
+                    "ff" : "leadFake    && subleadFake && ( leadMatchType != 0 || subleadMatchType != 0)"
+			},
+            "templates" : {
+                "pf" : { 
+		        "sel"  : "cicNoChIsoSingleSB", 
+                        "fill_categories" : { 
+                        "EBEB" :{ "leadIsSB && TMath::Even(event)" :    [ "leadChIso", "subleadRndConeChIso" ],
+                                "leadIsSB && ! TMath::Even(event)" :    [ "subleadRndConeChIso", "leadChIso" ],
+                                "subleadIsSB && ! TMath::Even(event)" : [ "subleadChIso", "leadRndConeChIso" ],
+                                "subleadIsSB && ! TMath::Even(event)" : [ "leadRndConeChIso", "subleadChIso" ]
+                        },
+                        "EBEE" :{ "leadIsEB && ! subleadIsEB &&      leadIsSB" : [ "leadRndConeChIso", "subleadChIso" ], 
+                                "leadIsEB && ! subleadIsEB &&    ! leadIsSB" : [ "leadChIso", "subleadRndConeChIso" ], 
+                                "! leadIsEB && subleadIsEB &&   subleadIsSB" : [ "subleadChIso", "leadRndConeChIso" ], 
+                                "! leadIsEB && subleadIsEB && ! subleadIsSB" : [ "subleadChIso", "leadRndConeChIso" ]
+                                }
+                        }			
+		    }
+	    }
+	},	
         "2D" : {
             "ndim"       : 2,                                                                "#" : "number of dimensions for the template  ",
             "bins"       : [ "mass", [500.0,1300.0] ],                                       "#" : "kinematic bins in which the fit is run ",
