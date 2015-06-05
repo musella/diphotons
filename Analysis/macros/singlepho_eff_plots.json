@@ -1,0 +1,70 @@
+{
+    "drawopts" : ["Draw,DrawRatio[0.5]","hist","hist","hist nostack"],
+    "legpos"  : [0.580,0.60,0.830,0.88],
+
+    "sig" : null,
+    "bkg" : [
+	      ["%(den)s","%(dentit)s",
+	      [["colors","myColorB1"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","l"],["SetFillColor","myColorB3tr"]],
+	      { "%(den)s" : [] }
+	      ]
+	      ],
+    "data" : [
+	      ["%(num)s","%(numtit)s",
+	      [["colors","myColorA1"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","l"],["SetFillColor","myColorA3tr"]],
+	      { "%(num)s" : [] }
+	      ]
+	     ],
+
+     "ratios" : [
+     	      ["kinSinglePhoGenIso"                ,"Acceptance"             ,"cicSinglePhoGenIso"         ,"Cut-based ID"                  ,""],
+              ["kinSinglePho"                      ,"All"                    ,"kinSinglePhoGenIso"         ,"Isolated"               ,"genIsoEffNoId"],
+              ["kinSinglePho"                      ,"Acceptance No Gen Iso"  ,"cicSinglePho"               ,"Cut-based ID"             ,"overall"],
+              ["cicSinglePhoGenIso"                ,"All events"             ,"cicSinglePhoGenIso"         ,"Gen Iso"                       ,"genIsoEff"],
+              ["cicSinglePho"                      ,"All events"             ,"cicSinglePhoGenIso"         ,"Gen Iso"                       ,"genIsoEff"]
+
+    ],
+
+    "data_file"  : "output.root",
+    "bkg_file"  : "output.root",
+    "sig_file"  : "output.root",
+
+    "_categories": ["EBHighR9","EBLowR9","EEHighR9","EELowR9"], 
+    "categories" : [],
+    "groups": {
+        "all"       : ["EBHighR9","EBLowR9","EEHighR9","EELowR9"],
+        "EB"       : ["EBHighR9","EBLowR9"],
+        "EE"       : ["EEHighR9","EELowR9"],
+        "EBHighR9" : ["EBHighR9"],
+	"EBLowR9"  : ["EBLowR9"],
+	"EEHighR9" : ["EEHighR9"],
+	"EELowR9"  : ["EELowR9"]
+	}, 
+	
+    "plots": [
+	      ["phoPt" ,[["Rebin",5],["ytitle","Events / %(binw)s GeV"],["xtitle","p_{T}(#gamma) (GeV)"],["xrange",[50.0,3000.0]]],null,null],
+	      ["phoEta" ,[["ytitle","Events / %(binw)s"],["xtitle","#eta_{T}(#gamma)"],["xrange",[-2.5,2.5]]],null,[0.7,0.7,0.9,0.9]],
+	      ["phoChIso" ,[["ytitle","Events / %(binw)s GeV"],["xtitle","Iso_{Ch}"],["xrange",[0,15]]],null,null],
+	      ["phoPhoIso" ,[["ytitle","Events / %(binw)s GeV"],["xtitle","Iso_{#gamma}"],["xrange",[0,15]]],null,null],
+	      ["phoHoE" ,[["ytitle","Events / %(binw)s"],["xtitle","H/E"],["xrange",[0,15]]],null,null],
+	      ["phoSigmaIeIe" ,[["ytitle","Events / %(binw)s"],["xtitle","#sigma_{#ieta#ieta}"],["xrange",[0,4e-2]]],null,null]	      
+	      ],
+	      	      
+    "styles": { 
+	"*mass*" : [["logy",1e-4]],
+	"*Pt*" : [["logy",1e-4]],
+	"*Iso*"  : [["logy",1e-4]],     
+	"*rat"   : ["SetGridy"],
+	"*ratio" : [["ytitle","#varepsilon"],["applyTo",["GetYaxis",[["SetNdivisions",505],["SetRangeUser",[0.5,1.0]]]]]]
+	},	 
+    "postproc" : {
+    },
+
+    "template": "%(sample)s/histograms/GGJets_M_200To13000_sherpa_13TeV_%(cat)s%(name)s",
+
+    "rootstyle_extra" : [
+    		  "TGaxis::SetMaxDigits(3);",
+		  "TH1::SetDefaultSumw2(1);"
+    ]
+    
+}

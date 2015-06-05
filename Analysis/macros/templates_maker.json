@@ -65,22 +65,6 @@
 		       		  ]
             },
 
-    "_data" : [
-               "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)sGenIso",
-               "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)sNonGenIso"
-             ],
-
-    "#" : "data used for template making",
-    "_templates" : [
-               "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)s"
-             ],
-             
-     "#" : "mc dataset",
-     "_mc" : [
-             "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)sGenIso",
-             "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)sNonGenIso"
-            ],
-
     "#" : "file names for different datasets. Files folder can be specified by --input-dir on the command line",
     "data_file"  : "output.root",
     "mc_file"    : "output.root",
@@ -105,7 +89,6 @@
     "treeName": "trees/%(sample)s_%(cat)s",
 
     "preselection" : "leadChIso < 15. && subleadChIso < 15. && mass > 250",   "#" : "preselection cut applied to all trees",
-    "_preselection" : "leadChIso < 5. && subleadChIso < 5. && leadHoE < 0.05 && subleadHoE < 0.05",   "#" : "preselection cut applied to all trees",
     "selection"    : "cicNoChIso",                              "#" : "nominal selection",
     
     "#" : "---------------------------------------------------------------------------------------------------------------------",
@@ -503,18 +486,14 @@
     "comparisons" : {
 	"fit2DTruth" : { "fit" : "2D",
 		"templates" : { "mix:kDSinglePho2D" : {} },
-                "components": [["pp",{"2D" : {}}],
-			       "pf",
-			       "ff"
+                "components": ["pf","ff",  ["pp",{ "2D" : {}}] 
                 ],
                 "prepfit": true,
                 "weight_cut": "weight < 5.",
 		"redo" : true,
 		"doDataMc" : false, "doMcTruth" : true,
-		"splitByBin" : false,
-                "template_binning" : [ 0.0,0.1,5.0,15.0],
-				"mass_binning" :"mass[13000,0.0,13000.0]",
-				"mass_split":[5,5,0]
+        "template_binning" : [ 0.0,0.1,5.0,15.0],
+		"mass_binning" :"mass[13000,0.0,13000.0]"
 		},
 	"_fit1DTruth" : { "fit" : "1D",
                 "components" : [ "f","p" ],
@@ -525,14 +504,31 @@
 		"redo" : true,
 		"weight_cut": "weight < 5.",
 		"doDataMc" : false, "doMcTruth" : true,
-		"splitByBin" : false,
-                "template_binning" : [ 0.0,0.1, 1.0, 4.0,9.0,15.0 ],
-				"mass_binning" :"mass[13000,0.0,13000.0]",
-				"mass_split":[10,10,0]
+        "template_binning" : [ 0.0,0.1, 1.0, 4.0,9.0,15.0 ],
+		"mass_binning" :"mass[13000,0.0,13000.0]"
 		}
     },
       
-
+   "nominalFit":{
+        "3_components":{
+                "dimensions" :"2D", 
+                "observable": "templateNdim2d_unroll",
+                "components": ["pp","pf","ff"],
+                "data": "unrolled_data", 
+		"mass_binning" :"mass[13000,0.0,13000.0]"
+         },
+        "2_components":{
+                "dimensions" :"2D", 
+                "observable": "templateNdim2d_unroll",
+                "components": ["pp","pf"],
+                "data": "unrolled_data", 
+		"mass_binning" :"mass[13000,0.0,13000.0]"
+        }
+    },
+   "plotPurity":{
+                "treename":"fitresult_unrolled",
+                "dimensions" :"2D" 
+    },
     "rootstyle_extra" : [
                   "TGaxis::SetMaxDigits(3);",
                   "TH1::SetDefaultSumw2(1);"
