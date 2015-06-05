@@ -545,7 +545,7 @@
         }
     },
    "plotPurity":{
-                "treename":"fitresult_unrolled",
+                "treename":"fitresult",
                 "treetruth":"truth_purity",
                 "dimensions" :"2D" 
     },
@@ -555,4 +555,3 @@
     ]
     
 }
-
