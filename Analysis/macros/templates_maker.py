@@ -73,7 +73,7 @@ class TemplatesApp(PlotApp):
                                     ),
                         make_option("--read-ws","-r",dest="read_ws",action="store",type="string",
                                     default=False,
-                                    help="List of variables to be used for reweighting.",
+                                    help="workspace input file.",
                                     ),
                         make_option("--output-file","-o",dest="output_file",action="store",type="string",
                                     default=None,
@@ -1006,7 +1006,7 @@ class TemplatesApp(PlotApp):
         if autofill and dataset.sumEntries() == 0.:
             tree = self.treeData(name)
             if not tree: 
-                return dset
+                return dataset
             if rooset:
                 dataset = dataset.reduce(RooFit.SelectVars(rooset))
             else:
