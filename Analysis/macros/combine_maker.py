@@ -45,7 +45,13 @@ class CombineApp(TemplatesApp):
                                     help="Parametrize background components normalization as fractions",
                                     ),
                         make_option("--nuisance-fractions",dest="nuisance_fractions",action="store_true",default=False,
-                                    help="Add nuisance parameters for component fractions"),
+                                    help="Add nuisance parameters for component fractions",
+                                    ),
+                        make_option("--nuisance-fractions-covariance",dest="nuisance_fractions_covariance",
+                                    action="callback",callback=optpars_utils.Load(scratch=True), type="string",
+                                    default=None,
+                                    help="correlation matrix between nuisance parameters",
+                                    ),
                         make_option("--bkg-shapes",dest="bkg_shapes",action="callback",callback=optpars_utils.Load(scratch=True),
                                     type="string",
                                     default={ "bkg" : {
@@ -109,12 +115,17 @@ class CombineApp(TemplatesApp):
         ROOT.RooMsgService.instance().setGlobalKillBelow(RooFit.FATAL)
 
         options.only_subset = [options.fit_name]
-        
         options.store_new_only=True
-        self.setup(options,args)
-
         options.components = options.bkg_shapes.keys()
-
+        
+        # make sure that relevant 
+        #  config parameters are read/written to the workspace
+        self.save_params_.append("signals")
+        if options.fit_background or options.generate_datacard:
+            self.save_params_.append("components")
+        
+        self.setup(options,args)
+        
         if options.fit_background:
             self.fitBackground(options,args)
             
@@ -269,7 +280,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             # other nuisance parameters
             datacard.write("\n")
             for param in fit.get("params",[]):
-                datacard.write("%s param %1.3g %1.3g\n" % param )            
+                datacard.write("%s param %1.3g %1.3g\n" % tuple(param) )            
             
             datacard.write("----------------------------------------------------------------------------------------------------------------------------------\n\n")
             
@@ -307,9 +318,12 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             
             reduced = dset.reduce(RooFit.SelectVars(rooset),RooFit.Range("fullRange")) ## FIXME: roobs range
             reduced.SetName("data_%s"% (cat))
+            
+            ## keep track of numbef of events in data
             ndata[cat] = reduced.sumEntries()
             rooNdata[cat] = self.buildRooVar("%s_norm" % cat,[],recycle=False,importToWs=False)
             rooNdata[cat].setVal(ndata[cat])
+            
             self.workspace_.rooImport(reduced)
             
             binned = reduced.binnedClone("binned_data_%s" % cat)
@@ -333,42 +347,106 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             importme = []
             fractions = {}
             setme = []
+            # use purity fractions to define components normalization
             if options.norm_as_fractions:
                 tot = 0.
                 roolist = ROOT.RooArgList()
                 rooformula = []
-                for icomp,comp in enumerate(options.components[:-1]):
+                # read covariance matrix for purities
+                if options.nuisance_fractions_covariance:
+                    ## FIXME: covariance per-category
+                    if not options.nuisance_fractions:
+                        print "You specified a covariance matrix for the component fraction, but did not set the nuisance-fractions options"
+                        print "   I will act as if you did it"
+                        options.nuisance_fractions = True
+                    cov_components = options.nuisance_fractions_covariance["components"]
+                    # make sure we have the right number of items in the covariance
+                    assert(len(cov_components) == len(options.components) - 1)
+                    # one of purities is a linear combination of the others.
+                    #     find out which one
+                    dependent = None
+                    for comp in options.components:
+                        if not comp in cov_components:
+                            dependent = comp
+                            break
+                    assert(dependent)
+                    # now build the covariance matrix
+                    errors = options.nuisance_fractions_covariance["errors"]
+                    correlations = options.nuisance_fractions_covariance["correlations"]
+                    covariance = ROOT.TMatrixDSym(len(errors))
+                    for ii,ierr in enumerate(errors):
+                        for jj,jerr in enumerate(errors):
+                            covariance[ii][jj] = correlations[ii][jj]*ierr*jerr
+                    # and find eigenvectors
+                    eigen = ROOT.TMatrixDSymEigen(covariance)
+                    vectors = eigen.GetEigenVectors();
+                    values  = eigen.GetEigenValues();                    
+                    # create unit gaussians per eigen-vector
+                    eigvVars = ROOT.RooArgList()
+                    for ii in range(len(errors)):
+                        eigNuis = self.buildRooVar("%s_eig%d_frac_nuis" % (cat,ii), [0.,-5.,5.], importToWs=False )
+                        eigNuis.Print()
+                        eigNuis.setConstant(True)
+                        eigvVars.add(eigNuis)
+                        fit["params"].append( (eigNuis.GetName(), eigNuis.getVal(), 1.) )
+                else:
+                    cov_components = options.components[:-1]
+                    dependent      = options.components[-1]
+                    
+                ## for icomp,comp in enumerate(options.components[:-1]):
+                for icomp,comp in enumerate(cov_components):
                     if comp != "":
                         comp = "%s_" % comp
-                    frac = self.buildRooVar("%s%s_frac" % (comp,cat), [], importToWs=False )
+                    # FIXME: optionally read central value as input
+                    frac = self.buildRooVar("%s%s_frac" % (comp,cat), [0.5,0.,1.], importToWs=False )
+                    # set purity fraction according to normalization dataset
                     setme.append(comp)
                     fractions[comp] = frac
+                    # build rooformula var for depdendent coefficient
                     rooformula.append("@%d"%icomp)
                     if options.nuisance_fractions:
-                        nuis = self.buildRooVar("%s%s_frac_nuis" % (comp,cat), [], importToWs=False )
-                        nuis.setVal(0.)
-                        nuis.setConstant(True)
-                        fit["params"].append( (nuis.GetName(), nuis.getVal(), 0.) )
-                        nuisfrac = ROOT.RooFormulaVar("%s%s_nuisanced_frac" % (comp,cat),"%s%s_nuisanced_frac" % (comp,cat),"@0*(1.+@1)",ROOT.RooArgList(frac,nuis) )
-                        roolist.add(nuisfrac)
+                        if options.nuisance_fractions_covariance:
+                            # now go create the linear combinations
+                            # each is equal to the transpose matrx times the square root of the eigenvalue (so that we get unit gaussians)
+                            coeffs = ROOT.RooArgList()                                    
+                            for jcomp in range(len(cov_components)):
+                                coeff = self.buildRooVar("%s%s_coeff%d_frac" % (comp,cat,jcomp), [vectors(icomp,jcomp)*sqrt(values(jcomp))], importToWs=False )
+                                coeff.setConstant(True)
+                                coeff.Print()
+                                coeffs.add(coeff)
+                            nuis = ROOT.RooAddition("%s%s_frac_nuis" % (comp,cat), "%s%s_frac_nuis" % (comp,cat), eigvVars, coeffs )                            
+                        else:
+                            nuis = self.buildRooVar("%s%s_frac_nuis" % (comp,cat), [0.,-5,5], importToWs=False )
+                            nuis.setConstant(True)
+                            fit["params"].append( (nuis.GetName(), nuis.getVal(), 0.) )
+                            
+                        ## nuisfrac = ROOT.RooFormulaVar("%s%s_nuisanced_frac" % (comp,cat),"%s%s_nuisanced_frac" % (comp,cat),"TMath::Max(@0+@1,1.e-4)",ROOT.RooArgList(frac,nuis) )
+                        nuisfrac = ROOT.RooAddition("%s%s_nuisanced_frac" % (comp,cat),"%s%s_nuisanced_frac" % (comp,cat),ROOT.RooArgList(frac,nuis) )
+                        roolist.add(nuisfrac)                        
                         self.keep( [nuis,nuisfrac] )
+
                     else:
                         roolist.add(frac)
-                comp = options.components[-1]
+                # now build the dependent coefficient as 1 - sum frac_j
+                comp = dependent
                 if comp != "":
                     comp = "%s_" % comp
                 frac = ROOT.RooFormulaVar("%s%s_frac" % (comp,cat),"%s%s_frac" % (comp,cat),"1.-%s" % "-".join(rooformula),roolist )
                 fractions[comp] = frac
+                # all purity fractions built
 
-            for comp,opts in options.bkg_shapes.iteritems():
-                model = opts.get("model",options.default_model)
-                source  = opts["shape"]
-                nsource = opts["norm"]
-                source_cats = opts.get("shape_cats",{})
-                nsource_cats = opts.get("norm_cats",{})
-                add_sideband = opts.get("add_sideband",False)
-                weight_cut = opts.get("weight_cut",None)
+            # now fit the observable
+            for comp,opts in options.bkg_shapes.iteritems():                
+                # fit options
+                model = opts.get("model",options.default_model) # functional form
+                source  = opts["shape"]                         # dataset used to fit shape
+                nsource = opts["norm"]                          # dataset used to set normalization
+                source_cats = opts.get("shape_cats",{})         # potentially take shape from different category
+                nsource_cats = opts.get("norm_cats",{})         # ... or normalization
+                add_sideband = opts.get("add_sideband",False)   # add shape dataset as control region
+                weight_cut = opts.get("weight_cut",None)        # for convenience: remove MC event with high weight
                 
+                # options read
                 print "component : " , comp
                 print "model :", model
                 if comp != "":
@@ -383,18 +461,18 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
 
                 if add_sideband and not catsource in sidebands:
                     sidebands[catsource] = set()
-                
-                
                 dset  = self.rooData(treename)
-                ndset = self.rooData(ntreename)                
-                ## cut away high weight events for the fit if needed, but keep the uncut dataset
+                ndset = self.rooData(ntreename)
+                
+                ## if needed cut away high weight events for the fit if needed, but keep the uncut dataset
                 if weight_cut:                    
                     uncut        = dset.reduce(RooFit.SelectVars(rooset),RooFit.Range("fullRange"))
                     binned_uncut = uncut.binnedClone()
                     dset         = self.reducedRooData(treename,rooset,sel=weight_cut,redo=True,importToWs=True)                    
-                
+
+                ## reduce datasets to required range
                 reduced  = dset.reduce(RooFit.SelectVars(rooset),RooFit.Range("fullRange"))
-                nreduced = ndset.reduce(RooFit.SelectVars(rooset),RooFit.Range("fullRange"))                
+                nreduced = ndset.reduce(RooFit.SelectVars(rooset),RooFit.Range("fullRange"))
                 reduced.SetName("source_dataset_%s%s"% (comp,cat))
                 binned = reduced.binnedClone()                
                 print "shape source :", treename, reduced.sumEntries(),
@@ -413,34 +491,38 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     sbpdf.SetName("model_%s_%s_control" % (add_sideband,catsource))
                     sidebands[catsource].add(add_sideband)
                 else:
+                    ## else book fully independet shape
                     pdf = self.buildPdf(model,"model_%s%s" % (comp,cat), roobs )                    
                 pdf.SetName("model_%s%s" % (comp,cat))
 
                 ## normalization has to be called <pdfname>_norm or combine won't find it
                 if options.norm_as_fractions:
-                    norm = ROOT.RooFormulaVar("%s_norm" %  (pdf.GetName()),"%s_norm" %  (pdf.GetName()),
+                    # normalization is n_tot * frac_comp
+                    norm = ROOT.RooProduct("%s_norm" %  (pdf.GetName()),"%s_norm" %  (pdf.GetName()),
                                               ## "@0*@1",ROOT.RooArgList(ROOT.RooFit.RooConst(ndata[cat]),fractions[comp]))
-                                              "@0*@1",ROOT.RooArgList(rooNdata[cat],fractions[comp]))
+                                              ## "@0*@1",
+                                              ROOT.RooArgList(rooNdata[cat],fractions[comp]))
                 else:
+                    # otherwise just n_comp
                     norm = self.buildRooVar("%s_norm" %  (pdf.GetName()), [], importToWs=False ) 
                     norm.setVal(reduced.sumEntries())
-                ## extpdf = ROOT.RooExtendPdf("ext_%s" % pdf.GetName(),"ext_%s" %  pdf.GetName(),pdf,norm)
-                ## extpdf.fitTo(binned,ROOT.RooFit.Strategy(2),*fitops)
+
+                # fit
                 pdf.fitTo(binned,ROOT.RooFit.Strategy(2),*fitops)
-                extpdf = pdf
-                ## extpdf.fitTo(reduced,ROOT.RooFit.Strategy(1))
+                # pdf.fitTo(reduced,ROOT.RooFit.Strategy(2),*fitops)
                 
                 ## set normalization to expected number of events in normalization region
                 if options.norm_as_fractions:
                     if comp in setme:
                         fractions[comp].setVal(nreduced.sumEntries()/ndata[cat])
-                        fractions[comp].setConstant(True) # set this to true so that other components fits don't change it
+                        fractions[comp].setConstant(True) # set constant by default
                 else:
                     norm.setVal(nreduced.sumEntries()) 
 
                 if add_sideband:
                     ## build normalization variable for sideband
-                    sbnorm = self.buildRooVar("%s_norm" %  (sbpdf.GetName()), [], importToWs=False ) 
+                    sbnorm = self.buildRooVar("%s_norm" %  (sbpdf.GetName()), [], importToWs=False )
+                    ## sideband normalization accounts also for the high weight events
                     if weight_cut:
                         sbnorm.setVal(uncut.sumEntries())
                     else:
@@ -449,7 +531,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 ## plot the fit result
                 frame = roobs.frame()
                 binned.plotOn(frame)
-                extpdf.plotOn(frame)
+                pdf.plotOn(frame)
 
                 hist   = frame.getObject(int(frame.numItems()-2))
                 fitc   = frame.getObject(int(frame.numItems()-1))
@@ -493,8 +575,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 
                 # import everything to the workspace
                 self.workspace_.rooImport(pdf,RooFit.RecycleConflictNodes())
-                importme.append([norm]) ## import this only after we run on all components, in case we use fractions
-                ## self.workspace_.rooImport(norm)
+                importme.append([norm]) ## import this only after we run on all components, to make sure that all fractions are properly set
                 self.workspace_.rooImport(reduced)
                 
                 # import pdf and data for sidebands
@@ -510,16 +591,16 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     self.workspace_.rooImport(sbpdf,RooFit.RecycleConflictNodes())
             
                 print
-            
-            ### if options.norm_as_fractions:
-            ###     for me in setme:
-            ###         fractions[me].setConstant(False)
+                
+            # import all variables
             for me in importme:
                 self.workspace_.rooImport(*me)
-
+                
+        # keep track of nuisance parameters
         fit["sidebands"] = {}
         for nam,val in sidebands.iteritems():
             fit["sidebands"]["%s_control" % nam] = list(val)
+            
         # done
         self.saveWs(options)
        

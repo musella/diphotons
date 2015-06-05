@@ -110,7 +110,8 @@ class TemplatesApp(PlotApp):
         self.store_ = {}
         self.rename_ = False
         self.store_new_ = False
-
+        self.save_params_ = []
+        
         ## load ROOT (and libraries)
         global ROOT, style_utils, RooFit
         import ROOT
@@ -203,7 +204,12 @@ class TemplatesApp(PlotApp):
                 "comparisons"    : options.comparisons,
                 "stored" : self.store_.keys(),
                 }
-        
+        for name in self.save_params_:
+            val = getattr(options,name,None)
+            print name, val
+            if val:
+                cfg[name] = val
+
         print "--------------------------------------------------------------------------------------------------------------------------"
         print "saving output"
         print 
@@ -247,6 +253,12 @@ class TemplatesApp(PlotApp):
             options.mix = cfg.get("mix",{})
         if not options.compare_templates:
             options.comparisons = cfg.get("comparisons",{})
+
+        for name in self.save_params_:
+            val = cfg.get(name,None)
+            print name, val
+            if val:
+                setattr(options,name,val)
         
         print "Fits :"
         print "---------------------------------------------------------"
@@ -1277,13 +1289,16 @@ class TemplatesApp(PlotApp):
             rooVar.setConstant(False)
 
         if len(binning) > 0:
-            if len(binning)==1:
-                rooVar.setVal(binning[0])                
+            val = None
+            if len(binning)==1 or len(binning)>2 and binning[0]>=min(binning[1:]):
+                rooVar.setVal(binning[0])
+                binning = binning[1:]
             else:
+                rooVar.setVal(0.5*(binning[0]+binning[-1]))
+            if len(binning) > 1:
                 rooVar.setMin(binning[0])
                 rooVar.setMax(binning[-1])
-                rooVar.setVal(0.5*(binning[0]+binning[-1]))
-                rooVar.setBinning(ROOT.RooBinning(len(binning)-1,binning))
+                rooVar.setBinning(ROOT.RooBinning(len(binning)-1,array.array('d',binning)))
         if importToWs:
             self.workspace_.rooImport(rooVar,ROOT.RooFit.RecycleConflictNodes())
         self.keep(rooVar) ## make sure the variable is not destroyed by the garbage collector
