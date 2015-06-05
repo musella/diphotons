@@ -38,15 +38,14 @@ class CombineApp(TemplatesApp):
                                     default="mgg[5000,500,6000]",
                                     help="Observable used in the fit default : [%default]",
                                     ),
-                        make_option("--fit-background",dest="fit_backround",action="store_true",default=False,
+                        make_option("--fit-background",dest="fit_background",action="store_true",default=False,
                                     help="Fit background",
                                     ),                        
                         make_option("--norm-as-fractions",dest="norm_as_fractions",action="store_true",default=False,
                                     help="Parametrize background components normalization as fractions",
                                     ),
                         make_option("--nuisance-fractions",dest="nuisance_fractions",action="store_true",default=False,
-                                    help="Add nuisance parameters for component fractions",
-                                    ),
+                                    help="Add nuisance parameters for component fractions"),
                         make_option("--bkg-shapes",dest="bkg_shapes",action="callback",callback=optpars_utils.Load(scratch=True),
                                     type="string",
                                     default={ "bkg" : {
@@ -61,6 +60,27 @@ class CombineApp(TemplatesApp):
                         make_option("--data-source",dest="data_source",action="store",type="string",
                                     default="data",
                                     help="Dataset to be used as 'data' default : [%default]",
+                                    ),
+                        make_option("--generate-signal-dataset",dest="generate_signal_dataset",action="store_true",default=False,
+                                    help="Generate signal dataset",
+                                    ),
+                        make_option("--signal-name",dest="signal_name",action="store",type="string",
+                                    default=None,
+                                    help="Signal name to generate the dataset and/or datacard"),            
+                        make_option("--generate-datacard",dest="generate_datacard",action="store_true",default=False,
+                                    help="Generate datacard",
+                                    ),
+                        make_option("--background-root-file",dest="background_root_file",action="store",type="string",
+                                    default="full_analysis_anv1_v14_bkg_ws.root",
+                                    help="Output file from the background fit",
+                                    ),
+                        make_option("--signal-root-file",dest="signal_root_file",action="store",type="string",
+                                    default=None,
+                                    help="Output file from the signal model",
+                                    ),
+                        make_option("--cardname",dest="cardname",action="store",type="string",
+                                    default=None,
+                                    help="Name of generated card",
                                     ),
                         
                         ]
@@ -95,45 +115,79 @@ class CombineApp(TemplatesApp):
 
         options.components = options.bkg_shapes.keys()
 
-        if options.fit_backround:
+        if options.fit_background:
             self.fitBackground(options,args)
             
-            ## Generate datacard
+        if options.generate_signal_dataset:
+            self.generateSignalDataset(options,args)
             
-            datacard = open("dataCard_"+options.output_file.replace("root","txt"),"w+")
+        if options.generate_datacard:
+            self.generateDatacard(options,args)
+                
+                
+  
+    ## ------------------------------------------------------------------------------------------------------------
+    def generateDatacard(self,options,args):
+        """Generate a datacard with name: signal_name.txt if signal_root_file not provided.
+        
+        Generates datacard for signal_name or loop over the list of signals if signal_name not provided.
+        If read_ws then bkg.root file = read_ws file.
+        
+        """
+        
+        
+        
+        fitname = options.fit_name
+        fit = options.fits[fitname]
+        sidebands = list(fit.get("sidebands",{}).keys())
+        categories = list(fit["categories"].keys())
+        if (options.read_ws):
+            options.background_root_file = options.read_ws
+        isNameProvided = False
+                     
+        for signame,trees in options.signals.iteritems():
+        
+            if (options.signal_name != None):
+                isNameProvided = True
+                signame = options.signal_name
+                 
+            if (not isNameProvided or (isNameProvided and options.signal_root_file == None)):
+                options.signal_root_file = signame+".root" 
+            datacard = open("dataCard_"+signame+".txt","w+")
+            if(options.cardname != None):    
+                datacard = open(options.cardname,"w+")
+            
+                
             datacard.write("""
+## Signal: %s - 13TeV
+##
 ----------------------------------------------------------------------------------------------------------------------------------
 imax * number of channels
 jmax * number of backgrounds
 kmax * number of nuisance parameters (source of systematic uncertainties)
-----------------------------------------------------------------------------------------------------------------------------------\n""")
-        
-            fitname = options.fit_name
-            fit = options.fits[fitname]
-            icat = 0
-            sidebands = list(fit["sidebands"].keys())
-            categories = list(fit["categories"].keys())            
+----------------------------------------------------------------------------------------------------------------------------------\n""" % signame)
+                        
             for cat in categories:
                 datacard.write("shapes sig".ljust(20))
-                datacard.write((" %s  HighMassGG_m1500_001.root" % cat).ljust(50))
-                datacard.write(" w_all:mggSig_cat%d\n" % icat)
-                icat+=1
+                datacard.write((" %s  %s" % (cat,options.signal_root_file)).ljust(50))
+                datacard.write(" wtemplates:signal_%s_%s\n"% (signame,cat))
+                
                 for comp in options.components:
                     datacard.write(("shapes %s" % comp).ljust(20))
-                    datacard.write((" %s  %s" % (cat,options.output_file)).ljust(50))
+                    datacard.write((" %s  %s" % (cat,options.background_root_file)).ljust(50))
                     datacard.write(" wtemplates:model_%s_%s\n" % (comp,cat) )  
                 
                 datacard.write("shapes data_obs".ljust(20))
-                datacard.write((" %s  %s" % (cat,options.output_file)).ljust(50))
+                datacard.write((" %s  %s" % (cat,options.background_root_file)).ljust(50))
                 datacard.write(" wtemplates:data_%s\n" % cat) 
             
             for cat in sidebands:                
                 for comp in  fit["sidebands"][cat]:
                     datacard.write(("shapes %s" % comp).ljust(20))
-                    datacard.write((" %s  %s" % (cat,options.output_file)).ljust(50))
+                    datacard.write((" %s  %s" % (cat,options.background_root_file)).ljust(50))
                     datacard.write(" wtemplates:model_%s_%s\n" % (comp,cat) )  
                 datacard.write("shapes data_obs".ljust(20))
-                datacard.write((" %s  %s" % (cat,options.output_file)).ljust(50))
+                datacard.write((" %s  %s" % (cat,options.background_root_file)).ljust(50))
                 datacard.write(" wtemplates:data_%s\n" % cat)                 
 
             datacard.write("----------------------------------------------------------------------------------------------------------------------------------\n")
@@ -147,14 +201,13 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                   datacard.write(" -1".ljust(15) )
             datacard.write("\n")
             
-
             datacard.write("----------------------------------------------------------------------------------------------------------------------------------\n")
-        
+            
             datacard.write("bin".ljust(20))
             for cat in categories:
+                datacard.write((" %s" % cat).ljust(15) )
+                for comp in options.components:
                     datacard.write((" %s" % cat).ljust(15) )
-                    for comp in options.components:
-                        datacard.write((" %s" % cat).ljust(15) )
             for cat in sidebands:                
                 for comp in  fit["sidebands"][cat]:
                     datacard.write((" %s" % cat).ljust(15) )                    
@@ -163,23 +216,23 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
 
             datacard.write("process".ljust(20))
             for cat in categories:
-                    datacard.write(" sig".ljust(15) )
-                    for comp in options.components:
-                        datacard.write((" %s" % comp).ljust(15) )
+                datacard.write(" sig".ljust(15) )
+                for comp in options.components:
+                    datacard.write((" %s" % comp).ljust(15) )
             for cat in sidebands:                
                 for comp in  fit["sidebands"][cat]:
                     datacard.write((" %s" % comp).ljust(15) )                    
             datacard.write("\n")
-        
+            
             datacard.write("process".ljust(20))
             icomp = {}
             for cat in categories:
-                    datacard.write(" 0".ljust(15) )
-                    i = 0
-                    for comp in options.components:
-                        i+=1
-                        icomp[comp] = i
-                        datacard.write((" %d" % i).ljust(15) )
+                datacard.write(" 0".ljust(15) )
+                i = 0
+                for comp in options.components:
+                    i+=1
+                    icomp[comp] = i
+                    datacard.write((" %d" % i).ljust(15) )
             for cat in sidebands:                
                 for comp in  fit["sidebands"][cat]:
                     if comp in icomp:
@@ -192,7 +245,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             
             datacard.write("rate".ljust(20))
             for cat in categories:
-                datacard.write(" 0.36".ljust(15) )
+                datacard.write(" -1".ljust(15) )
                 for comp in options.components:
                     datacard.write(" 1".ljust(15) )
             for cat in sidebands:                
@@ -201,13 +254,13 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             datacard.write("\n")
             
             datacard.write("----------------------------------------------------------------------------------------------------------------------------------\n")
-        
+            
             # normalization nuisances
             datacard.write("lumi  lnN".ljust(20))
             for cat in categories:
-                    datacard.write(" 1.04".ljust(15) )
-                    for comp in options.components:
-                        datacard.write(" -".ljust(15) )
+                datacard.write(" 1.04".ljust(15) )
+                for comp in options.components:
+                    datacard.write(" -".ljust(15) )
             for cat in sidebands:                
                 for comp in  fit["sidebands"][cat]:                    
                     datacard.write(" -".ljust(15) )
@@ -215,14 +268,17 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             
             # other nuisance parameters
             datacard.write("\n")
-            for param in fit["params"]:
-                datacard.write("param %s %1.3g %1.3g\n" % param )            
+            for param in fit.get("params",[]):
+                datacard.write("%s param %1.3g %1.3g\n" % param )            
             
             datacard.write("----------------------------------------------------------------------------------------------------------------------------------\n\n")
-        
-
-        
-    ## ------------------------------------------------------------------------------------------------------------
+            
+            
+            if isNameProvided:
+                break
+            
+    
+    ## ------------------------------------------------------------------------------------------------------------  
     def fitBackground(self,options,args):
 
         print "--------------------------------------------------------------------------------------------------------------------------"
@@ -233,7 +289,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         fit = options.fits[fitname]
         
         roobs = self.buildRooVar(*(self.getVar(options.observable)), recycle=False, importToWs=True)
-        roobs.setBins(5000,"cache")
+        #roobs.setBins(5000,"cache")
         roobs.setRange("fullRange",roobs.getMin(),roobs.getMax())
         roowe = self.buildRooVar("weight",[])        
         rooset = ROOT.RooArgSet(roobs,roowe)
@@ -466,6 +522,50 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             fit["sidebands"]["%s_control" % nam] = list(val)
         # done
         self.saveWs(options)
+       
+    ## ------------------------------------------------------------------------------------------------------------
+    def generateSignalDataset(self,options,args):
+        
+        print "--------------------------------------------------------------------------------------------------------------------------"
+        print "generating signal dataset"
+        print 
+        
+        options.store_new_only = True
+        fitname = options.fit_name
+        fit = options.fits[fitname] 
+        isNameProvided = False
+        for signame,trees in options.signals.iteritems():
+            self.workspace_ = ROOT.RooWorkspace("wtemplates","wtemplates")
+            self.workspace_.rooImport = getattr(self.workspace_,"import")
+            if (options.signal_name != None):
+                isNameProvided = True
+                signame = options.signal_name
+           
+                    
+            roobs = self.buildRooVar(*(self.getVar(options.observable)), recycle=False, importToWs=True)
+            #roobs.setBins(5000,"cache")
+            roobs.setRange("fullRange",roobs.getMin(),roobs.getMax())
+            roowe = self.buildRooVar("weight",[])        
+            rooset = ROOT.RooArgSet(roobs,roowe)
+
+            ## build and import signal dataset
+            for cat in fit["categories"]:
+                treename = "%s_%s_%s" % (signame,options.fit_name,cat)
+                print treename
+                dset = self.rooData(treename)
+                dset.Print()
+                
+                reduced = dset.reduce(RooFit.SelectVars(rooset),RooFit.Range("fullRange")) ## FIXME: roobs range
+                reduced.SetName("signal_%s_%s"% (signame,cat))
+                binned = reduced.binnedClone()
+                binned.SetName("signal_%s_%s"% (signame,cat))
+                self.workspace_.rooImport(binned)
+            if (not isNameProvided or (isNameProvided and options.output_file == None)):
+                options.output_file = signame+".root" 
+            # done
+            self.saveWs(options)
+            if isNameProvided :
+                break
         
     ## ------------------------------------------------------------------------------------------------------------
     def buildPdf(self,model,name,xvar,order=0,label=None):
