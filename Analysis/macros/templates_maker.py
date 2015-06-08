@@ -33,20 +33,20 @@ class TemplatesApp(PlotApp):
                                     help="Preselection cuts to be applied."),
                         make_option("--selection",dest="selection",action="store",type="string",
                                     help="(Di-)Photon selection to be used for analysis. In dataset definition it replaces '%(sel)s'."),                
-                        make_option("--fit-categories",dest="fit_categories",action="callback",type="string",callback=optpars_utils.ScratchAppend(),help="sets specific category for fit",default=["EBEB","EBEE"]),
-                        make_option("--fit-massbins",dest="fit_massbins",action="callback",type="string",callback=optpars_utils.ScratchAppend(),help="sets massbins for fit or templates comparison",default=["1","1","0"]),
-                        make_option("--fit-templates",dest="fit_templates",action="callback",type="string",callback=optpars_utils.ScratchAppend(),help="get templates for fit",default=["unrolled_template"]),
+                        make_option("--fit-categories",dest="fit_categories",action="callback",type="string",callback=optpars_utils.ScratchAppend(),help="sets specific category for fit, e.g. EBEB or EBEE",default=["EBEB","EBEE"]),
+                        make_option("--fit-massbins",dest="fit_massbins",action="callback",type="string",callback=optpars_utils.ScratchAppend(),help="sets massbins for fit or templates comparison: first integer is total number of massbins, 2. how many bins we want to run over, 3. startbin",default=["1","1","0"]),
+                        make_option("--fit-templates",dest="fit_templates",action="callback",type="string",callback=optpars_utils.ScratchAppend(),help="get templates for fit: either unrolled_template or unrolled_mctruth",default=["unrolled_template"]),
                         make_option("--plot-closure",dest="plot_closure",action="callback",callback=optpars_utils.ScratchAppend(),type="string",
                                     default=["template"],
-                                    help="chose template or mctruth."),
-                        make_option("--plot-signalregion",dest="plot_signalregion",action="callback",callback=optpars_utils.ScratchAppend(),type="string",
-                                    default=["signalregion"],
-                                    help="purity for signalregion or whole range applied.Choose 'signalregion' or 'all'"),
+                                    help="choose template or mctruth."),
+                        make_option("--plot-purityvalue",dest="plot_purityvalue",action="callback",callback=optpars_utils.ScratchAppend(),type="string",
+                                    default=["fraction"],
+                                    help="purity either as fraction or as number of events in signalregion.Choose 'fraction' or 'events'"),
                         make_option("--aliases",dest="aliases",action="callback",type="string",callback=optpars_utils.ScratchAppend(),
                                     default=[],
                                     help="List of aliases to be defined for each tree. They can be used for selection or variable definition"),
                         make_option("--plot-purity",dest="plot_purity",action="store_true",default=False,
-                                    help="Plot purities",
+                                    help="Plot purities, purity vs massbin and pull function",
                                     ),
                         make_option("--fits",dest="fits",action="callback",callback=optpars_utils.Load(),type="string",
                                     default={},help="List of templates fits to be performed. Categories, componentd and templates can be specified."),
@@ -346,7 +346,8 @@ class TemplatesApp(PlotApp):
                              templatename= "template_mix_%s_%s_%s" % (compname,mixname,mapping.get(cat,cat))
                         else:
                              templatename= "template_%s_%s_%s" % (compname,template,mapping.get(cat,cat))
-                        tempdata = self.reducedRooData(templatename,setargs,False,sel=weight_cut,redo=ReDo)
+                      #  tempdata = self.reducedRooData(templatename,setargs,False,sel=weight_cut,redo=ReDo)
+                        tempdata = self.reducedRooData(templatename,isoargs,False,sel=weight_cut,redo=ReDo)
                         print tempdata
                         if "mix" in template:
                             templatename=( "reduced_templatemix_%s_2D_%s" % (compname,mapping.get(cat,cat)))
@@ -364,17 +365,17 @@ class TemplatesApp(PlotApp):
                     mass_split= [int(x) for x in options.fit_massbins]
                     diphomass=self.massquantiles(dset_data,massargs,mass_b,mass_split) 
                     truth_pp= "mctruth_%s_%s_%s" % (compname,fitname,cat)
-                    tp_mcpu = ROOT.TNtuple("tree_truth_purity_all_%s_%s_%s" % (compname,fitname,cat),"tree_truth_purity_%s_%s_%s" % (compname,fitname,cat),"number_pu:frac_pu:massbin:masserror" )
-                    ntp_mcpu = ROOT.TNtuple("tree_truth_purity_signalregion_%s_%s_%s" % (compname,fitname,cat),"tree_truth_purity_signalrange_%s_%s_%s" % (compname,fitname,cat),"number_pu:frac_pu:massbin:masserror" )
-                    self.store_[ntp_mcpu.GetName()] =ntp_mcpu
-                    self.store_[tp_mcpu.GetName()] =tp_mcpu
+                   # tp_mcpu = ROOT.TNtuple("tree_truth_purity_all_%s_%s_%s" % (compname,fitname,cat),"tree_truth_purity_%s_%s_%s" % (compname,fitname,cat),"number_pu:frac_pu:massbin:masserror" )
+                    #ntp_mcpu = ROOT.TNtuple("tree_truth_purity_signalregion_%s_%s_%s" % (compname,fitname,cat),"tree_truth_purity_signalrange_%s_%s_%s" % (compname,fitname,cat),"number_pu:frac_pu:massbin:masserror" )
+                #    self.store_[ntp_mcpu.GetName()] =ntp_mcpu
+                 #   self.store_[tp_mcpu.GetName()] =tp_mcpu
                     for mb in range(mass_split[2],mass_split[1]):
                         massbin=(diphomass[mb]+diphomass[mb+1])/2.
                         masserror=(diphomass[mb+1]-diphomass[mb])/2.
                         
                         cut=ROOT.TCut("mass>%f && mass<%f"% (diphomass[mb],diphomass[mb+1]))
                         cut_s= "%1.0f_%2.0f"% (diphomass[mb],diphomass[mb+1])
-                        cut_sigregion=ROOT.TCut("templateNdim2Dim0< 5. && templateNdim2Dim1< 5.")#TODO implement signal region definition in json
+                  #      cut_sigregion=ROOT.TCut("templateNdim2Dim0< 5. && templateNdim2Dim1< 5.")#TODO implement signal region definition in json
                         print cut.GetTitle()
                         dset_massc = dset_data.Clone("%s_mb_%s"%(dset_data.GetName()[8:],cut_s))
                         dset_massc=dset_massc.reduce(cut.GetTitle())
@@ -396,8 +397,8 @@ class TemplatesApp(PlotApp):
                         number_pu_sigrange=temp_massc_truth.sumEntries()
                         frac_pu_sigrange=number_pu_sigrange/data_massc_truth.sumEntries()
                         print number_pu, frac_pu, "in signal range", number_pu_sigrange, frac_pu_sigrange
-                        tp_mcpu.Fill(number_pu, frac_pu,massbin, masserror)
-                        ntp_mcpu.Fill(number_pu_sigrange, frac_pu_sigrange,massbin, masserror)
+                  #      tp_mcpu.Fill(number_pu, frac_pu,massbin, masserror)
+                   #     ntp_mcpu.Fill(number_pu_sigrange, frac_pu_sigrange,massbin, masserror)
                         ## loop over 2 legs
                         for id in range(fit["ndim"]):
                             histls=[]
@@ -672,7 +673,7 @@ class TemplatesApp(PlotApp):
                 else:catd=cat
                 print "data_2D_%s" %catd
                 dset_data = self.reducedRooData("data_2D_%s" %catd,ROOT.RooArgSet(mass),False,redo=False)
-                diphomass=self.massquantiles(dset_data,mass,mass_b,mass_split) 
+                diphomass=self.massquantiles(dset_data,mass,mass_b,mass_split)
                 tp = ROOT.TNtuple("tree_fitresult_fraction_%s_%s_%s" % (tempname,dim,cat),"tree_fitresult_fraction_%s_%s_%s" % (tempname,dim,cat),"norm:purity_pp:error_pp_sumw2off:error_pp_sumw2on:purity_pf:error_pf_sumw2off:error_pf_sumw2on:correlation:massbin:masserror" )
                 self.store_[tp.GetName()] = tp
                 ntp = ROOT.TNtuple("tree_fitresult_events_%s_%s_%s" % (tempname,dim,cat),"tree_fitresult_events_%s_%s_%s" % (tempname,dim,cat),"norm:purity_pp:error_pp_sumw2off:error_pp_sumw2on:purity_pf:error_pf_sumw2off:error_pf_sumw2on:correlation:massbin:masserror" )
@@ -682,7 +683,6 @@ class TemplatesApp(PlotApp):
                     cut=ROOT.TCut("mass>%f && mass<%f"% (diphomass[mb],diphomass[mb+1]))
                     cut_s=None
                     cut_s= "%1.0f_%2.0f"% (diphomass[mb],diphomass[mb+1])
-                    print
                     print cut.GetTitle()
                     data = self.rooData("%s_%s_%s_mb_%s"%(dataname,dim,cat,cut_s))
                     entries= data.sumEntries()
@@ -691,17 +691,19 @@ class TemplatesApp(PlotApp):
                     jpp = ROOT.RooRealVar("jpp","jpp",0.6,0,1)
                     jpf = ROOT.RooRealVar("jpf","jpf",0.3,0,1)
                     jff = ROOT.RooRealVar("jff","jff",0.1,0,1)
-                    jnorm = ROOT.RooRealVar("jnorm","jnorm",entries,0.,1e7)
+                    jnorm = ROOT.RooRealVar("jnorm","jnorm",entries,0.,1e6)
                     jnorm.Print()
                     fpp= ROOT.RooFormulaVar("fpp","fpp","@0*@1 ",ROOT.RooArgList(jnorm,jpp))
                     pu_estimates=ROOT.RooArgList(fpp)
                     if len(components)>2: 
+                        print "3 comp"
                         fpf= ROOT.RooFormulaVar("fpf","fpf","@0*@1 ",ROOT.RooArgList(jnorm,jpf))
                         pu_estimates.add(fpf)
                         pu_estimates_roopdf=ROOT.RooArgList(fpp,fpf)
                         fff= ROOT.RooFormulaVar("fff","fff","(@0*(1-@1-@2)) ",ROOT.RooArgList(jnorm,jpp,jpf))
                         pu_estimates_roopdf.add(fff)
                     else:
+                        print "2 comp"
                         fpf= ROOT.RooFormulaVar("fpf","fpf","(@0*(1-@1)) ",ROOT.RooArgList(jnorm,jpp))
                         pu_estimates_roopdf=ROOT.RooArgList(fpp,fpf)
                         
@@ -740,13 +742,18 @@ class TemplatesApp(PlotApp):
                         pullerr_pf=fpf.getParameter("jpf").getPropagatedError(fit_mcstudies)
                         pu_npf=fpf.getVal()
                         pullerr_npf=fpf.getPropagatedError(fit_mcstudies)
-                        correlation=fit_mcstudies.correlation("jpp","jpf")
+                        covariance_mcstudies=fit_mcstudies.covarianceMatrix()
+                        print covariance_mcstudies.GetName()
+                        correlation_mcstudies=fit_mcstudies.correlationMatrix()
+                        self.workspace_.rooImport(covariance_mcstudies, covariance_mcstudies)
+                       # self.workspace_.rooImport(correlation_mcstudies,"correlation_mcstudies")
+                       # self.workspace_.rooImport(fit_mcstudies,"fit_mcstudies")
                     else: 
                         pu_pf=1-pu_pp
                         pu_npf=1-pu_npp
                         pullerr_npf=0.
                         pullerr_pf=0.
-                        correlation = 0.
+                    return
     #ML fit to weighted dataset: SumW2Error takes statistics of dataset into account, scales with number of events in datasetif ON good for MC comparison, takes limited statistics of MC dataset into account
   #  if OUT treated as if it would be data- for data MC comparison
                     fit_fordata = fitUnrolledPdf.fitTo(data, RooFit.NumCPU(8), RooFit.Extended(True),RooFit.SumW2Error(False),RooFit.Verbose(False),RooFit.Save(True))
@@ -755,6 +762,11 @@ class TemplatesApp(PlotApp):
                     if len(components)>2:
                         puerr_npf=fpf.getPropagatedError(fit_fordata)
                         puerr_pf=fpf.getParameter("jpf").getPropagatedError(fit_fordata)
+                        covariance_fordata=fit_fordata.covarianceMatrix()
+                        correlation_fordata=fit_fordata.correlationMatrix()
+                        self.workspace_.rooImport(covariance_fordata,"covariance_fordata")
+                        self.workspace_.rooImport(correlation_fordata,"correlation_fordata")
+                        self.workspace_.rooImport(fit_fordata,"fit_fordata")
                     else: 
                         puerr_npf=0.
                         puerr_pf=0.
@@ -767,7 +779,7 @@ class TemplatesApp(PlotApp):
                     self.plotFit(observable,fitUnrolledPdf,rooExtPdfs,data,components,cat,log=False)
                     print "done fit ...."
                     print 
-## -----------------------------------------------------------------------------------------------------------
+## ---------------#--------------------------------------------------------------------------------------------
     def plotFit(self,roovar,rooaddpdf,roopdfs,data,components,cat,log):
         ROOT.TH1F.SetDefaultSumw2(True)
         b=ROOT.TLatex()
@@ -808,24 +820,18 @@ class TemplatesApp(PlotApp):
     ## ------------------------------------------------------------------------------------------------------------
     def plotPurity(self,options,args):
         comp=3
-  #      treename=options.plotPurity["treename"]
-  #      treetruthname=options.plotPurity["treetruth"]
+        treetruthname=options.plotPurity["treetruth"]
         dim=options.plotPurity["dimensions"]
         categories = options.fit_categories
         closure = options.plot_closure
-       # puregion = options.plot_signalregion
-       # for opt, puregion in zip(closure,puregion):
+        pu_val = options.plot_purityvalue
         for opt in closure:
-            #    print opt, puregion
             for cat in categories:
                 tree_mctruth=self.treeData("fitresult_fraction_unrolled_mctruth_%s_%s"%( dim, cat))
                 tree_template=self.treeData("fitresult_fraction_unrolled_template_%s_%s"%(dim, cat))
-                #tree_truthpp=self.treeData("%s_%s_pp_%s_%s"%(treetruthname,puregion, dim, cat))
-                #tree_truthpf=self.treeData("%s_%s_pf_%s_%s"%(treetruthname,puregion, dim, cat))
-                #tree_truthff=self.treeData("%s_%s_ff_%s_%s"%(treetruthname, puregion,dim, cat))
-                tree_truthpp=self.treeData("truth_purity_signalregion_pp_%s_%s"%( dim, cat))
-                tree_truthpf=self.treeData("truth_purity_signalregion_pf_%s_%s"%(dim, cat))
-                tree_truthff=self.treeData("truth_purity_signalregion_ff_%s_%s"%(dim, cat))
+                tree_truthpp=self.treeData("%s_signalregion_pp_%s_%s"%(treetruthname, dim, cat))
+                tree_truthpf=self.treeData("%s_signalregion_pf_%s_%s"%(treetruthname,dim, cat))
+                tree_truthff=self.treeData("%s_signalregion_ff_%s_%s"%(treetruthname,dim, cat))
                 if tree_truthff!=None:
                     g_truthff=ROOT.TGraphErrors(tree_truthff.GetEntries())
                 else:
@@ -881,19 +887,22 @@ class TemplatesApp(PlotApp):
                         g_templatepf.SetPointError(mb,tree_template.masserror,tree_template.error_pf_sumw2on)
                         #g_ratiopf.SetPoint(mb,tree_template.massbin,tree_template.error_pf_sumw2on)
                        # g_ratiopf.SetPointError(mb,tree_template.masserror,tree_template.error_pf_sumw2on)
+                        print "here", tree_mctruth.purity_pf,tree_truthpf.frac_pu,tree_mctruth.error_pf_sumw2on
                         if comp>2:
                             if opt=="template":
                                 pullpf=(tree_template.purity_pf-tree_truthpf.frac_pu)/tree_template.error_pf_sumw2on
                             elif opt=="mctruth":
+                                if tree_mctruth.error_pf_sumw2on==0.:
+                                        print "error is zero!"
+                                        tree_mctruth.error_pf_sumw2on=0.000001
                                 pullpf=(tree_mctruth.purity_pf-tree_truthpf.frac_pu)/tree_mctruth.error_pf_sumw2on
                             g_pullpf.SetPoint(mb,tree_template.massbin,pullpf)
                             h_pullpf.Fill(pullpf)
-                puregion="fraction"
-                self.pullFunction(g_pullpp,h_pullpp,cat,"pp",opt,puregion)
+                self.pullFunction(g_pullpp,h_pullpp,cat,"pp",opt,pu_val)
                 if comp>2:
                  #   self.plotPurityMassbins(g_mctruthpp,g_templatepp,g_ratiopp,cat,g_mctruthpf,g_templatepf,g_ratiopf)
-                    self.plotPurityMassbins(g_truthpp,g_truthpf,g_truthff,g_mctruthpp,g_templatepp,g_pullpp,cat,puregion,g_mctruthpf,g_templatepf,g_pullpf)
-                    self.pullFunction(g_pullpf,h_pullpf,cat,"pf",opt,puregion)
+                    self.plotPurityMassbins(g_truthpp,g_truthpf,g_truthff,g_mctruthpp,g_templatepp,g_pullpp,cat,pu_val,g_mctruthpf,g_templatepf,g_pullpf)
+                    self.pullFunction(g_pullpf,h_pullpf,cat,"pf",opt,pu_val)
                     ccorr = ROOT.TCanvas("ccorr_%s" % (cat),"ccorr_%s" % (cat))
                     ccorr.Divide(1,2)
                     ccorr.cd(1)
@@ -904,12 +913,12 @@ class TemplatesApp(PlotApp):
                     self.autosave(True)
                 else: 
                     #self.plotPurityMassbins(g_mctruthpp,g_templatepp,g_ratiopp,cat)
-                    self.plotPurityMassbins(g_truthpp,g_truthpf,g_truthff,g_mctruthpp,g_templatepp,g_pullpp,cat,puregion)
+                    self.plotPurityMassbins(g_truthpp,g_truthpf,g_truthff,g_mctruthpp,g_templatepp,g_pullpp,cat,pu_val)
         ## ------------------------------------------------------------------------------------------------------------
-    def pullFunction(self,g_pull,h_pull,cat,comp,opt,puregion):
+    def pullFunction(self,g_pull,h_pull,cat,comp,opt,pu_val):
         leg = ROOT.TLegend(0.5,0.8,0.9,0.9)
         print "cpull_%s_%s" % (comp,cat)
-        cpull = ROOT.TCanvas("cpull_for%s_%s_%s_%s" % (opt,comp,cat,puregion),"cpull_for%s_%s_%s_%s" % (opt,comp,cat,puregion))
+        cpull = ROOT.TCanvas("cpull_for%s_%s_%s_%s" % (opt,comp,cat,pu_val),"cpull_for%s_%s_%s_%s" % (opt,comp,cat,pu_val))
         cpull.Divide(1,2)
         cpull.cd(1)
         ROOT.gPad.SetPad(0., 0.5, 1., 1.0)
@@ -935,9 +944,9 @@ class TemplatesApp(PlotApp):
         self.keep( [cpull] )
         self.autosave(True)
     ## ------------------------------------------------------------------------------------------------------------
-    def plotPurityMassbins(self,g_truthpp,g_truthpf,g_truthff,g_mctruthpp,g_templatepp,g_ratiopp,cat,puregion,g_mctruthpf=None,g_templatepf=None,g_ratiopf=None):
+    def plotPurityMassbins(self,g_truthpp,g_truthpf,g_truthff,g_mctruthpp,g_templatepp,g_ratiopp,cat,pu_val,g_mctruthpf=None,g_templatepf=None,g_ratiopf=None):
         leg = ROOT.TLegend(0.6,0.6,0.8,0.9)
-        cpu = ROOT.TCanvas("cpu_%s_%s" % (cat,puregion),"cpu_%s_%s" %(cat,puregion))
+        cpu = ROOT.TCanvas("cpu_%s_%s" % (cat,pu_val),"cpu_%s_%s" %(cat,pu_val))
         cpu.Divide(1,2)
         cpu.cd(1)
         ROOT.gPad.SetPad(0., 0.4, 1., 1.0)

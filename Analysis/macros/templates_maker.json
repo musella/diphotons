@@ -504,7 +504,7 @@
     },
 
     "comparisons" : {
-	"fit2DTruth" : { "fit" : "2D",
+	"_fit2DTruth" : { "fit" : "2D",
 		"templates" : { "mix:kDSinglePho2D" : {} ,
                                 "2D":{}
                 },
@@ -517,10 +517,10 @@
         "template_binning" : [ 0.0,0.1,5.0,15.0],
 		"mass_binning" :"mass[13000,0.0,13000.0]"
 		},
-	"_fit1DTruth" : { "fit" : "1D",
-                "components" : [ "f","p" ],
+	"fit1DTruth" : { "fit" : "1D",
+                "components" : [ "f" ],
 		"templates" : {"singlePho" : { "EBEB" : "EB", "EBEE" : "EB", "EEEB" : "EE"  }
-                                ,"1D" : {} 
+                            
                             },
                 "prepfit": true,
 		"redo" : true,
@@ -548,7 +548,6 @@
         }
     },
    "plotPurity":{
-                "treename":"fitresult",
                 "treetruth":"truth_purity",
                 "dimensions" :"2D" 
     },
