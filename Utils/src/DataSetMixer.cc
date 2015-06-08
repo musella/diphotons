@@ -125,7 +125,7 @@ void fillCache(std::vector<Cache> & target, TTree *source, float frac, float ptS
                std::vector<TTreeFormula *> & match,
                TTreeFormula * weight,
                std::vector<std::vector<float>> * matchTarget=0,
-               std::vector<TH1 *> * matchHisto=0
+               std::vector<TH1 *> * matchHisto=0,float maxWeight=0.
     )
 {
     Cache cache(formulas.size(),(matchTarget ? 0 : match.size()));
@@ -137,6 +137,11 @@ void fillCache(std::vector<Cache> & target, TTree *source, float frac, float ptS
     for(int iev=0; iev<source->GetEntries(); ++iev) {
         source->GetEntry(iev);
         if( gRandom->Uniform() > frac ) { continue; }
+        cache.weight = ( weight ? weight->EvalInstance() : 1. );
+        if( maxWeight > 0. && cache.weight > maxWeight ) { 
+            cache.weight = maxWeight;
+        }
+        
         float pt = fourVec[0]->EvalInstance();
         if( pt < ptSubleadMin ) { continue; }
         cache.p4.SetPtEtaPhiE(pt,fourVec[1]->EvalInstance(),fourVec[2]->EvalInstance(),fourVec[3]->EvalInstance());
@@ -152,7 +157,6 @@ void fillCache(std::vector<Cache> & target, TTree *source, float frac, float ptS
             matchFill[ivar] = match[ivar]->EvalInstance();
         }
         
-        cache.weight = ( weight ? weight->EvalInstance() : 1. );
         totwei += cache.weight;
         if( pt >= ptLeadMin ) {
             cache.lead = true;
@@ -307,11 +311,14 @@ void DataSetMixer::fillLikeTarget(TTree * target,
                                   const char *pT1, const char *eta1, const char *phi1, const char *energy1, 
                                   const char *pT2, const char *eta2, const char *phi2, const char *energy2,
                                   const RooArgList & matchVars1, const RooArgList & matchVars2,
-                                  bool rndSwap,float rndMatch, int nNeigh, int nMinNeigh, 
-                                  bool useCdfDistance, bool matchWithThreshold
+                                  bool rndSwap,float rndMatch, int nNeigh, int nMinNeigh,
+                                  float targetFraction,
+                                  bool useCdfDistance, bool matchWithThreshold,
+                                  float maxWeight,
+                                  Double_t * axesWeights
         )
 {
-    
+    cout << "axesWeights "<< axesWeights << endl;
     size_t nvar = ( vars_.getSize() - 3 )/ 2;
     std::vector<TTreeFormula *> formulas1(nvar), formulas2(nvar);
     TTreeFormula * weight1      = (!weight1_.empty() ? new TTreeFormula("weight1",weight1_.c_str(),tree1) : 0);
@@ -342,12 +349,12 @@ void DataSetMixer::fillLikeTarget(TTree * target,
     
     // loop over 1st tree and store kinematics and variables
     cout << "DataSetMixer: loop over 1st tree/leg ...";
-    fillCache(cache1,tree1,1.,ptSubleadMin_,ptLeadMin_,fourVec1,formulas1,match1,weight1,&cacheMatch1,(useCdfDistance?&matchHisto1:0));
+    fillCache(cache1,tree1,1.,ptSubleadMin_,ptLeadMin_,fourVec1,formulas1,match1,weight1,&cacheMatch1,(useCdfDistance?&matchHisto1:0),maxWeight);
     cout << "done. Selected " << cache1.size() << " entries "<< endl;
     
     // loop over 2nd tree and store kinematics and variables
     cout << "DataSetMixer: loop over 2nd tree/leg ...";
-    fillCache(cache2,tree2,1.,ptSubleadMin_,ptLeadMin_,fourVec2,formulas2,match2,weight2,&cacheMatch2,(useCdfDistance?&matchHisto2:0));
+    fillCache(cache2,tree2,1.,ptSubleadMin_,ptLeadMin_,fourVec2,formulas2,match2,weight2,&cacheMatch2,(useCdfDistance?&matchHisto2:0),maxWeight);
     cout << "done. Selected " << cache2.size() << " entries "<< endl;
     if( matchWithThreshold ) {
         cacheCheck1 = cacheMatch1;
@@ -384,7 +391,7 @@ void DataSetMixer::fillLikeTarget(TTree * target,
     for(size_t idim=0; idim<cacheMatch1.size(); ++idim) { 
         if( useCdfDistance ) {
             for(auto & val : cacheMatch1[idim] ) {
-                val = cdfs1[idim]->eval(val);
+                val = cdfs1[idim]->eval(val) * ( axesWeights != 0 ? axesWeights[idim] : 1.);
             }
         }
         kdtree1->SetData(idim,&cacheMatch1[idim][0]); 
@@ -392,7 +399,7 @@ void DataSetMixer::fillLikeTarget(TTree * target,
     for(size_t idim=0; idim<cacheMatch2.size(); ++idim) {
         if( useCdfDistance ) {
             for(auto & val : cacheMatch2[idim] ) {
-                val = cdfs2[idim]->eval(val);
+                val = cdfs2[idim]->eval(val)  * ( axesWeights != 0 ? axesWeights[idim] : 1.);
             }
         }
         kdtree2->SetData(idim,&cacheMatch2[idim][0]); 
@@ -408,22 +415,33 @@ void DataSetMixer::fillLikeTarget(TTree * target,
     size_t ientry = 0;
     
     int maxwarn = 10, nwarn = 0, nreject = 0;
+    float lwei = 0., swei = 1e+7; 
+    double totwei = 0., truncwei = 0.;
+    int ntot = 0, ntrunc = 0;
     //// auto engine = std::default_random_engine{};
     for(int iev=0; iev<target->GetEntries(); ++iev) {
         target->GetEntry(iev);
+        float wei = ( weightTarget != 0 ? weightTarget->EvalInstance() : 1. );
+        totwei += wei; ++ntot;
+        if( maxWeight > 0. && wei > maxWeight ) {
+            wei = maxWeight;
+        }
+        truncwei += wei; ++ntrunc;
+        if( targetFraction > 0. && gRandom->Uniform() > targetFraction ) {
+            continue;
+        }
+        lwei = max(wei,lwei);
+        swei = min(wei,swei);
         eval(target1,targetMatch1);
         eval(target2,targetMatch2);
         if( matchWithThreshold ) {
             check1 = target1;
             check2 = target2;
         }
-        // FIXME decouple swap in matching and template filling
-        //bool swap = rndSwap && ientry % 2 == 0;
-        //bool rndmatch = rndMatch && ientry % 2 == 0;
+
         TKDTreeIF *mtree1=kdtree1, *mtree2=kdtree2;
         std::vector<Cache> *mcache1=&cache1, *mcache2=&cache2; 
         std::vector<std::vector<float>> *ccheck1=&cacheCheck1,*ccheck2=&cacheCheck2;
-        //bool swap = (rndMatch ) && ientry % 2 == 0;
         bool swap = (rndMatch!=0.0? gRandom->Uniform()> rndMatch: false );
         if( swap ) {
             std::swap(mtree1,mtree2);
@@ -431,11 +449,10 @@ void DataSetMixer::fillLikeTarget(TTree * target,
             std::swap(ccheck1,ccheck2);
         }
         
-        float wei = ( weightTarget != 0 ? weightTarget->EvalInstance() : 1. );
         if( useCdfDistance ) {
             for(size_t idim=0; idim<target1.size(); ++idim) {
-                target1[idim] = cdfs1[idim]->eval(target1[idim]);
-                target2[idim] = cdfs2[idim]->eval(target2[idim]);
+                target1[idim] = cdfs1[idim]->eval(target1[idim]) * ( axesWeights != 0 ? axesWeights[idim] : 1.);
+                target2[idim] = cdfs2[idim]->eval(target2[idim]) * ( axesWeights != 0 ? axesWeights[idim] : 1.);
             }
         }
         
@@ -491,6 +508,10 @@ void DataSetMixer::fillLikeTarget(TTree * target,
     }
     cout << "DataSetMixer:  Matching summary: target " << target->GetEntries() << " accepted entries " << ientry << " invalid neighbours " << nwarn
          << " rejected neighbours " << nreject
+         << " largest weight (in target tree) " << lwei
+         << " smallest weight (in target tree) " << swei
+         << " average weight (in target tree) " << totwei/((double) ntot)
+         << " truncated average weight (in target tree) " << truncwei/((double) ntrunc)
          << endl;
     
     // Done. Cleanup

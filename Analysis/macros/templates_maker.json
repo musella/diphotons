@@ -65,22 +65,6 @@
 		       		  ]
             },
 
-    "_data" : [
-               "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)sGenIso",
-               "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)sNonGenIso"
-             ],
-
-    "#" : "data used for template making",
-    "_templates" : [
-               "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)s"
-             ],
-             
-     "#" : "mc dataset",
-     "_mc" : [
-             "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)sGenIso",
-             "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)sNonGenIso"
-            ],
-
     "#" : "file names for different datasets. Files folder can be specified by --input-dir on the command line",
     "data_file"  : "output.root",
     "mc_file"    : "output.root",
@@ -105,7 +89,6 @@
     "treeName": "trees/%(sample)s_%(cat)s",
 
     "preselection" : "leadChIso < 15. && subleadChIso < 15. && mass > 250",   "#" : "preselection cut applied to all trees",
-    "_preselection" : "leadChIso < 5. && subleadChIso < 5. && leadHoE < 0.05 && subleadHoE < 0.05",   "#" : "preselection cut applied to all trees",
     "selection"    : "cicNoChIso",                              "#" : "nominal selection",
     
     "#" : "---------------------------------------------------------------------------------------------------------------------",
@@ -228,13 +211,61 @@
 		    }
 	    }
 	},	
+        "cic2" : {
+            "ndim"       : 2,                                                                "#" : "number of dimensions for the template  ",
+            "bins"       : [ "mass", [500.0,1300.0] ],                                       "#" : "kinematic bins in which the fit is run ",
+            "template_binning" : [ 0.0, 0.1, 5.0, 15.0 ],                                    "#" : "template varaible binning              ",
+		
+            "selection"    : "cic",
+            "components" : [ "pp", "pf", "ff" ],                                             "#" : "list of fit components                 ",
+            "dataset_variables" : ["mgg","mass [-1.0,0.0,20.0,50.0,100.0,200.0,500.0,13000.0]","leadPt","subleadPt","leadEta","subleadEta", "leadMatchType", "subleadMatchType"],      "#" : "additional variables to be stored      ",
+            "store_trees" : true,	
+            "categories" : {
+                "EBEB" : { 
+                    "src"  : "EBEB",
+                     "fill" : { 
+                         "TMath::Even(event)" :[ "leadChIso", "subleadChIso" ],
+                         "! TMath::Even(event)" :[ "subleadChIso", "leadChIso" ]
+                      }
+                }, 
+                "EBEE" : { "src" : "notEBEB" ,
+                        "fill" : { 
+                        "leadIsEB && ! subleadIsEB" :[ "leadChIso", "subleadChIso" ],
+                            "! leadIsEB && subleadIsEB" :[ "subleadChIso", "leadChIso" ]
+                       }
+                }
+            },
+	    "signals" : "__all__", 
+		"truth_selection" : {
+		    "pp" : "leadPrompt  && subleadPrompt",
+			"pf" : "(leadPrompt && subleadFake) || (subleadPrompt && leadFake)",
+                    "ff" : "leadFake    && subleadFake && ( leadMatchType != 0 || subleadMatchType != 0)"
+			},
+            "templates" : {
+                "pf" : { 
+		        "sel"  : "cicNoChIsoSingleSB", 
+                        "fill_categories" : { 
+                        "EBEB" :{ "leadIsSB && TMath::Even(event)" :    [ "leadChIso", "subleadRndConeChIso" ],
+                                "leadIsSB && ! TMath::Even(event)" :    [ "subleadRndConeChIso", "leadChIso" ],
+                                "subleadIsSB && ! TMath::Even(event)" : [ "subleadChIso", "leadRndConeChIso" ],
+                                "subleadIsSB && ! TMath::Even(event)" : [ "leadRndConeChIso", "subleadChIso" ]
+                        },
+                        "EBEE" :{ "leadIsEB && ! subleadIsEB &&      leadIsSB" : [ "leadRndConeChIso", "subleadChIso" ], 
+                                "leadIsEB && ! subleadIsEB &&    ! leadIsSB" : [ "leadChIso", "subleadRndConeChIso" ], 
+                                "! leadIsEB && subleadIsEB &&   subleadIsSB" : [ "subleadChIso", "leadRndConeChIso" ], 
+                                "! leadIsEB && subleadIsEB && ! subleadIsSB" : [ "subleadChIso", "leadRndConeChIso" ]
+                                }
+                        }			
+		    }
+	    }
+	},	
         "2D" : {
             "ndim"       : 2,                                                                "#" : "number of dimensions for the template  ",
             "bins"       : [ "mass", [500.0,1300.0] ],                                       "#" : "kinematic bins in which the fit is run ",
             "template_binning" : [ 0.0,0.1, 1.0, 4.0,9.0, 15.0 ],                                   "#" : "template varaible binning              ",
 
             "components" : [ "pp", "pf", "ff" ],                                             "#" : "list of fit components                 ",
-            "dataset_variables" : ["mgg","mass [-1.0,0.0,20.0,50.0,100.0,200.0,500.0,13000.0]","leadPt","subleadPt","leadEta","subleadEta", "leadScEta","subleadScEta","leadMatchType", "subleadMatchType"],      "#" : "additional variables to be stored      ",
+		"dataset_variables" : ["mgg","mass [-1.0,0.0,20.0,50.0,100.0,200.0,500.0,13000.0]","leadPt","subleadPt","leadEta","subleadEta", "leadScEta","subleadScEta","leadMatchType", "subleadMatchType","leadPhoIso","subleadPhoIso"],      "#" : "additional variables to be stored      ",
             "store_trees" : true,	
 
             "#" :"categories in which to split the fit       ",
@@ -319,7 +350,7 @@
             "#" : "1D fit: same as above, with (possible) additional loop over legs",
             "ndim"       : 1,
             "bins"       : [ "mass", [500.0,1300.0] ],
-		"dataset_variables" : ["mass [-1.0,0.0,20.0,50.0,100.0,200.0,500.0,13000.0]","phoPt := %(leg)sPt","phoEta := %(leg)sEta","phoScEta := %(leg)sScEta", "phoPhi := %(leg)sPhi","phoEnergy := %(leg)sPt*cosh(%(leg)sEta)",
+		"dataset_variables" : ["mass [-1.0,0.0,20.0,50.0,100.0,200.0,500.0,13000.0]","phoPt := %(leg)sPt","phoEta := %(leg)sEta","phoScEta := %(leg)sScEta", "phoPhi := %(leg)sPhi","phoEnergy := %(leg)sPt*cosh(%(leg)sEta)","phoPhoIso := %(leg)sPhoIso",
 				       "phoSigmaIeIe := %(leg)sSigmaIeIe",
 				       "phoGenIso := %(leg)sGenIso", "phoMatchType := %(leg)sMatchType",
                                         "phoRndConePhoIso:= %(leg)sRndConePhoIso",
@@ -336,6 +367,10 @@
             "categories" : { 
                 "EBEB" : { 
                     "src" : "EBEB",
+                        "fill" : { "1" : ["%(leg)sChIso"] }
+                }, 
+                "eta_inclusive" : { 
+                    "src" : "eta_inclusive",
                         "fill" : { "1" : ["%(leg)sChIso"] }
                 }, 
                 "EBEE" : {
@@ -360,15 +395,17 @@
                         "fill_categories" : { 
                             "EBEB" : { "1" : ["%(leg)sRndConeChIso"] },
                             "EBEE" : { "%(leg)sIsEB" : ["%(leg)sRndConeChIso"] },
-                            "EEEB" : { "! %(leg)sIsEB" : ["%(leg)sRndConeChIso"] }
+                            "EEEB" : { "! %(leg)sIsEB" : ["%(leg)sRndConeChIso"] },
+                            "eta_inclusive" : { "1" : ["%(leg)sRndConeChIso"] }
                     }
                 },
                 "f" : { 
                     "sel" : "cicNoChIsoSingleSB",
                         "fill_categories" : { 
-                        "EBEB" : { "%(leg)sIsSB &&                  %(leg)sSigmaIeIe>0.012" : ["%(leg)sChIso"] },
-                        "EBEE" : { "%(leg)sIsSB &&   %(leg)sIsEB && %(leg)sSigmaIeIe>0.012" : ["%(leg)sChIso"] },
-                        "EEEB" : { "%(leg)sIsSB && ! %(leg)sIsEB && %(leg)sSigmaIeIe>0.035" : ["%(leg)sChIso"] }
+                        "EBEB" : { "%(leg)sIsSB                 " : ["%(leg)sChIso"] },
+                        "EBEE" : { "%(leg)sIsSB &&   %(leg)sIsEB" : ["%(leg)sChIso"] },
+			"EEEB" : { "%(leg)sIsSB && ! %(leg)sIsEB" : ["%(leg)sChIso"] },
+                        "eta_inclusive" : { "%(leg)sIsSB" : ["%(leg)sChIso"] }
                     }
                 },
                 "f1" : { 
@@ -376,7 +413,8 @@
                         "fill_categories" : { 
                         "EBEB" : { "TMath::Even(event) && %(leg)sIsSB &&                  %(leg)sSigmaIeIe>0.012" : ["%(leg)sChIso"] },
                         "EBEE" : { "TMath::Even(event) && %(leg)sIsSB &&   %(leg)sIsEB && %(leg)sSigmaIeIe>0.012" : ["%(leg)sChIso"] },
-                        "EEEB" : { "TMath::Even(event) && %(leg)sIsSB && ! %(leg)sIsEB && %(leg)sSigmaIeIe>0.035" : ["%(leg)sChIso"] }
+                        "EEEB" : { "TMath::Even(event) && %(leg)sIsSB && ! %(leg)sIsEB && %(leg)sSigmaIeIe>0.035" : ["%(leg)sChIso"] },
+                        "eta_inclusive" : { "TMath::Even(event) && %(leg)sIsSB" : ["%(leg)sChIso"] }
                     }
                 },
                 "f2" : { 
@@ -384,7 +422,8 @@
                         "fill_categories" : { 
                         "EBEB" : { "! TMath::Even(event) && %(leg)sIsSB &&                  %(leg)sSigmaIeIe>0.012" : ["%(leg)sChIso"] },
                         "EBEE" : { "! TMath::Even(event) && %(leg)sIsSB &&   %(leg)sIsEB && %(leg)sSigmaIeIe>0.012" : ["%(leg)sChIso"] },
-                        "EEEB" : { "! TMath::Even(event) && %(leg)sIsSB && ! %(leg)sIsEB && %(leg)sSigmaIeIe>0.035" : ["%(leg)sChIso"] }
+			    "EEEB" : { "! TMath::Even(event) && %(leg)sIsSB && ! %(leg)sIsEB && %(leg)sSigmaIeIe>0.035" : ["%(leg)sChIso"] },
+			"eta_inclusive" : { "!TMath::Even(event) && %(leg)sIsSB" : ["%(leg)sChIso"] }
                     }
                 }
             }
@@ -464,6 +503,98 @@
     "#" : "---------------------------------------------------------------------------------------------------------------------",
     "#" : "Template mixing                                                                                                      ",
     "#" : "---------------------------------------------------------------------------------------------------------------------",
+    "_mix" : { 
+	"kDClosure2D" : {
+	    "target" : "2D",
+		"ptLeadMin" : 100.0, "ptSubleadMin" : 100.0, "massMin" : 200.0,
+		"pt" : "phoPt", "eta" : "phoEta", "phi" : "phoPhi", "energy" : "phoEnergy",
+		"_sources" : { 
+		"pp" : [ "1D:mctruth:p", "1D:mctruth:p" ]
+		    }, 
+		"sources" : { 
+		"pf" : [ "1D:p", "1D:f" ]
+		    }, 
+		"_sources" : { 
+		"pf" : [ "1D:mctruth:p", "1D:mctruth:f" ]
+		    }, 
+		"replace" : "pho",
+		"type" : "kdtree",
+		    
+		"_fill_categories" : {
+		    "EBEE" : { "legs" : ["eta_inclusive","eta_inclusive"], "rndswap" : false, "nNeigh" : 10, "matchWithThreshold" : false,
+			    "useCdfDistance" : true, "targetFraction" : 5e-2, "maxWeight" : 0.1, "rndmatch":0.9,
+			    "axesWeights" : [10.0,1.0,2.0],
+			    "match1"  : ["log(phoPt)" ,"TMath::Abs(phoScEta)","TMath::Abs(phoScEta)<1.5"    ], 
+			    "match2"  : ["log(phoPt)" ,"TMath::Abs(phoScEta)","TMath::Abs(phoScEta)<1.5"    ], 
+			    "target1" : [
+					 "log((TMath::Abs(leadScEta)<TMath::Abs(subleadScEta))*leadPt       + (TMath::Abs(leadScEta)>=TMath::Abs(subleadScEta))*subleadPt)",
+					 "(TMath::Abs(leadScEta)<TMath::Abs(subleadScEta))*TMath::Abs(leadScEta)    + (TMath::Abs(leadScEta)>=TMath::Abs(subleadScEta))*TMath::Abs(subleadScEta)",
+					 "((TMath::Abs(leadScEta)<TMath::Abs(subleadScEta))*TMath::Abs(leadScEta)    + (TMath::Abs(leadScEta)>=TMath::Abs(subleadScEta))*TMath::Abs(subleadScEta))<1.5"
+					 ],
+			    "target2" : [
+					 "log((TMath::Abs(leadScEta)<TMath::Abs(subleadScEta))*subleadPt    + (TMath::Abs(leadScEta)>=TMath::Abs(subleadScEta))*leadPt)",
+					 "(TMath::Abs(leadScEta)<TMath::Abs(subleadScEta))*TMath::Abs(subleadScEta) + (TMath::Abs(leadScEta)>=TMath::Abs(subleadScEta))*TMath::Abs(leadScEta)[0.3]",
+					 "((TMath::Abs(leadScEta)<TMath::Abs(subleadScEta))*TMath::Abs(subleadScEta) + (TMath::Abs(leadScEta)>=TMath::Abs(subleadScEta))*TMath::Abs(leadScEta))<1.5"
+					 ]
+			    }
+		},
+		"_fill_categories" : {
+			"EBEB" : { "legs" : ["EBEB","EBEB"], "rndswap" : true, "nNeigh" : 25, "matchWithThreshold" : false,
+			    "useCdfDistance" : true, "targetFraction" : 1e-3, "maxWeight" : 0.005, "rndmatch":0.8,
+				"axesWeights" : [4.0,1.0,1.0],
+			    "match1"  : ["phoPhoIso","log(phoPt)" ,"TMath::Abs(phoScEta)"    ], 
+			    "match2"  : ["phoPhoIso","log(phoPt)" ,"TMath::Abs(phoScEta)"    ], 
+				"target1" : ["leadPhoIso",
+					 "log(leadPt)",
+					 "TMath::Abs(leadScEta)"
+					 ],
+			    "target2" : ["subleadPhoIso",
+					 "log(subleadPt)",
+					 "TMath::Abs(subleadScEta)"
+					 ]			
+				}
+		},
+		"fill_categories" : {
+		    "EBEE" : { "legs" : ["eta_inclusive","eta_inclusive"], "rndswap" : false, "nNeigh" : 25, "matchWithThreshold" : false,
+			    "useCdfDistance" : true, "targetFraction" : 1e-3, "maxWeight" : 0.005, "rndmatch":0.8,
+			    "axesWeights" : [4.0,1.0,1.0,3.0],
+			    "match1"  : ["phoPhoIso","log(phoPt)" ,"TMath::Abs(phoScEta)","TMath::Abs(phoScEta)<1.5"    ], 
+			    "match2"  : ["phoPhoIso","log(phoPt)" ,"TMath::Abs(phoScEta)","TMath::Abs(phoScEta)<1.5"    ], 
+			    "target1" : ["(TMath::Abs(leadScEta)<TMath::Abs(subleadScEta))*leadPhoIso + (TMath::Abs(leadScEta)>=TMath::Abs(subleadScEta))*subleadPhoIso[10]",
+					 "log((TMath::Abs(leadScEta)<TMath::Abs(subleadScEta))*leadPt       + (TMath::Abs(leadScEta)>=TMath::Abs(subleadScEta))*subleadPt)",
+					 "(TMath::Abs(leadScEta)<TMath::Abs(subleadScEta))*TMath::Abs(leadScEta)    + (TMath::Abs(leadScEta)>=TMath::Abs(subleadScEta))*TMath::Abs(subleadScEta)",
+					 "((TMath::Abs(leadScEta)<TMath::Abs(subleadScEta))*TMath::Abs(leadScEta)    + (TMath::Abs(leadScEta)>=TMath::Abs(subleadScEta))*TMath::Abs(subleadScEta))<1.5"
+					 ],
+			    "target2" : ["(TMath::Abs(leadScEta)<TMath::Abs(subleadScEta))*subleadPhoIso + (TMath::Abs(leadScEta)>=TMath::Abs(subleadScEta))*leadPhoIso[10]",
+					 "log((TMath::Abs(leadScEta)<TMath::Abs(subleadScEta))*subleadPt    + (TMath::Abs(leadScEta)>=TMath::Abs(subleadScEta))*leadPt)",
+					 "(TMath::Abs(leadScEta)<TMath::Abs(subleadScEta))*TMath::Abs(subleadScEta) + (TMath::Abs(leadScEta)>=TMath::Abs(subleadScEta))*TMath::Abs(leadScEta)",
+					 "((TMath::Abs(leadScEta)<TMath::Abs(subleadScEta))*TMath::Abs(subleadScEta) + (TMath::Abs(leadScEta)>=TMath::Abs(subleadScEta))*TMath::Abs(leadScEta))<1.5"
+					 ]
+			    }
+		},
+		"_fill_categories" : {
+		    "EBEB" : { "legs" : ["EBEB","EBEB"], "rndswap" : true, "nNeigh" : 25, "matchWithThreshold" : false,
+			    "useCdfDistance" : true, "targetFraction" : 5e-2, "maxWeight" : 0.1,
+			    "axesWeights" : [1.0,1.0],
+			    "match1"  : ["log(phoPt)"    ,"TMath::Abs(phoScEta)"    ], 
+			    "match2"  : ["log(phoPt)"    ,"TMath::Abs(phoScEta)"    ], 
+			    "target1" : ["log(leadPt)"   ,"TMath::Abs(leadScEta)[0.2]"   ], 
+			    "target2" : ["log(subleadPt)","TMath::Abs(subleadScEta)[0.2]"]
+			    }
+		},
+		"_fill_categories" : {
+		    "EBEB" : { "legs" : ["EBEB","EBEB"], "rndswap" : true, "nNeigh" : 10, "nMinNeigh" : 10, "matchWithThreshold" : false,
+			    "useCdfDistance" : true, "targetFraction" : 1e-2,
+			    "axesWeights" : [10.0,1.0,1.0],
+			    "match1"  : ["nvtx","log(phoPt)"    ,"TMath::Abs(phoScEta)"    ], 
+			    "match2"  : ["nvtx","log(phoPt)"    ,"TMath::Abs(phoScEta)"    ], 
+			    "target1" : ["nvtx","log(leadPt)"   ,"TMath::Abs(leadScEta)[0.2]"   ], 
+			    "target2" : ["nvtx","log(subleadPt)","TMath::Abs(subleadScEta)[0.2]"]
+			    }
+		}
+	}
+
+    },
     "mix" : { 
 	"kDSinglePho2D" : {
 		"target" : "2D",
@@ -504,10 +635,19 @@
 
     },
     "comparisons" : {
-	"_fit2DTruth" : { "fit" : "2D",
-		"templates" : { "mix:kDSinglePho2D" : {} ,
-                                "2D":{}
-                },
+	"_mixClosure" : { "fit" : "2D",
+		"templates" : { "mix:kDClosure2D" : {} },
+                "components": [["pf",{"2D":{},"mix:kDClosure2D" : {} }]], "categories" : ["EBEB","EBEE"],
+                "prepfit": true,
+                "weight_cut": "weight < 5.",
+		"redo" : true,
+		"doDataMc" : false, "doMcTruth" : true,
+		    "template_binning" : [ 0.0,0.1,5.0,15.0],
+		    "_template_binning" : [ 0.0,0.1,1.0,2.0,4.0,5.0,8.0,15.0],
+		"mass_binning" :"mass[13000,0.0,13000.0]"
+		},
+	"fit2DTruth" : { "fit" : "2D",
+		"templates" : { "mix:kDSinglePho2D" : {},"2D":{} },
                 "components": ["pf","ff",  ["pp",{ "2D" : {}}] 
                 ],
                 "prepfit": true,
@@ -534,8 +674,7 @@
         "template_binning" : [ 0.0,0.1, 5.0,15.0 ],
 		"mass_binning" :"mass[13000,0.0,13000.0]"
 		}
-    },
-      
+    
    "nominalFit":{
         " 3_components":{
                 "dimensions" :"2D", 

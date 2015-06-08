@@ -9,6 +9,39 @@ import array
 
 from getpass import getuser
 
+from math import sqrt
+
+# ----------------------------------------------------------------------------------------------------
+def computeShapeWithUnc(histo,extraerr=None):
+    histo.Scale(1./histo.Integral())
+    if not extraerr:
+        return
+    for xb in range(histo.GetNbinsX()+1):
+        for yb in range(histo.GetNbinsX()+1):
+            ib = histo.GetBin(xb,yb)            
+            err = histo.GetBinError(ib)
+            bbyb = extraerr*histo.GetBinContent(ib)
+            err = sqrt( err*err + bbyb*bbyb )
+            histo.SetBinError(ib,err)
+
+    return
+    denom = histo.Clone("temp")
+    denom.Reset("ICE")
+    error = ROOT.Double(0.)
+    entries = histo.GetEntries()
+    try:
+        integral = histo.IntegralAndError(-1,-1,error) 
+    except:
+        integral = histo.IntegralAndError(-1,-1,-1,-1,error) 
+    for xb in range(denom.GetNbinsX()+1):
+        for yb in range(denom.GetNbinsX()+1):
+            ib = histo.GetBin(xb,yb)            
+            denom.SetBinContent(ib,integral)
+            denom.SetBinError(ib,error)
+    histo.Divide(histo,denom,1.,1.,"B")
+    del denom
+    
+
 ## ----------------------------------------------------------------------------------------------------------------------------------------
 ## TemplatesApp class
 ## ----------------------------------------------------------------------------------------------------------------------------------------
@@ -79,9 +112,13 @@ class TemplatesApp(PlotApp):
                                     default=False,
                                     help="Mix templates.",
                                     ),
+                        make_option("--extra-shape-unc",dest="extra_shape_unc",action="store",type="float",
+                                    default=None,
+                                    help="Add extra uncertainty to template shapes (implemented only for plotting)",
+                                    ),
                         make_option("--read-ws","-r",dest="read_ws",action="store",type="string",
                                     default=False,
-                                    help="List of variables to be used for reweighting.",
+                                    help="workspace input file.",
                                     ),
                         make_option("--output-file","-o",dest="output_file",action="store",type="string",
                                     default=None,
@@ -113,7 +150,8 @@ class TemplatesApp(PlotApp):
         self.store_ = {}
         self.rename_ = False
         self.store_new_ = False
-
+        self.save_params_ = []
+        
         ## load ROOT (and libraries)
         global ROOT, style_utils, RooFit
         import ROOT
@@ -174,6 +212,7 @@ class TemplatesApp(PlotApp):
             self.mixTemplates(options,args)
             
         if options.compare_templates:
+            print "AAAAAAAAAAAAaa"
             self.compareTemplates(options,args)
             
         if options.nominal_fit:
@@ -203,7 +242,12 @@ class TemplatesApp(PlotApp):
                 "comparisons"    : options.comparisons,
                 "stored" : self.store_.keys(),
                 }
-        
+        for name in self.save_params_:
+            val = getattr(options,name,None)
+            print name, val
+            if val:
+                cfg[name] = val
+
         print "--------------------------------------------------------------------------------------------------------------------------"
         print "saving output"
         print 
@@ -247,6 +291,12 @@ class TemplatesApp(PlotApp):
             options.mix = cfg.get("mix",{})
         if not options.compare_templates:
             options.comparisons = cfg.get("comparisons",{})
+
+        for name in self.save_params_:
+            val = cfg.get(name,None)
+            print name, val
+            if val:
+                setattr(options,name,val)
         
         print "Fits :"
         print "---------------------------------------------------------"
@@ -310,13 +360,14 @@ class TemplatesApp(PlotApp):
             else: d2=False
             fit=options.fits[fitname]
             components=comparison.get("components",fit["components"])
+            print components
             for comp in components:
                 if type(comp) == str or type(comp)==unicode:
                     compname = comp
                     templatesls= comparison["templates"]
                 else:
                     compname, templatesls = comp
-                for cat in fit["categories"]:
+                for cat in comparison.get("categories",fit["categories"]):
                     print
                     print cat, compname
                     isoargs=ROOT.RooArgSet("isoargs")
@@ -343,20 +394,20 @@ class TemplatesApp(PlotApp):
                     templates.append(truth)
 ### loop over templates
                     for template,mapping in templatesls.iteritems():
+                        print template, mapping
                         if "mix" in template:
                              mixname = template.split(":")[-1]
                              templatename= "template_mix_%s_%s_%s" % (compname,mixname,mapping.get(cat,cat))
                         else:
                              templatename= "template_%s_%s_%s" % (compname,template,mapping.get(cat,cat))
                         tempdata = self.reducedRooData(templatename,setargs,False,sel=weight_cut,redo=ReDo)
-                        print tempdata
-                        if "mix" in template:
-                            templatename=( "reduced_templatemix_%s_2D_%s" % (compname,mapping.get(cat,cat)))
+
+                        if "mix" in template and not prepfit:
+                            templatename=( "reduced_template_%s_2D_%s" % (compname,mapping.get(cat,cat)))
                             tempdata.SetName(templatename)
                         templates.append(tempdata)
-                        tempdata.Print()
-
 ###------------------- split in massbins
+                    
                     masserror = array.array('d',[])
                     
                     if cat=="EEEB": catd="EBEE"#TODO implement in json file
@@ -416,7 +467,11 @@ class TemplatesApp(PlotApp):
                                 tempHisto=ROOT.TH1F("%s_dim%d_%d" % (tm.GetName(),fit["ndim"],id),
                                                     "%s_dim%d_%d" % (tm.GetName(),fit["ndim"],id),len(template_binning)-1,template_binning)
                                 tm.fillHistogram(tempHisto,isoarg1d)
-                                tempHisto.Scale(1.0/tempHisto.Integral())
+                                ## tempHisto.Scale(1.0/tempHisto.Integral())
+                                if "truth" in tempHisto.GetName():
+                                    computeShapeWithUnc(tempHisto)
+                                else:
+                                    computeShapeWithUnc(tempHisto,options.extra_shape_unc)
                                 for bin in range(1,len(template_binning) ):
                                     tempHisto.SetBinContent(bin,tempHisto.GetBinContent(bin)/(tempHisto.GetBinWidth(bin)))
                                     tempHisto.SetBinError(bin,tempHisto.GetBinError(bin)/(tempHisto.GetBinWidth(bin)))
@@ -426,16 +481,15 @@ class TemplatesApp(PlotApp):
                             self.plotHistos(histls,tit,template_binning,True)
                         ## roll out for combine tool per category
                         if fit["ndim"]>1:
-                            print
-                            self.histounroll(templates_massc,template_binning,isoargs,compname,cat,cut_s,prepfit,sigRegionlow2D,sigRegionup2D)
+                            self.histounroll(templates_massc,template_binning,isoargs,compname,cat,cut_s,prepfit,sigRegionlow2D,sigRegionup2D,extra_shape_unc=options.extra_shape_unc)
                             if prepfit:
                                 datals=[]
                                 datals.append(dset_massc)
-                                self.histounroll(datals,template_binning,isoargs,compname,cat,cut_s,prepfit,sigRegionlow2D,sigRegionup2D)
+                                self.histounroll(datals,template_binning,isoargs,compname,cat,cut_s,prepfit,sigRegionlow2D,sigRegionup2D,extra_shape_unc=options.extra_shape_unc)
 
     ## ------------------------------------------------------------------------------------------------------------
 
-    def histounroll(self,templatelist, template_binning,isoargs,comp,cat,mcut_s,prepfit,sigRegionlow,sigRegionup):
+    def histounroll(self,templatelist, template_binning,isoargs,comp,cat,mcut_s,prepfit,sigRegionlow,sigRegionup,extra_shape_unc=None):
         pad_it=0
         c1=ROOT.TCanvas("d2hist_%s" % cat,"2d hists per category",1000,1000) 
         c1.Divide(1,2)
@@ -453,16 +507,28 @@ class TemplatesApp(PlotApp):
             tempur.fillHistogram(temp2d,ROOT.RooArgList(isoargs))
            # print "integral 2d  histo", temp2d.Integral()
             temp2dx=temp2d.ProjectionX("%s_X" %tempur.GetName())
-            temp2dx.Scale(1./temp2dx.Integral())
+            ## temp2dx.Scale(1./temp2dx.Integral())
+            if "truth" in temp2dx.GetName():
+                computeShapeWithUnc(temp2dx)
+            else:
+                computeShapeWithUnc(temp2dx,extra_shape_unc)
             temp2dx.SetTitle("%s_X" %tempur.GetName())
             temp2dy=temp2d.ProjectionY("%s_Y" %tempur.GetName())
-            temp2dy.Scale(1./temp2dy.Integral())
+            ## temp2dy.Scale(1./temp2dy.Integral())
+            if "truth" in temp2dy.GetName():
+                computeShapeWithUnc(temp2dy)
+            else:
+                computeShapeWithUnc(temp2dy,extra_shape_unc)
             ## draw projections as a check
             histlsX.append(temp2dx)
             temp2dy.SetTitle("%s_Y" %tempur.GetName())
             histlsY.append(temp2dy)
             if len(templatelist) >1:
-                temp2d.Scale(1./temp2d.Integral())
+                ## temp2d.Scale(1./temp2d.Integral())
+                if "truth" in temp2d.GetName():
+                    computeShapeWithUnc(temp2d)
+                else:
+                    computeShapeWithUnc(temp2d,extra_shape_unc)
             tempunroll_binning = array.array('d',[])
             tempunroll_binning.append(0.0)
             sum=0.
@@ -597,6 +663,8 @@ class TemplatesApp(PlotApp):
         histlist[0].Draw("E2")
         histlist[0].GetXaxis().SetLimits(-0.1,max(template_bins))
         #histlist[0].SetStats()
+        ymax = 0.
+        ymin = 1.e+5
         histlist[0].GetYaxis().SetLabelSize( histlist[0].GetYaxis().GetLabelSize() * canv.GetWh() / ROOT.gPad.GetWh() )
         if dim1:
             histlist[0].GetXaxis().SetTitle(title[-17:])
@@ -604,6 +672,9 @@ class TemplatesApp(PlotApp):
             histlist[0].GetXaxis().SetTitle("charged isolation")
         for i in range(0,len(histlist)):
             histlist[i].GetXaxis().SetLimits(-0.1,max(template_bins))
+            ymax = max(ymax,histlist[i].GetMaximum())
+            if histlist[i].GetMinimum() != 0.:
+                ymin = max(ymin,histlist[i].GetMinimum())
             if i>0:
                 histlist[i].SetLineColor(ROOT.kAzure+i)
                 histlist[i].SetMarkerColor(ROOT.kAzure+i)
@@ -611,25 +682,33 @@ class TemplatesApp(PlotApp):
                 histlist[i].Draw("E SAME")
             histlist[0].GetXaxis().SetLimits(-0.1,max(template_bins))
             leg.AddEntry(histlist[i],histlist[i].GetName(),"l")  
+        print "ymin", ymin, "ymax", ymax
+        histlist[0].GetYaxis().SetRangeUser(ymin*0.5,ymax*5.)
         leg.Draw()
         canv.cd(2)
-        ratio=histlist[1].Clone("ratio")
-        ratio.Divide(histlist[0])
-        ratio.SetLineColor(ROOT.kAzure+1)
-        ratio.SetMarkerColor(ROOT.kAzure+1)
-        ratio.GetYaxis().SetTitleSize( histlist[0].GetYaxis().GetTitleSize() * 6.5/3.5 )
-        ratio.GetYaxis().SetLabelSize( histlist[0].GetYaxis().GetLabelSize() * 6.5/3.5 )
-        ratio.GetYaxis().SetTitleOffset( histlist[0].GetYaxis().GetTitleOffset() * 6.5/3.5 )
-        ratio.GetXaxis().SetTitleSize( histlist[0].GetXaxis().GetTitleSize() * 6.5/3.5 )
-        ratio.GetXaxis().SetLabelSize( histlist[0].GetXaxis().GetLabelSize() * 6.5/3.5 )
+        ratios = []
+        for ihsit,hist in enumerate(histlist[1:]):
+            ratios.append( hist.Clone("ratio_%d" % ihsit) )
+            ratios[-1].Divide(histlist[0])
+        ## ratio=histlist[1].Clone("ratio")
+        ## ratio.Divide(histlist[0])
+        ## ratio.SetLineColor(ROOT.kAzure+1)
+        ## ratio.SetMarkerColor(ROOT.kAzure+1)
+        ratios[0].GetYaxis().SetTitleSize( histlist[0].GetYaxis().GetTitleSize() * 6.5/3.5 )
+        ratios[0].GetYaxis().SetLabelSize( histlist[0].GetYaxis().GetLabelSize() * 6.5/3.5 )
+        ratios[0].GetYaxis().SetTitleOffset( histlist[0].GetYaxis().GetTitleOffset() * 6.5/3.5 )
+        ratios[0].GetXaxis().SetTitleSize( histlist[0].GetXaxis().GetTitleSize() * 6.5/3.5 )
+        ratios[0].GetXaxis().SetLabelSize( histlist[0].GetXaxis().GetLabelSize() * 6.5/3.5 )
         if dim1:
-            ratio.GetXaxis().SetTitle(title[-17:])
+            ratios[0].GetXaxis().SetTitle(title[-17:])
         else:
-            ratio.GetXaxis().SetTitle("charged isolation")
-        ratio.Draw()
-        ratio.GetYaxis().SetTitle("ratio")
-        ratio.GetXaxis().SetLimits(-0.1,max(template_bins))
-        ratio.GetYaxis().SetRangeUser(0.5,1.5)
+            ratios[0].GetXaxis().SetTitle("charged isolation")
+        ratios[0].Draw()        
+        ratios[0].GetYaxis().SetTitle("ratio")
+        ratios[0].GetXaxis().SetLimits(-0.1,max(template_bins))
+        ratios[0].GetYaxis().SetRangeUser(0.2,1.8)
+        for r in ratios[1:]:
+            r.Draw("same")
         ROOT.gStyle.SetOptStat(0)
         #  ROOT.gStyle.SetOptTitle(0)
         self.keep( [canv] )
@@ -1179,6 +1258,9 @@ class TemplatesApp(PlotApp):
             print 
 
             targetName      = mix["target"]
+            targetSrc       = "data"
+            if ":" in targetName:
+                targetName, targetSrc = targetName.split(":")
             targetFit       = options.fits[targetName]
             ndim            = targetFit["ndim"]
             ## categories      = target["categories"]
@@ -1226,8 +1308,12 @@ class TemplatesApp(PlotApp):
                     print
                     print "Component :", comp
                     for leg,src in zip(fill["legs"],source):
-                        sname,scomp = src
-                        legname = "template_%s_%s_%s" % (scomp,sname,leg)
+                        if len(src) == 2:
+                            sname,scomp = src
+                            stype = "template"
+                        else:
+                            sname,stype,scomp = src
+                        legname = "%s_%s_%s_%s" % (stype,scomp,sname,leg)
                         legnams.append( legname )
                         print legname
                         dset = self.rooData(legname,False)
@@ -1257,14 +1343,16 @@ class TemplatesApp(PlotApp):
                         
                     elif mixType == "kdtree":
                         targetCat       = fill.get("targetCat",cat)
+                        targetFraction  = fill.get("targetFraction",0.)
                         nNeigh          = fill.get("nNeigh",10)
                         nMinNeigh       = fill.get("nMinNeigh",nNeigh)
                         useCdfDistance  = fill.get("useCdfDistance",False)
                         matchWithThreshold  = fill.get("matchWithThreshold",False)
                         targetWeight    = fill.get("targetWeight","weight")
-                        dataname        = "data_%s_%s" % (targetName,targetCat)                        
+                        maxWeight    = fill.get("maxWeight",0.)
+                        dataname        = "%s_%s_%s" % (targetSrc,targetName,targetCat)                        
                         target          = self.treeData(dataname)
-                    
+
 
                         matchVars1   = ROOT.RooArgList()
                         matchVars2   = ROOT.RooArgList()
@@ -1283,15 +1371,18 @@ class TemplatesApp(PlotApp):
                         for var in fill["target2"]:
                             var = self.buildRooVar(*(self.getVar(var)))
                             targetMatch2.add(var)
+                        axesWeights     = fill.get( "axesWeights", [1.]*len(fill["match1"]) )
                             
                         print "target :", dataname
                         print "rndswap :", rndswap, " rndmatch :", rndmatch," useCdfDistance :", useCdfDistance, "matchWithThreshold :", matchWithThreshold
                         print "nNeigh :", nNeigh, "nMinNeigh :", nMinNeigh
                         print "target :", target
+                        print "axesWeights :", axesWeights
                         mixer.fillLikeTarget(target,targetMatch1,targetMatch2,targetWeight,tree1,tree2,
                                              pt,eta,phi,energy,pt,eta,phi,energy,
-                                             matchVars1,matchVars2,rndswap,rndmatch,nNeigh,nMinNeigh,
-                                             useCdfDistance,matchWithThreshold)
+                                             matchVars1,matchVars2,rndswap,rndmatch,nNeigh,nMinNeigh,targetFraction,
+                                             useCdfDistance,matchWithThreshold, maxWeight,
+                                             array.array('d',axesWeights))
                     
                     dataset = mixer.get()
                     self.workspace_.rooImport(dataset,ROOT.RooFit.RecycleConflictNodes())
@@ -1349,7 +1440,7 @@ class TemplatesApp(PlotApp):
         if autofill and dataset.sumEntries() == 0.:
             tree = self.treeData(name)
             if not tree: 
-                return dset
+                return dataset
             if rooset:
                 dataset = dataset.reduce(RooFit.SelectVars(rooset))
             else:
@@ -1445,13 +1536,16 @@ class TemplatesApp(PlotApp):
             rooVar.setConstant(False)
 
         if len(binning) > 0:
-            if len(binning)==1:
-                rooVar.setVal(binning[0])                
+            val = None
+            if len(binning)==1 or len(binning)>2 and binning[0]>=min(binning[1:]):
+                rooVar.setVal(binning[0])
+                binning = binning[1:]
             else:
+                rooVar.setVal(0.5*(binning[0]+binning[-1]))
+            if len(binning) > 1:
                 rooVar.setMin(binning[0])
                 rooVar.setMax(binning[-1])
-                rooVar.setVal(0.5*(binning[0]+binning[-1]))
-                rooVar.setBinning(ROOT.RooBinning(len(binning)-1,binning))
+                rooVar.setBinning(ROOT.RooBinning(len(binning)-1,array.array('d',binning)))
         if importToWs:
             self.workspace_.rooImport(rooVar,ROOT.RooFit.RecycleConflictNodes())
         self.keep(rooVar) ## make sure the variable is not destroyed by the garbage collector

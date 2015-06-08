@@ -1,5 +1,6 @@
 import json
 import csv
+import copy
 
 # -----------------------------------------------------------------------------------------------------------
 class ScratchAppend:
@@ -23,18 +24,17 @@ class Load:
     def __init__(self,scratch=False,empty={}):
         self.cold = True
         self.scratch = scratch
-        self.empty = empty
-    
+        self.empty = copy.copy(empty)
+        
     def __call__(self,option, opt_str, value, parser, *args, **kwargs):
         if self.scratch and self.cold:
-            setattr(parser.values,option.dest,self.empty)
+            setattr(parser.values,option.dest,copy.copy(self.empty))
             self.cold = False
             
         if option.dest == "__opts__":
             dest = parser.values
         else:
             dest = getattr(parser.values,option.dest)
-        
             
         if type(dest) == dict:
             setter = dict.__setitem__
@@ -52,7 +52,7 @@ class Load:
                     attr.extend(v)
                 setter(dest,k,v)
             cf.close()
-
+        
 # -----------------------------------------------------------------------------
 class Csv:
     def __call__(self,option, opt_str, value, parser, *args, **kwargs):
