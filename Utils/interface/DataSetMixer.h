@@ -32,8 +32,11 @@ public:
                         const char *pT1, const char *eta1, const char *phi1, const char *energy1, 
                         const char *pT2, const char *eta2, const char *phi2, const char *energy2,
                         const RooArgList & matchVars1, const RooArgList & matchVars2,
-                        bool rndSwap,float rndMatch, int nNeigh=10, int nMinNeigh=10, bool useCdfDistance=false,
-                        bool matchWithThreshold=false
+                        bool rndSwap,float rndMatch, int nNeigh=10, int nMinNeigh=10, float targetFraction=0.,
+                        bool useCdfDistance=false, bool matchWithThreshold=false,
+                        float maxWeight=0.,
+                        Double_t * axesWeights=0
+                        
         );
     
     RooArgList & vars() { return vars_; };
