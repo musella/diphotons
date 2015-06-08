@@ -118,14 +118,13 @@
     "#" : "List of aliases. Used to define variables/simplify expressions selection.",
     "aliases"  : [ 
                "phoIsEB    := abs(phoScEta) < 1.5",
-               "phoIsSB    := phoIsEB    && (phoSigmaIeIe    > 0.012) || !phoIsEB    && (phoSigmaIeIe>0.035   )",
-               "_phoIsSB    := ((phoRndConePhoIso - rho*phoPhoIsoEA) -0.002*phoPt < 4. ) && (phoIsEB    && (phoSigmaIeIe    > 0.012) || !phoIsEB    && (phoSigmaIeIe>0.035 )  )",
+               "phoIsSB    := (((phoPhoIso - rho*phoPhoIsoEA) -0.002*phoPt < 2. ) && (phoIsEB    && (phoSigmaIeIe    > 0.012) ))||( ((phoPhoIso - rho*phoPhoIsoEA) -0.002*phoPt < 11. ) &&!phoIsEB    && (phoSigmaIeIe>0.035 )  )",
                "leadIsEB    := abs(leadScEta) < 1.5",
                "subleadIsEB := abs(subleadScEta) < 1.5",
-               "leadIsSB:    := leadIsEB    && (leadSigmaIeIe    > 0.012) || !leadIsEB    && (leadSigmaIeIe>0.035   )",
-               "_leadIsSB:    := ((phoRndConePhoIso - rho*phoPhoIsoEA) -0.002*phoPt < 4. )&& (leadIsEB    && (leadSigmaIeIe    > 0.012) || !leadIsEB    && (leadSigmaIeIe>0.035   ))",
-               "subleadIsSB := subleadIsEB && (subleadSigmaIeIe > 0.012) || !subleadIsEB && (subleadSigmaIeIe>0.035)",
-               "_subleadIsSB :=((phoRndConePhoIso - rho*phoPhoIsoEA) -0.002*phoPt < 4. ) &&( subleadIsEB && (subleadSigmaIeIe > 0.012) || !subleadIsEB && (subleadSigmaIeIe>0.035))",
+               "_leadIsSB := leadIsEB && (leadSigmaIeIe > 0.012) || !leadIsEB && (leadSigmaIeIe>0.035)",
+               "leadIsSB := (((leadPhoIso - rho*leadPhoIsoEA) -0.002*leadPt < 2. ) && (leadIsEB    && (leadSigmaIeIe    > 0.012) ))||( ((leadPhoIso - rho*leadPhoIsoEA) -0.002*leadPt < 11. ) &&!leadIsEB    && (leadSigmaIeIe>0.035     )  )",
+               "_subleadIsSB := subleadIsEB && (subleadSigmaIeIe > 0.012) || !subleadIsEB && (subleadSigmaIeIe>0.035)",
+               "subleadIsSB := ((((subleadPhoIso - rho*subleadPhoIsoEA) -0.002*subleadPt < 2. ) && (subleadIsEB    && (subleadSigmaIeIe    > 0.012) ))||( ((subleadPhoIso - rho*subleadPhoIsoEA) -0.002*subleadPt < 11. ) &&!subleadIsEB    && (subleadSigmaIeIe>0.035     )) )",
                "leadPrompt    := leadGenIso < 10. && leadMatchType == 1",
                "leadFake      := ! leadPrompt",
                "subleadPrompt := subleadGenIso < 10. && subleadMatchType == 1",
@@ -322,7 +321,9 @@
             "bins"       : [ "mass", [500.0,1300.0] ],
 		"dataset_variables" : ["mass [-1.0,0.0,20.0,50.0,100.0,200.0,500.0,13000.0]","phoPt := %(leg)sPt","phoEta := %(leg)sEta","phoScEta := %(leg)sScEta", "phoPhi := %(leg)sPhi","phoEnergy := %(leg)sPt*cosh(%(leg)sEta)",
 				       "phoSigmaIeIe := %(leg)sSigmaIeIe",
-				       "phoGenIso := %(leg)sGenIso", "phoMatchType := %(leg)sMatchType"
+				       "phoGenIso := %(leg)sGenIso", "phoMatchType := %(leg)sMatchType",
+                                        "phoRndConePhoIso:= %(leg)sRndConePhoIso",
+                                        "phoPhoIsoEA:= %(leg)sPhoIsoEA"
 				       ],
             "template_binning" : [-1.0, 0.0,0.1, 1.0, 4.0,9.0, 15.0 ],
             "components" : ["p", "f"],
@@ -394,7 +395,7 @@
 
             "ndim"       : 1,
             "bins"       : [ "phoPt", [100,6000] ],
-            "dataset_variables" : ["phoPt","phoEta","phoScEta","phoPhi","phoEnergy := phoPt*cosh(phoEta)","phoSigmaIeIe","phoGenIso","phoMatchType","rho","nvtx"],
+            "dataset_variables" : ["phoPt","phoRndConePhoIso","phoPhoIsoEA","phoEta","phoScEta","phoPhi","phoEnergy := phoPt*cosh(phoEta)","phoSigmaIeIe","phoGenIso","phoMatchType","rho","nvtx"],
             "_template_binning" : [ -10.0, 0.0, 1.0, 1.5, 2.0, 2.5, 3.0, 5.0, 10.0, 15.0 ],
 	    "template_binning" : [-1.0,  0.0,0.1, 1.0, 4.0,9.0, 15.0 ],
             "store_trees"  : true,
@@ -465,7 +466,7 @@
     "#" : "---------------------------------------------------------------------------------------------------------------------",
     "mix" : { 
 	"kDSinglePho2D" : {
-
+		"target" : "2D",
 		"ptLeadMin" : 100.0, "ptSubleadMin" : 100.0, "massMin" : 200.0,
 		"pt" : "phoPt", "eta" : "phoEta", "phi" : "phoPhi", "energy" : "phoEnergy",
 		"sources" : { 
@@ -502,7 +503,6 @@
 	}
 
     },
-
     "comparisons" : {
 	"_fit2DTruth" : { "fit" : "2D",
 		"templates" : { "mix:kDSinglePho2D" : {} ,
@@ -514,19 +514,24 @@
                 "weight_cut": "weight < 5.",
 		"redo" : true,
 		"doDataMc" : false, "doMcTruth" : true,
-        "template_binning" : [ 0.0,0.1,5.0,15.0],
+                "template_binning" : [ 0.0,0.1,5.0,15.0],
+ 
+                "lowerLimitSigRegion2D": "0.", 
+                "upperLimitSigRegion2D": "4.", 
+                "upperLimitSigRegion1D": "5.", 
 		"mass_binning" :"mass[13000,0.0,13000.0]"
 		},
 	"fit1DTruth" : { "fit" : "1D",
                 "components" : [ "f" ],
 		"templates" : {"singlePho" : { "EBEB" : "EB", "EBEE" : "EB", "EEEB" : "EE"  }
+                                 ,"1D" : {} 
                             
                             },
-                "prepfit": true,
+                "prepfit": false,
 		"redo" : true,
 		"weight_cut": "weight < 5.",
 		"doDataMc" : false, "doMcTruth" : true,
-        "template_binning" : [ 0.0,0.1, 1.0, 4.0,9.0,15.0 ],
+        "template_binning" : [ 0.0,0.1, 5.0,15.0 ],
 		"mass_binning" :"mass[13000,0.0,13000.0]"
 		}
     },
@@ -537,6 +542,8 @@
                 "observable": "templateNdim2d_unroll",
                 "components": ["pp","pf","ff"],
                 "data": "unrolled_data", 
+                "lowerLimitSigRegion": "0.", 
+                "upperLimitSigRegion": "4.", 
 		"mass_binning" :"mass[13000,0.0,13000.0]"
          },
         "_2_components":{
@@ -544,6 +551,8 @@
                 "observable": "templateNdim2d_unroll",
                 "components": ["pp","pf"],
                 "data": "unrolled_data", 
+                "lowerLimitSigRegion": "0.", 
+                "upperLimitSigRegion": "4.", 
 		"mass_binning" :"mass[13000,0.0,13000.0]"
         }
     },
