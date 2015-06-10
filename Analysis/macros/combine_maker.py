@@ -661,23 +661,24 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             label = model
         if model == "dijet":
             pname = "dijet_%s" % name
-            linc = self.buildRooVar("%s_lin" % pname,[], importToWs=False)
-            logc = self.buildRooVar("%s_log" % pname,[], importToWs=False)
+            linc = self.buildRooVar("%s_lin" % pname,[-10,20], importToWs=False)
+            logc = self.buildRooVar("%s_log" % pname,[-10,20], importToWs=False)
             linc.setVal(5.)
             logc.setVal(-1.)
             
             self.pdfPars_.add(linc)
             self.pdfPars_.add(logc)
             
-            roolist = ROOT.RooArgList( xvar, linc, logc )
-            pdf = ROOT.RooGenericPdf( pname, pname, "pow(@0,@1+@2*log(@0))", roolist )
+            roolist = ROOT.RooArgList( xvar, linc, logc)
+            pdf = ROOT.RooGenericPdf( pname, pname, "TMath::Max(1e-50,pow(@0,@1+@2*log(@0)))", roolist )
+            
             
             self.keep( [pdf,linc,logc] )
         elif model == "moddijet":
             pname = "moddijet_%s" % name
-            lina = self.buildRooVar("%s_lina" % pname,[], importToWs=False)
-            loga = self.buildRooVar("%s_loga" % pname,[], importToWs=False)
-            linb = self.buildRooVar("%s_linb" % pname,[], importToWs=False)
+            lina = self.buildRooVar("%s_lina" % pname,[-10,20], importToWs=False)
+            loga = self.buildRooVar("%s_loga" % pname,[-10,20], importToWs=False)
+            linb = self.buildRooVar("%s_linb" % pname,[-10,20], importToWs=False)
             sqrb = self.buildRooVar("%s_sqrb" % pname,[], importToWs=False)
             lina.setVal(5.)
             loga.setVal(-1.)
@@ -692,7 +693,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             self.pdfPars_.add(sqrb)
             
             roolist = ROOT.RooArgList( xvar, lina, loga, linb, sqrb )
-            pdf = ROOT.RooGenericPdf( pname, pname, "pow(@0,@1+@2*log(@0))*pow(1.-@0*@4,@3)", roolist )
+            pdf = ROOT.RooGenericPdf( pname, pname, "TMath::(1e-50,pow(@0,@1+@2*log(@0))*pow(1.-@0*@4,@3))", roolist )
             
             self.keep( [pdf,lina,loga, linb, sqrb] )
         elif model == "expow":
