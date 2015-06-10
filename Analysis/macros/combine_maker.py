@@ -82,6 +82,9 @@ class CombineApp(TemplatesApp):
                                     default=None,
                                     help="Name of generated card",
                                     ),
+                        make_option("--compute-FWHM",dest="compute_FWHM",action="store_true",default=False,
+                                    help="Compute the Full Width Half Maximum",
+                                    ),
                         
                         ]
                  )
@@ -92,6 +95,7 @@ class CombineApp(TemplatesApp):
         global ROOT, style_utils, RooFit
         import ROOT
         from ROOT import RooFit
+        
         import diphotons.Utils.pyrapp.style_utils as style_utils
         ROOT.gSystem.Load("libdiphotonsUtils")
         
@@ -104,6 +108,7 @@ class CombineApp(TemplatesApp):
         self.loadRootStyle()
         ROOT.TGaxis.SetMaxDigits(3)
         from ROOT import RooFit
+        from ROOT import TH1F, TCanvas, TAxis
         
         printLevel = ROOT.RooMsgService.instance().globalKillBelow()
         ROOT.RooMsgService.instance().setGlobalKillBelow(RooFit.FATAL)
@@ -124,8 +129,7 @@ class CombineApp(TemplatesApp):
         if options.generate_datacard:
             self.generateDatacard(options,args)
                 
-                
-  
+
     ## ------------------------------------------------------------------------------------------------------------
     def generateDatacard(self,options,args):
         """Generate a datacard with name: signal_name.txt if signal_root_file not provided.
@@ -226,13 +230,18 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             
             datacard.write("process".ljust(20))
             icomp = {}
+            i = 0
             for cat in categories:
                 datacard.write(" 0".ljust(15) )
-                i = 0
+                
                 for comp in options.components:
-                    i+=1
-                    icomp[comp] = i
-                    datacard.write((" %d" % i).ljust(15) )
+                    if comp in icomp:
+                        j = icomp[comp]
+                    else:
+                        i+=1
+                        j = i
+                        icomp[comp] = i 
+                    datacard.write((" %d" % j).ljust(15) )
             for cat in sidebands:                
                 for comp in  fit["sidebands"][cat]:
                     if comp in icomp:
@@ -240,6 +249,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     else:
                         i+=1
                         j = i
+                        icomp[comp] = i 
                     datacard.write((" %d" % j).ljust(15) )
             datacard.write("\n")
             
@@ -247,7 +257,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             for cat in categories:
                 datacard.write(" -1".ljust(15) )
                 for comp in options.components:
-                    datacard.write(" 1".ljust(15) )
+                    datacard.write(" 10".ljust(15) )
             for cat in sidebands:                
                 for comp in  fit["sidebands"][cat]:                    
                     datacard.write(" 1".ljust(15) )
@@ -523,14 +533,14 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         # done
         self.saveWs(options)
        
-    ## ------------------------------------------------------------------------------------------------------------
+ ## ------------------------------------------------------------------------------------------------------------
     def generateSignalDataset(self,options,args):
         
         print "--------------------------------------------------------------------------------------------------------------------------"
         print "generating signal dataset"
         print 
         
-        options.store_new_only = True
+        
         fitname = options.fit_name
         fit = options.fits[fitname] 
         isNameProvided = False
@@ -547,7 +557,14 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             roobs.setRange("fullRange",roobs.getMin(),roobs.getMax())
             roowe = self.buildRooVar("weight",[])        
             rooset = ROOT.RooArgSet(roobs,roowe)
+           
 
+            if (not isNameProvided or (isNameProvided and options.output_file == None)):
+                options.output_file = signame+".root" 
+
+            nameFileOutput = options.output_file
+            file_fwhm = open(signame+"_FWHM.txt","a")
+            
             ## build and import signal dataset
             for cat in fit["categories"]:
                 treename = "%s_%s_%s" % (signame,options.fit_name,cat)
@@ -560,12 +577,50 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 binned = reduced.binnedClone()
                 binned.SetName("signal_%s_%s"% (signame,cat))
                 self.workspace_.rooImport(binned)
-            if (not isNameProvided or (isNameProvided and options.output_file == None)):
-                options.output_file = signame+".root" 
-            # done
+                
+                if options.compute_FWHM:
+                    # plot signal histogram and compute FWHM
+                    canv = ROOT.TCanvas("signal_%s" % (cat),"signal" )
+                    roobs.setBins(1200)
+
+                    hist = binned.createHistogram("sigHist",roobs)
+                    halfMaxVal = 0.5*hist.GetMaximum()
+                    maxBin = hist.GetMaximumBin()
+                    print ("%r %r" % (maxBin,halfMaxVal))
+                    binLeft=binRight=xWidth=xLeft=xRight=0
+
+                    for ibin in range(1,maxBin):
+                        binVal = hist.GetBinContent(ibin)
+                        if (binVal >= halfMaxVal):
+                            binLeft = ibin
+                            break;
+                    for ibin in range(maxBin+1,hist.GetXaxis().GetNbins()+1):
+                        binVal = hist.GetBinContent(ibin)
+                        if (binVal < halfMaxVal):
+                            binRight = ibin-1
+                            break;
+                    if (binLeft > 0 and binRight > 0 ):
+                        xLeft = hist.GetXaxis().GetBinCenter(binLeft)
+                        xRight = hist.GetXaxis().GetBinCenter(binRight)
+                        xWidth = xRight-xLeft
+                    else:
+                        print("Did not succeed to get the FWHM")
+
+                    print ("FWHM = %r" % (xWidth))
+                    hist.GetXaxis().SetRangeUser(hist.GetXaxis().GetBinCenter(maxBin)-5*xWidth,hist.GetXaxis().GetBinCenter(maxBin)+5*xWidth)
+                    hist.Draw("HIST")
+                    
+                    #canv.SaveAs(options.output_file.replace(".root","_%s_hist.png" % (cat))
+                    canv.SaveAs(nameFileOutput.replace(".root",("%s_hist.png" % cat)))
+                    
+                    file_fwhm.write("%d %s %d %d\n" % (roobs.getMin(),cat,xWidth,xLeft))
+                
             self.saveWs(options)
+                        
+            # if signame provided then stop
             if isNameProvided :
-                break
+                break                
+  
         
     ## ------------------------------------------------------------------------------------------------------------
     def buildPdf(self,model,name,xvar,order=0,label=None):
@@ -575,8 +630,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             label = model
         if model == "dijet":
             pname = "dijet_%s" % name
-            linc = self.buildRooVar("%s_lin" % pname,[], importToWs=False)
-            logc = self.buildRooVar("%s_log" % pname,[], importToWs=False)
+            linc = self.buildRooVar("%s_lin" % pname,[-100.0,100.0], importToWs=False)
+            logc = self.buildRooVar("%s_log" % pname,[-100.0,100.0], importToWs=False)
             linc.setVal(5.)
             logc.setVal(-1.)
             
@@ -587,11 +642,27 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             pdf = ROOT.RooGenericPdf( pname, pname, "pow(@0,@1+@2*log(@0))", roolist )
             
             self.keep( [pdf,linc,logc] )
+            
+        if model == "maxdijet":
+            pname = "maxdijet_%s" % name
+            linc = self.buildRooVar("%s_lin" % pname,[-100.0,100.0], importToWs=False)
+            logc = self.buildRooVar("%s_log" % pname,[-100.0,100.0], importToWs=False)
+            linc.setVal(5.)
+            logc.setVal(-1.)
+            
+            self.pdfPars_.add(linc)
+            self.pdfPars_.add(logc)
+            
+            roolist = ROOT.RooArgList( xvar, linc, logc )
+            pdf = ROOT.RooGenericPdf( pname, pname, "TMath::Max(1e-30,pow(@0,@1+@2*log(@0)))", roolist )
+            
+            self.keep( [pdf,linc,logc] )
+            
         elif model == "moddijet":
             pname = "moddijet_%s" % name
-            lina = self.buildRooVar("%s_lina" % pname,[], importToWs=False)
-            loga = self.buildRooVar("%s_loga" % pname,[], importToWs=False)
-            linb = self.buildRooVar("%s_linb" % pname,[], importToWs=False)
+            lina = self.buildRooVar("%s_lina" % pname,[-100.0,100.0], importToWs=False)
+            loga = self.buildRooVar("%s_loga" % pname,[-100.0,100.0], importToWs=False)
+            linb = self.buildRooVar("%s_linb" % pname,[-100.0,100.0], importToWs=False)
             sqrb = self.buildRooVar("%s_sqrb" % pname,[], importToWs=False)
             lina.setVal(5.)
             loga.setVal(-1.)
