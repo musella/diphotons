@@ -53,7 +53,10 @@
 
 ### Background model
 - `./combine_maker.py --load templates_maker.json --fit-name cic --input-dir ~musella/public/workspace/exo/full_analysis_anv1_v14  -o full_analysis_anv1_v14_final_ws.root`
-- `./combine_maker.py --fit-name cic  --fit-background   --observable mgg[5000,300,6000] --read-ws full_analysis_anv1_v14_final_ws.root -O ~/www/test_bkg_fit -o full_analysis_anv1_v14_bkg_ws.root`
+- `./combine_maker.py --fit-name cic  --fit-background --read-ws full_analysis_anv1_v14_final_ws.root -O ~/www/test_bkg_fit -o full_analysis_anv1_v14_bkg_ws.root`
+- `./combine_maker.py --generate-signal-dataset --read-ws full_analysis_anv1_v14_final_ws.root --fit-name cic --load templates_maker.json --signal-name grav_001_1500 -o grav_001_1500.root`
+-`./combine_maker.py --generate-datacard --read-ws full_analysis_anv1_v14_bkg_ws.root --fit-name cic --load templates_maker.json --signal-name grav_001_1500 --signal-root-file grav_001_1500.root --background-root-file full_analysis_anv1_v14_bkg_ws.root`
+
 
 ### Per-component background model
 - `./combine_maker.py --fit-name cic  --fit-background   --observable mgg[5700,300,6000] --read-ws full_analysis_anv1_v18_final_ws.root -O ~/www/test_bkg_fit -o full_analysis_anv1_v18_bkg_ws.root  --bkg-shapes bkg_model/split_shapes.json`
