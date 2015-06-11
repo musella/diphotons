@@ -69,6 +69,12 @@ class BiasApp(CombineApp):
                         make_option("--exclude-test-range",dest="exclude_test_range",action="store_true",default=False,
                                     help="Exclude test range from fit",
                                     ),
+                        make_option("--components",dest="components",action="callback",type="string",callback=optpars_utils.ScratchAppend(str),
+                                    help="Background components",default=[],
+                                    ),
+                        make_option("--models",dest="models",action="callback",type="string",callback=optpars_utils.ScratchAppend(str),
+                                    help="Backround models",default=[],
+                                    ),
                         make_option("--analyze-bias",dest="analyze_bias",action="store_true",default=False),
                         make_option("--bias-files",dest="bias_files",action="callback",type="string",callback=optpars_utils.ScratchAppend(str),
                                     default=[]
@@ -131,7 +137,7 @@ class BiasApp(CombineApp):
                 dset = self.rooData(treename)
                 dset.Print()
 
-                reduced = dset.reduce(ROOT.RooArgSet(roobs))
+                reduced = dset.reduce(ROOT.RooArgSet(roobs),"%s > %f && %s < %f" % (roobs.GetName(),roobs.getMin(),roobs.GetName(),roobs.getMax()))
                 binned = reduced.binnedClone()
                 
                 if options.throw_from_model:
@@ -215,7 +221,7 @@ class BiasApp(CombineApp):
                 tnorm = dset.sumEntries()*options.lumi_factor
                 print tnorm, norm.getVal()
                 ntoys = options.n_toys
-
+                
                 for toy in range(ntoys):
                     data = pdf.generate(ROOT.RooArgSet(roobs),ROOT.gRandom.Poisson(tnorm)) ## 
                     if options.binned_toys: data=data.binnedClone()
@@ -231,7 +237,6 @@ class BiasApp(CombineApp):
     def fitToys(self,options,args):
         
         fout = self.openOut(options)
-            
         fitname = options.fit_name
         fit = options.fits[fitname]
         
@@ -239,12 +244,16 @@ class BiasApp(CombineApp):
         roobs.setRange("fitRange",*options.fit_range)
         minx = options.fit_range[0]
         maxx = options.fit_range[1]
+        minf = minx
+        maxf = maxx
         testRanges = []
         for itest in xrange(len(options.test_ranges)/2):
             rname = "testRange_%1.0f_%1.0f" % ( options.test_ranges[2*itest],options.test_ranges[2*itest+1] )
             print rname, options.test_ranges[2*itest:2*itest+2]
             minx = min(minx,options.test_ranges[2*itest])
             maxx = max(maxx,options.test_ranges[2*itest+1])
+            if options.test_ranges[2*itest] < minf:
+                continue
             roobs.setRange( rname, *options.test_ranges[2*itest:2*itest+2] )
             testRanges.append( (rname,options.test_ranges[2*itest:2*itest+2]) )
         ## roobs.setRange("fullRange",roobs.getMin(),roobs.getMax())
@@ -256,9 +265,11 @@ class BiasApp(CombineApp):
 
         roowe = self.buildRooVar("weight",[])
         
-        fitops = ( ROOT.RooFit.PrintLevel(-1),ROOT.RooFit.Warnings(False),ROOT.RooFit.NumCPU(4),ROOT.RooFit.Minimizer("Minuit2") )
-        ## fitops = ( ROOT.RooFit.PrintLevel(2),ROOT.RooFit.Warnings(False),ROOT.RooFit.NumCPU(4),ROOT.RooFit.Minimizer("Minuit2") )
-
+        fitops = [ ROOT.RooFit.PrintLevel(-1),ROOT.RooFit.Warnings(False),ROOT.RooFit.NumCPU(4),ROOT.RooFit.Minimizer("Minuit2"), ROOT.RooFit.Strategy(2), ROOT.RooFit.Offset(True) ]
+        if options.verbose:
+            fitops[0] = ROOT.RooFit.PrintLevel(-1)
+            fitops[1] = ROOT.RooFit.Warnings(True) 
+            
         for comp,model in zip(options.components,options.models):
             if comp != "":
                 comp = "%s_" % comp
@@ -269,10 +280,11 @@ class BiasApp(CombineApp):
                 biases = {}
                 for testRange in testRanges:
                     rname = testRange[0]
-                    ntp = ROOT.TNtuple("tree_bias_%s%s_%s_%s" % (comp,cat,model,rname),"tree_bias_%s%s_%s_%s" % (comp,cat,model,rname),"toy:truth:fit:minos:errhe:errp:errm:bias" )
+                    ntp = ROOT.TNtuple("tree_bias_%s%s_%s_%s" % (comp,cat,model,rname),"tree_bias_%s%s_%s_%s" % (comp,cat,model,rname),"toy:truth:fit:minos:errhe:errp:errm:bias:fitmin:fitmax" )
                     biases[rname] = ntp
                     self.store_[ntp.GetName()] = ntp
-                    
+                print self.store_
+                
                 generator = self.rooPdf("pdf_mctruth_%s%s_%s" % (comp,fitname,cat))
                 gnorm     = self.buildRooVar("norm_mctruth_%s%s_%s" % (comp,fitname,cat), [], recycle=True)
                 gnorm.Print() 
@@ -293,12 +305,20 @@ class BiasApp(CombineApp):
                     
                     if options.plot_toys_fits:
                         frame = roobs.frame()
-                        pdff = pdf.Clone()
-                        pdff.fitTo(dset,ROOT.RooFit.Range("fullRange"),*fitops)
-                        pdff.plotOn(frame,ROOT.RooFit.LineColor(ROOT.kGreen),ROOT.RooFit.Range("fullRange"))
+                        # pdff = pdf.Clone()
+                        # pdff.fitTo(dset,ROOT.RooFit.Range("fullRange"),*fitops)
+                        # pdff.plotOn(frame,ROOT.RooFit.LineColor(ROOT.kGreen),ROOT.RooFit.Range("fullRange"))
                      
-                    pdft.fitTo(dset,ROOT.RooFit.Range("fitRange"),*fitops)
-                    
+                    ## pdft.fitTo(dset,ROOT.RooFit.Range("fitRange"),*fitops)
+                    gnll = pdf.createNLL(dset,ROOT.RooFit.Extended())
+                    gminim = ROOT.RooMinimizer(gnll)
+                    gminim.setMinimizerType("Minuit2")                        
+                    gminim.setEps(1000)
+                    gminim.setOffsetting(True)
+                    gminim.setStrategy(2)
+                    gminim.setPrintLevel( -1 if not options.verbose else 2)
+                    gminim.migrad()
+
                     if options.plot_toys_fits:
                         dset.plotOn(frame)
                         pdf.plotOn(frame,ROOT.RooFit.LineColor(ROOT.kRed))
@@ -309,18 +329,26 @@ class BiasApp(CombineApp):
                         canv.SetLogx()
                         frame.Draw()
                         self.keep( canv )
-                    
+
                     for test in testRanges:
+                        if options.verbose:
+                            print "test range: ", test
+                            
                         testRange,testLim = test
                         iname = "%s_%s_%s" % (toyname, model, testRange)
 
                         roonorm = ROOT.RooRealVar("norm_%s" % iname, "norm_%s" % iname, 0.)
                         roonorm.setConstant(False)
-                        roonorm.setRange(0.,1.e+7)
+                        ## roonorm.setRange(-dset.sumEntries()*5.,dset.sumEntries()*5.)
 
                         integral = pdft.createIntegral(ROOT.RooArgSet(roobs),ROOT.RooArgSet(roobs),testRange)
                         nomnorm = integral.getVal()*dset.sumEntries()
+                        if nomnorm == 0.:
+                            continue
+                        if options.verbose:
+                            print "Nominal normalization : ", nomnorm, integral.getVal(), dset.sumEntries()                        
                         roonorm.setVal(nomnorm)
+                        roonorm.setRange(-10.*nomnorm,10.*nomnorm)
                         truenorm = trueNorms[testRange]
                         epdf = ROOT.RooExtendPdf(iname,iname,pdf,roonorm,testRange)
                         
@@ -331,27 +359,52 @@ class BiasApp(CombineApp):
                         nll = epdf.createNLL(edset,ROOT.RooFit.Extended())
 
                         minim = ROOT.RooMinimizer(nll)
+                        minim.setEps(1000)
                         minim.setOffsetting(True)
                         minim.setMinimizerType("Minuit2")
-                        minim.setPrintLevel(-1)
-                        minim.setStrategy(2)
-                        migrad = minim.migrad()
-                                                
-                        ## print migrad
-                        if migrad != 0:
-                            minim.setStrategy(0)
+                        minim.setMaxIterations(15)
+                        minim.setMaxFunctionCalls(100)
+                        if options.verbose:
+                            minim.setPrintLevel(2)
+                        else:
+                            minim.setPrintLevel(-1)
+                            
+                        if options.verbose:
+                            print "Running migrad"
+                            
+                        for stra in range(2,3):
+                            minim.setStrategy(stra)
                             migrad = minim.migrad()
-                            if migrad != 0:
-                                continue
+                            if migrad == 0:
+                                break
+
+                        if options.verbose:
+                            print "Migrad sta", migrad
+                                                
+                        if migrad != 0:
+                            continue
+
+                        
+                        ### ## print migrad
+                        ### if migrad != 0:
+                        ###     minim.setStrategy(1)
+                        ###     migrad = minim.migrad()
+                        ###     if migrad != 0:
+                        ###         continue
                         
                         nomnorm = roonorm.getVal()
                         
+                        if options.verbose:
+                            print "Now running hesse"
+
                         minim.hesse()
                         hesseerr = roonorm.getError()
                         fiterrh = roonorm.getErrorHi()
                         fiterrl = roonorm.getErrorLo()
                         
                         if not options.approx_minos:
+                            if options.verbose:
+                                print "Running minos"
                             minos = minim.minos(ROOT.RooArgSet(roonorm))                        
                             if minos == 0:
                                 if roonorm.getErrorHi() != 0.:
@@ -359,23 +412,61 @@ class BiasApp(CombineApp):
                                 if roonorm.getErrorLo() != 0.:
                                     fiterrl = roonorm.getErrorLo()
                         else:
+                            if options.verbose:
+                                print "Computing approximate minos errors"
                             fitval  = roonorm.getVal()
-                            fiterrh = abs(roonorm.getErrorHi()/3.)
-                            fiterrl = abs(roonorm.getErrorLo()/3.)
-                            pll = nll.createProfile(ROOT.RooArgSet(roonorm))
-                            minll = pll.getVal()
+                            fiterrh = abs(roonorm.getErrorHi()/2.)
+                            fiterrl = abs(roonorm.getErrorLo()/2.)
+                            if options.verbose:
+                                print "Creating NLL"
+                            # pll = nll.createProfile(ROOT.RooArgSet(roonorm))
+                            # print pll.minimizer()
+                            # pll.minimizer().setEps(0.1)
+                            if options.verbose:
+                                print "Computing NLL at minimum"
+                            # minll = pll.getVal()
+                            minll  = nll.getVal()
                             if fiterrl < fitval:
                                 roonorm.setVal(fitval-fiterrl)
                             else:
                                 roonorm.setVal(0.1)
                                 fiterrl = fitval - 0.1
-                            nllm =  pll.getVal()
+                            if options.verbose:
+                                print "evaluating NLL at ", roonorm.getVal()
+                            # nllm =  pll.getVal()
+                            roonorm.setConstant(True) 
+                            ## minim.migrad()
+                            minimm = ROOT.RooMinimizer(nll)
+                            minimm.setPrintLevel( -1 if not options.verbose else 2)
+                            minimm.setMaxIterations(15)
+                            minimm.setMaxFunctionCalls(100)                            
+                            minimm.setStrategy(1)
+                            minimm.setEps(1000)
+                            minimm.setOffsetting(True)
+                            minimm.setMinimizerType("Minuit2")
+                            minimm.migrad()
+                            nllm =  nll.getVal()
+
                             roonorm.setVal(fitval+fiterrh)
-                            nllp =  pll.getVal()
+                            roonorm.setConstant(True) 
+                            if options.verbose:
+                                print "evaluating NLL at ", roonorm.getVal()
+                            ## minim.migrad()
+                            minimp = ROOT.RooMinimizer(nll)
+                            minimp.setPrintLevel( -1 if not options.verbose else 2)
+                            minimp.setMaxIterations(15)
+                            minimp.setMaxFunctionCalls(100)                            
+                            minimp.setStrategy(1)
+                            minimp.setEps(1000)
+                            minimp.setOffsetting(True)
+                            minimp.setMinimizerType("Minuit2")
+                            minimp.migrad()
+                            nllp =  nll.getVal()
+                            ## nllp =  pll.getVal()
                             
                             if nllm-minll > 0. and nllp-minll > 0.:
-                                fiterrh = fiterrh / sqrt(2.*(nllp-minll)) 
-                                fiterrl = fiterrl / sqrt(2.*(nllm-minll))
+                                fiterrh = max(hesseerr,fiterrh / sqrt(2.*(nllp-minll))) 
+                                fiterrl = max(hesseerr,fiterrl / sqrt(2.*(nllm-minll)))
                                 minos = 0
                             else:
                                 minos = 1
@@ -396,7 +487,7 @@ class BiasApp(CombineApp):
                         else:
                             bias = (nomnorm-truenorm)/abs(errh)
 
-                        biases[testRange].Fill( toy,truenorm, nomnorm,  minos, hesseerr, fiterrh, fiterrl, bias )
+                        biases[testRange].Fill( toy,truenorm, nomnorm,  minos, hesseerr, fiterrh, fiterrl, bias, options.fit_range[0], options.fit_range[1] )
                     
                     self.autosave(True)
                         
@@ -413,6 +504,9 @@ class BiasApp(CombineApp):
         profiles = {}
         bprofiles = {}
         
+        xfirst = 1e5
+        xlast  = 0.
+
         for fname,label in zip(options.bias_files,options.bias_labels):
             fin = self.open(fname)
             for key in ROOT.TIter(fin.GetListOfKeys()):
@@ -437,6 +531,8 @@ class BiasApp(CombineApp):
                         bprofile = bprofiles[slabel]
                         
                     xmin,xmax = [float(t) for t in rng.split("_")[1:]]
+                    xfirst = min(xmin,xfirst)
+                    xlast = max(xmax,xlast)
                     ibin = profile.GetN()
                     
                     tree.Draw("bias>>h_bias_%s(501,-5.005,5.005)" % nlabel )
@@ -469,23 +565,25 @@ class BiasApp(CombineApp):
                     gausd = hd.GetListOfFunctions().At(0)
                     medd = array.array('d',[0.])
                     hd.GetQuantiles(len(prb),medd,prb)
-                    ## profile.SetPoint(ibin,0.5*(xmax+xmin),abs(medd[0])/(xmax-xmin))
-                    profile.SetPoint(ibin,0.5*(xmax+xmin),abs(medd[0]))
+                    profile.SetPoint(ibin,0.5*(xmax+xmin),abs(medd[0])/(xmax-xmin))
+                    ## profile.SetPoint(ibin,0.5*(xmax+xmin),abs(medd[0]))
                     profile.SetPointError(ibin,0.5*(xmax-xmin),0.)
                     
-                    bprofile.SetPoint(ibin,0.5*(xmax+xmin),med[0])
+                    ## bprofile.SetPoint(ibin,0.5*(xmax+xmin),med[0])
+                    bprofile.SetPoint(ibin,0.5*(xmax+xmin),gaus.GetParameter(1)/(gaus.GetParameter(2)))
                     bprofile.SetPointError(ibin,0.5*(xmax-xmin),0.)
                     
+                    tree.GetEntry(0)
                     summary[nlabel] = [ gaus.GetParameter(1), gaus.GetParError(1), gaus.GetParameter(2), gaus.GetParError(2),
-                                        med[0], qtl[0], gausd.GetParameter(1), gausd.GetParError(1), medd[0] ]
+                                        med[0], qtl[0], gausd.GetParameter(1), gausd.GetParError(1), medd[0], medd[0]/med[0], tree.truth ]
         
         ### styles = [ [ (style_utils.colors,ROOT.kBlack) ],  [ (style_utils.colors,ROOT.kRed) ],  
         ###            [ (style_utils.colors,ROOT.kBlue) ],  [ (style_utils.colors,ROOT.kGreen+1) ],
         ###            [ (style_utils.colors,ROOT.kOrange) ],  [ (style_utils.colors,ROOT.kMagenta+1) ] 
         ###            ]
                     
-        colors = [ ROOT.kRed, ROOT.kBlue, ROOT.kGreen+1, ROOT.kOrange ]
-        markers = [ROOT.kFullCircle,ROOT.kOpenCircle]
+        colors = [ ROOT.kRed, ROOT.kBlue, ROOT.kGreen+1, ROOT.kOrange, ROOT.kCyan, ROOT.kMagenta, ROOT.kYellow, ROOT.kGray ]
+        markers = [ROOT.kFullCircle,ROOT.kOpenCircle,ROOT.kCyan, ROOT.kMagenta, ROOT.kYellow, ROOT.kGray ]
         styles = []
         keys = sorted(bprofiles.keys())
         nfuncs = len(options.bias_labels)
@@ -498,24 +596,29 @@ class BiasApp(CombineApp):
         ROOT.gStyle.SetOptFit(0)
         canv = ROOT.TCanvas("profile_bias","profile_bias")
         canv.SetLogx()
-        ## canv.SetLogy()
+        canv.SetLogy()
         canv.SetGridy()
         leg  = ROOT.TLegend(0.6,0.6,0.9,0.9)
         leg.SetFillStyle(0)
+        profiles[keys[0]].GetXaxis().SetRangeUser(xfirst,xlast)
+        bprofiles[keys[0]].GetXaxis().SetRangeUser(xfirst,xlast)                    
         first = True
         cstyles = copy(styles)
+        fits = []
         ## for key,profile in profiles.iteritems():
         for key in keys:
             profile = profiles[key]
             profile.Sort()
-            style = cstyles.pop(0)
+            profile.Print()
+            style = cstyles.pop(0)            
             ## func = ROOT.TF1("bfunc","(x>[0])*( [1]/([0]+x)+[2] )")
-            ## func.SetParameters(300.,1.,1.e-3)
-            ## profile.Fit(func,"+")
-            ## fit = profile.GetListOfFunctions().At(0)
-            ## self.keep(fit)
-            ## style_utils.apply( fit, style[:1] )
-            ## profile.Print("V")
+            func = ROOT.TF1("bfunc","[0]*pow(x/%f,[1])+[2]"% max(600,xfirst),max(600,xfirst),xlast)
+            # func.SetParameters(300.,1.,1.e-3)
+            func.SetParameters(1.e-2,-4,1.e-5)
+            profile.Fit(func,"R+")
+            fit = profile.GetListOfFunctions().At(0)
+            fits.append([key,fit])
+            style_utils.apply( fit, style[:1] )
             style_utils.apply( profile, style )
             leg.AddEntry(profile,key,"pe")
             if first:
@@ -523,9 +626,10 @@ class BiasApp(CombineApp):
                 profile.GetXaxis().SetMoreLogLabels()
                 profile.GetXaxis().SetTitle("mass")
                 ## profile.GetYaxis().SetRangeUser(0.001,0.3)
-                profile.GetYaxis().SetRangeUser(0.,6.)
-                ## profile.GetYaxis().SetTitle("| n_{fit} - n_{true} | / GeV")
-                profile.GetYaxis().SetTitle("| n_{fit} - n_{true} |")
+                profile.GetYaxis().SetRangeUser(0.00001,0.2)
+                ## profile.GetYaxis().SetRangeUser(0.,6.)
+                profile.GetYaxis().SetTitle("| n_{fit} - n_{true} | / GeV")
+                ## profile.GetYaxis().SetTitle("| n_{fit} - n_{true} |")
                 first = False
             else:
                 profile.Draw("P")
@@ -541,6 +645,15 @@ class BiasApp(CombineApp):
         first = True
         cstyles = copy(styles)
         ## for key,profile in bprofiles.iteritems():
+        frame = ROOT.TH2F("frame","frame",100,xfirst,xlast,100,-4,2);
+        frame.SetStats(False)
+        frame.Draw()
+        frame.GetXaxis().SetTitle("mass")
+        frame.GetYaxis().SetTitle("( n_{fit} - n_{true} )/ \sigma_{fit}")
+        box = ROOT.TBox(xfirst,-0.5,xlast,0.5)
+        box.SetFillColorAlpha(ROOT.kGray,0.1)
+        box.Draw("same")        
+        self.keep([frame,box])
         for key in keys:
             profile = bprofiles[key]
             profile.Sort()
@@ -548,21 +661,24 @@ class BiasApp(CombineApp):
             ## profile.Print("V")
             style_utils.apply( profile, cstyles.pop(0) )
             bleg.AddEntry(profile,key,"pe")
-            if first:
-                profile.Draw("AP")
-                xmin = profile.GetXaxis().GetXmin()
-                xmax = profile.GetXaxis().GetXmax()
-                profile.GetXaxis().SetMoreLogLabels()
-                profile.GetXaxis().SetTitle("mass")
-                profile.GetYaxis().SetRangeUser(-4,2.)
-                profile.GetYaxis().SetTitle("( n_{fit} - n_{true} )/ \sigma_{fit}")
-                first = False
-                box = ROOT.TBox(xmin,-0.5,xmax,0.5)
-                box.SetFillColorAlpha(ROOT.kGray,0.1)
-                box.Draw("same")
-                profile.Draw("P")
-            else:
-                profile.Draw("P")
+            ## if first:
+            ##     profile.Draw("AP")
+            ##     xmin = profile.GetXaxis().GetXmin()
+            ##     xmax = profile.GetXaxis().GetXmax()
+            ##     ## xmin = xfirst
+            ##     ## xmax = xlast
+            ##     profile.GetXaxis().SetMoreLogLabels()
+            ##     profile.GetXaxis().SetTitle("mass")
+            ##     profile.GetYaxis().SetRangeUser(-4,2.)
+            ##     profile.GetYaxis().SetTitle("( n_{fit} - n_{true} )/ \sigma_{fit}")
+            ##     first = False
+            ##     box = ROOT.TBox(xmin,-0.5,xmax,0.5)
+            ##     box.SetFillColorAlpha(ROOT.kGray,0.1)
+            ##     box.Draw("same")
+            ##     profile.Draw("P")
+            ## else:
+            ##     profile.Draw("P")
+            profile.Draw("P")
         bleg.Draw("same")
         canv.RedrawAxis()
         canv.Modified()
@@ -577,6 +693,12 @@ class BiasApp(CombineApp):
         for key in keys:
             maxl = max(len(key),maxl)
         summarystr = ""
+        for name,fit in fits:
+            summarystr += "%s %s\n" % ( name, fit.GetExpFormula("p") )
+        summarystr += "test region".ljust(maxl+3)
+        for field in ["pmean","err","psig","err","pmedian","p68","bmean","err","bmedian","smedian","truth"]:
+            summarystr += field.rjust(9)
+        summarystr += "\n"
         for key in keys:
             val = summary[key]
             summarystr += ("%s, " % key).ljust(maxl+3)
