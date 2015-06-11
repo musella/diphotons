@@ -306,22 +306,14 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         print "including bias term in the background"
         print "--------------------------------------------------------------------------------------------------------------------------"
         
-        options.background_root_file = options.read_ws
-        if (options.signal_name == None or options.signal_root_file == None ) :
-            print "Provide signal-name and signal-root-file "
-            return;
-            
-        fitname = options.fit_name
-        fit = options.fits[fitname]
+        fit = options.fits[options.fit_name]
         
-        signame = options.signal_name
-        
-        print "reading signal and bkg pdfs from %s and %s" % (options.signal_root_file, options.background_root_file)
+        #signame = options.signal_name
 
         ## reading back background_root_file
         
         # build observable variable
-        roobs = self.buildRooVar(*(self.getVar(options.observable)), recycle=True, importToWs=True)
+        print """roobs = self.buildRooVar(*(self.getVar(options.observable)), recycle=True, importToWs=True)
         roowe = self.buildRooVar("weight",[])        
         rooset = ROOT.RooArgSet(roobs,roowe)
         
@@ -329,23 +321,11 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         
         for cat in fit["categories"]:
             
-            options.read_ws = options.background_root_file
-            self.readWs(options,args)
-                
             dataBinned = self.rooData("binned_data_%s" % cat)
             data = self.rooData("data_%s" % cat)
-            
-            
-            ## reading back signal_root_file workspace
-            options.read_ws = options.signal_root_file
-            self.readWs(options,args)
             signalDataHist = self.rooData("signal_%s_%s" % (signame,cat))
-            
             signalPdf = ROOT.RooHistPdf("signalPdf_%s_%s"% (signame,cat),"signalPdf_%s_%s"% (signame,cat),ROOT.RooArgSet(roobs),signalDataHist)
 
-            options.read_ws = options.background_root_file
-            self.readWs(options,args)
-            
             for comp in options.components :
             
                 bkgPdf = self.rooPdf("model_%s_%s" % (comp,cat))
@@ -359,13 +339,13 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 
                 ## build list of coefficients 
                 roolist = ROOT.RooArgList()
-                nBias = self.buildRooVar("nBias_%s_%s_frac" % (comp,cat), [], importToWs=False )
+                nBias = self.buildRooVar("nBias_%s_%s" % (comp,cat), [], importToWs=False )
                 nBias.setVal(0.)
                 nBias.setConstant(True)
                 
                 #fracsig = ROOT.RooFormulaVar("signal_%s_frac" % (cat), "signal_%s_frac" % (cat), "@0*1./@1", ROOT.RooArgList(nBias,rooNdataVar[cat]) )
 
-                nuis = self.buildRooVar("%s_%s_frac_nuis" % (comp,cat), [], importToWs=False )
+                nuis = self.buildRooVar("%s_%s_nBias_nuis" % (comp,cat), [], importToWs=False )
                 nuis.setVal(0.)
                 nuis.setConstant(True)
                 fit["params"].append( (nuis.GetName(), nuis.getVal(), 0.) )
@@ -381,7 +361,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 pdfSum_norm = ROOT.RooFormulaVar("%s_norm" %  (pdfSum.GetName()), "%s_norm" %  (pdfSum.GetName()),"@0",ROOT.RooArgList(rooNdataFormula)) 
                 self.workspace_.rooImport(pdfSum_norm)
                 self.workspace_.rooImport(pdfSum,RooFit.RecycleConflictNodes())
-        self.saveWs(options)
+        self.saveWs(options)"""
 
     ## ------------------------------------------------------------------------------------------------------------  
 
