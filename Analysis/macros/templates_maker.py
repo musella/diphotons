@@ -347,7 +347,6 @@ class TemplatesApp(PlotApp):
     def doCompareTemplates(self,options,args):
         print "Compare truth templates with rcone and sideband templates"
         ROOT.TH1F.SetDefaultSumw2(True)
-        print options.aliases[1]
         for name, comparison in options.comparisons.iteritems():
             if name.startswith("_"): continue
             print "Comparison %s" % name
@@ -355,7 +354,7 @@ class TemplatesApp(PlotApp):
             ReDo=comparison["redo"] 
             weight_cut=comparison["weight_cut"] 
             fitname=comparison["fit"]
-            if fitname=="2D": d2=True
+            if fitname=="2D" : d2=True
             else: d2=False
             fit=options.fits[fitname]
             components=comparison.get("components",fit["components"])
@@ -395,16 +394,19 @@ class TemplatesApp(PlotApp):
                     for template,mapping in templatesls.iteritems():
                         print template, mapping
                         if "mix" in template:
-                             mixname = template.split(":")[-1]
-                             templatename= "template_mix_%s_%s_%s" % (compname,mixname,mapping.get(cat,cat))
+                            mixname = template.split(":")[-1]
+                            print "template_mix_%s_%s_%s" % (compname,mixname,mapping.get(cat,cat))
+                            templatename= "template_mix_%s_%s_%s" % (compname,mixname,mapping.get(cat,cat))
                         else:
-                             templatename= "template_%s_%s_%s" % (compname,template,mapping.get(cat,cat))
+                            print "template_%s_%s_%s" % (compname,template,mapping.get(cat,cat))
+                            templatename= "template_%s_%s_%s" % (compname,template,mapping.get(cat,cat))
                         tempdata = self.reducedRooData(templatename,setargs,False,sel=weight_cut,redo=ReDo)
 
                         #if "mix" in template and not prepfit:
                         if "mix" in template:
                             templatename=( "reduced_template_mix_%s_2D_%s" % (compname,mapping.get(cat,cat)))
                             tempdata.SetName(templatename)
+                        tempdata.Print()
                         templates.append(tempdata)
 ###------------------- split in massbins
                     
@@ -463,11 +465,12 @@ class TemplatesApp(PlotApp):
                             isoarg1d=ROOT.RooArgList("isoarg")
                             isoarg1d.add(self.buildRooVar("templateNdim%dDim%d" % ( fit["ndim"],id),template_binning,recycle=True))                
                             tit = "compiso_%s_%s_%s_mb_%s_templateNdim%dDim%d" % (fitname,compname,cat,cut_s,fit["ndim"],id)
+                            numEntries_s=""
                             for tm in templates_massc:
                                 tempHisto=ROOT.TH1F("%s_dim%d_%d" % (tm.GetName(),fit["ndim"],id),
                                                     "%s_dim%d_%d" % (tm.GetName(),fit["ndim"],id),len(template_binning)-1,template_binning)
                                 tm.fillHistogram(tempHisto,isoarg1d)
-                                ## tempHisto.Scale(1.0/tempHisto.Integral())
+                                numEntries_s+= (" %f " % tempHisto.Integral())
                                 if "truth" in tempHisto.GetName():
                                     computeShapeWithUnc(tempHisto)
                                 else:
@@ -478,7 +481,7 @@ class TemplatesApp(PlotApp):
                                 histls.append(tempHisto)
                           #  if not prepfit: 
                             print "plot 1d histos"
-                            self.plotHistos(histls,tit,template_binning,True)
+                            self.plotHistos(histls,tit,template_binning,True,numEntries_s)
                         ## roll out for combine tool per category
                         if fit["ndim"]>1:
                             self.histounroll(templates_massc,template_binning,isoargs,compname,cat,cut_s,prepfit,sigRegionlow2D,sigRegionup2D,extra_shape_unc=options.extra_shape_unc)
@@ -641,12 +644,12 @@ class TemplatesApp(PlotApp):
 
 ## ------------------------------------------------------------------------------------------------------------
 
-    def plotHistos(self,histlist,title,template_bins,dim1):
-      #  ROOT.gStyle.SetOptStat(111111)
+    def plotHistos(self,histlist,title,template_bins,dim1,numEntries=None):
         leg = ROOT.TLegend(0.5,0.8,0.9,0.9)
         leg.SetTextSize(0.03)
         leg.SetTextFont(42);
         leg.SetFillColor(ROOT.kWhite)
+        leg.SetHeader("#%s " % numEntries)
         canv = ROOT.TCanvas(title,title)
         canv.Divide(1,2)
         canv.cd(1)
@@ -674,7 +677,7 @@ class TemplatesApp(PlotApp):
             histlist[i].GetXaxis().SetLimits(-0.1,max(template_bins))
             ymax = max(ymax,histlist[i].GetMaximum())
             if histlist[i].GetMinimum() != 0.:
-                ymin = max(ymin,histlist[i].GetMinimum())
+                ymin = min(ymin,histlist[i].GetMinimum())
             if i>0:
                 histlist[i].SetLineColor(ROOT.kAzure+i)
                 histlist[i].SetMarkerColor(ROOT.kAzure+i)
@@ -690,10 +693,6 @@ class TemplatesApp(PlotApp):
         for ihsit,hist in enumerate(histlist[1:]):
             ratios.append( hist.Clone("ratio_%d" % ihsit) )
             ratios[-1].Divide(histlist[0])
-        ## ratio=histlist[1].Clone("ratio")
-        ## ratio.Divide(histlist[0])
-        ## ratio.SetLineColor(ROOT.kAzure+1)
-        ## ratio.SetMarkerColor(ROOT.kAzure+1)
         ratios[0].GetYaxis().SetTitleSize( histlist[0].GetYaxis().GetTitleSize() * 6.5/3.5 )
         ratios[0].GetYaxis().SetLabelSize( histlist[0].GetYaxis().GetLabelSize() * 6.5/3.5 )
         ratios[0].GetYaxis().SetTitleOffset( histlist[0].GetYaxis().GetTitleOffset() * 6.5/3.5 )
@@ -1134,6 +1133,7 @@ class TemplatesApp(PlotApp):
             
         ## loop over configured fits
         for name, fit in options.fits.iteritems():
+            if name.startswith("_"): continue
             print
             print "--------------------------------------------------------------------------------------------------------------------------"
             print "Preparing fit %s" % name
@@ -1208,7 +1208,7 @@ class TemplatesApp(PlotApp):
                     count = self.rooData("mctruth_%s_%s_%s" % (truth,name,cat) ).sumEntries()
                     breakDown += count
                     catCounts[truth] = count
-                print cat, " ".join( "%s : %1.4g" % (key,val) for key,val in catCounts.iteritems() ),
+                print "truth : ",cat, " ".join( "%s : %1.4g" % (key,val) for key,val in catCounts.iteritems() ),
                 if breakDown != catCounts["tot"]:
                     print "\n   Warning : total MC counts don't match sum of truths. Difference: ", catCounts["tot"]-breakDown
                 else:
@@ -1222,6 +1222,7 @@ class TemplatesApp(PlotApp):
                 cats = {}
                 presel = cfg.get("presel",preselection)
                 for cat,fill in cfg["fill_categories"].iteritems():
+                    if cat.startswith("_"): continue
                     config = { "src" : categories[cat]["src"],
                                "fill": fill
                                }
@@ -1250,6 +1251,7 @@ class TemplatesApp(PlotApp):
     def doMixTemplates(self,options,args):
         
         for name, mix in options.mix.iteritems():
+            if name.startswith("_"): continue
             print
             print "--------------------------------------------------------------------------------------------------------------------------"
             print "Mixing templates %s" % name
@@ -1298,6 +1300,7 @@ class TemplatesApp(PlotApp):
             print
 
             for cat, fill in fill_categories.iteritems():
+                if cat.startswith("_"): continue
                 print
                 print "Filling category :", cat
                 for comp,source in sources.iteritems():
@@ -1347,7 +1350,8 @@ class TemplatesApp(PlotApp):
                         useCdfDistance  = fill.get("useCdfDistance",False)
                         matchWithThreshold  = fill.get("matchWithThreshold",False)
                         targetWeight    = fill.get("targetWeight","weight")
-                        maxWeight    = fill.get("maxWeight",0.)
+                        maxWeightTarget    = fill.get("maxWeightTarget",0.)
+                        maxWeightCache    = fill.get("maxWeightCache",0.)
                         dataname        = "%s_%s_%s" % (targetSrc,targetName,targetCat)                        
                         target          = self.treeData(dataname)
 
@@ -1379,7 +1383,7 @@ class TemplatesApp(PlotApp):
                         mixer.fillLikeTarget(target,targetMatch1,targetMatch2,targetWeight,tree1,tree2,
                                              pt,eta,phi,energy,pt,eta,phi,energy,
                                              matchVars1,matchVars2,rndswap,rndmatch,nNeigh,nMinNeigh,targetFraction,
-                                             useCdfDistance,matchWithThreshold, maxWeight,
+                                             useCdfDistance,matchWithThreshold, maxWeightTarget,maxWeightCache,
                                              array.array('d',axesWeights))
                     
                     dataset = mixer.get()
