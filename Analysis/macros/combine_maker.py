@@ -119,7 +119,8 @@ class CombineApp(TemplatesApp):
         self.setup(options,args)
 
         options.components = options.bkg_shapes.keys()
-
+ 
+        self.includeBiasPdf(options,args)
         if options.fit_background:
             self.fitBackground(options,args)
             
@@ -287,8 +288,91 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             if isNameProvided:
                 break
             
-    
+    def includeBiasPdf(self,options,args):
+
+        print "--------------------------------------------------------------------------------------------------------------------------"
+        print "including bias term in the background"
+        print "--------------------------------------------------------------------------------------------------------------------------"
+        
+        options.background_root_file = options.read_ws
+        if (options.signal_name == None or options.signal_root_file == None ) :
+            print "Provide signal-name and signal-root-file "
+            return;
+            
+        fitname = options.fit_name
+        fit = options.fits[fitname]
+        
+        signame = options.signal_name
+        
+        print "reading signal and bkg pdfs from %s and %s" % (options.signal_root_file, options.background_root_file)
+
+        ## reading back background_root_file
+        
+        # build observable variable
+        roobs = self.buildRooVar(*(self.getVar(options.observable)), recycle=True, importToWs=True)
+        roowe = self.buildRooVar("weight",[])        
+        rooset = ROOT.RooArgSet(roobs,roowe)
+        
+        fit["params"] = []
+        
+        for cat in fit["categories"]:
+            
+            options.read_ws = options.background_root_file
+            self.readWs(options,args)
+                
+            dataBinned = self.rooData("binned_data_%s" % cat)
+            data = self.rooData("data_%s" % cat)
+            
+            
+            ## reading back signal_root_file workspace
+            options.read_ws = options.signal_root_file
+            self.readWs(options,args)
+            signalDataHist = self.rooData("signal_%s_%s" % (signame,cat))
+            
+            signalPdf = ROOT.RooHistPdf("signalPdf_%s_%s"% (signame,cat),"signalPdf_%s_%s"% (signame,cat),ROOT.RooArgSet(roobs),signalDataHist)
+
+            options.read_ws = options.background_root_file
+            self.readWs(options,args)
+            
+            for comp in options.components :
+            
+                bkgPdf = self.rooPdf("model_%s_%s" % (comp,cat))
+                roopdflist = ROOT.RooArgList()
+                roopdflist.add(bkgPdf)
+                roopdflist.add(signalPdf)
+                
+                ## retrieve norm of pdf 
+                rooNdata = self.buildRooVar("%s_norm" % (bkgPdf.GetName()),[],recycle=True,importToWs=False)
+                rooNdataFormula = ROOT.RooFormulaVar("%s_norm_Formula" % (bkgPdf.GetName()), "%s_norm_Formula" % (bkgPdf.GetName()), "@0", ROOT.RooArgList(rooNdata))
+                
+                ## build list of coefficients 
+                roolist = ROOT.RooArgList()
+                nBias = self.buildRooVar("nBias_%s_%s_frac" % (comp,cat), [], importToWs=False )
+                nBias.setVal(0.)
+                nBias.setConstant(True)
+                
+                #fracsig = ROOT.RooFormulaVar("signal_%s_frac" % (cat), "signal_%s_frac" % (cat), "@0*1./@1", ROOT.RooArgList(nBias,rooNdataVar[cat]) )
+
+                nuis = self.buildRooVar("%s_%s_frac_nuis" % (comp,cat), [], importToWs=False )
+                nuis.setVal(0.)
+                nuis.setConstant(True)
+                fit["params"].append( (nuis.GetName(), nuis.getVal(), 0.) )
+                nuisBias = ROOT.RooFormulaVar("%s_%s_nuisanced_nBias" % (comp,cat),"%s_%s_nuisanced_nBias" % (comp,cat),"@0*(1.+@1)",ROOT.RooArgList(nBias,nuis) ) #or fracsig ??
+                fracsignuis = ROOT.RooFormulaVar("signal_%s_%s_nuisanced_frac" % (comp,cat),"signal_%s_%s_nuisanced_frac" % (comp,cat),"@0*1./@1",ROOT.RooArgList(nuisBias,rooNdataFormula) )
+                fracbkg = ROOT.RooFormulaVar("background_%s_%s_frac" % (comp,cat), "background_%s_%s_frac" % (comp,cat), "1.-@0",ROOT.RooArgList(fracsignuis))
+                roolist.add(fracsignuis)
+                #self.keep( [nuis,nuisfrac] )
+                roolist.add(fracbkg)
+                
+                ## summing pdfs
+                pdfSum = ROOT.RooAddPdf("model_bkgnbias_%s_%s" % (comp,cat),"model_bkgnbias_%s_%s" % (comp,cat), roopdflist, roolist)
+                pdfSum_norm = ROOT.RooFormulaVar("%s_norm" %  (pdfSum.GetName()), "%s_norm" %  (pdfSum.GetName()),"@0",ROOT.RooArgList(rooNdataFormula)) 
+                self.workspace_.rooImport(pdfSum_norm)
+                self.workspace_.rooImport(pdfSum,RooFit.RecycleConflictNodes())
+        self.saveWs(options)
+
     ## ------------------------------------------------------------------------------------------------------------  
+
     def fitBackground(self,options,args):
 
         print "--------------------------------------------------------------------------------------------------------------------------"
