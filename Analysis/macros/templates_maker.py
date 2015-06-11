@@ -116,8 +116,8 @@ class TemplatesApp(PlotApp):
                                     default=None,
                                     help="Add extra uncertainty to template shapes (implemented only for plotting)",
                                     ),
-                        make_option("--read-ws","-r",dest="read_ws",action="store",type="string",
-                                    default=False,
+                        make_option("--read-ws","-r",dest="read_ws",type="string",
+                                    default=[],action="callback",callback=optpars_utils.ScratchAppend(),
                                     help="workspace input file.",
                                     ),
                         make_option("--output-file","-o",dest="output_file",action="store",type="string",
@@ -151,6 +151,7 @@ class TemplatesApp(PlotApp):
         self.rename_ = False
         self.store_new_ = False
         self.save_params_ = []
+        self.workspace_ = None
         
         ## load ROOT (and libraries)
         global ROOT, style_utils, RooFit
@@ -179,6 +180,12 @@ class TemplatesApp(PlotApp):
         if options.store_new_only:
             self.store_new_ = True
             self.store_inputs_ = options.store_inputs
+        
+        if len(options.read_ws) > 0:
+            options.read_ws_list = options.read_ws
+            options.read_ws = options.read_ws_list[0]
+        else:
+            options.read_ws = False
             
         if not options.output_file:
             if options.read_ws: 
@@ -274,16 +281,42 @@ class TemplatesApp(PlotApp):
         print
 
     ## ------------------------------------------------------------------------------------------------------------
-    def readWs(self,options,args):
-        print
-        print "--------------------------------------------------------------------------------------------------------------------------"
-        print "Reading back workspace from %s " % options.read_ws
-        print 
-        fin = self.open(options.read_ws)
+    def rooImportItr(self,coll,verbose=False):        
+        itr = coll.createIterator()
+        if verbose:
+            print "Importing collection to workspace"
+            coll.Print()
+        obj = itr.Next()
+        while obj:
+            if type(obj) == ROOT.TObject:
+                ## FIXME: for some reason, instead of a null pointer, at the end of the iteration
+                ##        a bare TObject is returned.... looks like a plain ROOT bug
+                break          
+            self.workspace_.rooImport(obj,ROOT.RooFit.RecycleConflictNodes(),ROOT.RooFit.Silence(not verbose))
+            obj = itr.Next()
+        
+    ## ------------------------------------------------------------------------------------------------------------
+    def mergeWs(self,options,read_ws):
+        
+            
+        fin = self.open(read_ws)
         cfg = json.loads( str(fin.Get("cfg").GetString()) )
-        options.fits = cfg["fits"]
-        self.workspace_ = fin.Get("wtemplates")
-        self.workspace_.rooImport = getattr(self.workspace_,"import")
+        for name,val in cfg["fits"].iteritems():
+            options.fits[name] = val
+        ws = fin.Get("wtemplates")
+
+        if not self.workspace_:
+            self.workspace_ = ws
+            self.workspace_.rooImport = getattr(self.workspace_,"import")
+        else:
+            self.rooImportItr( ws.allVars(), verbose=options.verbose )
+            self.rooImportItr( ws.allFunctions(), verbose=options.verbose )
+            self.rooImportItr( ws.allPdfs(), verbose=options.verbose )
+            
+            alldata = ws.allData()
+            for data in alldata:
+                self.workspace_.rooImport(data)
+            
         for name in cfg["stored"]:
             self.store_[name]=fin.Get(name)
             
@@ -297,6 +330,35 @@ class TemplatesApp(PlotApp):
             print name, val
             if val:
                 setattr(options,name,val)
+    
+    ## ------------------------------------------------------------------------------------------------------------
+    def readWs(self,options,args):
+        print
+        print "--------------------------------------------------------------------------------------------------------------------------"
+        print "Reading back workspace from %s " % options.read_ws
+        print 
+        ### fin = self.open(options.read_ws)
+        ### cfg = json.loads( str(fin.Get("cfg").GetString()) )
+        ### options.fits = cfg["fits"]
+        ### self.workspace_ = fin.Get("wtemplates")
+        ### self.workspace_.rooImport = getattr(self.workspace_,"import")
+        ### for name in cfg["stored"]:
+        ###     self.store_[name]=fin.Get(name)
+        ###     
+        ### if not options.mix_templates:
+        ###     options.mix = cfg.get("mix",{})
+        ### if not options.compare_templates:
+        ###     options.comparisons = cfg.get("comparisons",{})
+        ### 
+        ### for name in self.save_params_:
+        ###     val = cfg.get(name,None)
+        ###     print name, val
+        ###     if val:
+        ###         setattr(options,name,val)
+        
+        for ws in options.read_ws_list:
+            self.mergeWs(options,ws)
+            
         
         print "Fits :"
         print "---------------------------------------------------------"
