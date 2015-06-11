@@ -1283,7 +1283,7 @@ class TemplatesApp(PlotApp):
                 rooVar.setMin(binning[0])
                 rooVar.setMax(binning[-1])
                 rooVar.setVal(0.5*(binning[0]+binning[-1]))
-                rooVar.setBinning(ROOT.RooBinning(len(binning)-1,binning))
+                rooVar.setBinning(ROOT.RooBinning(len(binning)-1,array.array('d',binning)))
         if importToWs:
             self.workspace_.rooImport(rooVar,ROOT.RooFit.RecycleConflictNodes())
         self.keep(rooVar) ## make sure the variable is not destroyed by the garbage collector
