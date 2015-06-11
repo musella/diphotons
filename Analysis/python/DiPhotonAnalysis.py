@@ -187,6 +187,7 @@ class DiPhotonAnalysis(object):
                 " && abs(leadingPhoton.superCluster.eta)<2.5 && abs(subLeadingPhoton.superCluster.eta)<2.5 "
                 " && ( abs(leadingPhoton.superCluster.eta)<1.4442 || abs(leadingPhoton.superCluster.eta)>1.566)"
                 " && ( abs(subLeadingPhoton.superCluster.eta)<1.4442 || abs(subLeadingPhoton.superCluster.eta)>1.566)" 
+                " && ( abs(leadingPhoton.superCluster.eta) < 1.5 || abs(subLeadingPhoton.superCluster.eta) < 1.5 )"
                 % { "massCut" : self.massCut, 
                     "ptLead"  : self.ptLead,
                     "ptSublead" : self.ptSublead,

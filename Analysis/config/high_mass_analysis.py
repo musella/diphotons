@@ -246,8 +246,8 @@ analysis.addAnalysisSelection(process,"cic",highMassCiCDiPhotons,dumpTrees=True,
                                          (5,"NoEleVeto",      False,False,True),
                                          ## Sidebands
                                          ## removeIndex, (ignoreIndex(es),ingnoreNtimes), dumpTree, dumpWorkspace, dumpHistos, splitByIso
-                                         (0,(4,1),"NoChIsoSingleSB",  True, False,True,False),
-                                         (0,(4,2),"NoChIsoDoubleSB",  True, False,True,False),
+                                         ((0,1),(4,1),"NoChIsoSingleSB",  True, False,True,False),
+                                         ((0,1),(4,2),"NoChIsoDoubleSB",  True, False,True,False),
                                          (1,(4,1),"NoPhoIsoSingleSB",  False, False,True,False),
                                          (1,(4,2),"NoPhoIsoDoubleSB",  False, False,True,False),
                                          ]
@@ -259,9 +259,13 @@ analysis.addPhotonAnalysisSelection(process,"cic",highMassCiCPhotons,dumpTrees=F
                                     dumperTemplate=photonDumper,
                                     nMinusOne=[(0,"NoChIso",        True, False,True), ## removeIndex(es), label, dumpTree, dumpWorkspace, dumpHistos
                                                (1,"NoPhoIso",       False, False,True),
+                                               (2,"NoNeuIso",       False,False,True),
+                                               (3,"NoHoverE",       False,False,True),
+                                               (4,"NoSigmaIetaIeta",False,False,True),
+                                               (5,"NoEleVeto",      False,False,True),
                                                ## Sidebands
                                                ## removeIndex, (ignoreIndex(es),ingnoreNtimes), dumpTree, dumpWorkspace, dumpHistos, splitByIso
-                                               (0,(4,1),"NoChIsoSB",  True, False,True,False),
+                                               ((0,1),(4,1),"NoChIsoSB",  True, False,True,False),
                                                (1,(4,1),"NoPhoIsoSB",  False, False,True,False)
                                                ]
                               )
