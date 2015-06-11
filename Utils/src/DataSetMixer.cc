@@ -175,13 +175,12 @@ void fillCache(std::vector<Cache> & target, TTree *source, float frac, float ptS
             }
         }
     }
-    
     if( ! pdfs.empty() ) {
         std::vector<std::vector<float>> bins(pdfs.size());
         std::vector<sorted_dataset_type::iterator> idx(pdfs.size());
-        std::vector<float> count(pdfs.size(),0.);
+        std::vector<float> counts(pdfs.size(),0.);
         float totcount = 0.;
-        float res = 1.e-4;
+        float res = 1.e-3;
         float maxfr  = res*10.;
         for(auto count : pdfs[0] ) {
             if( count.first / totwei < maxfr ) {
@@ -192,23 +191,33 @@ void fillCache(std::vector<Cache> & target, TTree *source, float frac, float ptS
         for(size_t ip=0; ip<pdfs.size(); ++ip) {
             idx[ip] = pdfs[ip].begin();
             bins[ip].push_back(idx[ip]->second);
+            /// bins[ip].push_back(-step);
         }
-        for(float prob=step; prob<totcount; prob+=step) {
-            for(size_t ip=0; ip<pdfs.size(); ++ip) {
-                while(count[ip] < prob && idx[ip] != pdfs[ip].end()) {
+        for(size_t ip=0; ip<pdfs.size(); ++ip) {
+            for(float prob=step; prob<totcount; prob+=step) {
+                while(counts[ip] <= prob && idx[ip] != pdfs[ip].end()) {
                     if( idx[ip]->first / totwei < maxfr ) {
-                        count[ip] += idx[ip]->first;         
+                        counts[ip] += idx[ip]->first;         
                     }
                     ++idx[ip];
                 }
-                if( idx[ip] != pdfs[ip].end()) {
+                if( idx[ip] != pdfs[ip].end()  ) {
                     bins[ip].push_back(idx[ip]->second);
                 }
             }
         }
         for(size_t ip=0; ip<pdfs.size(); ++ip) {
             bins[ip].push_back(pdfs[ip].rbegin()->second);
-            TH1 * h = new TH1F(Form("h_pdf_%s_%lx",match[ip]->GetTitle(),(long unsigned int)matchHisto),Form("h_pdf_%s",match[ip]->GetTitle()),bins[ip].size()-1,&bins[ip][0]);
+            float width = pdfs[ip].rbegin()->second - pdfs[ip].begin()->second;
+            std::vector<double> collapsed;
+            collapsed.push_back(pdfs[ip].begin()->second-1e-6*width);
+            for(auto bin : bins[ip] ) {
+                if( collapsed.empty() || collapsed.back() != bin ) {
+                    collapsed.push_back(bin);
+                }
+            }
+            collapsed.push_back(pdfs[ip].rbegin()->second+1e-6*width);
+            TH1 * h = new TH1F(Form("h_pdf_%s_%lx",match[ip]->GetTitle(),(long unsigned int)matchHisto),Form("h_pdf_%s",match[ip]->GetTitle()),collapsed.size()-1,&collapsed[0]);
             (*matchHisto)[ip] = h;
             // h->SetDirectory(0);
             for(auto bin : bins[ip]) {
@@ -366,6 +375,7 @@ void DataSetMixer::fillLikeTarget(TTree * target,
     if( useCdfDistance ) { 
         for(size_t idim=0; idim<matchHisto1.size(); ++idim) {
             cdfs1.push_back( cdf(matchHisto1[idim],matchHisto1[idim]->GetXaxis()->GetXmin(),matchHisto1[idim]->GetXaxis()->GetXmax()) );
+            if( axesWeights != 0 && axesWeights[idim] < 0. ) { continue; }
             TCanvas canv(Form("cdf_%s_%s_%lu",tree1->GetName(),target->GetName(),idim),Form("cdf_%s_%s_%lu",tree1->GetName(),target->GetName(),idim));
             canv.Divide(2,1);
             canv.cd(1);
@@ -373,9 +383,11 @@ void DataSetMixer::fillLikeTarget(TTree * target,
             canv.cd(2);
             matchHisto1[idim]->Draw("hist");
             canv.SaveAs(Form("%s.png",canv.GetName()));
+            // canv.SaveAs(Form("%s.root",canv.GetName()));
         }
         for(size_t idim=0; idim<matchHisto2.size(); ++idim) {
             cdfs2.push_back( cdf(matchHisto2[idim],matchHisto2[idim]->GetXaxis()->GetXmin(),matchHisto2[idim]->GetXaxis()->GetXmax()) );
+            if( axesWeights != 0 && axesWeights[idim] < 0. ) { continue; }
             TCanvas canv(Form("cdf_%s_%s_%lu",tree2->GetName(),target->GetName(),idim),Form("cdf_%s_%s_%lu",tree2->GetName(),target->GetName(),idim));
             canv.Divide(2,1);
             canv.cd(1);
@@ -383,6 +395,7 @@ void DataSetMixer::fillLikeTarget(TTree * target,
             canv.cd(2);
             matchHisto1[idim]->Draw("hist");
             canv.SaveAs(Form("%s.png",canv.GetName()));
+            // canv.SaveAs(Form("%s.root",canv.GetName()));
         }
     }
 
@@ -391,7 +404,11 @@ void DataSetMixer::fillLikeTarget(TTree * target,
     for(size_t idim=0; idim<cacheMatch1.size(); ++idim) { 
         if( useCdfDistance ) {
             for(auto & val : cacheMatch1[idim] ) {
-                val = cdfs1[idim]->eval(val) * ( axesWeights != 0 ? axesWeights[idim] : 1.);
+                if( axesWeights != 0 && axesWeights[idim] < 0. ) {
+                    val *= -axesWeights[idim];
+                } else {
+                    val = cdfs1[idim]->eval(val) * ( axesWeights != 0 ? axesWeights[idim] : 1.);
+                }
             }
         }
         kdtree1->SetData(idim,&cacheMatch1[idim][0]); 
@@ -399,7 +416,11 @@ void DataSetMixer::fillLikeTarget(TTree * target,
     for(size_t idim=0; idim<cacheMatch2.size(); ++idim) {
         if( useCdfDistance ) {
             for(auto & val : cacheMatch2[idim] ) {
-                val = cdfs2[idim]->eval(val)  * ( axesWeights != 0 ? axesWeights[idim] : 1.);
+                if( axesWeights != 0 && axesWeights[idim] < 0. ) {
+                    val *= -axesWeights[idim];
+                } else {
+                    val = cdfs2[idim]->eval(val)  * ( axesWeights != 0 ? axesWeights[idim] : 1.);
+                }
             }
         }
         kdtree2->SetData(idim,&cacheMatch2[idim][0]); 
@@ -451,8 +472,13 @@ void DataSetMixer::fillLikeTarget(TTree * target,
         
         if( useCdfDistance ) {
             for(size_t idim=0; idim<target1.size(); ++idim) {
-                target1[idim] = cdfs1[idim]->eval(target1[idim]) * ( axesWeights != 0 ? axesWeights[idim] : 1.);
-                target2[idim] = cdfs2[idim]->eval(target2[idim]) * ( axesWeights != 0 ? axesWeights[idim] : 1.);
+                if( axesWeights != 0 && axesWeights[idim] < 0. ) {
+                    target1[idim] *= -axesWeights[idim];
+                    target2[idim] *= -axesWeights[idim];
+                } else {
+                    target1[idim] = cdfs1[idim]->eval(target1[idim]) * ( axesWeights != 0 ? axesWeights[idim] : 1.);
+                    target2[idim] = cdfs2[idim]->eval(target2[idim]) * ( axesWeights != 0 ? axesWeights[idim] : 1.);
+                }
             }
         }
         
