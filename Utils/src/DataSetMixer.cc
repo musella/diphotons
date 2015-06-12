@@ -125,7 +125,7 @@ void fillCache(std::vector<Cache> & target, TTree *source, float frac, float ptS
                std::vector<TTreeFormula *> & match,
                TTreeFormula * weight,
                std::vector<std::vector<float>> * matchTarget=0,
-               std::vector<TH1 *> * matchHisto=0,float maxWeight=0.
+               std::vector<TH1 *> * matchHisto=0,float maxWeightCache=0.
     )
 {
     Cache cache(formulas.size(),(matchTarget ? 0 : match.size()));
@@ -138,8 +138,8 @@ void fillCache(std::vector<Cache> & target, TTree *source, float frac, float ptS
         source->GetEntry(iev);
         if( gRandom->Uniform() > frac ) { continue; }
         cache.weight = ( weight ? weight->EvalInstance() : 1. );
-        if( maxWeight > 0. && cache.weight > maxWeight ) { 
-            cache.weight = maxWeight;
+        if( maxWeightCache > 0. && cache.weight > maxWeightCache ) { 
+            cache.weight = maxWeightCache;
         }
         
         float pt = fourVec[0]->EvalInstance();
@@ -314,7 +314,8 @@ void DataSetMixer::fillLikeTarget(TTree * target,
                                   bool rndSwap,float rndMatch, int nNeigh, int nMinNeigh,
                                   float targetFraction,
                                   bool useCdfDistance, bool matchWithThreshold,
-                                  float maxWeight,
+                                  float maxWeightTarget,
+                                  float maxWeightCache,
                                   Double_t * axesWeights
         )
 {
@@ -349,12 +350,12 @@ void DataSetMixer::fillLikeTarget(TTree * target,
     
     // loop over 1st tree and store kinematics and variables
     cout << "DataSetMixer: loop over 1st tree/leg ...";
-    fillCache(cache1,tree1,1.,ptSubleadMin_,ptLeadMin_,fourVec1,formulas1,match1,weight1,&cacheMatch1,(useCdfDistance?&matchHisto1:0),maxWeight);
+    fillCache(cache1,tree1,1.,ptSubleadMin_,ptLeadMin_,fourVec1,formulas1,match1,weight1,&cacheMatch1,(useCdfDistance?&matchHisto1:0),maxWeightCache);
     cout << "done. Selected " << cache1.size() << " entries "<< endl;
     
     // loop over 2nd tree and store kinematics and variables
     cout << "DataSetMixer: loop over 2nd tree/leg ...";
-    fillCache(cache2,tree2,1.,ptSubleadMin_,ptLeadMin_,fourVec2,formulas2,match2,weight2,&cacheMatch2,(useCdfDistance?&matchHisto2:0),maxWeight);
+    fillCache(cache2,tree2,1.,ptSubleadMin_,ptLeadMin_,fourVec2,formulas2,match2,weight2,&cacheMatch2,(useCdfDistance?&matchHisto2:0),maxWeightCache);
     cout << "done. Selected " << cache2.size() << " entries "<< endl;
     if( matchWithThreshold ) {
         cacheCheck1 = cacheMatch1;
@@ -372,7 +373,7 @@ void DataSetMixer::fillLikeTarget(TTree * target,
             cdfs1.back()->graph()->Draw("apl");
             canv.cd(2);
             matchHisto1[idim]->Draw("hist");
-            canv.SaveAs(Form("%s.png",canv.GetName()));
+            canv.SaveAs(Form("/afs/cern.ch/user/m/mquittna/www/diphoton/Phys14/%s.png",canv.GetName()));
         }
         for(size_t idim=0; idim<matchHisto2.size(); ++idim) {
             cdfs2.push_back( cdf(matchHisto2[idim],matchHisto2[idim]->GetXaxis()->GetXmin(),matchHisto2[idim]->GetXaxis()->GetXmax()) );
@@ -382,7 +383,7 @@ void DataSetMixer::fillLikeTarget(TTree * target,
             cdfs2.back()->graph()->Draw("apl");
             canv.cd(2);
             matchHisto1[idim]->Draw("hist");
-            canv.SaveAs(Form("%s.png",canv.GetName()));
+            canv.SaveAs(Form("/afs/cern.ch/user/m/mquittna/www/diphoton/Phys14/%s.png",canv.GetName()));
         }
     }
 
@@ -423,8 +424,8 @@ void DataSetMixer::fillLikeTarget(TTree * target,
         target->GetEntry(iev);
         float wei = ( weightTarget != 0 ? weightTarget->EvalInstance() : 1. );
         totwei += wei; ++ntot;
-        if( maxWeight > 0. && wei > maxWeight ) {
-            wei = maxWeight;
+        if( maxWeightTarget > 0. && wei > maxWeightTarget ) {
+            wei = maxWeightTarget;
         }
         truncwei += wei; ++ntrunc;
         if( targetFraction > 0. && gRandom->Uniform() > targetFraction ) {

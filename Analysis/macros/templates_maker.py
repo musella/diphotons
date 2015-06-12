@@ -75,6 +75,8 @@ class TemplatesApp(PlotApp):
                         make_option("--plot-purityvalue",dest="plot_purityvalue",action="callback",callback=optpars_utils.ScratchAppend(),type="string",
                                     default=["fraction"],
                                     help="purity either as fraction or as number of events in signalregion.Choose 'fraction' or 'events'"),
+                        make_option("--plot-mctruth",dest="plotMCtruth",action="callback",callback=optpars_utils.ScratchAppend(),type="string",
+                                    default=["mctruth"]),
                         make_option("--aliases",dest="aliases",action="callback",type="string",callback=optpars_utils.ScratchAppend(),
                                     default=[],
                                     help="List of aliases to be defined for each tree. They can be used for selection or variable definition"),
@@ -218,6 +220,8 @@ class TemplatesApp(PlotApp):
             self.nominalFit(options,args)
         if options.plot_purity:
             self.plotPurity(options,args)
+        if options.plotMCtruth:
+            self.plotMCtruth(options,args)
         
 
     ## ------------------------------------------------------------------------------------------------------------
@@ -333,6 +337,116 @@ class TemplatesApp(PlotApp):
             self.workspace_.rooImport = getattr(self.workspace_,"import")
             
 
+    ## ------------------------------------------------------------------------------------------------------------
+    
+    
+    def plotMCtruth(self,options,args):
+        d1=False
+        bPt=True
+        bIso=False
+        bEta=True
+        #varname="PhoIso"
+    #    varname="PhoPt"
+        varname="phoEta"
+        isoname="ChargedIso"
+        isobinning=array.array('d',[0.,0.1,5.,15.])
+        if d1:
+            treef=self.treeData("template_f_singlePho_eta_inclusive")
+            tree=self.treeData("template_p_singlePho_eta_inclusive")
+            cpEB=ROOT.TCanvas("cpeta_%s"%varname,"cpeta_%s"%varname)
+            #hpEB=ROOT.TH2F("hpEB","hpEB",len(isobinning)-1,isobinning,20,0.,10.) 
+            hpEB=ROOT.TH2F("hpEB","hpEB",len(isobinning)-1,isobinning,12,0.,2.5) 
+            cpEB.cd()
+            cpEB.SetLogz()
+            hpEB.GetYaxis().SetTitle(varname)
+            hpEB.GetXaxis().SetTitle(isoname)
+            #tree.Draw("templateNdim1Dim0:phoPhoIso>>hpEB","weight","colz")
+            #tree.Draw("templateNdim1Dim0:log(phoPt)>>hpEB","weight","colz")
+            tree.Draw("templateNdim1Dim0:abs(phoScEta)>>hpEB","weight","colz")
+            cfEB=ROOT.TCanvas("cfeta_%s"%varname,"cfeta_%s,"%varname)
+           # hfEB=ROOT.TH2F("hfeta","hfeta",len(isobinning)-1,isobinning,20,0.,10.) 
+            hfEB=ROOT.TH2F("hfeta","hfeta",len(isobinning)-1,isobinning,12,0.,2.5) 
+            cfEB.cd()
+            cfEB.SetLogz()
+            hfEB.GetYaxis().SetTitle(varname)
+            hfEB.GetXaxis().SetTitle(isoname)
+            #treef.Draw("templateNdim1Dim0:phoPhoIso>>hfeta","weight","colz")
+            treef.Draw("templateNdim1Dim0:log(phoPt)>>hfeta","weight","colz")
+            treef.Draw("templateNdim1Dim0:abs(phoScEta)>>hfeta","weight","colz")
+        else:
+            tree=self.treeData("mctruth_pf_2D_EBEE")
+            VarListlead=["leadPhoIso","leadPt","leadScEta"]
+            VarListsubLead=["subleadPhoIso","subleadPt","subleadScEta"]
+            cpEB=ROOT.TCanvas("cpEB_%s"%varname,"cpEB_%s"%varname)
+            #hpEB=ROOT.TH2F("hpEB_%s"%varname,"hpEB_%s"%varname,50,0.,10.,len(isobinning)-1,isobinning) 
+            hpEB=ROOT.TH2F("hpEB_%s"%varname,"hpEB_%s"%varname,len(isobinning)-1,isobinning,12,0.,2.5) 
+            cpEE=ROOT.TCanvas("cpEE_%s"%varname,"cpEE_%s"%varname)
+            hpEE=ROOT.TH2F("hpEE_%s"%varname,"hpEE_%s"%varname,len(isobinning)-1,isobinning,12,0.,2.5) 
+            cfEB=ROOT.TCanvas("cfEB_%s"%varname,"cfEB_%s"%varname)
+            hfEB=ROOT.TH2F("hfEB_%s"%varname,"hfEB_%s"%varname,len(isobinning)-1,isobinning,12,0.,2.5) 
+            cfEE=ROOT.TCanvas("cfEE_%s"%varname,"cfEE_%s"%varname)
+            hfEE=ROOT.TH2F("hfEE_%s"%varname,"hfEE_%s"%varname,len(isobinning)-1,isobinning,12,0.,2.5) 
+            for mb in range (0, tree.GetEntries()):
+                varpEB=-99.
+                varfEB=-99.
+                varpEE=-99.
+                varfEE=-99.
+                tree.GetEntry(mb)
+                if (tree.leadMatchType==1 and tree.leadScEta<1.5):
+                    #varpEB=tree.leadPt
+                    varpEB=abs(tree.leadEta)
+                elif  (tree.subleadMatchType==1 and tree.subleadScEta<1.5):
+                    varpEB=tree.subleadEta
+                #hpEB.Fill(tree.templateNdim2Dim0,ROOT.TMath.log(varpEB), tree.weight)
+                hpEB.Fill(tree.templateNdim2Dim0, (varpEB), tree.weight)
+                if (tree.leadMatchType!=1 and abs(tree.leadScEta<1.5)):
+                    varfEB=abs(tree.leadEta)
+                elif  (tree.subleadMatchType!=1 and abs(tree.subleadScEta<1.5)):
+                    varfEB=abs(tree.subleadEta)
+                hfEB.Fill(tree.templateNdim2Dim0, (varfEB), tree.weight)
+                #hfEB.Fill(tree.templateNdim2Dim0,ROOT.TMath.log(varfEB), tree.weight)
+                if (tree.leadMatchType==1 and abs(tree.leadScEta>1.5)):
+                    varpEE=abs(tree.leadEta)
+                elif  (tree.subleadMatchType==1 and tree.subleadScEta>1.5):
+                    varpEE=abs(tree.subleadEta)
+                hpEE.Fill(tree.templateNdim2Dim1, (varpEE), tree.weight)
+                #hpEE.Fill(tree.templateNdim2Dim1,ROOT.TMath.log(varpEE), tree.weight)
+                if (tree.leadMatchType!=1 and tree.leadScEta>1.5):
+                    varfEE=abs(tree.leadEta)
+                elif  (tree.subleadMatchType!=1 and abs(tree.subleadScEta>1.5)):
+                    varfEE=abs(tree.subleadEta)
+                hfEE.Fill(tree.templateNdim2Dim1, (varfEE), tree.weight)
+                #hfEE.Fill(tree.templateNdim2Dim1,ROOT.TMath.log(varfEE), tree.weight)
+        
+            cpEB.cd()
+            cpEB.SetLogz()
+            hpEB.GetYaxis().SetTitle(varname)
+            hpEB.GetXaxis().SetTitle(isoname)
+            hpEB.Draw("colz")
+            cfEB.cd()
+            cfEB.SetLogz()
+            hfEB.GetYaxis().SetTitle(varname)
+            hfEB.GetXaxis().SetTitle(isoname)
+            hfEB.Draw("colz")
+            self.keep([cpEB,cfEB])
+            cpEE.cd()
+            cpEE.SetLogz()
+            hpEE.GetYaxis().SetTitle(varname)
+            hpEE.GetXaxis().SetTitle(isoname)
+            hpEE.Draw("colz")
+            cfEE.cd()
+            cfEE.SetLogz()
+            hfEE.GetYaxis().SetTitle(varname)
+            hfEE.GetXaxis().SetTitle(isoname)
+            hfEE.Draw("colz")
+        self.keep([cpEB,cfEB])
+        if not d1:
+            self.keep([cpEB,cfEB,cpEE,cfEE])
+        self.autosave(True)
+
+        
+    
+    
     ## ------------------------------------------------------------------------------------------------------------
     
     def compareTemplates(self,options,args):
@@ -1232,7 +1346,8 @@ class TemplatesApp(PlotApp):
                     print "template %s - %s" % (component,cat), self.rooData("template_%s_%s_%s" % (component,name,cat) ).sumEntries()
             print 
             print "--------------------------------------------------------------------------------------------------------------------------"
-            print 
+            print
+        
 
         if options.mix_templates:
             self.doMixTemplates(options,args)
@@ -1355,7 +1470,6 @@ class TemplatesApp(PlotApp):
                         dataname        = "%s_%s_%s" % (targetSrc,targetName,targetCat)                        
                         target          = self.treeData(dataname)
 
-
                         matchVars1   = ROOT.RooArgList()
                         matchVars2   = ROOT.RooArgList()
                         targetMatch1 = ROOT.RooArgList()
@@ -1374,7 +1488,6 @@ class TemplatesApp(PlotApp):
                             var = self.buildRooVar(*(self.getVar(var)))
                             targetMatch2.add(var)
                         axesWeights     = fill.get( "axesWeights", [1.]*len(fill["match1"]) )
-                            
                         print "target :", dataname
                         print "rndswap :", rndswap, " rndmatch :", rndmatch," useCdfDistance :", useCdfDistance, "matchWithThreshold :", matchWithThreshold
                         print "nNeigh :", nNeigh, "nMinNeigh :", nMinNeigh
@@ -1396,6 +1509,9 @@ class TemplatesApp(PlotApp):
             print 
 
 
+    ## ------------------------------------------------------------------------------------------------------------
+    
+    
     ## ------------------------------------------------------------------------------------------------------------
     def setAliases(self,tree):
         """ Define all aliases in tees
