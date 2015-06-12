@@ -152,6 +152,8 @@ class TemplatesApp(PlotApp):
         self.store_new_ = False
         self.save_params_ = []
         self.workspace_ = None
+
+        self.save_params_.append("signals")
         
         ## load ROOT (and libraries)
         global ROOT, style_utils, RooFit
