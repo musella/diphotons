@@ -81,7 +81,26 @@ class BiasApp(CombineApp):
                                     ),
                         make_option("--bias-labels",dest="bias_labels",action="callback",type="string",callback=optpars_utils.ScratchAppend(str),
                                     default=[]
-                                    ),                        
+                                    ),                    
+                        make_option("--bias-param",dest="bias_param",action="callback",type="string",callback=optpars_utils.Load(),
+                                    default={
+                                "EBEB_dijet_300_6000" : "(0.25*((x/600.)^-5))+2e-5",
+                                "EBEB_dijet_400_6000" : "(0.25*((x/600.)^-5))+2e-5",
+                                "EBEB_dijet_500_6000" : "(0.25*((x/600.)^-5))+2e-5",
+                                "EBEE_dijet_300_6000" : "(0.125*((x/600.)^-4))+2e-5",
+                                "EBEE_dijet_400_6000" : "(0.125*((x/600.)^-4))+2e-5",
+                                "EBEE_dijet_500_6000" : "(0.125*((x/600.)^-4))+2e-5",
+                                ### "EBEB_dijet_300_6000" : "(0.110705*((x/600.000000)^-6.04594))+7.28617e-05",
+                                ### "EBEB_dijet_400_6000" : "(0.103261*((x/600.000000)^-6.14835))+7.29511e-05",
+                                ### "EBEB_dijet_500_6000" : "(0.125619*((x/600.000000)^-6.23181))+7.29431e-05",
+                                ### "EBEE_dijet_300_6000" : "(0.0472049*((x/600.000000)^-5.33805))+7.25388e-05",
+                                ### "EBEE_dijet_400_6000" : "(0.0397002*((x/600.000000)^-5.03543))+7.21574e-05",
+                                ### "EBEE_dijet_500_6000" : "(0.0514193*((x/600.000000)^-5.33518))+7.24997e-05",
+                                }
+                                    ),                    
+                        make_option("--scale-bias",dest="scale_bias",action="store",type="float",
+                                    default=1.
+                                    ),                    
                         ]
                  )
                 ]
@@ -323,7 +342,7 @@ class BiasApp(CombineApp):
                         dset.plotOn(frame)
                         pdf.plotOn(frame,ROOT.RooFit.LineColor(ROOT.kRed))
                         pdft.plotOn(frame)
-                        
+                        generator.plotOn(frame,ROOT.RooFit.LineColor(ROOT.kGreen))
                         canv = ROOT.TCanvas("fit_%s" % toyname,"fit_%s" % toyname)
                         canv.SetLogy()
                         canv.SetLogx()
@@ -503,6 +522,7 @@ class BiasApp(CombineApp):
         
         profiles = {}
         bprofiles = {}
+        cprofiles = {}
         
         xfirst = 1e5
         xlast  = 0.
@@ -520,15 +540,26 @@ class BiasApp(CombineApp):
                     nlabel = "_".join(toks)
                     slabel = "_".join([cat,model,label])
                     
+                    bias_func = None
+                    if slabel in options.bias_param:
+                        bias_func = ROOT.TF1("err_correction",options.bias_param[slabel],0,2e+6)
+                        ## bias_func.Print()
+                        
                     if not slabel in profiles:
                         profile = ROOT.TGraphErrors()
                         bprofile = ROOT.TGraphErrors()
                         profiles[slabel] = profile
                         bprofiles[slabel] = bprofile
                         self.keep( [profile,bprofile] )
+                        if bias_func:
+                            cprofile = ROOT.TGraphErrors()
+                            cprofiles[slabel] = cprofile
+                            self.keep( [cprofile] )
                     else:
                         profile = profiles[slabel]
                         bprofile = bprofiles[slabel]
+                        if bias_func:
+                            cprofile = cprofiles[slabel]
                         
                     xmin,xmax = [float(t) for t in rng.split("_")[1:]]
                     xfirst = min(xmin,xfirst)
@@ -536,7 +567,7 @@ class BiasApp(CombineApp):
                     ibin = profile.GetN()
                     
                     tree.Draw("bias>>h_bias_%s(501,-5.005,5.005)" % nlabel )
-                    hb = ROOT.gDirectory.Get("h_bias_%s" % ("_".join(toks)))
+                    hb = ROOT.gDirectory.Get("h_bias_%s" % nlabel )
                     hb.Fit("gaus","L+Q")
                     
                     canv = ROOT.TCanvas(nlabel,nlabel)
@@ -551,7 +582,7 @@ class BiasApp(CombineApp):
                     med = array.array('d',[0.])
                     hb.GetQuantiles(len(prb),med,prb)
                     
-                    tree.Draw("abs(bias)>>h_coverage_%s(501,0,5.01)" % ("_".join(toks)) )
+                    tree.Draw("abs(bias)>>h_coverage_%s(501,0,5.01)" % nlabel )
                     hc = ROOT.gDirectory.Get("h_coverage_%s" % nlabel )
                     
                     prb = array.array('d',[0.683])
@@ -572,11 +603,28 @@ class BiasApp(CombineApp):
                     ## bprofile.SetPoint(ibin,0.5*(xmax+xmin),med[0])
                     bprofile.SetPoint(ibin,0.5*(xmax+xmin),gaus.GetParameter(1)/(gaus.GetParameter(2)))
                     bprofile.SetPointError(ibin,0.5*(xmax-xmin),0.)
-                    
+
                     tree.GetEntry(0)
                     summary[nlabel] = [ gaus.GetParameter(1), gaus.GetParError(1), gaus.GetParameter(2), gaus.GetParError(2),
                                         med[0], qtl[0], gausd.GetParameter(1), gausd.GetParError(1), medd[0], medd[0]/med[0], tree.truth ]
-        
+                    if bias_func:
+                        tree.SetAlias("berr","(fit-truth)/bias*%f" % max(1.,gaus.GetParameter(2)))
+                        tree.SetAlias("corr_bias","(fit-truth)/sqrt(berr^2+%f^2)" % (bias_func.Integral(xmin,xmax)*options.scale_bias) )
+                        tree.Draw("corr_bias>>h_corr_bias_%s(501,-5.005,5.005)" % nlabel )
+                        hc = ROOT.gDirectory.Get("h_corr_bias_%s" % nlabel )
+                        hc.Fit("gaus","L+Q")
+                        
+                        hc.Print()
+                        
+                        gausc = hc.GetListOfFunctions().At(0)
+                        medc = array.array('d',[0.])
+                        hc.GetQuantiles(len(prb),medc,prb)
+                        
+                        cprofile.SetPoint(ibin,0.5*(xmax+xmin),gausc.GetParameter(1))
+                        cprofile.SetPointError(ibin,0.5*(xmax-xmin),0.)
+
+                        summary[nlabel].extend( [medc[0], gausc.GetParameter(1), gausc.GetParameter(2)] )
+                        
         ### styles = [ [ (style_utils.colors,ROOT.kBlack) ],  [ (style_utils.colors,ROOT.kRed) ],  
         ###            [ (style_utils.colors,ROOT.kBlue) ],  [ (style_utils.colors,ROOT.kGreen+1) ],
         ###            [ (style_utils.colors,ROOT.kOrange) ],  [ (style_utils.colors,ROOT.kMagenta+1) ] 
@@ -602,6 +650,10 @@ class BiasApp(CombineApp):
         leg.SetFillStyle(0)
         profiles[keys[0]].GetXaxis().SetRangeUser(xfirst,xlast)
         bprofiles[keys[0]].GetXaxis().SetRangeUser(xfirst,xlast)                    
+        ckeys = sorted(cprofiles.keys())
+        print ckeys
+        if len(ckeys) > 0:
+            cprofiles[ckeys[0]].GetXaxis().SetRangeUser(xfirst,xlast)                  
         first = True
         cstyles = copy(styles)
         fits = []
@@ -611,14 +663,18 @@ class BiasApp(CombineApp):
             profile.Sort()
             profile.Print()
             style = cstyles.pop(0)            
-            ## func = ROOT.TF1("bfunc","(x>[0])*( [1]/([0]+x)+[2] )")
-            func = ROOT.TF1("bfunc","[0]*pow(x/%f,[1])+[2]"% max(600,xfirst),max(600,xfirst),xlast)
-            # func.SetParameters(300.,1.,1.e-3)
-            func.SetParameters(1.e-2,-4,1.e-5)
-            profile.Fit(func,"R+")
-            fit = profile.GetListOfFunctions().At(0)
-            fits.append([key,fit])
-            style_utils.apply( fit, style[:1] )
+            ## ## func = ROOT.TF1("bfunc","(x>[0])*( [1]/([0]+x)+[2] )")
+            ## func = ROOT.TF1("bfunc","[0]*pow(x/%f,[1])+[2]"% max(600,xfirst),max(600,xfirst),xlast)
+            ## # func.SetParameters(300.,1.,1.e-3)
+            ## func.SetParameters(1.e-2,-4,1.e-5)
+            ## profile.Fit(func,"R+")
+            ## fit = profile.GetListOfFunctions().At(0)
+            ## fits.append([key,fit])
+            if key in options.bias_param:
+                bias_func = ROOT.TF1("err_correction_%s" % key,options.bias_param[slabel],xfirst,xlast)
+                style_utils.apply( bias_func, style[:1] )
+                bias_func.Draw("same")
+                
             style_utils.apply( profile, style )
             leg.AddEntry(profile,key,"pe")
             if first:
@@ -644,7 +700,6 @@ class BiasApp(CombineApp):
         bleg.SetFillStyle(0)
         first = True
         cstyles = copy(styles)
-        ## for key,profile in bprofiles.iteritems():
         frame = ROOT.TH2F("frame","frame",100,xfirst,xlast,100,-4,2);
         frame.SetStats(False)
         frame.Draw()
@@ -657,35 +712,45 @@ class BiasApp(CombineApp):
         for key in keys:
             profile = bprofiles[key]
             profile.Sort()
-            ## profile.SetMarkerSize(2)
-            ## profile.Print("V")
             style_utils.apply( profile, cstyles.pop(0) )
             bleg.AddEntry(profile,key,"pe")
-            ## if first:
-            ##     profile.Draw("AP")
-            ##     xmin = profile.GetXaxis().GetXmin()
-            ##     xmax = profile.GetXaxis().GetXmax()
-            ##     ## xmin = xfirst
-            ##     ## xmax = xlast
-            ##     profile.GetXaxis().SetMoreLogLabels()
-            ##     profile.GetXaxis().SetTitle("mass")
-            ##     profile.GetYaxis().SetRangeUser(-4,2.)
-            ##     profile.GetYaxis().SetTitle("( n_{fit} - n_{true} )/ \sigma_{fit}")
-            ##     first = False
-            ##     box = ROOT.TBox(xmin,-0.5,xmax,0.5)
-            ##     box.SetFillColorAlpha(ROOT.kGray,0.1)
-            ##     box.Draw("same")
-            ##     profile.Draw("P")
-            ## else:
-            ##     profile.Draw("P")
             profile.Draw("P")
         bleg.Draw("same")
-        canv.RedrawAxis()
-        canv.Modified()
-        canv.Update()
+        bcanv.RedrawAxis()
+        bcanv.Modified()
+        bcanv.Update()
         
         self.keep( [canv,leg,bcanv,bleg#,box
                     ] )
+        
+        if len(ckeys) > 0:
+            ccanv = ROOT.TCanvas("profile_corr_pull","profile_corr_pull")
+            ccanv.SetLogx()
+            ccanv.SetGridy()
+            ccanv.SetGridx()
+            cleg  = ROOT.TLegend(0.2,0.12,0.5,0.42)
+            cleg.SetFillStyle(0)
+            first = True
+            cstyles = copy(styles)
+            cframe = ROOT.TH2F("cframe","cframe",100,xfirst,xlast,100,-4,2);
+            cframe.SetStats(False)
+            cframe.Draw()
+            cframe.GetXaxis().SetTitle("mass")
+            cframe.GetYaxis().SetTitle("( n_{fit} - n_{true} )/ ( \sigma_{fit} \oplus bias )")
+            box.Draw("same")        
+            self.keep([cframe])
+            for key in ckeys:
+                profile = cprofiles[key]
+                profile.Sort()
+                style_utils.apply( profile, cstyles.pop(0) )
+                cleg.AddEntry(profile,key,"pe")
+                profile.Draw("P")
+            cleg.Draw("same")
+            ccanv.RedrawAxis()
+            ccanv.Modified()
+            ccanv.Update()
+            self.keep( [ccanv,cleg] )
+            
         self.autosave(True)
         
         keys = sorted(summary.keys())
@@ -696,7 +761,7 @@ class BiasApp(CombineApp):
         for name,fit in fits:
             summarystr += "%s %s\n" % ( name, fit.GetExpFormula("p") )
         summarystr += "test region".ljust(maxl+3)
-        for field in ["pmean","err","psig","err","pmedian","p68","bmean","err","bmedian","smedian","truth"]:
+        for field in ["pmean","err","psig","err","pmedian","p68","bmean","err","bmedian","smedian","truth","corr_bmedian","corr_bmean","corr_bsigma"]:
             summarystr += field.rjust(9)
         summarystr += "\n"
         for key in keys:
