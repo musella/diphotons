@@ -41,6 +41,9 @@ class CombineApp(TemplatesApp):
                         make_option("--fit-background",dest="fit_background",action="store_true",default=False,
                                     help="Fit background",
                                     ),                        
+                        make_option("--freeze-params",dest="freeze_params",action="store_true",default=False,
+                                    help="Freeze background parameters after fitting",
+                                    ),                        
                         make_option("--norm-as-fractions",dest="norm_as_fractions",action="store_true",default=False,
                                     help="Parametrize background components normalization as fractions",
                                     ),
@@ -584,6 +587,13 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 self.autosave(True)
                 
                 # import everything to the workspace
+                if options.freeze_params:
+                    params = pdf.getDependents(self.pdfPars_)
+                    itr = params.createIterator()
+                    p = itr.Next()
+                    while p:
+                        p.setConstant(True)
+                        p = itr.Next()
                 self.workspace_.rooImport(pdf,RooFit.RecycleConflictNodes())
                 importme.append([norm]) ## import this only after we run on all components, to make sure that all fractions are properly set
                 self.workspace_.rooImport(reduced)
@@ -747,13 +757,13 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             
         elif model == "moddijet":
             pname = "moddijet_%s" % name
-            lina = self.buildRooVar("%s_lina" % pname,[-100.0,100.0], importToWs=False)
-            loga = self.buildRooVar("%s_loga" % pname,[-100.0,100.0], importToWs=False)
-            linb = self.buildRooVar("%s_linb" % pname,[-100.0,100.0], importToWs=False)
+            lina = self.buildRooVar("%s_lina" % pname,[-20,5], importToWs=False)
+            loga = self.buildRooVar("%s_loga" % pname,[-100,0], importToWs=False)
+            linb = self.buildRooVar("%s_linb" % pname,[-100,0], importToWs=False)
             sqrb = self.buildRooVar("%s_sqrb" % pname,[], importToWs=False)
             lina.setVal(5.)
             loga.setVal(-1.)
-            linb.setVal(0.1)
+            linb.setVal(-0.1)
             sqrb.setVal(1./13.e+3)
             sqrb.setConstant(1)
             
@@ -764,7 +774,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             self.pdfPars_.add(sqrb)
             
             roolist = ROOT.RooArgList( xvar, lina, loga, linb, sqrb )
-            pdf = ROOT.RooGenericPdf( pname, pname, "TMath::(1e-50,pow(@0,@1+@2*log(@0))*pow(1.-@0*@4,@3))", roolist )
+            pdf = ROOT.RooGenericPdf( pname, pname, "pow(@0,@1+@2*log(@0))*pow(1.-@0*@4,@3)", roolist )
             
             self.keep( [pdf,lina,loga, linb, sqrb] )
         elif model == "expow":
