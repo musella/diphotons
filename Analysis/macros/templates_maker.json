@@ -503,7 +503,7 @@
     "#" : "---------------------------------------------------------------------------------------------------------------------",
     "#" : "Template mixing                                                                                                      ",
     "#" : "---------------------------------------------------------------------------------------------------------------------",
-    "_mix" : { 
+    "mix" : { 
 	"kDClosure2D" : {
 	    "target" : "2D",
 		"ptLeadMin" : 100.0, "ptSubleadMin" : 100.0, "massMin" : 200.0,
@@ -523,7 +523,7 @@
 		"_fill_categories" : {
 		    "EBEE" : { "legs" : ["eta_inclusive","eta_inclusive"], "rndswap" : false, "nNeigh" : 10, "matchWithThreshold" : false,
 			    "useCdfDistance" : true, "targetFraction" : 5e-2, "maxWeight" : 0.1, "rndmatch":0.9,
-			    "axesWeights" : [10.0,1.0,2.0],
+			    "axesWeights" : [10.0,1.0,-1.0],
 			    "match1"  : ["log(phoPt)" ,"TMath::Abs(phoScEta)","TMath::Abs(phoScEta)<1.5"    ], 
 			    "match2"  : ["log(phoPt)" ,"TMath::Abs(phoScEta)","TMath::Abs(phoScEta)<1.5"    ], 
 			    "target1" : [
@@ -557,7 +557,7 @@
 		"fill_categories" : {
 		    "EBEE" : { "legs" : ["eta_inclusive","eta_inclusive"], "rndswap" : false, "nNeigh" : 25, "matchWithThreshold" : false,
 			    "useCdfDistance" : true, "targetFraction" : 1e-3, "maxWeight" : 0.005, "rndmatch":0.8,
-			    "axesWeights" : [4.0,1.0,1.0,3.0],
+			    "axesWeights" : [4.0,1.0,1.0,-1.0],
 			    "match1"  : ["phoPhoIso","log(phoPt)" ,"TMath::Abs(phoScEta)","TMath::Abs(phoScEta)<1.5"    ], 
 			    "match2"  : ["phoPhoIso","log(phoPt)" ,"TMath::Abs(phoScEta)","TMath::Abs(phoScEta)<1.5"    ], 
 			    "target1" : ["(TMath::Abs(leadScEta)<TMath::Abs(subleadScEta))*leadPhoIso + (TMath::Abs(leadScEta)>=TMath::Abs(subleadScEta))*subleadPhoIso[10]",
@@ -585,7 +585,7 @@
 		"_fill_categories" : {
 		    "EBEB" : { "legs" : ["EBEB","EBEB"], "rndswap" : true, "nNeigh" : 10, "nMinNeigh" : 10, "matchWithThreshold" : false,
 			    "useCdfDistance" : true, "targetFraction" : 1e-2,
-			    "axesWeights" : [10.0,1.0,1.0],
+			    "axesWeights" : [10.0,1.0,-1.0],
 			    "match1"  : ["nvtx","log(phoPt)"    ,"TMath::Abs(phoScEta)"    ], 
 			    "match2"  : ["nvtx","log(phoPt)"    ,"TMath::Abs(phoScEta)"    ], 
 			    "target1" : ["nvtx","log(leadPt)"   ,"TMath::Abs(leadScEta)[0.2]"   ], 
@@ -595,7 +595,7 @@
 	}
 
     },
-    "mix" : { 
+    "_mix" : { 
 	"kDSinglePho2D" : {
 		"target" : "2D",
 		"ptLeadMin" : 100.0, "ptSubleadMin" : 100.0, "massMin" : 200.0,
@@ -635,7 +635,7 @@
 
     },
     "comparisons" : {
-	"_mixClosure" : { "fit" : "2D",
+	"mixClosure" : { "fit" : "2D",
 		"templates" : { "mix:kDClosure2D" : {} },
                 "components": [["pf",{"2D":{},"mix:kDClosure2D" : {} }]], "categories" : ["EBEB","EBEE"],
                 "prepfit": true,
@@ -646,7 +646,7 @@
 		    "_template_binning" : [ 0.0,0.1,1.0,2.0,4.0,5.0,8.0,15.0],
 		"mass_binning" :"mass[13000,0.0,13000.0]"
 		},
-	"fit2DTruth" : { "fit" : "2D",
+	"_fit2DTruth" : { "fit" : "2D",
 		"templates" : { "mix:kDSinglePho2D" : {},"2D":{} },
                 "components": ["pf","ff",  ["pp",{ "2D" : {}}] 
                 ],
@@ -661,7 +661,7 @@
                 "upperLimitSigRegion1D": "5.", 
 		"mass_binning" :"mass[13000,0.0,13000.0]"
 		},
-	"fit1DTruth" : { "fit" : "1D",
+	"_fit1DTruth" : { "fit" : "1D",
                 "components" : [ "f" ],
 		"templates" : {"singlePho" : { "EBEB" : "EB", "EBEE" : "EB", "EEEB" : "EE"  }
                                  ,"1D" : {} 

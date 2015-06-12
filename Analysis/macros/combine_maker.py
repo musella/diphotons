@@ -197,7 +197,6 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 for comp in options.components:
                     datacard.write(("shapes %s" % comp).ljust(20))
                     datacard.write((" %s  %s" % (cat,options.background_root_file)).ljust(50))
-                    #datacard.write(" wtemplates:model_bkgnbias_%s_%s_%s\n" % (comp,signame,cat) )  
                     datacard.write(" wtemplates:model_%s_%s\n" % (comp,cat) ) 
                 datacard.write("shapes data_obs".ljust(20))
                 datacard.write((" %s  %s" % (cat,options.background_root_file)).ljust(50))
