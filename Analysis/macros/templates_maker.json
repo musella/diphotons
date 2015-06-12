@@ -675,7 +675,7 @@
 		"mass_binning" :"mass[13000,0.0,13000.0]"
 		}
     },
-   "nominalFit":{
+    "nominalFit":{
         " 3_components":{
                 "dimensions" :"2D", 
                 "observable": "templateNdim2d_unroll",

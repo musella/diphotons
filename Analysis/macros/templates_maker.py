@@ -1609,6 +1609,7 @@ class TemplatesApp(PlotApp):
             if len(binning) > 1:
                 rooVar.setMin(binning[0])
                 rooVar.setMax(binning[-1])
+
                 rooVar.setBinning(ROOT.RooBinning(len(binning)-1,array.array('d',binning)))
         if importToWs:
             self.workspace_.rooImport(rooVar,ROOT.RooFit.RecycleConflictNodes())
