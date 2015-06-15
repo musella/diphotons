@@ -118,8 +118,8 @@ class TemplatesApp(PlotApp):
                                     default=None,
                                     help="Add extra uncertainty to template shapes (implemented only for plotting)",
                                     ),
-                        make_option("--read-ws","-r",dest="read_ws",action="store",type="string",
-                                    default=False,
+                        make_option("--read-ws","-r",dest="read_ws",type="string",
+                                    default=[],action="callback",callback=optpars_utils.ScratchAppend(),
                                     help="workspace input file.",
                                     ),
                         make_option("--output-file","-o",dest="output_file",action="store",type="string",
@@ -153,6 +153,7 @@ class TemplatesApp(PlotApp):
         self.rename_ = False
         self.store_new_ = False
         self.save_params_ = []
+        self.workspace_ = None
         
         ## load ROOT (and libraries)
         global ROOT, style_utils, RooFit
@@ -181,6 +182,12 @@ class TemplatesApp(PlotApp):
         if options.store_new_only:
             self.store_new_ = True
             self.store_inputs_ = options.store_inputs
+        
+        if len(options.read_ws) > 0:
+            options.read_ws_list = options.read_ws
+            options.read_ws = options.read_ws_list[0]
+        else:
+            options.read_ws = False
             
         if not options.output_file:
             if options.read_ws: 
@@ -220,8 +227,8 @@ class TemplatesApp(PlotApp):
             self.nominalFit(options,args)
         if options.plot_purity:
             self.plotPurity(options,args)
-        if options.plotMCtruth:
-            self.plotMCtruth(options,args)
+     #   if options.plotMCtruth:
+      #      self.plotMCtruth(options,args)
         
 
     ## ------------------------------------------------------------------------------------------------------------
@@ -277,16 +284,42 @@ class TemplatesApp(PlotApp):
         print
 
     ## ------------------------------------------------------------------------------------------------------------
-    def readWs(self,options,args):
-        print
-        print "--------------------------------------------------------------------------------------------------------------------------"
-        print "Reading back workspace from %s " % options.read_ws
-        print 
-        fin = self.open(options.read_ws)
+    def rooImportItr(self,coll,verbose=False):        
+        itr = coll.createIterator()
+        if verbose:
+            print "Importing collection to workspace"
+            coll.Print()
+        obj = itr.Next()
+        while obj:
+            if type(obj) == ROOT.TObject:
+                ## FIXME: for some reason, instead of a null pointer, at the end of the iteration
+                ##        a bare TObject is returned.... looks like a plain ROOT bug
+                break          
+            self.workspace_.rooImport(obj,ROOT.RooFit.RecycleConflictNodes(),ROOT.RooFit.Silence(not verbose))
+            obj = itr.Next()
+        
+    ## ------------------------------------------------------------------------------------------------------------
+    def mergeWs(self,options,read_ws):
+        
+            
+        fin = self.open(read_ws)
         cfg = json.loads( str(fin.Get("cfg").GetString()) )
-        options.fits = cfg["fits"]
-        self.workspace_ = fin.Get("wtemplates")
-        self.workspace_.rooImport = getattr(self.workspace_,"import")
+        for name,val in cfg["fits"].iteritems():
+            options.fits[name] = val
+        ws = fin.Get("wtemplates")
+
+        if not self.workspace_:
+            self.workspace_ = ws
+            self.workspace_.rooImport = getattr(self.workspace_,"import")
+        else:
+            self.rooImportItr( ws.allVars(), verbose=options.verbose )
+            self.rooImportItr( ws.allFunctions(), verbose=options.verbose )
+            self.rooImportItr( ws.allPdfs(), verbose=options.verbose )
+            
+            alldata = ws.allData()
+            for data in alldata:
+                self.workspace_.rooImport(data)
+            
         for name in cfg["stored"]:
             self.store_[name]=fin.Get(name)
             
@@ -300,6 +333,35 @@ class TemplatesApp(PlotApp):
             print name, val
             if val:
                 setattr(options,name,val)
+    
+    ## ------------------------------------------------------------------------------------------------------------
+    def readWs(self,options,args):
+        print
+        print "--------------------------------------------------------------------------------------------------------------------------"
+        print "Reading back workspace from %s " % options.read_ws
+        print 
+        ### fin = self.open(options.read_ws)
+        ### cfg = json.loads( str(fin.Get("cfg").GetString()) )
+        ### options.fits = cfg["fits"]
+        ### self.workspace_ = fin.Get("wtemplates")
+        ### self.workspace_.rooImport = getattr(self.workspace_,"import")
+        ### for name in cfg["stored"]:
+        ###     self.store_[name]=fin.Get(name)
+        ###     
+        ### if not options.mix_templates:
+        ###     options.mix = cfg.get("mix",{})
+        ### if not options.compare_templates:
+        ###     options.comparisons = cfg.get("comparisons",{})
+        ### 
+        ### for name in self.save_params_:
+        ###     val = cfg.get(name,None)
+        ###     print name, val
+        ###     if val:
+        ###         setattr(options,name,val)
+        
+        for ws in options.read_ws_list:
+            self.mergeWs(options,ws)
+            
         
         print "Fits :"
         print "---------------------------------------------------------"
@@ -341,81 +403,120 @@ class TemplatesApp(PlotApp):
     
     
     def plotMCtruth(self,options,args):
-        d1=False
-        bPt=True
+        d1=True
+        bPt=False
         bIso=False
         bEta=True
-        #varname="PhoIso"
-    #    varname="PhoPt"
-        varname="phoEta"
+        if bPt:varname="logPhoPt"
+        elif bIso:varname="PhoIso"
+        elif bEta:varname="phoEta"
         isoname="ChargedIso"
         isobinning=array.array('d',[0.,0.1,5.,15.])
         if d1:
+            print "d1"
             treef=self.treeData("template_f_singlePho_eta_inclusive")
             tree=self.treeData("template_p_singlePho_eta_inclusive")
-            cpEB=ROOT.TCanvas("cpeta_%s"%varname,"cpeta_%s"%varname)
-            #hpEB=ROOT.TH2F("hpEB","hpEB",len(isobinning)-1,isobinning,20,0.,10.) 
-            hpEB=ROOT.TH2F("hpEB","hpEB",len(isobinning)-1,isobinning,12,0.,2.5) 
-            cpEB.cd()
-            cpEB.SetLogz()
-            hpEB.GetYaxis().SetTitle(varname)
-            hpEB.GetXaxis().SetTitle(isoname)
-            #tree.Draw("templateNdim1Dim0:phoPhoIso>>hpEB","weight","colz")
-            #tree.Draw("templateNdim1Dim0:log(phoPt)>>hpEB","weight","colz")
-            tree.Draw("templateNdim1Dim0:abs(phoScEta)>>hpEB","weight","colz")
-            cfEB=ROOT.TCanvas("cfeta_%s"%varname,"cfeta_%s,"%varname)
-           # hfEB=ROOT.TH2F("hfeta","hfeta",len(isobinning)-1,isobinning,20,0.,10.) 
-            hfEB=ROOT.TH2F("hfeta","hfeta",len(isobinning)-1,isobinning,12,0.,2.5) 
-            cfEB.cd()
-            cfEB.SetLogz()
-            hfEB.GetYaxis().SetTitle(varname)
-            hfEB.GetXaxis().SetTitle(isoname)
-            #treef.Draw("templateNdim1Dim0:phoPhoIso>>hfeta","weight","colz")
-            treef.Draw("templateNdim1Dim0:log(phoPt)>>hfeta","weight","colz")
-            treef.Draw("templateNdim1Dim0:abs(phoScEta)>>hfeta","weight","colz")
+            cp=ROOT.TCanvas("cpeta_%s"%varname,"cpeta_%s"%varname)
+            cp.cd()
+            cp.SetLogz()
+            if bEta:
+                hp=ROOT.TH2F("hpEB","hpEB",12,0.,2.5,len(isobinning)-1,isobinning) 
+                hf=ROOT.TH2F("hfeta","hfeta",12,0.,2.5,len(isobinning)-1,isobinning) 
+                tree.Draw("abs(phoScEta):templateNdim1Dim0>>hpEB","weight","colz ")
+            elif bIso:
+                hp=ROOT.TH2F("hpEB","hpEB",len(isobinning)-1,isobinning,15,0.,15.) 
+                hf=ROOT.TH2F("hfeta","hfeta",len(isobinning)-1,isobinning,15,0.,15.) 
+                tree.Draw("templateNdim1Dim0:phoPhoIso>>hpEB","weight","colz ")
+            elif bPt:
+                hp=ROOT.TH2F("hpEB","hpEB",len(isobinning)-1,isobinning,20,0.,20.) 
+                hf=ROOT.TH2F("hfeta","hfeta",len(isobinning)-1,isobinning,20,0.,20.) 
+                tree.Draw("templateNdim1Dim0:log(phoPt)>>hpEB","weight","colz ")
+            cf=ROOT.TCanvas("cfeta_%s"%varname,"cfeta_%s,"%varname)
+            cf.cd()
+            cf.SetLogz()
+            hp.GetYaxis().SetTitle(varname)
+            hp.GetXaxis().SetTitle(isoname)
+            hf.GetYaxis().SetTitle(varname)
+            hf.GetXaxis().SetTitle(isoname)
+            
+            if bIso:
+                treef.Draw("templateNdim1Dim0:phoPhoIso>>hfeta","weight","colz ")
+            elif bPt:
+                treef.Draw("templateNdim1Dim0:log(phoPt)>>hfeta","weight","colz")
+            elif bEta:
+                treef.Draw("abs(phoScEta):templateNdim1Dim0>>hfeta","weight","colz")
+            self.keep([cp,cf])
         else:
+            print "d2"
             tree=self.treeData("mctruth_pf_2D_EBEE")
             VarListlead=["leadPhoIso","leadPt","leadScEta"]
             VarListsubLead=["subleadPhoIso","subleadPt","subleadScEta"]
             cpEB=ROOT.TCanvas("cpEB_%s"%varname,"cpEB_%s"%varname)
-            #hpEB=ROOT.TH2F("hpEB_%s"%varname,"hpEB_%s"%varname,50,0.,10.,len(isobinning)-1,isobinning) 
-            hpEB=ROOT.TH2F("hpEB_%s"%varname,"hpEB_%s"%varname,len(isobinning)-1,isobinning,12,0.,2.5) 
             cpEE=ROOT.TCanvas("cpEE_%s"%varname,"cpEE_%s"%varname)
-            hpEE=ROOT.TH2F("hpEE_%s"%varname,"hpEE_%s"%varname,len(isobinning)-1,isobinning,12,0.,2.5) 
             cfEB=ROOT.TCanvas("cfEB_%s"%varname,"cfEB_%s"%varname)
-            hfEB=ROOT.TH2F("hfEB_%s"%varname,"hfEB_%s"%varname,len(isobinning)-1,isobinning,12,0.,2.5) 
             cfEE=ROOT.TCanvas("cfEE_%s"%varname,"cfEE_%s"%varname)
-            hfEE=ROOT.TH2F("hfEE_%s"%varname,"hfEE_%s"%varname,len(isobinning)-1,isobinning,12,0.,2.5) 
+            if bEta:
+                hpEB=ROOT.TH2F("hpEB_%s"%varname,"hpEB_%s"%varname,len(isobinning)-1,isobinning,12,-1.,2.5) 
+                hpEE=ROOT.TH2F("hpEE_%s"%varname,"hpEE_%s"%varname,len(isobinning)-1,isobinning,12,-1.,2.5) 
+                hfEB=ROOT.TH2F("hfEB_%s"%varname,"hfEB_%s"%varname,len(isobinning)-1,isobinning,12,-1.,2.5) 
+                hfEE=ROOT.TH2F("hfEE_%s"%varname,"hfEE_%s"%varname,len(isobinning)-1,isobinning,12,-1.,2.5) 
+            elif bPt:
+                hpEB=ROOT.TH2F("hpEB_%s"%varname,"hpEB_%s"%varname,len(isobinning)-1,isobinning,14,3.,10.) 
+                hpEE=ROOT.TH2F("hpEE_%s"%varname,"hpEE_%s"%varname,len(isobinning)-1,isobinning,14,3.,10.) 
+                hfEB=ROOT.TH2F("hfEB_%s"%varname,"hfEB_%s"%varname,len(isobinning)-1,isobinning,14,3.,10.) 
+                hfEE=ROOT.TH2F("hfEE_%s"%varname,"hfEE_%s"%varname,len(isobinning)-1,isobinning,14,3.,10.) 
+            elif bIso:
+                hpEB=ROOT.TH2F("hpEB_%s"%varname,"hpEB_%s"%varname,len(isobinning)-1,isobinning,10,0.,10.) 
+                hpEE=ROOT.TH2F("hpEE_%s"%varname,"hpEE_%s"%varname,len(isobinning)-1,isobinning,10,0.,10.) 
+                hfEB=ROOT.TH2F("hfEB_%s"%varname,"hfEB_%s"%varname,len(isobinning)-1,isobinning,10,0.,10.) 
+                hfEE=ROOT.TH2F("hfEE_%s"%varname,"hfEE_%s"%varname,len(isobinning)-1,isobinning,10,0.,10.) 
             for mb in range (0, tree.GetEntries()):
                 varpEB=-99.
                 varfEB=-99.
                 varpEE=-99.
                 varfEE=-99.
                 tree.GetEntry(mb)
-                if (tree.leadMatchType==1 and tree.leadScEta<1.5):
-                    #varpEB=tree.leadPt
-                    varpEB=abs(tree.leadEta)
-                elif  (tree.subleadMatchType==1 and tree.subleadScEta<1.5):
-                    varpEB=tree.subleadEta
-                #hpEB.Fill(tree.templateNdim2Dim0,ROOT.TMath.log(varpEB), tree.weight)
-                hpEB.Fill(tree.templateNdim2Dim0, (varpEB), tree.weight)
-                if (tree.leadMatchType!=1 and abs(tree.leadScEta<1.5)):
-                    varfEB=abs(tree.leadEta)
-                elif  (tree.subleadMatchType!=1 and abs(tree.subleadScEta<1.5)):
-                    varfEB=abs(tree.subleadEta)
-                hfEB.Fill(tree.templateNdim2Dim0, (varfEB), tree.weight)
-                #hfEB.Fill(tree.templateNdim2Dim0,ROOT.TMath.log(varfEB), tree.weight)
-                if (tree.leadMatchType==1 and abs(tree.leadScEta>1.5)):
-                    varpEE=abs(tree.leadEta)
-                elif  (tree.subleadMatchType==1 and tree.subleadScEta>1.5):
-                    varpEE=abs(tree.subleadEta)
-                hpEE.Fill(tree.templateNdim2Dim1, (varpEE), tree.weight)
+                if (tree.leadMatchType==1 and abs(tree.leadScEta)<1.5):
+                    if bEta: varpEB=abs(tree.leadScEta)
+                    elif bPt: varpEB=tree.leadPt
+                    elif bIso: varpEB=tree.leadPhoIso
+                elif  (tree.subleadMatchType==1 and abs(tree.subleadScEta)<1.5):
+                    if bEta: varpEB=abs(tree.subleadScEta)
+                    elif bPt: varpEB=tree.subleadPt
+                    elif bIso: varpEB=tree.subleadPhoIso
+                if bPt:hpEB.Fill(tree.templateNdim2Dim0,ROOT.TMath.log(varpEB), tree.weight)
+                else:hpEB.Fill(tree.templateNdim2Dim0,varpEB, tree.weight)
+                if (tree.leadMatchType!=1 and abs(tree.leadScEta)<1.5):
+                    if bEta: varfEB=abs(tree.leadScEta)
+                    elif bPt: varfEB=tree.leadPt
+                    elif bIso: varfEB=tree.leadPhoIso
+                elif  (tree.subleadMatchType!=1 and abs(tree.subleadScEta)<1.5):
+                    if bEta: varfEB=abs(tree.subleadScEta)
+                    elif bPt: varfEB=tree.subleadPt
+                    elif bIso: varfEB=tree.subleadPhoIso
+                if bPt:hfEB.Fill(tree.templateNdim2Dim0,ROOT.TMath.log(varfEB), tree.weight)
+                else: hfEB.Fill(tree.templateNdim2Dim0, varfEB, tree.weight)
+                if (tree.leadMatchType==1 and abs(tree.leadScEta)>1.5):
+                    if bEta: varpEE=abs(tree.leadScEta)
+                    elif bPt: varpEE=tree.leadPt
+                    elif bIso: varpEE=tree.leadPhoIso
+                elif  (tree.subleadMatchType==1 and abs(tree.subleadScEta)>1.5):
+                    if bEta: varpEE=abs(tree.subleadScEta)
+                    elif bPt: varpEE=tree.subleadPt
+                    elif bIso: varpEE=tree.subleadPhoIso
+                if bPt:hpEE.Fill(tree.templateNdim2Dim1,ROOT.TMath.log(varpEE), tree.weight)
+                else: hpEE.Fill(tree.templateNdim2Dim1, (varpEE), tree.weight)
                 #hpEE.Fill(tree.templateNdim2Dim1,ROOT.TMath.log(varpEE), tree.weight)
-                if (tree.leadMatchType!=1 and tree.leadScEta>1.5):
-                    varfEE=abs(tree.leadEta)
-                elif  (tree.subleadMatchType!=1 and abs(tree.subleadScEta>1.5)):
-                    varfEE=abs(tree.subleadEta)
-                hfEE.Fill(tree.templateNdim2Dim1, (varfEE), tree.weight)
+                if (tree.leadMatchType!=1 and abs(tree.leadScEta)>1.5):
+                    if bEta:    varfEE=abs(tree.leadScEta)
+                    elif bPt: varfEE=tree.leadPt
+                    elif bIso: varfEE=tree.leadPhoIso
+                elif  (tree.subleadMatchType!=1 and abs(tree.subleadScEta)>1.5):
+                    if bEta:    varfEE=abs(tree.subleadEta)
+                    elif bPt: varfEE=tree.subleadPt
+                    elif bIso: varfEE=tree.subleadPhoIso
+                if bPt:hfEE.Fill(tree.templateNdim2Dim1,ROOT.TMath.log(varfEE), tree.weight)
+                else: hfEE.Fill(tree.templateNdim2Dim1, (varfEE), tree.weight)
                 #hfEE.Fill(tree.templateNdim2Dim1,ROOT.TMath.log(varfEE), tree.weight)
         
             cpEB.cd()
@@ -428,7 +529,6 @@ class TemplatesApp(PlotApp):
             hfEB.GetYaxis().SetTitle(varname)
             hfEB.GetXaxis().SetTitle(isoname)
             hfEB.Draw("colz")
-            self.keep([cpEB,cfEB])
             cpEE.cd()
             cpEE.SetLogz()
             hpEE.GetYaxis().SetTitle(varname)
@@ -439,8 +539,6 @@ class TemplatesApp(PlotApp):
             hfEE.GetYaxis().SetTitle(varname)
             hfEE.GetXaxis().SetTitle(isoname)
             hfEE.Draw("colz")
-        self.keep([cpEB,cfEB])
-        if not d1:
             self.keep([cpEB,cfEB,cpEE,cfEE])
         self.autosave(True)
 
@@ -500,6 +598,7 @@ class TemplatesApp(PlotApp):
                         sigRegionup1D=float(comparison.get("upperLimitSigRegion1D"))
                     else: setargs=ROOT.RooArgSet(isoargs)
                     setargs.add(self.buildRooVar("weight",[],recycle=True))
+                    print "here"
                     truthname= "mctruth_%s_%s_%s" % (compname,fitname,cat)
                     truth = self.reducedRooData(truthname,setargs,False,sel=weight_cut,redo=ReDo)
                     truth.Print()
