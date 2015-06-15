@@ -253,7 +253,6 @@ class TemplatesApp(PlotApp):
                 }
         for name in self.save_params_:
             val = getattr(options,name,None)
-            print name, val
             if val:
                 cfg[name] = val
 

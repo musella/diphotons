@@ -1,10 +1,40 @@
 #include "../interface/DataSetFiller.h"
 #include "RooRealVar.h"
+#include "RooDataHist.h"
+#include "RooAbsPdf.h"
 
 #include "TTreeFormula.h"
 
 #include <iostream>
 using namespace std;
+
+
+RooDataHist* DataSetFiller::throwAsimov( double nexp, RooAbsPdf *pdf, RooRealVar *x, RooDataHist *asimov )
+{
+    RooArgSet mset( *x );
+    if( asimov != 0 ) {
+        asimov->reset();
+    } else {
+        asimov = new RooDataHist(Form("asimov_dataset_%s",pdf->GetName()),Form("asimov_dataset_%s",pdf->GetName()),mset);
+    }
+    pdf->fillDataHist( asimov, &mset, 1, false );
+
+    for( int i = 0 ; i < asimov->numEntries() ; i++ ) {
+        asimov->get( i ) ;
+
+        // Expected data, multiply p.d.f by nEvents
+        Double_t w = asimov->weight() * nexp;
+        asimov->set( w, sqrt( w ) );
+    }
+
+    Double_t corr = nexp / asimov->sumEntries();
+    for( int i = 0 ; i < asimov->numEntries() ; i++ ) {
+        RooArgSet theSet = *( asimov->get( i ) );
+        asimov->set( asimov->weight()*corr, sqrt( asimov->weight()*corr ) );
+    }
+    
+    return asimov;
+}
 
 DataSetFiller::DataSetFiller(const char * name, const char * title, const RooArgList & variables, const char *weightVarName, bool fillTree) :
     vars_(variables),
