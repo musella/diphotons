@@ -96,11 +96,34 @@ class CombineApp(TemplatesApp):
                                     default=None,
                                     help="Name of generated card",
                                     ),
-                        make_option("--compute-FWHM",dest="compute_FWHM",action="store_true",default=False,
-                                    help="Compute the Full Width Half Maximum",
+                        make_option("--compute-fwhm",dest="compute_fwhm",action="store_true",default=False,
+                                    help="Compute the Full Width Half Maximum (FWHM) when generating signals",
                                     ),
                         make_option("--generate-ws-bkgnbias",dest="generate_ws_bkgnbias",action="store_true",default=False,
                                     help="Read signal and background workspaces and generate background+bias model",
+                                    ),
+                        make_option("--bias-func",dest="bias_func",action="callback",callback=optpars_utils.Load(scratch=True),
+                                    type="string",
+                                    default={} ,
+                                    help="Bias as a function of diphoton mass to compute the bias uncertainty values inside the datacard",
+                                    ),
+                        make_option("--fwhm-input-file",dest="fwhm_input_file",action="callback",callback=optpars_utils.Load(scratch=True),
+                                    type="string",
+                                    default={} ,
+                                    help="Full Width Half Maximum (FWHM) values for different graviton masses used to compute the bias uncertainty values inside the datacard",
+                                    ),
+                        make_option("--datacard-bkg-rate",dest="datacard_bkg_rate",action="store",type="string",
+                                    default="1",
+                                    help="To increase bkg rate in datacard, for signal: call option --expectSignal when running combine tool",
+                                    ),
+                        make_option("--set-bins-fwhm",dest="set_bins_fwhm",action="callback",callback=optpars_utils.Load(scratch=True),
+                                    type="string",
+                                    default={},
+                                    help="File containing best binning of histograms to compute the FWHM, best binning depends on the graviton mass and coupling",
+                                    ),
+                        make_option("--fwhm-output-file",dest="fwhm_output_file",action="store",type="string",
+                                    default={},
+                                    help="File where to write fwhm values",
                                     ),
                         ]
                  )
@@ -144,7 +167,7 @@ class CombineApp(TemplatesApp):
             self.save_params_.append("components")
         
         if options.generate_ws_bkgnbias:
-            self.includeBiasPdf(options,args)
+            self.generateWsBkgnbias(options,args)
         
         if options.fit_background:
             self.fitBackground(options,args)
@@ -282,10 +305,10 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             for cat in categories:
                 datacard.write(" -1".ljust(15) )
                 for comp in options.components:
-                    datacard.write(" 1".ljust(15) )
+                    datacard.write((" %s" % options.datacard_bkg_rate).ljust(15))
             for cat in sidebands:                
                 for comp in  fit["sidebands"][cat]:                    
-                    datacard.write(" 1".ljust(15) )
+                    datacard.write((" %s" % options.datacard_bkg_rate).ljust(15) )
             datacard.write("\n")
             
             datacard.write("----------------------------------------------------------------------------------------------------------------------------------\n")
@@ -304,8 +327,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             # other nuisance parameters
             datacard.write("\n")
             for param in fit.get("params",[]):
-                if param[-1] == 0.:
-                    datacard.write("# ")    
+                if (param[-1] == 0):
+                    datacard.write("# ")
                 datacard.write("%s param %1.3g %1.3g\n" % tuple(param) )            
             
             datacard.write("----------------------------------------------------------------------------------------------------------------------------------\n\n")
@@ -315,7 +338,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 break
                 
     ## ------------------------------------------------------------------------------------------------------------        
-    def includeBiasPdf(self,options,args):
+    def generateWsBkgnbias(self,options,args):
 
         print "--------------------------------------------------------------------------------------------------------------------------"
         print "including bias term in the background"
@@ -324,13 +347,17 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         fit = options.fits[options.fit_name]
         
         signame = options.signal_name
+        if (options.signal_name == None or options.fit_name == None):
+            print "Please provide --signal-name and --fit-name"
+            return
 
         ## reading back background_root_file
         
         # build observable variable
         roobs = self.buildRooVar(*(self.getVar(options.observable)), recycle=True, importToWs=True)
-        roowe = self.buildRooVar("weight",[])        
-        rooset = ROOT.RooArgSet(roobs,roowe)
+        roobs.setRange("fullRange",roobs.getMin(),roobs.getMax()) 
+        #roowe = self.buildRooVar("weight",[])        
+        #rooset = ROOT.RooArgSet(roobs,roowe)
         
         fit["params"] = []
         
@@ -339,13 +366,13 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             dataBinned = self.rooData("binned_data_%s" % cat)
             data = self.rooData("data_%s" % cat)
             signalDataHist = self.rooData("signal_%s_%s" % (signame,cat))
-            signalPdf = ROOT.RooHistPdf("signalPdf_%s_%s"% (signame,cat),"signalPdf_%s_%s"% (signame,cat),ROOT.RooArgSet(roobs),signalDataHist)
+            signalPdf = ROOT.RooHistPdf("signal_model_%s_%s"% (signame,cat),"signalPdf_%s_%s"% (signame,cat),ROOT.RooArgSet(roobs),signalDataHist)
             self.workspace_.rooImport(data)
             self.workspace_.rooImport(dataBinned)
             for comp in options.components :
  
                 bkgPdf = self.rooPdf("model_%s_%s" % (comp,cat))
-                bkgPdf.SetName("bkg_only_%s" % bkgPdf.GetName())
+               
                 ##FIXME Retrieve sideband pdf
 
                 roopdflist = ROOT.RooArgList()
@@ -354,6 +381,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 
                 ## retrieve norm of pdf 
                 rooNdata = self.buildRooVar("%s_norm" % (bkgPdf.GetName()),[],recycle=True,importToWs=False)
+
+                bkgPdf.SetName("bkgOnly_model_%s_%s" % (comp,cat) )
                 rooNdata.SetName("%s_norm" % bkgPdf.GetName())
                 ## build list of coefficients 
                 roolist = ROOT.RooArgList()
@@ -361,17 +390,34 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 nBias.setVal(0.)
                 nBias.setConstant(True)
                 
-                fit["params"].append( (nBias.GetName(), nBias.getVal(), 0.) )
-                
-                fracsignuis = ROOT.RooFormulaVar("signal_%s_%s_nuisanced_frac" % (comp,cat),"signal_%s_%s_nuisanced_frac" % (comp,cat),"@0*1./@1",ROOT.RooArgList(nBias,rooNdata) )
+                # compute the nuisance values if bias_func and fwhm_input_file are provided 
+                nB = 0.
+                if(len(options.bias_func) != 0 and len(options.fwhm_input_file) != 0):
+                    bias_name = "%s_%s_%d_%d" % (cat,options.default_model,int(roobs.getMin()),int(roobs.getMax()))
+                    if (not bias_name in options.bias_func.keys()):
+                        print
+                        print("Cannot compute the bias values: bias function for %s not provided" % bias_name)
+                        print
+                    else:
+                        bias_func = ROOT.TF1(bias_name, options.bias_func[bias_name],roobs.getMin(),roobs.getMax())
+                        # get value of grav mass
+                        substr = signame[signame.index("_")+1:]
+                        grav_mass = float(substr[substr.index("_")+1:])
+                        fwhm_val = float(options.fwhm_input_file[signame][cat])
+                        nB = bias_func.Eval(grav_mass) * fwhm_val 
+                        #print "%f" % nB
+                fit["params"].append( (nBias.GetName(), nBias.getVal(), nB) )
+                pdfSum_norm = ROOT.RooFormulaVar("model_%s_%s_norm" % (comp,cat),"model_%s_%s_norm" % (comp,cat),"@0",ROOT.RooArgList(rooNdata)) 
+
+                fracsignuis = ROOT.RooFormulaVar("signal_%s_%s_nuisanced_frac" % (comp,cat),"signal_%s_%s_nuisanced_frac" % (comp,cat),"@0*1./@1",ROOT.RooArgList(nBias,pdfSum_norm) )
                 fracbkg = ROOT.RooFormulaVar("background_%s_%s_frac" % (comp,cat), "background_%s_%s_frac" % (comp,cat), "1.-@0",ROOT.RooArgList(fracsignuis))
                 roolist.add(fracbkg)
                 roolist.add(fracsignuis)
                 
                 
                 ## summing pdfs
-                pdfSum = ROOT.RooAddPdf("model_bkgnbias_%s_%s" % (comp,cat),"model_bkgnbias_%s_%s" % (comp,cat), roopdflist, roolist)
-                pdfSum_norm = ROOT.RooFormulaVar("%s_norm" %  (pdfSum.GetName()), "%s_norm" %  (pdfSum.GetName()),"@0",ROOT.RooArgList(rooNdata)) 
+                pdfSum = ROOT.RooAddPdf("model_%s_%s" % (comp,cat),"model_%s_%s" % (comp,cat), roopdflist, roolist)
+                
                 self.workspace_.rooImport(pdfSum_norm)
                 
                 self.workspace_.rooImport(pdfSum,RooFit.RecycleConflictNodes())
@@ -760,27 +806,37 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         fitname = options.fit_name
         fit = options.fits[fitname] 
         isNameProvided = False
+        list_fwhm = {}
+        isPrefix = False
+        if (options.signal_name != None):
+                isNameProvided = True
+        
+        if (not isNameProvided and options.output_file != None):
+            isPrefix = True
+            prefix_output = options.output_file
         for signame,trees in options.signals.iteritems():
             self.workspace_ = ROOT.RooWorkspace("wtemplates","wtemplates")
             self.workspace_.rooImport = getattr(self.workspace_,"import")
-            if (options.signal_name != None):
-                isNameProvided = True
+            if(isNameProvided):
                 signame = options.signal_name
-           
-                    
+
             roobs = self.buildRooVar(*(self.getVar(options.observable)), recycle=False, importToWs=True)
             #roobs.setBins(5000,"cache")
             roobs.setRange("fullRange",roobs.getMin(),roobs.getMax())
             roowe = self.buildRooVar("weight",[])        
             rooset = ROOT.RooArgSet(roobs,roowe)
            
+            # In case nothing specified about the output file, set: output_file = signame.root
+            if ( options.output_file == None ):
+                options.output_file = "%s.root" % (signame)
 
-            if (not isNameProvided or (isNameProvided and options.output_file == None)):
-                options.output_file = signame+".root" 
-
+            # In case we loop over all signals, we can give inside options.output_file the prefix
+            # ... for all generated signal files (e.g. a common directory)
+            elif (isPrefix):
+                options.output_file = "%s_%s.root" % (prefix_output,signame)
             nameFileOutput = options.output_file
-            
-            
+           
+            sublist_fwhm = {}
             ## build and import signal dataset
             for cat in fit["categories"]:
                 treename = "%s_%s_%s" % (signame,options.fit_name,cat)
@@ -794,12 +850,19 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 binned.SetName("signal_%s_%s"% (signame,cat))
                 self.workspace_.rooImport(binned)
                 
-                if options.compute_FWHM:
-                    file_fwhm = open(signame+"_FWHM.txt","a")
+                if options.compute_fwhm:
+                    if len(options.fwhm_output_file) != 0:
+                        file_fwhm = open(options.fwhm_output_file,"a")
+                    else:
+                        file_fwhm = open("fwhm_%s.json" % fitname,"a")
                     # plot signal histogram and compute FWHM
                     canv = ROOT.TCanvas("signal_%s" % (cat),"signal" )
-                    roobs.setBins(1200)
+                    nBins = 1000
+                    if (options.set_bins_fwhm != None):
+                        if (signame in options.set_bins_fwhm.keys()):
+                            nBins = float(options.set_bins_fwhm[signame])
 
+                    roobs.setBins(nBins)
                     hist = binned.createHistogram("sigHist",roobs)
                     halfMaxVal = 0.5*hist.GetMaximum()
                     maxBin = hist.GetMaximumBin()
@@ -820,23 +883,26 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                         xLeft = hist.GetXaxis().GetBinCenter(binLeft)
                         xRight = hist.GetXaxis().GetBinCenter(binRight)
                         xWidth = xRight-xLeft
+                        print ("FWHM = %f" % (xWidth))
+                        hist.GetXaxis().SetRangeUser(hist.GetXaxis().GetBinCenter(maxBin)-5*xWidth,hist.GetXaxis().GetBinCenter(maxBin)+5*xWidth)
+                        hist.Draw("HIST")
+                        #canv.SaveAs(options.output_file.replace(".root","_%s_hist.png" % (cat))
+                        canv.SaveAs(nameFileOutput.replace(".root",("%s_hist.png" % cat)))
+                        sublist_fwhm[cat] = "%f" % xWidth
                     else:
-                        print("Did not succeed to get the FWHM")
+                        print
+                        print("Did not succeed to compute the FWHM")
+                        print
 
-                    print ("FWHM = %r" % (xWidth))
-                    hist.GetXaxis().SetRangeUser(hist.GetXaxis().GetBinCenter(maxBin)-5*xWidth,hist.GetXaxis().GetBinCenter(maxBin)+5*xWidth)
-                    hist.Draw("HIST")
-                    
-                    #canv.SaveAs(options.output_file.replace(".root","_%s_hist.png" % (cat))
-                    canv.SaveAs(nameFileOutput.replace(".root",("%s_hist.png" % cat)))
-                    
-                    file_fwhm.write("%d %s %d %d\n" % (roobs.getMin(),cat,xWidth,xLeft))
-                
+            list_fwhm[signame] = sublist_fwhm
             self.saveWs(options)
                         
             # if signame provided then stop
             if isNameProvided :
-                break                
+                break
+        if options.compute_fwhm:
+            json_output = json.dumps(list_fwhm, indent=4)
+            file_fwhm.write("%s\n" % json_output)
   
         
     ## ------------------------------------------------------------------------------------------------------------
