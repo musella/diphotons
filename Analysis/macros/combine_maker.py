@@ -41,6 +41,14 @@ class CombineApp(TemplatesApp):
                         make_option("--fit-background",dest="fit_background",action="store_true",default=False,
                                     help="Fit background",
                                     ),                        
+                        make_option("--fit-asimov",dest="fit_asimov",action="callback",callback=optpars_utils.ScratchAppend(float),
+                                    type="string",default=[],
+                                    help="Do background fit on asimov dataset (thrown from fit to extended mass range)",
+                                    metavar="FIT_RANGE"
+                                    ),                        
+                        make_option("--freeze-params",dest="freeze_params",action="store_true",default=False,
+                                    help="Freeze background parameters after fitting",
+                                    ),                        
                         make_option("--norm-as-fractions",dest="norm_as_fractions",action="store_true",default=False,
                                     help="Parametrize background components normalization as fractions",
                                     ),
@@ -425,9 +433,20 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         
         roobs = self.buildRooVar(*(self.getVar(options.observable)), recycle=False, importToWs=True)
         #roobs.setBins(5000,"cache")
-        roobs.setRange("fullRange",roobs.getMin(),roobs.getMax())
+        roobs.setRange("fullRange",roobs.getMin(),roobs.getMax()) 
         roowe = self.buildRooVar("weight",[])        
         rooset = ROOT.RooArgSet(roobs,roowe)
+
+        useAsimov = False
+        if len(options.fit_asimov) > 0 :
+            obsvar,obsbinning = self.getVar(options.observable)
+            nbins = float(len(obsbinning)-1)*(options.fit_asimov[1] - options.fit_asimov[0])/(obsbinning[-1]-obsbinning[0])
+            asimbinning = self.getVar("%s[%d,%f,%f]" % ( obsvar,nbins,options.fit_asimov[0],options.fit_asimov[1] ) )[1]
+            asimobs = self.buildRooVar(obsvar,asimbinning, recycle=False, importToWs=False)
+            useAsimov = True
+            asimobs.setRange("asimRange",asimobs.getMin(),asimobs.getMax())
+            asimobs.setRange("fullRange",roobs.getMin(),roobs.getMax())
+            
         
         ## build and import data dataset
         ndata = {}
@@ -588,17 +607,49 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 dset  = self.rooData(treename)
                 ndset = self.rooData(ntreename)
                 
-                ## if needed cut away high weight events for the fit if needed, but keep the uncut dataset
+                ## if needed replace dataset with asimov
+                if useAsimov:
+                    print 
+                    print "will use asimov dataset"                    
+                    print "enlarged fit range : %1.4g-%1.4g" % ( asimobs.getMin(), asimobs.getMax() )
+                    print "Final    fit range : %1.4g-%1.4g" % ( roobs.getMin(), roobs.getMax() )
+                    if weight_cut:
+                        adset = self.reducedRooData(treename,rooset,sel=weight_cut,redo=True,importToWs=False)
+                    else:
+                        adset = dset
+                    ## fit pdf to asimov dataset
+                    aset = ROOT.RooArgSet(asimobs,roowe)
+                    adset = adset.reduce(RooFit.SelectVars(aset),RooFit.Range("asimRange")) 
+                    apdf = self.buildPdf(model,"asimov_model_%s%s" % (comp,cat), asimobs )
+                    apdf.fitTo(adset,*fitops)
+                    snap = ("asimov_model_%s%s" % (comp,cat), apdf.getDependents( self.pdfPars_ ).snapshot())                    
+                    ## now compute number of expected events in "fullRange"                    
+                    ndset = ndset.reduce(RooFit.SelectVars(aset),RooFit.Range("asimRange"))
+                    nexp = ndset.sumEntries()
+                    nexp *= apdf.createIntegral(ROOT.RooArgSet(asimobs),"fullRange").getVal()/apdf.createIntegral(ROOT.RooArgSet(asimobs),"asimRange").getVal()
+                    print "throwing asimov dataset for %1.4g expected events (computed from %1.4g events in enlarged range)" % ( nexp, ndset.sumEntries() )
+                    ## build a new pdf which depends on roobs instead of asimobs and use it to throw the asimov dataset
+                    tpdf = self.buildPdf(model,"extra_asimov_model_%s%s" % (comp,cat), roobs, load=snap )
+                    dset = ROOT.DataSetFiller.throwAsimov(nexp,tpdf,roobs)
+                    ndset = dset
+                    print
+                else:
+                    snap = None
+                    
+                ## if needed cut away high weight events for the fit, but keep the uncut dataset
                 if weight_cut:                    
                     uncut        = dset.reduce(RooFit.SelectVars(rooset),RooFit.Range("fullRange"))
                     binned_uncut = uncut.binnedClone()
-                    dset         = self.reducedRooData(treename,rooset,sel=weight_cut,redo=True,importToWs=True)                    
+                    if useAsimov:
+                        dset = uncut
+                    else:
+                        dset = self.reducedRooData(treename,rooset,sel=weight_cut,redo=True,importToWs=False)                    
 
                 ## reduce datasets to required range
                 reduced  = dset.reduce(RooFit.SelectVars(rooset),RooFit.Range("fullRange"))
                 nreduced = ndset.reduce(RooFit.SelectVars(rooset),RooFit.Range("fullRange"))
                 reduced.SetName("source_dataset_%s%s"% (comp,cat))
-                binned = reduced.binnedClone()                
+                binned = reduced.binnedClone() if not useAsimov else reduced               
                 print "shape source :", treename, reduced.sumEntries(),
                 if weight_cut:
                     print uncut.sumEntries()
@@ -610,13 +661,13 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 if add_sideband: 
                     ## if we want to take background shape from sideband in data, book 
                     ##    the pdf such that coefficients are the same for the signal region and sideband shapes
-                    pdf = self.buildPdf(model,"model_%s_%s_control" % (add_sideband,catsource), roobs )
-                    sbpdf = self.buildPdf(model,"model_%s_%s_control" % (add_sideband,catsource), roobs )
+                    pdf = self.buildPdf(model,"model_%s_%s_control" % (add_sideband,catsource), roobs, load=snap )
+                    sbpdf = self.buildPdf(model,"model_%s_%s_control" % (add_sideband,catsource), roobs, loap=snap )
                     sbpdf.SetName("model_%s_%s_control" % (add_sideband,catsource))
                     sidebands[catsource].add(add_sideband)
                 else:
                     ## else book fully independet shape
-                    pdf = self.buildPdf(model,"model_%s%s" % (comp,cat), roobs )                    
+                    pdf = self.buildPdf(model,"model_%s%s" % (comp,cat), roobs, load=snap )                    
                 pdf.SetName("model_%s%s" % (comp,cat))
 
                 ## normalization has to be called <pdfname>_norm or combine won't find it
@@ -632,8 +683,9 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     norm.setVal(reduced.sumEntries())
 
                 # fit
-                pdf.fitTo(binned,ROOT.RooFit.Strategy(2),*fitops)
-                # pdf.fitTo(reduced,ROOT.RooFit.Strategy(2),*fitops)
+                if not useAsimov:
+                    # no need to refit if we used asimov dataset
+                    pdf.fitTo(binned,ROOT.RooFit.Strategy(2),*fitops)
                 
                 ## set normalization to expected number of events in normalization region
                 if options.norm_as_fractions:
@@ -677,7 +729,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 canv.cd(1)
                 frame.GetXaxis().SetMoreLogLabels()
                 frame.GetYaxis().SetLabelSize( frame.GetYaxis().GetLabelSize() * canv.GetWh() / ROOT.gPad.GetWh() )
-                frame.GetYaxis().SetRangeUser( 1.e-6,50. )
+                frame.GetYaxis().SetRangeUser( 1.e-10,50. )
                 frame.Draw()
                 
                 canv.cd(2)
@@ -698,6 +750,13 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 self.autosave(True)
                 
                 # import everything to the workspace
+                if options.freeze_params:
+                    params = pdf.getDependents(self.pdfPars_)
+                    itr = params.createIterator()
+                    p = itr.Next()
+                    while p:
+                        p.setConstant(True)
+                        p = itr.Next()
                 self.workspace_.rooImport(pdf,RooFit.RecycleConflictNodes())
                 importme.append([norm]) ## import this only after we run on all components, to make sure that all fractions are properly set
                 self.workspace_.rooImport(reduced)
@@ -841,7 +900,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
   
         
     ## ------------------------------------------------------------------------------------------------------------
-    def buildPdf(self,model,name,xvar,order=0,label=None):
+    def buildPdf(self,model,name,xvar,order=0,label=None,load=None):
         
         pdf = None
         if not label:
@@ -879,13 +938,13 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             
         elif model == "moddijet":
             pname = "moddijet_%s" % name
-            lina = self.buildRooVar("%s_lina" % pname,[-100.0,100.0], importToWs=False)
-            loga = self.buildRooVar("%s_loga" % pname,[-100.0,100.0], importToWs=False)
-            linb = self.buildRooVar("%s_linb" % pname,[-100.0,100.0], importToWs=False)
+            lina = self.buildRooVar("%s_lina" % pname,[-20,5], importToWs=False)
+            loga = self.buildRooVar("%s_loga" % pname,[-100,0], importToWs=False)
+            linb = self.buildRooVar("%s_linb" % pname,[-100,0], importToWs=False)
             sqrb = self.buildRooVar("%s_sqrb" % pname,[], importToWs=False)
             lina.setVal(5.)
             loga.setVal(-1.)
-            linb.setVal(0.1)
+            linb.setVal(-0.1)
             sqrb.setVal(1./13.e+3)
             sqrb.setConstant(1)
             
@@ -896,7 +955,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             self.pdfPars_.add(sqrb)
             
             roolist = ROOT.RooArgList( xvar, lina, loga, linb, sqrb )
-            pdf = ROOT.RooGenericPdf( pname, pname, "TMath::(1e-50,pow(@0,@1+@2*log(@0))*pow(1.-@0*@4,@3))", roolist )
+            pdf = ROOT.RooGenericPdf( pname, pname, "pow(@0,@1+@2*log(@0))*pow(1.-@0*@4,@3)", roolist )
             
             self.keep( [pdf,lina,loga, linb, sqrb] )
         elif model == "expow":
@@ -1009,7 +1068,17 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             
             self.keep( [pdf,slo,qua,alp] )
 
+        if load:
+            sname,snap = load
+            params = pdf.getDependents(self.pdfPars_)
+            itr = snap.createIterator()
+            var = itr.Next()
+            while var:
+                parname = var.GetName().replace(sname,name)
+                params[parname].setVal(var.getVal())
+                var = itr.Next()
             
+
         return pdf
       
     

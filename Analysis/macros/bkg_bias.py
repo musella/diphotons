@@ -52,6 +52,13 @@ class BiasApp(CombineApp):
                         make_option("--plot-toys-fits",dest="plot_toys_fits",action="store_true",default=False,
                                     help="Make plots with fit results",
                                     ),
+                        make_option("--plot-binning",dest="plot_binning",action="callback",callback=optpars_utils.ScratchAppend(float),
+                                    type="string",default=[],
+                                    help="Binning to be used for plots",
+                                    ),
+                        make_option("--plot-fit-bands",dest="plot_fit_bands",action="store_true",default=False,
+                                    help="Add error bands to plots",
+                                    ),                        
                         make_option("--n-toys",dest="n_toys",action="store",type="int",default=False,
                                     help="Number of toys",
                                     ),
@@ -81,7 +88,26 @@ class BiasApp(CombineApp):
                                     ),
                         make_option("--bias-labels",dest="bias_labels",action="callback",type="string",callback=optpars_utils.ScratchAppend(str),
                                     default=[]
-                                    ),                        
+                                    ),                    
+                        make_option("--bias-param",dest="bias_param",action="callback",type="string",callback=optpars_utils.Load(),
+                                    default={
+                                "EBEB_dijet_300_6000" : "(0.22*((x/600.)^-5))+1e-6",
+                                "EBEB_dijet_400_6000" : "(0.2*((x/600.)^-5))+2e-6",
+                                "EBEB_dijet_500_6000" : "(0.18*((x/600.)^-5))+5e-6",
+                                "EBEE_dijet_300_6000" : "(0.06*((x/600.)^-4))+1e-7",
+                                "EBEE_dijet_400_6000" : "(0.04*((x/600.)^-4))+1e-7",
+                                "EBEE_dijet_500_6000" : "(0.04*((x/600.)^-4))+1e-7",
+                                ### "EBEB_dijet_300_6000" : "(0.110705*((x/600.000000)^-6.04594))+7.28617e-05",
+                                ### "EBEB_dijet_400_6000" : "(0.103261*((x/600.000000)^-6.14835))+7.29511e-05",
+                                ### "EBEB_dijet_500_6000" : "(0.125619*((x/600.000000)^-6.23181))+7.29431e-05",
+                                ### "EBEE_dijet_300_6000" : "(0.0472049*((x/600.000000)^-5.33805))+7.25388e-05",
+                                ### "EBEE_dijet_400_6000" : "(0.0397002*((x/600.000000)^-5.03543))+7.21574e-05",
+                                ### "EBEE_dijet_500_6000" : "(0.0514193*((x/600.000000)^-5.33518))+7.24997e-05",
+                                }
+                                    ),                    
+                        make_option("--scale-bias",dest="scale_bias",action="store",type="float",
+                                    default=1.
+                                    ),                    
                         ]
                  )
                 ]
@@ -222,17 +248,145 @@ class BiasApp(CombineApp):
                 print tnorm, norm.getVal()
                 ntoys = options.n_toys
                 
-                for toy in range(ntoys):
-                    data = pdf.generate(ROOT.RooArgSet(roobs),ROOT.gRandom.Poisson(tnorm)) ## 
-                    if options.binned_toys: data=data.binnedClone()
-                    toyname = "toy_%s%s_%d" % (comp,cat,toy)
-                    data.SetName(toyname)
-                    data.SetTitle(toyname)
-                    self.workspace_.rooImport(data)
+                if ntoys < 0:
+                    data = pdf.generate(ROOT.RooArgSet(roobs),ROOT.gRandom.Poisson(tnorm))
+                    asimov = data.binnedClone()
+                    asimov = ROOT.DataSetFiller.throwAsimov(tnorm,pdf,roobs,asimov)
+                    asimov.SetName("toy_%s%s_asimov" % (comp,cat))
+                    self.workspace_.rooImport(asimov)
+                else:
+                    for toy in range(ntoys):
+                        data = pdf.generate(ROOT.RooArgSet(roobs),ROOT.gRandom.Poisson(tnorm)) ## 
+                        if options.binned_toys: data=data.binnedClone()
+                        toyname = "toy_%s%s_%d" % (comp,cat,toy)
+                        data.SetName(toyname)
+                        data.SetTitle(toyname)
+                        self.workspace_.rooImport(data)
                     
         self.saveWs(options)
 
+    ## ------------------------------------------------------------------------------------------------------------
+    def plotFitBands(self,options,frame,dset,pdf,obs,roocurve,binning=None,slabel=None):
+        
+        wd = ROOT.gDirectory
+        params = pdf.getDependents( self.pdfPars_ )
+        snap = params.snapshot()
 
+	nlim = ROOT.RooRealVar("nlim%s" % dset.GetName(),"",0.0,0.0,1e+5)
+	nbias = ROOT.RooRealVar("nbias%s" % dset.GetName(),"",0.0,-1.e+5,1e+5)
+	sbias = ROOT.RooRealVar("sbias%s" % dset.GetName(),"",0.0,-1.e+5,1e+5)
+        sbias.setConstant(True)
+        biaspdf = ROOT.RooGaussian("nbiasPdf%s" % dset.GetName(),"",nbias,ROOT.RooFit.RooConst(0.),sbias)
+        nsum = ROOT.RooAddition("nsum%s"%dset.GetName(),"",ROOT.RooArgList(nlim,nbias))
+
+        onesigma = ROOT.TGraphAsymmErrors()
+        twosigma = ROOT.TGraphAsymmErrors()
+        bias     = ROOT.TGraphAsymmErrors()
+
+        bands  =  [onesigma,twosigma,bias]
+        styles = [ [(style_utils.colors,ROOT.kYellow)],  [(style_utils.colors,ROOT.kGreen+1)], 
+                   [(style_utils.colors,ROOT.kOrange)]
+                   ]
+        for band in bands:
+            style_utils.apply( band, styles.pop(0) )
+            
+        self.keep(bands)
+        
+        bins = []
+        if binning:
+            roobins = obs.getBinning(binning)
+            for ibin in range(roobins.numBins()):
+                bins.append(  (roobins.binCenter(ibin), roobins.binLow(ibin), roobins.binHigh(ibin)) )
+        else:
+            for ibin in range(1,frame.GetXaxis().GetNbins()+1):
+                lowedge = frame.GetXaxis().GetBinLowEdge(ibin)
+                upedge  = frame.GetXaxis().GetBinUpEdge(ibin)
+                center  = frame.GetXaxis().GetBinCenter(ibin)
+                bins.append(  (center,lowedge,upedge) )
+
+        bias_func=None
+        if slabel in options.bias_param:
+            bias_func = ROOT.TF1("err_correction",options.bias_param[slabel],0,2e+6)        
+
+        for ibin,bin in enumerate(bins):
+            center,lowedge,upedge = bin
+            
+            nombkg = roocurve.interpolate(center)
+            onesigma.SetPoint(ibin,center,nombkg)
+            twosigma.SetPoint(ibin,center,nombkg)
+            
+            nlim.setVal(nombkg)
+            ## itr = snap.createIterator()
+            ## var = itr.Next()
+            ## while var:
+            ##     params[var.GetName()].setVal(var.getVal())
+            ##     var = itr.Next()
+                
+            ## for f in ROOT.gROOT.GetListOfFiles():
+            ##     print f.GetName()
+
+            if options.verbose or ibin % 10 == 0:
+                print "computing error band ", ibin, lowedge, upedge, nombkg,                
+
+            if nombkg < 5e-4:
+                print
+                continue
+
+            obs.setRange("errRange",lowedge,upedge)
+            if bias_func:
+                nbias.setVal(0.)
+                sbias.setVal(bias_func.Integral(lowedge,upedge))
+                epdf = ROOT.RooExtendPdf("epdf","",pdf,nsum,"errRange")
+                nll = epdf.createNLL(dset,ROOT.RooFit.Extended(),ROOT.RooFit.ExternalConstraints( ROOT.RooArgSet(biaspdf) ))
+            else:
+                epdf = ROOT.RooExtendPdf("epdf","",pdf,nlim,"errRange")
+                nll = epdf.createNLL(dset,ROOT.RooFit.Extended())
+            minim = ROOT.RooMinimizer(nll)
+            minim.setMinimizerType("Minuit2")
+            minim.setStrategy(0)
+            minim.setPrintLevel( -1 if not options.verbose else 2)
+            # minim.setPrintLevel(-1)
+            minim.migrad()
+
+            if nombkg > 1.5e-3:
+                minim.minos(ROOT.RooArgSet(nlim))
+                errm, errp = -nlim.getErrorLo(),nlim.getErrorHi()
+            else:
+                result = minim.lastMinuitFit()
+                errm = nlim.getPropagatedError(result)
+                errp = errm
+                
+            onesigma.SetPointError(ibin,0.,0.,errm,errp)
+            
+            if options.verbose or ibin % 10 == 0:
+                print errp, errm
+                
+            if nombkg > 1.5e-3:
+                minim.setErrorLevel(1.91)
+                minim.migrad()
+                minim.minos(ROOT.RooArgSet(nlim))
+                errm, errp = -nlim.getErrorLo(),nlim.getErrorHi()
+            else:
+                result = minim.lastMinuitFit()
+                errm = 2.*nlim.getError()
+                errp = errm
+                
+            twosigma.SetPointError(ibin,0.,0.,errm,errp)
+            
+            del minim
+            del nll
+
+        frame.addObject(twosigma,"E3")
+        frame.addObject(onesigma,"E3")
+
+        itr = snap.createIterator()
+        var = itr.Next()
+        while var:
+            params[var.GetName()].setVal(var.getVal())
+            var = itr.Next()
+            
+        wd.cd()    
+        
     ## ------------------------------------------------------------------------------------------------------------
     def fitToys(self,options,args):
         
@@ -263,6 +417,17 @@ class BiasApp(CombineApp):
         roobs.setMin(minx)
         roobs.setMax(maxx)
 
+        if len(options.plot_binning) > 0:
+            if len(options.plot_binning) == 3:
+                options.plot_binning[0] = int(options.plot_binning[0])
+                binning = ROOT.RooBinning(*options.plot_binning)
+            else:
+                binning = ROOT.RooBinning(array.array('d',plot_binning))
+            roobs.setBinning(binning,"plotBinning")
+            options.plot_binning = "plotBinning"
+        else:
+            options.plot_binning = None
+
         roowe = self.buildRooVar("weight",[])
         
         fitops = [ ROOT.RooFit.PrintLevel(-1),ROOT.RooFit.Warnings(False),ROOT.RooFit.NumCPU(4),ROOT.RooFit.Minimizer("Minuit2"), ROOT.RooFit.Strategy(2), ROOT.RooFit.Offset(True) ]
@@ -283,8 +448,7 @@ class BiasApp(CombineApp):
                     ntp = ROOT.TNtuple("tree_bias_%s%s_%s_%s" % (comp,cat,model,rname),"tree_bias_%s%s_%s_%s" % (comp,cat,model,rname),"toy:truth:fit:minos:errhe:errp:errm:bias:fitmin:fitmax" )
                     biases[rname] = ntp
                     self.store_[ntp.GetName()] = ntp
-                print self.store_
-                
+                    
                 generator = self.rooPdf("pdf_mctruth_%s%s_%s" % (comp,fitname,cat))
                 gnorm     = self.buildRooVar("norm_mctruth_%s%s_%s" % (comp,fitname,cat), [], recycle=True)
                 gnorm.Print() 
@@ -297,10 +461,20 @@ class BiasApp(CombineApp):
                     testRange,testLim = test
                     pobs.setRange(testRange,roobs.getBinning(testRange).lowBound(),roobs.getBinning(testRange).highBound())
                     trueNorms[testRange] = generator.createIntegral(ROOT.RooArgSet(pobs),testRange).getVal()/renorm
-                
-                for toy in xrange(options.first_toy,options.first_toy+options.n_toys):
-                    toyname = "toy_%s%s_%d" % (comp,cat,toy)
+
+                toyslist = {}
+                if options.n_toys > 0:
+                    for toy in xrange(options.first_toy,options.first_toy+options.n_toys):
+                        toyslist[toy]="toy_%s%s_%d" % (comp,cat,toy)
+                else:
+                    toyslist[-1] = "toy_%s%s_asimov" % (comp,cat)
+                    
+                ## for toy in xrange(options.first_toy,options.first_toy+options.n_toys):
+                ##     toyname = "toy_%s%s_%d" % (comp,cat,toy)
+                for toy,toyname in toyslist.iteritems():
                     dset = self.rooData(toyname).reduce("%s > %f && %s < %f" % (roobs.GetName(),minx,roobs.GetName(),maxx))
+                    print dset,pdf
+                    
                     pdft = pdf.Clone()
                     
                     if options.plot_toys_fits:
@@ -320,10 +494,25 @@ class BiasApp(CombineApp):
                     gminim.migrad()
 
                     if options.plot_toys_fits:
-                        dset.plotOn(frame)
-                        pdf.plotOn(frame,ROOT.RooFit.LineColor(ROOT.kRed))
-                        pdft.plotOn(frame)
-                        
+                        if options.plot_binning:
+                            dset.plotOn(frame,ROOT.RooFit.Binning(options.plot_binning),ROOT.RooFit.DataError(ROOT.RooAbsData.Poisson))
+                        else:
+                            dset.plotOn(frame,ROOT.RooFit.DataError(ROOT.RooAbsData.Poisson))
+                        if options.plot_fit_bands:
+                            pdf.plotOn(frame,ROOT.RooFit.Invisible())
+                        else:
+                            pdf.plotOn(frame,ROOT.RooFit.LineColor(ROOT.kBlue))
+                                                    
+                        if toy > 0:
+                            generator.plotOn(frame,ROOT.RooFit.LineColor(ROOT.kGreen))
+                            
+                        if options.plot_fit_bands:
+                            slabel = "%s_%s_%1.0f_%1.0f" % ( cat, model, options.fit_range[0], options.fit_range[1] )
+                            self.plotFitBands(options,frame,dset,pdf,roobs,frame.getObject(1),options.plot_binning,slabel)
+                            pdf.plotOn(frame,ROOT.RooFit.LineColor(ROOT.kBlue))
+
+
+                        frame.GetYaxis().SetRangeUser(1e-5,1e+3)
                         canv = ROOT.TCanvas("fit_%s" % toyname,"fit_%s" % toyname)
                         canv.SetLogy()
                         canv.SetLogx()
@@ -487,7 +676,7 @@ class BiasApp(CombineApp):
                         else:
                             bias = (nomnorm-truenorm)/abs(errh)
 
-                        biases[testRange].Fill( toy,truenorm, nomnorm,  minos, hesseerr, fiterrh, fiterrl, bias, options.fit_range[0], options.fit_range[1] )
+                        biases[testRange].Fill( toy, truenorm, nomnorm,  minos, hesseerr, fiterrh, fiterrl, bias, options.fit_range[0], options.fit_range[1] )
                     
                     self.autosave(True)
                         
@@ -503,6 +692,7 @@ class BiasApp(CombineApp):
         
         profiles = {}
         bprofiles = {}
+        cprofiles = {}
         
         xfirst = 1e5
         xlast  = 0.
@@ -520,15 +710,26 @@ class BiasApp(CombineApp):
                     nlabel = "_".join(toks)
                     slabel = "_".join([cat,model,label])
                     
+                    bias_func = None
+                    if slabel in options.bias_param:
+                        bias_func = ROOT.TF1("err_correction",options.bias_param[slabel],0,2e+6)
+                        ## bias_func.Print()
+                        
                     if not slabel in profiles:
                         profile = ROOT.TGraphErrors()
                         bprofile = ROOT.TGraphErrors()
                         profiles[slabel] = profile
                         bprofiles[slabel] = bprofile
                         self.keep( [profile,bprofile] )
+                        if bias_func:
+                            cprofile = ROOT.TGraphErrors()
+                            cprofiles[slabel] = cprofile
+                            self.keep( [cprofile] )
                     else:
                         profile = profiles[slabel]
                         bprofile = bprofiles[slabel]
+                        if bias_func:
+                            cprofile = cprofiles[slabel]
                         
                     xmin,xmax = [float(t) for t in rng.split("_")[1:]]
                     xfirst = min(xmin,xfirst)
@@ -536,7 +737,7 @@ class BiasApp(CombineApp):
                     ibin = profile.GetN()
                     
                     tree.Draw("bias>>h_bias_%s(501,-5.005,5.005)" % nlabel )
-                    hb = ROOT.gDirectory.Get("h_bias_%s" % ("_".join(toks)))
+                    hb = ROOT.gDirectory.Get("h_bias_%s" % nlabel )
                     hb.Fit("gaus","L+Q")
                     
                     canv = ROOT.TCanvas(nlabel,nlabel)
@@ -551,7 +752,7 @@ class BiasApp(CombineApp):
                     med = array.array('d',[0.])
                     hb.GetQuantiles(len(prb),med,prb)
                     
-                    tree.Draw("abs(bias)>>h_coverage_%s(501,0,5.01)" % ("_".join(toks)) )
+                    tree.Draw("abs(bias)>>h_coverage_%s(501,0,5.01)" % nlabel )
                     hc = ROOT.gDirectory.Get("h_coverage_%s" % nlabel )
                     
                     prb = array.array('d',[0.683])
@@ -572,11 +773,28 @@ class BiasApp(CombineApp):
                     ## bprofile.SetPoint(ibin,0.5*(xmax+xmin),med[0])
                     bprofile.SetPoint(ibin,0.5*(xmax+xmin),gaus.GetParameter(1)/(gaus.GetParameter(2)))
                     bprofile.SetPointError(ibin,0.5*(xmax-xmin),0.)
-                    
+
                     tree.GetEntry(0)
                     summary[nlabel] = [ gaus.GetParameter(1), gaus.GetParError(1), gaus.GetParameter(2), gaus.GetParError(2),
                                         med[0], qtl[0], gausd.GetParameter(1), gausd.GetParError(1), medd[0], medd[0]/med[0], tree.truth ]
-        
+                    if bias_func:
+                        tree.SetAlias("berr","(fit-truth)/bias*%f" % max(1.,gaus.GetParameter(2)))
+                        tree.SetAlias("corr_bias","(fit-truth)/sqrt(berr^2+%f^2)" % (bias_func.Integral(xmin,xmax)*options.scale_bias) )
+                        tree.Draw("corr_bias>>h_corr_bias_%s(501,-5.005,5.005)" % nlabel )
+                        hc = ROOT.gDirectory.Get("h_corr_bias_%s" % nlabel )
+                        hc.Fit("gaus","L+Q")
+                        
+                        hc.Print()
+                        
+                        gausc = hc.GetListOfFunctions().At(0)
+                        medc = array.array('d',[0.])
+                        hc.GetQuantiles(len(prb),medc,prb)
+                        
+                        cprofile.SetPoint(ibin,0.5*(xmax+xmin),gausc.GetParameter(1))
+                        cprofile.SetPointError(ibin,0.5*(xmax-xmin),0.)
+
+                        summary[nlabel].extend( [medc[0], gausc.GetParameter(1), gausc.GetParameter(2)] )
+                        
         ### styles = [ [ (style_utils.colors,ROOT.kBlack) ],  [ (style_utils.colors,ROOT.kRed) ],  
         ###            [ (style_utils.colors,ROOT.kBlue) ],  [ (style_utils.colors,ROOT.kGreen+1) ],
         ###            [ (style_utils.colors,ROOT.kOrange) ],  [ (style_utils.colors,ROOT.kMagenta+1) ] 
@@ -602,6 +820,10 @@ class BiasApp(CombineApp):
         leg.SetFillStyle(0)
         profiles[keys[0]].GetXaxis().SetRangeUser(xfirst,xlast)
         bprofiles[keys[0]].GetXaxis().SetRangeUser(xfirst,xlast)                    
+        ckeys = sorted(cprofiles.keys())
+        print ckeys
+        if len(ckeys) > 0:
+            cprofiles[ckeys[0]].GetXaxis().SetRangeUser(xfirst,xlast)                  
         first = True
         cstyles = copy(styles)
         fits = []
@@ -611,14 +833,19 @@ class BiasApp(CombineApp):
             profile.Sort()
             profile.Print()
             style = cstyles.pop(0)            
-            ## func = ROOT.TF1("bfunc","(x>[0])*( [1]/([0]+x)+[2] )")
-            func = ROOT.TF1("bfunc","[0]*pow(x/%f,[1])+[2]"% max(600,xfirst),max(600,xfirst),xlast)
-            # func.SetParameters(300.,1.,1.e-3)
-            func.SetParameters(1.e-2,-4,1.e-5)
-            profile.Fit(func,"R+")
-            fit = profile.GetListOfFunctions().At(0)
-            fits.append([key,fit])
-            style_utils.apply( fit, style[:1] )
+            ## ## func = ROOT.TF1("bfunc","(x>[0])*( [1]/([0]+x)+[2] )")
+            ## func = ROOT.TF1("bfunc","[0]*pow(x/%f,[1])+[2]"% max(600,xfirst),max(600,xfirst),xlast)
+            ## # func.SetParameters(300.,1.,1.e-3)
+            ## func.SetParameters(1.e-2,-4,1.e-5)
+            ## profile.Fit(func,"R+")
+            ## fit = profile.GetListOfFunctions().At(0)
+            ## fits.append([key,fit])
+            if key in options.bias_param:
+                bias_func = ROOT.TF1("err_correction_%s" % key,options.bias_param[key],xfirst,xlast)
+                style_utils.apply( bias_func, style[:1] )
+                bias_func.Draw("same")
+                self.keep(bias_func)
+                
             style_utils.apply( profile, style )
             leg.AddEntry(profile,key,"pe")
             if first:
@@ -644,7 +871,6 @@ class BiasApp(CombineApp):
         bleg.SetFillStyle(0)
         first = True
         cstyles = copy(styles)
-        ## for key,profile in bprofiles.iteritems():
         frame = ROOT.TH2F("frame","frame",100,xfirst,xlast,100,-4,2);
         frame.SetStats(False)
         frame.Draw()
@@ -657,35 +883,45 @@ class BiasApp(CombineApp):
         for key in keys:
             profile = bprofiles[key]
             profile.Sort()
-            ## profile.SetMarkerSize(2)
-            ## profile.Print("V")
             style_utils.apply( profile, cstyles.pop(0) )
             bleg.AddEntry(profile,key,"pe")
-            ## if first:
-            ##     profile.Draw("AP")
-            ##     xmin = profile.GetXaxis().GetXmin()
-            ##     xmax = profile.GetXaxis().GetXmax()
-            ##     ## xmin = xfirst
-            ##     ## xmax = xlast
-            ##     profile.GetXaxis().SetMoreLogLabels()
-            ##     profile.GetXaxis().SetTitle("mass")
-            ##     profile.GetYaxis().SetRangeUser(-4,2.)
-            ##     profile.GetYaxis().SetTitle("( n_{fit} - n_{true} )/ \sigma_{fit}")
-            ##     first = False
-            ##     box = ROOT.TBox(xmin,-0.5,xmax,0.5)
-            ##     box.SetFillColorAlpha(ROOT.kGray,0.1)
-            ##     box.Draw("same")
-            ##     profile.Draw("P")
-            ## else:
-            ##     profile.Draw("P")
             profile.Draw("P")
         bleg.Draw("same")
-        canv.RedrawAxis()
-        canv.Modified()
-        canv.Update()
+        bcanv.RedrawAxis()
+        bcanv.Modified()
+        bcanv.Update()
         
         self.keep( [canv,leg,bcanv,bleg#,box
                     ] )
+        
+        if len(ckeys) > 0:
+            ccanv = ROOT.TCanvas("profile_corr_pull","profile_corr_pull")
+            ccanv.SetLogx()
+            ccanv.SetGridy()
+            ccanv.SetGridx()
+            cleg  = ROOT.TLegend(0.2,0.12,0.5,0.42)
+            cleg.SetFillStyle(0)
+            first = True
+            cstyles = copy(styles)
+            cframe = ROOT.TH2F("cframe","cframe",100,xfirst,xlast,100,-4,2);
+            cframe.SetStats(False)
+            cframe.Draw()
+            cframe.GetXaxis().SetTitle("mass")
+            cframe.GetYaxis().SetTitle("( n_{fit} - n_{true} )/ ( \sigma_{fit} \oplus bias )")
+            box.Draw("same")        
+            self.keep([cframe])
+            for key in ckeys:
+                profile = cprofiles[key]
+                profile.Sort()
+                style_utils.apply( profile, cstyles.pop(0) )
+                cleg.AddEntry(profile,key,"pe")
+                profile.Draw("P")
+            cleg.Draw("same")
+            ccanv.RedrawAxis()
+            ccanv.Modified()
+            ccanv.Update()
+            self.keep( [ccanv,cleg] )
+            
         self.autosave(True)
         
         keys = sorted(summary.keys())
@@ -696,7 +932,7 @@ class BiasApp(CombineApp):
         for name,fit in fits:
             summarystr += "%s %s\n" % ( name, fit.GetExpFormula("p") )
         summarystr += "test region".ljust(maxl+3)
-        for field in ["pmean","err","psig","err","pmedian","p68","bmean","err","bmedian","smedian","truth"]:
+        for field in ["pmean","err","psig","err","pmedian","p68","bmean","err","bmedian","smedian","truth","corr_bmedian","corr_bmean","corr_bsigma"]:
             summarystr += field.rjust(9)
         summarystr += "\n"
         for key in keys:
