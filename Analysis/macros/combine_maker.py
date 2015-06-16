@@ -355,8 +355,9 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         
         # build observable variable
         roobs = self.buildRooVar(*(self.getVar(options.observable)), recycle=True, importToWs=True)
-        roowe = self.buildRooVar("weight",[])        
-        rooset = ROOT.RooArgSet(roobs,roowe)
+        roobs.setRange("fullRange",roobs.getMin(),roobs.getMax()) 
+        #roowe = self.buildRooVar("weight",[])        
+        #rooset = ROOT.RooArgSet(roobs,roowe)
         
         fit["params"] = []
         
@@ -394,7 +395,9 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 if(len(options.bias_func) != 0 and len(options.fwhm_input_file) != 0):
                     bias_name = "%s_%s_%d_%d" % (cat,options.default_model,int(roobs.getMin()),int(roobs.getMax()))
                     if (not bias_name in options.bias_func.keys()):
+                        print
                         print("Cannot compute the bias values: bias function for %s not provided" % bias_name)
+                        print
                     else:
                         bias_func = ROOT.TF1(bias_name, options.bias_func[bias_name],roobs.getMin(),roobs.getMax())
                         # get value of grav mass
@@ -887,7 +890,10 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                         canv.SaveAs(nameFileOutput.replace(".root",("%s_hist.png" % cat)))
                         sublist_fwhm[cat] = "%f" % xWidth
                     else:
+                        print
                         print("Did not succeed to compute the FWHM")
+                        print
+
             list_fwhm[signame] = sublist_fwhm
             self.saveWs(options)
                         
