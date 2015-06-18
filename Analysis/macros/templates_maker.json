@@ -121,7 +121,7 @@
     "#" :"General form is <fit-name> : { <fit-config> }",
         
     "fits" : {
-        "_cic" : {
+        "cic" : {
             "ndim"       : 2,                                                                "#" : "number of dimensions for the template  ",
             "bins"       : [ "mass", [500.0,1300.0] ],                                       "#" : "kinematic bins in which the fit is run ",
             "template_binning" : [ 0.0, 0.1, 5.0, 15.0 ],                                    "#" : "template varaible binning              ",
@@ -211,7 +211,7 @@
 		    }
 	    }
 	},	
-        "_cic2" : {
+        "cic2" : {
             "ndim"       : 2,                                                                "#" : "number of dimensions for the template  ",
             "bins"       : [ "mass", [500.0,1300.0] ],                                       "#" : "kinematic bins in which the fit is run ",
             "template_binning" : [ 0.0, 0.1, 5.0, 15.0 ],                                    "#" : "template varaible binning              ",
@@ -267,7 +267,7 @@
             "components" : [ "pp", "pf", "ff" ],                                             "#" : "list of fit components                 ",
 		"dataset_variables" : ["mgg","mass [-1.0,0.0,20.0,50.0,100.0,200.0,500.0,13000.0]","leadPt","subleadPt","leadEta","subleadEta", "leadScEta","subleadScEta","leadMatchType", "subleadMatchType","leadPhoIso","subleadPhoIso"],      "#" : "additional variables to be stored      ",
             "store_trees" : true,	
-
+            "preselection" : "!(leadFake    && subleadFake && ( leadMatchType == 0 && subleadMatchType == 0)) && (leadChIso < 15. && subleadChIso < 15. && mass > 250)",
             "#" :"categories in which to split the fit       ",
             "#" :"format is <fit-category-name>: { <config> }",
             "categories" : {
@@ -481,7 +481,7 @@
                         "eta_inclusive" : { "phoIsSB" : ["phoChIso"] }
                     }
 				},
-                "fwhigh" : { 
+                "_fwhigh" : { 
                     "sel" : "cicNoChIsoSBSinglePho",
                         "fill_categories" : { 
                         	"EB" : { "phoIsSB && weight >=1." : ["phoChIso"] },
@@ -489,7 +489,7 @@
                         	"eta_inclusive" : { "phoIsSB && weight>=1."  : ["phoChIso"] }
                 	}
 				},
-                "fwlow" : { 
+                "_fwlow" : { 
                     "sel" : "cicNoChIsoSBSinglePho",
                         "fill_categories" : { 
                         	"EB" : { "phoIsSB && weight <1." : ["phoChIso"] },
@@ -623,7 +623,7 @@
 		    }, 
 		"replace" : "pho",
 		"type" : "kdtree",
-		"transfer_variables" :["mass"],
+		"transfer_variables" :["mass", "weightTarget:= weight"],
 		"fill_categories" : {
 		    "EBEB" : { "legs" : ["EB","EB"], "rndswap" : true,"rndmatch":0.8, "nNeigh" : 20, "nMinNeigh" : 10, "matchWithThreshold" : false,
 			    "useCdfDistance" : true,"targetFraction" : 1e-2, "maxWeightTarget" :0.02, "maxWeightCache":1.0 ,
@@ -678,7 +678,7 @@
 		    "_template_binning" : [ 0.0,0.1,1.0,2.0,4.0,5.0,8.0,15.0],
 		"mass_binning" :"mass[13000,0.0,13000.0]"
 		},
-	"_fit2DTruth" : { "fit" : "2D",
+	"fit2DTruth" : { "fit" : "2D",
 		"templates" : { "mix:kDSinglePho2D" : {},"2D":{} },
                 "_components": [["pf",{"2D":{},"mix:kDSinglePho2D" : {} }]], "categories" : ["EBEE","EBEB"],
                 "components": ["pf","ff",  ["pp",{ "2D" : {}}] 
@@ -690,12 +690,14 @@
                 "template_binning" : [ 0.0,0.1,5.0,15.0],
  
                 "lowerLimitSigRegion2D": "0.", 
-                "upperLimitSigRegion2D": "4.", 
-                "upperLimitSigRegion1D": "5.", 
+                "_upperLimitSigRegion2D": "4.", 
+                "_upperLimitSigRegion1D": "5.", 
+                "upperLimitSigRegion2D": "9.", 
+                "upperLimitSigRegion1D": "15.", 
 		"mass_binning" :"mass[13000,0.0,13000.0]"
 		},
-	"fit1DTruth" : { "fit" : "1D",
-                "components" : [ "f", ["fhigh",{"singlePho":{}}],["flow",{"singlePho":{}}],"p" ],
+	"_fit1DTruth" : { "fit" : "1D",
+                "components" : [ "f", ["fwhigh",{"singlePho":{}}],["fwlow",{"singlePho":{}}],"p" ],
 		"templates" : {"singlePho" : { "EBEB" : "EB", "EBEE" : "EB", "EEEB" : "EE" ,"eta_inclusive":"eta_inclusive" }
                                  ,"1D" : {} 
                             
@@ -713,10 +715,11 @@
                 "dimensions" :"2D", 
                 "observable": "templateNdim2d_unroll",
                 "components": ["pp","pf","ff"],
-                "data": "unrolled_data", 
                 "lowerLimitSigRegion": "0.", 
-                "upperLimitSigRegion": "4.", 
-		"mass_binning" :"mass[13000,0.0,13000.0]"
+                "upperLimitSigRegion": "9.", 
+                "_upperLimitSigRegion": "4.", 
+		"mass_binning" :"mass[13000,0.0,13000.0]",
+                "extended_fit":"false"
          },
         "_2_components":{
                 "dimensions" :"2D", 
@@ -729,8 +732,10 @@
         }
     },
    "plotPurity":{
-                "treetruth":"truth_purity",
-                "dimensions" :"2D" 
+                "_treetruth":"truth_purity_all",
+                "treetruth":"truth_purity_signalregion",
+                "dimensions" :"2D", 
+                "categories" :["EBEE"]
     },
     "rootstyle_extra" : [
                   "TGaxis::SetMaxDigits(3);",
