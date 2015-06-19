@@ -719,7 +719,7 @@
                 "upperLimitSigRegion": "9.", 
                 "_upperLimitSigRegion": "4.", 
 		"mass_binning" :"mass[13000,0.0,13000.0]",
-                "extended_fit":"false"
+                "extended_fit":"False"
          },
         "_2_components":{
                 "dimensions" :"2D", 
@@ -735,7 +735,7 @@
                 "_treetruth":"truth_purity_all",
                 "treetruth":"truth_purity_signalregion",
                 "dimensions" :"2D", 
-                "categories" :["EBEE"]
+                "categories" :["EBEE","EBEB"]
     },
     "rootstyle_extra" : [
                   "TGaxis::SetMaxDigits(3);",
