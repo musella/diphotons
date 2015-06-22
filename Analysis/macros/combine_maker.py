@@ -319,13 +319,19 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         ndata = {}
         rooNdata = {}
         sidebands = {}
+
+        #TODO ROOHIst func
+
+        #from workspace binning 
+        #and extend rooset with iso1 2
+
         for cat in fit["categories"]:
             treename = "%s_%s_%s" % (options.data_source,options.fit_name,cat)
             
             print "importing %s as data for cat %s" % (treename, cat)
             
             dset = self.rooData(treename)
-            
+            #add column , keep unrolled and mass afterwards for rooset
             reduced = dset.reduce(RooFit.SelectVars(rooset),RooFit.Range("fullRange")) ## FIXME: roobs range
             reduced.SetName("data_%s"% (cat))
             
@@ -537,7 +543,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                         sbnorm.setVal(uncut.sumEntries())
                     else:
                         sbnorm.setVal(reduced.sumEntries())
-                
+                #TODO conditional pdf
                 ## plot the fit result
                 frame = roobs.frame()
                 binned.plotOn(frame)
