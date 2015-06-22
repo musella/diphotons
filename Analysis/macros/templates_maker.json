@@ -680,7 +680,8 @@
 		},
 	"fit2DTruth" : { "fit" : "2D",
 		"templates" : { "mix:kDSinglePho2D" : {},"2D":{} },
-                "_components": [["pf",{"2D":{},"mix:kDSinglePho2D" : {} }]], "categories" : ["EBEE","EBEB"],
+                "_components": [["pf",{"2D":{},"mix:kDSinglePho2D" : {} }]], 
+                "categories" : ["EBEB","EBEE"],
                 "components": ["pf","ff",  ["pp",{ "2D" : {}}] 
                 ],
                 "prepfit": true,
