@@ -1,6 +1,7 @@
 import json
 import csv
 import copy
+import os
 
 # -----------------------------------------------------------------------------------------------------------
 class ScratchAppend:
@@ -44,14 +45,18 @@ class Load:
             getter = getattr
         
         for cfg in value.split(","):
-            cf = open(cfg)
-            settings = json.loads(cf.read())
+            if os.path.exists(cfg):
+                cf = open(cfg)
+                strn = cf.read()
+                cf.close()
+            else:
+                strn = cfg
+            settings = json.loads(strn)
             for k,v in settings.iteritems():
                 attr  = getter(dest,k,None)
                 if attr and type(attr) == list:           
                     attr.extend(v)
                 setter(dest,k,v)
-            cf.close()
         
 # -----------------------------------------------------------------------------
 class Csv:

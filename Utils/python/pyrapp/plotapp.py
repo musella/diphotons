@@ -20,7 +20,26 @@ def rename(h,cmap):
 
     ## print "renamed ", h.GetName()
 
+# -----------------------------------------------------------------------------------------------------------
+def smoothErrors(grae):
+   w = [ 0.10,0.25,0.30,0.25,0.10 ]
+   np = grae.GetN()
+   e1 = [0. for ip in range(np)]
+   e2 = [0. for ip in range(np)]
 
+   for ip in range(2,np-2):
+       for jp in range(-2,3):
+           e1[ip] += w[jp+2]*grae.GetErrorYlow(ip-jp)
+           e2[ip] += w[jp+2]*grae.GetErrorYhigh(ip-jp)
+   for ip in 0,1,np-1,np-2:
+       e1[ip] = grae.GetErrorYlow(ip)
+       e2[ip] = grae.GetErrorYhigh(ip)
+
+   for ip in range(np):
+       grae.SetPointEYhigh(ip,e1[ip])
+       grae.SetPointEYlow(ip,e2[ip])
+       
+       
 ## 
 def getQuantilesGraphs(histo,probs,twosided=False,errors=True,sign=1):
     from math import sqrt

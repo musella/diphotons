@@ -18,6 +18,9 @@ public:
     
     RooDataSet * get() { return dataset_; }
     TTree * getTree() { return tree_; }
+
+    static RooDataHist * throwAsimov( double nexp, RooAbsPdf *pdf, RooRealVar *x, RooDataHist *asimov=0);
+    
     
 private:
     RooArgList vars_;

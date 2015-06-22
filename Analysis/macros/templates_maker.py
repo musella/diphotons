@@ -154,6 +154,8 @@ class TemplatesApp(PlotApp):
         self.store_new_ = False
         self.save_params_ = []
         self.workspace_ = None
+
+        self.save_params_.append("signals")
         
         ## load ROOT (and libraries)
         global ROOT, style_utils, RooFit
@@ -254,7 +256,6 @@ class TemplatesApp(PlotApp):
                 }
         for name in self.save_params_:
             val = getattr(options,name,None)
-            print name, val
             if val:
                 cfg[name] = val
 
@@ -1717,6 +1718,7 @@ class TemplatesApp(PlotApp):
             if len(binning) > 1:
                 rooVar.setMin(binning[0])
                 rooVar.setMax(binning[-1])
+
                 rooVar.setBinning(ROOT.RooBinning(len(binning)-1,array.array('d',binning)))
         if importToWs:
             self.workspace_.rooImport(rooVar,ROOT.RooFit.RecycleConflictNodes())
