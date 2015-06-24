@@ -100,12 +100,6 @@
 
     "#" : "List of aliases. Used to define variables/simplify expressions selection.",
     "aliases"  : [ 
-               "phoPhoIsoEB    := ((phoPhoIso - rho*phoPhoIsoEA) -0.002*phoPt < 1. ) && phoIsEB",
-				"phoPhoIsoEE    := (((phoPhoIso - rho*phoPhoIsoEA) -0.002*phoPt < 0. )&& !phoIsEB",
-               "subleadPhoIsoEB    := ((subleadPhoIso - rho*subleadPhoIsoEA) -0.002*subleadPt < 1. ) && subleadPhoIsEB ",
-				"subleadPhoIsoEE    := (((subleadPhoIso - rho*subleadPhoIsoEA) -0.002*subleadPt < 0. ) && subleadPhoIsEB",
-               "leadPhoIsoEB    := ((leadPhoIso - rho*leadPhoIsoEA) -0.002*leadPt < 1. )&&leadPhoIsEB ",
-				"subleadPhoIsoEE    := (((leadPhoIso - rho*leadPhoIsoEA) -0.002*leadPt < 0. )&& !leadPhoIsEB",
 
                "phoIsEB    := abs(phoScEta) < 1.5",
                "phoIsSB    := (((phoPhoIso - rho*phoPhoIsoEA) -0.002*phoPt < 2. ) && (phoIsEB    && (phoSigmaIeIe    > 0.012) ))||( ((phoPhoIso - rho*phoPhoIsoEA) -0.002*phoPt < 11. ) &&!phoIsEB    && (phoSigmaIeIe>0.035 )  )",
@@ -119,6 +113,12 @@
                "subleadFake   := ! subleadPrompt",
                "phoPrompt := phoGenIso < 10. && phoMatchType == 1",
                "phoFake   := ! phoPrompt",
+               "phoPhoIsoEB    := ((phoPhoIso - rho*phoPhoIsoEA) -0.002*phoPt < 1. ) && phoIsEB",
+				"phoPhoIsoEE    := ((phoPhoIso - rho*phoPhoIsoEA) -0.002*phoPt < 0. )&& !phoIsEB",
+               "subleadPhoIsoEB    := ((subleadPhoIso - rho*subleadPhoIsoEA) -0.002*subleadPt < 1. ) && subleadIsEB ",
+				"subleadPhoIsoEE    := ((subleadPhoIso - rho*subleadPhoIsoEA) -0.002*subleadPt < 0. ) && !subleadIsEB",
+               "leadPhoIsoEB    := ((leadPhoIso - rho*leadPhoIsoEA) -0.002*leadPt < 1. ) && leadIsEB ",
+				"leadPhoIsoEE    := ((leadPhoIso - rho*leadPhoIsoEA) -0.002*leadPt < 0. )&& !leadIsEB",
 	       "mgg := mass"
     ],
 
@@ -327,25 +327,26 @@
                         "#" : "pseudo-random swap, but taking care to take the random cone isolation for the signal-region photon",
                         "#" : "  and the photon isolation for the side-band one                                                  ",
                         "fill_categories" : { 
-                        "EBEB" :{ "leadIsSB && TMath::Even(event)" :    [ "leadChIso", "subleadRndConeChIso" ],
-                                "leadIsSB && ! TMath::Even(event)" :    [ "subleadRndConeChIso", "leadChIso" ],
-                                "subleadIsSB && ! TMath::Even(event)" : [ "subleadChIso", "leadRndConeChIso" ],
-                                "subleadIsSB && ! TMath::Even(event)" : [ "leadRndConeChIso", "subleadChIso" ]
+                        "EBEB" :{ "leadIsSB && TMath::Even(event) && subleadPhoIsoEB" :    [ "leadChIso", "subleadRndConeChIso" ],
+                                "leadIsSB && ! TMath::Even(event) && subleadPhoIsoEB" :    [ "subleadRndConeChIso", "leadChIso" ],
+                                "subleadIsSB &&  TMath::Even(event)&& leadPhoIsoEB" : [ "subleadChIso", "leadRndConeChIso" ],
+                                "subleadIsSB && ! TMath::Even(event)&& leadPhoIsoEB" : [ "leadRndConeChIso", "subleadChIso" ]
                         },
-                        "EBEE" :{ "leadIsEB && ! subleadIsEB &&      leadIsSB" : [ "leadChIso", "subleadRndConeChIso" ], 
-                                "leadIsEB && ! subleadIsEB &&    ! leadIsSB" : [ "leadRndConeChIso", "subleadChIso" ], 
-                                "! leadIsEB && subleadIsEB &&   subleadIsSB" : [ "subleadChIso", "leadRndConeChIso" ], 
-                                "! leadIsEB && subleadIsEB && ! subleadIsSB" : [ "subleadRndConeChIso", "leadChIso" ]
+                        "EBEE" :{ "leadIsEB &&  subleadPhoIsoEE&& leadIsSB" : [ "leadChIso", "subleadRndConeChIso" ], 
+                                "leadPhoIsoEB && ! subleadIsEB &&    subleadIsSB" : [ "leadRndConeChIso", "subleadChIso" ], 
+
+                                "leadPhoIsoEE && subleadIsEB &&   subleadIsSB" : [ "subleadChIso", "leadRndConeChIso" ], 
+                                "! leadIsEB && subleadPhoIsoEB && leadIsSB" : [ "subleadRndConeChIso", "leadChIso" ]
                                 }
                         }
                  },
                  "ff" : { "sel"  : "cicNoChIsoDoubleSB",        
                          "fill_categories" : {
-                         "EBEB" :{ "TMath::Even(event)" : [ "leadChIso", "subleadChIso" ],
-                                 "! TMath::Even(event)" : [ "subleadChIso", "leadChIso" ]
+                         "EBEB" :{ "TMath::Even(event) && subleadPhoIsoEB && leadPhoIsoEB " : [ "leadChIso", "subleadChIso" ],
+                                 "! TMath::Even(event) &&subleadPhoIsoEB && subleadPhoIsoEB" : [ "subleadChIso", "leadChIso" ]
                                  },
-                         "EBEE" :{ "leadIsEB && ! subleadIsEB" : [ "leadChIso", "subleadChIso" ],
-                                 "! leadIsEB && subleadIsEB" : [ "subleadChIso", "leadChIso" ]
+                         "EBEE" :{ "leadPhoIsoEB && subleadPhoIsoEE" : [ "leadChIso", "subleadChIso" ],
+                                 "leadPhoIsoEE && subleadPhoIsoEB" : [ "subleadChIso", "leadChIso" ]
                                  }
                             }
                         }
@@ -399,10 +400,10 @@
                     "sel" : "cicNoChIso",
                     "dataset" : "data",
                         "fill_categories" : { 
-                            "EBEB" : { "1" : ["%(leg)sRndConeChIso"] },
-                            "EBEE" : { "%(leg)sIsEB" : ["%(leg)sRndConeChIso"] },
-                            "EEEB" : { "! %(leg)sIsEB" : ["%(leg)sRndConeChIso"] },
-                            "eta_inclusive" : { "1" : ["%(leg)sRndConeChIso"] }
+                            "EBEB" : { "%(leg)sPhoIsoEB" : ["%(leg)sRndConeChIso"] },
+                            "EBEE" : { "%(leg)sPhoIsoEB" : ["%(leg)sRndConeChIso"] },
+                            "EEEB" : { "! %(leg)sPhoIsoEE" : ["%(leg)sRndConeChIso"] },
+                            "eta_inclusive" : { "%(leg)sPhoIsoEB ||%(leg)sPhoIsoEE" : ["%(leg)sRndConeChIso"] }
                     }
                 },
                 "f" : { 
@@ -473,9 +474,9 @@
                     "_presel" :  "phoRndConePhoIso - rho*phoPhoIsoEA < 4.",
                     "dataset" : "data",
                         "fill_categories" : { 
-                            "EB" : { "1" : ["phoRndConeChIso"] },
-                            "EE" : { "1" : ["phoRndConeChIso"] },
-                            "eta_inclusive" : { "1" : ["phoRndConeChIso"] }
+                            "EB" : { "phoPhoIsoEB" : ["phoRndConeChIso"] },
+                            "EE" : { "phoPhoIsoEE" : ["phoRndConeChIso"] },
+                            "eta_inclusive" : { "phoPhoIsoEB ||phoPhoIsoEE" : ["phoRndConeChIso"] }
                     }
                 },
                 "f" : { 
@@ -683,7 +684,7 @@
 		    "_template_binning" : [ 0.0,0.1,1.0,2.0,4.0,5.0,8.0,15.0],
 		"mass_binning" :"mass[13000,0.0,13000.0]"
 		},
-	"_fit2DTruth" : { "fit" : "2D",
+	"fit2DTruth" : { "fit" : "2D",
 		"templates" : { "mix:kDSinglePho2D" : {},"2D":{} },
                 "_components": [["pf",{"2D":{},"mix:kDSinglePho2D" : {} }]], 
                 "categories" : ["EBEB","EBEE"],
@@ -702,7 +703,7 @@
                 "upperLimitSigRegion1D": "15.", 
 		"mass_binning" :"mass[13000,0.0,13000.0]"
 		},
-	"fit1DTruth" : { "fit" : "1D",
+	"_fit1DTruth" : { "fit" : "1D",
                 "components" : [ "f" ],
 		"templates" : {"singlePho" : { "EBEB" : "EB", "EBEE" : "EB", "EEEB" : "EE" ,"eta_inclusive":"eta_inclusive" }
                                  

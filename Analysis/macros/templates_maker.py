@@ -554,7 +554,8 @@ class TemplatesApp(PlotApp):
                                 histls.append(tempHisto)
                           #  if not prepfit: 
                            # print "plot 1d histos"
-                            #self.plotHistos(histls,tit,template_binning,True,numEntries_s)
+                            self.plotHistos(histls,tit,template_binning,True,numEntries_s)
+                            #self.plotcorr(histls,tit,template_binning,True,numEntries_s)
                         ## roll out for combine tool per category
                         if fit["ndim"]>1:
                             self.histounroll(templates_massc,template_binning,isoargs,compname,cat,cut_s,prepfit,sigRegionlow2D,sigRegionup2D,extra_shape_unc=options.extra_shape_unc)
@@ -742,9 +743,8 @@ class TemplatesApp(PlotApp):
         return dpmq
 
 ## ------------------------------------------------------------------------------------------------------------
-
-    def plotHistos(self,histlist,title,template_bins,dim1,numEntries=None):
-        leg = ROOT.TLegend(0.5,0.8,0.9,0.9)
+    def plotcorr(self,histlist,title,template_bins,dim1,numEntries=None):
+        leg = ROOT.TLegend(0.3,0.8,0.9,0.9)
         leg.SetTextSize(0.03)
         leg.SetTextFont(42);
         leg.SetFillColor(ROOT.kWhite)
@@ -772,7 +772,8 @@ class TemplatesApp(PlotApp):
             histlist[0].GetXaxis().SetTitle(title[-17:])
         else:
             histlist[0].GetXaxis().SetTitle("charged isolation")
-        for i in range(0,len(histlist)):
+        #for i in range(0,len(histlist)):
+        for i in range(2,len(histlist)):
             histlist[i].GetXaxis().SetLimits(-0.1,max(template_bins))
             ymax = max(ymax,histlist[i].GetMaximum())
             if histlist[i].GetMinimum() != 0.:
@@ -788,13 +789,85 @@ class TemplatesApp(PlotApp):
         leg.Draw()
         canv.cd(2)
         ratios = []
-        for ihsit,hist in enumerate(histlist[1:]):
+        for ihsit,hist in enumerate(histlist[2:]):
             ratios.append( hist.Clone("ratio_%d" % ihsit) )
             ratios[-1].Divide(histlist[0])
-        ratios[0].GetYaxis().SetTitleSize( histlist[0].GetYaxis().GetTitleSize() * 6.5/3.5 )
+        ratios[0].GetYaxis().SetTitleSize( histlist[0].GetYaxis().GetTitleSize() * 3.5/3.5 )
         ratios[0].GetYaxis().SetLabelSize( histlist[0].GetYaxis().GetLabelSize() * 6.5/3.5 )
         ratios[0].GetYaxis().SetTitleOffset( histlist[0].GetYaxis().GetTitleOffset() * 6.5/3.5 )
-        ratios[0].GetXaxis().SetTitleSize( histlist[0].GetXaxis().GetTitleSize() * 6.5/3.5 )
+        ratios[0].GetXaxis().SetTitleSize( histlist[0].GetXaxis().GetTitleSize() * 4.5/3.5 )
+        ratios[0].GetXaxis().SetLabelSize( histlist[0].GetXaxis().GetLabelSize() * 6.5/3.5 )
+        if dim1:
+            ratios[0].GetXaxis().SetTitle(title[-17:])
+        else:
+            ratios[0].GetXaxis().SetTitle("charged isolation")
+        ratios[0].Draw()        
+        ratios[0].GetYaxis().SetTitle("ratio")
+        ratios[0].GetXaxis().SetLimits(-0.1,max(template_bins))
+        ratios[0].GetYaxis().SetRangeUser(0.2,1.8)
+        for r in ratios[1:]:
+            r.Draw("same")
+        ROOT.gStyle.SetOptStat(0)
+        #  ROOT.gStyle.SetOptTitle(0)
+        self.keep( [canv] )
+        self.autosave(True)
+        
+
+## ------------------------------------------------------------------------------------------------------------
+
+    def plotHistos(self,histlist,title,template_bins,dim1,numEntries=None):
+        leg = ROOT.TLegend(0.3,0.8,0.9,0.9)
+        leg.SetTextSize(0.03)
+        leg.SetTextFont(42);
+        leg.SetFillColor(ROOT.kWhite)
+        leg.SetHeader("#%s " % numEntries)
+        canv = ROOT.TCanvas(title,title)
+        canv.Divide(1,2)
+        canv.cd(1)
+        ROOT.gPad.SetPad(0., 0.35, 1., 1.0)
+        ROOT.gPad.SetLogy()
+        canv.cd(2)
+        ROOT.gPad.SetPad(0., 0., 1., 0.35)
+        ROOT.gPad.SetGridy()
+        canv.cd(1)
+        
+        histlist[0].SetFillColor(ROOT.kRed)
+        histlist[0].SetFillStyle(3004)
+        histlist[0].SetLineColor(ROOT.kRed)
+        histlist[0].Draw("E2")
+        histlist[0].GetXaxis().SetLimits(-0.1,max(template_bins))
+        #histlist[0].SetStats()
+        ymax = 0.
+        ymin = 1.e+5
+        histlist[0].GetYaxis().SetLabelSize( histlist[0].GetYaxis().GetLabelSize() * canv.GetWh() / ROOT.gPad.GetWh() )
+        if dim1:
+            histlist[0].GetXaxis().SetTitle(title[-17:])
+        else:
+            histlist[0].GetXaxis().SetTitle("charged isolation")
+        #for i in range(0,len(histlist)):
+        for i in range(2,len(histlist)):
+            histlist[i].GetXaxis().SetLimits(-0.1,max(template_bins))
+            ymax = max(ymax,histlist[i].GetMaximum())
+            if histlist[i].GetMinimum() != 0.:
+                ymin = min(ymin,histlist[i].GetMinimum())
+            if i>0:
+                histlist[i].SetLineColor(ROOT.kAzure+i)
+                histlist[i].SetMarkerColor(ROOT.kAzure+i)
+                histlist[i].SetMarkerStyle(20)
+                histlist[i].Draw("E SAME")
+            histlist[0].GetXaxis().SetLimits(-0.1,max(template_bins))
+            leg.AddEntry(histlist[i],histlist[i].GetName(),"l")  
+        histlist[0].GetYaxis().SetRangeUser(ymin*0.5,ymax*5.)
+        leg.Draw()
+        canv.cd(2)
+        ratios = []
+        for ihsit,hist in enumerate(histlist[2:]):
+            ratios.append( hist.Clone("ratio_%d" % ihsit) )
+            ratios[-1].Divide(histlist[0])
+        ratios[0].GetYaxis().SetTitleSize( histlist[0].GetYaxis().GetTitleSize() * 3.5/3.5 )
+        ratios[0].GetYaxis().SetLabelSize( histlist[0].GetYaxis().GetLabelSize() * 6.5/3.5 )
+        ratios[0].GetYaxis().SetTitleOffset( histlist[0].GetYaxis().GetTitleOffset() * 6.5/3.5 )
+        ratios[0].GetXaxis().SetTitleSize( histlist[0].GetXaxis().GetTitleSize() * 4.5/3.5 )
         ratios[0].GetXaxis().SetLabelSize( histlist[0].GetXaxis().GetLabelSize() * 6.5/3.5 )
         if dim1:
             ratios[0].GetXaxis().SetTitle(title[-17:])
@@ -1021,7 +1094,7 @@ class TemplatesApp(PlotApp):
             cFit.SetLogy()
         frame = roovar.frame(RooFit.Title("1d fit for category %s and %u components"% (cat,len(components))))
         data.plotOn(frame,RooFit.Name("data"))
-        print "data has sigRegion ? ", data.get()[roovar.GetName()].hasRange("sigRegion")
+    #    print "data has sigRegion ? ", data.get()[roovar.GetName()].hasRange("sigRegion")
     #    dataVar = data.get()[roovar.GetName()]
      #   dataVar.setRange("sigRegion",roovar.getBinning("sigRegion").lowBound(),roovar.getBinning("sigRegion").highBound())
    #     data.plotOn(frame,RooFit.Name("datasigRegion"),RooFit.Range("sigRegion"),RooFit.LineColor(ROOT.kCyan+1))
@@ -1197,38 +1270,33 @@ class TemplatesApp(PlotApp):
         g_mctruthpp.SetMarkerSize(1.3)
         g_templatepp.SetMarkerSize(1.3)
         g_templatepp.SetMarkerStyle(20)
-        g_mctruthpp.GetXaxis().SetTitle("Diphoton mass [GeV]")
-        g_mctruthpp.GetYaxis().SetTitle("purity")
-        g_mctruthpp.GetYaxis().SetRangeUser(0.,1.6)
-        g_mctruthpp.GetXaxis().SetLimits(230.,13000.)
-        g_mctruthpp.Draw("AP")
-        cpu.Update()
-        if not opt=="mctruth":
+        g_truthpp.GetXaxis().SetTitle("Diphoton mass [GeV]")
+        g_truthpp.GetYaxis().SetTitle("purity")
+        g_truthpp.GetYaxis().SetRangeUser(0.,1.6)
+        g_truthpp.GetXaxis().SetLimits(200.,15000.)
+        g_truthpp.Draw("AP")
+        if opt=="mctruth":
+            g_mctruthpp.Draw("P SAME")
+            leg.AddEntry(g_mctruthpp,"pp mctruth template","lp")  
+            g_mctruthpf.Draw("P SAME")
+            leg.AddEntry(g_mctruthpf,"pf mctruth template","lp")
+        else:
             g_templatepp.Draw("P SAME")
             g_templatepf.Draw("P SAME")
-        g_truthpp.Draw("P SAME")
-        leg.AddEntry(g_mctruthpp,"pp mctruth template","lp")  
-        if  opt=="template":
             leg.AddEntry(g_templatepp,"pp template","lp")  
-        elif  opt=="template_mix":
-            leg.AddEntry(g_templatepp,"pp %s" % opt,"lp")  
+            leg.AddEntry(g_templatepf,"pf %s"% opt,"pl")  
+        g_truthpp.Draw("P")
+        g_truthpp.Draw("AP")
         leg.AddEntry(g_truthpp,"pp truth","lp")  
-        if g_mctruthpf!=None:
-            g_mctruthpf.SetMarkerColor(ROOT.kOrange+7)
-            g_templatepf.SetMarkerColor(ROOT.kBlack)
-            g_mctruthpf.SetLineColor(ROOT.kOrange+7)
-            g_templatepf.SetLineColor(ROOT.kBlack)
-            g_mctruthpf.SetMarkerStyle(20)
-            g_templatepf.SetMarkerStyle(20)
-            g_mctruthpf.SetMarkerSize(1.3)
-            g_templatepf.SetMarkerSize(1.3)  
-            g_mctruthpf.Draw("P SAME")
-            leg.AddEntry(g_mctruthpf,"pf mctruth","lp")
-            if  opt=="template_mix":
-                leg.AddEntry(g_templatepf,"pf %s"% opt,"pl")  
-            elif  opt=="template":
-                leg.AddEntry(g_templatepf,"pf template","pl")  
-        leg.AddEntry(g_truthpf,"pf truth","lp")  
+        g_mctruthpf.SetMarkerColor(ROOT.kOrange+7)
+        g_templatepf.SetMarkerColor(ROOT.kBlack)
+        g_mctruthpf.SetLineColor(ROOT.kOrange+7)
+        g_templatepf.SetLineColor(ROOT.kBlack)
+        g_mctruthpf.SetMarkerStyle(20)
+        g_templatepf.SetMarkerStyle(20)
+        g_mctruthpf.SetMarkerSize(1.3)
+        g_templatepf.SetMarkerSize(1.3)  
+    #    g_ratiopp.GetYaxis().SetTitle("(pu_tp-pu_mctruth)/pu_tperr")
         leg.AddEntry(g_truthff,"ff truth","lp")  
         g_truthpf.Draw("P SAME")
         g_truthff.Draw("P SAME")
@@ -1236,27 +1304,33 @@ class TemplatesApp(PlotApp):
         leg.Draw()
         cpu.cd(2)
         g_ratiopp.SetMarkerStyle(20)
-        g_ratiopp.SetMarkerColor(g_templatepp.GetMarkerColor())
-        g_ratiopp.SetLineColor(g_templatepp.GetLineColor())
-        g_ratiopp.GetXaxis().SetTitle("Diphoton mass [GeV]")
-        g_ratiopp.GetYaxis().SetTitle("(pu_tp-pu_mctruth)/pu_tperr")
-        g_ratiopp.GetYaxis().SetRangeUser(-5.,5.)
-       # g_ratiopp.GetXaxis().SetLimits(g_mctruthpp.GetXaxis().GetBinLowEdge(g_mctruthpp.GetXaxis.GetFirst()),g_mctruthpp.GetXaxis().GetBinUpEdge(g_mctruthpp.GetXaxis(g_mctruthpp.GetXaxis.GetLast())))
-        g_ratiopp.GetYaxis().SetTitleSize( g_mctruthpp.GetYaxis().GetTitleSize() *6./4. )
-        g_ratiopp.GetYaxis().SetLabelSize( g_mctruthpp.GetYaxis().GetLabelSize()*6./4.  )
-        g_ratiopp.GetYaxis().SetTitleOffset(g_mctruthpp.GetYaxis().GetTitleOffset() )
-        g_ratiopp.GetXaxis().SetTitleSize( g_mctruthpp.GetXaxis().GetTitleSize() *6./4. )
-        g_ratiopp.GetXaxis().SetLabelSize( g_mctruthpp.GetXaxis().GetLabelSize()*6./4. )
-        g_ratiopp.Draw("AP")
-        g_ratiopp.GetXaxis().SetLimits(300.,13000.)
-        g_ratiopp.Draw("AP")
-        cpu.Update()
-        if g_mctruthpf!=None:
-            g_ratiopf.SetMarkerStyle(20)
+        if opt=="mctruth":
+            g_ratiopp.SetMarkerColor(g_mctruthpp.GetMarkerColor())
+            g_ratiopp.SetLineColor(g_mctruthpp.GetLineColor())
+            g_ratiopf.SetMarkerColor(g_mctruthpf.GetMarkerColor())
+            g_ratiopf.SetMarkerColor(g_mctruthpf.GetMarkerColor())
+        else:
+            g_ratiopp.SetMarkerColor(g_templatepp.GetMarkerColor())
+            g_ratiopp.SetLineColor(g_templatepp.GetLineColor())
             g_ratiopf.SetMarkerColor(g_templatepf.GetMarkerColor())
             g_ratiopf.SetLineColor(g_templatepf.GetLineColor())
-            g_ratiopf.Draw("P SAME")
-            self.keep( [g_mctruthpf,g_templatepf,g_ratiopf] )
+        g_ratiopp.GetXaxis().SetTitle("Diphoton mass [GeV]")
+    #    g_ratiopp.GetYaxis().SetTitle("(pu_tp-pu_mctruth)/pu_tperr")
+        g_ratiopp.GetYaxis().SetTitle("pull fct")
+    
+        g_ratiopp.GetYaxis().SetRangeUser(-5.,5.)
+       # g_ratiopp.GetXaxis().SetLimits(g_mctruthpp.GetXaxis().GetBinLowEdge(g_mctruthpp.GetXaxis.GetFirst()),g_mctruthpp.GetXaxis().GetBinUpEdge(g_mctruthpp.GetXaxis(g_mctruthpp.GetXaxis.GetLast())))
+        g_ratiopp.GetYaxis().SetTitleSize( g_mctruthpp.GetYaxis().GetTitleSize() *4.5/4. )
+        g_ratiopp.GetYaxis().SetLabelSize( g_mctruthpp.GetYaxis().GetLabelSize()*6./4.  )
+        g_ratiopp.GetYaxis().SetTitleOffset(g_mctruthpp.GetYaxis().GetTitleOffset()*4.5/4. )
+        g_ratiopp.GetXaxis().SetTitleSize( g_mctruthpp.GetXaxis().GetTitleSize() *5./4. )
+        g_ratiopp.GetXaxis().SetLabelSize( g_mctruthpp.GetXaxis().GetLabelSize()*6./4. )
+        g_ratiopp.Draw("AP")
+        g_ratiopp.GetXaxis().SetLimits(350.,15000.)
+        g_ratiopp.Draw("AP")
+        g_ratiopf.SetMarkerStyle(20)
+        g_ratiopf.Draw("P SAME")
+        self.keep( [g_mctruthpf,g_templatepf,g_ratiopf] )
         self.keep( [cpu,g_mctruthpp,g_templatepp,g_ratiopp] )
         self.autosave(True)
     ## ------------------------------------------------------------------------------------------------------------
