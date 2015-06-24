@@ -100,13 +100,18 @@
 
     "#" : "List of aliases. Used to define variables/simplify expressions selection.",
     "aliases"  : [ 
+               "phoPhoIsoEB    := ((phoPhoIso - rho*phoPhoIsoEA) -0.002*phoPt < 1. ) && phoIsEB",
+				"phoPhoIsoEE    := (((phoPhoIso - rho*phoPhoIsoEA) -0.002*phoPt < 0. )&& !phoIsEB",
+               "subleadPhoIsoEB    := ((subleadPhoIso - rho*subleadPhoIsoEA) -0.002*subleadPt < 1. ) && subleadPhoIsEB ",
+				"subleadPhoIsoEE    := (((subleadPhoIso - rho*subleadPhoIsoEA) -0.002*subleadPt < 0. ) && subleadPhoIsEB",
+               "leadPhoIsoEB    := ((leadPhoIso - rho*leadPhoIsoEA) -0.002*leadPt < 1. )&&leadPhoIsEB ",
+				"subleadPhoIsoEE    := (((leadPhoIso - rho*leadPhoIsoEA) -0.002*leadPt < 0. )&& !leadPhoIsEB",
+
                "phoIsEB    := abs(phoScEta) < 1.5",
                "phoIsSB    := (((phoPhoIso - rho*phoPhoIsoEA) -0.002*phoPt < 2. ) && (phoIsEB    && (phoSigmaIeIe    > 0.012) ))||( ((phoPhoIso - rho*phoPhoIsoEA) -0.002*phoPt < 11. ) &&!phoIsEB    && (phoSigmaIeIe>0.035 )  )",
                "leadIsEB    := abs(leadScEta) < 1.5",
                "subleadIsEB := abs(subleadScEta) < 1.5",
-               "_leadIsSB := leadIsEB && (leadSigmaIeIe > 0.012) || !leadIsEB && (leadSigmaIeIe>0.035)",
                "leadIsSB := (((leadPhoIso - rho*leadPhoIsoEA) -0.002*leadPt < 2. ) && (leadIsEB    && (leadSigmaIeIe    > 0.012) ))||( ((leadPhoIso - rho*leadPhoIsoEA) -0.002*leadPt < 11. ) &&!leadIsEB    && (leadSigmaIeIe>0.035     )  )",
-               "_subleadIsSB := subleadIsEB && (subleadSigmaIeIe > 0.012) || !subleadIsEB && (subleadSigmaIeIe>0.035)",
                "subleadIsSB := ((((subleadPhoIso - rho*subleadPhoIsoEA) -0.002*subleadPt < 2. ) && (subleadIsEB    && (subleadSigmaIeIe    > 0.012) ))||( ((subleadPhoIso - rho*subleadPhoIsoEA) -0.002*subleadPt < 11. ) &&!subleadIsEB    && (subleadSigmaIeIe>0.035     )) )",
                "leadPrompt    := leadGenIso < 10. && leadMatchType == 1",
                "leadFake      := ! leadPrompt",
@@ -267,7 +272,7 @@
             "components" : [ "pp", "pf", "ff" ],                                             "#" : "list of fit components                 ",
 		"dataset_variables" : ["mgg","mass [-1.0,0.0,20.0,50.0,100.0,200.0,500.0,13000.0]","leadPt","subleadPt","leadEta","subleadEta", "leadScEta","subleadScEta","leadMatchType", "subleadMatchType","leadPhoIso","subleadPhoIso"],      "#" : "additional variables to be stored      ",
             "store_trees" : true,	
-            "preselection" : "!(leadFake    && subleadFake && ( leadMatchType == 0 && subleadMatchType == 0)) && (leadChIso < 15. && subleadChIso < 15. && mass > 250)",
+            "preselection" : " !(leadFake    && subleadFake && ( leadMatchType == 0 && subleadMatchType == 0)) && (leadChIso < 15. && subleadChIso < 15. && mass > 250)",
             "#" :"categories in which to split the fit       ",
             "#" :"format is <fit-category-name>: { <config> }",
             "categories" : {
@@ -287,7 +292,7 @@
                 "EBEE" : { "src" : "notEBEB" ,
                         "#" : "Here first photon is barrel, second is endcap",
                         "fill" : { 
-                        "leadIsEB && ! subleadIsEB" :[ "leadChIso", "subleadChIso" ],
+                        "leadPhoIsoEB && subleadPhoIsoEE" :[ "leadChIso", "subleadChIso" ],
                             "! leadIsEB && subleadIsEB" :[ "subleadChIso", "leadChIso" ]
                        }
                 }
@@ -309,11 +314,11 @@
                         "dataset" : "data",    "#" : "input dataset. can be data,mc or templates",
                         "#" : "How to fill different categories. Logic is the same as for the 'fill' instructions above",
                         "fill_categories" : {
-                        "EBEB" :{"TMath::Even(event)" : [ "leadRndConeChIso", "subleadRndConeChIso" ],
-                                 "! TMath::Even(event)" : [ "subleadRndConeChIso", "leadRndConeChIso" ]
+                        "EBEB" :{"TMath::Even(event) && leadPhoIsoEB && subleadPhoIsoEB" : [ "leadRndConeChIso", "subleadRndConeChIso" ],
+                                 "! TMath::Even(event) && leadPhoIsoEB && subleadPhoIsoEB" : [ "subleadRndConeChIso", "leadRndConeChIso" ]
                                 },
-                        "EBEE" :{ "leadIsEB && ! subleadIsEB" : [ "leadRndConeChIso", "subleadRndConeChIso" ], 
-                                "! leadIsEB && subleadIsEB" : [ "subleadRndConeChIso", "leadRndConeChIso" ]
+                        "EBEE" :{ "leadPhoIsoEB && subleadPhoIsoEE" : [ "leadRndConeChIso", "subleadRndConeChIso" ], 
+                                "leadPhoIsoEE && subleadPhoIsoEB" : [ "subleadRndConeChIso", "leadRndConeChIso" ]
                                 }
                             }
                 },
@@ -678,7 +683,7 @@
 		    "_template_binning" : [ 0.0,0.1,1.0,2.0,4.0,5.0,8.0,15.0],
 		"mass_binning" :"mass[13000,0.0,13000.0]"
 		},
-	"fit2DTruth" : { "fit" : "2D",
+	"_fit2DTruth" : { "fit" : "2D",
 		"templates" : { "mix:kDSinglePho2D" : {},"2D":{} },
                 "_components": [["pf",{"2D":{},"mix:kDSinglePho2D" : {} }]], 
                 "categories" : ["EBEB","EBEE"],
@@ -697,17 +702,18 @@
                 "upperLimitSigRegion1D": "15.", 
 		"mass_binning" :"mass[13000,0.0,13000.0]"
 		},
-	"_fit1DTruth" : { "fit" : "1D",
-                "components" : [ "f", ["fwhigh",{"singlePho":{}}],["fwlow",{"singlePho":{}}],"p" ],
+	"fit1DTruth" : { "fit" : "1D",
+                "components" : [ "f" ],
 		"templates" : {"singlePho" : { "EBEB" : "EB", "EBEE" : "EB", "EEEB" : "EE" ,"eta_inclusive":"eta_inclusive" }
-                                 ,"1D" : {} 
+                                 
                             
                             },
                 "prepfit": false,
 		"redo" : true,
 		"weight_cut": "weight < 1000.",
 		"doDataMc" : false, "doMcTruth" : true,
-                "template_binning" : [ 0.0,0.1, 5.0,15.0 ],
+                "_template_binning" : [ 0.0,0.1, 5.0,15.0 ],
+                "template_binning" : [ 0.0,0.1, 1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0,10.0,11.0,12.0,13.0,14.0,15.0 ],
 		"mass_binning" :"mass[13000,0.0,13000.0]"
 		}
 	},
