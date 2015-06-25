@@ -746,8 +746,94 @@ class TemplatesApp(PlotApp):
         for  k in range(0,len(dpmq)):
             print "prob " ,prob[k] ," diphomass " , dpmq[k]  
         return dpmq
+ 
+    ## ------------------------------------------------------------------------------------------------------------
+    #MQ compare truth templates with rcone and sideband templates
+    def corrSinglePho(self,options,args):
+        fout = self.openOut(options)
+        fout.Print()
+        fout.cd()
+        ROOT.TH1F.SetDefaultSumw2(True)
+        setargs=ROOT.RooArgSet("setargs")
+        iso,isob=self.getVar("templateNdim1Dim0")
+        isovar=self.buildRooVar(iso,isob,recycle=True)
+        setargs.add(isovar)
+        sigma_var,sigma_b=self.getVar("phoSigmaIeIe")
+        template_binning=array.array('d',[])
+        for i in range(0,16):
+            i=i*1.
+            template_binning.append(i)
+        sieievar=self.buildRooVar(sigma_var,sigma_b,recycle=True)
+        sieievar.setRange(0.002,0.024)
+        setargs.add(sieievar)
+        rooweight=self.buildRooVar("weight",[],recycle=True)
+        setargs.add(rooweight)
+        setargs.Print()
+        truth = self.reducedRooData("mctruth_f_singlePho_EB",setargs,False,redo=True)
+        truth.Print()
+        tempdata = self.reducedRooData("template_f_singlePho_EB",setargs,False,redo=True)
+        tempdata.append(truth)
+        tempCombined=tempdata
+        tempCombined.SetName("template_allsieie_f_singlePho_EB")
+        tempCombined.Print()
+        histo_sieie=ROOT.TH1F("histo_sieie","histo_sieie",100,0.002,0.024)
+        tempCombined.fillHistogram(histo_sieie,ROOT.RooArgList(sieievar)) 
+        histo_sieie.Scale(1.0/histo_sieie.Integral())
+        prob = array.array('d',[])
+        n=5
+        sieieb = array.array('d',[0.0 for i in range(n+1)])
+        for i in range(0,n+1):
+            prob.append(i/float(n))
+        histo_sieie.GetQuantiles(n+1,sieieb,prob)
+        print sieieb
+        sieiebins=ROOT.RooBinning(len(sieieb)-1,sieieb,"sieiebins" )
+        sieievar.setBinning(sieiebins)
+        histo2_sieie=ROOT.TH2F("histo2_sieie","histo2_sieie",len(sieieb)-1,sieieb,len(template_binning)-1,template_binning)
+        tempCombined.fillHistogram(histo2_sieie,ROOT.RooArgList(sieievar,isovar)) 
+        self.workspace_.rooImport(tempCombined)
+        prb = array.array('d',[0.99])
+        graphs=[]
+        graphs=getQuantilesGraphs(histo2_sieie,prb)
+        self.keep([graphs,histo2_sieie])
+        print graphs
+        self.plotQuantileGraphs(histo2_sieie,graphs)
+        self.autosave(True)
+        self.saveWs(options,fout)
 
-## ------------------------------------------------------------------------------------------------------------
+    ## ------------------------------------------------------------------------------------------------------------
+    def plotQuantileGraphs(self,histo,graphs):
+        
+        c=ROOT.TCanvas("c" ,"c",10,10,700,900)
+        c.cd()
+        histo.GetXaxis().SetTitle("#sigma_{i#etai#eta}")
+        histo.GetYaxis().SetTitle("Charged PF Isolation [GeV]")
+        histo.Draw("colz")
+        cQ=ROOT.TCanvas("cQ3" ,"corr chIso mass",10,10,700,900)
+        cQ.cd()
+        i=0
+        leg =ROOT.TLegend(0.6,0.8,0.9,0.9)
+        leg.SetTextSize(0.03)
+        leg.SetTextFont(42);
+        leg.SetFillColor(ROOT.kWhite)
+        for gr in graphs:
+            gr.SetMarkerStyle(21)
+            gr.SetMarkerColor(ROOT.kRed-i)
+            gr.SetLineColor(ROOT.kRed-i)
+            if i==0:
+                gr.GetXaxis().SetTitle("#sigma_{i#etai#eta}")
+                gr.GetYaxis().SetTitle("Charged PF Isolation [GeV]")
+                gr.GetYaxis().SetRangeUser(0.,20.)
+                gr.Draw("ap")
+            if i>0:
+                gr.Draw("p same")
+            leg.AddEntry(gr.GetName()[-14:],gr.GetName()[-14:],"ple")
+            leg.Draw()
+            i=i+2
+        self.keep( [c,cQ] )
+        self.autosave(True)
+        #
+
+    ## ------------------------------------------------------------------------------------------------------------
     def plotcorr(self,histlist,title,template_bins,dim1,numEntries=None):
         leg = ROOT.TLegend(0.3,0.8,0.9,0.9)
         leg.SetTextSize(0.03)
