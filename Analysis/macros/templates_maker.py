@@ -107,6 +107,10 @@ class TemplatesApp(PlotApp):
                                     default=False,
                                      help="build 3d templates with unrolled variable and mass",
                                     ), 
+                        make_option("--corr-singlePho",dest="corr_singlePho",action="store_true",
+                                    default=False,
+                                     help="correlation sieie and chiso single fake photon",
+                                    ), 
                         make_option("--do-reweight",dest="do_reweight",action="store_true",default=False,
                                     help="Reweight templates to data.",
                                     ),
@@ -233,6 +237,8 @@ class TemplatesApp(PlotApp):
             self.nominalFit(options,args)
         if options.plot_purity:
             self.plotPurity(options,args)
+        if options.corr_singlePho:
+            self.corrSinglePho(options,args)
         if options.build_3dtemplates:
             self.build3dTemplates(options,args)
      #   if options.plotMCtruth:
