@@ -930,7 +930,7 @@ class TemplatesApp(PlotApp):
             dataCombine=data.reduce(ROOT.RooArgSet(mass,unrolledIso))
             dataCombine.SetName("data_3D_%s" %cat)
             dataCombine.Print()
-            self.workspace_.rooImport(dataCombine)
+            self.workspace_.rooImport(dataCombine,ROOT.RooFit.RenameVariable("mass","mgg"))
           #  for temp in tempname=options.build3d.get("tempname"):
           #TODO grab template names from json file
             for comp in components:
@@ -945,13 +945,13 @@ class TemplatesApp(PlotApp):
                 histoCombine_temp=histo_temp.reduce(ROOT.RooArgSet(mass,unrolledIso))
                 histoCombine_temp.SetNameTitle("template_%s_3D_%s" %(comp,cat),"template_%s_3D_%s" %(comp,cat))
                 histoCombine_temp.Print()
-                self.workspace_.rooImport(histoCombine_temp)
+                self.workspace_.rooImport(histoCombine_temp,ROOT.RooFit.RenameVariable("mass","mgg"))
                 histo_mctruth = self.reducedRooData("mctruth_%s_2D_%s" %(comp,cat),setargs,False,sel=weight_cut,redo=False)
                 histo_mctruth.addColumn(unrolledVar)
                 histoCombine_mctruth=histo_mctruth.reduce(ROOT.RooArgSet(mass,unrolledIso))
                 histoCombine_mctruth.SetNameTitle("mctruth_%s_3D_%s" %(comp,cat),"mctruth_%s_3D_%s" %(comp,cat))
                 histoCombine_mctruth.Print()
-                self.workspace_.rooImport(histoCombine_mctruth)
+                self.workspace_.rooImport(histoCombine_mctruth,ROOT.RooFit.RenameVariable("mass","mgg"))
         self.saveWs(options,fout)
     ## ------------------------------------------------------------------------------------------------------------
         def nominalFit(self,options,args):
