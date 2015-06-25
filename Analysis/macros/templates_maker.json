@@ -745,6 +745,13 @@
                 "dimensions" :"2D", 
                 "categories" :["EBEE","EBEB"]
     },
+	"build3d":{
+			"ndim":"2", 
+            "categories" : ["EBEB","EBEE"],
+            "templates":["reduced_template_mix" ],
+            "components": ["pf","ff","pp"], 
+            "weight_cut": "weight < 5."
+	},
     "rootstyle_extra" : [
                   "TGaxis::SetMaxDigits(3);",
                   "TH1::SetDefaultSumw2(1);"

@@ -103,6 +103,10 @@ class TemplatesApp(PlotApp):
                         make_option("--nominal-fit",dest="nominal_fit",action="store_true",default=False,
                                     help="do fit templates",
                                     ),
+                        make_option("--build-3dtemplates",dest="build_3dtemplates",action="store_true",
+                                    default=False,
+                                     help="build 3d templates with unrolled variable and mass",
+                                    ), 
                         make_option("--do-reweight",dest="do_reweight",action="store_true",default=False,
                                     help="Reweight templates to data.",
                                     ),
@@ -229,6 +233,8 @@ class TemplatesApp(PlotApp):
             self.nominalFit(options,args)
         if options.plot_purity:
             self.plotPurity(options,args)
+        if options.build_3dtemplates:
+            self.build3dTemplates(options,args)
      #   if options.plotMCtruth:
       #      self.plotMCtruth(options,args)
         
@@ -456,6 +462,7 @@ class TemplatesApp(PlotApp):
                    # setargs.add(self.buildRooVar("weight",[],recycle=True))
                     rooweight=self.buildRooVar("weight",[],recycle=True)
                     setargs.add(rooweight)
+                    setargs.Print()
                     truthname= "mctruth_%s_%s_%s" % (compname,fitname,cat)
                     truth = self.reducedRooData(truthname,setargs,False,sel=weight_cut,redo=ReDo)
                    # truth = self.reducedRooData(truthname,setargs,False,redo=ReDo)
@@ -480,9 +487,7 @@ class TemplatesApp(PlotApp):
                         tempdata.Print()
                         templates.append(tempdata)
 ###------------------- split in massbins
-                    
                     masserror = array.array('d',[])
-
                     
                     if cat=="EEEB": catd="EBEE"#TODO implement in json file
                     else: catd=cat
@@ -845,7 +850,7 @@ class TemplatesApp(PlotApp):
         else:
             histlist[0].GetXaxis().SetTitle("charged isolation")
         #for i in range(0,len(histlist)):
-        for i in range(2,len(histlist)):
+        for i in range(1,len(histlist)):
             histlist[i].GetXaxis().SetLimits(-0.1,max(template_bins))
             ymax = max(ymax,histlist[i].GetMaximum())
             if histlist[i].GetMinimum() != 0.:
@@ -861,7 +866,7 @@ class TemplatesApp(PlotApp):
         leg.Draw()
         canv.cd(2)
         ratios = []
-        for ihsit,hist in enumerate(histlist[2:]):
+        for ihsit,hist in enumerate(histlist[1:]):
             ratios.append( hist.Clone("ratio_%d" % ihsit) )
             ratios[-1].Divide(histlist[0])
         ratios[0].GetYaxis().SetTitleSize( histlist[0].GetYaxis().GetTitleSize() * 3.5/3.5 )
@@ -887,14 +892,76 @@ class TemplatesApp(PlotApp):
 
 
     ## ------------------------------------------------------------------------------------------------------------
-    def nominalFit(self,options,args):
+    def build3dTemplates(self,options,args):
         fout = self.openOut(options)
         fout.Print()
         fout.cd()
-        self.doNominalFit(options,args)
+        ROOT.TH1F.SetDefaultSumw2(True)
+        weight_cut=options.build3d.get("weight_cut") 
+        var,var_b=self.getVar("templateNdim2d_unroll")
+        unrolledIso=self.buildRooVar(var,var_b,recycle=True)
+        unrolledIso.Print()
+        isoargs=ROOT.RooArgSet("isoargs")
+        for idim in range(int(options.build3d["ndim"])):
+            iso,biniso=self.getVar("templateNdim2Dim%d" % (idim))
+            isoargs.add(self.buildRooVar(iso,biniso,recycle=True))
+        template_binning=array.array('d',[0.0,0.1,5.,15.])
+         
+        self.histounroll_book(template_binning,isoargs)
+        components=options.build3d.get("components")
+        dim=options.build3d.get("dimensions")
+        mass_var,mass_b=self.getVar("mass")
+        mass=self.buildRooVar(mass_var,mass_b,recycle=True)
+        mass.Print()
+        setargs=ROOT.RooArgSet(isoargs)
+        setargs.add(mass)
+        categories = options.build3d.get("categories")
+        components = options.build3d.get("components")
+        for catd in categories:
+            print "-----------------------------------------------------------------"
+            if catd=="EEEB": cat="EBEE" 
+            else:cat=catd
+            data_book=self.rooData("hist2d_forUnrolled")
+            data_book.Print()
+            #get dataset and add column (actually filling values in) 
+            unrolledVar=ROOT.RooHistFunc(unrolledIso.GetName(),unrolledIso.GetName(),isoargs,data_book)
+            data = self.reducedRooData("data_2D_%s" %cat,setargs,False,sel=weight_cut, redo=False)
+            data.addColumn(unrolledVar)
+            dataCombine=data.reduce(ROOT.RooArgSet(mass,unrolledIso))
+            dataCombine.SetName("data_3D_%s" %cat)
+            dataCombine.Print()
+            self.workspace_.rooImport(dataCombine)
+          #  for temp in tempname=options.build3d.get("tempname"):
+          #TODO grab template names from json file
+            for comp in components:
+                print cat, comp 
+                histo_book=self.rooData("hist2d_forUnrolled")
+                if comp=="pp":
+                    histo_temp = self.reducedRooData("template_%s_2D_%s" %(comp,cat),setargs,False,sel=weight_cut,redo=False)
+                else:
+                    histo_temp = self.reducedRooData("template_mix_%s_kDSinglePho2D_%s" %(comp,cat),setargs,False,sel=weight_cut,redo=False)
+                
+                histo_temp.addColumn(unrolledVar)
+                histoCombine_temp=histo_temp.reduce(ROOT.RooArgSet(mass,unrolledIso))
+                histoCombine_temp.SetNameTitle("template_%s_3D_%s" %(comp,cat),"template_%s_3D_%s" %(comp,cat))
+                histoCombine_temp.Print()
+                self.workspace_.rooImport(histoCombine_temp)
+                histo_mctruth = self.reducedRooData("mctruth_%s_2D_%s" %(comp,cat),setargs,False,sel=weight_cut,redo=False)
+                histo_mctruth.addColumn(unrolledVar)
+                histoCombine_mctruth=histo_mctruth.reduce(ROOT.RooArgSet(mass,unrolledIso))
+                histoCombine_mctruth.SetNameTitle("mctruth_%s_3D_%s" %(comp,cat),"mctruth_%s_3D_%s" %(comp,cat))
+                histoCombine_mctruth.Print()
+                self.workspace_.rooImport(histoCombine_mctruth)
         self.saveWs(options,fout)
-    
     ## ------------------------------------------------------------------------------------------------------------
+        def nominalFit(self,options,args):
+            fout = self.openOut(options)
+            fout.Print()
+            fout.cd()
+            self.doNominalFit(options,args)
+            self.saveWs(options,fout)
+
+## ------------------------------------------------------------------------------------------------------------
     def doNominalFit(self,options,args):
         ROOT.TH1F.SetDefaultSumw2(True)
         for name, nomFit in options.nominalFit.iteritems():
@@ -941,6 +1008,7 @@ class TemplatesApp(PlotApp):
                 if cat=="EEEB": catd="EBEE" 
                 else:catd=cat
                 data_book=self.rooData("hist2d_forUnrolled")
+                data_book.Print()
                 unrolledVar=ROOT.RooHistFunc(observable.GetName(),observable.GetName(),isoargs,data_book)
               #get dataset and add column (actually filling values in) 
                 data = self.reducedRooData("data_2D_%s" %catd,setargs,False,sel=weight_cut, redo=False)
@@ -1117,6 +1185,7 @@ class TemplatesApp(PlotApp):
 
     ## ------------------------------------------------------------------------------------------------------------
     def plotPurity(self,options,args):
+        
         comp=3
         treetruthname=options.plotPurity["treetruth"]
         dim=options.plotPurity["dimensions"]
