@@ -179,7 +179,8 @@
 		"truth_selection" : {
 		    "pp" : "leadPrompt  && subleadPrompt",
 			"pf" : "(leadPrompt && subleadFake) || (subleadPrompt && leadFake)",
-                    "ff" : "leadFake    && subleadFake && ( leadMatchType != 0 || subleadMatchType != 0)"
+                    "ff" : "leadFake    && subleadFake && ( leadMatchType != 0 || subleadMatchType != 0)",
+                    "all_ff" : "leadFake    && subleadFake"
 			},
             "templates" : {
                 "pf" : { 
@@ -239,7 +240,8 @@
 		"truth_selection" : {
 		    "pp" : "leadPrompt  && subleadPrompt",
 			"pf" : "(leadPrompt && subleadFake) || (subleadPrompt && leadFake)",
-                    "ff" : "leadFake    && subleadFake && ( leadMatchType != 0 || subleadMatchType != 0)"
+                    "ff" : "leadFake    && subleadFake && ( leadMatchType != 0 || subleadMatchType != 0)",
+                    "all_ff" : "leadFake    && subleadFake"
 			},
             "templates" : {
                 "pf" : { 
