@@ -13,6 +13,8 @@
 ## Event mixing
 `./templates_maker.py --load templates_maker.json --read-ws full_analysis_anv1_v18/templates.root --mix-templates`
 
+ --store-new-only possible, then two times --read-ws afterwards for 2 files
+- also possible to load different json files after another
 ## Comparison plots
 
 
