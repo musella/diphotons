@@ -107,6 +107,10 @@ class TemplatesApp(PlotApp):
                                     default=False,
                                      help="build 3d templates with unrolled variable and mass",
                                     ), 
+                        make_option("--corr-singlePho",dest="corr_singlePho",action="store_true",
+                                    default=False,
+                                     help="correlation sieie and chiso single fake photon",
+                                    ), 
                         make_option("--do-reweight",dest="do_reweight",action="store_true",default=False,
                                     help="Reweight templates to data.",
                                     ),
@@ -233,6 +237,8 @@ class TemplatesApp(PlotApp):
             self.nominalFit(options,args)
         if options.plot_purity:
             self.plotPurity(options,args)
+        if options.corr_singlePho:
+            self.corrSinglePho(options,args)
         if options.build_3dtemplates:
             self.build3dTemplates(options,args)
      #   if options.plotMCtruth:
@@ -560,7 +566,6 @@ class TemplatesApp(PlotApp):
                           #  if not prepfit: 
                            # print "plot 1d histos"
                             self.plotHistos(histls,tit,template_binning,True,numEntries_s)
-                            #self.plotcorr(histls,tit,template_binning,True,numEntries_s)
                         ## roll out for combine tool per category
                         if fit["ndim"]>1:
                             self.histounroll(templates_massc,template_binning,isoargs,compname,cat,cut_s,prepfit,sigRegionlow2D,sigRegionup2D,extra_shape_unc=options.extra_shape_unc)
@@ -749,79 +754,99 @@ class TemplatesApp(PlotApp):
         for  k in range(0,len(dpmq)):
             print "prob " ,prob[k] ," diphomass " , dpmq[k]  
         return dpmq
+ 
+    ## ------------------------------------------------------------------------------------------------------------
+    #MQ compare truth templates with rcone and sideband templates
+    def corrSinglePho(self,options,args):
+        fout = self.openOut(options)
+        fout.Print()
+        fout.cd()
+        ROOT.TH1F.SetDefaultSumw2(True)
+        setargs=ROOT.RooArgSet("setargs")
+        iso,isob=self.getVar("templateNdim1Dim0")
+        isovar=self.buildRooVar(iso,isob,recycle=True)
+        setargs.add(isovar)
+        sigma_var,sigma_b=self.getVar("phoSigmaIeIe")
+        template_binning=array.array('d',[])
+        for i in range(0,16):
+            i=i*1.
+            template_binning.append(i)
+        sieievar=self.buildRooVar(sigma_var,sigma_b,recycle=True)
+        setargs.add(sieievar)
+        rooweight=self.buildRooVar("weight",[],recycle=True)
+        setargs.add(rooweight)
+        setargs.Print()
+        prob = array.array('d',[])
+        n=10
+        sieieb = array.array('d',[0.0 for i in range(n+1)])
+        for i in range(0,n+1):
+            prob.append(i/float(n))
+        for cat in options.corrPlot.get("categories"):
+            if cat=="EB":
+                sieielow=0.002
+                sieieup=0.024
+            elif cat =="EE":
+                sieielow=0.002
+                sieieup=0.04
+            sieievar.setRange(sieielow,sieieup)
+            truth = self.reducedRooData("mctruth_f_singlePho_%s"% cat,setargs,False,redo=True)
+            truth.Print()
+            tempdata = self.reducedRooData("template_f_singlePho_%s" %cat,setargs,False,redo=True)
+            tempdata.append(truth)
+            tempCombined=tempdata
+            tempCombined.SetName("template_allsieie_f_singlePho_%s" %cat)
+            tempCombined.Print()
+            histo_sieie=ROOT.TH1F("histo_sieie_%s" %cat,"histo_sieie_%s"%cat,100,sieielow,sieieup)
+            tempCombined.fillHistogram(histo_sieie,ROOT.RooArgList(sieievar)) 
+            histo_sieie.Scale(1.0/histo_sieie.Integral())
+            histo_sieie.GetQuantiles(n+1,sieieb,prob)
+            sieiebins=ROOT.RooBinning(len(sieieb)-1,sieieb,"sieiebins" )
+            sieievar.setBinning(sieiebins)
+            histo2_sieie=ROOT.TH2F("histo2_sieie_%s" %cat,"histo2_sieie_%s"%cat,len(sieieb)-1,sieieb,len(template_binning)-1,template_binning)
+            tempCombined.fillHistogram(histo2_sieie,ROOT.RooArgList(sieievar,isovar)) 
+            self.workspace_.rooImport(tempCombined)
+            prb = array.array('d',[0.99,0.8,0.7,0.6,0.5,0.3,0.1,0.05])
+            graphs=[]
+            graphs=getQuantilesGraphs(histo2_sieie,prb)
+            self.keep([graphs,histo2_sieie])
+            self.plotQuantileGraphs(histo2_sieie,graphs,cat)
+            self.autosave(True)
+        self.saveWs(options,fout)
 
-## ------------------------------------------------------------------------------------------------------------
-    def plotcorr(self,histlist,title,template_bins,dim1,numEntries=None):
-        leg = ROOT.TLegend(0.3,0.8,0.9,0.9)
+    ## ------------------------------------------------------------------------------------------------------------
+    def plotQuantileGraphs(self,histo,graphs,cat):
+        
+        c=ROOT.TCanvas("cCorrelation2d_%s"%cat ,"cCorrelation2d_%s"%cat,10,10,700,900)
+        c.cd()
+        histo.GetXaxis().SetTitle("#sigma_{i#etai#eta}")
+        histo.GetYaxis().SetTitle("Charged PF Isolation [GeV]")
+        histo.Draw("colz")
+        cQ=ROOT.TCanvas("cCorrelation_%s"%cat ,"corr chIso mass %s"% cat,10,10,700,900)
+        cQ.cd()
+        i=0
+        leg =ROOT.TLegend(0.6,0.65,0.9,0.9)
         leg.SetTextSize(0.03)
         leg.SetTextFont(42);
         leg.SetFillColor(ROOT.kWhite)
-        leg.SetHeader("#%s " % numEntries)
-        canv = ROOT.TCanvas(title,title)
-        canv.Divide(1,2)
-        canv.cd(1)
-        ROOT.gPad.SetPad(0., 0.35, 1., 1.0)
-        ROOT.gPad.SetLogy()
-        canv.cd(2)
-        ROOT.gPad.SetPad(0., 0., 1., 0.35)
-        ROOT.gPad.SetGridy()
-        canv.cd(1)
-        
-        histlist[0].SetFillColor(ROOT.kRed)
-        histlist[0].SetFillStyle(3004)
-        histlist[0].SetLineColor(ROOT.kRed)
-        histlist[0].Draw("E2")
-        histlist[0].GetXaxis().SetLimits(-0.1,max(template_bins))
-        #histlist[0].SetStats()
-        ymax = 0.
-        ymin = 1.e+5
-        histlist[0].GetYaxis().SetLabelSize( histlist[0].GetYaxis().GetLabelSize() * canv.GetWh() / ROOT.gPad.GetWh() )
-        if dim1:
-            histlist[0].GetXaxis().SetTitle(title[-17:])
-        else:
-            histlist[0].GetXaxis().SetTitle("charged isolation")
-        #for i in range(0,len(histlist)):
-        for i in range(2,len(histlist)):
-            histlist[i].GetXaxis().SetLimits(-0.1,max(template_bins))
-            ymax = max(ymax,histlist[i].GetMaximum())
-            if histlist[i].GetMinimum() != 0.:
-                ymin = min(ymin,histlist[i].GetMinimum())
+        for gr in graphs:
+            gr.SetMarkerStyle(21)
+            gr.SetMarkerColor(ROOT.kRed-i)
+            gr.SetLineColor(ROOT.kRed-i)
+            if i==0:
+                gr.GetXaxis().SetTitle("#sigma_{i#etai#eta}")
+                gr.GetYaxis().SetTitle("Charged PF Isolation [GeV]")
+                gr.GetYaxis().SetRangeUser(0.,24.)
+                gr.Draw("AP")
             if i>0:
-                histlist[i].SetLineColor(ROOT.kAzure+i)
-                histlist[i].SetMarkerColor(ROOT.kAzure+i)
-                histlist[i].SetMarkerStyle(20)
-                histlist[i].Draw("E SAME")
-            histlist[0].GetXaxis().SetLimits(-0.1,max(template_bins))
-            leg.AddEntry(histlist[i],histlist[i].GetName(),"l")  
-        histlist[0].GetYaxis().SetRangeUser(ymin*0.5,ymax*5.)
-        leg.Draw()
-        canv.cd(2)
-        ratios = []
-        for ihsit,hist in enumerate(histlist[2:]):
-            ratios.append( hist.Clone("ratio_%d" % ihsit) )
-            ratios[-1].Divide(histlist[0])
-        ratios[0].GetYaxis().SetTitleSize( histlist[0].GetYaxis().GetTitleSize() * 3.5/3.5 )
-        ratios[0].GetYaxis().SetLabelSize( histlist[0].GetYaxis().GetLabelSize() * 6.5/3.5 )
-        ratios[0].GetYaxis().SetTitleOffset( histlist[0].GetYaxis().GetTitleOffset() * 6.5/3.5 )
-        ratios[0].GetXaxis().SetTitleSize( histlist[0].GetXaxis().GetTitleSize() * 4.5/3.5 )
-        ratios[0].GetXaxis().SetLabelSize( histlist[0].GetXaxis().GetLabelSize() * 6.5/3.5 )
-        if dim1:
-            ratios[0].GetXaxis().SetTitle(title[-17:])
-        else:
-            ratios[0].GetXaxis().SetTitle("charged isolation")
-        ratios[0].Draw()        
-        ratios[0].GetYaxis().SetTitle("ratio")
-        ratios[0].GetXaxis().SetLimits(-0.1,max(template_bins))
-        ratios[0].GetYaxis().SetRangeUser(0.2,1.8)
-        for r in ratios[1:]:
-            r.Draw("same")
-        ROOT.gStyle.SetOptStat(0)
-        #  ROOT.gStyle.SetOptTitle(0)
-        self.keep( [canv] )
+                gr.Draw("P SAME")
+            leg.AddEntry(gr.GetName()[-14:],gr.GetName()[-14:],"ple")
+            leg.Draw()
+            i=i+1
+        self.keep( [c,cQ] )
         self.autosave(True)
-        
+        #
 
-## ------------------------------------------------------------------------------------------------------------
+    ## ------------------------------------------------------------------------------------------------------------
 
     def plotHistos(self,histlist,title,template_bins,dim1,numEntries=None):
         leg = ROOT.TLegend(0.3,0.8,0.9,0.9)
