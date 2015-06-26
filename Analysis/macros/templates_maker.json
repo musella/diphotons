@@ -744,6 +744,9 @@
                 "dimensions" :"2D", 
                 "categories" :["EBEE","EBEB"]
     },
+   "corrPlot":{
+                "categories" :["EB","EE"]
+    },
 	"build3d":{
 			"ndim":"2", 
             "categories" : ["EBEB","EBEE"],

@@ -15,6 +15,7 @@ class DataSetMixer
 public:
     DataSetMixer(const char * name, const char * title, 
                  const RooArgList & variables1, const RooArgList & variables2,                  
+                 const RooArgList & variablesT,
                  const char * replace1, const char * replace2, 
                  float ptLeadMin, float ptSubleadMin, float massMin,
                  const char *weightVarName1=0, const char *weightVarName2=0, bool fillTree=false);
@@ -26,7 +27,7 @@ public:
                       );
 
     void fillLikeTarget(TTree * target,
-                        const RooArgList & targetVars1, const RooArgList & targetVars2, 
+                        const RooArgList & targetVars1, const RooArgList & targetVars2,  
                         std::string  targetWeight,
                         TTree * tree1, TTree * tree2,
                         const char *pT1, const char *eta1, const char *phi1, const char *energy1, 
@@ -34,9 +35,9 @@ public:
                         const RooArgList & matchVars1, const RooArgList & matchVars2,
                         bool rndSwap,float rndMatch, int nNeigh=10, int nMinNeigh=10, float targetFraction=0.,
                         bool useCdfDistance=false, bool matchWithThreshold=false,
-                        float maxWeight=0.,
+                        float maxWeightTarget=0.,
+                        float maxWeightCache=0.,
                         Double_t * axesWeights=0
-                        
         );
     
     RooArgList & vars() { return vars_; };
@@ -47,7 +48,7 @@ public:
 private:
     float ptLeadMin_, ptSubleadMin_, massMin_;
     std::string weight1_,weight2_;
-    RooArgList vars_, vars1_, vars2_;
+    RooArgList vars_, vars1_, vars2_, varsT_;
     RooDataSet * dataset_;
     TNtuple * tree_;
     std::vector<float> treeBuf_;
