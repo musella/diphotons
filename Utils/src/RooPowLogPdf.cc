@@ -22,7 +22,7 @@ using namespace Faddeeva;
 //_____________________________________________________________________________
 RooPowLogPdf::RooPowLogPdf(const char *name, const char *title, RooAbsReal& _x, RooAbsReal& _c, RooAbsReal& _d) :
 	RooAbsPdf(name, title), 
-	analyticIntegral_(false), 
+	analyticIntegral_(true), 
 	x_("x","Dependent",this,_x), c_("c","Lin",this,_c), d_("d","Log",this,_d)
 {
 }

@@ -9,7 +9,7 @@ class RooAbsReal;
 
 class RooPowLogPdf : public RooAbsPdf {
 public:
-	RooPowLogPdf() : analyticIntegral_(false) {} ;
+	RooPowLogPdf() : analyticIntegral_(true) {} ;
 	RooPowLogPdf(const char *name, const char *title,
 		     RooAbsReal& _x, RooAbsReal& _c, RooAbsReal& _d);
 	RooPowLogPdf(const RooPowLogPdf& other, const char* name=0);
