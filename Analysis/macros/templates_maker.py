@@ -818,6 +818,17 @@ class TemplatesApp(PlotApp):
         histo.GetXaxis().SetTitle("#sigma_{i#etai#eta}")
         histo.GetYaxis().SetTitle("Charged PF Isolation [GeV]")
         histo.Draw("colz")
+        c.Update()
+        ps = c.GetPrimitive("stats")
+        ps.SetX2(0.99)
+        histo.SetStats(0)
+        c.Modified()
+        c2=ROOT.TCanvas("cCorrelation1d_%s"%cat ,"cCorrelation1d_%s"%cat,10,10,700,900)
+        c2.Divide(1,2)
+        c2.cd(1)
+        histo.ProjectionX().Draw()
+        c2.cd(2)
+        histo.ProjectionY().Draw()
         cQ=ROOT.TCanvas("cCorrelation_%s"%cat ,"corr chIso mass %s"% cat,10,10,700,900)
         cQ.cd()
         i=0
@@ -839,7 +850,7 @@ class TemplatesApp(PlotApp):
             leg.AddEntry(gr.GetName()[-14:],gr.GetName()[-14:],"ple")
             leg.Draw()
             i=i+1
-        self.keep( [c,cQ] )
+        self.keep( [c,c2,cQ] )
         self.autosave(True)
         #
 
