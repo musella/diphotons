@@ -68,11 +68,12 @@ void fillFormulas(const char * A, const char * B, const char * C, const char * D
 }
 
 // --------------------------------------------------------------------------------------------------------------------------------
-void addEntry(Cache & leg1,Cache & leg2, TLorentzVector & sum, size_t nvar, RooDataSet * dataset, TNtuple * tree, RooArgList & vars, 
-              std::vector<float> & treeBuf, float wei=1.)
+void addEntry(Cache & leg1,Cache & leg2,TLorentzVector & sum, size_t nvar, RooDataSet * dataset, TNtuple * tree, RooArgList & vars, 
+              std::vector<float> & treeBuf,  float wei=1.,Cache *targetCache=0,size_t nvarTarget =0)
 {        
     // set variables
     //float weight = sqrt(leg1.weight*leg2.weight)*wei;
+    //
     float weight = (leg1.weight*leg2.weight)*wei;
     for(size_t ivar=0; ivar<nvar; ++ivar) {
         if( tree ) {
@@ -83,22 +84,37 @@ void addEntry(Cache & leg1,Cache & leg2, TLorentzVector & sum, size_t nvar, RooD
             RooRealVar & varLeg2 = dynamic_cast<RooRealVar &>( vars[ivar+nvar] );
             varLeg1.setVal( leg1.vars[ivar] );
             varLeg2.setVal( leg2.vars[ivar] );                     
+        
+        }
+    // fill tree or dataset
+        if( tree ) { 
+            treeBuf[2*nvar] = sum.M();
+            treeBuf[2*nvar+1] = sum.Pt();
+            treeBuf[2*nvar+2] = weight;
+            treeBuf[2*nvar+2] = weight;
+        } else { 
+            dynamic_cast<RooRealVar &>(vars[2*nvar]  ).setVal(sum.M());
+            dynamic_cast<RooRealVar &>(vars[2*nvar+1]).setVal(sum.Pt());
+            dynamic_cast<RooRealVar &>(vars[2*nvar+2]).setVal(weight);
         }
     }
-    // fill tree or dataset
-    if( tree ) { 
-        treeBuf[2*nvar] = sum.M();
-        treeBuf[2*nvar+1] = sum.Pt();
-        treeBuf[2*nvar+2] = weight;
+    if(targetCache){
+        for(size_t iel=0; iel< nvarTarget;++iel){
+            if(tree){ 
+                treeBuf[2*nvar+3+iel] = targetCache->vars[iel];
+            }
+            else{
+                dynamic_cast<RooRealVar &>(vars[2*nvar+3+iel]).setVal(targetCache->vars[iel]);
+            }    
+        }
+    }
+    if(tree){ 
         tree->Fill( &treeBuf[0] );
-    } else { 
-        dynamic_cast<RooRealVar &>(vars[2*nvar]  ).setVal(sum.M());
-        dynamic_cast<RooRealVar &>(vars[2*nvar+1]).setVal(sum.Pt());
-        dynamic_cast<RooRealVar &>(vars[2*nvar+2]).setVal(weight);
+    } else{
         dataset->add( RooArgSet(vars), weight );
     }
+        
 }
-
 // --------------------------------------------------------------------------------------------------------------------------------
 void eval(std::vector<float> & target, std::vector<TTreeFormula *> & src)
 {
@@ -125,26 +141,29 @@ void fillCache(std::vector<Cache> & target, TTree *source, float frac, float ptS
                std::vector<TTreeFormula *> & match,
                TTreeFormula * weight,
                std::vector<std::vector<float>> * matchTarget=0,
-               std::vector<TH1 *> * matchHisto=0,float maxWeight=0.
+               std::vector<TH1 *> * matchHisto=0,float maxWeightCache=0.
     )
 {
     Cache cache(formulas.size(),(matchTarget ? 0 : match.size()));
     std::vector<float> matchCache(matchTarget ? match.size() : 0);
     std::vector<float> & matchFill( matchTarget ? matchCache : cache.match);
     std::vector<sorted_dataset_type> pdfs(matchHisto ? match.size() : 0);
-    
+    if (formulas.empty() ){return;}
     double totwei = 0.;
     for(int iev=0; iev<source->GetEntries(); ++iev) {
         source->GetEntry(iev);
         if( gRandom->Uniform() > frac ) { continue; }
         cache.weight = ( weight ? weight->EvalInstance() : 1. );
-        if( maxWeight > 0. && cache.weight > maxWeight ) { 
-            cache.weight = maxWeight;
+        if( maxWeightCache > 0. && cache.weight > maxWeightCache ) { 
+            cache.weight = maxWeightCache;
         }
         
-        float pt = fourVec[0]->EvalInstance();
-        if( pt < ptSubleadMin ) { continue; }
-        cache.p4.SetPtEtaPhiE(pt,fourVec[1]->EvalInstance(),fourVec[2]->EvalInstance(),fourVec[3]->EvalInstance());
+        float pt = 0.;
+        if (!fourVec.empty()){
+            pt = fourVec[0]->EvalInstance();
+            if( pt < ptSubleadMin ) { continue; }
+                cache.p4.SetPtEtaPhiE(pt,fourVec[1]->EvalInstance(),fourVec[2]->EvalInstance(),fourVec[3]->EvalInstance());
+        }
         cache.index = iev;
 
         ///// cache.vars.resize(nvar);
@@ -246,12 +265,12 @@ std::string reword(const std::string & name, const char * prep, const char * str
 // Actual DataSetMixer implementation
 // --------------------------------------------------------------------------------------------------------------------------------
 DataSetMixer::DataSetMixer(const char * name, const char * title, 
-                           const RooArgList & variables1, const RooArgList & variables2,                  
+                           const RooArgList & variables1, const RooArgList & variables2,const RooArgList & variablesT,                 
                            const char * replace1, const char * replace2, 
-                           float ptLeadMin, float ptSubleadMin, float massMin,                           
+                           float ptLeadMin, float ptSubleadMin, float massMin,                       
                            const char *weightVarName1, const char *weightVarName2, bool fillTree) :
     ptLeadMin_(ptLeadMin), ptSubleadMin_(ptSubleadMin), massMin_(massMin),
-    vars1_(variables1),    vars2_(variables2), 
+    vars1_(variables1),    vars2_(variables2),varsT_(variablesT), 
     tree_(0)
 {
     // make sure that the two legs have the same variables
@@ -289,11 +308,16 @@ DataSetMixer::DataSetMixer(const char * name, const char * title,
         vars_.addClone(replaceVar);
     }
     // add mass, pt and weight. FIXME: do not hard-code?
-    RooRealVar mass("mass","mass",0.); vars_.addClone(mass);
-    RooRealVar pt("pt","pt",0.); vars_.addClone(pt);
+    RooRealVar mixedMass("mixedMass","mixedMass",0.); vars_.addClone(mixedMass);
+    RooRealVar mixedPt("mixedPt","mixedPt",0.); vars_.addClone(mixedPt);
     RooRealVar weight("weight","weight",1.); vars_.addClone(weight);
     // done booking vars
     // vars_.Print();
+    for(int ivar=0; ivar<varsT_.getSize(); ++ivar) {
+        RooRealVar &var = dynamic_cast<RooRealVar &>( varsT_[ivar] );
+        std::string name = var.GetName();
+        vars_.addClone(var);
+    }
     
     // book dataset
     dataset_ = new RooDataSet(name,title,RooArgSet(vars_),"weight");
@@ -314,7 +338,7 @@ DataSetMixer::DataSetMixer(const char * name, const char * title,
 
 // --------------------------------------------------------------------------------------------------------------------------------
 void DataSetMixer::fillLikeTarget(TTree * target,
-                                  const RooArgList & targetMatchVars1, const RooArgList & targetMatchVars2, 
+                                  const RooArgList & targetMatchVars1, const RooArgList & targetMatchVars2,
                                   std::string  targetWeight,
                                   TTree * tree1, TTree * tree2,
                                   const char *pT1, const char *eta1, const char *phi1, const char *energy1, 
@@ -323,52 +347,59 @@ void DataSetMixer::fillLikeTarget(TTree * target,
                                   bool rndSwap,float rndMatch, int nNeigh, int nMinNeigh,
                                   float targetFraction,
                                   bool useCdfDistance, bool matchWithThreshold,
-                                  float maxWeight,
+                                  float maxWeightTarget,
+                                  float maxWeightCache,
                                   Double_t * axesWeights
         )
 {
     cout << "axesWeights "<< axesWeights << endl;
-    size_t nvar = ( vars_.getSize() - 3 )/ 2;
-    std::vector<TTreeFormula *> formulas1(nvar), formulas2(nvar);
+    std::vector<TTreeFormula *> formulas1, formulas2, formulasTarget;
     TTreeFormula * weight1      = (!weight1_.empty() ? new TTreeFormula("weight1",weight1_.c_str(),tree1) : 0);
     TTreeFormula * weight2      = (!weight2_.empty()? new TTreeFormula("weight2",weight2_.c_str(),tree2) : 0);
     TTreeFormula * weightTarget = (!targetWeight.empty() ? new TTreeFormula("weightTarget",targetWeight.c_str(),target) : 0);
     /// cout << targetWeight << " " << weightTarget << endl;
-    fillFormulas(vars_,tree1,formulas1);
-    fillFormulas(vars_,tree2,formulas2);
-
+    fillFormulas(vars1_,tree1,formulas1);
+    fillFormulas(vars2_,tree2,formulas2);
+    fillFormulas(varsT_,target,formulasTarget);
+   
     // book TTres formula for variables to be matched
     std::vector<TTreeFormula *> match1, match2, targetMatch1, targetMatch2;
+    std::vector<TTreeFormula *> matchTar;
     std::vector<float> thr1, thr2;
     fillFormulas(matchVars1,tree1,match1);
     fillFormulas(matchVars2,tree2,match2);
     fillFormulas(targetMatchVars1,target,targetMatch1,(matchWithThreshold?&thr1:0));
     fillFormulas(targetMatchVars2,target,targetMatch2,(matchWithThreshold?&thr2:0));
-    
+     
     // 4-vectors
-    std::vector<TTreeFormula *> fourVec1, fourVec2;
+    std::vector<TTreeFormula *> fourVec1, fourVec2, fourVecTarget;
     fillFormulas(pT1,eta1,phi1,energy1,tree1,fourVec1);
     fillFormulas(pT2,eta2,phi2,energy2,tree2,fourVec2);
+//    fillFormulas(pT2,eta2,phi2,energy2,tree2,fourVec2);
     
     // actual mixing
     std::vector<Cache> cache1, cache2; // for caching 
     std::vector<std::vector<float>> cacheMatch1(matchVars1.getSize()), cacheMatch2(matchVars2.getSize());
     std::vector<std::vector<float>> cacheCheck1, cacheCheck2;
     std::vector<TH1 *> matchHisto1(matchVars1.getSize(),0), matchHisto2(matchVars2.getSize(),0);
-    
+    // fill target variables in cache which should kept untouched
+    std::vector<Cache> cacheTarg; // for caching
+    cout << "DataSetMixer: fill cache Target for untouched variables..... " ;
+    fillCache(cacheTarg,target,1.,ptSubleadMin_,ptLeadMin_,fourVecTarget,formulasTarget,matchTar,weightTarget);
+    cout << "done. Selected " << cacheTarg.size() << " entries "<< endl;
     // loop over 1st tree and store kinematics and variables
     cout << "DataSetMixer: loop over 1st tree/leg ...";
-    fillCache(cache1,tree1,1.,ptSubleadMin_,ptLeadMin_,fourVec1,formulas1,match1,weight1,&cacheMatch1,(useCdfDistance?&matchHisto1:0),maxWeight);
+    fillCache(cache1,tree1,1.,ptSubleadMin_,ptLeadMin_,fourVec1,formulas1,match1,weight1,&cacheMatch1,(useCdfDistance?&matchHisto1:0),maxWeightCache);
     cout << "done. Selected " << cache1.size() << " entries "<< endl;
     
     // loop over 2nd tree and store kinematics and variables
     cout << "DataSetMixer: loop over 2nd tree/leg ...";
-    fillCache(cache2,tree2,1.,ptSubleadMin_,ptLeadMin_,fourVec2,formulas2,match2,weight2,&cacheMatch2,(useCdfDistance?&matchHisto2:0),maxWeight);
+    fillCache(cache2,tree2,1.,ptSubleadMin_,ptLeadMin_,fourVec2,formulas2,match2,weight2,&cacheMatch2,(useCdfDistance?&matchHisto2:0),maxWeightCache);
     cout << "done. Selected " << cache2.size() << " entries "<< endl;
     if( matchWithThreshold ) {
         cacheCheck1 = cacheMatch1;
         cacheCheck2 = cacheMatch2;
-    }
+    }   
 
 	
     std::vector<HistoConverter *> cdfs1, cdfs2;
@@ -382,8 +413,7 @@ void DataSetMixer::fillLikeTarget(TTree * target,
             cdfs1.back()->graph()->Draw("apl");
             canv.cd(2);
             matchHisto1[idim]->Draw("hist");
-            canv.SaveAs(Form("%s.png",canv.GetName()));
-            // canv.SaveAs(Form("%s.root",canv.GetName()));
+            canv.SaveAs(Form("/afs/cern.ch/user/m/mquittna/www/diphoton/Phys14/%s.png",canv.GetName()));
         }
         for(size_t idim=0; idim<matchHisto2.size(); ++idim) {
             cdfs2.push_back( cdf(matchHisto2[idim],matchHisto2[idim]->GetXaxis()->GetXmin(),matchHisto2[idim]->GetXaxis()->GetXmax()) );
@@ -394,8 +424,7 @@ void DataSetMixer::fillLikeTarget(TTree * target,
             cdfs2.back()->graph()->Draw("apl");
             canv.cd(2);
             matchHisto1[idim]->Draw("hist");
-            canv.SaveAs(Form("%s.png",canv.GetName()));
-            // canv.SaveAs(Form("%s.root",canv.GetName()));
+            canv.SaveAs(Form("/afs/cern.ch/user/m/mquittna/www/diphoton/Phys14/%s.png",canv.GetName()));
         }
     }
 
@@ -439,13 +468,15 @@ void DataSetMixer::fillLikeTarget(TTree * target,
     float lwei = 0., swei = 1e+7; 
     double totwei = 0., truncwei = 0.;
     int ntot = 0, ntrunc = 0;
+    //constVariables=const RooArgList()
     //// auto engine = std::default_random_engine{};
     for(int iev=0; iev<target->GetEntries(); ++iev) {
         target->GetEntry(iev);
+        Cache*  targetEntry=( (size_t)iev<cacheTarg.size() ? &cacheTarg[iev] : 0);
         float wei = ( weightTarget != 0 ? weightTarget->EvalInstance() : 1. );
         totwei += wei; ++ntot;
-        if( maxWeight > 0. && wei > maxWeight ) {
-            wei = maxWeight;
+        if( maxWeightTarget > 0. && wei > maxWeightTarget ) {
+            wei = maxWeightTarget;
         }
         truncwei += wei; ++ntrunc;
         if( targetFraction > 0. && gRandom->Uniform() > targetFraction ) {
@@ -488,6 +519,8 @@ void DataSetMixer::fillLikeTarget(TTree * target,
         //// std::shuffle(std::begin(neigh1), std::end(neigh1), engine);
         //// std::shuffle(std::begin(neigh2), std::end(neigh2), engine);
         
+        std::vector<std::pair<int,int> > npairs;
+        float nweight=0.;
         int nAccept = nMinNeigh;
         for(int ip=0; ip<nNeigh; ++ip) {
             if( neigh1[ip] < 0 || neigh2[ip] < 0 ) {
@@ -517,17 +550,22 @@ void DataSetMixer::fillLikeTarget(TTree * target,
                     nreject++;
                     continue;
                 }
-            }            
+            }
             
-            auto & obj1 = (*mcache1)[neigh1[ip]];
-            auto & obj2 = (*mcache2)[neigh2[ip]];
+            npairs.push_back(std::make_pair(neigh1[ip],neigh2[ip]));
+            nweight +=(*mcache1)[neigh1[ip]].weight* (*mcache2)[neigh2[ip]].weight;
+        }
+        for(auto & neigh:npairs){
+            auto & obj1 = (*mcache1)[neigh.first];
+            auto & obj2 = (*mcache2)[neigh.second];
             
             bool reswap = rndSwap && gRandom->Uniform()>=0.5;
             auto & leg1 = ( reswap ? obj2 : obj1 );
             auto & leg2 = ( reswap ? obj1 : obj2 );
 
             TLorentzVector sum = obj1.p4 + obj2.p4;
-            addEntry(leg1,leg2,sum,nvar,dataset_,tree_,vars_,treeBuf_,wei);        
+            
+            addEntry(leg1,leg2,sum,(size_t)vars1_.getSize(),dataset_,tree_,vars_,treeBuf_,wei/nweight, targetEntry, (size_t) varsT_.getSize());        
             ++ientry;
             if( --nAccept == 0 ) { break; }
         }
@@ -545,6 +583,9 @@ void DataSetMixer::fillLikeTarget(TTree * target,
         delete formula;
     }
     for(auto & formula : formulas2 ) {
+        delete formula;
+    }
+    for(auto & formula : formulasTarget ) {
         delete formula;
     }
     for(auto & formula : match1 ) {

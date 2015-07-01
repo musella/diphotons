@@ -28,8 +28,12 @@ class Load:
         self.empty = copy.copy(empty)
         
     def __call__(self,option, opt_str, value, parser, *args, **kwargs):
+        appendlst = True
         if self.scratch and self.cold:
-            setattr(parser.values,option.dest,copy.copy(self.empty))
+            if option.dest == "__opts__":
+                appendlst = False
+            else:
+                setattr(parser.values,option.dest,copy.copy(self.empty))
             self.cold = False
             
         if option.dest == "__opts__":
@@ -54,9 +58,10 @@ class Load:
             settings = json.loads(strn)
             for k,v in settings.iteritems():
                 attr  = getter(dest,k,None)
-                if attr and type(attr) == list:           
+                if appendlst and attr and type(attr) == list:           
                     attr.extend(v)
-                setter(dest,k,v)
+                else:
+                    setter(dest,k,v)
         
 # -----------------------------------------------------------------------------
 class Csv:

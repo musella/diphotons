@@ -13,6 +13,8 @@
 ## Event mixing
 `./templates_maker.py --load templates_maker.json --read-ws full_analysis_anv1_v18/templates.root --mix-templates`
 
+ --store-new-only possible, then two times --read-ws afterwards for 2 files
+- also possible to load different json files after another
 ## Comparison plots
 
 
@@ -36,8 +38,8 @@
 ---plot-purityvalue either fraction or number of events
 
 ### Throwing toys
-- `./bkg_bias.py --throw-toys --throw-from-model --lumi-factor=10. --n-toys=1000 --components pp --models dijet --fit-name 2D --store-new-only --read-ws full_analysis_anv1_v18/bias_study_input.root -o full_analysis_anv1_v18/bias_study_toys_from_fit_unbinned_10fb.root  -O ~/www/exo/phys_14_anv1/full_analysis_v18/bkg_model_v0/ --observable mass[300,6000]`
-- `./bkg_bias.py --throw-toys --lumi-factor=10. --n-toys=1000 --components pp --models dijet --fit-name 2D --store-new-only --read-ws full_analysis_anv1_v18/bias_study_input.root -o full_analysis_anv1_v18/bias_study_toys_from_mc_unbinned_10fb.root  -O ~/www/exo/phys_14_anv1/full_analysis_v18/bkg_model_v0/ --observable mass[300,6000]`
+- `./bkg_bias.py --throw-toys --throw-from-model --lumi-factor=10. --n-toys=1000 --components pp --models dijet --fit-name 2D --store-new-only --read-ws full_analysis_anv1_v18/bias_study_input.root -o full_analysis_anv1_v18/bias_study_toys_from_fit_unbinned_10fb.root  -O ~/www/exo/phys_14_anv1/full_analysis_v18/bkg_model_v0/ --observable mass[1140,300,6000]`
+- `./bkg_bias.py --throw-toys --lumi-factor=10. --n-toys=1000 --components pp --models dijet --fit-name 2D --store-new-only --read-ws full_analysis_anv1_v18/bias_study_input.root -o full_analysis_anv1_v18/bias_study_toys_from_mc_unbinned_10fb.root  -O ~/www/exo/phys_14_anv1/full_analysis_v18/bkg_model_v0/ --observable mass[1140,300,6000]`
 
 ### Fitting toys
 - `./submit_toys.sh 8nm full_analysis_anv1_v18/bias_study_toys_from_fit_unbinned_10fb.root bias_study_toys_from_fit_cmp_to_gen_10fb_1000 1000 2`

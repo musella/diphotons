@@ -33,15 +33,18 @@
 *.REMOTE.*
 *.LOCAL.*
 *.BACKUP.*
+*.bak
 
 # python compiled
 *.pyc
 __init__.py
 
 */test/*/
+*/test/*.root
 */macros/*/
 */config/*/
 */macros/*.png
 */macros/*.pdf
 */macros/*.eps
 */macros/*.root
+*/macros/*.txt
