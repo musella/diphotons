@@ -138,6 +138,10 @@ class CombineApp(TemplatesApp):
                                     default={},
                                     help="File where to write fwhm values",
                                     ),
+                        make_option("--luminosity",dest="luminosity",action="store",type="string",
+                                    default="1",
+                                    help="Specify luminosity for generating data, background and signal workspaces",
+                                    ),
                         ]
                  )
                 ]+option_groups,option_list=option_list
@@ -369,8 +373,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         # build observable variable
         roobs = self.buildRooVar(*(self.getVar(options.observable)), recycle=True, importToWs=True)
         roobs.setRange("fullRange",roobs.getMin(),roobs.getMax()) 
-        #roowe = self.buildRooVar("weight",[])        
-        #rooset = ROOT.RooArgSet(roobs,roowe)
+        roowe = self.buildRooVar("weight",[])        
+        rooset = ROOT.RooArgSet(roobs,roowe)
         
         fit["params"] = []
         
@@ -474,7 +478,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             
             print "importing %s as data for cat %s" % (treename, cat)
             
-            dset = self.rooData(treename)
+            dset = self.rooData(treename, weight="%s * weight" % options.luminosity)
             
             reduced = dset.reduce(RooFit.SelectVars(rooset),RooFit.Range("fullRange")) ## FIXME: roobs range
             reduced.SetName("data_%s"% (cat))
@@ -621,8 +625,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
 
                 if add_sideband and not catsource in sidebands:
                     sidebands[catsource] = set()
-                dset  = self.rooData(treename)
-                ndset = self.rooData(ntreename)
+                dset  = self.rooData(treename,weight="%s * weight" % options.luminosity)
+                ndset = self.rooData(ntreename,weight="%s * weight" % options.luminosity)
                 
                 ## if needed replace dataset with asimov
                 if useAsimov:
@@ -866,7 +870,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             for cat in fit["categories"]:
                 treename = "%s_%s_%s" % (signame,options.fit_name,cat)
                 print treename
-                dset = self.rooData(treename)
+                dset = self.rooData(treename,weight="%s * weight" % options.luminosity)
                 dset.Print()
                 
                 reduced = dset.reduce(RooFit.SelectVars(rooset),RooFit.Range("fullRange")) ## FIXME: roobs range
@@ -885,8 +889,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     nBins = 1000
                     if (options.set_bins_fwhm != None):
                         if (signame in options.set_bins_fwhm.keys()):
-                            nBins = float(options.set_bins_fwhm[signame])
-
+                            nBins = int(options.set_bins_fwhm[signame])
                     roobs.setBins(nBins)
                     hist = binned.createHistogram("sigHist",roobs)
                     halfMaxVal = 0.5*hist.GetMaximum()
