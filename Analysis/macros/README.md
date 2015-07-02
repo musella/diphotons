@@ -33,9 +33,9 @@
 -fit-categories: EBEB or EBEE
 
 ### plots for purity vs massbins and pull function
-- ./templates_maker.py --load templates_maker_fits.json  --read-ws fit056_v19_mb5_w5_all.root -O /afs/cern.ch/user/m/mquittna/www/diphoton/Phys14/test -o purity076_test.root --plot-purity --plot-closure mctruth --plot-purityvalue fraction
--plot-closure for mctruth or tempalte
----plot-purityvalue either fraction or number of events
+plot-closure for mctruth or template
+- `./templates_maker.py --load templates_maker_fits.json  --read-ws fit056_v19_mb5_w5_all.root -O /afs/cern.ch/user/m/mquittna/www/diphoton/Phys14/test -o purity076_test.root --plot-purity --plot-closure mctruth --plot-purityvalue fraction`
+- "plot-purityvalue": either fraction or number of events
 
 ### Throwing toys
 - `./bkg_bias.py --throw-toys --throw-from-model --lumi-factor=10. --n-toys=1000 --components pp --models dijet --fit-name 2D --store-new-only --read-ws full_analysis_anv1_v19/bias_study_input.root -o full_analysis_anv1_v19/bias_study_toys_from_fit_unbinned_10fb.root  -O ~/www/exo/phys_14_anv1/full_analysis_v19/bkg_model_v0/ --observable mass[1140,300,6000]`
