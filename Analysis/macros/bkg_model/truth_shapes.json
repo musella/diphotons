@@ -6,24 +6,20 @@
 	    },
 	    "pf" : { 
 	    	 "shape":"mctruth_pf", "norm":"mctruth_pf",
-		 "template" : "template_pf",
-		 "_template" : "template_mix_pf:kDSinglePho2D",
+		 "template" : "template_mix_pf:kDSinglePho2D",
 		 "shape_cats" : {  
 		 	      "EBHighR9" : "EBLowR9",
 			      "EEHighR9" : "EELowR9"
 		  },
-		  "_add_sideband" : "pf",
 		  "weight_cut"   : "weight < 5."
 	    },	    
 	    "ff" : { 
 	    	 "shape":"mctruth_pf", "norm":"mctruth_ff",
-		 "template" : "template_ff",
-		 "_template" : "template_mix_ff:kDSinglePho2D",
+		 "template" : "template_mix_ff:kDSinglePho2D",
 		 "shape_cats" : {  
 		 	      "EBHighR9" : "EBLowR9",
 			      "EEHighR9" : "EELowR9"
 		  },
-		  "_add_sideband" : "pf",
 		  "weight_cut"   : "weight < 5."
 	    }	    
 }

@@ -11,9 +11,12 @@ class RooAbsReal;
 
 class RooSlicePdf : public RooAbsPdf {
 public:
-	RooSlicePdf() : histo_(0) {} ;
-	RooSlicePdf(const char *name, const char *title, TH2 * histo,
-		     RooAbsReal& _x, RooAbsReal& _p);
+	RooSlicePdf() : histo_(0) ///,  pdf_(0) 
+		{} ;
+	RooSlicePdf(const char *name, const char *title, TH2 * histo, 
+		     Double_t * widths,
+		    RooAbsReal& _x, RooAbsReal& _p//, RooAbsPdf * _ppdf=0
+		);
 	RooSlicePdf(const RooSlicePdf& other, const char* name=0);
 	virtual TObject* clone(const char* newname) const { return new RooSlicePdf(*this,newname); }
 	inline virtual ~RooSlicePdf() { if(histo_) { delete histo_; } }
@@ -27,7 +30,9 @@ public:
 protected:
 	/// std::shared_ptr<TH2> histo_;
 	TH2 * histo_;
-	bool analyticIntegral_;
+	std::vector<double> widths_;
+	/// RooAbsPdf * pdf_;
+	/// RooRealProxy binw_;
 	RooRealProxy x_;
 	RooRealProxy p_;
 	

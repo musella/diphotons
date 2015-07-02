@@ -1,28 +1,29 @@
 {
 	    "pp" : { 
 	    	 "shape":"data", "norm":"mctruth_pp", 
-		 "template" : "template_pp"
+		 "template" : "template_pp",
+		  "weight_cut"   : "weight < 5.",
+		 "model_cats" : { "EBEB" : "moddijet" 
+		 }
 	    },
 	    "pf" : { 
 	    	 "shape":"template_pf", "norm":"mctruth_pf",
-		 "template" : "template_pf",
-		 "_template" : "template_mix_pf:kDSinglePho2D",
+		 "template" : "template_mix_pf:kDSinglePho2D",
 		 "shape_cats" : {  
 		 	      "EBHighR9" : "EBLowR9",
 			      "EEHighR9" : "EELowR9"
 		  },
 		  "add_sideband" : "pf",
-		  "weight_cut"   : "1"
+		  "weight_cut"   : "weight < 5."
 	    },	    
 	    "ff" : { 
 	    	 "shape":"template_pf", "norm":"mctruth_ff",
-		 "template" : "template_ff",
-		 "_template" : "template_mix_ff:kDSinglePho2D",
+		 "template" : "template_mix_ff:kDSinglePho2D",
 		 "shape_cats" : {  
 		 	      "EBHighR9" : "EBLowR9",
 			      "EEHighR9" : "EELowR9"
 		  },
 		  "add_sideband" : "pf",
-		  "weight_cut"   : "1"
+		  "weight_cut"   : "weight < 5."
 	    }	    
 }
