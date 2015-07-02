@@ -36,7 +36,7 @@ git fetch musella
 git co -b topic_${FLASHGG_TAG} ${FLASHGG_TAG} 
 
 cd ${CMSSW_BASE}/src
-bash flashgg/setup.sh | tee setup.log
+bash flashgg/setup.sh 2>&1 | tee flashgg/setup.log
 
 # add your own fork as a remote. Skip if you dont have one
 cd flashgg 
