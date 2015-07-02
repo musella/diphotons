@@ -2,7 +2,8 @@
 	    "pp" : { 
 	    	 "shape":"mctruth_pp", "norm":"mctruth_pp", 
 		 "template" : "template_pp",
-		 "weight_cut" : "weight < 5."
+		 "weight_cut" : "weight < 5.",
+		 "model" : "moddijet"
 	    },
 	    "pf" : { 
 	    	 "shape":"mctruth_pf", "norm":"mctruth_pf",

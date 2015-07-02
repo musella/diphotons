@@ -343,7 +343,7 @@ class TemplatesApp(PlotApp):
 
         for name in self.save_params_:
             val = cfg.get(name,None)
-            print name, val
+            print "Reading back saved parameter ", name, val
             if val:
                 setattr(options,name,val)
     
@@ -1763,8 +1763,8 @@ class TemplatesApp(PlotApp):
         if importToWs:
             self.workspace_.rooImport(data)
         return data
-    ## ------------------------------------------------------------------------------------------------------------
 
+    ## ------------------------------------------------------------------------------------------------------------
     def rooPdf(self,name):
         pdf = self.workspace_.pdf(name)
         if not pdf and self.store_new_:

@@ -2,7 +2,7 @@
 	    "pp" : { 
 	    	 "shape":"data", "norm":"mctruth_pp", 
 		 "template" : "template_pp",
-		  "weight_cut"   : "weight < 5.",
+		 "weight_cut"   : "weight < 5.",
 		 "model_cats" : { "EBEB" : "moddijet" 
 		 }
 	    },

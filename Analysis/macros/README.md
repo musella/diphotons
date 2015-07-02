@@ -81,6 +81,11 @@
 
 ### Running combine tool 
 
+### Using custom pdfs
+We have to run text2workspace.py by hand since combine forgets to pass the list of libraries to be loaded. eg:
+- `text2workspace.py -L libdiphotonsUtils  -m 1500  -o dataCard_grav_001_1500.root  dataCard_grav_001_1500.txt`
+- `combine -M ProfileLikelihood --expectSignal 1 --pvalue --significance -t -1  -m 1500 dataCard_grav_001_1500.root -L libdiphotonsUtils`
+
 ### Significance
 - `combine -M ProfileLikelihood --expectSignal 1 --significance -t -1 dataCard_full_analysis_anv1_v14_bkg_ws.txt`
 ### Limits

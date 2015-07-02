@@ -201,15 +201,14 @@ class CombineApp(TemplatesApp):
         options.components = options.bkg_shapes.keys()
         self.use_custom_pdfs_ = options.use_custom_pdfs
 
-        self.setup(options,args)
-
         # make sure that relevant 
         #  config parameters are read/written to the workspace
         self.save_params_.append("signals")
-
-    
         if options.fit_background or options.generate_datacard:
             self.save_params_.append("components")
+
+        self.setup(options,args)
+
         
         if options.generate_ws_bkgnbias:
             self.generateWsBkgnbias(options,args)
@@ -774,7 +773,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 else:
                     # otherwise just n_comp
                     norm = self.buildRooVar("%s_norm" %  (pdf.GetName()), [], importToWs=False ) 
-                    norm.setVal(reduced.sumEntries())
+                    norm.setVal(nreduced.sumEntries())
 
                 # fit
                 if not useAsimov:
@@ -788,7 +787,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                         fractions[comp].setConstant(True) # set constant by default
                 else:
                     norm.setVal(nreduced.sumEntries()) 
-
+                    
                 if add_sideband:
                     ## build normalization variable for sideband
                     sbnorm = self.buildRooVar("%s_norm" %  (sbpdf.GetName()), [], importToWs=False )
@@ -808,7 +807,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     templset = self.reducedRooData(ttreename, rooset, sel=weight_cut, redo=True, importToWs=False )
                     templset = templset.reduce(RooFit.Range("fullRange"))
                     templset.addColumn(templfunc)
-
+                    
                     ## fill TH2 of template vs observable
                     xb = roobs.getBinning("templateBinning%s"%cat)
                     yb = rootempl.getBinning("templateBinning%s"%cat)
@@ -905,7 +904,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         
         if (not isNameProvided and options.output_file != None):
             isPrefix = True
-            prefix_output = options.output_file
+            prefix_output = options.output_file.replace(".root","")
         for signame,trees in options.signals.iteritems():
             self.workspace_ = ROOT.RooWorkspace("wtemplates","wtemplates")
             self.workspace_.rooImport = getattr(self.workspace_,"import")
