@@ -4,7 +4,8 @@
 #include "../interface/SimpleShapeCategoryOptimization.h"
 #include "../interface/DataSetFiller.h"
 #include "../interface/DataSetMixer.h"
-
+#include "../interface/RooPowLogPdf.h"
+#include "../interface/RooSlicePdf.h"
 
 #pragma link C++ defined_in "../interface/DataSetFiller.h";
 #pragma link C++ defined_in "../interface/DataSetMixer.h";
@@ -12,6 +13,8 @@
 #pragma link C++ defined_in "../interface/FunctionHelpers.h";
 #pragma link C++ defined_in "../interface/NaiveCategoryOptimization.h";
 #pragma link C++ defined_in "../interface/SimpleShapeCategoryOptimization.h";
+#pragma link C++ defined_in "../interface/RooPowLogPdf.h";
+#pragma link C++ defined_in "../interface/RooSlicePdf.h";
 
 #pragma link C++ class std::list<RooAbsData*>::iterator;
 

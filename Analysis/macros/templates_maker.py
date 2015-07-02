@@ -343,7 +343,7 @@ class TemplatesApp(PlotApp):
 
         for name in self.save_params_:
             val = cfg.get(name,None)
-            print name, val
+            print "Reading back saved parameter ", name, val
             if val:
                 setattr(options,name,val)
     
@@ -683,38 +683,46 @@ class TemplatesApp(PlotApp):
             self.autosave(True)
 
 
-## ------------------------------------------------------------------------------------------------------------
-    def histounroll_book(self,template_binning,isoargs_):
+    ## ------------------------------------------------------------------------------------------------------------
+    def histounroll_book(self,template_binning,args,importToWs=True,buildHistFunc=False):
+        print args
+        template_binning = array.array('d',template_binning)
         th2d=ROOT.TH2F("th2d","th2d",len(template_binning)-1,template_binning,len(template_binning)-1,template_binning)
         bin=0
         binslist=[]
-        isoargs=ROOT.RooArgList(isoargs_)
+        isoargs=ROOT.RooArgList(args)
         #booking binslist
-     #   rootemplate_binning=ROOT.RooBinning(len(template_binning),template_binning,"rootemplate_binning")
         for b in range(1,len(template_binning)):
             for x in range(1,b+1):
                 bin+=1
-                binslist.append((x,b))
+                binslist.append((x,b))                
             for y in range (b-1,0,-1):
                 bin+=1
                 binslist.append((b,y))
-        ibin=0
+        unroll_widths=array.array('d',[])
         for bin1,bin2 in binslist:
-            th2d.SetBinContent(bin1,bin2,ibin+0.5)
-            ibin+=1
+            area = th2d.GetXaxis().GetBinWidth(bin1)*th2d.GetYaxis().GetBinWidth(bin2)
+            unroll_widths.append(area)
+        for ibin,bins in enumerate(binslist):
+            bin1,bin2=bins
+            th2d.SetBinContent(bin1,bin2,
+                               ## (unroll_binning[ibin]+unroll_binning[ibin+1])*0.5)
+                               ibin+0.5)
         hist2d_forUnrolled=ROOT.RooDataHist("hist2d_forUnrolled","hist2d_forUnrolled",ROOT.RooArgList(isoargs), th2d)
-        #ct=ROOT.TCanvas("ct","ct",1000,1000) 
-        #ct.cd()
-        ##th2d.Draw("TEXT")
-        #hist2d_forUnrolled.createHistogram( "book_roodatahist",isoargs[0],RooFit.Binning("rootemplate_binning"),RooFit.YVar(isoargs[1],RooFit.Binning("rootemplate_binning"))).Draw("TEXT")
-        #self.keep( [th2d,ct] )
-        #self.autosave(True)
 
-        
-        self.workspace_.rooImport(hist2d_forUnrolled,ROOT.RooFit.RecycleConflictNodes())
+        self.keep(hist2d_forUnrolled)
+            
+        ret=hist2d_forUnrolled
+        if buildHistFunc:
+            ret=ROOT.RooHistFunc(buildHistFunc,buildHistFunc,args,hist2d_forUnrolled)
+            self.keep(ret)
+            
+        if importToWs:
+            self.workspace_.rooImport(ret,ROOT.RooFit.RecycleConflictNodes())
+            
+        return ret,unroll_widths
 
-## ------------------------------------------------------------------------------------------------------------
-
+    ## ------------------------------------------------------------------------------------------------------------
     def massquantiles(self,dataset,massargs,mass_binning,mass_split):
         #print "splitByBin for dataset", dataset.GetName()
         #massH=ROOT.TH1F("%s_massH" % dataset.GetName()[-17:],"%s_massH" % dataset.GetName()[-17:],len(mass_binning)-1,mass_binning)
@@ -1758,7 +1766,6 @@ class TemplatesApp(PlotApp):
     def reducedRooData(self,name,rooset,binned=False,weight="weight",sel=None,redo=False,importToWs=True):
         data = self.rooData("reduced_%s" % name)
         if not data or redo:
-            print "create rooData"
             data = self.rooData(name,rooset=rooset,weight=weight,sel=sel,redo=redo)
             if binned:
                 data = data.binnedClone("reduced_%s" % name,"reduced_%s" % name)
@@ -1767,8 +1774,8 @@ class TemplatesApp(PlotApp):
         if importToWs:
             self.workspace_.rooImport(data)
         return data
-    ## ------------------------------------------------------------------------------------------------------------
 
+    ## ------------------------------------------------------------------------------------------------------------
     def rooPdf(self,name):
         pdf = self.workspace_.pdf(name)
         if not pdf and self.store_new_:

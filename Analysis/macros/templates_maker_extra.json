@@ -1,0 +1,237 @@
+{
+    "#" :"List of fits.",
+    "#" :"General form is <fit-name> : { <fit-config> }",
+        
+    "fits" : {
+        "1D" : {
+            "#" : "1D fit: same as above, with (possible) additional loop over legs",
+            "ndim"       : 1,
+            "bins"       : [ "mass", [500.0,1300.0] ],
+		"dataset_variables" : ["mass [-1.0,0.0,20.0,50.0,100.0,200.0,500.0,13000.0]","phoPt := %(leg)sPt","phoEta := %(leg)sEta","phoScEta := %(leg)sScEta", "phoPhi := %(leg)sPhi","phoEnergy := %(leg)sPt*cosh(%(leg)sEta)","phoPhoIso := %(leg)sPhoIso",
+				       "phoSigmaIeIe := %(leg)sSigmaIeIe",
+				       "phoGenIso := %(leg)sGenIso", "phoMatchType := %(leg)sMatchType",
+                                        "phoPhoIso:= %(leg)sPhoIso",
+                                        "phoPhoIsoEA:= %(leg)sPhoIsoEA"
+				       ],
+            "template_binning" : [-1.0, 0.0,0.1, 1.0, 4.0,9.0, 15.0 ],
+            "components" : ["p", "f"],
+            "store_trees" : true,	
+
+            "#" : "loop over legs defined here",
+            "#" : " %(leg)s replaced with these values",
+            "legs" : ["lead","sublead"],
+                
+            "categories" : { 
+                "EBEB" : { 
+                    "src" : "EBEB",
+                        "fill" : { "1" : ["%(leg)sChIso"] }
+                }, 
+                "eta_inclusive" : { 
+                    "src" : "eta_inclusive",
+                        "fill" : { "1" : ["%(leg)sChIso"] }
+                }, 
+                "EBEE" : {
+                    "src" : "notEBEB",
+                        "fill" : { "%(leg)sIsEB" : ["%(leg)sChIso"] }
+
+                },
+                "EEEB" : {
+                    "src" : "notEBEB",
+                        "fill" : { "! %(leg)sIsEB" : ["%(leg)sChIso"] }
+
+                }
+            },
+            "truth_selection" : {
+                "p" : "%(leg)sPrompt",
+                "f" : "%(leg)sFake"
+            },
+            "templates" : {
+                "p" : {
+                    "sel" : "cicNoChIso",
+                    "dataset" : "data",
+                        "fill_categories" : { 
+                            "EBEB" : { "%(leg)sPhoIsoEB" : ["%(leg)sRndConeChIso"] },
+                            "EBEE" : { "%(leg)sPhoIsoEB" : ["%(leg)sRndConeChIso"] },
+                            "EEEB" : { "! %(leg)sPhoIsoEE" : ["%(leg)sRndConeChIso"] },
+                            "eta_inclusive" : { "%(leg)sPhoIsoEB ||%(leg)sPhoIsoEE" : ["%(leg)sRndConeChIso"] }
+                    }
+                },
+                "f" : { 
+                    "sel" : "cicNoChIsoSingleSB",
+                        "fill_categories" : { 
+                        "EBEB" : { "%(leg)sIsSB                 " : ["%(leg)sChIso"] },
+                        "EBEE" : { "%(leg)sIsSB &&   %(leg)sIsEB" : ["%(leg)sChIso"] },
+			"EEEB" : { "%(leg)sIsSB && ! %(leg)sIsEB" : ["%(leg)sChIso"] },
+                        "eta_inclusive" : { "%(leg)sIsSB" : ["%(leg)sChIso"] }
+                    }
+                },
+                "f1" : { 
+                    "sel" : "cicNoChIsoSingleSB",
+                        "fill_categories" : { 
+                        "EBEB" : { "TMath::Even(event) && %(leg)sIsSB &&                  %(leg)sSigmaIeIe>0.012" : ["%(leg)sChIso"] },
+                        "EBEE" : { "TMath::Even(event) && %(leg)sIsSB &&   %(leg)sIsEB && %(leg)sSigmaIeIe>0.012" : ["%(leg)sChIso"] },
+                        "EEEB" : { "TMath::Even(event) && %(leg)sIsSB && ! %(leg)sIsEB && %(leg)sSigmaIeIe>0.035" : ["%(leg)sChIso"] },
+                        "eta_inclusive" : { "TMath::Even(event) && %(leg)sIsSB" : ["%(leg)sChIso"] }
+                    }
+                },
+                "f2" : { 
+                    "sel" : "cicNoChIsoSingleSB",
+                        "fill_categories" : { 
+                        "EBEB" : { "! TMath::Even(event) && %(leg)sIsSB &&                  %(leg)sSigmaIeIe>0.012" : ["%(leg)sChIso"] },
+                        "EBEE" : { "! TMath::Even(event) && %(leg)sIsSB &&   %(leg)sIsEB && %(leg)sSigmaIeIe>0.012" : ["%(leg)sChIso"] },
+			    "EEEB" : { "! TMath::Even(event) && %(leg)sIsSB && ! %(leg)sIsEB && %(leg)sSigmaIeIe>0.035" : ["%(leg)sChIso"] },
+			"eta_inclusive" : { "!TMath::Even(event) && %(leg)sIsSB" : ["%(leg)sChIso"] }
+                    }
+                }
+            }
+        }
+    },
+
+    "#" : "---------------------------------------------------------------------------------------------------------------------",
+    "#" : "Template mixing                                                                                                      ",
+    "#" : "---------------------------------------------------------------------------------------------------------------------",
+    "_mix" : { 
+	"_kDClosure2D" : {
+	    "target" : "2D",
+		"ptLeadMin" : 100.0, "ptSubleadMin" : 100.0, "massMin" : 200.0,
+		"pt" : "phoPt", "eta" : "phoEta", "phi" : "phoPhi", "energy" : "phoEnergy",
+		"_sources" : { 
+		"pp" : [ "1D:mctruth:p", "1D:mctruth:p" ]
+		    }, 
+		"sources" : { 
+		"pf" : [ "1D:p", "1D:f" ]
+		    }, 
+		"_sources" : { 
+		"pf" : [ "1D:mctruth:p", "1D:mctruth:f" ]
+		    }, 
+		"replace" : "pho",
+		"type" : "kdtree",
+		    
+		"_fill_categories" : {
+		    "EBEE" : { "legs" : ["eta_inclusive","eta_inclusive"], "rndswap" : false, "nNeigh" : 10, "matchWithThreshold" : false,
+			    "useCdfDistance" : true, "targetFraction" : 5e-2, "maxWeight" : 0.1, "rndmatch":0.9,
+			    "axesWeights" : [10.0,1.0,-1.0],
+			    "match1"  : ["log(phoPt)" ,"TMath::Abs(phoScEta)","TMath::Abs(phoScEta)<1.5"    ], 
+			    "match2"  : ["log(phoPt)" ,"TMath::Abs(phoScEta)","TMath::Abs(phoScEta)<1.5"    ], 
+			    "target1" : [
+					 "log((TMath::Abs(leadScEta)<TMath::Abs(subleadScEta))*leadPt       + (TMath::Abs(leadScEta)>=TMath::Abs(subleadScEta))*subleadPt)",
+					 "(TMath::Abs(leadScEta)<TMath::Abs(subleadScEta))*TMath::Abs(leadScEta)    + (TMath::Abs(leadScEta)>=TMath::Abs(subleadScEta))*TMath::Abs(subleadScEta)",
+					 "((TMath::Abs(leadScEta)<TMath::Abs(subleadScEta))*TMath::Abs(leadScEta)    + (TMath::Abs(leadScEta)>=TMath::Abs(subleadScEta))*TMath::Abs(subleadScEta))<1.5"
+					 ],
+			    "target2" : [
+					 "log((TMath::Abs(leadScEta)<TMath::Abs(subleadScEta))*subleadPt    + (TMath::Abs(leadScEta)>=TMath::Abs(subleadScEta))*leadPt)",
+					 "(TMath::Abs(leadScEta)<TMath::Abs(subleadScEta))*TMath::Abs(subleadScEta) + (TMath::Abs(leadScEta)>=TMath::Abs(subleadScEta))*TMath::Abs(leadScEta)[0.3]",
+					 "((TMath::Abs(leadScEta)<TMath::Abs(subleadScEta))*TMath::Abs(subleadScEta) + (TMath::Abs(leadScEta)>=TMath::Abs(subleadScEta))*TMath::Abs(leadScEta))<1.5"
+					 ]
+			    }
+		},
+		"_fill_categories" : {
+			"EBEB" : { "legs" : ["EBEB","EBEB"], "rndswap" : true, "nNeigh" : 25, "matchWithThreshold" : false,
+			    "useCdfDistance" : true, "targetFraction" : 1e-3, "maxWeight" : 0.005, "rndmatch":0.8,
+				"axesWeights" : [4.0,1.0,1.0],
+			    "match1"  : ["phoPhoIso","log(phoPt)" ,"TMath::Abs(phoScEta)"    ], 
+			    "match2"  : ["phoPhoIso","log(phoPt)" ,"TMath::Abs(phoScEta)"    ], 
+				"target1" : ["leadPhoIso",
+					 "log(leadPt)",
+					 "TMath::Abs(leadScEta)"
+					 ],
+			    "target2" : ["subleadPhoIso",
+					 "log(subleadPt)",
+					 "TMath::Abs(subleadScEta)"
+					 ]			
+				}
+		},
+		"fill_categories" : {
+		    "EBEE" : { "legs" : ["eta_inclusive","eta_inclusive"], "rndswap" : false, "nNeigh" : 25, "matchWithThreshold" : false,
+			    "useCdfDistance" : true, "targetFraction" : 1e-3, "maxWeight" : 0.005, "rndmatch":0.8,
+			    "axesWeights" : [4.0,1.0,1.0,-1.0],
+			    "match1"  : ["phoPhoIso","log(phoPt)" ,"TMath::Abs(phoScEta)","TMath::Abs(phoScEta)<1.5"    ], 
+			    "match2"  : ["phoPhoIso","log(phoPt)" ,"TMath::Abs(phoScEta)","TMath::Abs(phoScEta)<1.5"    ], 
+			    "target1" : ["(TMath::Abs(leadScEta)<TMath::Abs(subleadScEta))*leadPhoIso + (TMath::Abs(leadScEta)>=TMath::Abs(subleadScEta))*subleadPhoIso[10]",
+					 "log((TMath::Abs(leadScEta)<TMath::Abs(subleadScEta))*leadPt       + (TMath::Abs(leadScEta)>=TMath::Abs(subleadScEta))*subleadPt)",
+					 "(TMath::Abs(leadScEta)<TMath::Abs(subleadScEta))*TMath::Abs(leadScEta)    + (TMath::Abs(leadScEta)>=TMath::Abs(subleadScEta))*TMath::Abs(subleadScEta)",
+					 "((TMath::Abs(leadScEta)<TMath::Abs(subleadScEta))*TMath::Abs(leadScEta)    + (TMath::Abs(leadScEta)>=TMath::Abs(subleadScEta))*TMath::Abs(subleadScEta))<1.5"
+					 ],
+			    "target2" : ["(TMath::Abs(leadScEta)<TMath::Abs(subleadScEta))*subleadPhoIso + (TMath::Abs(leadScEta)>=TMath::Abs(subleadScEta))*leadPhoIso[10]",
+					 "log((TMath::Abs(leadScEta)<TMath::Abs(subleadScEta))*subleadPt    + (TMath::Abs(leadScEta)>=TMath::Abs(subleadScEta))*leadPt)",
+					 "(TMath::Abs(leadScEta)<TMath::Abs(subleadScEta))*TMath::Abs(subleadScEta) + (TMath::Abs(leadScEta)>=TMath::Abs(subleadScEta))*TMath::Abs(leadScEta)",
+					 "((TMath::Abs(leadScEta)<TMath::Abs(subleadScEta))*TMath::Abs(subleadScEta) + (TMath::Abs(leadScEta)>=TMath::Abs(subleadScEta))*TMath::Abs(leadScEta))<1.5"
+					 ]
+			    }
+		},
+		"_fill_categories" : {
+		    "EBEB" : { "legs" : ["EBEB","EBEB"], "rndswap" : true, "nNeigh" : 25, "matchWithThreshold" : false,
+			    "useCdfDistance" : true, "targetFraction" : 5e-2, "maxWeight" : 0.1,
+			    "axesWeights" : [1.0,1.0],
+			    "match1"  : ["log(phoPt)"    ,"TMath::Abs(phoScEta)"    ], 
+			    "match2"  : ["log(phoPt)"    ,"TMath::Abs(phoScEta)"    ], 
+			    "target1" : ["log(leadPt)"   ,"TMath::Abs(leadScEta)[0.2]"   ], 
+			    "target2" : ["log(subleadPt)","TMath::Abs(subleadScEta)[0.2]"]
+			    }
+		},
+		"_fill_categories" : {
+		    "EBEB" : { "legs" : ["EBEB","EBEB"], "rndswap" : true, "nNeigh" : 10, "nMinNeigh" : 10, "matchWithThreshold" : false,
+			    "useCdfDistance" : true, "targetFraction" : 1e-2,
+			    "axesWeights" : [10.0,1.0,-1.0],
+			    "match1"  : ["nvtx","log(phoPt)"    ,"TMath::Abs(phoScEta)"    ], 
+			    "match2"  : ["nvtx","log(phoPt)"    ,"TMath::Abs(phoScEta)"    ], 
+			    "target1" : ["nvtx","log(leadPt)"   ,"TMath::Abs(leadScEta)[0.2]"   ], 
+			    "target2" : ["nvtx","log(subleadPt)","TMath::Abs(subleadScEta)[0.2]"]
+			    }
+		}
+	}
+
+    },
+    "mix" : {
+    },
+    "comparisons" : {
+	"_mixClosure" : { "fit" : "2D",
+		"templates" : { "mix:kDClosure2D" : {} },
+                "components": [["pf",{"2D":{},"mix:kDClosure2D" : {} }]], "categories" : ["EBEB","EBEE"],
+                "prepfit": true,
+                "weight_cut": "weight < 5.",
+		"redo" : true,
+		"doDataMc" : false, "doMcTruth" : true,
+		    "template_binning" : [ 0.0,0.1,5.0,15.0],
+		    "_template_binning" : [ 0.0,0.1,1.0,2.0,4.0,5.0,8.0,15.0],
+		"mass_binning" :"mass[13000,0.0,13000.0]"
+		},
+	"fit2DTruth" : { "fit" : "2D",
+		"templates" : { "mix:kDSinglePho2D" : {},"2D":{} },
+                "_components": [["pf",{"2D":{},"mix:kDSinglePho2D" : {} }]], 
+                "categories" : ["EBEB","EBEE"],
+                "components": ["pf","ff",  ["pp",{ "2D" : {}}] 
+                ],
+                "prepfit": true,
+                "weight_cut": "weight < 5.",
+		"redo" : true,
+		"doDataMc" : false, "doMcTruth" : true,
+                "template_binning" : [ 0.0,0.1,5.0,15.0],
+ 
+                "lowerLimitSigRegion2D": "0.", 
+                "_upperLimitSigRegion2D": "4.", 
+                "_upperLimitSigRegion1D": "5.", 
+                "upperLimitSigRegion2D": "9.", 
+                "upperLimitSigRegion1D": "15.", 
+		"mass_binning" :"mass[13000,0.0,13000.0]"
+		},
+	"_fit1DTruth" : { "fit" : "1D",
+                "components" : [ "f" ],
+		"templates" : {"singlePho" : { "EBEB" : "EB", "EBEE" : "EB", "EEEB" : "EE" ,"eta_inclusive":"eta_inclusive" }
+                                 
+                            
+                            },
+                "prepfit": false,
+		"redo" : true,
+		"weight_cut": "weight < 1000.",
+		"doDataMc" : false, "doMcTruth" : true,
+                "_template_binning" : [ 0.0,0.1, 5.0,15.0 ],
+                "template_binning" : [ 0.0,0.1, 1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0,10.0,11.0,12.0,13.0,14.0,15.0 ],
+		"mass_binning" :"mass[13000,0.0,13000.0]"
+		}
+	},
+   "nominalFit":{
+    },
+   "plotPurity":{
+    }    
+}

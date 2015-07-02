@@ -346,7 +346,7 @@ class BiasApp(CombineApp):
 
                     if options.plot_toys_fits:
                         slabel = "%s_%s_%1.0f_%1.0f" % ( cat, model, options.fit_range[0], options.fit_range[1] )
-                        self.plotFit(options,dset,pdf,roobs,toyname,slabel,bias_funcs=options.bias_param)
+                        self.plotBkgFit(options,dset,pdf,roobs,toyname,slabel,bias_funcs=options.bias_param)
 
                     for test in testRanges:
                         if options.verbose:
