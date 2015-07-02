@@ -470,10 +470,6 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         rooNdata = {}
         sidebands = {}
 
-        #TODO ROOHIst func
-
-        #from workspace binning 
-        #and extend rooset with iso1 2
 
         for cat in fit["categories"]:
             treename = "%s_%s_%s" % (options.data_source,options.fit_name,cat)
