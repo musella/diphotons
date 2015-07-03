@@ -555,7 +555,6 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             rooset.add(rootempls)
                         
         self.workspace_.rooImport(roobs)
-        
         # import data dataset
         for cat in fit["categories"]:
             treename = "%s_%s_%s" % (options.data_source,options.fit_name,cat)
@@ -908,6 +907,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         for nam,val in sidebands.iteritems():
             fit["sidebands"]["%s_control" % nam] = list(val)
             
+        self.workspace_.rooImport(rootempl)
+        rootempl.Print()
         # done
         self.saveWs(options)
        
@@ -940,7 +941,13 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 signame = options.signal_name
 
             roobs = self.buildRooVar(*(self.getVar(options.observable)), recycle=False, importToWs=True)
-            rootempl = self.buildRooVar(*(self.getVar("templateNdim2_unroll")), recycle=False, importToWs=True)
+            #rootempl = self.buildRooVar(*(self.getVar("templateNdim2_unroll")), recycle=False, importToWs=True)
+            rootemplname, rootempl_binning = self.getVar("templateNdim2_unroll")
+          #  unrol_binning = array.array( 'd', [ float(bound) for bound in range(nb+1) ] )
+            print rootemplname
+            print rootempl_binning
+            rootempl = self.buildRooVar(rootemplname,rootempl_binning, recycle=False, importToWs=True)
+            rootempl.Print()
             #roobs.setBins(5000,"cache")
             roobs.setRange("fullRange",roobs.getMin(),roobs.getMax())
             roowe = self.buildRooVar("weight",[])        
@@ -1025,11 +1032,40 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                         print "Integral templpdf     :", ppPdf.createIntegral(ROOT.RooArgSet(rootempl,roobs),"templateBinning%s"%cat).getVal()
                         print "Integral signal pdf    :", binnedPdf.createIntegral(ROOT.RooArgSet(roobs),"templateBinning%s"%cat).getVal()
                         print "Integral combined pdf    :", signalPdf.createIntegral(ROOT.RooArgSet(rootempl,roobs),"templateBinning%s"%cat).getVal()
+                        rootempl.Print() 
+                
+                    self.plotBkgFit(options,binned,ppPdf,rootempl,"template_proj_pp_%s" % (cat),poissonErrs=True,logy=False,logx=False,
+                                    plot_binning=list(rootempl_binning),
+                                    opts=[RooFit.ProjWData(ROOT.RooArgSet(roobs),binned)], bias_funcs={}, forceSkipBands=True )
                     
-                    self.workspace_.rooImport(signalPdf,RooFit.RecycleConflictNodes())
-#TODO all the rest fit, plot fit etc 
+                    #self.plotBkgFit(options,plbinned,pdf,rootempl,"template_cond_%s%s" % (comp,cat),poissonErrs=True,logy=False,logx=False,
+                                 #   plot_binning=list(unrol_binning), bias_funcs={} )
+                    
+                ## plot the fit result
+                   # self.plotBkgFit(options,plreduced,pdf,roobs,"%s%s" % (comp,cat),poissonErrs=True)
+
+                ## normalization has to be called <pdfname>_norm or combine won't find it
+            #    if options.norm_as_fractions:
+                    # normalization is n_tot * frac_comp
+             #       norm = ROOT.RooProduct("%s_norm" %  (pdf.GetName()),"%s_norm" %  (pdf.GetName()),
+              #                                ROOT.RooArgList(rooNdata[cat],fractions[comp]))
+               # else:
+                #    # otherwise just n_comp
+                 #   norm = self.buildRooVar("%s_norm" %  (pdf.GetName()), [], importToWs=False ) 
+                 #   norm.setVal(nreduced.sumEntries())
+               # pdf.fitTo(binned,RooFit.Strategy(2),*fitops)
+               # if options.norm_as_fractions:
+               #     if comp in setme:
+                #        fractions[comp].setVal(nreduced.sumEntries()/ndata[cat])
+                 #       fractions[comp].setConstant(True) # set constant by default
+              #  else:
+               #     norm.setVal(nreduced.sumEntries()) 
+                
                 
 
+                self.workspace_.rooImport(binnedPdf,RooFit.RecycleConflictNodes())
+                self.workspace_.rooImport(signalPdf,RooFit.RecycleConflictNodes())
+                #importme.append([norm]) ## import this only after we run on all components, to make sure that all fractions are properly set
             list_fwhm[signame] = sublist_fwhm
             self.saveWs(options)
                         
@@ -1057,8 +1093,9 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 idim = int(subname[-1])
                 obs.SetTitle("template^{%d}_{%dD}" % (idim,ndim) )
         doBands = options.plot_fit_bands and not forceSkipBands
-        
+        obs.Print() 
         frame = obs.frame()
+        print frame
         resid  = obs.frame()
         invisible = []
         ## dataopts = [,RooFit.MarkerSize(1)]
@@ -1091,13 +1128,18 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         if doBands:
             invisible.append(RooFit.Invisible())
         print "Plotting dataset"
+        dset.Print()
+        print frame
+        print invisible
+        return
         dset.plotOn(frame,*(dataopts+invisible))
         print "Plotting pdf....",
+        pdf.Print()
         pdf.plotOn(frame,*(curveopts+invisible))
         print "done"
         hist   = frame.getObject(int(frame.numItems()-2))
         fitc   = frame.getObject(int(frame.numItems()-1))
-        
+
         if extra:
             extra.plotOn(frame,RooFit.LineColor(ROOT.kGreen))
             
@@ -1139,7 +1181,6 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             resid.addObject(rtwosigma,"E3")
             resid.addObject(ronesigma,"E3")
             print "done"
-
         hresid = frame.residHist(hist.GetName(),fitc.GetName(),True)
         resid.addPlotable(hresid,"PE")
         
