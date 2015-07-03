@@ -733,7 +733,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     print "enlarged fit range : %1.4g-%1.4g" % ( asimobs.getMin(), asimobs.getMax() )
                     print "final    fit range : %1.4g-%1.4g" % ( roobs.getMin(), roobs.getMax() )
                     if weight_cut:
-                        adset = self.reducedRooData(treename,rooset,sel=weight_cut,redo=True,importToWs=False)
+                        adset = self.reducedRooData(treename,rooset,weight="%s * weight" % options.luminosity,sel=weight_cut,redo=True,importToWs=False)
                     else:
                         adset = dset
                     ## fit pdf to asimov dataset
@@ -762,7 +762,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     if useAsimov:
                         dset = uncut
                     else:
-                        dset = self.reducedRooData(treename,rooset,sel=weight_cut,redo=True,importToWs=False)                    
+                        dset = self.reducedRooData(treename,rooset,weight="%s * weight" % options.luminosity,sel=weight_cut,redo=True,importToWs=False)                    
 
                 ## reduce datasets to required range
                 reduced  = dset.reduce(RooFit.SelectVars(rooset),RooFit.Range("fullRange"))
@@ -820,7 +820,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     if ":" in tsource:
                         tsource, tfitnam = tsource.split(":")
                     ttreename = "%s_%s_%s" % ( tsource, tfitnam, cat )
-                    templset = self.reducedRooData(ttreename, rooset, sel=weight_cut, redo=True, importToWs=False )
+                    templset = self.reducedRooData(ttreename, rooset, weight="%s * weight" % options.luminosity, sel=weight_cut, redo=True, importToWs=False )
                     templset = templset.reduce(RooFit.Range("fullRange"))
                     templset.addColumn(templfunc)
                     
