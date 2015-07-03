@@ -130,6 +130,10 @@ class TemplatesApp(PlotApp):
                                     default=[],action="callback",callback=optpars_utils.ScratchAppend(),
                                     help="workspace input file.",
                                     ),
+                        make_option("--ws-dir","-w",dest="ws_dir",action="store",type="string",
+                                    default=None,
+                                    help="Folder to be used to read and write workspaces"
+                                    ),
                         make_option("--output-file","-o",dest="output_file",action="store",type="string",
                                     default=None,
                                     help="Output file.",
@@ -250,10 +254,10 @@ class TemplatesApp(PlotApp):
         if options.read_ws and options.output_file == options.read_ws:
             name    = options.output_file
             tmpname = name.replace(".root","_tmp.root")
-            fout    = self.open(tmpname,"recreate")
+            fout    = self.open(tmpname,"recreate",folder=options.ws_dir)
             self.rename_  = (tmpname,name)
         else:
-            fout = self.open(options.output_file,"recreate")
+            fout = self.open(options.output_file,"recreate",folder=options.ws_dir)
         return fout
 
     ## ------------------------------------------------------------------------------------------------------------
@@ -314,8 +318,11 @@ class TemplatesApp(PlotApp):
     ## ------------------------------------------------------------------------------------------------------------
     def mergeWs(self,options,read_ws):
         
-            
-        fin = self.open(read_ws)
+        if os.path.dirname(read_ws) == "" and not os.path.exists(read_ws):
+            print "Warning: %s does not exist. I will look for it in %s" % ( read_ws, options.ws_dir )
+            fin = self.open(read_ws,folder=options.ws_dir)
+        else:
+            fin = self.open(read_ws)
         cfg = json.loads( str(fin.Get("cfg").GetString()) )
         for name,val in cfg["fits"].iteritems():
             options.fits[name] = val
@@ -2029,3 +2036,5 @@ class TemplatesApp(PlotApp):
 if __name__ == "__main__":
     app = TemplatesApp()
     app.run()
+
+#  LocalWords:  workspaces
