@@ -69,7 +69,7 @@
 ### Semi-parametric templates vs isolation
 - `./templates_maker.py --load templates_maker.json,templates_maker_fits.json --mix-templates --input-dir  ~musella/public/workspace/exo/full_analysis_anv1_v19  -o full_analysis_anv1_v19_final_ws_semiparam.root --only-subset 2D,singlePho`
 
-- `./combine_maker.py --fit-name 2D  --fit-background   --observable mgg[11460,270,6000] --read-ws full_analysis_anv1_v19_final_ws_semiparam.root -O ~/www/exo/full_analysis_anv1_v19/test_bkg_fit_semiparam_split_shapes -o full_analysis_anv1_v19_bkg_ws_semiparam_truth_shapes.root  --use-templates  --bkg-shapes bkg_model/truth_shapes.json --plot-norm-dataset --plot-binning '191,270,6000'`
+- `./combine_maker.py --fit-name 2D  --fit-background   --observable mgg[11460,270,6000] --read-ws full_analysis_anv1_v19_final_ws_semiparam.root -O ~/www/exo/full_analysis_anv1_v19/test_bkg_fit_semiparam_split_shapes -o full_analysis_anv1_v19_bkg_ws_semiparam_split_shapes.root  --use-templates  --bkg-shapes bkg_model/split_shapes.json --plot-norm-dataset --plot-binning '191,270,6000'`
 - `./combine_maker.py --fit-name 2D  --fit-background   --observable mgg[11460,270,6000] --read-ws full_analysis_anv1_v19_final_ws_semiparam.root -O ~/www/exo/full_analysis_anv1_v19/test_bkg_fit_semiparam_truth_shapes -o full_analysis_anv1_v19_bkg_ws_semiparam_truth_shapes.root  --use-templates  --bkg-shapes bkg_model/truth_shapes.json --plot-norm-dataset --plot-binning '191,270,6000'`
 - Notes
   - `bkg_model/truth_shapes.json` uses MC truth for mgg shape, but data-driven templates.

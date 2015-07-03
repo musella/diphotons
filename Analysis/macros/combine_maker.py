@@ -50,6 +50,9 @@ class CombineApp(TemplatesApp):
                         make_option("--use-templates",dest="use_templates",action="store_true",default=False,
                                     help="Use hybrid fit",
                                     ),                        
+                        make_option("--use-templates-forSignal",dest="use_templates_forSignal",action="store_true",default=False,
+                                    help="Use histogram from generate SignalDataset and templates from pp (background) template",
+                                    ),                        
                         make_option("--obs-template-binning",dest="obs_template_binning",action="callback",callback=optpars_utils.Load(scratch=True),
                                     default={ "EBEB" : [270,300.,350.,400.,6000.],
                                               "EBEE" : [270,300.,350.,400.,6000.]
@@ -912,6 +915,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 signame = options.signal_name
 
             roobs = self.buildRooVar(*(self.getVar(options.observable)), recycle=False, importToWs=True)
+            rootempl = self.buildRooVar(*(self.getVar("templateNdim2_unroll")), recycle=False, importToWs=True)
             #roobs.setBins(5000,"cache")
             roobs.setRange("fullRange",roobs.getMin(),roobs.getMax())
             roowe = self.buildRooVar("weight",[])        
@@ -940,7 +944,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 binned = reduced.binnedClone()
                 binned.SetName("signal_%s_%s"% (signame,cat))
                 self.workspace_.rooImport(binned)
-                
+
                 if options.compute_fwhm:
                     if len(options.fwhm_output_file) != 0:
                         file_fwhm = open(options.fwhm_output_file,"a")
@@ -984,6 +988,22 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                         print
                         print("Did not succeed to compute the FWHM")
                         print
+                if options.use_templates_forSignal:
+                    print rootempl
+                    ppPdf=self.rooPdf( "model_%s_pp_%s" %(rootempl.GetName(),cat) )
+                    ppPdf.Print()
+                    binnedPdf=ROOT.RooHistPdf("%s_pdf"% binned.GetName(),"%s_pdf"% binned.GetName(),ROOT.RooArgSet(roobs),binned)
+                    signalPdf = ROOT.RooProdPdf("model_signal%s" % (cat), "model_signal%s" % (cat), 
+                                          binnedPdf, ppPdf )
+                    
+                    if options.verbose:
+                        print "Integral templpdf     :", ppPdf.createIntegral(ROOT.RooArgSet(rootempl,roobs),"templateBinning%s"%cat).getVal()
+                        print "Integral signal pdf    :", binnedPdf.createIntegral(ROOT.RooArgSet(roobs),"templateBinning%s"%cat).getVal()
+                        print "Integral combined pdf    :", signalPdf.createIntegral(ROOT.RooArgSet(rootempl,roobs),"templateBinning%s"%cat).getVal()
+                    
+                    self.workspace_.rooImport(signalPdf,RooFit.RecycleConflictNodes())
+#TODO all the rest fit, plot fit etc 
+                
 
             list_fwhm[signame] = sublist_fwhm
             self.saveWs(options)
@@ -993,9 +1013,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 break
         if options.compute_fwhm:
             json_output = json.dumps(list_fwhm, indent=4)
-            file_fwhm.write("%s\n" % json_output)
-  
-        
+            file_fwhm.write("%s\n" % json_output) 
     ## ------------------------------------------------------------------------------------------------------------
     def plotBkgFit(self,options,dset,pdf,obs,label,blabel=None,extra=None,bias_funcs=None,poissonErrs=True,plot_binning=None,logx=True,logy=True,
                    opts=[],forceSkipBands=False):
