@@ -79,6 +79,9 @@
   - `--template-binnning <binning>` overwrites the default template binning
   - `--plot-fit-bands --fast-bands` adds uncertainties bands on the models
 
+### All in one 
+- `./combine_maker.py --fit-name 2D  --fit-background --observable mgg[11460,270,6000] --read-ws full_analysis_anv1_v19_final_ws_semiparam.root -O ~/www/exo/full_analysis_anv1_v19/test_bkg_fit_semiparam_split_shapes -o full_analysis_anv1_v19_mgg_split_shapes.root  --bkg-shapes bkg_model/truth_shapes.json --plot-norm-dataset --plot-binning '191,270,6000' --generate-signal --generate-datacard --ws-dir full_analysis_anv1_v19_mgg_split_shapes --cardname datacard_full_analysis_anv1_v19_mgg_split_shapes.txt`
+
 ### Running combine tool 
 
 ### Using custom pdfs
