@@ -798,7 +798,12 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                         sbnorm.setVal(uncut.sumEntries())
                     else:
                         sbnorm.setVal(reduced.sumEntries())
-
+                        
+                # fit
+                if not useAsimov:
+                    # no need to refit if we used asimov dataset
+                    pdf.fitTo(binned,RooFit.Strategy(2),*fitops)
+                    
                 ## template pdfs
                 if options.use_templates:
                     ## get dataset for templates building
@@ -854,11 +859,6 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     # otherwise just n_comp
                     norm = self.buildRooVar("%s_norm" %  (pdf.GetName()), [], importToWs=False ) 
                     norm.setVal(nreduced.sumEntries())
-                    
-                # fit
-                if not useAsimov:
-                    # no need to refit if we used asimov dataset
-                    pdf.fitTo(binned,RooFit.Strategy(2),*fitops)
                     
                 ## set normalization to expected number of events in normalization region
                 if options.norm_as_fractions:
