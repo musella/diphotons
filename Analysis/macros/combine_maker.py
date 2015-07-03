@@ -209,6 +209,7 @@ class CombineApp(TemplatesApp):
         self.save_params_.append("signals")
         if options.fit_background or options.generate_datacard:
             self.save_params_.append("components")
+        self.save_params_.append("fit_name")
 
         self.setup(options,args)
 
@@ -235,8 +236,6 @@ class CombineApp(TemplatesApp):
         
         """
         
-        
-        
         fitname = options.fit_name
         fit = options.fits[fitname]
         sidebands = list(fit.get("sidebands",{}).keys())
@@ -244,18 +243,41 @@ class CombineApp(TemplatesApp):
         if (options.read_ws):
             options.background_root_file = options.read_ws
         isNameProvided = False
-                     
-        for signame,trees in options.signals.iteritems():
         
-            if (options.signal_name != None):
-                isNameProvided = True
-                signame = options.signal_name
-                 
-            if (not isNameProvided or (isNameProvided and options.signal_root_file == None)):
+        if (options.signal_name != None):
+            signals = [options.signal_name]
+            fname_prefix = None
+        else:
+            signals = options.signals.keys()
+            fname_prefix = options.signal_root_file.replace(".root","_") if options.signal_root_file else ""
+
+        ##for signame,trees in options.signals.iteritems():
+        for signame in signals:
+        
+            ### if (options.signal_name != None):
+            ###     isNameProvided = True
+            ###     signame = options.signal_name
+            ### 
+            ### if (not isNameProvided or (isNameProvided and options.signal_root_file == None)):
+            ###     options.signal_root_file = signame+".root" 
+
+            if fname_prefix:
+                options.signal_root_file = "%s%s.root" % ( fname_prefix, signame )
+            elif not options.signal_root_file:
                 options.signal_root_file = signame+".root" 
-            datacard = open("dataCard_"+signame+".txt","w+")
-            if(options.cardname != None):    
-                datacard = open(options.cardname,"w+")
+
+            ### if(options.cardname != None):    
+            ###     datacard = self.open(options.cardname,"w+")
+            ### else:
+            ###     datacard = self.open("dataCard_"+signame+".txt","w+")
+
+            cardname = "dataCard_"+signame+".txt"
+            if options.cardname:
+                if options.signal_name:
+                    cardname = options.cardname
+                else:
+                    cardname = "%s_%s.txt" % ( options.cardname.replace(".txt",""), signame )
+            datacard = self.open(cardname,"w+",folder=options.ws_dir)
             
                 
             datacard.write("""
@@ -767,29 +789,6 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     pdf.SetName("model_%s_%s%s" % (roobs.GetName(),comp,cat))
                 else:
                     pdf.SetName("model_%s%s" % (comp,cat))
-
-                ## normalization has to be called <pdfname>_norm or combine won't find it
-                if options.norm_as_fractions:
-                    # normalization is n_tot * frac_comp
-                    norm = ROOT.RooProduct("%s_norm" %  (pdf.GetName()),"%s_norm" %  (pdf.GetName()),
-                                              ROOT.RooArgList(rooNdata[cat],fractions[comp]))
-                else:
-                    # otherwise just n_comp
-                    norm = self.buildRooVar("%s_norm" %  (pdf.GetName()), [], importToWs=False ) 
-                    norm.setVal(nreduced.sumEntries())
-
-                # fit
-                if not useAsimov:
-                    # no need to refit if we used asimov dataset
-                    pdf.fitTo(binned,RooFit.Strategy(2),*fitops)
-                    
-                ## set normalization to expected number of events in normalization region
-                if options.norm_as_fractions:
-                    if comp in setme:
-                        fractions[comp].setVal(nreduced.sumEntries()/ndata[cat])
-                        fractions[comp].setConstant(True) # set constant by default
-                else:
-                    norm.setVal(nreduced.sumEntries()) 
                     
                 if add_sideband:
                     ## build normalization variable for sideband
@@ -845,6 +844,29 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     
                 ## plot the fit result
                 self.plotBkgFit(options,plreduced,pdf,roobs,"%s%s" % (comp,cat),poissonErrs=True)
+
+                ## normalization has to be called <pdfname>_norm or combine won't find it
+                if options.norm_as_fractions:
+                    # normalization is n_tot * frac_comp
+                    norm = ROOT.RooProduct("%s_norm" %  (pdf.GetName()),"%s_norm" %  (pdf.GetName()),
+                                              ROOT.RooArgList(rooNdata[cat],fractions[comp]))
+                else:
+                    # otherwise just n_comp
+                    norm = self.buildRooVar("%s_norm" %  (pdf.GetName()), [], importToWs=False ) 
+                    norm.setVal(nreduced.sumEntries())
+                    
+                # fit
+                if not useAsimov:
+                    # no need to refit if we used asimov dataset
+                    pdf.fitTo(binned,RooFit.Strategy(2),*fitops)
+                    
+                ## set normalization to expected number of events in normalization region
+                if options.norm_as_fractions:
+                    if comp in setme:
+                        fractions[comp].setVal(nreduced.sumEntries()/ndata[cat])
+                        fractions[comp].setConstant(True) # set constant by default
+                else:
+                    norm.setVal(nreduced.sumEntries()) 
                 
                 # import everything to the workspace
                 if options.freeze_params:
@@ -908,6 +930,9 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         if (not isNameProvided and options.output_file != None):
             isPrefix = True
             prefix_output = options.output_file.replace(".root","")
+            options.signal_root_file = options.output_file ## copy this in case we want to run --generate-datacard at the same time
+            if not options.cardname:
+                options.cardname = "dacard_%s.txt" % prefix_output
         for signame,trees in options.signals.iteritems():
             self.workspace_ = ROOT.RooWorkspace("wtemplates","wtemplates")
             self.workspace_.rooImport = getattr(self.workspace_,"import")
@@ -947,9 +972,9 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
 
                 if options.compute_fwhm:
                     if len(options.fwhm_output_file) != 0:
-                        file_fwhm = open(options.fwhm_output_file,"a")
+                        file_fwhm = self.open(options.fwhm_output_file,"a",folder=options.ws_dir)
                     else:
-                        file_fwhm = open("fwhm_%s.json" % fitname,"a")
+                        file_fwhm = self.open("fwhm_%s.json" % fitname,"a",folder=options.ws_dir)
                     # plot signal histogram and compute FWHM
                     canv = ROOT.TCanvas("signal_%s" % (cat),"signal" )
                     nBins = 1000

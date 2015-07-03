@@ -12,7 +12,7 @@ forked the flashgg and this repository.
 # change these to the values that you prefer
 PROJECT_AREA=EXO_7_4_0_pre9 
 CMSSW_VERSION=CMSSW_7_4_0_pre9 
-## FLASHGG_TAG=diphotonsPhys14AnV1
+FLASHGG_TAG=diphtons_phys14
 
 # read github name from git config
 MY_GITHUB_NAME=$(git config --get user.github)
@@ -29,14 +29,14 @@ git cms-init
 cd ${CMSSW_BASE}/src
 git clone https://github.com/cms-analysis/flashgg.git
 
-## Not needed
-## cd flashgg
-## git remote add musella git@github.com:musella/flashgg.git
-## git fetch musella
-## git co -b topic_${FLASHGG_TAG} ${FLASHGG_TAG} 
+## make sure we use a consistent flashgg tag
+cd flashgg
+git remote add musella git@github.com:musella/flashgg.git
+git fetch musella
+git co -b topic_${FLASHGG_TAG} ${FLASHGG_TAG} 
 
 cd ${CMSSW_BASE}/src
-bash flashgg/setup.sh | tee setup.log
+bash flashgg/setup.sh 2>&1 | tee flashgg/setup.log
 
 # add your own fork as a remote. Skip if you dont have one
 cd flashgg 

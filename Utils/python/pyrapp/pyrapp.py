@@ -215,14 +215,19 @@ class PyRApp(object):
     def open(self,name,option="",folder=None):
         tdir = None
         fname = name
+        if folder:
+            if not os.path.exists(folder):
+                os.mkdir(folder)
+            fname = "%s/%s" % ( folder, name )
+        if not fname.endswith(".root"):
+            return open(fname,option)
         if ".root/" in name:
             fname, tdir = name.split(".root/")
             fname += ".root"
-        if folder:
-            fname = "%s/%s" % ( folder, name )
+        option = self.normalizeTFileOptions(option)
         key = "%s::%s" % (os.path.abspath(fname), option)
         if not key in self.files_:
-            self.files_[key] = ROOT.TFile.Open(os.path.abspath(fname),self.normalizeTFileOptions(option))
+            self.files_[key] = ROOT.TFile.Open(os.path.abspath(fname),option)
         if tdir:
             return self.files_[key].Get(tdir)
         return self.files_[key]
