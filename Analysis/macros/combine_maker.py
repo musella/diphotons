@@ -129,7 +129,7 @@ class CombineApp(TemplatesApp):
                                     help="Generate datacard",
                                     ),
                         make_option("--background-root-file",dest="background_root_file",action="store",type="string",
-                                    default="full_analysis_anv1_v14_bkg_ws.root",
+                                    default=None,
                                     help="Output file from the background fit",
                                     ),
                         make_option("--signal-root-file",dest="signal_root_file",action="store",type="string",
@@ -209,7 +209,6 @@ class CombineApp(TemplatesApp):
         self.save_params_.append("fit_name")
 
         self.setup(options,args)
-
         
         if options.generate_ws_bkgnbias:
             self.generateWsBkgnbias(options,args)
@@ -237,7 +236,9 @@ class CombineApp(TemplatesApp):
         fit = options.fits[fitname]
         sidebands = list(fit.get("sidebands",{}).keys())
         categories = list(fit["categories"].keys())
-        if (options.read_ws):
+        ### if (options.read_ws):
+        ###     options.background_root_file = options.read_ws
+        if not options.background_root_file:
             options.background_root_file = options.read_ws
         isNameProvided = False
         
@@ -424,8 +425,9 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         roobs.setRange("fullRange",roobs.getMin(),roobs.getMax()) 
         #roowe = self.buildRooVar("weight",[])        
         #rooset = ROOT.RooArgSet(roobs,roowe)
-        
-        fit["params"] = []
+
+        if not "params" in fit:
+            fit["params"] = []
         
         for cat in fit["categories"]:
             
@@ -440,7 +442,6 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 bkgPdf = self.rooPdf("model_%s_%s" % (comp,cat))
                
                 ##FIXME Retrieve sideband pdf
-
                 roopdflist = ROOT.RooArgList()
                 roopdflist.add(bkgPdf)
                 roopdflist.add(signalPdf)
@@ -499,6 +500,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         ROOT.RooMsgService.instance().addStream(RooFit.DEBUG,RooFit.Topic(RooFit.Eval),RooFit.ClassName("RooProdPdf")) 
         fitname = options.fit_name
         fit = options.fits[fitname]
+        
+        options.background_root_file = options.output_file # set name for datacard generation
         
         roobs = self.buildRooVar(*(self.getVar(options.observable)), recycle=False, importToWs=False)
         #roobs.setBins(5000,"cache")
