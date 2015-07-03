@@ -238,7 +238,7 @@
             "ndim"       : 1,
             "bins"       : [ "phoPt", [100,6000] ],
             "dataset_variables" : ["phoPt","phoPhoIso","phoRndConePhoIso","phoPhoIsoEA","phoEta","phoScEta","phoPhi","phoEnergy := phoPt*cosh(phoEta)","phoSigmaIeIe","phoGenIso","phoMatchType","rho","nvtx"],
-	    "template_binning" : [0.0,5.0,15.0],
+	    "template_binning" : [0.0,0.1,5.0,15.0],
             "store_trees"  : true,
             "selection"    : "cicNoChIsoSinglePho",
             "_preselection" : "phoChIso < 15.",
@@ -299,7 +299,7 @@
                     }
                 }
             },
-	    "_templates" {
+	    "_templates" : {
 	    	"_fwhigh" : { 
                     "sel" : "cicNoChIsoSBSinglePho",
                         "fill_categories" : { 
@@ -335,7 +335,7 @@
 		    }, 
 		"replace" : "pho",
 		"type" : "kdtree",
-		"transfer_variables" :["mass", "weightTarget:= weight"],
+                "transfer_variables" :["mass", "weightTarget:= weight", "mgg := mass"],
 		"fill_categories" : {
 		    "EBEB" : { "legs" : ["EB","EB"], "rndswap" : true,"rndmatch":0.8, "nNeigh" : 20, "nMinNeigh" : 10, "matchWithThreshold" : false,
 			    "useCdfDistance" : true,"targetFraction" : 1e-2, "maxWeightTarget" :0.02, "maxWeightCache":1.0 ,

@@ -695,16 +695,21 @@ class TemplatesApp(PlotApp):
         for b in range(1,len(template_binning)):
             for x in range(1,b+1):
                 bin+=1
-                binslist.append((x,b))
+                binslist.append((x,b))                
             for y in range (b-1,0,-1):
                 bin+=1
                 binslist.append((b,y))
-        ibin=0
+        unroll_widths=array.array('d',[])
         for bin1,bin2 in binslist:
-            th2d.SetBinContent(bin1,bin2,ibin+0.5)
-            ibin+=1
+            area = th2d.GetXaxis().GetBinWidth(bin1)*th2d.GetYaxis().GetBinWidth(bin2)
+            unroll_widths.append(area)
+        for ibin,bins in enumerate(binslist):
+            bin1,bin2=bins
+            th2d.SetBinContent(bin1,bin2,
+                               ## (unroll_binning[ibin]+unroll_binning[ibin+1])*0.5)
+                               ibin+0.5)
         hist2d_forUnrolled=ROOT.RooDataHist("hist2d_forUnrolled","hist2d_forUnrolled",ROOT.RooArgList(isoargs), th2d)
-        
+
         self.keep(hist2d_forUnrolled)
             
         ret=hist2d_forUnrolled
@@ -715,7 +720,7 @@ class TemplatesApp(PlotApp):
         if importToWs:
             self.workspace_.rooImport(ret,ROOT.RooFit.RecycleConflictNodes())
             
-        return ret
+        return ret,unroll_widths
 
     ## ------------------------------------------------------------------------------------------------------------
     def massquantiles(self,dataset,massargs,mass_binning,mass_split):
@@ -1750,7 +1755,6 @@ class TemplatesApp(PlotApp):
     def reducedRooData(self,name,rooset,binned=False,weight="weight",sel=None,redo=False,importToWs=True):
         data = self.rooData("reduced_%s" % name)
         if not data or redo:
-            print "create rooData"
             data = self.rooData(name,rooset=rooset,weight=weight,sel=sel,redo=redo)
             if binned:
                 data = data.binnedClone("reduced_%s" % name,"reduced_%s" % name)
