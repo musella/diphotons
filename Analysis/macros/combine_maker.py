@@ -169,6 +169,10 @@ class CombineApp(TemplatesApp):
                                     default={},
                                     help="File where to write fwhm values",
                                     ),
+                        make_option("--luminosity",dest="luminosity",action="store",type="string",
+                                    default="1",
+                                    help="Specify luminosity for generating data, background and signal workspaces",
+                                    ),
                         ]
                  )
                 ]+option_groups,option_list=option_list
@@ -200,6 +204,7 @@ class CombineApp(TemplatesApp):
         options.store_new_only=True
         options.components = options.bkg_shapes.keys()
         self.use_custom_pdfs_ = options.use_custom_pdfs
+        self.save_params_.append("luminosity")
 
         # make sure that relevant 
         #  config parameters are read/written to the workspace
@@ -423,8 +428,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         # build observable variable
         roobs = self.buildRooVar(*(self.getVar(options.observable)), recycle=True, importToWs=True)
         roobs.setRange("fullRange",roobs.getMin(),roobs.getMax()) 
-        #roowe = self.buildRooVar("weight",[])        
-        #rooset = ROOT.RooArgSet(roobs,roowe)
+        roowe = self.buildRooVar("weight",[])        
+        rooset = ROOT.RooArgSet(roobs,roowe)
 
         if not "params" in fit:
             fit["params"] = []
@@ -471,7 +476,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                         substr = signame[signame.index("_")+1:]
                         grav_mass = float(substr[substr.index("_")+1:])
                         fwhm_val = float(options.fwhm_input_file[signame][cat])
-                        nB = bias_func.Eval(grav_mass) * fwhm_val 
+                        nB = bias_func.Eval(grav_mass) * fwhm_val * float(options.luminosity) 
                         #print "%f" % nB
                 fit["params"].append( (nBias.GetName(), nBias.getVal(), nB) )
                 pdfSum_norm = ROOT.RooFormulaVar("model_%s_%s_norm" % (comp,cat),"model_%s_%s_norm" % (comp,cat),"@0",ROOT.RooArgList(rooNdata)) 
@@ -561,11 +566,13 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             treename = "%s_%s_%s" % (options.data_source,options.fit_name,cat)
             
             print "importing %s as data for cat %s" % (treename, cat)
-            
-            dset = self.rooData(treename)
+
+            dset = self.rooData(treename, weight="%s * weight" % options.luminosity)
+
             if options.use_templates:
                 dset.addColumn(templfunc)
             reduced = dset.reduce(RooFit.SelectVars(extset),RooFit.Range("fullRange")) ## FIXME: roobs range
+
             reduced.SetName("data_%s"% (cat))
             
             ## keep track of numbef of events in data
@@ -713,9 +720,11 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
 
                 if add_sideband and not catsource in sidebands:
                     sidebands[catsource] = set()
-                dset  = self.rooData(treename)
-                ndset = self.rooData(ntreename)
+
+                dset  = self.rooData(treename,weight="%s * weight" % options.luminosity)
+                ndset = self.rooData(ntreename,weight="%s * weight" % options.luminosity)
                 pldset = dset if not options.plot_norm_dataset else ndset
+
                 
                 ## if needed replace dataset with asimov
                 if useAsimov:
@@ -960,7 +969,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             for cat in fit["categories"]:
                 treename = "%s_%s_%s" % (signame,options.fit_name,cat)
                 print treename
-                dset = self.rooData(treename)
+                dset = self.rooData(treename,weight="%s * weight" % options.luminosity)
                 dset.Print()
                 
                 reduced = dset.reduce(RooFit.SelectVars(rooset),RooFit.Range("fullRange"))
@@ -979,8 +988,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     nBins = 1000
                     if (options.set_bins_fwhm != None):
                         if (signame in options.set_bins_fwhm.keys()):
-                            nBins = float(options.set_bins_fwhm[signame])
-
+                            nBins = int(options.set_bins_fwhm[signame])
                     roobs.setBins(nBins)
                     hist = binned.createHistogram("sigHist",roobs)
                     halfMaxVal = 0.5*hist.GetMaximum()
