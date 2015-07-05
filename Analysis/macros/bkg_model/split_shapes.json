@@ -1,9 +1,9 @@
 {
 	    "pp" : { 
-	    	 "shape":"data", "norm":"mctruth_pp", 
+	    	 "shape":"mctruth_pp", "norm":"mctruth_pp", 
 		 "template" : "template_pp",
 		 "weight_cut"   : "weight < 5.",
-		 "model_cats" : { "EBEB" : "moddijet" 
+		 "_model_cats" : { "EBEB" : "moddijet" 
 		 }
 	    },
 	    "pf" : { 

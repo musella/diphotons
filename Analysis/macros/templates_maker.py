@@ -43,6 +43,55 @@ def computeShapeWithUnc(histo,extraerr=None):
     
 
 ## ----------------------------------------------------------------------------------------------------------------------------------------
+class LookUp:
+    def __init__(self,target,method):
+        self.method_ = method
+        self.container_ = target.container_
+
+    def __call__(self,*args):
+        for ws in self.container_:
+            obj = getattr(ws,self.method_)(*args)
+            if obj: return obj
+        return None
+
+## ----------------------------------------------------------------------------------------------------------------------------------------
+class WsList:
+    
+    def __init__(self,init=None):
+        self.container_ = []
+        if init:
+            self.append(init)
+        
+    def append(self,what):
+        self.container_.append(what)
+    
+    def __getattr__(self,method):
+        return LookUp(self,method)
+    
+    ### def data(self,what):
+    ###     return self.lookup(what,"var")
+    ### 
+    ### def var(self,what):
+    ###     return self.lookup(what,"var")
+    ### 
+    ### def pdf(self,what):
+    ###     return self.lookup(what,"pdf")
+    ### 
+    ### def set(self,what):
+    ###     return self.lookup(what,"set")
+    ### 
+    ### def func(self,what):
+    ###     return self.lookup(what,"func")
+    ### 
+    ### def lookup(self,what,method):
+    ###     for ws in self.container_:
+    ###         obj = getattr(ws,method)(what)
+    ###         if obj: return obj
+    ###     return None
+
+
+
+## ----------------------------------------------------------------------------------------------------------------------------------------
 ## TemplatesApp class
 ## ----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -350,8 +399,8 @@ class TemplatesApp(PlotApp):
 
         for name in self.save_params_:
             val = cfg.get(name,None)
-            print "Reading back saved parameter ", name, val
             if val:
+                print "Reading back saved parameter ", name, val
                 setattr(options,name,val)
     
     ## ------------------------------------------------------------------------------------------------------------
@@ -414,7 +463,7 @@ class TemplatesApp(PlotApp):
             self.store_input_ = self.store_
             self.store_ = {}
             
-            self.workspace_input_ = self.workspace_
+            self.workspace_input_ = WsList(self.workspace_)
             self.workspace_ = ROOT.RooWorkspace("wtemplates","wtemplates")
             self.workspace_.rooImport = getattr(self.workspace_,"import")
             
@@ -1748,7 +1797,12 @@ class TemplatesApp(PlotApp):
 
 
     ## ------------------------------------------------------------------------------------------------------------
-    
+    def bookNewWs(self,keepOld=True):
+        if keepOld:
+            self.workspace_input_.append(self.workspace_)
+        self.workspace_ = ROOT.RooWorkspace("wtemplates","wtemplates")
+        self.workspace_.rooImport = getattr(self.workspace_,"import")
+        
     
     ## ------------------------------------------------------------------------------------------------------------
     def setAliases(self,tree):
@@ -1875,6 +1929,13 @@ class TemplatesApp(PlotApp):
             self.variables_[name] = xbins
         return name,xbins
 
+    ## ------------------------------------------------------------------------------------------------------------
+    def rooVar(self,name):
+        rooVar = self.workspace_.var(name)
+        if not rooVar and self.store_new_:
+            rooVar = self.workspace_input_.var(name)
+        return rooVar
+        
     ## ------------------------------------------------------------------------------------------------------------
     def buildRooVar(self,name,binning,importToWs=True,recycle=False):
         rooVar = None
