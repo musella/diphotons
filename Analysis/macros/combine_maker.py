@@ -540,12 +540,11 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 rootempls.add( self.buildRooVar("templateNdim%dDim%d" %(ndim,idim), fit["template_binning"]) )
                 nb = len(fit["template_binning"])-1
                 nb *= nb
-            templfunc,unrol_widths = self.histounroll_book(fit["template_binning"],rootempls,buildHistFunc="templateNdim%d_unroll" % ndim)
+            templfunc,unrol_widths = self.histounroll_book(fit["template_binning"],rootempls,importToWs=False,buildHistFunc="templateNdim%d_unroll" % ndim)
             unrol_binning = array.array( 'd', [ float(bound) for bound in range(nb+1) ] )
             unrol_widths = array.array( 'd', [ 1. for bound in range(nb) ] )
             assert( len(unrol_binning) == len(unrol_widths)+1 )
-            rootempl = self.buildRooVar(templfunc.GetName() , unrol_binning  )
-
+            rootempl = self.buildRooVar(templfunc.GetName() , unrol_binning)
             # make sure binnings are consistently defined later on
             roobs = rooset[roobs.GetName()]
             for cat in fit["categories"]:
@@ -860,8 +859,6 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 else:
                     # otherwise just n_comp
                     norm = self.buildRooVar("%s_norm" %  (pdf.GetName()), [], importToWs=False ) 
-                    norm.setVal(nreduced.sumEntries())
-                    
                 ## set normalization to expected number of events in normalization region
                 if options.norm_as_fractions:
                     if comp in setme:
@@ -909,9 +906,10 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         fit["sidebands"] = {}
         for nam,val in sidebands.iteritems():
             fit["sidebands"]["%s_control" % nam] = list(val)
-            
+        templfunc.Print()
+        templfunc.SetNameTitle("func_%s"% templfunc.GetName(),"func_%s"% templfunc.GetName())
+        self.workspace_.rooImport(templfunc)
         self.workspace_.rooImport(rootempl)
-        rootempl.Print()
         # done
         self.saveWs(options)
        
@@ -944,18 +942,22 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 signame = options.signal_name
 
             roobs = self.buildRooVar(*(self.getVar(options.observable)), recycle=False, importToWs=True)
-            #rootempl = self.buildRooVar(*(self.getVar("templateNdim2_unroll")), recycle=False, importToWs=True)
-            rootemplname, rootempl_binning = self.getVar("templateNdim2_unroll")
-          #  unrol_binning = array.array( 'd', [ float(bound) for bound in range(nb+1) ] )
-            print rootemplname
-            print rootempl_binning
-            rootempl = self.buildRooVar(rootemplname,rootempl_binning, recycle=False, importToWs=True)
-            rootempl.Print()
             #roobs.setBins(5000,"cache")
             roobs.setRange("fullRange",roobs.getMin(),roobs.getMax())
             roowe = self.buildRooVar("weight",[])        
             rooset = ROOT.RooArgSet(roobs,roowe)
-           
+            if options.use_templates_forSignal:
+                rootemplname="templateNdim2_unroll"
+                rootempl = self.buildRooVar(*(self.getVar(rootemplname)), recycle=True)
+                ndim = fit["ndim"]
+                rootempls = ROOT.RooArgSet()
+                for idim in range(ndim):
+                    rootempls.add(self.buildRooVar(*(self.getVar(rootemplname)), recycle=False))  
+                templfunc = self.rooFunc("func_%s"%rootemplname)
+                templfunc.SetName(rootemplname)
+            
+            
+            
             # In case nothing specified about the output file, set: output_file = signame.root
             if ( options.output_file == None ):
                 options.output_file = "%s.root" % (signame)
@@ -972,8 +974,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 treename = "%s_%s_%s" % (signame,options.fit_name,cat)
                 print treename
                 dset = self.rooData(treename)
-                dset.Print()
-                
+                 
+                self.workspace_.rooImport(dset)
                 reduced = dset.reduce(RooFit.SelectVars(rooset),RooFit.Range("fullRange"))
                 reduced.SetName("signal_%s_%s"% (signame,cat))
                 binned = reduced.binnedClone()
@@ -1023,52 +1025,48 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                         print
                         print("Did not succeed to compute the FWHM")
                         print
+
+#################################################################
                 if options.use_templates_forSignal:
-                    print rootempl
+                    #data_dset = self.rooData("%s_%s_%s" % (options.data_source,options.fit_name,cat))
+                    #ndata = data_dset.sumEntries()
+                    #modify signal mc dataset for plottnig
+                    rootempl_binning= rootempl.getBinning("templateBinning%s" % cat)
+                    rootempl.setRange("fullRangeTemp",rootempl.getMin(),rootempl.getMax()) 
+                    rootemps=ROOT.RooArgSet(roobs,rootempl)
+                    dset.addColumn(templfunc)
+                 #   plreduced = dset.reduce(RooFit.SelectVars(rootemps),RooFit.Range("fullRange"),RooFit.Range("fullRangeTemp"))
+                    plreduced = dset.reduce(RooFit.SelectVars(rootemps),RooFit.Range("fullRange"))
+                    plreduced.SetName("pl_%s_%s"% (signame,cat)) 
+                    if options.verbose: plreduced.Print()
+                    self.workspace_.rooImport(plreduced)
+                    plbinned = plreduced.binnedClone()
+                    plbinned.SetName("plbinned_%s_%s"% (signame,cat))
+                    if options.verbose: plbinned.Print()
+                    self.workspace_.rooImport(plbinned)
+                    rootemps.Print()
+                    binnedPdf=ROOT.RooHistPdf("%s_pdf"% plbinned.GetName(),"%s_pdf"% plbinned.GetName(),rootemps,plbinned)
+                    self.workspace_.rooImport(binnedPdf,RooFit.RecycleConflictNodes())
+                    #add pp template from bkg fit
                     ppPdf=self.rooPdf( "model_%s_pp_%s" %(rootempl.GetName(),cat) )
-                    ppPdf.Print()
-                    binnedPdf=ROOT.RooHistPdf("%s_pdf"% binned.GetName(),"%s_pdf"% binned.GetName(),ROOT.RooArgSet(roobs),binned)
-                    signalPdf = ROOT.RooProdPdf("model_signal%s" % (cat), "model_signal%s" % (cat), 
-                                          binnedPdf, ppPdf )
+                    if options.verbose: ppPdf.Print()
+                    signalPdf = ROOT.RooProdPdf("model_signal%s" % (cat), "model_signal%s" % (cat), binnedPdf, ppPdf )
+                    self.workspace_.rooImport(signalPdf,RooFit.RecycleConflictNodes())
                     
                     if options.verbose:
                         print "Integral templpdf     :", ppPdf.createIntegral(ROOT.RooArgSet(rootempl,roobs),"templateBinning%s"%cat).getVal()
                         print "Integral signal pdf    :", binnedPdf.createIntegral(ROOT.RooArgSet(roobs),"templateBinning%s"%cat).getVal()
                         print "Integral combined pdf    :", signalPdf.createIntegral(ROOT.RooArgSet(rootempl,roobs),"templateBinning%s"%cat).getVal()
-                        rootempl.Print() 
-                
-                    self.plotBkgFit(options,binned,ppPdf,rootempl,"template_proj_pp_%s" % (cat),poissonErrs=True,logy=False,logx=False,
-                                    plot_binning=list(rootempl_binning),
-                                    opts=[RooFit.ProjWData(ROOT.RooArgSet(roobs),binned)], bias_funcs={}, forceSkipBands=True )
+                    self.plotBkgFit(options,plreduced,binnedPdf,rootempl,"template_proj_%s" % (cat),poissonErrs=True,logy=False,logx=False,plot_binning=rootempl_binning, bias_funcs={},sig=True)
                     
-                    #self.plotBkgFit(options,plbinned,pdf,rootempl,"template_cond_%s%s" % (comp,cat),poissonErrs=True,logy=False,logx=False,
-                                 #   plot_binning=list(unrol_binning), bias_funcs={} )
-                    
-                ## plot the fit result
-                   # self.plotBkgFit(options,plreduced,pdf,roobs,"%s%s" % (comp,cat),poissonErrs=True)
+                    roobs_binning=array.array('d',[100,roobs.getMin(),roobs.getMax()]) 
+                    self.plotBkgFit(options,plreduced,binnedPdf,roobs,"mass_proj_%s" % (cat),plot_binning=list(roobs_binning),poissonErrs=True,sig=True)
 
                 ## normalization has to be called <pdfname>_norm or combine won't find it
-            #    if options.norm_as_fractions:
-                    # normalization is n_tot * frac_comp
-             #       norm = ROOT.RooProduct("%s_norm" %  (pdf.GetName()),"%s_norm" %  (pdf.GetName()),
-              #                                ROOT.RooArgList(rooNdata[cat],fractions[comp]))
-               # else:
-                #    # otherwise just n_comp
-                 #   norm = self.buildRooVar("%s_norm" %  (pdf.GetName()), [], importToWs=False ) 
-                 #   norm.setVal(nreduced.sumEntries())
-               # pdf.fitTo(binned,RooFit.Strategy(2),*fitops)
-               # if options.norm_as_fractions:
-               #     if comp in setme:
-                #        fractions[comp].setVal(nreduced.sumEntries()/ndata[cat])
-                 #       fractions[comp].setConstant(True) # set constant by default
-              #  else:
-               #     norm.setVal(nreduced.sumEntries()) 
-                
-                
-
-                self.workspace_.rooImport(binnedPdf,RooFit.RecycleConflictNodes())
-                self.workspace_.rooImport(signalPdf,RooFit.RecycleConflictNodes())
-                #importme.append([norm]) ## import this only after we run on all components, to make sure that all fractions are properly set
+                    norm = self.buildRooVar("%s_norm" %  (signalPdf.GetName()), [], importToWs=False ) 
+                    norm.setVal(reduced.sumEntries()) 
+                    self.workspace_.rooImport(norm)
+            #end use templates
             list_fwhm[signame] = sublist_fwhm
             self.saveWs(options)
                         
@@ -1080,9 +1078,9 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             file_fwhm.write("%s\n" % json_output) 
     ## ------------------------------------------------------------------------------------------------------------
     def plotBkgFit(self,options,dset,pdf,obs,label,blabel=None,extra=None,bias_funcs=None,poissonErrs=True,plot_binning=None,logx=True,logy=True,
-                   opts=[],forceSkipBands=False):
+                   opts=[],forceSkipBands=False,sig=False):
         ## plot the fit result
-        print "Plotting background model ", label, obs.GetName()
+        print "Plotting  model ", label, obs.GetName()
         obsname = obs.GetName()
         if obsname == "mass" or obsname == "mgg":
             obs.SetTitle("m_{#gamma #gamma}")
@@ -1096,9 +1094,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 idim = int(subname[-1])
                 obs.SetTitle("template^{%d}_{%dD}" % (idim,ndim) )
         doBands = options.plot_fit_bands and not forceSkipBands
-        obs.Print() 
         frame = obs.frame()
-        print frame
         resid  = obs.frame()
         invisible = []
         ## dataopts = [,RooFit.MarkerSize(1)]
@@ -1110,6 +1106,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         if not plot_binning:
             plot_binning = options.plot_binning
 
+        binning = None
         if type(plot_binning) == list:
             if len(plot_binning) > 0:
                 if len(plot_binning) == 3:
@@ -1120,9 +1117,10 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 obs.setBinning(binning,"plotBinning")
                 dset.get()[obs.GetName()].setBinning(binning,"plotBinning")
                 binning = "plotBinning"
-            else:
-                binning = None
-                
+        else:
+            obs.setBinning(plot_binning,"plotBinning")
+            dset.get()[obs.GetName()].setBinning(plot_binning,"plotBinning")
+            binning = "plotBinning"
         if options.verbose and binning:
             print "Plot binning: ",
             dset.get()[obs.GetName()].getBinning(binning).Print()
@@ -1131,18 +1129,13 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         if doBands:
             invisible.append(RooFit.Invisible())
         print "Plotting dataset"
-        dset.Print()
-        print frame
-        print invisible
-        return
         dset.plotOn(frame,*(dataopts+invisible))
         print "Plotting pdf....",
-        pdf.Print()
         pdf.plotOn(frame,*(curveopts+invisible))
         print "done"
         hist   = frame.getObject(int(frame.numItems()-2))
         fitc   = frame.getObject(int(frame.numItems()-1))
-
+        print hist, fitc
         if extra:
             extra.plotOn(frame,RooFit.LineColor(ROOT.kGreen))
             
@@ -1188,7 +1181,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         resid.addPlotable(hresid,"PE")
         
         ## canv = ROOT.TCanvas("bkg_fit_%s" % label, "bkg_fit_%s" % label, 1200, 800 )
-        canv = ROOT.TCanvas("bkg_fit_%s" % label, "bkg_fit_%s" % label)
+        if sig:canv = ROOT.TCanvas("sig_fit_%s" % label, "bkg_fit_%s" % label)
+        else:canv = ROOT.TCanvas("bkg_fit_%s" % label, "bkg_fit_%s" % label)
         canv.Divide(1,2)
         
         canv.cd(1)
@@ -1208,6 +1202,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         canv.cd(1)
         ymax = fitc.interpolate(frame.GetXaxis().GetXmin())*2.
         ymin = fitc.interpolate(frame.GetXaxis().GetXmax())*0.25
+        print "ymin, ymax",ymin, ymax
         if not logx:
             ymin = min(0,ymin)
         frame.GetYaxis().SetRangeUser(ymin,ymax)
