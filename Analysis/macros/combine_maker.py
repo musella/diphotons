@@ -50,6 +50,9 @@ class CombineApp(TemplatesApp):
                         make_option("--use-templates",dest="use_templates",action="store_true",default=False,
                                     help="Use hybrid fit",
                                     ),                        
+                        make_option("--template-comp-sig",dest="template_comp_sig",action="store_true",default="pp",
+                                    help="Use this template for signal modeling",
+                                    ),                        
                         make_option("--obs-template-binning",dest="obs_template_binning",action="callback",callback=optpars_utils.Load(scratch=True),
                                     default={ "EBEB" : [270,300.,350.,400.,6000.],
                                               "EBEE" : [270,300.,350.,400.,6000.]
@@ -1019,14 +1022,14 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         roowe = self.buildRooVar("weight",[])        
         rooset = ROOT.RooArgSet(roobs,roowe)
         if options.use_templates:
-            rootemplname="templateNdim2_unroll"
-            rootempl = self.buildRooVar(*(self.getVar(rootemplname)), recycle=True)
             ndim = fit["ndim"]
+            rootemplname="templateNdim%s_unroll"% ndim
+            rootempl = self.buildRooVar(*(self.getVar(rootemplname)), recycle=True)
             rootempls = ROOT.RooArgSet()
             for idim in range(ndim):
                 rootempls.add(self.buildRooVar(*(self.getVar(rootemplname)), recycle=False)) 
             rooset.add(rootempls)
-            templfunc = self.rooFunc("func_%s"%rootemplname)
+            templfunc = self.rooFunc("func_%s" % rootemplname)
             templfunc.SetName(rootemplname)
 
         for signame,trees in options.signals.iteritems():
@@ -1055,13 +1058,11 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 if options.use_templates:
                     rootempl_binning= rootempl.getBinning("templateBinning%s" % cat)
                     if options.verbose:rootempl_binning.Print()
-                    rootempl.setRange("fullRangeTemp",rootempl.getMin(),rootempl.getMax()) 
                     dset.addColumn(templfunc)
                     rootemps=ROOT.RooArgSet(roobs,rootempl)
-                    reduced = dset.reduce(RooFit.SelectVars(rootemps),RooFit.Range("fullRange"),RooFit.Range("fullRangeTemp"))
                 else:
                     rootemps=ROOT.RooArgSet(roobs)
-                    reduced = dset.reduce(RooFit.SelectVars(rootemps),RooFit.Range("fullRange"))
+                reduced = dset.reduce(RooFit.SelectVars(rootemps),RooFit.Range("fullRange"))
                 reduced.SetName("signal_%s_%s"% (signame,cat))
                 if options.verbose: reduced.Print()
                 binned = reduced.binnedClone()
@@ -1121,7 +1122,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     print "Integral signal pdf    :", pdf.createIntegral(ROOT.RooArgSet(roobs),"templateBinning%s"%cat).getVal()
                 if options.use_templates:
                     #add pp template from bkg fit
-                    ppPdf=self.rooPdf( "model_%s_pp_%s" %(rootempl.GetName(),cat) ,importToWs=True)
+                    
+                    ppPdf=self.rooPdf( "model_%s_%s_%s" %(rootempl.GetName(),options.template_comp_sig,cat) ,importToWs=True)
                     pdf = ROOT.RooProdPdf("model_signal_%s_%s"% (signame, cat), "model_signal_%s_%s"% (signame, cat),pdf, ppPdf )
                     self.workspace_.rooImport(pdf,RooFit.RecycleConflictNodes())
                     if options.verbose:
@@ -1194,7 +1196,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 obs.setBinning(binning,"plotBinning")
                 dset.get()[obs.GetName()].setBinning(binning,"plotBinning")
                 binning = "plotBinning"
-        else:
+        elif type(plot_binning) == ROOT.RooBinning:
             obs.setBinning(plot_binning,"plotBinning")
             dset.get()[obs.GetName()].setBinning(plot_binning,"plotBinning")
             binning = "plotBinning"
