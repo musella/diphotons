@@ -104,7 +104,7 @@
                "phoIsSB    := (((phoPhoIso - rho*phoPhoIsoEA) -0.002*phoPt < 2. ) && (phoIsEB    && (phoSigmaIeIe    > 0.012) ))||( ((phoPhoIso - rho*phoPhoIsoEA) -0.002*phoPt < 11. ) &&!phoIsEB    && (phoSigmaIeIe>0.035 )  )",
                "leadIsEB    := abs(leadScEta) < 1.5",
                "subleadIsEB := abs(subleadScEta) < 1.5",
-               "leadIsSB := (((leadPhoIso - rho*leadPhoIsoEA) -0.002*leadPt < 2. ) && (leadIsEB    && (leadSigmaIeIe    > 0.012) ))||( ((leadPhoIso - rho*leadPhoIsoEA) -0.002*leadPt < 11. ) &&!leadIsEB    && (leadSigmaIeIe>0.035     )  )",
+               "leadIsSB := (((leadPhoIso - rho*leadPhoIsoEA) -0.002*leadPt < 2. ) && (leadIsEB    && (leadSigmaIeIe    > 0.012) ))||( ((leadPhoIso - rho*leadPhoIsoEA) -0.002*leadPt < 11. ) &&!leadIsEB    && (leadSigmaIeIe>0.035    )  )",
                "subleadIsSB := ((((subleadPhoIso - rho*subleadPhoIsoEA) -0.002*subleadPt < 2. ) && (subleadIsEB    && (subleadSigmaIeIe    > 0.012) ))||( ((subleadPhoIso - rho*subleadPhoIsoEA) -0.002*subleadPt < 11. ) &&!subleadIsEB    && (subleadSigmaIeIe>0.035     )) )",
                "leadPrompt    := leadGenIso < 10. && leadMatchType == 1",
                "leadFake      := ! leadPrompt",
