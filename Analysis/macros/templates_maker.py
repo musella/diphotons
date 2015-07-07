@@ -959,6 +959,7 @@ class TemplatesApp(PlotApp):
         template_binning=array.array('d',[0.0,0.1,5.,15.])
          
         self.histounroll_book(template_binning,isoargs)
+        return
         components=options.build3d.get("components")
         dim=options.build3d.get("dimensions")
         mass_var,mass_b=self.getVar("mass")
@@ -1783,11 +1784,21 @@ class TemplatesApp(PlotApp):
         return data
 
     ## ------------------------------------------------------------------------------------------------------------
-    def rooPdf(self,name):
+    def rooPdf(self,name,importToWs=False):
         pdf = self.workspace_.pdf(name)
         if not pdf and self.store_new_:
             pdf = self.workspace_input_.pdf(name)            
+        if importToWs:
+            self.workspace_.rooImport(pdf)
         return pdf
+
+    ## ------------------------------------------------------------------------------------------------------------
+    def rooFunc(self,name):
+        rooHistFunc = self.workspace_.function(name)
+        if not rooHistFunc and self.store_new_:
+            rooHistFunc = self.workspace_input_.function(name)            
+        return rooHistFunc
+
 
 
     ## ------------------------------------------------------------------------------------------------------------
