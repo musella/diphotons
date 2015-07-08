@@ -1,0 +1,28 @@
+TColor::TColor:0: RuntimeWarning: color 5974 already defined
+TClass::TClass:0: RuntimeWarning: no dictionary for class stack<RooAbsArg*,deque<RooAbsArg*> > is available
+[?1034h
+--------------------------------------------------------------------------------------------------------------------------
+Preparing fit cic2
+
+Will put the following variables in the dataset : 
+RooArgList:: = (rho,nvtx,run,event,weight,mgg,mass,leadPt,subleadPt,leadEta,subleadEta,leadMatchType,subleadMatchType,templateNdim2Dim0,templateNdim2Dim1)
+Number of dimensions : 2
+Components           : pp,pf,ff
+
+
+truth :  EBEB ff : 0.6983 pp : 216.3 pf : 51.52 all_ff : 2.8 tot : 270.7 
+   Warning : total MC counts don't match sum of truths. Difference:  -0.698314859216
+truth :  EBEE ff : 0.6278 pp : 155 pf : 51.22 all_ff : 0.6537 tot : 206.8 
+   Warning : total MC counts don't match sum of truths. Difference:  -0.627847367691
+
+template pf - EBEB 416.03287756
+template pf - EBEE 1097.7644925
+
+--------------------------------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------------------------------
+saving output
+
+writing workspace ... done
+--------------------------------------------------------------------------------------------------------------------------
+

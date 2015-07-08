@@ -29,6 +29,13 @@ while [[ -n $1 ]]; do
 	    shapes=$(echo $(basename $2 | sed 's%.json%%'))
 	    opts="$opts $1"
 	    ;;
+	--use-templates)
+	    templates="use_templates"
+	    opts="$opts $1"
+	    ;;
+	--mix-templates)
+	    mix="--mix-templates"
+	    ;;
 	--nuisance-fractions-covariance)
 	    covariance=$(echo $(basename $2 | sed 's%.json%%'))
 	    opts="$opts $1"
@@ -63,6 +70,7 @@ fi
 label="$shapes"
 [[ -n $covariance ]] && label="${label}_${covariance}"
 [[ -n $bias ]] && label="${label}_${bias}"
+[[ -n $templates ]] && label="${label}_${templates}"
 [[ -n $addlabel ]] && label="${label}_${addlabel}"
 
 input=${version}_${fitname}_final_ws.root
@@ -85,10 +93,20 @@ if [[ ! -f $input ]]; then
     echo "creating $input"
     echo "**************************************************************************************************************************"
     subset=$fitname
-    [[ "$fitname" == "2D" ]] && subset="2D,singlePho"
-    ./templates_maker.py --load templates_maker.json,templates_maker_fits.json --only-subset $subset --input-dir $treesdir/$version -o $input 2>&1 | tee $input_log
+    if [[ "$fitname" == "2D" ]]; then
+	subset="2D,singlePho"
+	mix="--mix-templates"
+    fi
+    ./templates_maker.py --load templates_maker.json,templates_maker_fits.json --only-subset $subset $mix --input-dir $treesdir/$version -o $input 2>&1 | tee $input_log
+    echo "**************************************************************************************************************************"
+elif [[ -n$mix ]]; then
+    echo "**************************************************************************************************************************"
+    echo "running event mixing"
+    echo "**************************************************************************************************************************"
+    ./templates_maker.py --read-ws $input $mix 2>&1 | tee mix_$input_log
     echo "**************************************************************************************************************************"
 fi
+	    
 
 echo "**************************************************************************************************************************"
 echo "running model creation"

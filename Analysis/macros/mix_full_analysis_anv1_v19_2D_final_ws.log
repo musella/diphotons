@@ -1,0 +1,138 @@
+TColor::TColor:0: RuntimeWarning: color 5974 already defined
+[?1034h
+--------------------------------------------------------------------------------------------------------------------------
+Reading back workspace from full_analysis_anv1_v19_2D_final_ws.root 
+
+Reading back saved parameter  signals {u'grav_001_750': [u'RSGravToGG_kMpl_001_M_750_13TeV:output.root/%(sel)sGenIso', u'RSGravToGG_kMpl_001_M_750_13TeV:output.root/%(sel)sNonGenIso'], u'grav_02_5000': [u'RSGravToGG_kMpl_02_M_5000_13TeV:output.root/%(sel)sGenIso', u'RSGravToGG_kMpl_02_M_5000_13TeV:output.root/%(sel)sNonGenIso'], u'grav_01_1500': [u'RSGravToGG_kMpl_01_M_1500_13TeV:output.root/%(sel)sGenIso', u'RSGravToGG_kMpl_01_M_1500_13TeV:output.root/%(sel)sNonGenIso'], u'grav_001_5000': [u'RSGravToGG_kMpl_001_M_5000_13TeV:output.root/%(sel)sGenIso', u'RSGravToGG_kMpl_001_M_5000_13TeV:output.root/%(sel)sNonGenIso'], u'grav_001_1500': [u'RSGravToGG_kMpl_001_M_1500_13TeV:output.root/%(sel)sGenIso', u'RSGravToGG_kMpl_001_M_1500_13TeV:output.root/%(sel)sNonGenIso'], u'grav_02_1500': [u'RSGravToGG_kMpl_02_M_1500_13TeV:output.root/%(sel)sGenIso', u'RSGravToGG_kMpl_02_M_1500_13TeV:output.root/%(sel)sNonGenIso'], u'grav_02_3000': [u'RSGravToGG_kMpl_02_M_3000_13TeV:output.root/%(sel)sGenIso', u'RSGravToGG_kMpl_02_M_3000_13TeV:output.root/%(sel)sNonGenIso'], u'grav_01_3000': [u'RSGravToGG_kMpl_01_M_3000_13TeV:output.root/%(sel)sGenIso', u'RSGravToGG_kMpl_01_M_3000_13TeV:output.root/%(sel)sNonGenIso']}
+Fits :
+---------------------------------------------------------
+- 2D 
+  ndim : 2 
+  components : pp,pf,ff
+
+- singlePho 
+  ndim : 1 
+  components : p,f
+
+TTrees :
+---------------------------------------------------------
+tree_mc_2D_EBEB                :   152518
+tree_template_f1_singlePho_eta_inclusive :     3276
+tree_template_ff_2D_EBEB       :       56
+tree_grav_02_5000_2D_EBEB      :    63353
+tree_grav_02_5000_2D_EBEE      :     4689
+tree_template_ff_2D_EBEE       :       16
+tree_grav_001_1500_2D_EBEB     :    42384
+tree_data_singlePho_eta_inclusive :  3253574
+tree_grav_001_1500_2D_EBEE     :    18188
+tree_mctruth_pf_2D_EBEB        :     6912
+tree_mctruth_p_singlePho_eta_inclusive :  3197853
+tree_mctruth_pf_2D_EBEE        :     7031
+tree_mctruth_f_singlePho_EB    :    35820
+tree_data_2D_EBEB              :   152518
+tree_mctruth_f_singlePho_eta_inclusive :    55721
+tree_data_2D_EBEE              :   139429
+tree_template_p_singlePho_eta_inclusive :  3206341
+tree_mc_singlePho_EB           :  2154798
+tree_mc_2D_EBEE                :   139429
+tree_mc_singlePho_eta_inclusive :  3253574
+tree_mc_singlePho_EE           :  1098776
+tree_mctruth_p_singlePho_EB    :  2118978
+tree_mctruth_p_singlePho_EE    :  1078875
+tree_mctruth_pp_2D_EBEB        :   145022
+tree_template_f2_singlePho_EB  :     2536
+tree_template_f2_singlePho_EE  :      757
+tree_template_f1_singlePho_EE  :      738
+tree_template_f1_singlePho_EB  :     2538
+tree_grav_01_3000_2D_EBEB      :    56018
+tree_mctruth_ff_2D_EBEB        :       63
+tree_template_p_singlePho_EE   :  1089468
+tree_template_p_singlePho_EB   :  2116873
+tree_mctruth_ff_2D_EBEE        :       85
+tree_grav_01_3000_2D_EBEE      :     9235
+tree_grav_001_750_2D_EBEB      :    33138
+tree_grav_001_750_2D_EBEE      :    21725
+tree_mctruth_pp_2D_EBEE        :   132306
+tree_grav_02_1500_2D_EBEB      :    42746
+tree_template_pp_2D_EBEE       :   135876
+tree_template_pp_2D_EBEB       :   147744
+tree_grav_02_1500_2D_EBEE      :    18262
+tree_template_pf_2D_EBEE       :     1717
+tree_template_f_singlePho_eta_inclusive :     6569
+tree_template_pf_2D_EBEB       :     1826
+tree_grav_001_5000_2D_EBEB     :    65174
+tree_grav_001_5000_2D_EBEE     :     3649
+tree_template_f_singlePho_EE   :     1495
+tree_data_singlePho_EE         :  1098776
+tree_mctruth_f_singlePho_EE    :    19901
+tree_data_singlePho_EB         :  2154798
+tree_template_f2_singlePho_eta_inclusive :     3293
+tree_grav_02_3000_2D_EBEE      :     9447
+tree_grav_01_1500_2D_EBEB      :    42305
+tree_grav_01_1500_2D_EBEE      :    18460
+tree_grav_02_3000_2D_EBEB      :    56530
+tree_template_f_singlePho_EB   :     5074
+
+Datasets :
+---------------------------------------------------------
+data_2D_EBEB                   :        0
+data_2D_EBEE                   :        0
+mc_2D_EBEB                     :        0
+mc_2D_EBEE                     :        0
+grav_001_750_2D_EBEB           :        0
+grav_001_750_2D_EBEE           :        0
+grav_02_5000_2D_EBEB           :        0
+grav_02_5000_2D_EBEE           :        0
+grav_01_1500_2D_EBEB           :        0
+grav_01_1500_2D_EBEE           :        0
+grav_02_3000_2D_EBEB           :        0
+grav_02_3000_2D_EBEE           :        0
+grav_001_1500_2D_EBEB          :        0
+grav_001_1500_2D_EBEE          :        0
+grav_02_1500_2D_EBEB           :        0
+grav_02_1500_2D_EBEE           :        0
+grav_001_5000_2D_EBEB          :        0
+grav_001_5000_2D_EBEE          :        0
+grav_01_3000_2D_EBEB           :        0
+grav_01_3000_2D_EBEE           :        0
+mctruth_pp_2D_EBEB             :        0
+mctruth_pp_2D_EBEE             :        0
+mctruth_pf_2D_EBEB             :        0
+mctruth_pf_2D_EBEE             :        0
+mctruth_ff_2D_EBEB             :        0
+mctruth_ff_2D_EBEE             :        0
+template_pp_2D_EBEB            :        0
+template_pp_2D_EBEE            :        0
+template_pf_2D_EBEB            :        0
+template_pf_2D_EBEE            :        0
+template_ff_2D_EBEB            :        0
+template_ff_2D_EBEE            :        0
+data_singlePho_EE              :        0
+data_singlePho_eta_inclusive   :        0
+data_singlePho_EB              :        0
+mc_singlePho_EE                :        0
+mc_singlePho_eta_inclusive     :        0
+mc_singlePho_EB                :        0
+mctruth_p_singlePho_EE         :        0
+mctruth_p_singlePho_eta_inclusive :        0
+mctruth_p_singlePho_EB         :        0
+mctruth_f_singlePho_EE         :        0
+mctruth_f_singlePho_eta_inclusive :        0
+mctruth_f_singlePho_EB         :        0
+template_f1_singlePho_EE       :        0
+template_f1_singlePho_eta_inclusive :        0
+template_f1_singlePho_EB       :        0
+template_p_singlePho_EE        :        0
+template_p_singlePho_eta_inclusive :        0
+template_p_singlePho_EB        :        0
+template_f2_singlePho_EE       :        0
+template_f2_singlePho_eta_inclusive :        0
+template_f2_singlePho_EB       :        0
+template_f_singlePho_EE        :        0
+template_f_singlePho_eta_inclusive :        0
+template_f_singlePho_EB        :        0
+
+Number of toys : 0
+
+--------------------------------------------------------------------------------------------------------------------------
+TFile: name=/afs/cern.ch/work/m/musella/private/Analysis/CMBN_7_1_5/src/diphotons/Analysis/macros/full_analysis_anv1_v19_2D_final_ws_tmp.root, title=, option=CREATE

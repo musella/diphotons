@@ -53,6 +53,14 @@
 
 ## Preparing combine inputs
 
+### Shell script wrapper
+
+-`./combine_maker.sh <analysis_version> <list-of-options>`
+  - runs template_maker.py to generate the input workspace from the analysis trees
+  - runs background model, signal model and datacard creation according to the options
+  - all the outuput goes to a dedicate folder named `<analysis_version>_<fitname>_lumi_<luminosity>_<background_model>[_bias][_use_templates][_<extra_label>]`
+    the extra label can be specified through the `--label` option
+
 ### Background model
 - `./combine_maker.py --load templates_maker.json,templates_maker_fits.json --fit-name cic --input-dir ~musella/public/workspace/exo/full_analysis_anv1_v14  -o full_analysis_anv1_v14_final_ws.root`
 - `./combine_maker.py --fit-name cic  --fit-background --read-ws full_analysis_anv1_v14_final_ws.root -O ~/www/test_bkg_fit -o full_analysis_anv1_v14_bkg_ws.root`
