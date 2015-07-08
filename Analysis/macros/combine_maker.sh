@@ -25,6 +25,10 @@ while [[ -n $1 ]]; do
 	    addlabel=$2
 	    shift
 	    ;;
+	--use-templates)
+	    templates="semiparam"
+	    opts="$opts $1"
+	    ;;
 	--bkg-shapes)
 	    shapes=$(echo $(basename $2 | sed 's%.json%%'))
 	    opts="$opts $1"
@@ -62,6 +66,7 @@ fi
 
 label="$shapes"
 [[ -n $covariance ]] && label="${label}_${covariance}"
+[[ -n $templates ]] && label="${label}_${templates}"
 [[ -n $bias ]] && label="${label}_${bias}"
 [[ -n $addlabel ]] && label="${label}_${addlabel}"
 

@@ -35,7 +35,7 @@ class CombineApp(TemplatesApp):
                                     default="cic",
                                     help="Fit to consider"),
                         make_option("--observable",dest="observable",action="store",type="string",
-                                    default="mgg[5700,300,6000]",
+                                    default="mgg[3350,300,7000]",
                                     help="Observable used in the fit default : [%default]",
                                     ),
                         make_option("--fit-background",dest="fit_background",action="store_true",default=False,
@@ -54,8 +54,8 @@ class CombineApp(TemplatesApp):
                                     help="Use this template for signal modeling",
                                     ),                        
                         make_option("--obs-template-binning",dest="obs_template_binning",action="callback",callback=optpars_utils.Load(scratch=True),
-                                    default={ "EBEB" : [270,300.,350.,400.,6000.],
-                                              "EBEE" : [270,300.,350.,400.,6000.]
+                                    default={ "EBEB" : [270,300.,350.,400.,7000.],
+                                              "EBEE" : [270,300.,350.,400.,7000.]
                                               },
                                     help="Binning of the parametric observable to be used for templates",
                                     ),                        
@@ -70,8 +70,12 @@ class CombineApp(TemplatesApp):
                                     metavar="FIT_RANGE"
                                     ),                        
                         make_option("--plot-binning",dest="plot_binning",action="callback",callback=optpars_utils.ScratchAppend(float),
-                                    type="string",default=[],
+                                    type="string",default=[134,300,7000],
                                     help="Binning to be used for plots",
+                                    ),
+                        make_option("--plot-signal-binning",dest="plot_signal_binning",action="callback",callback=optpars_utils.ScratchAppend(float),
+                                    type="string",default=[50,0.2],
+                                    help="Number of bins and width of observable for signal model plots",
                                     ),
                         make_option("--plot-fit-bands",dest="plot_fit_bands",action="store_true",default=False,
                                     help="Add error bands to plots",
@@ -130,6 +134,9 @@ class CombineApp(TemplatesApp):
                                     help="Signal name to generate the dataset and/or datacard"),            
                         make_option("--generate-datacard",dest="generate_datacard",action="store_true",default=False,
                                     help="Generate datacard",
+                                    ),
+                        make_option("--use-signal-datahist",dest="use_signal_datahist",action="store_true",default=False,
+                                    help="Give RooDataHist to combine instead of RooHistPdf",
                                     ),
                         make_option("--binned-data-in-datacard",dest="binned_data_in_datacard",action="store_true",default=False,
                                     help="Use binned data dataset in datacard",
@@ -212,7 +219,8 @@ class CombineApp(TemplatesApp):
         
         printLevel = ROOT.RooMsgService.instance().globalKillBelow()
         ROOT.RooMsgService.instance().setGlobalKillBelow(RooFit.FATAL)
-
+        ROOT.TH1F.SetDefaultSumw2(True)
+        
         options.only_subset = [options.fit_name]
         options.store_new_only=True
         options.components = options.bkg_shapes.keys()
@@ -325,7 +333,10 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             for cat in categories:
                 datacard.write("shapes sig".ljust(20))
                 datacard.write((" %s  %s" % (cat,options.signal_root_file)).ljust(50))
-                datacard.write(" wtemplates:signal_%s_%s\n"% (signame,cat))
+                if options.use_signal_datahist:
+                    datacard.write(" wtemplates:signal_%s_%s\n"% (signame,cat))
+                else:
+                    datacard.write(" wtemplates:model_signal_%s_%s\n"% (signame,cat))
                 
                 for comp in options.components:
                     datacard.write(("shapes %s" % comp).ljust(20))
@@ -411,7 +422,10 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             
             datacard.write("rate".ljust(20))
             for cat in categories:
-                datacard.write(" -1".ljust(15) )
+                if options.use_signal_datahist:
+                    datacard.write(" -1".ljust(15) )
+                else:
+                    datacard.write("  1".ljust(15) )
                 for comp in options.components:
                     datacard.write((" %s" % options.datacard_bkg_rate).ljust(15))
             for cat in sidebands:                
@@ -491,10 +505,14 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 
                 dataBinned = self.rooData("binned_data_%s" % cat)
                 data = self.rooData("data_%s" % cat)
-                signalDataHist = self.rooData("signal_%s_%s" % (signame,cat))
-                signalPdf = ROOT.RooHistPdf("signal_model_%s_%s"% (signame,cat),"signalPdf_%s_%s"% (signame,cat),ROOT.RooArgSet(roobs),signalDataHist)
+                if options.use_signal_datahist:
+                    signalDataHist = self.rooData("signal_%s_%s" % (signame,cat))
+                    signalPdf = ROOT.RooHistPdf("signal_model_%s_%s"% (signame,cat),"signalPdf_%s_%s"% (signame,cat),ROOT.RooArgSet(roobs),signalDataHist)
+                else:
+                    signalPdf = self.rooPdf("model_signal_%s_%s"% (signame,cat))
                 self.workspace_.rooImport(data)
                 self.workspace_.rooImport(dataBinned)
+                
                 for comp in options.components :
                 
                     ## # import source datasets too
@@ -510,6 +528,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     ## retrieve norm of pdf 
                     rooNdata = self.buildRooVar("%s_norm" % (bkgPdf.GetName()),[],recycle=True,importToWs=False)
 
+                    ## add bias term only to some background components
+                    ##     important in the case of the semi-parametric fit
                     if not comp in options.bkgnbias_components:
                         self.workspace_.rooImport(bkgPdf)
                         self.workspace_.rooImport(rooNdata)
@@ -1001,8 +1021,6 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         print "generating signal dataset"
         print 
         
-        
-        ROOT.TH1F.SetDefaultSumw2(True)
         fitname = options.fit_name
         fit = options.fits[fitname] 
         isNameProvided = False
@@ -1017,13 +1035,17 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             options.signal_root_file = options.output_file ## copy this in case we want to run --generate-datacard at the same time
             if not options.cardname:
                 options.cardname = "dacard_%s.txt" % prefix_output
+        
+        ## book roo observable
         roobs = self.buildRooVar(*(self.getVar(options.observable)), recycle=False, importToWs=True)
         roobs.setRange("fullRange",roobs.getMin(),roobs.getMax())
         roowe = self.buildRooVar("weight",[])        
         rooset = ROOT.RooArgSet(roobs,roowe)
+        
+        ## read back template roovariable and map
         if options.use_templates:
             ndim = fit["ndim"]
-            rootemplname="templateNdim%s_unroll"% ndim
+            rootemplname="templateNdim%s_unroll" % ndim
             rootempl = self.buildRooVar(*(self.getVar(rootemplname)), recycle=True)
             rootempls = ROOT.RooArgSet()
             for idim in range(ndim):
@@ -1031,7 +1053,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             rooset.add(rootempls)
             templfunc = self.rooFunc("func_%s" % rootemplname)
             templfunc.SetName(rootemplname)
-
+            options.use_signal_datahist = False ## make sure that in the datacard we point to the pdf for signal, not to the roodatahist
+            
         for signame,trees in options.signals.iteritems():
             self.bookNewWs()
             
@@ -1113,34 +1136,53 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                         print("Did not succeed to compute the FWHM")
                         print
 
-                ##option to take isolation- mgg templates for signal modeling
-                binnedInMgg=binned.reduce(ROOT.RooArgSet(roobs))
-                pdf=ROOT.RooHistPdf("model_signal_%s_%s_%s"% (roobs.GetName(),signame, cat),"model_signal_%s_%s_%s"% (roobs.GetName(),signame, cat),ROOT.RooArgSet(roobs),binnedInMgg)
-                self.keep(pdf)
+                ## build RooHistPdf in roobs
+                pdfDataHist = binned if not options.use_templates else binned.reduce(ROOT.RooArgSet(roobs))
+                pdf=ROOT.RooHistPdf("model_signal_%s_%s"% (signame, cat),"model_signal_%s_%s"% (signame, cat),ROOT.RooArgSet(roobs),pdfDataHist)
                 if options.verbose:
                     pdf.Print()
                     print "Integral signal pdf    :", pdf.createIntegral(ROOT.RooArgSet(roobs),"templateBinning%s"%cat).getVal()
-                if options.use_templates:
-                    #add pp template from bkg fit
                     
-                    ppPdf=self.rooPdf( "model_%s_%s_%s" %(rootempl.GetName(),options.template_comp_sig,cat) ,importToWs=True)
+                ## prepare binnning: doing it here as it is faster than on the 2D pdf
+                plot_signal_binning = None
+                if options.plot_signal_binning:
+                    nbins, width = options.plot_signal_binning
+                    obsmean = pdf.mean(roobs).getVal()
+                    width = max(width,pdf.sigma(roobs).getVal()/obsmean*4.)
+                    omin, omax = obsmean*(1.-0.5*width), obsmean*(1.+0.5*width)
+                    print obsmean, omin, omax
+                    omin = max(roobs.getMin(),omin)
+                    omax = min(roobs.getMax(),omax)
+                    print omin, omax
+                    step = (omax-omin)/nbins
+                    plot_signal_binnning = []
+                    while omin<omax:
+                        plot_signal_binnning.append(omin)
+                        omin += step                    
+                    
+                ## prepare semi-parametric model if neded
+                if options.use_templates:
+                    pdf.SetName("model_signal_%s_%s_%s"% (roobs.GetName(),signame, cat))
+                    ppPdf=self.rooPdf( "model_%s_%s_%s" %(rootempl.GetName(),options.template_comp_sig,cat))
+                    self.keep([pdf,ppPdf])
                     pdf = ROOT.RooProdPdf("model_signal_%s_%s"% (signame, cat), "model_signal_%s_%s"% (signame, cat),pdf, ppPdf )
-                    self.workspace_.rooImport(pdf,RooFit.RecycleConflictNodes())
                     if options.verbose:
                         ppPdf.Print()
                         pdf.Print()
                         print "Integral templpdf     :", ppPdf.createIntegral(ROOT.RooArgSet(rootempl,roobs),"templateBinning%s"%cat).getVal()
                         print "Integral combined pdf    :", pdf.createIntegral(ROOT.RooArgSet(rootempl,roobs),"templateBinning%s"%cat).getVal()
-                    self.plotBkgFit(options,binned,pdf,rootempl,"template_proj_%s" % (cat),poissonErrs=True,logy=False,logx=False,plot_binning=rootempl_binning,opts=[RooFit.ProjWData(ROOT.RooArgSet(roobs),binned)], bias_funcs={},sig=True)
-                else:
-                    pdf.SetName("model_signal_%s_%s" % (signame,cat))
-                self.plotBkgFit(options,binnedInMgg, pdf,roobs,"mass_proj_%s" % (cat),poissonErrs=True,sig=True,logx=False,logy=False)
+                    self.plotBkgFit(options,binned,pdf,rootempl,"signal_%s_%s_%s" % (signame,rootempl.GetName(),cat),poissonErrs=True,logy=False,logx=False,plot_binning=rootempl_binning,opts=[RooFit.ProjWData(ROOT.RooArgSet(roobs),binned)], bias_funcs={},sig=True)
+                
+                self.plotBkgFit(options,reduced,pdf,roobs,"signal_%s_%s_%s" % (signame,roobs.GetName(),cat),poissonErrs=False,sig=True,logx=False,logy=False,
+                                plot_binning=plot_signal_binnning)
 
                 ## normalization has to be called <pdfname>_norm or combine won't find it
                 norm = self.buildRooVar("%s_norm" %  (pdf.GetName()), [], importToWs=False ) 
                 norm.setVal(reduced.sumEntries()) 
+                
+                ## import pdf and normalization
+                self.workspace_.rooImport(pdf,RooFit.RecycleConflictNodes())
                 self.workspace_.rooImport(norm)
-                #end use templates
            
             list_fwhm[signame] = sublist_fwhm
             self.saveWs(options)
@@ -1172,16 +1214,14 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             else:
                 idim = int(subname[-1])
                 obs.SetTitle("template^{%d}_{%dD}" % (idim,ndim) )
-        doBands = options.plot_fit_bands and not forceSkipBands
-        frame = obs.frame()
-        resid  = obs.frame()
+
         invisible = []
         ## dataopts = [,RooFit.MarkerSize(1)]
         dataopts = [RooFit.MarkerSize(1)]+opts
         if poissonErrs:
             dataopts.append(RooFit.DataError(ROOT.RooAbsData.Poisson))
         curveopts = [RooFit.LineColor(ROOT.kBlue)]
-
+        
         if not plot_binning:
             plot_binning = options.plot_binning
 
@@ -1203,10 +1243,18 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         if options.verbose and binning:
             print "Plot binning: ",
             dset.get()[obs.GetName()].getBinning(binning).Print()
-        if binning:
-            dataopts.append(RooFit.Binning(binning))                        
+        doBands = options.plot_fit_bands and not forceSkipBands
         if doBands:
             invisible.append(RooFit.Invisible())
+            
+        if binning:
+            dataopts.append(RooFit.Binning(binning))                        
+            frame = obs.frame(RooFit.Range("plotBinning"))
+            resid  = obs.frame(RooFit.Range("plotBinning"))
+        else:
+            frame = obs.frame()
+            resid  = obs.frame()
+        
         print "Plotting dataset"
         dset.plotOn(frame,*(dataopts+invisible))
         print "Plotting pdf....",
