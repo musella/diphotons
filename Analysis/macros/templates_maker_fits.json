@@ -134,8 +134,8 @@
                                 "subleadIsSB && ! TMath::Even(event)" : [ "subleadChIso", "leadRndConeChIso" ],
                                 "subleadIsSB && ! TMath::Even(event)" : [ "leadRndConeChIso", "subleadChIso" ]
                         },
-                        "EBEE" :{ "leadIsEB && ! subleadIsEB &&      leadIsSB" : [ "leadRndConeChIso", "subleadChIso" ], 
-                                "leadIsEB && ! subleadIsEB &&    ! leadIsSB" : [ "leadChIso", "subleadRndConeChIso" ], 
+                        "EBEE" :{" leadIsEB && ! subleadIsEB &&      leadIsSB" : [ "leadRndConeChIso", "subleadChIso" ], 
+                                "  leadIsEB && ! subleadIsEB &&    ! leadIsSB" : [ "leadChIso", "subleadRndConeChIso" ], 
                                 "! leadIsEB && subleadIsEB &&   subleadIsSB" : [ "subleadChIso", "leadRndConeChIso" ], 
                                 "! leadIsEB && subleadIsEB && ! subleadIsSB" : [ "subleadChIso", "leadRndConeChIso" ]
                                 }
@@ -194,11 +194,11 @@
                         "dataset" : "data",    "#" : "input dataset. can be data,mc or templates",
                         "#" : "How to fill different categories. Logic is the same as for the 'fill' instructions above",
                         "fill_categories" : {
-                        "EBEB" :{"TMath::Even(event) && leadPhoIsoEB && subleadPhoIsoEB" : [ "leadRndConeChIso", "subleadRndConeChIso" ],
-                                 "! TMath::Even(event) && leadPhoIsoEB && subleadPhoIsoEB" : [ "subleadRndConeChIso", "leadRndConeChIso" ]
+                        "EBEB" :{"TMath::Even(event) " : [ "leadRndConeChIso", "subleadRndConeChIso" ],
+                                 "! TMath::Even(event)" : [ "subleadRndConeChIso", "leadRndConeChIso" ]
                                 },
-                        "EBEE" :{ "leadPhoIsoEB && subleadPhoIsoEE" : [ "leadRndConeChIso", "subleadRndConeChIso" ], 
-                                "leadPhoIsoEE && subleadPhoIsoEB" : [ "subleadRndConeChIso", "leadRndConeChIso" ]
+                        "EBEE" :{ "leadIsEB && !subleadIsEB" : [ "leadRndConeChIso", "subleadRndConeChIso" ], 
+                                "!leadIsEB && subleadIsEB" : [ "subleadRndConeChIso", "leadRndConeChIso" ]
                                 }
                             }
                 },
@@ -222,11 +222,11 @@
                  },
                  "ff" : { "sel"  : "cicNoChIsoDoubleSB",        
                          "fill_categories" : {
-                         "EBEB" :{ "TMath::Even(event) && subleadPhoIsoEB && leadPhoIsoEB " : [ "leadChIso", "subleadChIso" ],
-                                 "! TMath::Even(event) &&subleadPhoIsoEB && leadPhoIsoEB" : [ "subleadChIso", "leadChIso" ]
+                         "EBEB" :{ "TMath::Even(event)  " : [ "leadChIso", "subleadChIso" ],
+                                 "! TMath::Even(event) " : [ "subleadChIso", "leadChIso" ]
                                  },
-                         "EBEE" :{ "leadPhoIsoEB && subleadPhoIsoEE" : [ "leadChIso", "subleadChIso" ],
-                                 "leadPhoIsoEE && subleadPhoIsoEB" : [ "subleadChIso", "leadChIso" ]
+                         "EBEE" :{ "leadIsEB && !subleadIsEB" : [ "leadChIso", "subleadChIso" ],
+                                 "!leadIsEB && subleadIsEB" : [ "subleadChIso", "leadChIso" ]
                                  }
                             }
                         }
@@ -269,9 +269,9 @@
                     "_presel" :  "phoRndConePhoIso - rho*phoPhoIsoEA < 4.",
                     "dataset" : "data",
                         "fill_categories" : { 
-                            "EB" : { "phoPhoIsoEB" : ["phoRndConeChIso"] },
-                            "EE" : { "phoPhoIsoEE" : ["phoRndConeChIso"] },
-                            "eta_inclusive" : { "phoPhoIsoEB ||phoPhoIsoEE" : ["phoRndConeChIso"] }
+                            "EB" : { "phoIsEB" : ["phoRndConeChIso"] },
+                            "EE" : { "!phoIsEB" : ["phoRndConeChIso"] },
+                            "eta_inclusive" : { "phoIsEB ||!phoIsEB" : ["phoRndConeChIso"] }
                     }
                 },
                 "f" : { 
