@@ -54,8 +54,8 @@ class CombineApp(TemplatesApp):
                                     help="Use this template for signal modeling",
                                     ),                        
                         make_option("--obs-template-binning",dest="obs_template_binning",action="callback",callback=optpars_utils.Load(scratch=True),
-                                    default={ "EBEB" : [270,300.,350.,400.,7000.],
-                                              "EBEE" : [270,300.,350.,400.,7000.]
+                                    default={ "EBEB" : [270.,295.,325.,370.,450.,7000.],
+                                              "EBEE" : [270.,310.,355.,420.,535.,7000.]
                                               },
                                     help="Binning of the parametric observable to be used for templates",
                                     ),                        
