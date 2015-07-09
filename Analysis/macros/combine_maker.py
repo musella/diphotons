@@ -35,6 +35,7 @@ class CombineApp(TemplatesApp):
                                     default="cic",
                                     help="Fit to consider"),
                         make_option("--observable",dest="observable",action="store",type="string",
+                                    ## default="mgg[2650,300,6000]",
                                     default="mgg[3350,300,7000]",
                                     help="Observable used in the fit default : [%default]",
                                     ),
@@ -54,8 +55,8 @@ class CombineApp(TemplatesApp):
                                     help="Use this template for signal modeling",
                                     ),                        
                         make_option("--obs-template-binning",dest="obs_template_binning",action="callback",callback=optpars_utils.Load(scratch=True),
-                                    default={ "EBEB" : [270,300.,350.,400.,7000.],
-                                              "EBEE" : [270,300.,350.,400.,7000.]
+                                    default={ "EBEB" : [270,300.,350.,400.,6000.],
+                                              "EBEE" : [270,300.,350.,400.,6000.]
                                               },
                                     help="Binning of the parametric observable to be used for templates",
                                     ),                        
@@ -70,6 +71,7 @@ class CombineApp(TemplatesApp):
                                     metavar="FIT_RANGE"
                                     ),                        
                         make_option("--plot-binning",dest="plot_binning",action="callback",callback=optpars_utils.ScratchAppend(float),
+                                    ## type="string",default=[114,300,6000],
                                     type="string",default=[134,300,7000],
                                     help="Binning to be used for plots",
                                     ),
@@ -134,6 +136,9 @@ class CombineApp(TemplatesApp):
                                     help="Signal name to generate the dataset and/or datacard"),            
                         make_option("--generate-datacard",dest="generate_datacard",action="store_true",default=False,
                                     help="Generate datacard",
+                                    ),
+                        make_option("--include-flat-params-in-groups",dest="include_flat_params_in_groups",action="store_true",default=False,
+                                    help="Include flat parameters in nuisance groups. (requires combine PR #225)",
                                     ),
                         make_option("--use-signal-datahist",dest="use_signal_datahist",action="store_true",default=False,
                                     help="Give RooDataHist to combine instead of RooHistPdf",
@@ -453,6 +458,28 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     datacard.write("# ")
                 datacard.write("%s param %1.3g %1.3g\n" % tuple(param) )            
             
+            # flat parameters
+            datacard.write("\n")
+            for param in fit.get("flat_params",[]):
+                if (param[-1] == 0):
+                    datacard.write("# ")
+                datacard.write("%s flatParam\n" % param )
+            
+            # groups of nuisances
+            datacard.write("\n")
+            for group,params in fit.get("groups",{}).iteritems():
+                if len(params) == 0: continue
+                if not options.include_flat_params_in_groups:
+                    flatp = fit.get("flat_params",[])
+                    ## remove flat parameters from group
+                    flat_params = [ p for p in params if not p in flatp ]
+                    if len(flat_params) != 0:
+                        pars = " ".join( set(flat_params) )
+                        datacard.write("%s group = %s\n" % (group,pars ))
+                    datacard.write("# "); ## leave full group definition in datacard, but commented
+                pars = " ".join( set(params) )
+                datacard.write("%s group = %s\n" % (group,pars ))
+                
             datacard.write("----------------------------------------------------------------------------------------------------------------------------------\n\n")
             
             
@@ -684,8 +711,14 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
 
         ## prepare background fit components
         print
-        fit["params"] = []
-
+        fit["params"] = fit.get("params",[])
+        fit["flat_params"] = fit.get("flat_params",[])
+        fit["groups"] = fit.get("groups",{})
+        if not "bkg_shape" in fit["groups"]:
+            fit["groups"]["bkg_shape"] = []
+        if not "bkg_shape_control" in fit["groups"]:
+            fit["groups"]["bkg_shape_control"] = []
+            
         ## loop over categories to fit background
         for cat in fit["categories"]:
             
@@ -701,6 +734,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 tot = 0.
                 roolist = ROOT.RooArgList()
                 rooformula = []
+                if not "bkg_fractions" in fit["groups"]:
+                    fit["groups"]["bkg_fractions"] = []
                 # read covariance matrix for purities
                 if options.nuisance_fractions_covariance:
                     ## FIXME: covariance per-category
@@ -738,6 +773,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                         eigNuis.setConstant(True)
                         eigvVars.add(eigNuis)
                         fit["params"].append( (eigNuis.GetName(), eigNuis.getVal(), 1.) )
+                        fit["groups"]["bkg_fractions"].append(eigNuis.GetName())
                 else:
                     cov_components = options.components[:-1]
                     dependent      = options.components[-1]
@@ -755,7 +791,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     rooformula.append("@%d"%icomp)
                     if options.nuisance_fractions:
                         if options.nuisance_fractions_covariance:
-                            # now go create the linear combinations
+                            # now create the linear combinations
                             # each is equal to the transpose matrx times the square root of the eigenvalue (so that we get unit gaussians)
                             coeffs = ROOT.RooArgList()                                    
                             for jcomp in range(len(cov_components)):
@@ -769,12 +805,16 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                             nuis.setConstant(True)
                             fit["params"].append( (nuis.GetName(), nuis.getVal(), 0.) )
                             
+                        frac.setConstant(True)
                         nuisfrac = ROOT.RooAddition("%s%s_nuisanced_frac" % (comp,cat),"%s%s_nuisanced_frac" % (comp,cat),ROOT.RooArgList(frac,nuis) )
                         roolist.add(nuisfrac)                        
                         self.keep( [nuis,nuisfrac] )
                     else:
+                        frac.setConstant(False)
                         roolist.add(frac)
-                        
+                        fit["flat_params"].append(frac.GetName())
+                        fit["groups"]["bkg_fractions"].append(frac.GetName())
+
                 # now build the dependent coefficient as 1 - sum frac_j
                 comp = dependent
                 if comp != "":
@@ -963,18 +1003,25 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 if options.norm_as_fractions:
                     if comp in setme:
                         fractions[comp].setVal(nreduced.sumEntries()/ndata[cat])
-                        fractions[comp].setConstant(True) # set constant by default
+                        ## fractions[comp].setConstant(True) # set constant by default
                 else:
                     norm.setVal(nreduced.sumEntries()) 
                 
-                # import everything to the workspace
-                if options.freeze_params:
-                    params = pdf.getDependents(self.pdfPars_)
-                    itr = params.createIterator()
-                    p = itr.Next()
-                    while p:
-                        p.setConstant(True)
-                        p = itr.Next()
+                ## define groups of parameters and set them constant if requested
+                params = pdf.getDependents(self.pdfPars_)
+                itr = params.createIterator()
+                var = itr.Next()
+                while var:
+                    if not var.isConstant(): # skip the variables which were set constant
+                        fit["flat_params"].append( var.GetName() )
+                        fit["groups"]["bkg_shape"].append( var.GetName() )
+                        if "control" in var.GetName():
+                            fit["groups"]["bkg_shape_control"].append( var.GetName() )
+                    if options.freeze_params:
+                        var.setConstant(True)
+                    var = itr.Next()
+                    
+                # import pdf to the workspace
                 self.workspace_.rooImport(pdf,RooFit.RecycleConflictNodes())
                 importme.append([norm]) ## import this only after we run on all components, to make sure that all fractions are properly set
                 self.workspace_.rooImport(reduced)
@@ -1006,10 +1053,13 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         fit["sidebands"] = {}
         for nam,val in sidebands.iteritems():
             fit["sidebands"]["%s_control" % nam] = list(val)
-        templfunc.Print()
-        templfunc.SetNameTitle("func_%s"% templfunc.GetName(),"func_%s"% templfunc.GetName())
-        self.workspace_.rooImport(templfunc)
-        self.workspace_.rooImport(rootempl)
+        
+        if options.use_templates:
+            templfunc.Print()
+            templfunc.SetNameTitle("func_%s"% templfunc.GetName(),"func_%s"% templfunc.GetName())
+            self.workspace_.rooImport(templfunc)
+            self.workspace_.rooImport(rootempl)
+        
         self.workspace_.Print()
         # done
         self.saveWs(options)
@@ -1076,7 +1126,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             for cat in fit["categories"]:
                 treename = "%s_%s_%s" % (signame,options.fit_name,cat)
                 print treename
-                dset = self.rooData(treename)
+                ## dset = self.rooData(treename)
+                dset = self.rooData(treename,weight="%s * weight" % options.luminosity)
                 self.workspace_.rooImport(dset)
                 if options.use_templates:
                     rootempl_binning= rootempl.getBinning("templateBinning%s" % cat)
@@ -1178,6 +1229,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
 
                 ## normalization has to be called <pdfname>_norm or combine won't find it
                 norm = self.buildRooVar("%s_norm" %  (pdf.GetName()), [], importToWs=False ) 
+                norm.setConstant(True)
                 norm.setVal(reduced.sumEntries()) 
                 
                 ## import pdf and normalization
