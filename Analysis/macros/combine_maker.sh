@@ -30,6 +30,9 @@ while [[ -n $1 ]]; do
 	    templates="semiparam"
 	    opts="$opts $1"
 	    ;;
+        --mix-templates)
+            mix="--mix-templates"
+            ;;
 	--bkg-shapes)
 	    shapes=$(echo $(basename $2 | sed 's%.json%%'))
 	    opts="$opts $1"
@@ -91,8 +94,17 @@ if [[ ! -f $input ]]; then
     echo "creating $input"
     echo "**************************************************************************************************************************"
     subset=$fitname
-    [[ "$fitname" == "2D" ]] && subset="2D,singlePho"
+    if [[ "$fitname" == "2D" ]]; then
+        subset="2D,singlePho"
+        mix="--mix-templates"
+    fi
     ./templates_maker.py --load templates_maker.json,templates_maker_fits.json --only-subset $subset --input-dir $treesdir/$version -o $input 2>&1 | tee $input_log
+    echo "**************************************************************************************************************************"
+elif [[ -n$mix ]]; then
+    echo "**************************************************************************************************************************"
+    echo "running event mixing"
+    echo "**************************************************************************************************************************"
+    ./templates_maker.py --read-ws $input $mix 2>&1 | tee mix_$input_log
     echo "**************************************************************************************************************************"
 fi
 
