@@ -4,7 +4,8 @@
 version=$1 && shift
 
 fitname=2D 
-www=~/www/exo/
+#www=~/www/exo/
+www=/afs/cern.ch/user/m/mquittna/www/diphoton/Phys14/
 
 shapes="default_shapes"
 
