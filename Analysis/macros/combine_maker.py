@@ -210,6 +210,7 @@ class CombineApp(TemplatesApp):
         
         import diphotons.Utils.pyrapp.style_utils as style_utils
         ROOT.gSystem.Load("libdiphotonsUtils")
+        ROOT.gSystem.Load("libdiphotonsRooUtils")
         
         self.pdfPars_ = ROOT.RooArgSet()
 
@@ -664,7 +665,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 rootempls.add( self.buildRooVar("templateNdim%dDim%d" %(ndim,idim), fit["template_binning"]) )
                 nb = len(fit["template_binning"])-1
                 nb *= nb
-            templfunc,unrol_widths = self.histounroll_book(fit["template_binning"],rootempls,importToWs=False,buildHistFunc="templateNdim%d_unroll" % ndim)
+            templfunc,unrol_widths = self.histounroll_book(fit["template_binning"],rootempls,importToWs=False,buildHistFunc="templateNdim%d_unroll" % ndim)            
             unrol_binning = array.array( 'd', [ float(bound) for bound in range(nb+1) ] )
             unrol_widths = array.array( 'd', [ 1. for bound in range(nb) ] )
             assert( len(unrol_binning) == len(unrol_widths)+1 )
@@ -964,7 +965,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     ## make slice pdf out of TH2
                     self.keep(pdf)
                     templpdf = ROOT.RooSlicePdf("model_%s_%s%s" % (rootempl.GetName(),comp,cat),"model_%s_%s%s" % (rootempl.GetName(),comp,cat),
-                                                templhist,unrol_widths,rootempl,roobs)
+                                                templhist,rootempl,roobs,unrol_widths)
                     self.keep(templpdf)
                     if options.verbose:
                         print "Integral templpdf     :", templpdf.createIntegral(ROOT.RooArgSet(rootempl,roobs),"templateBinning%s"%cat).getVal()
@@ -1060,7 +1061,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             self.workspace_.rooImport(templfunc)
             self.workspace_.rooImport(rootempl)
         
-        self.workspace_.Print()
+        if options.verbose:
+            self.workspace_.Print()
         # done
         self.saveWs(options)
        

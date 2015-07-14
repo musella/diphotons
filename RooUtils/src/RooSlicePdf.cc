@@ -17,13 +17,12 @@ using namespace std;
 
 //_____________________________________________________________________________
 RooSlicePdf::RooSlicePdf(const char *name, const char *title, TH2 * histo, 
-			 Double_t * _widths,
-			 RooAbsReal& _x, RooAbsReal& _p //, RooAbsPdf * __ppdf
+			 RooAbsReal& _x, RooAbsReal& _p, Double_t * _widths //, RooAbsPdf * __ppdf
 	) :
 	RooAbsPdf(name, title), 
 	histo_(dynamic_cast<TH2*>(histo->Clone(Form("histo_%s",name)))),	
 	/// pdf_(__ppdf),
-	widths_(&_widths[0],&_widths[histo_->GetNbinsY()]),
+	// widths_(&_widths[0],&_widths[histo_->GetNbinsY()]),
 	x_("x","Dependent",this,_x), p_("p","Parameter",this,_p)
 {
 	histo_->SetDirectory(0);
@@ -32,6 +31,13 @@ RooSlicePdf::RooSlicePdf(const char *name, const char *title, TH2 * histo,
 	int nbinsx = histo_->GetNbinsX();
 	int nbinsy = histo_->GetNbinsY();
 	/// cout << "nbinsx " << nbinsx<< " nbinsy " << nbinsy << endl;
+	for(int yb=0; yb<histo_->GetNbinsY(); ++yb) {
+		if( _widths != 0 ) { 
+			widths_.push_back(_widths[yb]); 
+		} else { 
+			widths_.push_back(histo_->GetYaxis()->GetBinWidth(yb+1) ); 
+		}
+	}
 	for(int ib=0; ib<nbinsx; ++ib) {
 		double sliceint = histo_->Integral(ib+1,ib+1,1,nbinsy);		
 		if( sliceint == 0. ) { 
@@ -39,7 +45,7 @@ RooSlicePdf::RooSlicePdf(const char *name, const char *title, TH2 * histo,
 			continue; 
 		}
 		/// double slicewidth = histo_->GetXaxis()->GetBinWidth(ib+1);
-		/// cout << "sliceint " << ib << " " << sliceint << endl;
+		/// cout << "sliceint " << ib << " " << sliceint << endl;		
 		for(int jb=0; jb<nbinsy; ++jb) {
 			double bincont = histo_->GetBinContent(ib+1,jb+1)/(sliceint*widths_[jb]);
 			histo_->SetBinContent(ib+1,jb+1,bincont);

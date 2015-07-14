@@ -21,6 +21,13 @@ while [[ -n $1 ]]; do
 	    www=$2
 	    shift
 	    ;;
+	--verbose)
+	    verbose="--verbose"
+	    ;;
+	--redo-input)
+	    rerun="1"
+	    shift
+	    ;;
 	--label)
 	    addlabel=$2
 	    shift
@@ -88,7 +95,7 @@ mkdir $workdir
 
 mkdir $www/$version
 
-if [[ ! -f $input ]]; then
+if [[ -n $rerun  ]] || [[ ! -f $input ]]; then
     echo "**************************************************************************************************************************"
     echo "creating $input"
     echo "**************************************************************************************************************************"
@@ -97,13 +104,13 @@ if [[ ! -f $input ]]; then
         subset="2D,singlePho"
         mix="--mix-templates"
     fi
-    ./templates_maker.py --load templates_maker.json,templates_maker_fits.json --only-subset $subset --input-dir $treesdir/$version -o $input 2>&1 | tee $input_log
+    ./templates_maker.py --load templates_maker.json,templates_maker_fits.json --only-subset $subset $mix --input-dir $treesdir/$version -o $input $verbose 2>&1 | tee $input_log
     echo "**************************************************************************************************************************"
 elif [[ -n $mix ]]; then
     echo "**************************************************************************************************************************"
     echo "running event mixing"
-    echo "**************************************************************************************************************************"
-    ./templates_maker.py --read-ws $input $mix 2>&1 | tee mix_$input_log
+    echo "**************************************************************************************************************************"    
+    ./templates_maker.py --load templates_maker_fits.json --read-ws $input $mix $verbose 2>&1 | tee mix_$input_log
     echo "**************************************************************************************************************************"
 fi
 

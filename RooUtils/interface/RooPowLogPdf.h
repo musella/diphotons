@@ -4,6 +4,8 @@
 #include "RooAbsPdf.h"
 #include "RooRealProxy.h"
 
+#include "Rtypes.h"
+
 class RooRealVar;
 class RooAbsReal;
 
