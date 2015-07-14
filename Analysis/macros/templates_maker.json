@@ -87,7 +87,7 @@
     "#" : " %(cat)s is replaced with the category name                 ", 
     "treeName": "trees/%(sample)s_%(cat)s",
 
-    "preselection" : "leadChIso < 15. && subleadChIso < 15. && mass > 250",   "#" : "preselection cut applied to all trees",
+    "preselection" : "(leadChIso < 15. && subleadChIso < 15. && mass > 250)",   "#" : "preselection cut applied to all trees",
     "selection"    : "cicNoChIso",                              "#" : "nominal selection",
     
     "#" : "---------------------------------------------------------------------------------------------------------------------",

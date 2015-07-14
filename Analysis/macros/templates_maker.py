@@ -619,14 +619,13 @@ class TemplatesApp(PlotApp):
                                     tempHisto.SetBinContent(bin,tempHisto.GetBinContent(bin)/(tempHisto.GetBinWidth(bin)))
                                     tempHisto.SetBinError(bin,tempHisto.GetBinError(bin)/(tempHisto.GetBinWidth(bin)))
                                 histls.append(tempHisto)
-                          #  if not prepfit: 
+                           # if not prepfit: 
                            # print "plot 1d histos"
                             self.plotHistos(histls,tit,template_binning,True,numEntries_s)
                         ## roll out for combine tool per category
                         if fit["ndim"]>1:
                             self.histounroll(templates_massc,template_binning,isoargs,compname,cat,cut_s,prepfit,sigRegionlow2D,sigRegionup2D,extra_shape_unc=options.extra_shape_unc)
-            if fit["ndim"]>1:
-                self.histounroll_book(template_binning,isoargs)
+                            self.histounroll_book(template_binning,isoargs)
 
     ## ------------------------------------------------------------------------------------------------------------
 
@@ -786,7 +785,7 @@ class TemplatesApp(PlotApp):
 
         massH=ROOT.TH1F("%s_massH" % dataset.GetName(),"%s_massH" % dataset.GetName(),len(mass_binning)-1,mass_binning)
         dataset.fillHistogram(massH,ROOT.RooArgList(massargs)) 
-       # print "define mass bins " 
+       # print "define mass bins 0 
         massH.Scale(1.0/massH.Integral())
         prob = array.array('d',[])
         dpmq = array.array('d',[0.0 for i in range((mass_split[1]+1))])
@@ -1055,12 +1054,12 @@ class TemplatesApp(PlotApp):
                 self.workspace_.rooImport(histoCombine_mctruth,ROOT.RooFit.RenameVariable("mass","mgg"))
         self.saveWs(options,fout)
     ## ------------------------------------------------------------------------------------------------------------
-        def nominalFit(self,options,args):
-            fout = self.openOut(options)
-            fout.Print()
-            fout.cd()
-            self.doNominalFit(options,args)
-            self.saveWs(options,fout)
+    def nominalFit(self,options,args):
+        fout = self.openOut(options)
+        fout.Print()
+        fout.cd()
+        self.doNominalFit(options,args)
+        self.saveWs(options,fout)
 
 ## ------------------------------------------------------------------------------------------------------------
     def doNominalFit(self,options,args):
@@ -1455,8 +1454,6 @@ class TemplatesApp(PlotApp):
             g_templatepf.Draw("P SAME")
             leg.AddEntry(g_templatepp,"pp template","lp")  
             leg.AddEntry(g_templatepf,"pf %s"% opt,"pl")  
-        g_truthpp.Draw("P")
-        g_truthpp.Draw("AP")
         leg.AddEntry(g_truthpp,"pp truth","lp")  
         g_mctruthpf.SetMarkerColor(ROOT.kOrange+7)
         g_templatepf.SetMarkerColor(ROOT.kBlack)
@@ -1599,6 +1596,8 @@ class TemplatesApp(PlotApp):
             ## prepare truth templates
             for truth,sel in truth_selection.iteritems():
                 cut = ROOT.TCut(preselection)
+                print "cut truth"
+                cut.Print()
                 cut *= ROOT.TCut(sel)
                 legs = [""]
                 if "legs" in fit:
@@ -2028,7 +2027,6 @@ class TemplatesApp(PlotApp):
                     wei  = ROOT.TCut(preselection)
                     wei *= ROOT.TCut(cut)
                     wei *= ROOT.TCut(weight)
-                    
                     ## fill dataset from source trees
                     for tree in src:
                         twei = wei.GetTitle() % {"leg" : leg}

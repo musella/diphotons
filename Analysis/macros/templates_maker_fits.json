@@ -241,7 +241,6 @@
 	    "template_binning" : [0.0,0.1,5.0,15.0],
             "store_trees"  : true,
             "selection"    : "cicNoChIsoSinglePho",
-            "_preselection" : "phoChIso < 15.",
             "preselection" : "phoPt >170.",
             "components" : ["p", "f"],
             "categories" : { 
@@ -266,7 +265,6 @@
             "templates" : {
                 "p" : {
                     "sel" : "cicNoChIsoSinglePho",
-                    "_presel" :  "phoRndConePhoIso - rho*phoPhoIsoEA < 4.",
                     "dataset" : "data",
                         "fill_categories" : { 
                             "EB" : { "phoIsEB" : ["phoRndConeChIso"] },
@@ -380,7 +378,7 @@
                 "_upperLimitSigRegion1D": "5.", 
                 "upperLimitSigRegion2D": "9.", 
                 "upperLimitSigRegion1D": "15.", 
-		"mass_binning" :"mass[13000,270.0,13000.0]"
+		"mass_binning" :"mass[13000,200.0,13000.0]"
 		}
 	},
    "nominalFit":{
