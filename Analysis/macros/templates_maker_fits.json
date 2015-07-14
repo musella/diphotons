@@ -145,7 +145,7 @@
 	},	
         "2D" : {
             "ndim"       : 2,                                                                "#" : "number of dimensions for the template  ",
-	  		"dataset_variables" : ["mgg","mass [-1.0,0.0,20.0,50.0,100.0,200.0,500.0,13000.0]","leadPt","subleadPt","leadEta","subleadEta", "leadScEta","subleadScEta","leadMatchType", "subleadMatchType","leadPhoIso","subleadPhoIso"],      "#" : "additional variables to be stored      ",
+	    "dataset_variables" : ["mgg","mass [-1.0,0.0,20.0,50.0,100.0,200.0,500.0,13000.0]","leadPt","subleadPt","leadEta","subleadEta", "leadScEta","subleadScEta","leadMatchType", "subleadMatchType","leadPhoIso","subleadPhoIso"],      "#" : "additional variables to be stored      ",
              "store_trees" : true,
 			"bins"       : [ "mass", [500.0,1300.0] ],                                       "#" : "kinematic bins in which the fit is run ",
             "template_binning" : [ 0.0,0.1, 5.0, 15.0 ],                                   "#" : "template varaible binning              ",
