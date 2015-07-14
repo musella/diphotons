@@ -11,7 +11,6 @@ cd $folder
 
 args=""
 while [[ -n $1 ]]; do
-    echo $1;
     case $1 in
 	-M)
 	    method=$2
@@ -20,7 +19,6 @@ while [[ -n $1 ]]; do
 	    ;;
 	-n)
 	    label=$2
-	    args="$args $1 $2"
 	    shift
 	    ;;
 	--hadd)
@@ -38,7 +36,6 @@ for coup in $(echo $coupl | tr ',' ' '); do
     cards=datacard*_grav_${coup}_*.txt
     outputs=""
     
-    set -x
     for card in $cards; do
 	echo $card
 	binary=$(echo $card | sed 's%.txt$%.root%')
@@ -49,10 +46,13 @@ for coup in $(echo $coupl | tr ',' ' '); do
 	if [[ -f $binary ]] && [[ $binary -nt $card ]]; then
 	    card=$binary
 	fi
-	combine -L libdiphotonsUtils $args -n "${label}_k${kmpl}" -m $mass $card >& combine_log_${method}_${kmpl}_${mass}.log 
+	log=combine_log_${method}_${label}_${kmpl}_${mass}.log
+	set -x
+	combine -L libdiphotonsUtils $args -n "${label}_k${kmpl}" -m $mass $card 2>&1 | tee $log
+	set +x
 	
 	sleep 1
-	tail -5 combine_log_${method}_${kmpl}_${mass}.log 
+	tail -5 $log 
 	outputs="$outputs higgsCombine${label}_k${kmpl}.${method}.mH$mass.root"
     done
     if [[ -n $hadd ]]; then
