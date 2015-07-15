@@ -1251,7 +1251,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                         print "Integral templpdf only templateNdim2_unroll    :", ppPdf.createIntegral(ROOT.RooArgSet(rootempl),"templateBinning%s"%cat).getVal()
                         print "Integral combined pdf    :", pdf.createIntegral(ROOT.RooArgSet(rootempl,roobs),"templateBinning%s"%cat).getVal()
                         print
-                    self.plotBkgFit(options,binned,pdf,rootempl,"signal_%s_%s_%s" % (signame,rootempl.GetName(),cat),poissonErrs=False,logy=False,logx=False,plot_binning=rootempl_binning,opts=[RooFit.ProjWData(ROOT.RooArgSet(roobs),binned)], bias_funcs={},sig=True)
+                    self.plotBkgFit(options,binned,pdf,rootempl,"signal_%s_%s_%s" % (signame,rootempl.GetName(),cat),poissonErrs=True,logy=False,logx=False,plot_binning=rootempl_binning,opts=[RooFit.ProjWData(ROOT.RooArgSet(roobs),binned)], bias_funcs={},sig=True)
                 
                 self.plotBkgFit(options,reduced,pdf,roobs,"signal_%s_%s_%s" % (signame,roobs.GetName(),cat),poissonErrs=False,sig=True,logx=False,logy=False,
                                 plot_binning=plot_signal_binnning)
