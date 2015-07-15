@@ -10,9 +10,15 @@ forked the flashgg and this repository.
 
 ```
 # change these to the values that you prefer
-PROJECT_AREA=EXO_7_4_0_pre9 
-CMSSW_VERSION=CMSSW_7_4_0_pre9 
-FLASHGG_TAG=diphtons_phys14
+## # Phys14 settings
+## PROJECT_AREA=EXO_7_4_0_pre9 
+## CMSSW_VERSION=CMSSW_7_4_0_pre9 
+## FLASHGG_TAG=diphtons_phys14
+
+# Phys14 settings
+PROJECT_AREA=EXO_7_4_6_patch2
+CMSSW_VERSION=CMSSW_7_4_6_patch2 
+FLASHGG_TAG=Spring15BetaV0_pm1 # set empty if you want the master (safe as long as you are not producing MicroAOD)
 
 # read github name from git config
 MY_GITHUB_NAME=$(git config --get user.github)
@@ -33,7 +39,7 @@ git clone https://github.com/cms-analysis/flashgg.git
 cd flashgg
 git remote add musella git@github.com:musella/flashgg.git
 git fetch musella
-git co -b topic_${FLASHGG_TAG} ${FLASHGG_TAG} 
+[[ -n ${FLASHGG_TAG} ]] && git co -b topic_${FLASHGG_TAG} ${FLASHGG_TAG} 
 
 cd ${CMSSW_BASE}/src
 bash flashgg/setup.sh 2>&1 | tee flashgg/setup.log
@@ -129,24 +135,35 @@ echo crabConfig_*.py | xargs -n 1 crab sub
 ## parallel 'crab sub {}' ::: crabConfig_*.py
 ```
 
-### Configuration for Phys14 AN studies
+### Exisiting configurations
 ```
 cmsenv
 
 source /cvmfs/cms.cern.ch/crab3/crab.sh
 voms-proxy-init --voms cms --valid 168:00
 
+## CAMPAIGN=AN_Phys14_samples
+CAMPAIGN=EXOSpring15_v1
+
 cd ${CMSSW_BASE}/src/flashgg/MetaData/work
 
-cp -p  ${CMSSW_BASE}/src/diphotons/MetaData/work/campaigns/AN_Phys14_samples.json campaigns/MyAN_Phys14_samples.json
+cp -p  ${CMSSW_BASE}/src/diphotons/MetaData/work/campaigns/${CAMPAIGN}.json campaigns/My${CAMPAIGN}.json
 ln -sf  ${CMSSW_BASE}/src/diphotons/MetaData/work/analysis_microAOD.py .
 
-# edit list of samples to be actually submitted 
-emacs -nw campaigns/MyANPhys14_samples.json
-./prepareCrabJobs.py -C ExoPhys14AN -s campaigns/AN_MyPhys14_samples.json -p analysis_microAOD.py  --mkPilot
+# allow running on invalid datasets
+cat crabConfig_TEMPLATE.py > mycrabConfig_TEMPLATE.py
+cat >> mycrabConfig_TEMPLATE.py << EOF
+
+config.Data.allowNonValidInputDataset=True
+EOF
+
+# edit list of samples to be actually submitted (and check the crab template)
+emacs -nw campaigns/My${CAMPAIGN}.json mycrabConfig_TEMPLATE.py
+
+./prepareCrabJobs.py -C ${CAMPAIGN} -s campaigns/My${CAMPAIGN}.json -p analysis_microAOD.py  --mkPilot -t mycrabConfig_TEMPLATE.py
 
 # submit pilot jobs
-cd ExoPhys14AN
+cd ${CAMPAIGN}
 echo pilot* | xargs -n 1 crab sub
 
 ```
@@ -202,215 +219,4 @@ The `--help` option gives a list of supported options, while the `--dumpConfig` 
 - `Analysis/macros/eff_plots.py`: efficiency for di-photon selection. Runs on the output of `Analysis/config/high_mass_analysis.py`.
 - `Analysis/macros/templates_maker.py`: deals with templates creation.
 
-##### Templates maker configuration. 
-
-Note: JSON files do support comments, so remove the parts starting with `#` if you copy paste
-
-```
-{
-    # ---------------------------------------------------------------------------------------------------------------------
-    # Dataset definition
-    # ---------------------------------------------------------------------------------------------------------------------
-    #   %(sel)s is replaced with the appropriate string
-    #   fromat is <sample-name>:[[input-file][/file-folder]]
-    # data to be fit
-    "data" : [ 
-	       "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)sGenIso",
-	       "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)sNonGenIso",
-	       "QCD_HT_100toInf_13TeV:output.root/%(sel)s",
-	       "GJets_HT_100toInf_13TeV:output.root/%(sel)s"		
-	     ],
-    # data used for template making
-    "templates" : [
-	       "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)s",
-	       "QCD_HT_100toInf_13TeV:output.root/%(sel)s",
-	       "GJets_HT_100toInf_13TeV:output.root/%(sel)s"		
-	     ],
-     # data used for template making
-     "mc" : [  # data used for template making
-	     "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)sGenIso",
-	     "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)sNonGenIso",
-	       "QCD_HT_100toInf_13TeV:output.root/%(sel)s",
-	     "GJets_HT_100toInf_13TeV:output.root/%(sel)s"
-	    ],
-
-    # file names for different datasets. Files folder can be specified by --input-dir on the command line
-    "data_file"  : "output.root",
-    "mc_file"    : "output.root",
-    
-    # categories for the input datasets
-    "categories" : [],
-    # groups of categories can be defined to resum some of the categories
-    "groups": {
-        "EBEB"       : ["EBHighR9","EBLowR9"],
-        "notEBEB"    : ["EEHighR9","EELowR9"]
-	}, 
-
-    # how to compose the tree name starting from sub-pieces
-    #  %(sample)s is replaced with the items in dataset definition
-    #  %(cat)s is replaced with the category name
-    "treeName": "trees/%(sample)s_%(cat)s",
-    
-
-    # ---------------------------------------------------------------------------------------------------------------------
-    # Fit definition
-    # ---------------------------------------------------------------------------------------------------------------------
-
-    "dataset_variables" : ["mass","leadPt","subleadPt"],     # list of variables to be put in the dataset (other than the template ones)
-    "weight_expression" : "weight",                          # event weight expression  
-
-    "preselection" : "1",          # preselection applied to all trees
-    "selection"    : "cicNoChIso", # analysis selection, coming out of high_mass_analysis.py
-    
-    # List of aliases. Used to define variables/simplify expressions selection.
-    "aliases"  : [ 
-    	       "leadIsEB    := abs(leadScEta) < 1.5",
-	       "subleadIsEB := abs(subleadScEta) < 1.5",
-	       "leadIsSB    := leadIsEB    && (leadSigmaIeIe    > 0.012) || !leadIsEB    && (leadSigmaIeIe>0.03   )",
-	       "subleadIsSB := subleadIsEB && (subleadSigmaIeIe > 0.012) || !subleadIsEB && (subleadSigmaIeIe>0.03)",
-	       "leadPrompt    := leadGenIso < 10. && leadMatchType == 1",
-	       "leadFake      := ! leadPrompt",
-	       "subleadPrompt := subleadGenIso < 10. && subleadMatchType == 1",
-	       "subleadFake   := ! subleadPrompt"
-    ],
-
-    
-    # List of fits.
-    # General form is "<fit-name>" : { <fit-config> }
-    "fits" : {
-        # 2D fit
-	"2D" : {
-	    "ndim"       : 2,                              # number of dimensions for the template
-	    "bins"       : [ "mass", [500.0,1300.0] ],     # kinematic bins in which the fit is run
-            "template_binning" : [ -1.0, 0.0, 1.0, 15.0 ], # template varaible binning 
-	    "components" : [ "pp", "pf", "ff" ],           # list of fit components
-
-	    # categories in which to split the fit
-	    # format is <fit-category-name>: { <config> }
-	    "categories" : {                               
-		"EBEB" : { 
-		       	 "src"  : "EBEB",       # dataset category (or group) to use as input.
-			 # instruction for how to fill the templates
-			 #  format is <condition> : [ <list-of-expressions> ]. the lenght of <list-of-expressions> has to be exactly ndim
-			 "fill" : {  
-			 	# Pseudo-random-swap. 
-				#  For even events order is lead,sublead.
-				#  For odd events sublead,lead
-			 	"TMath::Even(Entry$)" :[ "leadBlockChIso", "subleadBlockChIso" ],
-			     	"! TMath::Even(Entry$)" :[ "subleadBlockChIso", "leadBlockChIso" ]
-			     }
-		}, 
-                "EBEE" : { "src" : "notEBEB" ,
-			"fill" : { 
-			# Here first photon is barrel, second is endcap
-			"leadIsEB && ! subleadIsEB" :[ "leadBlockChIso", "subleadBlockChIso" ],
-                        "! leadIsEB && subleadIsEB" :[ "subleadBlockChIso", "leadBlockChIso" ]
-		       }
-		} 
-	    },
-            
-            # MC truth selection.
-            #   This is applied to all fit categories in the mc dataset
-	    "truth_selection" : {
-		"pp" : "leadPrompt  && subleadPrompt",
-		    "pf" : "(leadPrompt && subleadFake) || (subleadPrompt && leadFake)",
-		    "ff" : "leadFake    && subleadFake"
-	    },
-	    
-	    # Template creation.
-	    #   Format is <component> : { <settings> }
-	    "templates" : {
-		"pp" : { "sel"  : "cicNoChIso", # event selection
-		         "dataset" : "data",    # input dataset
-			# How to fill different categories. Logic is the same as for the 'fill' instructions above
-			"fill_categories" : {
-			        # same logic as above, but with random cones.
-			        "EBEB" :{ "1" : [ "leadRndConeChIso", "subleadRndConeChIso" ] 
-				},
-				"EBEE" :{ "leadIsEB && ! subleadIsEB" : [ "leadRndConeChIso", "subleadRndConeChIso" ], 
-				          "! leadIsEB && subleadIsEB" : [ "subleadRndConeChIso", "leadRndConeChIso" ]
-				}
-			    }
-		},
-		"pf" : { "sel"  : "cicNoChIsoSingleSB",	
-			"fill_categories" : { 
-			# pseudo-random swap, but taking care to take the random cone isolation for the signal-region photon
-			#   and the photon isolation for the side-band one
-			"EBEB" :{ "leadIsSB && TMath::Even(Entry$)" :    [ "leadBlockChIso", "subleadRndConeChIso" ],
-				"leadIsSB && ! TMath::Even(Entry$)" :    [ "subleadRndConeChIso", "leadBlockChIso" ],
-				"subleadIsSB && ! TMath::Even(Entry$)" : [ "subleadBlockChIso", "leadRndConeChIso" ],
-				"subleadIsSB && ! TMath::Even(Entry$)" : [ "leadRndConeChIso", "subleadBlockChIso" ]
-			},
-			"EBEE" :{ "leadIsEB && ! subleadIsEB &&      leadIsSB" : [ "leadRndConeChIso", "subleadBlockChIso" ], 
-				"leadIsEB && ! subleadIsEB &&    ! leadIsSB" : [ "leadBlockChIso", "subleadRndConeChIso" ], 
-				"! leadIsEB && subleadIsEB &&   subleadIsSB" : [ "subleadBlockChIso", "leadRndConeChIso" ], 
-				"! leadIsEB && subleadIsEB && ! subleadIsSB" : [ "subleadBlockChIso", "leadRndConeChIso" ]
-				}
-			}
-		 },
-		 "ff" : { "sel"  : "cicNoChIsoDoubleSB",	
-			 "fill_categories" : {
-			 "EBEB" :{ "TMath::Even(Entry$)" : [ "leadBlockChIso", "subleadBlockChIso" ],
-				 "! TMath::Even(Entry$)" : [ "subleadBlockChIso", "leadBlockChIso" ]
-				 },
-			 "EBEE" :{ "leadIsEB && ! subleadIsEB" : [ "leadBlockChIso", "subleadBlockChIso" ],
-				 "! leadIsEB && subleadIsEB" : [ "subleadBlockChIso", "leadBlockChIso" ]
-				 }
-			    }
-			}
-		}
-	},
-	# 1D fit: same as above, with (possible) additional loop over legs
-	"1D" : {
-	    "ndim"       : 1,
-	    "bins"       : [ "mass", [500.0,1300.0] ],
-            "template_binning" : [ -1.0, 0.0, 1.0, 15.0 ],
-	    "components" : ["p", "f"],
-	    # loop over legs defined here
-	    #   %(leg)s replaced with these values
-            "legs" : ["lead","sublead"],
-	    "categories" : { 
-		"EBEB" : { 
-		    "src" : "EBEB",
-			"fill" : { "1" : ["%(leg)sBlockChIso"] }
-		}, 
-		"EBEE" : {
-    		    "src" : "notEBEB",
-			"fill" : { "%(leg)sIsEB" : ["%(leg)sBlockChIso"] }
-
-		},
-		"EEEB" : {
-    		    "src" : "notEBEB",
-			"fill" : { "! %(leg)sIsEB" : ["%(leg)sBlockChIso"] }
-
-		}
-	    },
-	    "truth_selection" : {
-		"p" : "%(leg)sPrompt",
-	        "f" : "%(leg)sFake"
-	    },
-	    "templates" : {
-		"p" : {
-		    "sel" : "cicNoChIso",
-		    "dataset" : "data",
-			"fill_categories" : { 
-			    "EBEB" : { "1" : ["%(leg)sRndConeChIso"] },
-			    "EBEE" : { "%(leg)sIsEB" : ["%(leg)sRndConeChIso"] },
-			    "EEEB" : { "! %(leg)sIsEB" : ["%(leg)sRndConeChIso"] }
-		    }
-		},
-		"f" : { 
-		    "sel" : "cicNoChIsoSingleSB",
-			"fill_categories" : { 
-			"EBEB" : { "%(leg)sIsSB" : ["%(leg)sBlockChIso"] },
-			"EBEE" : { "%(leg)sIsSB && %(leg)sIsEB" : ["%(leg)sBlockChIso"] },
-			"EEEB" : { "%(leg)sIsSB && ! %(leg)sIsEB" : ["%(leg)sBlockChIso"] }
-		    }
-		}
-	    }
-	}
-    }
-    
-}
-```
 
