@@ -193,9 +193,13 @@ class CombineApp(TemplatesApp):
                         make_option("--fwhm-output-file",dest="fwhm_output_file",action="store",type="string",
                                     default={},
                                     help="File where to write fwhm values",
-                                    ),
+                                    ), 
                         make_option("--luminosity",dest="luminosity",action="store",type="string",
                                     default="1",
+                                    help="Specify luminosity for generating data, background and signal workspaces",
+                                    ),
+                        make_option("--signal-scalefactor-forpdf",dest="signal_scalefactor_forpdf",action="store",type="string",
+                                    default="100",
                                     help="Specify luminosity for generating data, background and signal workspaces",
                                     ),
                         ]
@@ -220,17 +224,17 @@ class CombineApp(TemplatesApp):
         self.loadRootStyle()
         ROOT.TGaxis.SetMaxDigits(3)
         from ROOT import RooFit
-        from ROOT import TH1F, TCanvas, TAxis
+        from ROOT import TH1D, TCanvas, TAxis
         
         printLevel = ROOT.RooMsgService.instance().globalKillBelow()
         ROOT.RooMsgService.instance().setGlobalKillBelow(RooFit.FATAL)
-        ROOT.TH1F.SetDefaultSumw2(True)
+        ROOT.TH1D.SetDefaultSumw2(True)
         
         options.only_subset = [options.fit_name]
         options.store_new_only=True
         options.components = options.bkg_shapes.keys()
         self.use_custom_pdfs_ = options.use_custom_pdfs
-        self.save_params_.append("luminosity")
+        #self.save_params_.append("luminosity")
 
         # make sure that relevant 
         #  config parameters are read/written to the workspace
@@ -1090,8 +1094,9 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         roobs = self.buildRooVar(*(self.getVar(options.observable)), recycle=False, importToWs=True)
         roobs.setRange("fullRange",roobs.getMin(),roobs.getMax())
         roowe = self.buildRooVar("weight",[])        
+        weightMod = ROOT.RooFormulaVar("weightMod" ,"weightMod","@0*100", ROOT.RooArgList(roowe) )
+                
         rooset = ROOT.RooArgSet(roobs,roowe)
-        
         ## read back template roovariable and map
         if options.use_templates:
             ndim = fit["ndim"]
@@ -1128,21 +1133,40 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 print treename
                 ## dset = self.rooData(treename)
                 dset = self.rooData(treename,weight="%s * weight" % options.luminosity)
-                self.workspace_.rooImport(dset)
+                if options.signal_scalefactor_forpdf!=1:
+                    dsetPdf = self.rooData(treename,weight="%s * weight" %options.signal_scalefactor_forpdf,redo=True)
+                    dsetPdf.SetName("ForPdf_%s" %treename)
+                else: dsetPdf=dset
+                
+                if options.verbose: 
+                    dsetPdf.Print()
+                    dset.Print()
+
                 if options.use_templates:
                     rootempl_binning= rootempl.getBinning("templateBinning%s" % cat)
-                    if options.verbose:rootempl_binning.Print()
                     dset.addColumn(templfunc)
                     rootemps=ROOT.RooArgSet(roobs,rootempl)
+                    roobsArg=ROOT.RooArgSet(roobs)
                 else:
                     rootemps=ROOT.RooArgSet(roobs)
+                
                 reduced = dset.reduce(RooFit.SelectVars(rootemps),RooFit.Range("fullRange"))
                 reduced.SetName("signal_%s_%s"% (signame,cat))
-                if options.verbose: reduced.Print()
+                reducedPdf = dsetPdf.reduce(RooFit.SelectVars(roobsArg),RooFit.Range("fullRange"))
+                reducedPdf.SetName("signalforPdf_%s_%s"% (signame,cat))
+                
+                if options.verbose: 
+                    reduced.Print()
+                    reducedPdf.Print()
                 binned = reduced.binnedClone()
                 binned.SetName("signal_%s_%s"% (signame,cat))
-                if options.verbose: binned.Print()
+                binnedPdf = reducedPdf.binnedClone()
+                binnedPdf.SetName("signalforPdf_%s_%s"% (signame,cat))
+                if options.verbose: 
+                    binned.Print()
+                    binnedPdf.Print()
                 self.workspace_.rooImport(binned)
+                self.workspace_.rooImport(binnedPdf)
 
                 if options.compute_fwhm:
                     if len(options.fwhm_output_file) != 0:
@@ -1188,11 +1212,12 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                         print
 
                 ## build RooHistPdf in roobs
-                pdfDataHist = binned if not options.use_templates else binned.reduce(ROOT.RooArgSet(roobs))
+                ##pdfDataHist = binned if not options.use_templates else binned.reduce(ROOT.RooArgSet(roobs))
+                pdfDataHist = binnedPdf
                 pdf=ROOT.RooHistPdf("model_signal_%s_%s"% (signame, cat),"model_signal_%s_%s"% (signame, cat),ROOT.RooArgSet(roobs),pdfDataHist)
                 if options.verbose:
-                    pdf.Print()
                     print "Integral signal pdf    :", pdf.createIntegral(ROOT.RooArgSet(roobs),"templateBinning%s"%cat).getVal()
+                print "Integral signal pdf    :", pdf.createIntegral(ROOT.RooArgSet(roobs),"templateBinning%s"%cat).getVal()
                     
                 ## prepare binnning: doing it here as it is faster than on the 2D pdf
                 plot_signal_binning = None
@@ -1201,10 +1226,10 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     obsmean = pdf.mean(roobs).getVal()
                     width = max(width,pdf.sigma(roobs).getVal()/obsmean*4.)
                     omin, omax = obsmean*(1.-0.5*width), obsmean*(1.+0.5*width)
-                    print obsmean, omin, omax
+                    if options.verbose:  print obsmean, omin, omax
                     omin = max(roobs.getMin(),omin)
                     omax = min(roobs.getMax(),omax)
-                    print omin, omax
+                    if options.verbose: print omin, omax
                     step = (omax-omin)/nbins
                     plot_signal_binnning = []
                     while omin<omax:
@@ -1218,11 +1243,15 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     self.keep([pdf,ppPdf])
                     pdf = ROOT.RooProdPdf("model_signal_%s_%s"% (signame, cat), "model_signal_%s_%s"% (signame, cat),pdf, ppPdf )
                     if options.verbose:
+                        print
                         ppPdf.Print()
                         pdf.Print()
                         print "Integral templpdf     :", ppPdf.createIntegral(ROOT.RooArgSet(rootempl,roobs),"templateBinning%s"%cat).getVal()
+                        print "Integral templpdf only mgg    :", ppPdf.createIntegral(ROOT.RooArgSet(roobs),"templateBinning%s"%cat).getVal()
+                        print "Integral templpdf only templateNdim2_unroll    :", ppPdf.createIntegral(ROOT.RooArgSet(rootempl),"templateBinning%s"%cat).getVal()
                         print "Integral combined pdf    :", pdf.createIntegral(ROOT.RooArgSet(rootempl,roobs),"templateBinning%s"%cat).getVal()
-                    self.plotBkgFit(options,binned,pdf,rootempl,"signal_%s_%s_%s" % (signame,rootempl.GetName(),cat),poissonErrs=True,logy=False,logx=False,plot_binning=rootempl_binning,opts=[RooFit.ProjWData(ROOT.RooArgSet(roobs),binned)], bias_funcs={},sig=True)
+                        print
+                    self.plotBkgFit(options,binned,pdf,rootempl,"signal_%s_%s_%s" % (signame,rootempl.GetName(),cat),poissonErrs=False,logy=False,logx=False,plot_binning=rootempl_binning,opts=[RooFit.ProjWData(ROOT.RooArgSet(roobs),binned)], bias_funcs={},sig=True)
                 
                 self.plotBkgFit(options,reduced,pdf,roobs,"signal_%s_%s_%s" % (signame,roobs.GetName(),cat),poissonErrs=False,sig=True,logx=False,logy=False,
                                 plot_binning=plot_signal_binnning)
@@ -1253,7 +1282,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                        opts=[],forceSkipBands=False,sig=False):
         ## plot the fit result
         print "Plotting  model ", label, obs.GetName()
-        ROOT.TH1F.SetDefaultSumw2(True)
+        ROOT.TH1D.SetDefaultSumw2(True)
         obsname = obs.GetName()
         if obsname == "mass" or obsname == "mgg":
             obs.SetTitle("m_{#gamma #gamma}")
@@ -1292,9 +1321,9 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             obs.setBinning(plot_binning,"plotBinning")
             dset.get()[obs.GetName()].setBinning(plot_binning,"plotBinning")
             binning = "plotBinning"
-        if options.verbose and binning:
-            print "Plot binning: ",
-            dset.get()[obs.GetName()].getBinning(binning).Print()
+    #    if options.verbose and binning:
+   #         print "Plot binning: ",
+  #          dset.get()[obs.GetName()].getBinning(binning).Print()
         doBands = options.plot_fit_bands and not forceSkipBands
         if doBands:
             invisible.append(RooFit.Invisible())
@@ -1361,7 +1390,6 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         hresid = frame.residHist(hist.GetName(),fitc.GetName(),True)
         resid.addPlotable(hresid,"PE")
         
-        ## canv = ROOT.TCanvas("bkg_fit_%s" % label, "bkg_fit_%s" % label, 1200, 800 )
         if sig: canv = ROOT.TCanvas("sig_fit_%s" % label, "sig_fit_%s" % label)
         else:canv = ROOT.TCanvas("bkg_fit_%s" % label, "bkg_fit_%s" % label)
         canv.Divide(1,2)
@@ -1382,7 +1410,6 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
 
         canv.cd(1)
         if sig:
-        #TODO implement reasonably
             ymin = fitc.GetMinimum()
             ymax = fitc.GetMaximum()
         else:

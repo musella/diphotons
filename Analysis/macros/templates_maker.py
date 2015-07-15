@@ -217,6 +217,7 @@ class TemplatesApp(PlotApp):
         self.workspace_ = None
 
         self.save_params_.append("signals")
+        self.save_params_.append("aliases")
         
         ## load ROOT (and libraries)
         global ROOT, style_utils, RooFit
@@ -1596,8 +1597,6 @@ class TemplatesApp(PlotApp):
             ## prepare truth templates
             for truth,sel in truth_selection.iteritems():
                 cut = ROOT.TCut(preselection)
-                print "cut truth"
-                cut.Print()
                 cut *= ROOT.TCut(sel)
                 legs = [""]
                 if "legs" in fit:
@@ -1637,7 +1636,16 @@ class TemplatesApp(PlotApp):
                     cats[cat] = config
                 self.buildRooDataSet(trees,"template_%s" % component,name,fit,cats,fulllist,weight,presel,storeTrees)
                 for cat in categories.keys():
+                    print "tree: template %s - %s" % (component,cat)
+                    tree=self.treeData("template_%s_%s_%s" % (component,name,cat) )
+                    tree.Print()
+                    print "tree entries", tree.GetEntries()
+                    h1=ROOT.TH1F("h1","h1",2,0.,1.)
+                    tree.Draw("1>>h1","weight","goff")
+                    integral=h1.Integral()
+                    print integral
                     print "template %s - %s" % (component,cat), self.rooData("template_%s_%s_%s" % (component,name,cat) ).sumEntries()
+                    print "number of entries template %s - %s" % (component,cat), self.rooData("template_%s_%s_%s" % (component,name,cat) ).numEntries()
             print 
             print "--------------------------------------------------------------------------------------------------------------------------"
             print
