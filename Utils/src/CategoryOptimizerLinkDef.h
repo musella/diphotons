@@ -5,6 +5,16 @@
 #include "diphotons/Utils/interface/DataSetFiller.h"
 #include "diphotons/Utils/interface/DataSetMixer.h"
 
+#include "RVersion.h"
+
+#if ROOT_VERSION_CODE < ROOT_VERSION(6,0,0)
+#include "diphotons/RooUtils/interface/RooPowLogPdf.h"
+#include "diphotons/RooUtils/interface/RooSlicePdf.h"
+
+#pragma link C++ defined_in "diphotons/RooUtils/interface/RooPowLogPdf.h";
+#pragma link C++ defined_in "diphotons/RooUtils/interface/RooSlicePdf.h";
+#endif
+
 #pragma link C++ defined_in "diphotons/Utils/interface/DataSetFiller.h";
 #pragma link C++ defined_in "diphotons/Utils/interface/DataSetMixer.h";
 #pragma link C++ defined_in "diphotons/Utils/interface/CategoryOptimizer.h";

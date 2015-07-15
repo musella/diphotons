@@ -4,6 +4,7 @@
 #include "RooAbsPdf.h"
 #include "RooRealProxy.h"
 #include "TH2.h"
+#include "RVersion.h"
 // #include <memory>
 
 class RooRealVar;
