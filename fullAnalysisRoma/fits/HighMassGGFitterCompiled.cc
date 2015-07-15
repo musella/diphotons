@@ -20,6 +20,7 @@
 #include "TH1.h"
 #include "TH2.h"
 #include "TGraphAsymmErrors.h"
+#include "TGraphErrors.h"
 #include "TTree.h"
 #include "TChain.h"
 #include "TMath.h"
@@ -40,6 +41,8 @@ using namespace RooStats;
 static const Int_t NCAT = 4;  
 Int_t MINmass= 300;
 Int_t MAXmass= 6000;
+//Int_t MINmass= 1250;
+//Int_t MAXmass= 1700;
 Float_t Lum = 1.0;           // pb    
 bool wantResponse = 0;
 bool wantGenLevel = 0;
@@ -2397,6 +2400,7 @@ void MakeSigParametricWS(RooWorkspace* w, const char* fileBaseName, Float_t mass
   
   // mgg
   RooRealVar *mgg = new RooRealVar("mgg", "mgg", MINmass, MAXmass);
+  // RooRealVar *mgg = new RooRealVar("mgg", "mgg", 1250, 1700);
 
   // dataset
   wAll->import(*w->data("SigWeight_catEBHighR9"));   
@@ -2429,11 +2433,10 @@ void MakeSigParametricWS(RooWorkspace* w, const char* fileBaseName, Float_t mass
   wAll->import(*xsec);
   
   // File with parametric evolution of the detector response fits (after the final convolution)
-  // TFile *fileDetector = new TFile("detectorResponseEvolutionAfterConv.root","READ");
-  TFile *fileDetector = new TFile("detectorResponseEvolution_V3.root","READ");
+  TFile *fileDetector = new TFile("/afs/cern.ch/user/c/crovelli/public/Diphotons/detectorResponseEvolution_V3.root","READ");   
 
   // File with efficiency x acceptance trend
-  TFile *fileNormalization = new TFile("normalizationEvolution.root","READ");
+  TFile *fileNormalization = new TFile("/afs/cern.ch/user/c/crovelli/public/Diphotons/normalizationEvolution.root","READ");
   
   for (int c=0; c<NCAT; ++c) {
     cout << "---------- Category = " << c << endl;
@@ -2454,11 +2457,10 @@ void MakeSigParametricWS(RooWorkspace* w, const char* fileBaseName, Float_t mass
     cout << "mean: " << BWmean.getVal() << endl;
     cout << "width: " << BWwidth.getVal() << endl;
 
+
     // Parametrical description of detector resolution
-    // TF1* meanResp   = (TF1*)fileDetector->Get(TString::Format("mean_cat%d",c));
-    TF1* meanResp   = (TF1*)fileDetector->Get(TString::Format("abs_mean_cat%d",c));
-    // TF1* sigmaResp  = (TF1*)fileDetector->Get(TString::Format("sigma_cat%d",c));
-    TF1* sigmaResp  = (TF1*)fileDetector->Get(TString::Format("abs_sigma_cat%d",c));
+    TF1* meanResp   = (TF1*)fileDetector->Get(TString::Format("abs_mean_cat%d",c));     
+    TF1* sigmaResp  = (TF1*)fileDetector->Get(TString::Format("abs_sigma_cat%d",c));    
     TF1* alpha1Resp = (TF1*)fileDetector->Get(TString::Format("alpha1_cat%d",c));
     TF1* alpha2Resp = (TF1*)fileDetector->Get(TString::Format("alpha2_cat%d",c));
     TF1* n1Resp     = (TF1*)fileDetector->Get(TString::Format("n1_cat%d",c));
@@ -2478,10 +2480,10 @@ void MakeSigParametricWS(RooWorkspace* w, const char* fileBaseName, Float_t mass
     rooN1.ReplaceAll("x","@0");
     rooN2.ReplaceAll("x","@0");
 
-    RooFormulaVar CBmean("CBmean_cat"+myCut,"",rooMass,RooArgList(*mH));
     RooFormulaVar CBsigma("CBsigma_cat"+myCut,"",rooSigma,RooArgList(*mH));
     RooFormulaVar CBalpha1("CBalpha1_cat"+myCut,"",rooAlpha1,RooArgList(*mH));
     RooFormulaVar CBalpha2("CBalpha2_cat"+myCut,"",rooAlpha2,RooArgList(*mH));
+    RooFormulaVar CBmean("CBmean_cat"+myCut,"",rooMass,RooArgList(*mH));
     RooFormulaVar CBn1("CBn1_cat"+myCut,"",rooN1,RooArgList(*mH));
     RooFormulaVar CBn2("CBn2_cat"+myCut,"",rooN2,RooArgList(*mH));
 
@@ -2497,16 +2499,57 @@ void MakeSigParametricWS(RooWorkspace* w, const char* fileBaseName, Float_t mass
     
     // convolution
     mgg->setBins(5000, "cache");  
-    mgg->setBinning(RooBinning(5000,MINmass, MAXmass));
+    // mgg->setBinning(RooBinning(5000,1250,1700));
+    mgg->setBinning(RooBinning(5000,MINmass,MAXmass));
     
     RooFFTConvPdf* ConvolutedRes;
     ConvolutedRes = new RooFFTConvPdf("mggSig_cat"+myCut,"mggSig_cat"+myCut, *mgg,SigModelBW, ResponseDoubleCB);
     
+
     // dummy fit to fix the binning
     RooDataSet *sigToFit = (RooDataSet*) w->data("SigWeight_cat"+myCut);
-    RooFitResult* fitresults_CB = (RooFitResult* ) ConvolutedRes->fitTo(*sigToFit, SumW2Error(kFALSE), Range(MINmass, MAXmass), RooFit::Save(kFALSE));
+    // RooFitResult* fitresults_CB = (RooFitResult* ) ConvolutedRes->fitTo(*sigToFit, SumW2Error(kFALSE), Range(MINmass, MAXmass), RooFit::Save(kTRUE));
+    RooFitResult* fitresults_CB = (RooFitResult* ) ConvolutedRes->fitTo(*sigToFit, SumW2Error(kFALSE), Range(1250,1700), RooFit::Save(kTRUE));
+    fitresults_CB->Print("V");
     wAll->import(*ConvolutedRes);
-  
+
+
+
+    // for closure: control plot
+    RooPlot* controlPlot  = w->var("mgg")->frame(Range(1250, 1700),Title(""),Bins(60));
+    //RooPlot* controlPlot = w->var("mgg")->frame(Range(MINmass, MAXmass),Bins(100));
+    controlPlot->SetTitle("");
+    controlPlot->GetXaxis()->SetTitle("m_{#gamma#gamma}");
+    controlPlot->GetXaxis()->SetTitleFont(42);
+    controlPlot->GetXaxis()->SetTitleSize(0.04);
+    controlPlot->GetXaxis()->SetTitleOffset(1.40);
+    sigToFit->plotOn(controlPlot);
+    float max = controlPlot->GetMaximum();
+    SigModelBW.plotOn(controlPlot, LineColor(kGreen), LineStyle(kDashed));
+    ConvolutedRes->plotOn(controlPlot, LineColor(kBlue));  
+    TCanvas* c1 = new TCanvas("c1","PhotonsMass",0,0,800,800);
+    c1->cd(1);
+    controlPlot->Draw();  
+    controlPlot->GetYaxis()->SetRangeUser(0.01, max*1.2);
+    TLatex *lat  = new TLatex(0.55,0.9,TString::Format("Cat: %d", c));  
+    lat->SetTextSize(0.038);
+    lat->SetTextAlign(11);
+    lat->SetTextFont(42); 
+    lat->SetNDC();
+    TLegend *legmc = new TLegend(0.55, 0.6, 0.87, 0.88, "");
+    legmc->AddEntry(controlPlot->getObject(0),"Simulation","LPE");
+    legmc->AddEntry(controlPlot->getObject(1),"BW","L");
+    legmc->AddEntry(controlPlot->getObject(2),"BW #otimes Resolution","L");
+    legmc->SetTextSize(0.0206044);
+    legmc->SetTextFont(42);
+    legmc->SetBorderSize(0);
+    legmc->SetFillStyle(0);
+    legmc->Draw();
+    lat->Draw("same");
+    int massI(mass);
+    c1->SaveAs(TString::Format("plots/closure_cat%d.png",c));
+
+
 
     // Efficiency times Acceptance parameterization
     TF1* ExATrend   = (TF1*)fileNormalization->Get(TString::Format("exa_cat%d",c));
@@ -2626,6 +2669,8 @@ void runAllParametric(const Float_t mass=1500, Float_t coupling=0.1, string coup
   // range for the variables
   w->var("mgg")->setMin(MINmass);
   w->var("mgg")->setMax(MAXmass);
+  // w->var("mgg")->setMin(1250);
+  // w->var("mgg")->setMax(1700);
   
   cout << endl; 
   cout << "Now add signal data" << endl;
