@@ -37,9 +37,10 @@ git clone https://github.com/cms-analysis/flashgg.git
 
 ## make sure we use a consistent flashgg tag
 cd flashgg
-git remote add musella git@github.com:musella/flashgg.git
-git fetch musella
-[[ -n ${FLASHGG_TAG} ]] && git co -b topic_${FLASHGG_TAG} ${FLASHGG_TAG} 
+#git remote add musella git@github.com:musella/flashgg.git
+#git fetch musella
+#[[ -n ${FLASHGG_TAG} ]] && git co -b topic_${FLASHGG_TAG} ${FLASHGG_TAG} 
+git checkout -b Spring15BetaV2 Spring15BetaV2
 
 cd ${CMSSW_BASE}/src
 bash flashgg/setup.sh 2>&1 | tee flashgg/setup.log
