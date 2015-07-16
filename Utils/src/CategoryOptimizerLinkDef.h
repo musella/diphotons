@@ -1,20 +1,26 @@
-#include "../interface/CategoryOptimizer.h"
-#include "../interface/FunctionHelpers.h"
-#include "../interface/NaiveCategoryOptimization.h"
-#include "../interface/SimpleShapeCategoryOptimization.h"
-#include "../interface/DataSetFiller.h"
-#include "../interface/DataSetMixer.h"
-#include "../interface/RooPowLogPdf.h"
-#include "../interface/RooSlicePdf.h"
+#include "diphotons/Utils/interface/CategoryOptimizer.h"
+#include "diphotons/Utils/interface/FunctionHelpers.h"
+#include "diphotons/Utils/interface/NaiveCategoryOptimization.h"
+#include "diphotons/Utils/interface/SimpleShapeCategoryOptimization.h"
+#include "diphotons/Utils/interface/DataSetFiller.h"
+#include "diphotons/Utils/interface/DataSetMixer.h"
 
-#pragma link C++ defined_in "../interface/DataSetFiller.h";
-#pragma link C++ defined_in "../interface/DataSetMixer.h";
-#pragma link C++ defined_in "../interface/CategoryOptimizer.h";
-#pragma link C++ defined_in "../interface/FunctionHelpers.h";
-#pragma link C++ defined_in "../interface/NaiveCategoryOptimization.h";
-#pragma link C++ defined_in "../interface/SimpleShapeCategoryOptimization.h";
-#pragma link C++ defined_in "../interface/RooPowLogPdf.h";
-#pragma link C++ defined_in "../interface/RooSlicePdf.h";
+#include "RVersion.h"
+
+#if ROOT_VERSION_CODE < ROOT_VERSION(6,0,0)
+#include "diphotons/RooUtils/interface/RooPowLogPdf.h"
+#include "diphotons/RooUtils/interface/RooSlicePdf.h"
+
+#pragma link C++ defined_in "diphotons/RooUtils/interface/RooPowLogPdf.h";
+#pragma link C++ defined_in "diphotons/RooUtils/interface/RooSlicePdf.h";
+#endif
+
+#pragma link C++ defined_in "diphotons/Utils/interface/DataSetFiller.h";
+#pragma link C++ defined_in "diphotons/Utils/interface/DataSetMixer.h";
+#pragma link C++ defined_in "diphotons/Utils/interface/CategoryOptimizer.h";
+#pragma link C++ defined_in "diphotons/Utils/interface/FunctionHelpers.h";
+#pragma link C++ defined_in "diphotons/Utils/interface/NaiveCategoryOptimization.h";
+#pragma link C++ defined_in "diphotons/Utils/interface/SimpleShapeCategoryOptimization.h";
 
 #pragma link C++ class std::list<RooAbsData*>::iterator;
 

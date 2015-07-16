@@ -43,6 +43,23 @@ def computeShapeWithUnc(histo,extraerr=None):
     
 
 ## ----------------------------------------------------------------------------------------------------------------------------------------
+class rooImport:
+
+    def __init__(self,target):
+        self.import_ = getattr(target,"import")
+        
+    def __call__(self,*args):
+        if len(args) == 1:
+            try:
+                # workaround for https://sft.its.cern.ch/jira/browse/ROOT-6785
+                self.import_(args[0],ROOT.RooCmdArg())
+            except:
+                # for actual TObjects
+                self.import_(args[0])
+        else:
+            self.import_(*args)
+            
+## ----------------------------------------------------------------------------------------------------------------------------------------
 class LookUp:
     def __init__(self,target,method):
         self.method_ = method
@@ -65,6 +82,10 @@ class WsList:
     def append(self,what):
         self.container_.append(what)
     
+    def Print(self,opt=""):
+        for w in self.container_:
+            w.Print(opt)
+        
     def __getattr__(self,method):
         return LookUp(self,method)
     
@@ -217,6 +238,7 @@ class TemplatesApp(PlotApp):
         self.workspace_ = None
 
         self.save_params_.append("signals")
+        self.save_params_.append("aliases")
         
         ## load ROOT (and libraries)
         global ROOT, style_utils, RooFit
@@ -225,7 +247,12 @@ class TemplatesApp(PlotApp):
         from ROOT import RooAbsData
         import diphotons.Utils.pyrapp.style_utils as style_utils
         ROOT.gSystem.Load("libdiphotonsUtils")
-         
+        ROOT.gSystem.Load("libdiphotonsRooUtils")
+        if ROOT.gROOT.GetVersionInt() >= 6000:
+            ROOT.gSystem.AddIncludePath("-I$CMSSW_BASE/include")
+            ROOT.gROOT.ProcessLine('#include "diphotons/Utils/interface/DataSetFiller.h"')
+            ROOT.gROOT.ProcessLine('#include "diphotons/Utils/interface/DataSetMixer.h"')
+
         ROOT.gStyle.SetOptStat(111111)
 
     ## ------------------------------------------------------------------------------------------------------------
@@ -264,7 +291,9 @@ class TemplatesApp(PlotApp):
             self.readWs(options,args)
         elif not options.skip_templates:
             self.prepareTemplates(options,args)
-
+            
+        if options.verbose:
+            print "Read workspace"
 
     ## ------------------------------------------------------------------------------------------------------------
     def __call__(self,options,args):
@@ -281,6 +310,8 @@ class TemplatesApp(PlotApp):
         self.setup(options,args)
         
         if options.mix_templates:
+            if options.verbose:
+                print "calling mix templates"
             self.mixTemplates(options,args)
             
         if options.compare_templates:
@@ -379,7 +410,8 @@ class TemplatesApp(PlotApp):
 
         if not self.workspace_:
             self.workspace_ = ws
-            self.workspace_.rooImport = getattr(self.workspace_,"import")
+            ## self.workspace_.rooImport = getattr(self.workspace_,"import")
+            self.workspace_.rooImport = rooImport(self.workspace_)
         else:
             self.rooImportItr( ws.allVars(), verbose=options.verbose )
             self.rooImportItr( ws.allFunctions(), verbose=options.verbose )
@@ -465,7 +497,8 @@ class TemplatesApp(PlotApp):
             
             self.workspace_input_ = WsList(self.workspace_)
             self.workspace_ = ROOT.RooWorkspace("wtemplates","wtemplates")
-            self.workspace_.rooImport = getattr(self.workspace_,"import")
+            ## self.workspace_.rooImport = getattr(self.workspace_,"import")
+            self.workspace_.rooImport = rooImport(self.workspace_)
             
     
     
@@ -619,14 +652,13 @@ class TemplatesApp(PlotApp):
                                     tempHisto.SetBinContent(bin,tempHisto.GetBinContent(bin)/(tempHisto.GetBinWidth(bin)))
                                     tempHisto.SetBinError(bin,tempHisto.GetBinError(bin)/(tempHisto.GetBinWidth(bin)))
                                 histls.append(tempHisto)
-                          #  if not prepfit: 
+                           # if not prepfit: 
                            # print "plot 1d histos"
                             self.plotHistos(histls,tit,template_binning,True,numEntries_s)
                         ## roll out for combine tool per category
                         if fit["ndim"]>1:
                             self.histounroll(templates_massc,template_binning,isoargs,compname,cat,cut_s,prepfit,sigRegionlow2D,sigRegionup2D,extra_shape_unc=options.extra_shape_unc)
-            if fit["ndim"]>1:
-                self.histounroll_book(template_binning,isoargs)
+                            self.histounroll_book(template_binning,isoargs)
 
     ## ------------------------------------------------------------------------------------------------------------
 
@@ -786,7 +818,7 @@ class TemplatesApp(PlotApp):
 
         massH=ROOT.TH1F("%s_massH" % dataset.GetName(),"%s_massH" % dataset.GetName(),len(mass_binning)-1,mass_binning)
         dataset.fillHistogram(massH,ROOT.RooArgList(massargs)) 
-       # print "define mass bins " 
+       # print "define mass bins 0 
         massH.Scale(1.0/massH.Integral())
         prob = array.array('d',[])
         dpmq = array.array('d',[0.0 for i in range((mass_split[1]+1))])
@@ -1055,12 +1087,12 @@ class TemplatesApp(PlotApp):
                 self.workspace_.rooImport(histoCombine_mctruth,ROOT.RooFit.RenameVariable("mass","mgg"))
         self.saveWs(options,fout)
     ## ------------------------------------------------------------------------------------------------------------
-        def nominalFit(self,options,args):
-            fout = self.openOut(options)
-            fout.Print()
-            fout.cd()
-            self.doNominalFit(options,args)
-            self.saveWs(options,fout)
+    def nominalFit(self,options,args):
+        fout = self.openOut(options)
+        fout.Print()
+        fout.cd()
+        self.doNominalFit(options,args)
+        self.saveWs(options,fout)
 
 ## ------------------------------------------------------------------------------------------------------------
     def doNominalFit(self,options,args):
@@ -1455,8 +1487,6 @@ class TemplatesApp(PlotApp):
             g_templatepf.Draw("P SAME")
             leg.AddEntry(g_templatepp,"pp template","lp")  
             leg.AddEntry(g_templatepf,"pf %s"% opt,"pl")  
-        g_truthpp.Draw("P")
-        g_truthpp.Draw("AP")
         leg.AddEntry(g_truthpp,"pp truth","lp")  
         g_mctruthpf.SetMarkerColor(ROOT.kOrange+7)
         g_templatepf.SetMarkerColor(ROOT.kBlack)
@@ -1526,7 +1556,8 @@ class TemplatesApp(PlotApp):
             self.categories_ = options.categories
             
         ## create output workspace
-        self.workspace_.rooImport = getattr(self.workspace_,"import")
+        ## self.workspace_.rooImport = getattr(self.workspace_,"import")
+        self.workspace_.rooImport = rooImport(self.workspace_)
 
         ## read and store list of aliases. will be defined later in all trees
         for var in options.aliases:
@@ -1638,7 +1669,16 @@ class TemplatesApp(PlotApp):
                     cats[cat] = config
                 self.buildRooDataSet(trees,"template_%s" % component,name,fit,cats,fulllist,weight,presel,storeTrees)
                 for cat in categories.keys():
+                    print "tree: template %s - %s" % (component,cat)
+                    tree=self.treeData("template_%s_%s_%s" % (component,name,cat) )
+                    tree.Print()
+                    print "tree entries", tree.GetEntries()
+                    h1=ROOT.TH1F("h1","h1",2,0.,1.)
+                    tree.Draw("1>>h1","weight","goff")
+                    integral=h1.Integral()
+                    print integral
                     print "template %s - %s" % (component,cat), self.rooData("template_%s_%s_%s" % (component,name,cat) ).sumEntries()
+                    print "number of entries template %s - %s" % (component,cat), self.rooData("template_%s_%s_%s" % (component,name,cat) ).numEntries()
             print 
             print "--------------------------------------------------------------------------------------------------------------------------"
             print
@@ -1660,11 +1700,16 @@ class TemplatesApp(PlotApp):
     ## ------------------------------------------------------------------------------------------------------------
     def doMixTemplates(self,options,args):
         
+        print
+        print "--------------------------------------------------------------------------------------------------------------------------"
+        print "Mixing templates "
+        print 
+        
         for name, mix in options.mix.iteritems():
             if name.startswith("_"): continue
             print
             print "--------------------------------------------------------------------------------------------------------------------------"
-            print "Mixing templates %s" % name
+            print "Mixing %s" % name
             print 
 
             targetName      = mix["target"]
@@ -1813,7 +1858,8 @@ class TemplatesApp(PlotApp):
         if keepOld:
             self.workspace_input_.append(self.workspace_)
         self.workspace_ = ROOT.RooWorkspace("wtemplates","wtemplates")
-        self.workspace_.rooImport = getattr(self.workspace_,"import")
+        ## self.workspace_.rooImport = getattr(self.workspace_,"import")
+        self.workspace_.rooImport = rooImport(self.workspace_)
         
     
     ## ------------------------------------------------------------------------------------------------------------
@@ -1826,7 +1872,7 @@ class TemplatesApp(PlotApp):
 
     ## ------------------------------------------------------------------------------------------------------------
     def reducedRooData(self,name,rooset,binned=False,weight="weight",sel=None,redo=False,importToWs=True):
-        data = self.rooData("reduced_%s" % name)
+        data = self.rooData("reduced_%s" % name,quiet=True)
         if not data or redo:
             data = self.rooData(name,rooset=rooset,weight=weight,sel=sel,redo=redo)
             if binned:
@@ -1851,12 +1897,16 @@ class TemplatesApp(PlotApp):
         rooHistFunc = self.workspace_.function(name)
         if not rooHistFunc and self.store_new_:
             rooHistFunc = self.workspace_input_.function(name)            
+        if not rooHistFunc:
+            print "Warning failed to read %s" % name
+            self.workspace_.Print()
+            self.workspace_input_.Print()
         return rooHistFunc
 
 
 
     ## ------------------------------------------------------------------------------------------------------------
-    def rooData(self,name,autofill=True,rooset=None,weight="weight",sel=None,redo=False):
+    def rooData(self,name,autofill=True,rooset=None,weight="weight",sel=None,redo=False,quiet=False):
         if name in self.cache_ and not redo:
             return self.cache_[name]        
         dataset = self.workspace_.data(name)
@@ -1864,8 +1914,12 @@ class TemplatesApp(PlotApp):
             dataset = self.workspace_input_.data(name)
             if self.store_inputs_ and dataset:
                 self.workspace_.rooImport(dataset)
-
+                
         if not dataset:
+            if not quiet:
+                print "warning : dataset %s not found" % name
+                self.workspace_.Print()
+                self.workspace_input_.Print()
             return dataset
 
         if autofill and dataset.sumEntries() == 0.:
@@ -2028,7 +2082,6 @@ class TemplatesApp(PlotApp):
                     wei  = ROOT.TCut(preselection)
                     wei *= ROOT.TCut(cut)
                     wei *= ROOT.TCut(weight)
-                    
                     ## fill dataset from source trees
                     for tree in src:
                         twei = wei.GetTitle() % {"leg" : leg}

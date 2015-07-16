@@ -171,22 +171,35 @@ sc_xtal_information MiniAODFootprintRemoval::getSCXtalInfo( reco::SuperClusterRe
         return out;
     }
 
-    std::vector<DetId> crystals;
+    std::map<DetId,float> hitsAndFractions;    
     if( sc->clusters().isAvailable() ) {
         for( reco::CaloCluster_iterator bc = sc->clustersBegin(); bc != sc->clustersEnd(); ++bc ) {
             if( ! bc->isAvailable() ) { continue; }
             const std::vector< std::pair<DetId, float> > &seedrechits = ( *bc )->hitsAndFractions();
-            for( unsigned int i = 0; i < seedrechits.size(); i++ ) { crystals.push_back( seedrechits[i].first ); }
+            for( unsigned int i = 0; i < seedrechits.size(); i++ ) { 
+                hitsAndFractions[seedrechits[i].first] += seedrechits[i].second; 
+                // crystals.push_back( seedrechits[i].first ); 
+            }
         }
     } else if( sc->seed().isAvailable() ) {
         /// cout << "Warning : only seed cluster available " << endl;
         const std::vector< std::pair<DetId, float> > &seedrechits = sc->seed()->hitsAndFractions();
-        for( unsigned int i = 0; i < seedrechits.size(); i++ ) { crystals.push_back( seedrechits[i].first ); }
+        for( unsigned int i = 0; i < seedrechits.size(); i++ ) { 
+            hitsAndFractions[seedrechits[i].first] += seedrechits[i].second; 
+            // crystals.push_back( seedrechits[i].first ); 
+        }
     } else {
         cout << "Warning : no basic clusters available " << endl;
         return out;
     }
 
+    std::vector<DetId> crystals;    
+    for( auto hi : hitsAndFractions ) {
+        if( hi.second > 0.2 ) {
+            crystals.push_back( hi.first ); 
+        }
+    }
+    
     sort( crystals.begin(), crystals.end() );
     std::vector<DetId>::iterator it;
     it = unique( crystals.begin(), crystals.end() );

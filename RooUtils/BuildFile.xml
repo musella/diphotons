@@ -1,0 +1,12 @@
+<use   name="root"/>
+<use   name="roofit"/>
+<use   name="roofitcore"/>
+<use   name="roottmva"/>
+<use   name="rootmath"/>
+<use   name="rootrflx"/>
+<use   name="boost"/>
+<use   name="diphotons/Utils"/>
+<Flags CXXFLAGS="-ggdb"/>
+<export>
+  <lib   name="1"/>
+</export>

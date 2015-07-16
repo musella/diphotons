@@ -48,7 +48,7 @@ for coup in $(echo $coupl | tr ',' ' '); do
 	fi
 	log=combine_log_${method}_${label}_${kmpl}_${mass}.log
 	set -x
-	combine -L libdiphotonsUtils $args -n "${label}_k${kmpl}" -m $mass $card 2>&1 | tee $log
+	combine -L libdiphotonsUtils -L libdiphotonsRooUtils $args -n "${label}_k${kmpl}" -m $mass $card 2>&1 | tee $log
 	set +x
 	
 	sleep 1
