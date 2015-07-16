@@ -1,0 +1,28 @@
+{
+	    "pp" : { 
+	    	 "shape":"mctruth_pp", "norm":"mctruth_pp", 
+		 "template" : "mctruth_pp",
+		 "_weight_cut" : "weight < 5.",
+		 "model" : "moddijet"
+	    },
+	    "pf" : { 
+	    	 "shape":"mctruth_pf", "norm":"mctruth_pf",
+		 "template" : "mctruth_pf",
+		 "_template" : "template_mix_pf:kDSinglePho2D",
+		 "shape_cats" : {  
+		 	      "EBHighR9" : "EBLowR9",
+			      "EEHighR9" : "EELowR9"
+		  },
+		  "_weight_cut"   : "weight < 5."
+	    },	    
+	    "ff" : { 
+	    	 "shape":"mctruth_ff", "norm":"mctruth_ff",
+		 "template" : "mctruth_ff",
+		 "_template" : "template_mix_ff:kDSinglePho2D",
+		 "shape_cats" : {  
+		 	      "EBHighR9" : "EBLowR9",
+			      "EEHighR9" : "EELowR9"
+		  },
+		  "_weight_cut"   : "weight < 5."
+	    }	    
+}
