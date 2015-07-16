@@ -8,8 +8,11 @@ class MicroAODCustomize(fggMicroAODCustomize):
         super(MicroAODCustomize,self).__init__()
 
     def userCustomize(self,process):
+        
         if "QCD" in self.datasetName:
-            process.flashggPreselectedDiPhotons.filter = cms.bool(True)
+            ##     process.flashggPreselectedDiPhotons.filter = cms.bool(True)
+            process.myPreselectedPhotons.filter = cms.bool(True)
+            
 
 # customization object
 customize = MicroAODCustomize()
