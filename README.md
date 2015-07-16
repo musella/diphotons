@@ -15,7 +15,7 @@ forked the flashgg and this repository.
 ## CMSSW_VERSION=CMSSW_7_4_0_pre9 
 ## FLASHGG_TAG=diphtons_phys14
 
-# Phys14 settings
+# Spring15 settings
 PROJECT_AREA=EXO_7_4_6_patch2
 CMSSW_VERSION=CMSSW_7_4_6_patch2 
 FLASHGG_TAG=Spring15BetaV0_pm1 # set empty if you want the master (safe as long as you are not producing MicroAOD)
