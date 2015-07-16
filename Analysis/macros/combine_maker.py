@@ -214,7 +214,8 @@ class CombineApp(TemplatesApp):
         
         import diphotons.Utils.pyrapp.style_utils as style_utils
         ROOT.gSystem.Load("libdiphotonsUtils")
-        ROOT.gSystem.Load("libdiphotonsRooUtils")
+        if ROOT.gROOT.GetVersionInt() >= 60000:
+            ROOT.gSystem.Load("libdiphotonsRooUtils")
         
         self.pdfPars_ = ROOT.RooArgSet()
 

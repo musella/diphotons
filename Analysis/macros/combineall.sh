@@ -32,6 +32,11 @@ while [[ -n $1 ]]; do
 done
 shift
 
+
+libs="-L libdiphotonsUtils"
+rootversion=$(root-config --version| tr '.' ' ')
+[[ $rootversion -gt 5 ]] && libs="-L libdiphotonsRooUtils"
+
 for coup in $(echo $coupl | tr ',' ' '); do
     cards=datacard*_grav_${coup}_*.txt
     outputs=""
@@ -48,7 +53,7 @@ for coup in $(echo $coupl | tr ',' ' '); do
 	fi
 	log=combine_log_${method}_${label}_${kmpl}_${mass}.log
 	set -x
-	combine -L libdiphotonsUtils -L libdiphotonsRooUtils $args -n "${label}_k${kmpl}" -m $mass $card 2>&1 | tee $log
+	combine $libs $args -n "${label}_k${kmpl}" -m $mass $card 2>&1 | tee $log
 	set +x
 	
 	sleep 1

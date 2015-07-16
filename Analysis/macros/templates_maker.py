@@ -247,8 +247,8 @@ class TemplatesApp(PlotApp):
         from ROOT import RooAbsData
         import diphotons.Utils.pyrapp.style_utils as style_utils
         ROOT.gSystem.Load("libdiphotonsUtils")
-        ROOT.gSystem.Load("libdiphotonsRooUtils")
-        if ROOT.gROOT.GetVersionInt() >= 6000:
+        if ROOT.gROOT.GetVersionInt() >= 60000:
+            ROOT.gSystem.Load("libdiphotonsRooUtils")
             ROOT.gSystem.AddIncludePath("-I$CMSSW_BASE/include")
             ROOT.gROOT.ProcessLine('#include "diphotons/Utils/interface/DataSetFiller.h"')
             ROOT.gROOT.ProcessLine('#include "diphotons/Utils/interface/DataSetMixer.h"')
