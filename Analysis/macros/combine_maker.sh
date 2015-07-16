@@ -4,8 +4,10 @@
 version=$1 && shift
 
 fitname=2D 
-#www=~/www/exo/
-www=/afs/cern.ch/user/m/mquittna/www/diphoton/Phys14/
+www=~/www/exo/
+if [[ $(whoami) == "mquittna" ]]; then
+    www=/afs/cern.ch/user/m/mquittna/www/diphoton/Phys14/
+fi
 
 shapes="default_shapes"
 
