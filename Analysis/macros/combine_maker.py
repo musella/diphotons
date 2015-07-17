@@ -113,6 +113,10 @@ class CombineApp(TemplatesApp):
                                     default=None,
                                     help="correlation matrix between nuisance parameters",
                                     ),
+                        ## make_option("--select-components",dest="select_components",action="callback",callback=optpars_utils.ScratchAppend(),
+                        ##             default=[],
+                        ##             help="only consider subset of background components"
+                        ##             ),
                         make_option("--bkg-shapes",dest="bkg_shapes",action="callback",callback=optpars_utils.Load(scratch=True),
                                     type="string",
                                     default={ "bkg" : {
@@ -235,6 +239,8 @@ class CombineApp(TemplatesApp):
         options.only_subset = [options.fit_name]
         options.store_new_only=True
         options.components = options.bkg_shapes.keys()
+        ### if options.select_components:
+        ###     options.components = [ comp for comp in options.components if comp in options.select_components ]
         self.use_custom_pdfs_ = options.use_custom_pdfs
         #self.save_params_.append("luminosity")
 

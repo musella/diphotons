@@ -2,7 +2,7 @@
 	    "pp" : { 
 	    	 "shape":"mctruth_pp", "norm":"mctruth_pp", 
 		 "template" : "mctruth_pp",
-		 "_weight_cut" : "weight < 5.",
+		 "weight_cut" : "weight < 5.",
 		 "model" : "moddijet"
 	    },
 	    "pf" : { 
@@ -13,7 +13,7 @@
 		 	      "EBHighR9" : "EBLowR9",
 			      "EEHighR9" : "EELowR9"
 		  },
-		  "_weight_cut"   : "weight < 5."
+		  "weight_cut"   : "weight < 5."
 	    },	    
 	    "ff" : { 
 	    	 "shape":"mctruth_ff", "norm":"mctruth_ff",
@@ -23,6 +23,6 @@
 		 	      "EBHighR9" : "EBLowR9",
 			      "EEHighR9" : "EELowR9"
 		  },
-		  "_weight_cut"   : "weight < 5."
+		  "weight_cut"   : "weight < 5."
 	    }	    
 }

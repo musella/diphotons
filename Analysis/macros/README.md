@@ -101,5 +101,23 @@ We have to run text2workspace.py by hand since combine forgets to pass the list 
 
 ### Significance
 - `combine -M ProfileLikelihood --expectSignal 1 --significance -t -1 dataCard_full_analysis_anv1_v14_bkg_ws.txt`
+- `./combineall.sh full_analysis_anv1_v19_2D_split_shapes_semiparam_lumi_5 02 --hadd -M ProfileLikelihood ProfileLikelihood --expectSignal 1 --significance -t -1`
+
 ### Limits
 - `combine -M Asymptotic -t -1 --run expected dataCard_full_analysis_anv1_v14_bkg_ws.txt`
+- `./combineall.sh full_analysis_anv1_v19_2D_split_shapes_semiparam_lumi_5 02 --hadd -M Asymptotic -t -1 --run expected`
+
+### Running closure 2D
+
+- prepare models `prepare_all_models.sh`
+- throw asymov datasets `prepare_semiparam_closure.sh`
+
+- `combine -L libdiphotonsUtils datacard_full_analysis_anv1_v19_2D_split_shapes_semiparam_lumi_5_grav_02_1500.txt -M MultiDimFit --redefineSignaPOIs pf_EBEB_frac,pf_EBEE_frac,pp_EBEE_frac,pp_EBEB_frac --freezeNuisance r --setPhysicsModelParameters r=0 -n _fit_self  -m 0 -t -1 --saveWorkspace`
+
+- `combine -L libdiphotonsUtils datacard_full_analysis_anv1_v19_2D_split_shapes_semiparam_lumi_5_grav_02_1500.txt -M MultiDimFit --redefineSignaPOIs pf_EBEB_frac,pf_EBEE_frac,pp_EBEE_frac,pp_EBEB_frac --freezeNuisance r --setPhysicsModelParameters r=0 -n _fit_truth -t -1 --toysFile ../higgsCombine_truth.GenerateOnly.mH0.123456.root --saveWorkspace`
+
+- `combine -L libdiphotonsUtils datacard_full_analysis_anv1_v19_2D_split_shapes_semiparam_lumi_5_grav_02_1500.txt -M MultiDimFit --redefineSignaPOIs r,pf_EBEB_frac,pf_EBEE_frac,pp_EBEE_frac,pp_EBEB_frac  -m 1500 -n _fit_truth_r009 -t -1 --toysFile ../higgsCombine_truth_r0009.GenerateOnly.mH0.123456.root --saveWorkspace`
+
+- additional options
+  - run minos '--algo=singles'
+  - different starting points --setPhysicsModelParameters pf_EBEB_frac=0.1,pf_EBEE_frac=0.1,pp_EBEE_frac=0.8,pp_EBEB_frac=0.8
