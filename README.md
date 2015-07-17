@@ -18,7 +18,7 @@ forked the flashgg and this repository.
 # Spring15 settings
 PROJECT_AREA=EXO_7_4_6_patch2
 CMSSW_VERSION=CMSSW_7_4_6_patch2 
-FLASHGG_TAG=Spring15BetaV1_pm1 # set empty if you want the master (safe as long as you are not producing MicroAOD)
+FLASHGG_TAG=Spring15BetaV2_MetaV1 # set empty if you want the master (safe as long as you are not producing MicroAOD)
 
 # read github name from git config
 MY_GITHUB_NAME=$(git config --get user.github)
