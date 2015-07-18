@@ -2,6 +2,7 @@
 <use   name="DataFormats/Math"/>
 <use   name="DataFormats/Common"/>
 <use   name="DataFormats/JetReco"/>
+<use   name="DataFormats/TrackReco"/>
 <use   name="DataFormats/EcalRecHit"/>
 <use   name="flashgg/DataFormats"/>
 <use   name="DataFormats/PatCandidates"/>
