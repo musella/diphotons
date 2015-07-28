@@ -195,7 +195,7 @@ void DiPhoAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
   Handle<vector<flashgg::GenPhotonExtra> > genPhotonsHandle;
   edm::Handle<GenEventInfoProduct> genInfo;
   edm::Handle<View<reco::GenParticle> > genParticles;
-  if (sampleID>0) {     // MC
+  if (sampleID>0 && sampleID<10000) {     // MC
     iEvent.getByToken(genPhotonExtraToken_,genPhotonsHandle);
     iEvent.getByLabel(genInfo_,genInfo);   
     iEvent.getByToken( genPartToken_, genParticles );
@@ -221,7 +221,7 @@ void DiPhoAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
   // PU weight (for MC only and if requested)
   float pu_weight = 1.;
   float pu_n      = -1.;
-  if (sampleID>0) {     // MC
+  if (sampleID>0 && sampleID<10000) {     // MC
     pu_n = 0.;
     for( unsigned int PVI = 0; PVI < PileupInfos->size(); ++PVI ) {
       Int_t pu_bunchcrossing = PileupInfos->ptrAt( PVI )->getBunchCrossing();
@@ -235,12 +235,12 @@ void DiPhoAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
   
   // x-sec * kFact for MC only 
   float totXsec = 1.;
-  if (sampleID>0) totXsec = xsec_ * kfac_;
+  if (sampleID>0 && sampleID<10000) totXsec = xsec_ * kfac_;
 
   // other weights for the dataset
   float sumDataset = 1.;  
   float perEveW    = 1.;
-  if (sampleID>0) { 
+  if (sampleID>0 && sampleID<10000) { 
     sumDataset = sumDataset_;
     const auto & eveWeights = genInfo->weights();
     if(!eveWeights.empty()) perEveW = eveWeights[0];
@@ -494,7 +494,7 @@ void DiPhoAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
 		genVtxX = -999.;
 		genVtxY = -999.;
 		genVtxZ = -999.;
-		if (sampleID>0) {     // MC
+		if (sampleID>0 && sampleID<10000) {     // MC
 		  for( unsigned int genLoop = 0 ; genLoop < genParticles->size(); genLoop++ ) {
 		    
 		    if( genParticles->ptrAt( genLoop )->pdgId() != 2212 || genParticles->ptrAt( genLoop )->vertex().z() != 0. ) {
@@ -513,7 +513,7 @@ void DiPhoAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
 		genmatch2 = -999;
 		geniso1   = -999.;
 		geniso2   = -999.;
-		if (sampleID>0) {   
+		if (sampleID>0 && sampleID<10000) {   
 
 		  const auto & genPhotons = *genPhotonsHandle;
 		  
@@ -547,7 +547,7 @@ void DiPhoAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
 		}
 		
 		/* old version
-		if (sampleID>0) {   
+		if (sampleID>0 && sampleID<10000) {   
 		  
 		  const auto & genPhotons = *genPhotonsHandle;
 		  for (unsigned int j = 0 ; j < genPhotons.size() ; j++) {
@@ -573,7 +573,7 @@ void DiPhoAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
 
 		//--------> gen level mgg for signal samples
 		genmgg = -999.;
-		if (sampleID>99) {  // signal samples
+		if (sampleID>99 && sampleID<10000) {  // signal samples
 
 		  for( unsigned int genLoop = 0 ; genLoop < genParticles->size(); genLoop++ ) {
 		    
