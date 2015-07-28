@@ -43,8 +43,12 @@ def main():
     xsection = args[4]
     kfactor = args[5]
 
-    inputlist="lists_ANv1/"+dataset+".list"
-    inputweights="lists_ANv1/"+dataset+".weight"
+    if (sampleIndex!=0):
+        inputlist="lists_Spring15v1/50ns/MC/"+dataset+".list"
+    else: inputlist="lists_Spring15v1/50ns/data/"+dataset+".list" 
+    if (sampleIndex!=0):
+        inputweights="lists_Spring15v1/50ns/MC/"+dataset+".weight"
+    else: inputweights="lists_Spring15v1/50ns/data/"+dataset+".weight"
     output = dataset
 
     print "the outputs will be in the directory: "+opt.prefix
