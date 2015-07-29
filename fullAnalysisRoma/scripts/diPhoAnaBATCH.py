@@ -15,11 +15,7 @@ process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32( 1000 )
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32( -1 ) )
 
 process.source = cms.Source("PoolSource",
-                            fileNames=cms.untracked.vstring( 
-
-        # Spring15, RS 1TeV, k=0.1 
-        "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/RSGravToGG_kMpl-01_M-1000_TuneCUEP8M1_13TeV-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/150716_211524/0000/diphotonsMicroAOD_1.root" 
-        )
+                            fileNames = cms.untracked.vstring('/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/RSGravToGG_kMpl001_M_5000_Tune4C_13TeV_pythia8/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133931/0000/myOutputFile_1.root'
                             )
 
 process.load("flashgg/MicroAOD/flashggPhotons_cfi")
@@ -33,6 +29,7 @@ process.diPhoAna = cms.EDAnalyzer('DiPhoAnalyzer',
                                   DiPhotonTag = cms.untracked.InputTag('flashggDiPhotons'),
                                   PileupTag = cms.untracked.InputTag('addPileupInfo'),
                                   generatorInfo = cms.InputTag("generator"),
+                                  bits = cms.InputTag("TriggerResults","","HLT"),
                                   dopureweight = PU,
                                   sampleIndex  = SI,
                                   puWFileName  = weights,
