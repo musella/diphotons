@@ -14,11 +14,11 @@
 ./submitBatchDiPho.py --cfg diPhoAnaBATCH.py GGJets_M-6000To8000  0 6 pippo 2.47e-08     1     
 ./submitBatchDiPho.py --cfg diPhoAnaBATCH.py GGJets_M-8000To13000 0 7 pippo 9.8557e-11   1 
 
-# GJets (still phys14)
-#./submitBatchDiPho.py --cfg diPhoAnaBATCH.py GJets_HT-100to200  0  8 pippo 1534.  1  
-#./submitBatchDiPho.py --cfg diPhoAnaBATCH.py GJets_HT-200to400  0  9 pippo 490.0  1  
-#./submitBatchDiPho.py --cfg diPhoAnaBATCH.py GJets_HT-400to600  0 10 pippo 62.05  1  
-#./submitBatchDiPho.py --cfg diPhoAnaBATCH.py GJets_HT-600toInf  0 11 pippo 20.87  1  
+# GJets (25ns for the moment)
+./submitBatchDiPho.py --cfg diPhoAnaBATCH.py GJets_HT-100to200  0  8 pippo 9110.  1  
+./submitBatchDiPho.py --cfg diPhoAnaBATCH.py GJets_HT-200to400  0  9 pippo 22010.  1         #???  invalid anyway
+./submitBatchDiPho.py --cfg diPhoAnaBATCH.py GJets_HT-400to600  0 10 pippo 273.  1  
+./submitBatchDiPho.py --cfg diPhoAnaBATCH.py GJets_HT-600toInf  0 11 pippo 94.5  1  
 
 # QCD
 ./submitBatchDiPho.py --cfg diPhoAnaBATCH.py QCD_HT-200To300   0 12 pippo 1740000. 1       
@@ -43,5 +43,5 @@
 ./submitBatchDiPho.py --cfg diPhoAnaBATCH.py RSGravToGG_kMpl-02_M-5000   0 111 pippo 5.84e-05 1  
 
 # Data
-./submitBatchDiPho.py --cfg diPhoAnaBATCH.py DoubleEG    0 10001 pippo 1      1 
-./submitBatchDiPho.py --cfg diPhoAnaBATCH.pysinglePhoG   0 10002 pippo 1      1 
+./submitBatchDiPho.py --cfg diPhoAnaBATCH.py DoubleEG   0 10001 pippo 1      1 
+./submitBatchDiPho.py --cfg diPhoAnaBATCH.py singlePho  0 10002 pippo 1      1 
