@@ -104,5 +104,5 @@ void DiphotonStyle()
   TColor::CreateGradientColorTable(NRGBs, stops, red, green, blue, NCont);
   DiphotonsStyle->SetNumberContours(NCont);
 
-  return();
+  // return();
 }
