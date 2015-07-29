@@ -31,6 +31,7 @@ process.diPhoAna = cms.EDAnalyzer('DiPhoAnalyzer',
                                   DiPhotonTag = cms.untracked.InputTag('flashggDiPhotons'),
                                   PileupTag = cms.untracked.InputTag('addPileupInfo'),
                                   generatorInfo = cms.InputTag("generator"),
+                                  bits = cms.InputTag("TriggerResults","","HLT"),
                                   dopureweight = cms.untracked.int32(0),
                                   sampleIndex  = cms.untracked.int32(101),   
                                   puWFileName  = cms.string('xxx'),   # chiara  
