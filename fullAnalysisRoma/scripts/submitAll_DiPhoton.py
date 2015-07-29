@@ -16,9 +16,9 @@
 
 # GJets (25ns for the moment)
 ./submitBatchDiPho.py --cfg diPhoAnaBATCH.py GJets_HT-100to200  0  8 pippo 9110.  1  
-./submitBatchDiPho.py --cfg diPhoAnaBATCH.py GJets_HT-200to400  0  9 pippo 22010.  1         #???  invalid anyway
-./submitBatchDiPho.py --cfg diPhoAnaBATCH.py GJets_HT-400to600  0 10 pippo 273.  1  
-./submitBatchDiPho.py --cfg diPhoAnaBATCH.py GJets_HT-600toInf  0 11 pippo 94.5  1  
+#./submitBatchDiPho.py --cfg diPhoAnaBATCH.py GJets_HT-200to400  0  9 pippo 22010. 1         #???  invalid anyway
+./submitBatchDiPho.py --cfg diPhoAnaBATCH.py GJets_HT-400to600  0 10 pippo 273.   1  
+./submitBatchDiPho.py --cfg diPhoAnaBATCH.py GJets_HT-600toInf  0 11 pippo 94.5   1  
 
 # QCD
 ./submitBatchDiPho.py --cfg diPhoAnaBATCH.py QCD_HT-200To300   0 12 pippo 1740000. 1       
