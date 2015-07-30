@@ -6,13 +6,13 @@
 # Data:        sampleID>10000
 
 # GG+jets 
-./submitBatchDiPho.py --cfg diPhoAnaBATCH.py GGJets_M-200To500    0 1 pippo 2.86859      1 
-./submitBatchDiPho.py --cfg diPhoAnaBATCH.py GGJets_M-500To1000   0 2 pippo 0.137639     1  
-./submitBatchDiPho.py --cfg diPhoAnaBATCH.py GGJets_M-1000To2000  0 3 pippo 0.0123979    1  
-./submitBatchDiPho.py --cfg diPhoAnaBATCH.py GGJets_M-2000To4000  0 4 pippo 0.000600542  1  
-./submitBatchDiPho.py --cfg diPhoAnaBATCH.py GGJets_M-4000To6000  0 5 pippo 3.00677e-06  1    
-./submitBatchDiPho.py --cfg diPhoAnaBATCH.py GGJets_M-6000To8000  0 6 pippo 2.47e-08     1     
-./submitBatchDiPho.py --cfg diPhoAnaBATCH.py GGJets_M-8000To13000 0 7 pippo 9.8557e-11   1 
+./submitBatchDiPho.py --cfg diPhoAnaBATCH.py GGJets_M-200To500    0 1 pippo 2.302026      1 
+./submitBatchDiPho.py --cfg diPhoAnaBATCH.py GGJets_M-500To1000   0 2 pippo 0.1583156     1  
+./submitBatchDiPho.py --cfg diPhoAnaBATCH.py GGJets_M-1000To2000  0 3 pippo 0.01233671    1  
+./submitBatchDiPho.py --cfg diPhoAnaBATCH.py GGJets_M-2000To4000  0 4 pippo 0.0004121658  1  
+./submitBatchDiPho.py --cfg diPhoAnaBATCH.py GGJets_M-4000To6000  0 5 pippo 2.567550e-06  1    
+./submitBatchDiPho.py --cfg diPhoAnaBATCH.py GGJets_M-6000To8000  0 6 pippo 2.720000e-08  1     
+./submitBatchDiPho.py --cfg diPhoAnaBATCH.py GGJets_M-8000To13000 0 7 pippo 7.851862e-11  1 
 
 # GJets (25ns for the moment)
 ./submitBatchDiPho.py --cfg diPhoAnaBATCH.py GJets_HT-100to200  0  8 pippo 9110.  1  
