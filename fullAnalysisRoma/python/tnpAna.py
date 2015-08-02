@@ -32,7 +32,7 @@ process.load("flashgg/MicroAOD/flashggPhotons_cfi")
 process.load("flashgg/MicroAOD/flashggElectrons_cfi")
 process.load("flashgg/MicroAOD/flashggDiPhotons_cfi")
 
-process.TFileService = cms.Service("TFileService",fileName = cms.string("diPhotons.root"))
+process.TFileService = cms.Service("TFileService",fileName = cms.string("TaP_output.root"))
 
 process.tnpAna = cms.EDAnalyzer('TaPAnalyzer',
                                 VertexTag = cms.untracked.InputTag('offlineSlimmedPrimaryVertices'),
