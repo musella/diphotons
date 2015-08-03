@@ -142,7 +142,7 @@ public:
   void Draw(const int &rebin=1) {
     
     Color_t _sampleColor[nSamples];
-    _sampleColor[iRS  ]  = kBlue+1;
+    _sampleColor[iRS  ]   = kBlue+1;
     _sampleColor[iGJets ] = kViolet-9;
     _sampleColor[iGG    ] = kGreen-9;
     _sampleColor[iQCD   ] = kAzure-9;
@@ -157,7 +157,7 @@ public:
     
     THStack* hstack = new THStack();
     for (int i=0; i<nSamples; i++) {
-      
+
       // in case the user doesn't set it
       if( !_hist[i] ) continue;
       
@@ -173,6 +173,7 @@ public:
     }
     
     if(_hist[iRS]) _hist[iRS]->SetLineWidth(3);
+
     if(_data) _data->Rebin(rebin);
     if(_data) _data->SetLineColor  (kBlack);
     if(_data) _data->SetMarkerStyle(kFullCircle);
@@ -190,7 +191,7 @@ public:
       if(_hist[iRS]) _hist[iRS]->Draw("hist,same");
       if(_data) _data->Draw("ep,same");
     }
-    // hstack->SetTitle("CMS preliminary");  // chiara
+    hstack->SetTitle("CMS preliminary");  
     
     Float_t theMax = hstack->GetMaximum();
     Float_t theMin = hstack->GetMinimum();
@@ -201,7 +202,7 @@ public:
     }
     
     if (_data) {
-      
+            
       Float_t dataMax = GetMaximumIncludingErrors(_data);
       
       if (dataMax > theMax) theMax = dataMax;
@@ -229,7 +230,7 @@ public:
 	THStackAxisFonts(hstack, "y", TString::Format("entries / %.0f %s", _hist[iGG]->GetBinWidth(0),_units.Data()));
       }
     }
-    
+
     // total mess to get it nice, should be redone
     size_t j=0;
     TString rsLabel = " RS Graviton";
@@ -249,7 +250,7 @@ public:
     luminosity->SetTextSize(_tsize);
     luminosity->Draw("same");
   }
-  
+
   void setLumi(const float &l) { _lumi = l; }
   void setLabel(const TString &s) { _xLabel = s; }
   void setUnits(const TString &s) { _units = s; }

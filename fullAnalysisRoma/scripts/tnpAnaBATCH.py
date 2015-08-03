@@ -13,44 +13,40 @@ process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_condD
 
 from Configuration.AlCa.GlobalTag import GlobalTag
 if (isMC):
-    #process.GlobalTag = GlobalTag(process.GlobalTag, 'MCRUN2_74_V9A', '')           # 50ns
-    process.GlobalTag = GlobalTag(process.GlobalTag, 'MCRUN2_74_V9', '')            # 25ns
+    process.GlobalTag.globaltag = 'MCRUN2_74_V9A'         # 50ns 
+    #process.GlobalTag.globaltag = 'MCRUN2_74_V9'         # 25ns 
 else:
     process.GlobalTag = GlobalTag(process.GlobalTag, 'GR_P_V56', '')
 
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32( 10 ) )
+process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32( 1000 )
+
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32( -1 ) )
 
 process.source = cms.Source("PoolSource",
-                            fileNames=cms.untracked.vstring(
-
-        # Spring15, DY
-        "file:diphotonsMicroAOD_1.root"
-        )
+                            fileNames = cms.untracked.vstring('/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14_v2/diphotonsPhys14V2/RSGravToGG_kMpl001_M_5000_Tune4C_13TeV_pythia8/ExoPhys14_v2-diphotonsPhys14V2-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150128_133931/0000/myOutputFile_1.root'
                             )
 
 process.load("flashgg/MicroAOD/flashggPhotons_cfi")
-process.load("flashgg/MicroAOD/flashggElectrons_cfi")
 process.load("flashgg/MicroAOD/flashggDiPhotons_cfi")
+process.load("flashgg/MicroAOD/flashggElectrons_cfi")
 
-process.TFileService = cms.Service("TFileService",fileName = cms.string("TaP_output.root"))
+process.TFileService = cms.Service("TFileService",fileName = cms.string("OUTPUT"))
 
 process.tnpAna = cms.EDAnalyzer('TaPAnalyzer',
                                 VertexTag = cms.untracked.InputTag('offlineSlimmedPrimaryVertices'),
                                 ElectronTag=cms.InputTag('flashggElectrons'),
-                                genPhotonExtraTag = cms.InputTag("flashggGenPhotonsExtra"),    
+                                genPhotonExtraTag = cms.InputTag("flashggGenPhotonsExtra"),   
                                 DiPhotonTag = cms.untracked.InputTag('flashggDiPhotons'),
                                 PileupTag = cms.untracked.InputTag('addPileupInfo'),
-
                                 bits = cms.InputTag("TriggerResults","","HLT"),
                                 objects = cms.InputTag("selectedPatTrigger"),
-
                                 generatorInfo = cms.InputTag("generator"),
-                                dopureweight = cms.untracked.int32(0),
-                                sampleIndex  = cms.untracked.int32(101),   # 5
-                                puWFileName  = cms.string('xxx'),   # chiara  
-                                xsec         = cms.untracked.double(1.),
-                                kfac         = cms.untracked.double(1.),
-                                sumDataset   = cms.untracked.double(1.)
+                                dopureweight = PU,
+                                sampleIndex  = SI,
+                                puWFileName  = weights,
+                                xsec         = XS,
+                                kfac         = KF,
+                                sumDataset   = SDS
                                 )
 
 process.p = cms.Path(process.tnpAna)

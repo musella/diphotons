@@ -7,21 +7,16 @@ process.load("FWCore.MessageService.MessageLogger_cfi")
 
 process.load("Configuration.StandardSequences.GeometryDB_cff")
 process.load("Configuration.StandardSequences.MagneticField_cff")
-process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
-process.GlobalTag.globaltag = 'POSTLS170_V5::All'
-#process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff")
-#process.GlobalTag.globaltag = 'POSTLS170_V5'
+process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff")
+process.GlobalTag.globaltag = 'MCRUN2_74_V9A'         # 50ns
 
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32( 1000 ) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32( -1 ) )
 
 process.source = cms.Source("PoolSource",
                             fileNames=cms.untracked.vstring(
 
-        # Phys14, GG+jets, AnV1 
-        #"/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14ANv1/diphotonsPhys14AnV1/GGJets_M-500To1000_Pt-50_13TeV-sherpa/ExoPhys14ANv1-diphotonsPhys14AnV1-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150330_141301/0000/diphotonsMicroAOD_1.root"
-
-        # Phys14, RS 3TeV, AnV1 
-        "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14ANv1/diphotonsPhys14AnV1/RSGravToGG_kMpl-01_M-3000_Tune4C_13TeV-pythia8/ExoPhys14ANv1-diphotonsPhys14AnV1-v0-Phys14DR-PU30bx50_PHYS14_25_V1-v1/150330_141554/0000/diphotonsMicroAOD_2.root"
+        # Spring15, RS 1TeV, k=0.1
+        "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/RSGravToGG_kMpl-01_M-1000_TuneCUEP8M1_13TeV-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/150716_211524/0000/diphotonsMicroAOD_1.root"
         )
                             )
 
@@ -34,17 +29,15 @@ process.diPhoAna = cms.EDAnalyzer('DiPhoAnalyzer',
                                   VertexTag = cms.untracked.InputTag('offlineSlimmedPrimaryVertices'),
                                   genPhotonExtraTag = cms.InputTag("flashggGenPhotonsExtra"),    
                                   DiPhotonTag = cms.untracked.InputTag('flashggDiPhotons'),
-                                  reducedBarrelRecHitCollection = cms.InputTag('reducedEgamma','reducedEBRecHits'),
-                                  reducedEndcapRecHitCollection = cms.InputTag('reducedEgamma','reducedEERecHits'),
                                   PileupTag = cms.untracked.InputTag('addPileupInfo'),
                                   generatorInfo = cms.InputTag("generator"),
+                                  bits = cms.InputTag("TriggerResults","","HLT"),
                                   dopureweight = cms.untracked.int32(0),
-                                  sampleIndex  = cms.untracked.int32(101),   # 5
+                                  sampleIndex  = cms.untracked.int32(101),   
                                   puWFileName  = cms.string('xxx'),   # chiara  
-                                  xsec         = cms.untracked.double(0.172872),
+                                  xsec         = cms.untracked.double(0.172872),    # chiara
                                   kfac         = cms.untracked.double(1.),
-                                  #sumDataset   = cms.untracked.double(2236.0)
-                                  sumDataset   = cms.untracked.double(49972.0)
+                                  sumDataset   = cms.untracked.double(49972.0)   # chiara
                                   )
 
 process.p = cms.Path(process.diPhoAna)

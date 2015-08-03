@@ -1,5 +1,4 @@
 #! /usr/bin/env python
-# example: ./submitBatchDiPho.py -c -T 2000 -n 1 -p run_gensim --cfg step_fullSIM.py T1tttt_2J_mGo1300_mStop300_mChi280_pythia8-4bodydec
 
 import os
 import sys
@@ -43,8 +42,10 @@ def main():
     xsection = args[4]
     kfactor = args[5]
 
-    inputlist="lists_Spring15v1/25ns/MC/"+dataset+".list"
-    inputweights="lists_Spring15v1/25ns/MC/"+dataset+".weight"
+    inputlist="lists_Spring15v1/50ns/MC/"+dataset+".list"
+    inputweights="lists_Spring15v1/50ns/MC/"+dataset+".weight"
+    #inputlist="lists_Spring15v1/50ns/data/"+dataset+".list"
+    #inputweights="lists_Spring15v1/50ns/data/"+dataset+".weight"
 
     output = dataset
 

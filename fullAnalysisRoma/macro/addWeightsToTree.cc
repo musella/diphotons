@@ -295,7 +295,7 @@ void addWeights(const char* filename, float lumiForW, float massTrue=1) {
     if (i==0) xsecToWeight = totXsec;
    
     // new variables
-    if (sampleID!=0) {
+    if (sampleID>0 && sampleID<10000) {   // MC
       xsecWeight = perEveW * lumiForW * totXsec / sampleSumWeight;             
       weight     = xsecWeight * pu_weight;
       mggNominal = massTrue;
