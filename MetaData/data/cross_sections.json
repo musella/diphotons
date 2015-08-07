@@ -4,12 +4,12 @@
     "GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola" : { "xs" : 62.05 },
     "GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola" : { "xs" : 20.87 },
 
-    "GGJets_M-200To500_Pt-50_13TeV-sherpa" : { "xs" :  2.4338299999999999 },
-    "GGJets_M-500To1000_Pt-50_13TeV-sherpa" : { "xs" :  0.172872 },
-    "GGJets_M-1000To2000_Pt-50_13TeV-sherpa" : { "xs" :  0.0104901, "kf" : 1.2 },
-    "GGJets_M-2000To4000_Pt-50_13TeV-sherpa" : { "xs" :  0.000439813, "kf" : 1.2 },
-    "GGJets_M-4000To8000_Pt-50_13TeV-sherpa" : { "xs" :  2.1969699999999999e-06, "kf" : 1.2 },
-    "GGJets_M-8000To13000_Pt-50_13TeV-sherpa" : { "xs" :  7.0531399999999995e-11, "kf" : 1.2 },
+    "_GGJets_M-200To500_Pt-50_13TeV-sherpa" : { "xs" :  2.4338299999999999 },
+    "_GGJets_M-500To1000_Pt-50_13TeV-sherpa" : { "xs" :  0.172872 },
+    "_GGJets_M-1000To2000_Pt-50_13TeV-sherpa" : { "xs" :  0.0104901, "kf" : 1.2 },
+    "_GGJets_M-2000To4000_Pt-50_13TeV-sherpa" : { "xs" :  0.000439813, "kf" : 1.2 },
+    "_GGJets_M-4000To8000_Pt-50_13TeV-sherpa" : { "xs" :  2.1969699999999999e-06, "kf" : 1.2 },
+    "_GGJets_M-8000To13000_Pt-50_13TeV-sherpa" : { "xs" :  7.0531399999999995e-11, "kf" : 1.2 },
     
     "RSGravToGG_kMpl-02_M-5000_Tune4C_13TeV-pythia8" : { "xs" : 0.00005019  },
     "RSGravToGG_kMpl-02_M-3000_Tune4C_13TeV-pythia8" : { "xs" : 0.0045  },
@@ -19,9 +19,42 @@
     "RSGravToGG_kMpl-001_M-1500_Tune4C_13TeV-pythia8" : { "xs" : 0.001095 },
     "RSGravToGG_kMpl-001_M-750_Tune4C_13TeV-pythia8"  : { "xs" : 0.04471 },
     "RSGravToGG_kMpl001_M_5000_Tune4C_13TeV_pythia8" : { "xs" : 0.000000142 },
+
+    "RSGravToGG_kMpl-02_M-5000_TuneCUEP8M1_13TeV-pythia8" : { "xs" : 0.00005019 }, 
     						      
     "QCD_HT-100To250_13TeV-madgraph" : { "xs" : 28730000.0 },
     "QCD_HT_250To500_13TeV-madgraph" : { "xs" : 670500.0 },
     "QCD_HT-500To1000_13TeV-madgraph": { "xs" : 26740.0 },
-    "QCD_HT_1000ToInf_13TeV-madgraph": { "xs" : 769.7 }
+    "QCD_HT_1000ToInf_13TeV-madgraph": { "xs" : 769.7 },
+
+    "QCD_HT100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"   : { "xs" : 2.803e+07 },
+    "QCD_HT200to300_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"   : { "xs" : 1.708e+06 },
+    "QCD_HT300to500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"   : { "xs" : 3.509e+05 },
+    "QCD_HT500to700_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"   : { "xs" : 3.196e+04 },
+    "QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"  : { "xs" : 7.029e+03 },
+    "QCD_HT1000to1500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8" : { "xs" : 1.230e+03 },
+    "QCD_HT1500to2000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8" : { "xs" : 1.174e+02 },
+    "QCD_HT2000toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"  : { "xs" : 2.520e+01 },
+    
+    "GGJets_M-200To500_Pt-50_13TeV-sherpa"    : { "xs" : 2.047e+00  },
+    "GGJets_M-500To1000_Pt-50_13TeV-sherpa"   : { "xs" : 1.510e-01  },
+    "GGJets_M-1000To2000_Pt-50_13TeV-sherpa"  : { "xs" : 1.084e-02  },
+    "GGJets_M-2000To4000_Pt-50_13TeV-sherpa"  : { "xs" : 3.690e-04  },
+    "GGJets_M-4000To6000_Pt-50_13TeV-sherpa"  : { "xs" : 2.451e-06  },
+    "GGJets_M-6000To8000_Pt-50_13TeV-sherpa"  : { "xs" : 1.753e-08  },
+    "GGJets_M-8000To13000_Pt-50_13TeV-sherpa" : { "xs" : 7.053e-11  },
+    
+    "GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8" : { "xs" :2.816e+02 },
+    "GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8" : { "xs" :9.465e+01 },
+    "GJets_HT-40To100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"  : { "xs" :2.121e+04 },
+    "GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8" : { "xs" :9.863e+03 },
+    "GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8" : { "xs" :2.298e+03 },
+    
+    "WJetsToLNu_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8" : { "xs" :1.313e+03 },
+    "WJetsToLNu_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8" : { "xs" :3.575e+02 },
+    "WJetsToLNu_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8" : { "xs" :4.888e+01 },
+    "WJetsToLNu_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8" : { "xs" :1.872e+01 },
+    
+    "TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8" : { "xs" : 5.140e+02 }
+
 } 
