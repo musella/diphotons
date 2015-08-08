@@ -201,7 +201,7 @@ void TaPAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
     iEvent.getByToken(triggerObjects_, triggerObjects);
   
     edm::Handle<GenEventInfoProduct> genInfo;      
-    if (sampleID>0) iEvent.getByLabel(genInfo_,genInfo);  
+    if (sampleID>0 && sampleID<10000) iEvent.getByLabel(genInfo_,genInfo);  
 
     // --------------------------------------------------
     // Event info
@@ -219,7 +219,7 @@ void TaPAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
     // PU weight (for MC only and if requested)
     pu_weight = 1.;
     pu_n      = -1.;
-    if (sampleID>0) {     // MC
+    if (sampleID>0 && sampleID<10000) {     // MC
         pu_n = 0.;
         for( unsigned int PVI = 0; PVI < PileupInfos->size(); ++PVI )
         {
@@ -234,12 +234,12 @@ void TaPAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
   
     // x-sec * kFact for MC only 
     totXsec = 1.;
-    if (sampleID>0) totXsec = xsec_ * kfac_;
+    if (sampleID>0 && sampleID<10000) totXsec = xsec_ * kfac_;
 
     // other weights for the dataset
     sumDataset = 1.;  
     perEveW    = 1.;
-    if (sampleID>0) { 
+    if (sampleID>0 && sampleID<10000) { 
         sumDataset = sumDataset_;
         const auto & eveWeights = genInfo->weights();
         if(!eveWeights.empty()) perEveW = eveWeights[0];
