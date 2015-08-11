@@ -42,7 +42,9 @@ process.source = cms.Source("PoolSource",
         
         ## "/store/mc/Phys14DR/QCD_HT-100To250_13TeV-madgraph/MINIAODSIM/PU20bx25_PHYS14_25_V1-v1/00000/0441A526-7C87-E411-BE19-002590574604.root")
         ## "/store/data/Run2015B/DoubleEG/MINIAOD/PromptReco-v1/000/251/096/00000/8A2D533C-5626-E511-AF3C-02163E011FAB.root")
-        "root://eoscms//eos/cms/store/mc/RunIISpring15DR74/ADDGravToGG_MS-6000_NED-4_KK-1_M-2000To4000_13TeV-sherpa/MINIAODSIM/Asympt25ns_MCRUN2_74_V9-v1/20000/76CA81A9-1024-E511-8D9F-3417EBE6471D.root")
+        "/store/mc/RunIISpring15DR74/GGJets_M-1000To2000_Pt-50_13TeV-sherpa/MINIAODSIM/Asympt25ns_MCRUN2_74_V9-v3/40000/14933A04-1A3C-E511-979C-AC162DABCAF8.root"
+        ## "root://eoscms//eos/cms/store/mc/RunIISpring15DR74/ADDGravToGG_MS-6000_NED-4_KK-1_M-2000To4000_13TeV-sherpa/MINIAODSIM/Asympt25ns_MCRUN2_74_V9-v1/20000/76CA81A9-1024-E511-8D9F-3417EBE6471D.root"
+        )
                             )
 
 process.load("flashgg/MicroAOD/flashggMicroAODSequence_cff")
@@ -73,12 +75,13 @@ process.vetoJets = cms.EDFilter("CandPtrSelector",
 
 process.flashggPhotons.extraIsolations.extend([
         cms.PSet(
-            algo=cms.string("FlashggStdIsolationAlgo"),
-            name=cms.string("std03"),
+            algo=cms.string("FlashggRandomConeIsolationAlgo"),
+            name=cms.string("rnd03"),
             coneSize=cms.double(0.3), doOverlapRemoval=cms.bool(False),
             charged=cms.vdouble(0.02,0.02,0.1),
             photon=cms.vdouble(0.0, 0.070, 0.015, 0.0, 0.0, 0.0),
-            neutral=cms.vdouble(0.0, 0.000, 0.000, 0.0, 0.0, 0.0)
+            vetoCollections_=cms.VInputTag(cms.InputTag("vetoPhotons"),cms.InputTag("vetoJets")),
+            veto=cms.double(0.8),
             ),
         cms.PSet(
             algo=cms.string("DiphotonsFootPrintRemovedIsolationAlgo"),
@@ -87,7 +90,6 @@ process.flashggPhotons.extraIsolations.extend([
             rechitLinkEnlargement=cms.double(0.25),
             charged=cms.vdouble(0.02,0.02,0.1),
             photon=cms.vdouble(0.0, 0.070, 0.015, 0.0, 0.0, 0.0),
-            neutral=cms.vdouble(0.0, 0.000, 0.000, 0.0, 0.0, 0.0)
             ),
         cms.PSet(
             algo=cms.string("DiphotonsFootPrintRemovedIsolationAlgo"),
@@ -95,16 +97,6 @@ process.flashggPhotons.extraIsolations.extend([
             coneSize=cms.double(0.3), doRandomCone=cms.bool(False), removePhotonsInMap=cms.int32(0),
             rechitLinkEnlargement=cms.double(0.25),
             photon=cms.vdouble(0.0, 0.070, 0.015, 0.0, 0.0, 0.0),
-            ),
-        cms.PSet(
-            algo=cms.string("FlashggRandomConeIsolationAlgo"),
-            name=cms.string("rnd03"),
-            coneSize=cms.double(0.3), doOverlapRemoval=cms.bool(False),
-            charged=cms.vdouble(0.02,0.02,0.1),
-            photon=cms.vdouble(0.0, 0.070, 0.015, 0.0, 0.0, 0.0),
-            neutral=cms.vdouble(0.0, 0.000, 0.000, 0.0, 0.0, 0.0),
-            vetoCollections_=cms.VInputTag(cms.InputTag("vetoPhotons"),cms.InputTag("vetoJets")),
-            veto=cms.double(0.8),
             ),
         cms.PSet(
             algo=cms.string("DiphotonsFootPrintRemovedIsolationAlgo"),
@@ -116,17 +108,22 @@ process.flashggPhotons.extraIsolations.extend([
             vetoCollections_=cms.VInputTag(cms.InputTag("vetoPhotons"),cms.InputTag("vetoJets")),
             veto=cms.double(0.8),
             ),
-        cms.PSet(
-            algo=cms.string("DiphotonsFootPrintRemovedIsolationAlgo"),
-            name=cms.string("fprRndNoMap03"),
-            coneSize=cms.double(0.3), doRandomCone=cms.bool(True), removePhotonsInMap=cms.int32(0),
-            rechitLinkEnlargement=cms.double(0.25),
-            photon=cms.vdouble(0.0, 0.070, 0.015, 0.0, 0.0, 0.0),
-            vetoCollections_=cms.VInputTag(cms.InputTag("vetoPhotons"),cms.InputTag("vetoJets")),
-            veto=cms.double(0.8),
-            ),
         ]
     )
+
+
+for icone,dphi in enumerate( [0.7,1.3,1.9,2.5,3.1,-2.5,-1.9,-1.3,-0.7] ):
+    process.flashggPhotons.extraIsolations.append(
+        cms.PSet(
+            algo=cms.string("FlashggRandomConeIsolationAlgo"),
+            name=cms.string("rnd03_%d" % icone), deltaPhi=cms.double(dphi),
+            coneSize=cms.double(0.3), doOverlapRemoval=cms.bool(False),
+            charged=cms.vdouble(0.02,0.02,0.1),
+            photon=cms.vdouble(0.0, 0.070, 0.015, 0.0, 0.0, 0.0),
+            vetoCollections_=cms.VInputTag(cms.InputTag("vetoPhotons"),cms.InputTag("vetoJets")),
+            veto=cms.double(0.699),
+            ),
+        )
 
 from flashgg.MicroAOD.flashggMicroAODOutputCommands_cff import microAODDefaultOutputCommand, microAODDebugOutputCommand
  
@@ -150,17 +147,8 @@ process.out.outputCommands.extend([### "keep *_eventCount_*_*",
 
 process.myPreselectedPhotons = cms.EDFilter("PhotonSelector",
                                             src=cms.InputTag("flashggPhotons"),
-                                            cut=cms.string("(r9>0.8||egChargedHadronIso<20||egChargedHadronIso/pt<0.3)")
+                                            cut=cms.string("(r9>0.8||egChargedHadronIso<20||egChargedHadronIso/pt<0.3) && pt>50 && egChargedHadronIso<15")
                                             )
-
-## process.p = cms.Path((process.eventCount+process.weightsCount
-##                       +process.flashggVertexMapUnique+process.flashggVertexMapNonUnique## +process.flashggElectrons
-##                       +process.flashggMicroAODGenSequence
-##                       )
-##                      *(process.flashggPhotons)*(process.vetoPhotons+process.vetoJets)
-##                      *process.flashggDiPhotons*process.flashggPreselectedDiPhotons
-##                      *process.myPreselectedPhotons
-##                     )
 
 # need to allow unscheduled processes otherwise reclustering function will fail
 # this is because of the jet clustering tool, and we have to live with it for now.
@@ -175,6 +163,8 @@ addFlashggPFCHSLegJets(process)
 process.p = cms.Path(process.flashggMicroAODSequence*process.myPreselectedPhotons)
 
 process.e = cms.EndPath(process.out)
+
+process.e2 = cms.EndPath(process.eventCount+process.weightsCount)
 
 from diphotons.Analysis.MicroAODCustomize import customize
 customize(process)

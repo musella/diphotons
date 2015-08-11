@@ -443,6 +443,7 @@ class PlotApp(PyRApp):
         for s in samples:
             sfin = fin
             if ":" in s:
+                sa = s
                 s,fname = s.split(":")
                 folder = None
                 if ".root/" in fname:
@@ -450,7 +451,15 @@ class PlotApp(PyRApp):
                 ## print fname, folder
                 sfin = self.open(fname, folder=self.options.input_dir)
                 if folder:
-                    sfin = sfin.Get(folder)
+                    try:
+                        sfin = sfin.Get(folder)
+                    except Exception, e:
+                        print "Unable to read %s from %s" % ( folder, fname)
+                        print e
+                        sfin = None
+                if not sfin:
+                    print "Could not read %s, %s" % (sa, self.options.input_dir)
+                    sys.exit(1)
             if group:
                 h = None
                 for gr in group:

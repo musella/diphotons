@@ -1,4 +1,5 @@
 import ROOT
+import array
 
 # -----------------------------------------------------------------------------------------------------------
 def applyTo(obj,method,style):
@@ -12,7 +13,8 @@ def xtitle(h,tit):
 # -----------------------------------------------------------------------------------------------------------
 def ytitle(h,tit):
     ## print "ytitle", h.GetName(), tit
-    h.GetYaxis().SetTitle( tit % { "binw" : h.GetBinWidth(0) } )
+    binw = h.GetBinWidth(0) if not getattr(h,"isDensity",False) else 1.
+    h.GetYaxis().SetTitle( tit % { "binw" : 1 } )
     # h.GetYaxis().SetTitle(tit)
 
 # -----------------------------------------------------------------------------------------------------------
@@ -25,6 +27,41 @@ def logy(h,ymin=None):
         h.SetLogy()
         if ymin:
             h.ymin = ymin
+
+# -----------------------------------------------------------------------------------------------------------
+def overflow(h,limit=None):
+    if not limit:
+        limitBin=h.GetXaxis().GetLast()
+    else:
+        limitBin = h.GetXaxis().FindBin(limit)
+    maxBin = h.GetNbinsX()
+    ## print "overflow %s %s %1.2f %1.2f" % (h.GetName(), str(limit), h.GetXaxis().GetBinLowEdge(limitBin), h.GetXaxis().GetBinLowEdge(maxBin))
+    ## h.Print("all")
+    sumw = 0.
+    sumw2 = 0.
+    for ibin in range(limitBin,maxBin+1):
+        sumw += h.GetBinContent(ibin)
+        sumw2 += h.GetBinError(ibin)**2
+        h.SetBinContent(ibin,0.)
+        h.SetBinError(ibin,0.)
+    h.SetBinContent(limitBin,sumw)
+    h.SetBinError(limitBin,sumw2)
+
+# -----------------------------------------------------------------------------------------------------------
+def rebin(h,rebin):
+    if type(rebin) == list:
+        bins = array.array('d',rebin)
+        return h.Rebin(len(bins)-1,h.GetName(),bins)
+    else:
+        h.Rebin(rebin)
+
+# -----------------------------------------------------------------------------------------------------------
+def density(h):
+    for ibin in range(h.GetNbinsX()):
+        width = h.GetXaxis().GetBinWidth(ibin+1)
+        h.SetBinContent(ibin+1, h.GetBinContent(ibin+1) / width)
+        h.SetBinError(ibin+1, h.GetBinError(ibin+1) / width)
+        h.isDensity = True
 
 # -----------------------------------------------------------------------------------------------------------
 def scaleFonts(h,scale):
@@ -140,6 +177,8 @@ def apply(h,modifs):
                 except Exception as e:
                     exceptions.append(e)
                     ret = method(*args)
+                if type(ret) == type(h):
+                    h = ret
         except Exception as e:
             exceptions.append(e)
             exc = "\n".join( str(e) for e in exceptions)
