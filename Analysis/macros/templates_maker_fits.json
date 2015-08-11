@@ -66,7 +66,7 @@
 			},
             "templates" : {
                 "pf" : { 
-		        "sel"  : "cicNoChIsoSingleSB", 
+		        "sel"  : "cicSBNoChIsoSingleSB", 
                         "#" : "pseudo-random swap, but taking care to take the random cone isolation for the signal-region photon",
                         "#" : "  and the photon isolation for the side-band one                                                  ",
                         "fill_categories" : { 
@@ -127,7 +127,7 @@
 			},
             "templates" : {
                 "pf" : { 
-		        "sel"  : "cicNoChIsoSingleSB", 
+		        "sel"  : "cicSBNoChIsoSingleSB", 
                         "fill_categories" : { 
                         "EBEB" :{ "leadIsSB && TMath::Even(event)" :    [ "leadChIso", "subleadRndConeChIso" ],
                                 "leadIsSB && ! TMath::Even(event)" :    [ "subleadRndConeChIso", "leadChIso" ],
@@ -197,13 +197,13 @@
                         "EBEB" :{"TMath::Even(event) " : [ "leadRndConeChIso", "subleadRndConeChIso" ],
                                  "! TMath::Even(event)" : [ "subleadRndConeChIso", "leadRndConeChIso" ]
                                 },
-                        "EBEE" :{ "leadIsEB && !subleadIsEB" : [ "leadRndConeChIso", "subleadRndConeChIso" ], 
+                        "EBEE" :{"leadIsEB && !subleadIsEB" : [ "leadRndConeChIso", "subleadRndConeChIso" ], 
                                 "!leadIsEB && subleadIsEB" : [ "subleadRndConeChIso", "leadRndConeChIso" ]
                                 }
                             }
                 },
                 "pf" : { 
-		        "sel"  : "cicNoChIsoSingleSB", 
+		        "sel"  : "cicSBNoChIsoSingleSB", 
                         "#" : "pseudo-random swap, but taking care to take the random cone isolation for the signal-region photon",
                         "#" : "  and the photon isolation for the side-band one                                                  ",
                         "fill_categories" : { 
@@ -220,7 +220,7 @@
                                 }
                         }
                  },
-                 "ff" : { "sel"  : "cicNoChIsoDoubleSB",        
+                 "ff" : { "sel"  : "cicSBNoChIsoDoubleSB",        
                          "fill_categories" : {
                          "EBEB" :{ "TMath::Even(event)  " : [ "leadChIso", "subleadChIso" ],
                                  "! TMath::Even(event) " : [ "subleadChIso", "leadChIso" ]
@@ -273,7 +273,7 @@
                     }
                 },
                 "f" : { 
-                    "sel" : "cicNoChIsoSBSinglePho",
+                    "sel" : "cicSBNoChIsoSBSinglePho",
                         "fill_categories" : { 
                         "EB" : { "phoIsSB" : ["phoChIso"] },
                         "EE" : { "phoIsSB" : ["phoChIso"] },
@@ -281,7 +281,7 @@
                     }
 				},
                 "f1" : { 
-                    "sel" : "cicNoChIsoSBSinglePho",
+                    "sel" : "cicSBNoChIsoSBSinglePho",
                         "fill_categories" : { 
                         "EB" : { "TMath::Even(event) && phoIsSB" : ["phoChIso"] },
                         "EE" : { "TMath::Even(event) && phoIsSB" : ["phoChIso"] },
@@ -289,7 +289,7 @@
                     }
                 },
                 "f2" : { 
-                    "sel" : "cicNoChIsoSBSinglePho",
+                    "sel" : "cicSBNoChIsoSBSinglePho",
                         "fill_categories" : { 
                         "EB" : { "!TMath::Even(event) && phoIsSB" : ["phoChIso"] },
                         "EE" : { "!TMath::Even(event) && phoIsSB" : ["phoChIso"] },
@@ -299,7 +299,7 @@
             },
 	    "_templates" : {
 	    	"_fwhigh" : { 
-                    "sel" : "cicNoChIsoSBSinglePho",
+                    "sel" : "cicSBNoChIsoSBSinglePho",
                         "fill_categories" : { 
                         	"EB" : { "phoIsSB && weight >=1." : ["phoChIso"] },
                         	"EE" : { "phoIsSB && weight >=1." : ["phoChIso"] },
@@ -307,7 +307,7 @@
                 	}
 				},
                 "_fwlow" : { 
-                    "sel" : "cicNoChIsoSBSinglePho",
+                    "sel" : "cicSBNoChIsoSBSinglePho",
                         "fill_categories" : { 
                         	"EB" : { "phoIsSB && weight <1." : ["phoChIso"] },
                         	"EE" : { "phoIsSB && weight <1." : ["phoChIso"] },

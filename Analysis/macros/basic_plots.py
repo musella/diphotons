@@ -18,6 +18,7 @@ class BasicPlot(PlotApp):
 
     def replaceIn(self, template, replacements):
         ret = []
+        print template
         for name, title, style, subprocs in template:
             rsubprocs = {}
             for key,val in subprocs.iteritems():

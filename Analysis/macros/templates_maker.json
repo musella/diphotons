@@ -14,15 +14,22 @@
     "#" : "  fromat is <sample-name>:[[input-file][/file-folder]] order irrelevant                                                               ",
 	
     "#" : "data to be fit                                                                                                       ",
-    "data" : [
+    "_data" : [
                "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)sGenIso",
                "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)sNonGenIso",
                "QCD_HT_100toInf_13TeV:output.root/%(sel)s",
                "GJets_HT_100toInf_13TeV:output.root/%(sel)s"            
              ],
 
+    "data" : [
+               "Data_13TeV:output.root/%(sel)s"
+             ],
+
     "#" : "data used for template making",
     "templates" : [
+               "Data_13TeV:output.root/%(sel)s"
+             ],
+    "_templates" : [
                "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)s",
                "QCD_HT_100toInf_13TeV:output.root/%(sel)s",
                "GJets_HT_100toInf_13TeV:output.root/%(sel)s"            
@@ -30,6 +37,12 @@
              
      "#" : "mc dataset",
      "mc" : [
+             "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)s",
+               "QCD_HT_100toInf_13TeV:output.root/%(sel)s",
+               "GJets_HT_100toInf_13TeV:output.root/%(sel)s"            
+            ],
+
+     "_mc" : [
              "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)sGenIso",
                "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)sNonGenIso",
                "QCD_HT_100toInf_13TeV:output.root/%(sel)s",
@@ -37,7 +50,25 @@
             ],
 
      "#" : "mc dataset",
-      "signals" : {
+      "signals" : { 
+      "grav_02_5000" : [ "RSGravToGG_kMpl_02_M_5000_13TeV:output.root/%(sel)s"	]
+      
+      },
+      "_signals" : { 
+      "grav_001_2000": [ "RSGravToGG_kMpl_001_M_2000_13TeV:output.root/%(sel)s"],
+      "grav_001_3000": [ "RSGravToGG_kMpl_001_M_3000_13TeV:output.root/%(sel)s"],
+      "grav_001_500" : [ "RSGravToGG_kMpl_001_M_500_13TeV:output.root/%(sel)s"	],
+      "grav_01_1000" : [ "RSGravToGG_kMpl_01_M_1000_13TeV:output.root/%(sel)s"	],
+      "grav_01_3500" : [ "RSGravToGG_kMpl_01_M_3500_13TeV:output.root/%(sel)s"	],
+      "grav_01_4000" : [ "RSGravToGG_kMpl_01_M_4000_13TeV:output.root/%(sel)s"	],
+      "grav_01_5000" : [ "RSGravToGG_kMpl_01_M_5000_13TeV:output.root/%(sel)s"	],
+      "grav_01_7000" : [ "RSGravToGG_kMpl_01_M_7000_13TeV:output.root/%(sel)s"	],
+      "grav_02_1000" : [ "RSGravToGG_kMpl_02_M_1000_13TeV:output.root/%(sel)s"	],
+      "grav_02_4000" : [ "RSGravToGG_kMpl_02_M_4000_13TeV:output.root/%(sel)s"	],
+      "grav_02_5000" : [ "RSGravToGG_kMpl_02_M_5000_13TeV:output.root/%(sel)s" ]
+      
+      },
+      "_signals" : {
      	       	 "grav_001_750" : ["RSGravToGG_kMpl_001_M_750_13TeV:output.root/%(sel)sGenIso",
 		       		  "RSGravToGG_kMpl_001_M_750_13TeV:output.root/%(sel)sNonGenIso"
 		       		  ],

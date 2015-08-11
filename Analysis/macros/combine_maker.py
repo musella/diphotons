@@ -202,6 +202,13 @@ class CombineApp(TemplatesApp):
                                     default="1",
                                     help="Specify luminosity for generating data, background and signal workspaces",
                                     ),
+                        make_option("--real-data",dest="real_data",action="store_true",
+                                    default=True,
+                                    help="Running on real data",
+                                    ),
+                        make_option("--mc-data",dest="real_data",action="store_false",
+                                    help="Not running on real data",
+                                    ),
                         make_option("--signal-scalefactor-forpdf",dest="signal_scalefactor_forpdf",action="store",type="string",
                                     default="100",
                                     help="Specify luminosity for generating data, background and signal workspaces",
@@ -266,6 +273,11 @@ class CombineApp(TemplatesApp):
             self.generateDatacard(options,args)
 
 
+    def lumiScale(self,name):
+        if not self.options.real_data or ( not "data" in name and not "template" in name):
+            return self.options.luminosity
+        return "1"
+    
     ## ------------------------------------------------------------------------------------------------------------
     def generateDatacard(self,options,args):
         """Generate a datacard with name: signal_name.txt if signal_root_file not provided.
@@ -699,7 +711,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             
             print "importing %s as data for cat %s" % (treename, cat)
 
-            dset = self.rooData(treename, weight="%s * weight" % options.luminosity)
+            dset = self.rooData(treename, weight="%s * weight" % self.lumiScale(treename))
 
             if options.use_templates:
                 dset.addColumn(templfunc)
@@ -866,8 +878,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 if add_sideband and not catsource in sidebands:
                     sidebands[catsource] = set()
 
-                dset     = self.rooData(treename,weight="%s * weight" % options.luminosity)
-                ndset    = self.rooData(ntreename,weight="%s * weight" % options.luminosity)
+                dset     = self.rooData(treename,weight="%s * weight" % self.lumiScale(treename))
+                ndset    = self.rooData(ntreename,weight="%s * weight" % self.lumiScale(ntreename))
                 pldset   = dset if not options.plot_norm_dataset else ndset
                                 
                 ## if needed replace dataset with asimov
@@ -906,7 +918,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     if useAsimov:
                         dset = uncut
                     else:
-                        dset = self.reducedRooData(treename,rooset,weight="%s * weight" % options.luminosity,sel=weight_cut,redo=True,importToWs=False)                    
+                        dset = self.reducedRooData(treename,rooset,weight="%s * weight" % self.lumiScale(treename),sel=weight_cut,redo=True,importToWs=False)                    
 
                 ## reduce datasets to required range
                 reduced  = dset.reduce(RooFit.SelectVars(rooset),RooFit.Range("fullRange"))
@@ -964,7 +976,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     if ":" in tsource:
                         tsource, tfitnam = tsource.split(":")
                     ttreename = "%s_%s_%s" % ( tsource, tfitnam, cat )
-                    templset = self.reducedRooData(ttreename, rooset, weight="%s * weight" % options.luminosity, sel=weight_cut, redo=True, importToWs=False )
+                    templset = self.reducedRooData(ttreename, rooset, weight="%s * weight" % self.lumiScale(ttreename), sel=weight_cut, redo=True, importToWs=False )
                     templset = templset.reduce(RooFit.Range("fullRange"))
                     templset.addColumn(templfunc)
                     
@@ -1141,7 +1153,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 treename = "%s_%s_%s" % (signame,options.fit_name,cat)
                 print treename
                 ## dset = self.rooData(treename)
-                dset = self.rooData(treename,weight="%s * weight" % options.luminosity)
+                dset = self.rooData(treename,weight="%s * weight" % self.lumiScale(treename))
                 if options.signal_scalefactor_forpdf!=1:
                     dsetPdf = self.rooData(treename,weight="%s * weight" %options.signal_scalefactor_forpdf,redo=True)
                     dsetPdf.SetName("ForPdf_%s" %treename)
@@ -1151,11 +1163,11 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     dsetPdf.Print()
                     dset.Print()
 
+                roobsArg=ROOT.RooArgSet(roobs)
                 if options.use_templates:
                     rootempl_binning= rootempl.getBinning("templateBinning%s" % cat)
                     dset.addColumn(templfunc)
                     rootemps=ROOT.RooArgSet(roobs,rootempl)
-                    roobsArg=ROOT.RooArgSet(roobs)
                 else:
                     rootemps=ROOT.RooArgSet(roobs)
                 
@@ -1613,6 +1625,25 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             
             
             self.keep( [pdf,linc,logc] )
+
+        elif model == "pow":                
+            pname = "pow_%s" % name
+            linc = self.buildRooVar("%s_lin" % pname,[-100.0,100.0], importToWs=False)
+            linc.setVal(-5.)
+            
+            self.pdfPars_.add(linc)
+            
+            if self.use_custom_pdfs_:
+                print "Using custom pdf RooPowLogPdf"
+                pdf = ROOT.RooPowLogPdf( pname, pname, xvar, linc, RooFit.RooConst(0.))
+            else:
+                print "Using RooGenericPdf"
+                roolist = ROOT.RooArgList( xvar, linc )
+                pdf = ROOT.RooGenericPdf( pname, pname, "TMath::Max(1e-50,pow(@0,@1))", roolist )
+            
+            
+            self.keep( [pdf,linc] )
+
             
         if model == "maxdijet":
             pname = "maxdijet_%s" % name
