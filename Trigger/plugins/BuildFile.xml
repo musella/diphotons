@@ -1,0 +1,13 @@
+<use   name="FWCore/Framework"/>
+<use   name="FWCore/Utilities"/>
+<use   name="FWCore/Common"/>
+<use   name="CommonTools/Utils"/>
+<use   name="PhysicsTools/UtilAlgos"/>
+<use   name="rootcore"/>
+<use   name="rootrflx"/>
+<use   name="boost_python"/>
+<!-- Flags CXXFLAGS="-ggdb"/ -->
+<flags   EDM_PLUGIN="1"/>
+<export>
+  <lib   name="1"/>
+</export>
