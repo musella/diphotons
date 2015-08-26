@@ -25,13 +25,43 @@ class TriggerRatesApp(PlotApp):
                 ("TriggerRatesApp",[                        
                         make_option("--bits",dest="bits",action="callback",type="string",
                                     callback=optpars_utils.ScratchAppend(),
-                                    help="list of bits to be studied",default=["HLT_DoublePhoton85_v2","HLT_DoublePhoton50_v2","HLT_Photon100_HE10_v2","HLT_Photon165_HE10_v2"]),
+                                    help="list of bits to be studied",default=["HLT_DiSC30_18_EIso_AND_HE_Mass70_v1",
+                                                                               "HLT_Photon165_HE10_v2",
+                                                                               "HLT_Photon160_HE10_v2",
+                                                                               "HLT_Photon155_HE10_v2",
+                                                                               "HLT_Photon150_HE10_v2",
+                                                                               "HLT_Photon140_HE10_v2",
+                                                                               "HLT_Photon100_HE10_v2",
+                                                                               "HLT_Photon120_HE10_v2",
+                                                                               "HLT_DoublePhoton85_v2",
+                                                                               "HLT_DoublePhoton80_v2",
+                                                                               "HLT_DoublePhoton70_v2",
+                                                                               "HLT_DoublePhoton70_NoEEEE_v2",
+                                                                               "HLT_DoublePhoton70_NoEEEE_v2 && !HLT_DoublePhoton85_v2",
+                                                                               "HLT_DoublePhoton70_NoEEEE_v2 && !HLT_DoublePhoton80_v2",
+                                                                               "HLT_DoublePhoton70_NoEEEE_v2 && !HLT_DoublePhoton75_v2",
+                                                                               "HLT_DoublePhoton75_v2",
+                                                                               "HLT_DoublePhoton60_v2",
+                                                                               "HLT_DoublePhoton60_NoEEEE_v2",
+                                                                               "HLT_DoublePhoton60_NoEEEE_v2 && !HLT_DoublePhoton85_v2",
+                                                                               "HLT_DoublePhoton60_NoEEEE_v2 && !HLT_DoublePhoton80_v2",
+                                                                               "HLT_DoublePhoton60_NoEEEE_v2 && !HLT_DoublePhoton75_v2",
+                                                                               "HLT_DoublePhoton60_NoEEEE_v2 && !HLT_DoublePhoton70_v2",
+                                                                               "HLT_DoublePhoton50_v2",
+                                                                               "HLT_DoublePhoton40_v2",                                                                               
+                                                                               ]),
                         make_option("--cross-sections",dest="cross_sections",action="callback",type="string",
                                     callback=optpars_utils.Load(),default={},
                                     help="cross sections database"),
                         make_option("--lumi",dest="lumi",action="store",type="float",
-                                    default=5.e-3,
+                                    default=7.e-3,
                                     help="luminosity"),
+                        make_option("--pattern",dest="pattern",action="store",type="string",
+                                    default="*.root",
+                                    help="pattern"),                        
+                        make_option("--skip",dest="skip",action="callback",type="string",
+                                    callback=optpars_utils.ScratchAppend(),
+                                    help="list of datasets to be skipped",default=["QCD_Pt_15to30_TuneCUETP8M1_13TeV_pythia8"]),
                         ]
                  )
             ]+option_groups,option_list=option_list)
@@ -54,16 +84,22 @@ class TriggerRatesApp(PlotApp):
         self.loadRootStyle()
         
         ## print self.options.cross_sections
-        summary = { bit : [] for bit in options.bits }
+        ## summary = { bit : [] for bit in options.bits }
+        summary = {}
         lumi = options.lumi
+        dirname = os.path.dirname(options.input_dir.rstrip("/"))
+        print dirname
+        dirname = os.path.basename(dirname)
+        print dirname
 
         folders = glob.glob(os.path.join(options.input_dir,"*"))
         for folder in folders:
             dataset = os.path.basename(folder)
+            if dataset in options.skip: continue
             ## print folder, dataset
             xsec = options.cross_sections[dataset]["xs"]*options.cross_sections[dataset].get("br",1.)*options.cross_sections[dataset].get("kf",1.)
             chain = ROOT.TChain("myTriggerSummary/triggerBits","myTriggerSummary")
-            for fil in glob.glob(folder+"/*/*/*/*.root"):
+            for fil in glob.glob(folder+"/*/*/*/%s"%options.pattern):
                 chain.AddFile(fil)
             
             processed = ROOT.TH1D("%s_processed" % dataset,"processed",2,-0.5,1.5)
@@ -72,7 +108,8 @@ class TriggerRatesApp(PlotApp):
             
             hbits = []
             for bit in options.bits:
-                triggered = ROOT.TH1D("%s_triggered_%s" % (dataset, bit),bit,2,-0.5,1.5)
+                bitname = bit.replace(" ","").replace("||","_OR_").replace("&&","_AND_").replace("!","_NOT_").replace("(","_op_").replace(")","_cp_")
+                triggered = ROOT.TH1D("%s_triggered_%s" % (dataset, bitname),bit,2,-0.5,1.5)
                 chain.Draw("1>>%s" % triggered.GetName(),"%s*weight" % bit,"goff")
                 hbits.append(triggered)
             
@@ -95,13 +132,15 @@ class TriggerRatesApp(PlotApp):
                     eup=sqrt(nev)
                     edown=eup
                 
+                if not bit in summary: summary[bit] = []
                 summary[bit].append( (dataset, nev*scl, eup*scl, edown*scl) )
                 ## print bit, nev*scl, eup*scl, edown*scl
             print "--------------------------------------------------------------------------"
 
 
-        ressstr = ""
-        for bit,results in summary.iteritems():
+        ressstr  = "--------------------------------------------------------------------------\n"
+        ressstr += options.input_dir+"\n"
+        for bit,results in sorted( summary.iteritems(), key=lambda x: x[0]):
             sresults = sorted( results, key=lambda x: x[1] )
             ressstr += "--------------------------------------------------------------------------\n"
             ressstr += bit+"\n"
@@ -116,7 +155,7 @@ class TriggerRatesApp(PlotApp):
             ressstr += "total".ljust(22) + "%1.2g +%1.1g -%1.1g\n" % tuple(total)
             ressstr += "--------------------------------------------------------------------------\n"
             
-        with open("summary.txt","w+") as fout:
+        with open("summary_%s.txt" % dirname,"w+") as fout:
             fout.write(ressstr)
             fout.close()
         print ressstr
