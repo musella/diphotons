@@ -2403,7 +2403,7 @@ void MakeSigParametricWS(RooWorkspace* w, const char* fileBaseName, Float_t mass
   //RooRealVar *mgg = new RooRealVar("mgg", "mgg", MINmass, MAXmass);
   // RooRealVar *mgg = new RooRealVar("mgg", "mgg", 1250, 1700);
   RooRealVar *mgg = w->var("mgg");
-  mgg->setRange(1250,1700);
+  mgg->setRange(300,6000);
   mgg->setBins(5000);
   // dataset
   wAll->import(*w->data("SigWeight_catEBHighR9"));   
@@ -2542,22 +2542,28 @@ void MakeSigParametricWS(RooWorkspace* w, const char* fileBaseName, Float_t mass
     //// mgg->setBins(5000, "cache");  
     //// // mgg->setBinning(RooBinning(5000,1250,1700));
     //// mgg->setBinning(RooBinning(5000,MINmass,MAXmass));
-    RooRealVar* W = new RooRealVar("W","W",100);
-    RooNumConvPdf* ConvolutedRes;
+	RooRealVar* W = new RooRealVar("W","W",500);
+	W->setConstant();
+	RooRealVar* C = new RooRealVar("C","C",0);
+	C->setConstant();
+   
+
+	RooNumConvPdf* ConvolutedRes;
     ConvolutedRes = new RooNumConvPdf("mggSig_cat"+myCut,"mggSig_cat"+myCut, *mgg, SigModelBW, ResponseDoubleCB);	
-	ConvolutedRes->setConvolutionWindow(*MH,*W);
+   	ConvolutedRes->setConvolutionWindow(*C,*W);
     // dummy fit to fix the binning
     RooDataSet *sigToFit = (RooDataSet*) w->data("SigWeight_cat"+myCut);
 
     //RooFitResult* fitresults_CB = (RooFitResult* ) ConvolutedRes->fitTo(*sigToFit, SumW2Error(kFALSE), Range(1250,1700), RooFit::Save(kTRUE));
     //RooFitResult* fitresults_CB = (RooFitResult* ) ConvolutedRes->fitTo(*sigToFit, SumW2Error(kFALSE),Range(-300,300), RooFit::Save(kTRUE));
+	//	RooFitResult* fitresults_CB = (RooFitResult* ) ConvolutedRes->fitTo(*sigToFit, SumW2Error(kFALSE), RooFit::Save(kTRUE));
     //fitresults_CB->Print("V");
 
     wAll->import(*ConvolutedRes);
 	
 	
     // for closure: control plot
-    RooPlot* controlPlot  = w->var("mgg")->frame(Range(1400, 1600),Title(""),Bins(60));
+    RooPlot* controlPlot  = w->var("mgg")->frame(Range(1400, 1600),Title(""),Bins(100)); //
     //RooPlot* controlPlot = w->var("mgg")->frame(Range(MINmass, MAXmass),Bins(100));
     controlPlot->SetTitle("");
     controlPlot->GetXaxis()->SetTitle("m_{#gamma#gamma}");
