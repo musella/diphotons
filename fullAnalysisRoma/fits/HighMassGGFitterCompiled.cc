@@ -2542,10 +2542,10 @@ void MakeSigParametricWS(RooWorkspace* w, const char* fileBaseName, Float_t mass
     //// mgg->setBins(5000, "cache");  
     //// // mgg->setBinning(RooBinning(5000,1250,1700));
     //// mgg->setBinning(RooBinning(5000,MINmass,MAXmass));
-    
+    RooRealVar* W = new RooRealVar("W","W",100);
     RooNumConvPdf* ConvolutedRes;
     ConvolutedRes = new RooNumConvPdf("mggSig_cat"+myCut,"mggSig_cat"+myCut, *mgg, SigModelBW, ResponseDoubleCB);	
-
+	ConvolutedRes->setConvolutionWindow(*MH,*W);
     // dummy fit to fix the binning
     RooDataSet *sigToFit = (RooDataSet*) w->data("SigWeight_cat"+myCut);
 
@@ -2557,7 +2557,7 @@ void MakeSigParametricWS(RooWorkspace* w, const char* fileBaseName, Float_t mass
 	
 	
     // for closure: control plot
-    RooPlot* controlPlot  = w->var("mgg")->frame(Range(1250, 1700),Title(""),Bins(60));
+    RooPlot* controlPlot  = w->var("mgg")->frame(Range(1400, 1600),Title(""),Bins(60));
     //RooPlot* controlPlot = w->var("mgg")->frame(Range(MINmass, MAXmass),Bins(100));
     controlPlot->SetTitle("");
     controlPlot->GetXaxis()->SetTitle("m_{#gamma#gamma}");
