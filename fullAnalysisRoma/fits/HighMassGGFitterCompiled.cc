@@ -174,18 +174,11 @@ void AddSigData(RooWorkspace* w, Float_t mass, TString coupling) {
   sigTree->SetTitle("sigTree");
   sigTree->SetName("sigTree");
 
-//  RooRealVar *MH = new RooRealVar("MH", "MH", MINmass, MAXmass);
-//  MH->setVal(mass);
-//  MH->setConstant();
- 
   // -------------------------
   // common preselection cut on mgg and mggGen
   TString mainCut1 = TString::Format("mgg>=300 && mgg<=6000 && mggGen>=300 && mggGen<=6000");  
-  //  RooFormulaVar *mgg0formula = new RooFormulaVar("mgg0","","@0-@1",RooArgSet(*w->var("mgg"),*MH));
   RooDataSet sigWeighted("sigWeighted","dataset",sigTree,*ntplVars,mainCut1,"weight");   
-//  RooRealVar *mgg0 = (RooRealVar*)sigWeighted.addColumn(*mgg0formula);
-//  mgg0->setRange(-500,500);
-//  mgg0->setBins(1000);
+
   // -------------------------
   // reduced mass
   RooFormulaVar *massReduced_formula = new RooFormulaVar("massReduced_formula","","@0/@1",RooArgList(*w->var("mgg"),*w->var("mggGen")));
@@ -2410,7 +2403,8 @@ void MakeSigParametricWS(RooWorkspace* w, const char* fileBaseName, Float_t mass
   //RooRealVar *mgg = new RooRealVar("mgg", "mgg", MINmass, MAXmass);
   // RooRealVar *mgg = new RooRealVar("mgg", "mgg", 1250, 1700);
   RooRealVar *mgg = w->var("mgg");
-  
+  mgg->setRange(1250,1700);
+  mgg->setBins(5000);
   // dataset
   wAll->import(*w->data("SigWeight_catEBHighR9"));   
   wAll->import(*w->data("SigWeight_catEBLowR9"));   
@@ -2419,11 +2413,7 @@ void MakeSigParametricWS(RooWorkspace* w, const char* fileBaseName, Float_t mass
 
   // variables: mass 
   //RooRealVar *MH = (RooRealVar*)w->var("MH");
-  //RooRealVar *mgg0 = (RooRealVar*)w->var("mgg0");
   RooRealVar *MH = new RooRealVar("MH", "MH", MINmass, MAXmass);
-  //RooRealVar *C0 = new RooRealVar("C0", "C0", 0);
-  //C0->setVal(0);
-  //C0->setConstant();
   MH->setVal(mass);
   MH->setConstant();
   //wAll->import(*MH);
@@ -2554,17 +2544,15 @@ void MakeSigParametricWS(RooWorkspace* w, const char* fileBaseName, Float_t mass
     //// mgg->setBinning(RooBinning(5000,MINmass,MAXmass));
     
     RooNumConvPdf* ConvolutedRes;
-	//RooGenericPdf* ConvolutedRes;
-    ConvolutedRes = new RooNumConvPdf("mggSig_cat"+myCut,"mggSig_cat"+myCut, *mgg,SigModelBW, ResponseDoubleCB);	
-	//	cout << "ConvolutedResReal " << ConvolutedResReal->getVal() << " " << ConvolutedResReal->createIntegral(*mgg0)->getVal() << endl;
-	//	ConvolutedRes = new RooGenericPdf("mggSig_cat"+myCut,"mggSig_cat"+myCut,"1e-2*@0",RooArgList(*ConvolutedResReal));
+    ConvolutedRes = new RooNumConvPdf("mggSig_cat"+myCut,"mggSig_cat"+myCut, *mgg, SigModelBW, ResponseDoubleCB);	
 
     // dummy fit to fix the binning
     RooDataSet *sigToFit = (RooDataSet*) w->data("SigWeight_cat"+myCut);
-	// sigToFit = (RooDataSet*)sigToFit->reduce("mgg0>-300 && mgg0<300");
+
     //RooFitResult* fitresults_CB = (RooFitResult* ) ConvolutedRes->fitTo(*sigToFit, SumW2Error(kFALSE), Range(1250,1700), RooFit::Save(kTRUE));
     //RooFitResult* fitresults_CB = (RooFitResult* ) ConvolutedRes->fitTo(*sigToFit, SumW2Error(kFALSE),Range(-300,300), RooFit::Save(kTRUE));
     //fitresults_CB->Print("V");
+
     wAll->import(*ConvolutedRes);
 	
 	
@@ -2602,7 +2590,7 @@ void MakeSigParametricWS(RooWorkspace* w, const char* fileBaseName, Float_t mass
     lat->Draw("same");
     int massI(mass);
     c1->SaveAs(TString::Format("plots/closure_cat%d.png",c));
-
+	
 	
 
     // Efficiency times Acceptance parameterization
@@ -2675,7 +2663,7 @@ void MakeSigParametricWS(RooWorkspace* w, const char* fileBaseName, Float_t mass
 //	wAll->import(*binned_data_EBEB);
 //	wAll->import(*binned_data_EBEE);
 
-	TString filename(wsDir+TString(fileBaseName)+TString::Format("_m%d_test",imass)+"_"+couplingS+".root");
+	TString filename(wsDir+TString(fileBaseName)+TString::Format("_m%d_test_mgg",imass)+"_"+couplingS+".root");
 	TFile fileWs(filename,"RECREATE");
 	fileWs.cd();
 	wAll->writeToFile(filename);
