@@ -42,7 +42,8 @@ process.source = cms.Source("PoolSource",
         
         ## "/store/mc/Phys14DR/QCD_HT-100To250_13TeV-madgraph/MINIAODSIM/PU20bx25_PHYS14_25_V1-v1/00000/0441A526-7C87-E411-BE19-002590574604.root")
         ## "/store/data/Run2015B/DoubleEG/MINIAOD/PromptReco-v1/000/251/096/00000/8A2D533C-5626-E511-AF3C-02163E011FAB.root")
-        "/store/mc/RunIISpring15DR74/GGJets_M-1000To2000_Pt-50_13TeV-sherpa/MINIAODSIM/Asympt25ns_MCRUN2_74_V9-v3/40000/14933A04-1A3C-E511-979C-AC162DABCAF8.root"
+        ## "/store/mc/RunIISpring15DR74/GGJets_M-1000To2000_Pt-50_13TeV-sherpa/MINIAODSIM/Asympt25ns_MCRUN2_74_V9-v3/40000/14933A04-1A3C-E511-979C-AC162DABCAF8.root"
+        "/store/data/Run2015B/DoubleEG/MINIAOD/PromptReco-v1/000/251/244/00000/C47A9CF9-6227-E511-908E-02163E014509.root"
         ## "root://eoscms//eos/cms/store/mc/RunIISpring15DR74/ADDGravToGG_MS-6000_NED-4_KK-1_M-2000To4000_13TeV-sherpa/MINIAODSIM/Asympt25ns_MCRUN2_74_V9-v1/20000/76CA81A9-1024-E511-8D9F-3417EBE6471D.root"
         )
                             )
@@ -74,42 +75,42 @@ process.vetoJets = cms.EDFilter("CandPtrSelector",
                                 )
 
 process.flashggPhotons.extraIsolations.extend([
-        cms.PSet(
-            algo=cms.string("FlashggRandomConeIsolationAlgo"),
-            name=cms.string("rnd03"),
-            coneSize=cms.double(0.3), doOverlapRemoval=cms.bool(False),
-            charged=cms.vdouble(0.02,0.02,0.1),
-            photon=cms.vdouble(0.0, 0.070, 0.015, 0.0, 0.0, 0.0),
-            vetoCollections_=cms.VInputTag(cms.InputTag("vetoPhotons"),cms.InputTag("vetoJets")),
-            veto=cms.double(0.8),
-            ),
-        cms.PSet(
-            algo=cms.string("DiphotonsFootPrintRemovedIsolationAlgo"),
-            name=cms.string("fpr03"),
-            coneSize=cms.double(0.3), doRandomCone=cms.bool(False), removePhotonsInMap=cms.int32(1),
-            rechitLinkEnlargement=cms.double(0.25),
-            charged=cms.vdouble(0.02,0.02,0.1),
-            photon=cms.vdouble(0.0, 0.070, 0.015, 0.0, 0.0, 0.0),
-            ),
-        cms.PSet(
-            algo=cms.string("DiphotonsFootPrintRemovedIsolationAlgo"),
-            name=cms.string("fprNoMap03"),
-            coneSize=cms.double(0.3), doRandomCone=cms.bool(False), removePhotonsInMap=cms.int32(0),
-            rechitLinkEnlargement=cms.double(0.25),
-            photon=cms.vdouble(0.0, 0.070, 0.015, 0.0, 0.0, 0.0),
-            ),
-        cms.PSet(
-            algo=cms.string("DiphotonsFootPrintRemovedIsolationAlgo"),
-            name=cms.string("fprRnd03"),
-            coneSize=cms.double(0.3), doRandomCone=cms.bool(True), removePhotonsInMap=cms.int32(1),
-            rechitLinkEnlargement=cms.double(0.25),
-            charged=cms.vdouble(0.02,0.02,0.1),
-            photon=cms.vdouble(0.0, 0.070, 0.015, 0.0, 0.0, 0.0),
-            vetoCollections_=cms.VInputTag(cms.InputTag("vetoPhotons"),cms.InputTag("vetoJets")),
-            veto=cms.double(0.8),
-            ),
-        ]
-    )
+         cms.PSet(
+             algo=cms.string("FlashggRandomConeIsolationAlgo"),
+             name=cms.string("rnd03"),
+             coneSize=cms.double(0.3), doOverlapRemoval=cms.bool(False),
+             charged=cms.vdouble(0.02,0.02,0.1),
+             photon=cms.vdouble(0.0, 0.070, 0.015, 0.0, 0.0, 0.0),
+             vetoCollections_=cms.VInputTag(cms.InputTag("vetoPhotons"),cms.InputTag("vetoJets")),
+             veto=cms.double(0.699),
+             ),
+###          cms.PSet(
+###              algo=cms.string("DiphotonsFootPrintRemovedIsolationAlgo"),
+###              name=cms.string("fpr03"),
+###              coneSize=cms.double(0.3), doRandomCone=cms.bool(False), removePhotonsInMap=cms.int32(1),
+###              rechitLinkEnlargement=cms.double(0.25),
+###              charged=cms.vdouble(0.02,0.02,0.1),
+###              photon=cms.vdouble(0.0, 0.070, 0.015, 0.0, 0.0, 0.0),
+###              ),
+          cms.PSet(
+              algo=cms.string("DiphotonsFootPrintRemovedIsolationAlgo"),
+              name=cms.string("fprNoMap03"),
+              coneSize=cms.double(0.3), doRandomCone=cms.bool(False), removePhotonsInMap=cms.int32(0),
+              rechitLinkEnlargement=cms.double(0.25),
+              photon=cms.vdouble(0.0, 0.070, 0.015, 0.0, 0.0, 0.0),
+              charged=cms.vdouble(0.02,0.02,0.1),
+              ),
+         #### cms.PSet(
+         ####     algo=cms.string("DiphotonsFootPrintRemovedIsolationAlgo"),
+         ####     name=cms.string("fprRnd03"),
+         ####     coneSize=cms.double(0.3), doRandomCone=cms.bool(True), removePhotonsInMap=cms.int32(1),
+         ####     rechitLinkEnlargement=cms.double(0.25),
+         ####     charged=cms.vdouble(0.02,0.02,0.1),
+         ####     vetoCollections_=cms.VInputTag(cms.InputTag("vetoPhotons"),cms.InputTag("vetoJets")),
+         ####     veto=cms.double(0.699),
+         ####     ),
+         ]
+     )
 
 
 for icone,dphi in enumerate( [0.7,1.3,1.9,2.5,3.1,-2.5,-1.9,-1.3,-0.7] ):
@@ -122,6 +123,7 @@ for icone,dphi in enumerate( [0.7,1.3,1.9,2.5,3.1,-2.5,-1.9,-1.3,-0.7] ):
             photon=cms.vdouble(0.0, 0.070, 0.015, 0.0, 0.0, 0.0),
             vetoCollections_=cms.VInputTag(cms.InputTag("vetoPhotons"),cms.InputTag("vetoJets")),
             veto=cms.double(0.699),
+            ## maxVtx=cms.int32(1), computeWorstVtx=cms.bool(False)
             ),
         )
 
