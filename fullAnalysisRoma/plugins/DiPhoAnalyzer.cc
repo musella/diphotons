@@ -279,9 +279,9 @@ void DiPhoAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
     if (thisPath.find(thePath2)!=string::npos && thisHasFired) fired2 = true;
     if (!fired1 && !fired2) continue;
     
-    // in data for the moment we give priority to DoublePhoton85 (chiara: da studiare con le turnon curves)
+    // in data for the moment we give priority to DoublePhoton85
     if ( sampleID==10001 && fired1 ) fired = true;
-    if ( sampleID==10002 && fired2 && !fired1 ) fired = true;
+    if ( sampleID==10002 && fired2 && !fired1 ) fired = true;        
 
     // in MC we take the OR
     if (sampleID<1000) fired = true;
