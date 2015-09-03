@@ -294,7 +294,7 @@ class PlotApp(PyRApp):
                     datahists = [ self.readProcess(datafile,*subprocs,plot=plotname,plotmodifs=plotmodifs,category=catname,group=group) for subprocs in dataprocs ]
                     
                 # collect histograms
-                allhists = datahists+bkghists+sighists
+                allhists = datahists+list(reversed(bkghists))+sighists
                 if len(allhists) == 0:
                     print "Nothing to plot for %s %s" % (plotname,catname)
                     continue
@@ -422,17 +422,17 @@ class PlotApp(PyRApp):
             hname = names[iplot]
             h = style_utils.apply(h,subproc[hname])
         
-        sum = histos[0].Clone("%s_%s_%s" %( plot, name, category) )
-        sum.SetTitle(title)
+        hsum = histos[0].Clone("%s_%s_%s" %( plot, name, category) )
+        hsum.SetTitle(title)
         
         for h in histos[1:]:
-            sum.Add(h)
+            hsum.Add(h)
 
-        self.keep(sum,True)
-        sum = style_utils.apply(sum,plotmodifs)
-        sum = style_utils.apply(sum,style)
+        self.keep(hsum,True)
+        hsum = style_utils.apply(hsum,plotmodifs)
+        hsum = style_utils.apply(hsum,style)
         
-        return sum
+        return hsum
 
     #
     # Read plots from globe histogram files
@@ -661,6 +661,14 @@ class PlotApp(PyRApp):
         ROOT.myColorC3tr = ROOT.gROOT.GetListOfColors().Last().GetNumber()+2;
         tmp = ROOT.gROOT.GetColor( ROOT.myColorC3 )
         self.keep( ROOT.TColor( ROOT.myColorC3tr, tmp.GetRed(), tmp.GetGreen(), tmp.GetBlue(), "", 0.5  ) )
+
+        ROOT.myColorD1   = ROOT.TColor.GetColor("#7E822E")
+        ROOT.myColorD2   = ROOT.TColor.GetColor("#BABB8C")
+        ROOT.myColorD3   = ROOT.TColor.GetColor("#C3C49E")
+        ROOT.myColorD4   = ROOT.TColor.GetColor("#E3E3D0")
+        ROOT.myColorD3tr = ROOT.gROOT.GetListOfColors().Last().GetNumber()+2;
+        tmp = ROOT.gROOT.GetColor( ROOT.myColorD3 )
+        self.keep( ROOT.TColor( ROOT.myColorD3tr, tmp.GetRed(), tmp.GetGreen(), tmp.GetBlue(), "", 0.5  ) )
         
         ROOT.myColorB0   = ROOT.TColor.GetColor("#540000")
         ROOT.myColorB1   = ROOT.TColor.GetColor("#cc0000")

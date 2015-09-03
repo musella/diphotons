@@ -8,7 +8,7 @@ highMassCiCVariables = cms.vstring(
         "egPhotonIso", 
         "egNeutralHadronIso",
         "hadTowOverEm",
-        "(?r9>0.8||egChargedHadronIso<20||egChargedHadronIso/pt<0.3?full5x5_sigmaIetaIeta:sigmaIetaIeta)",
+        "full5x5_sigmaIetaIeta",
         "passElectronVeto"
         )
 
@@ -123,7 +123,66 @@ highMassCiCCutsV1 = cms.VPSet(
                  )
         )
 
+highMassCiCCutsV1SB = cms.VPSet(
+        cms.PSet(cut=cms.string("abs(superCluster.eta)<1.5 && r9>0.94"),
+                 selection = cms.VPSet(
+                cms.PSet(max=cms.string("5.")),
+                cms.PSet(max=cms.string("2.+0.002*pt"), 
+                         rhocorr=phoEffArea,
+                        ),
+                cms.PSet(# no neutral iso cut
+                    ),
+                cms.PSet(max=cms.string("5.e-2")),
+                cms.PSet(min=cms.string("0.001"), max=cms.string("1.05e-2")),
+                cms.PSet(min=cms.string("0.5"))
+                 ),
+                 ),
+        cms.PSet(cut=cms.string("abs(superCluster.eta)<1.5 && r9<=0.94"),
+                 selection = cms.VPSet(
+                cms.PSet(max=cms.string("5.")),
+#                cms.PSet(max=cms.string("(?1.+0.002*pt<2?2:1.+0.002*pt)"), 
+                cms.PSet(max=cms.string("2.+0.002*pt"), 
+                         rhocorr=phoEffArea
+                        ),
+                cms.PSet(# no neutral iso cut
+                    ),
+                cms.PSet(max=cms.string("5.e-2")),
+                cms.PSet(min=cms.string("0.001"), max=cms.string("1.05e-2")),
+                cms.PSet(min=cms.string("0.5"))
+                ),
+                ),
+         cms.PSet(cut=cms.string("abs(superCluster.eta)>=1.5 && r9>0.94"),
+                  selection = cms.VPSet(
+                cms.PSet(max=cms.string("5.")),
+ #               cms.PSet(max=cms.string("(?1.+0.002*pt<2?2:1.+0.002*pt)"), 
+                cms.PSet(max=cms.string("11.+0.002*pt"), 
+
+                         rhocorr=phoEffArea),
+                cms.PSet(# no neutral iso cut
+                    ),
+                cms.PSet(max=cms.string("5.e-2")),
+                cms.PSet(min=cms.string("0.001"), max=cms.string("2.82e-2")),
+                cms.PSet(min=cms.string("0.5"))
+                 ),
+                 ),
+        cms.PSet(cut=cms.string("abs(superCluster.eta)>=1.5 && r9<=0.94"),
+                 selection = cms.VPSet(
+                cms.PSet(max=cms.string("5.")),
+ #               cms.PSet(max=cms.string("(?1.+0.002*pt<2?2:1.+0.002*pt)"), 
+                cms.PSet(max=cms.string("11.+0.002*pt"), 
+
+                         rhocorr=phoEffArea),
+                cms.PSet(# no neutral iso cut
+                    ),
+                cms.PSet(max=cms.string("5.e-2")),
+                cms.PSet(min=cms.string("0.001"), max=cms.string("2.80e-2")),
+                cms.PSet(min=cms.string("0.5"))
+                ),
+                 )
+        )
+
 highMassCiCCuts = highMassCiCCutsV1
+highMassCiCCutsSB = highMassCiCCutsV1SB
 
 highMassCiCDiPhotons = cms.EDFilter(
     "GenericDiPhotonCandidateSelector",
@@ -132,8 +191,11 @@ highMassCiCDiPhotons = cms.EDFilter(
     cut = cms.string(
         "    (leadingPhoton.r9>0.8||leadingPhoton.egChargedHadronIso<20||leadingPhoton.egChargedHadronIso/leadingPhoton.pt<0.3)"
         " && (subLeadingPhoton.r9>0.8||subLeadingPhoton.egChargedHadronIso<20||subLeadingPhoton.egChargedHadronIso/subLeadingPhoton.pt<0.3)" 
+        " && leadingPhoton.egChargedHadronIso < 15  && subLeadingPhoton.egChargedHadronIso < 15" ## preselect in chargedIso
         )
     ,
     variables = highMassCiCVariables,
     categories = highMassCiCCuts,
     )
+
+highMassCiCDiPhotonsSB = highMassCiCDiPhotons.clone( categories=highMassCiCCutsSB )

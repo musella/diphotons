@@ -5,26 +5,24 @@
     ], 
     "variables": [
         "absScEta := scEta*((scEta>=0.)-(scEta<0.))[100,0.,2.5]", 
-        "pt[500,200,2000]",
+        "pt[500,70,1000]",
 	
-	"rndConeChIso[60,-10,50]",
-	"stdChIso[60,-10,50]",
-	
-	"fprRndConeChIso[60,-10,50]",
-	"fprChIso[60,-10,50]",
-        
-	"rndConePhoIso[60,-10,50]",
-	"stdPhoIso[60,-10,50]",
-        
-	"fprRndConePhoIso[60,-10,50]",
-	"fprPhoIso[60,-10,50]",
-        
-	"fprRndNoMapConePhoIso[60,-10,50]",
-	"fprNoMapPhoIso[60,-10,50]",
+	"egPhotonIso[1000,-10,50]",
+	"egChargedHadronIso[1000,-10,50]",
 
-	"relStdPhoIso := stdPhoIso/pt[60,-0.1,2.]",
-	"relFprPhoIso := fprPhoIso/pt[60,-0.1,2.]",
-	"relFprNoMapPhoIso := fprNoMapPhoIso/pt[60,-0.1,2.]"
-    ], 
-    "weight": "weight*(pt>100)"
+	"chgIsoWrtVtx0[1000,-10,50]",
+        "chgIsoWrtWorstVtx[1000,-10,50]",
+	"phoIso03[1000,-10,50]",
+
+	"relEgPhotonIso := egPhotonIso/pt[1000,0,1.2]",
+	"relEgChargedHadronIso := egChargedHadronIso/pt[1000,0,1.2]",
+
+	"relChgIsoWrtVtx0 := chgIsoWrtVtx0/pt[1000,0,1.2]",
+        "relChgIsoWrtWorstVtx := chgIsoWrtWorstVtx/pt[1000,0,1.2]",
+	"relPhoIso03 := phoIso03/pt[1000,0,1.2]"
+
+    ],
+    "rhoCorr" : true,
+    "ptCorr" : true,
+    "offsetCorr" : true
 }

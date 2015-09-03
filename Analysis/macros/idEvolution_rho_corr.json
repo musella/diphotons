@@ -1,0 +1,20 @@
+{
+    "categories": [
+		   "innerEB  := abs(scEta)<0.9",
+		   "outerEB  := abs(scEta)>=0.9 && abs(scEta)<1.5",
+		   "innerEE  := abs(scEta)>=1.5 && abs(scEta)<2.",
+		   "middleEE := abs(scEta)>=2. && abs(scEta)<2.2",
+		   "outerEE  := abs(scEta)>=2.2 && abs(scEta)<2.5"
+    ], 
+    "variables": [
+	"egPhotonIso[1000,-10,50]",
+	"egChargedHadronIso[1000,-10,50]",
+
+	"chgIsoWrtVtx0[1000,-10,50]",
+        "chgIsoWrtWorstVtx[1000,-10,50]",
+	"phoIso03[1000,-10,50]"
+    ],
+
+    "xvar" : "rho[1000,5,15]",
+    "fitMedian" : true
+}

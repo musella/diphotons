@@ -7,14 +7,19 @@ def applyTo(obj,method,style):
     apply(res,style)
 
 # -----------------------------------------------------------------------------------------------------------
+def cloneRename(h,search,replace):
+    newname = h.GetName().replace(search,replace)
+    return h.Clone(newname)
+
+# -----------------------------------------------------------------------------------------------------------
 def xtitle(h,tit):
     h.GetXaxis().SetTitle(tit)
 
 # -----------------------------------------------------------------------------------------------------------
 def ytitle(h,tit):
     ## print "ytitle", h.GetName(), tit
-    binw = h.GetBinWidth(0) if not getattr(h,"isDensity",False) else 1.
-    h.GetYaxis().SetTitle( tit % { "binw" : 1 } )
+    binw = h.GetBinWidth(1) if not getattr(h,"isDensity",False) else h.isDensity
+    h.GetYaxis().SetTitle( tit % { "binw" : binw } )
     # h.GetYaxis().SetTitle(tit)
 
 # -----------------------------------------------------------------------------------------------------------
@@ -56,12 +61,15 @@ def rebin(h,rebin):
         h.Rebin(rebin)
 
 # -----------------------------------------------------------------------------------------------------------
-def density(h):
+def density(h,ref=None):
+    if ref == None:
+        ref = h.GetBinWidth(1)
     for ibin in range(h.GetNbinsX()):
         width = h.GetXaxis().GetBinWidth(ibin+1)
-        h.SetBinContent(ibin+1, h.GetBinContent(ibin+1) / width)
-        h.SetBinError(ibin+1, h.GetBinError(ibin+1) / width)
-        h.isDensity = True
+        h.SetBinContent(ibin+1, h.GetBinContent(ibin+1) / width * ref)
+        h.SetBinError(ibin+1, h.GetBinError(ibin+1) / width * ref)
+        h.isDensity = ref
+        ## h.isDensity = 1.
 
 # -----------------------------------------------------------------------------------------------------------
 def scaleFonts(h,scale):

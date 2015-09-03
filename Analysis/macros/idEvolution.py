@@ -48,7 +48,7 @@ class IdEvolution(PlotApp):
                                      type="string",
                                      default=[
                         "absScEta := scEta*((scEta>=0.)-(scEta<0.))[100,0.,2.5]",
-                        "pt[500,200,2000]",
+                        "pt[500,70,1000]",
                         ### "rho[10000,0,100]",
                         
                         ### "phoIsoDeltaMap005 := phoIsoHybrid005*(phoIsoHybrid005<49)+49.*(phoIsoHybrid005>=49)[1000,-10,50]",
@@ -178,7 +178,7 @@ class IdEvolution(PlotApp):
                                      ###          ],
                                      help="default: %default"),
                          make_option("--xvar",dest="xvar",action="store",type="string",
-                                     default="pt[100000,200,2000]",
+                                     default="pt[100000,70,1000]",
                                      ## default="pt[100000,100,2000]",
                                      ## default="rho[1000,5,15]",
                                      help="default: %default"),
@@ -193,7 +193,11 @@ class IdEvolution(PlotApp):
                                      ## default="rho[1000,5,15]",
                                      help="default: %default"),
                          make_option("-w","--weight",dest="weight",action="store",type="string",
-                                     default="weight*(pt>100)", help="default: %default"
+                                     default="weight", help="default: %default"
+                                     ),
+                         make_option("--weights",dest="weights",action="callback",type="string",
+                                     callback=optpars_utils.ScratchAppend(),
+                                     default=["genIso<10.","genIso>=-999999999999"], help="default: %default"
                                      ),
                          make_option("--trees",dest="trees",action="callback",callback=optpars_utils.ScratchAppend(),
                                      type="string",
@@ -205,16 +209,32 @@ class IdEvolution(PlotApp):
                                      default="absScEta",help="default: %default"),
                          make_option("--reweight",action="store",default=None,type="string"
                                      ),
-                         make_option("--wread",action="store_true",default=False
+                         make_option("--wread",action="store",default=False,type="string"
                                      ),
                          make_option("--wvars",dest="wvars",action="callback",callback=optpars_utils.ScratchAppend(),
                                      type="string",default=["pt","absScEta"]),
                          make_option("--wrng",dest="wrng",action="callback",callback=optpars_utils.Load(),
-                                     type="string",default={"isEB" : [0.,1.5], "isEE" : [1.5,2.5] }),
+                                     type="string",default={}),
                          make_option("--fit-median",dest="fitMedian",action="store_true",
                                      default=False),
-                         make_option("--rho-corr",dest="rhoCrorr",action="store_true",
+                         make_option("--fit-expression",dest="fitExpression",action="store",type="string",
+                                     default="pol1"),
+                         make_option("--rho-corr",dest="rhoCorr",action="store_true",
                                      default=False),
+                         make_option("--rho-corr-var",dest="rhoCorrVar",action="store",type="string",
+                                     default="rho"),
+                         make_option("--no-rho-corr",dest="rhoCorr",action="store_false",
+                                     ),
+                         make_option("--pt-corr",dest="ptCorr",action="store_true",
+                                     default=False),
+                         make_option("--no-pt-corr",dest="ptCorr",action="store_false",
+                                     ),
+                         make_option("--pt-corr-var",dest="ptCorrVar",action="store",type="string",
+                                     default="pt"),
+                         make_option("--offset-corr",dest="offsetCorr",action="store_true",
+                                     default=False),
+                         make_option("--no-offset-corr",dest="offsetCorr",action="store_false",
+                                     ),
             
                          ]
             )
@@ -227,7 +247,11 @@ class IdEvolution(PlotApp):
         import ROOT
         import diphotons.Utils.pyrapp.style_utils as style_utils
         ROOT.gSystem.Load("libdiphotonsUtils")
-        
+        if ROOT.gROOT.GetVersionInt() >= 60000:
+            # ROOT.gSystem.Load("libdiphotonsRooUtils")
+            ROOT.gSystem.AddIncludePath("-I$CMSSW_BASE/src")
+            ROOT.gROOT.ProcessLine('#include "diphotons/Utils/interface/FunctionHelpers.h"')
+            
         self.setStyle("*quantile*", [ ("SetLineWidth",2), ("SetMarkerSize",2) ] )
         
 
@@ -271,8 +295,8 @@ class IdEvolution(PlotApp):
             win = self.open(fnam)
             
         if options.fitMedian:
-            ### sigQuantiles = [0.5,0.9,0.95,0.99]
-            sigQuantiles = [0.25,0.4,0.5,0.6,0.75]
+            sigQuantiles = [0.05,0.10,0.5,0.9,0.95,0.99]
+            ## sigQuantiles = [0.25,0.4,0.5,0.6,0.75]
             bkgQuantiles = []
         else:
             sigQuantiles = [0.99,0.95,0.9,0.85,0.5]
@@ -280,9 +304,15 @@ class IdEvolution(PlotApp):
 
         if options.fitMedian:
             ## summary = { v : { } for v in variables.keys() }
-            summary = { q : { v : [] for v in variables.keys() } for q in sigQuantiles }
+            summary = {}
+            for q in sigQuantiles:
+                summary[q] = {}
+                for v in variables.keys():
+                    summary[q][v] = []
+                    summary[q]["%sOffset"%v] = []
+            # summary = { q : { v : [] for v in variables.keys() } for q in sigQuantiles }
         
-        for cat in options.categories:
+        for cat in set(options.categories):
             xvar = options.xvar
             
             if ":=" in cat:
@@ -300,10 +330,12 @@ class IdEvolution(PlotApp):
                         yrng = variables[options.wvars[1]]
                         wfuncs[tree] = ROOT.FlatReweight( xrng[0],xrng[-1],yrng[0],yrng[-1] )
                     hname = "%s_%s_%s" % (tree,wname,name)
-                    win.ls()
+                    ## win.ls()
                     hist = win.Get( hname )
-                    rng1, rng2 = options.wrng[name]
-                    sf = ROOT.SliceFitter(hist,"pol2",rng1,rng2,False,True)
+                    yrng, frng = options.wrng[name]
+                    sf = ROOT.SliceFitter(hist,"[0]+[1]*x+[2]*x*x",yrng[0],yrng[1],frng[0],frng[1],False,True,1)
+                    ## plots = sf.getPlots()
+                    ## for p in plots: self.keep(p)
                     wfuncs[tree].add(sf)
                     self.keep(sf)
                     xbins = [ hist.GetXaxis().GetXbins()[ib] for ib in range(hist.GetNbinsX()+1) ]
@@ -339,8 +371,11 @@ class IdEvolution(PlotApp):
             tree = fin.Get(tnam)
             trees[tnam] = tree
             self.setAliases(tree)
-            
-        if win:
+        trees[sig].SetAlias("_extra_weight_",self.options.weights[0])
+        trees[bkg].SetAlias("_extra_weight_",self.options.weights[1])
+        self.options.weight = "(%s) * _extra_weight_" % options.weight
+
+        if win or options.wread:
             if not options.wread:
                 fwei = self.open("%s/wei.root" % options.outdir, "recreate")
                 wd = ROOT.gDirectory
@@ -361,7 +396,7 @@ class IdEvolution(PlotApp):
                 wd.cd()
                 
             options.weight = "(%s) * rewei" % ( options.weight )
-            fwei = self.open("%s/wei.root" % options.outdir)
+            fwei = self.open("%s/wei.root" % options.outdir if not options.wread else options.wread)
             for tnam in sig,bkg:
                 tree = trees[tnam] 
                 friend = fwei.Get("%s_rewei" % tnam)
@@ -416,7 +451,7 @@ class IdEvolution(PlotApp):
                         style_utils.colors(pdf1D,sigColors[0])
                         
                         if options.fitMedian:
-                            func = ROOT.TF1("fit_%s_%s_%s" % (cat,name,var),"pol1",pdf2D.GetXaxis().GetXmin(),pdf2D.GetXaxis().GetXmax())
+                            func = ROOT.TF1("fit_%s_%s_%s" % (cat,name,var),options.fitExpression,pdf2D.GetXaxis().GetXmin(),pdf2D.GetXaxis().GetXmax())
                             for i,p in enumerate(plots[cat][name][var]):
                                 fp = func.Clone("%s_%d" %( func.GetName(),i))
                                 ## fp.SetParameters(pdf1D.GetMean(),0.)
@@ -484,6 +519,7 @@ class IdEvolution(PlotApp):
                         style_utils.colors(func,col)
                         ## summary[var][cat].append( (qt,func.GetParameter(1) ))
                         summary[qt][var].append("%1.2g*(%s)" % (func.GetParameter(1),defs[0]))
+                        summary[qt]["%sOffset" % var].append("%1.2g*(%s)" % (func.GetParameter(0),defs[0]))
                         label += " %1.2g" % (func.GetParameter(1))
                     legSig.AddEntry(gr,label, "lp")
                     style_utils.colors(gr,col)
@@ -558,9 +594,18 @@ class IdEvolution(PlotApp):
         hist.GetXaxis().SetTitle(xvar)
         hist.GetYaxis().SetTitle(yvar)
         
-        if self.options.rhoCrorr and ("%sEA"%yvar in  self.aliases_):
-            print "Doing rho correction for", yvar, self.aliases_["%sEA"%yvar]
-            yvar += "- %sEA*rho" % yvar
+        yvar0 = yvar
+        if self.options.rhoCorr and ("%sEA"%yvar0 in  self.aliases_):
+            print "Doing rho correction for", yvar, self.aliases_["%sEA"%yvar0]
+            yvar += "- (%sEA*%s)" % (yvar0,self.options.rhoCorrVar)
+        if self.options.ptCorr and ("%sPtCorr"%yvar0 in  self.aliases_):
+            print "Doing pt correction for", yvar, self.aliases_["%sPtCorr"%yvar0]
+            yvar += "- (%sPtCorr*%s)" % (yvar0,self.options.ptCorrVar)
+        if self.options.offsetCorr and ("%sOffset"%yvar0 in  self.aliases_):
+            print "Doing offset correction correction for", yvar, self.aliases_["%sOffset"%yvar0]
+            yvar += "- (%sOffset)" % (yvar0)
+
+        print yvar
         tree.Draw("%s:%s>>%s" % ( yvar, xvar, name), weight, opt )
         
         if density:

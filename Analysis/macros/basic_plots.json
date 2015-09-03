@@ -44,20 +44,33 @@
 	      
 	     ],
 
+    "_bkg" : [
+	      ["dy","Drell-Yan #rightarrow e e",
+	      [["colors","myColorC1"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",40e-3],["legopt","f"],["SetFillColor","kMagenta"]],
+	      { "DYJetsToLL_M_50_TuneCUETP8M1_amcatnloFXFX_pythia8:output_dy.root/%(sel)s" : [] }
+	      ]
+    ],
+	      
     "bkg" : [
+	      
+	      ["dy","DY #rightarrow e e",
+	      [["colors","myColorD1"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",40e-3],["legopt","f"],["SetFillColor","myColorD3tr"]],
+	      { "DYJetsToLL_M_50_TuneCUETP8M1_amcatnloFXFX_pythia8_13TeV:output.root/%(sel)s" : [] }
+	      ],
+
 	      ["jetjet","j j",
-	      [["colors","myColorC1"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",5e-3],["legopt","f"],["SetFillColor","myColorC3tr"]],
-	      { "QCD_HT_100toInf_13TeV:output.root/%(sel)sDiPhotonsTrg" : [] }
+	      [["colors","myColorC1"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",40e-3],["legopt","f"],["SetFillColor","myColorC3tr"]],
+	      { "QCD_HT_100toInf_13TeV:output.root/%(sel)s" : [] }
 	      ],
 	      
 	      ["gjet","#gamma j",
 	      [["colors","myColorA1"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",40e-3],["legopt","f"],["SetFillColor","myColorA3tr"]],
-	      { "GJets_HT_100toInf_13TeV:output.root/%(sel)sDiPhotonsTrg" : [] }
+	      { "GJets_HT_100toInf_13TeV:output.root/%(sel)s" : [] }
 	      ],
 
 	      ["ggjet_iso","#gamma #gamma",
 	      [["colors","myColorB1"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",40e-3],["legopt","f"],["SetFillColor","myColorB3tr"]],
-	      { "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)sDiPhotonsTrg" : [] }
+	      { "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)s" : [] }
 	      ]
 	      
 	     ],
@@ -161,11 +174,22 @@
 	}, 
 	
     "plots": [
-	      ["mass"			,[["Rebin",5],["ytitle","Events / %(binw)s GeV"],["xtitle","m_{#gamma #gamma} (GeV)"],["xrange",[100.0,1000.0]],["overflow",[null]]]
+	      ["mass"			,[["xtitle","m_{#gamma #gamma} (GeV)"],["xrange",[100.0,1000.0]],
+					  ["rebin",[[100,150,200,250,300,400,500,600,700,800,1000,1050]]],["overflow",[null]],
+					  "density",["ytitle","Events / %(binw)s GeV"]
+					]
 					,null,null],
 
-	      ["pt"			,[["ytitle","Events / %(binw)s GeV"],["xtitle","p_T_{#gamma #gamma} (GeV)"],["overflow",[null]],
-	      				["rebin",[[0,5,10,20,30,50,100,200]]],"density"
+	      ["pt"			,[["xtitle","p_T_{#gamma #gamma} (GeV)"],["overflow",[null]],
+	      				["rebin",[[0,5,10,20,30,50,100,200]]],"density",["ytitle","Events / %(binw)s GeV"]
+	      				]
+					,null,null],
+
+	      ["nvtx"			,[["ytitle","Events / bin"],["xtitle","N_{vtx}"],["overflow",[null]]	      				
+	      				]
+					,null,null],
+
+	      ["rho"			,[["ytitle","Events / %(binw)s GeV"],["xtitle","#rho_{PU} (GeV)"],["overflow",[null]]	      				
 	      				]
 					,null,null],
 
@@ -181,24 +205,29 @@
 	      ["subleadPt"		,[["Rebin",2],["ytitle","Events / %(binw)s GeV"],["xtitle","p_{T}(#gamma 2) (GeV)"],["xrange",[100.0,1000.0]],["overflow",[null]]]
 					,null,null],
 
-	      ["leadChIso"		,[["ytitle","Events / %(binw)s GeV"],["xtitle","#gamma_{1} charged isolation (GeV)"],["xrange",[0,15]],["overflow",[null]],
-	      				["rebin",[[0,0.25,0.5,1,1.5,5,8,15]]],"density"
+	      ["leadChIso"		,[["xtitle","#gamma_{1} charged isolation (GeV)"],["xrange",[0,16]],
+	      				["rebin",[[0,0.25,0.5,1,1.5,5,15,16]]],["overflow",[null]],"density",["ytitle","Events / %(binw)s GeV"]
 	      				]
 					,null,null,["sig"]],
 
-	      ["subleadChIso"		,[["ytitle","Events / %(binw)s GeV"],["xtitle","#gamma_{2} charged isolation (GeV)"],["xrange",[0,15]],["overflow",[null]],
-	      				["rebin",[[0,0.25,0.5,1,1.5,5,8,15]]],"density"
+	      ["subleadChIso"		,[["xtitle","#gamma_{2} charged isolation (GeV)"],["xrange",[0,16]],
+	      				["rebin",[[0,0.25,0.5,1,1.5,5,15,16]]],["overflow",[null]],"density",["ytitle","Events / %(binw)s GeV"]
 	      				]
 					,null,null,["sig"]],
 
-	      ["leadPhoIso"		,[["ytitle","Events / %(binw)s GeV"],["xtitle","#gamma_{1} photon isolation (GeV)"],["xrange",[0,15]],["overflow",[null]]]
+	      ["leadPhoIso"		,[["xtitle","#gamma_{1} photon isolation (GeV)"],["xrange",[0,16]],
+	       				["rebin",[[0,0.25,0.5,1,1.5,5,15,16]]],["overflow",[null]],"density",["ytitle","Events / %(binw)s GeV"]
+	      				]
 					,null,null,["sig"]],
 
-	      ["subleadPhoIso"		,[["ytitle","Events / %(binw)s GeV"],["xtitle","#gamma_{2} photon isolation (GeV)"],["xrange",[0,15]],["overflow",[null]]]
+	      ["subleadPhoIso"		,[["xtitle","#gamma_{2} photon isolation (GeV)"],["xrange",[0,16]],
+	      				["rebin",[[0,0.25,0.5,1,1.5,5,15,16]]],["overflow",[null]],"density",["ytitle","Events / %(binw)s GeV"]
+	      				]
 
 					,null,null,["sig"]],
-	      ["leadHoE"		,[["ytitle","Events / %(binw)s GeV"],["xtitle","#gamma_{1} H/E"],["overflow",[null]]]
-
+	      ["leadHoE"		,[["xtitle","#gamma_{1} H/E"],
+	      				["rebin",[[0.005,0.01,0.05,0.1,0.11]]],["overflow",[null]],"density",["ytitle","Events / %(binw)s"]
+	      				]
 					,null,null,["sig"]],
 	      ["subleadHoE"		,[["ytitle","Events / %(binw)s GeV"],["xtitle","#gamma_{2} H/E"],["overflow",[null]]]
 
@@ -208,8 +237,20 @@
 					,null,null,["sig"]],
 
 	      ["subleadSigmaIeIe"	,[["ytitle","Events / %(binw)s GeV"],["xtitle","#gamma_{2} #sigma_{i#eta i#eta}"],["overflow",[null]]]
-					,null,null,["sig"]]
+					,null,null,["sig"]],
 	      			    
+	      ["leadPassEleVeto"	,[["ytitle","Events"],["xtitle","#gamma_{1} pass electron veto"]]
+					,null,null,["sig"]],
+
+	      ["subleadPassEleVeto"	,[["ytitle","Events"],["xtitle","#gamma_{2} pass electron veto"]]
+					,null,null,["sig"]],
+
+	      ["leadPixSeed"	,[["ytitle","Events"],["xtitle","#gamma_{1} has pixel seed"]]
+					,null,null,["sig"]],
+
+	      ["subleadPixSeed"	,[["ytitle","Events"],["xtitle","#gamma_{2} has pixel seed"]]
+					,null,null,["sig"]]
+
 	      ],
 
     "_selections" : [
@@ -219,11 +260,12 @@
     "selections" : [
         ["cic",""],
         ["cicNoSigmaIetaIeta","noSiEiE",["mass","leadSigmaIeIe","subleadSigmaIeIe"]],
-        ["cicNoChIso","noChIso",["mass","leadChIso","subleadChIso"]],
-        ["cicNoPhoIso","noPhoIso",["mass","leadPhoIso","subleadPhoIso"]],
+        ["cicNoChIso","noChIso",["mass","leadChIso","subleadChIso","nvtx","rho"]],
+        ["cicNoPhoIso","noPhoIso",["mass","leadPhoIso","subleadPhoIso","nvtx","rho"]],
         ["cicNoHoverE","noHoE",["mass","leadHoE","subleadHoE"]],
-        ["cicSBNoChIsoSingleSB","chIsoSingleSB",["mass","leadChIso","subleadChIso"]],
-        ["cicSBNoChIsoDoubleSB","chIsoDoubleSB",["mass","leadChIso","subleadChIso"]]
+        ["cicNoEleVeto","noEleVeto",["mass","leadPassEleVeto","subleadPassEleVeto","leadPixSeed","subleadPixSeed"]],
+        ["cicSBNoChIsoSingleSB","chIsoSingleSB",["mass","leadChIso","subleadChIso","nvtx","rho"]],
+        ["cicSBNoChIsoDoubleSB","chIsoDoubleSB",["mass","leadChIso","subleadChIso","nvtx","rho"]]
 
     ],
 
@@ -235,11 +277,11 @@
     ],
 	      
     "styles": { 
-	"*mass*" : [["logy",1e-1]],
-	"*Iso*"  : [["logy",1e-1]],
+	"*mass*" : [["logy",1e-3]],
+	"*Iso*"  : [["logy",1e-3]],
 	"*Pt*"  : [["logy",1e-1]],
 	"*pt*"  : [["logy",1e-2]],
-	"*HoE*"  : [["logy",1e-1]]
+	"*HoE*"  : [["logy",1e-3]]
 	},	 
     "postproc" : {
     },
