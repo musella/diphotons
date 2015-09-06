@@ -258,9 +258,10 @@ void AddSigData(RooWorkspace* w, Float_t mass, TString coupling) {
     w->import(*signalGAll, Rename("SigWeightGen"));
     cout << endl;
   }
-
+  //w->writeToFile("data_001_5000.root");
   cout << "workspace summary" << endl;
   w->Print();
+
 }
 
 // Signal model: doubleCB. To describe the detector resolution, reco mgg fitted
@@ -2389,7 +2390,7 @@ void MakeSigWS(RooWorkspace* w, const char* fileBaseName, Float_t mass, std::str
 //------------------------------------------------------------------------------------------------------
 
 // Write signal pdfs and datasets into the workspace. Fully parametric, take pdf from previously produced files 
-void MakeSigParametricWS(RooWorkspace* w, const char* fileBaseName, Float_t mass, Float_t coupling, TString couplingS, float thelumi){
+void MakeSigParametricWS(RooWorkspace* w, const char* fileBaseName, Float_t mass, Float_t coupling, TString couplingS, float thelum){
   
   TString wsDir = "workspaces/";
   Int_t ncat = NCAT;
@@ -2424,11 +2425,11 @@ void MakeSigParametricWS(RooWorkspace* w, const char* fileBaseName, Float_t mass
   kpl->setConstant();
   //wAll->import(*kpl);
 
-  // lumi
-  RooRealVar *lumi = new RooRealVar("lumi", "lumi", 0, 100000);
-  lumi->setVal(thelumi);  
-  lumi->setConstant();
-  //wAll->import(*lumi);
+  // lum
+  RooRealVar *lum = new RooRealVar("lum", "lum", 0, 100000);
+  lum->setVal(thelum);  
+  lum->setConstant();
+  //wAll->import(*lum);
  
   //------------------------------------------------------------------------------------------
   // xsec
@@ -2479,7 +2480,7 @@ void MakeSigParametricWS(RooWorkspace* w, const char* fileBaseName, Float_t mass
   // File with efficiency x acceptance trend
   TFile *fileNormalization = new TFile("/afs/cern.ch/user/c/crovelli/public/Diphotons/normalizationEvolution.root","READ");
   
-  for (int c=0; c<1; ++c) {
+  for (int c=0; c<NCAT; ++c) {
     cout << "---------- Category = " << c << endl;
     
     TString myCut = "EBHighR9";
@@ -2563,7 +2564,7 @@ void MakeSigParametricWS(RooWorkspace* w, const char* fileBaseName, Float_t mass
 	
 	
     // for closure: control plot
-    RooPlot* controlPlot  = w->var("mgg")->frame(Range(1400, 1600),Title(""),Bins(100)); //
+    RooPlot* controlPlot  = w->var("mgg")->frame(Range(1000, 2000),Title(""),Bins(100)); //
     //RooPlot* controlPlot = w->var("mgg")->frame(Range(MINmass, MAXmass),Bins(100));
     controlPlot->SetTitle("");
     controlPlot->GetXaxis()->SetTitle("m_{#gamma#gamma}");
@@ -2608,8 +2609,8 @@ void MakeSigParametricWS(RooWorkspace* w, const char* fileBaseName, Float_t mass
 
     // Signal normalization
     //float thisExA = ExATrend->Eval(mass);
-    //float thenorm = thisExA * thexsec * thelumi;
-    RooFormulaVar *mggSig_norm = new RooFormulaVar("mggSig_cat"+myCut+"_norm","mggSig_norm","@0*@1*@2",RooArgList(*effTimesAcc,*xsec,*lumi));
+    //float thenorm = thisExA * thexsec * thelum;
+    RooFormulaVar *mggSig_norm = new RooFormulaVar("mggSig_cat"+myCut+"_norm","mggSig_norm","@0*@1*@2",RooArgList(*effTimesAcc,*xsec,*lum));
     //mggSig_norm->setConstant();
     wAll->import(*mggSig_norm,RecycleConflictNodes());	
 	
@@ -2623,32 +2624,32 @@ void MakeSigParametricWS(RooWorkspace* w, const char* fileBaseName, Float_t mass
 //  if (coupling==0.2)  couplingS = "02";
 
 //---------------ADDING CATEGORIES----------------------//
-//	RooNumConvolution *mggSig_catEBHighR9 = (RooNumConvolution*)wAll->pdf("mggSig_catEBHighR9");
-//	RooNumConvolution *mggSig_catEBLowR9 = (RooNumConvolution*)wAll->pdf("mggSig_catEBLowR9");
-//	RooNumConvolution *mggSig_catEEHighR9 = (RooNumConvolution*)wAll->pdf("mggSig_catEEHighR9");
-//	RooNumConvolution *mggSig_catEELowR9 = (RooNumConvolution*)wAll->pdf("mggSig_catEELowR9");
-//
-//	RooFormulaVar *mggSig_catEBHighR9_norm = (RooFormulaVar*)wAll->function("mggSig_catEBHighR9_norm");
-//	RooFormulaVar *mggSig_catEBLowR9_norm = (RooFormulaVar*)wAll->function("mggSig_catEBLowR9_norm");
-//	RooFormulaVar *mggSig_catEEHighR9_norm = (RooFormulaVar*)wAll->function("mggSig_catEEHighR9_norm");
-//	RooFormulaVar *mggSig_catEELowR9_norm = (RooFormulaVar*)wAll->function("mggSig_catEELowR9_norm");
-//
-//	RooFormulaVar *mggSig_catEBEB_norm = new RooFormulaVar("mggSig_catEBEB_norm","mggSig_catEBEB_norm","@0+@1",RooArgList(*mggSig_catEBHighR9_norm,*mggSig_catEBLowR9_norm));
-//	RooFormulaVar *mggSig_catEBEE_norm = new RooFormulaVar("mggSig_catEBEE_norm","mggSig_catEBEE_norm","@0+@1",RooArgList(*mggSig_catEEHighR9_norm,*mggSig_catEELowR9_norm));
-//
-//	RooFormulaVar *frac1EBEB = new RooFormulaVar("frac1EBEB","frac1EBEB","@0/@1",RooArgList(*mggSig_catEBHighR9_norm,*mggSig_catEBEB_norm));
-//	RooFormulaVar *frac2EBEB = new RooFormulaVar("frac2EBEB","frac2EBEB","@0/@1",RooArgList(*mggSig_catEBLowR9_norm,*mggSig_catEBEB_norm));
-//	RooFormulaVar *frac1EBEE = new RooFormulaVar("frac1EBEE","frac1EBE","@0/@1",RooArgList(*mggSig_catEEHighR9_norm,*mggSig_catEBEE_norm));
-//	RooFormulaVar *frac2EBEE = new RooFormulaVar("frac2EBEE","frac2EBEE","@0/@1",RooArgList(*mggSig_catEELowR9_norm,*mggSig_catEBEE_norm));
-//	
-//	RooAddPdf mggSig_catEBEB = RooAddPdf("mggSig_catEBEB","mggSig_catEBEB",RooArgList(*mggSig_catEBHighR9,*mggSig_catEBLowR9),RooArgList(*frac1EBEB,*frac2EBEB));
-//	RooAddPdf mggSig_catEBEE = RooAddPdf("mggSig_catEBEE","mggSig_catEBEE",RooArgList(*mggSig_catEEHighR9,*mggSig_catEELowR9),RooArgList(*frac1EBEE,*frac2EBEE));
-//
-//	wAll->import(mggSig_catEBEB,RecycleConflictNodes());
-//	wAll->import(mggSig_catEBEE,RecycleConflictNodes());
-//	
-//	wAll->import(*mggSig_catEBEB_norm,RecycleConflictNodes());
-//	wAll->import(*mggSig_catEBEE_norm,RecycleConflictNodes());
+	RooNumConvPdf *mggSig_catEBHighR9 = (RooNumConvPdf*)wAll->pdf("mggSig_catEBHighR9");
+	RooNumConvPdf *mggSig_catEBLowR9 = (RooNumConvPdf*)wAll->pdf("mggSig_catEBLowR9");
+	RooNumConvPdf *mggSig_catEEHighR9 = (RooNumConvPdf*)wAll->pdf("mggSig_catEEHighR9");
+	RooNumConvPdf *mggSig_catEELowR9 = (RooNumConvPdf*)wAll->pdf("mggSig_catEELowR9");
+
+	RooFormulaVar *mggSig_catEBHighR9_norm = (RooFormulaVar*)wAll->function("mggSig_catEBHighR9_norm");
+	RooFormulaVar *mggSig_catEBLowR9_norm = (RooFormulaVar*)wAll->function("mggSig_catEBLowR9_norm");
+	RooFormulaVar *mggSig_catEEHighR9_norm = (RooFormulaVar*)wAll->function("mggSig_catEEHighR9_norm");
+	RooFormulaVar *mggSig_catEELowR9_norm = (RooFormulaVar*)wAll->function("mggSig_catEELowR9_norm");
+
+	RooFormulaVar *mggSig_catEBEB_norm = new RooFormulaVar("mggSig_catEBEB_norm","mggSig_catEBEB_norm","@0+@1",RooArgList(*mggSig_catEBHighR9_norm,*mggSig_catEBLowR9_norm));
+	RooFormulaVar *mggSig_catEBEE_norm = new RooFormulaVar("mggSig_catEBEE_norm","mggSig_catEBEE_norm","@0+@1",RooArgList(*mggSig_catEEHighR9_norm,*mggSig_catEELowR9_norm));
+
+	RooFormulaVar *frac1EBEB = new RooFormulaVar("frac1EBEB","frac1EBEB","@0/@1",RooArgList(*mggSig_catEBHighR9_norm,*mggSig_catEBEB_norm));
+	RooFormulaVar *frac2EBEB = new RooFormulaVar("frac2EBEB","frac2EBEB","@0/@1",RooArgList(*mggSig_catEBLowR9_norm,*mggSig_catEBEB_norm));
+	RooFormulaVar *frac1EBEE = new RooFormulaVar("frac1EBEE","frac1EBE","@0/@1",RooArgList(*mggSig_catEEHighR9_norm,*mggSig_catEBEE_norm));
+	RooFormulaVar *frac2EBEE = new RooFormulaVar("frac2EBEE","frac2EBEE","@0/@1",RooArgList(*mggSig_catEELowR9_norm,*mggSig_catEBEE_norm));
+	
+	RooAddPdf mggSig_catEBEB = RooAddPdf("mggSig_catEBEB","mggSig_catEBEB",RooArgList(*mggSig_catEBHighR9,*mggSig_catEBLowR9),RooArgList(*frac1EBEB,*frac2EBEB));
+	RooAddPdf mggSig_catEBEE = RooAddPdf("mggSig_catEBEE","mggSig_catEBEE",RooArgList(*mggSig_catEEHighR9,*mggSig_catEELowR9),RooArgList(*frac1EBEE,*frac2EBEE));
+
+	wAll->import(mggSig_catEBEB,RecycleConflictNodes());
+	wAll->import(mggSig_catEBEE,RecycleConflictNodes());
+	
+	wAll->import(*mggSig_catEBEB_norm,RecycleConflictNodes());
+	wAll->import(*mggSig_catEBEE_norm,RecycleConflictNodes());
 
 //---------------END ADDING CATEGORIS-------------------
 	
@@ -2668,8 +2669,8 @@ void MakeSigParametricWS(RooWorkspace* w, const char* fileBaseName, Float_t mass
 //	wAll->import(*model_bkg_EBEE_norm);
 //	wAll->import(*binned_data_EBEB);
 //	wAll->import(*binned_data_EBEE);
-
-	TString filename(wsDir+TString(fileBaseName)+TString::Format("_m%d_test_mgg",imass)+"_"+couplingS+".root");
+	TString lumS = TString::Format("%g",thelum/1000.);
+	TString filename(wsDir+TString(fileBaseName)+TString::Format("_m%d",imass)+"_"+couplingS+"_mgg_lum_"+lumS+".root");
 	TFile fileWs(filename,"RECREATE");
 	fileWs.cd();
 	wAll->writeToFile(filename);
@@ -2749,7 +2750,7 @@ void runfits(const Float_t mass=1500, string coupling="001") {
   return;*/
 }
 
-void runAllParametric(const Float_t mass=1500, Float_t coupling=0.1) {
+void runAllParametric(const Float_t mass=1500, Float_t coupling=0.1, Float_t luminosity = 10) {
 
   // xsecs
   // mass==750, coupling==0.01  => thexsec = 5.07/100.;
@@ -2779,10 +2780,9 @@ void runAllParametric(const Float_t mass=1500, Float_t coupling=0.1) {
   cout << endl; 
   cout << "Now add signal data" << endl;
   AddSigData(w, mass, couplingS);   
-  
-  MakeSigParametricWS(w, fileBaseName, mass, coupling, couplingS, Lum);
-
-  
+  luminosity *= 1000. ;
+  MakeSigParametricWS(w, fileBaseName, mass, coupling, couplingS, luminosity);
+ 
 
   return;
 }
