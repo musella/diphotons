@@ -177,13 +177,20 @@ def mergeTrees(tfile,sel,outname,trees,aliases):
     else:
         for name,selection in trees:            
             tree=tfile.Get(name)
+            if not tree:
+                print "Could not read tree %s " % name
+                print " from %s" % tfile.GetTitle()
+                sys.exit(-1)
             for aname, definition in aliases:
                 tree.SetAlias( aname,definition )
             print "%s '%s' '%s'" % (name, selection, sel)
+            if selection == "": selection = None
+            else: selection = ROOT.TCut(selection)
             if sel != "":
-                selection = str(ROOT.TCut(selection)*ROOT.TCut(sel))
-            if selection != "":
-                clone = tree.CopyTree(selection)
+                if selection: selection *= ROOT.TCut(sel)
+                else: selection = ROOT.TCut(sel)
+            if selection:
+                clone = tree.CopyTree(selection.GetTitle())
                 tree = clone
             tlist.Add(tree)
             print tree, tree.GetEntries()
@@ -267,7 +274,9 @@ def modelBuilders(trees, type, obs, varlist, sellist, weights, shapes, minevents
             else:
                 constraint.setConstant(True)
                 constraints.append(constraint)
-            modelBuilder.getModel().setMu(constraint)
+            model = modelBuilder.getModel()
+            print model
+            model.setMu(constraint)
             
         builders.append(modelBuilder)
     return builders,constraints
@@ -358,6 +367,7 @@ def optimizeMultiDim(options,args):
     if options.infile == "":
         options.infile = args[0]
     fin = ROOT.TFile.Open(options.infile)
+    print fin
 
     wd = os.getcwd()
     print wd
@@ -532,7 +542,9 @@ def optimizeMultiDim(options,args):
     ### fom = ROOT.fom
     fom = ROOT.SimpleShapeFomProvider(nsubcats)
     for sigModel in signals:
-        sigModel.getModel().setMu(mu)
+        model = sigModel.getModel()
+        print model
+        model.setMu(mu)
     fom.addPOI(mu)
     fom.minStrategy(2)
     for constraint in sigconstr+bkgconstr:
@@ -745,7 +757,12 @@ def main(options,args):
     
     ROOT.gSystem.SetIncludePath("-I$ROOTSYS/include -I$ROOFITSYS/include")
     ROOT.gSystem.Load("libdiphotonsUtils")
-
+    if ROOT.gROOT.GetVersionInt() >= 60000:
+        ROOT.gSystem.AddIncludePath("-I$CMSSW_BASE/include")
+        ROOT.gROOT.ProcessLine('#include "diphotons/Utils/interface/CategoryOptimizer.h"')
+        ROOT.gROOT.ProcessLine('#include "diphotons/Utils/interface/SimpleShapeCategoryOptimization.h"')
+        ROOT.gROOT.ProcessLine('#include "diphotons/Utils/interface/NaiveCategoryOptimization.h"')
+        
     ROOT.gStyle.SetOptStat(0)
     
     ROOT.RooMsgService.instance().setGlobalKillBelow(ROOT.RooFit.FATAL)
