@@ -1405,8 +1405,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 ronesigma.SetPointEYhigh(ip,oerrp),ronesigma.SetPointEYlow(ip,oerrm)
                 rtwosigma.SetPointEYhigh(ip,terrp),rtwosigma.SetPointEYlow(ip,terrm)
                 
-            resid.addObject(rtwosigma,"E3")
-            resid.addObject(ronesigma,"E3")
+            resid.addObject(rtwosigma,"E2")
+            resid.addObject(ronesigma,"E2")
             print "done"
         hresid = frame.residHist(hist.GetName(),fitc.GetName(),True)
         resid.addPlotable(hresid,"PE")

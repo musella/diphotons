@@ -356,7 +356,7 @@ class PlotApp(PyRApp):
                         leg.AddEntry(h,"",legopt)
             
                 # adjust yaxis
-                frame.GetYaxis().SetRangeUser(ymin,ymax*1.2)
+                frame.GetYaxis().SetRangeUser(ymin,ymax*1.5)
                 leg.Draw("same")
                 canv.RedrawAxis()
             

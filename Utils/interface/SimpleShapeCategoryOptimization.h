@@ -50,7 +50,7 @@ public:
 
     std::string name() const { return name_; };
 
-    void setShape( shape_t x );
+    void setShape( int x );
     shape_t getShape() { return shape_; };
 
     void minEvents( double x ) { minEvents_ = x; };

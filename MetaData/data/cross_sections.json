@@ -20,8 +20,6 @@
     "RSGravToGG_kMpl-001_M-750_Tune4C_13TeV-pythia8"  : { "xs" : 0.04471 },
     "RSGravToGG_kMpl001_M_5000_Tune4C_13TeV_pythia8" : { "xs" : 0.000000142 },
 
-    "RSGravToGG_kMpl-02_M-5000_TuneCUEP8M1_13TeV-pythia8" : { "xs" : 0.00005019 }, 
-    						      
     "QCD_HT-100To250_13TeV-madgraph" : { "xs" : 28730000.0 },
     "QCD_HT_250To500_13TeV-madgraph" : { "xs" : 670500.0 },
     "QCD_HT-500To1000_13TeV-madgraph": { "xs" : 26740.0 },
@@ -82,6 +80,47 @@
     "QCD_Pt-170to300_EMEnriched_TuneCUETP8M1_13TeV_pythia8" : { "xs" :  1.899e+04 },
     "QCD_Pt-300toInf_EMEnriched_TuneCUETP8M1_13TeV_pythia8" : { "xs" :  1.249e+03 },
     
-    "DYToLL_M_1_TuneCUETP8M1_13TeV_pythia8" : { "xs" : 1.943e+04 }
+    "DYToLL_M_1_TuneCUETP8M1_13TeV_pythia8" : { "xs" : 1.943e+04 },
+
+
+    "RSGravToGG_kMpl-001_M-500_TuneCUEP8M1_13TeV-pythia8" : { "xs" :   3.30e-01 }, 
+    "RSGravToGG_kMpl-001_M-750_TuneCUEP8M1_13TeV-pythia8" : { "xs" :   5.07e-02 }, 
+    "RSGravToGG_kMpl-001_M-1000_TuneCUEP8M1_13TeV-pythia8" : { "xs" :  1.21e-02 }, 
+    "RSGravToGG_kMpl-001_M-1500_TuneCUEP8M1_13TeV-pythia8" : { "xs" :  1.34e-03 }, 
+    "RSGravToGG_kMpl-001_M-2000_TuneCUEP8M1_13TeV-pythia8" : { "xs" :  2.43e-04 }, 
+    "RSGravToGG_kMpl-001_M-3000_TuneCUEP8M1_13TeV-pythia8" : { "xs" :  1.50e-05 }, 
+    "RSGravToGG_kMpl-001_M-4000_TuneCUEP8M1_13TeV-pythia8" : { "xs" :  1.38e-06 }, 
+    "RSGravToGG_kMpl-001_M-5000_TuneCUEP8M1_13TeV-pythia8" : { "xs" :  1.42e-07 }, 
+    "RSGravToGG_kMpl-001_M-6000_TuneCUEP8M1_13TeV-pythia8" : { "xs" :  1.55e-08 }, 
+    "RSGravToGG_kMpl-001_M-7000_TuneCUEP8M1_13TeV-pythia8" : { "xs" :  1.72e-09 }, 
+    "RSGravToGG_kMpl-01_M-500_TuneCUEP8M1_13TeV-pythia8" : { "xs" :    3.51e+01 }, 
+    "RSGravToGG_kMpl-01_M-750_TuneCUEP8M1_13TeV-pythia8" : { "xs" :    5.15e+00 }, 
+    "RSGravToGG_kMpl-01_M-1000_TuneCUEP8M1_13TeV-pythia8" : { "xs" :   1.23e+00 }, 
+    "RSGravToGG_kMpl-01_M-1250_TuneCUEP8M1_13TeV-pythia8" : { "xs" :   3.75e-01 }, 
+    "RSGravToGG_kMpl-01_M-1500_TuneCUEP8M1_13TeV-pythia8" : { "xs" :   1.33e-01 }, 
+    "RSGravToGG_kMpl-01_M-1750_TuneCUEP8M1_13TeV-pythia8" : { "xs" :   5.35e-02 }, 
+    "RSGravToGG_kMpl-01_M-2000_TuneCUEP8M1_13TeV-pythia8" : { "xs" :   2.41e-02 }, 
+    "RSGravToGG_kMpl-01_M-2250_TuneCUEP8M1_13TeV-pythia8" : { "xs" :   1.14e-02 }, 
+    "RSGravToGG_kMpl-01_M-2500_TuneCUEP8M1_13TeV-pythia8" : { "xs" :   5.69e-03 }, 
+    "RSGravToGG_kMpl-01_M-2750_TuneCUEP8M1_13TeV-pythia8" : { "xs" :   2.89e-03 }, 
+    "RSGravToGG_kMpl-01_M-3000_TuneCUEP8M1_13TeV-pythia8" : { "xs" :   1.50e-03 }, 
+    "RSGravToGG_kMpl-01_M-3500_TuneCUEP8M1_13TeV-pythia8" : { "xs" :   4.35e-04 }, 
+    "RSGravToGG_kMpl-01_M-4000_TuneCUEP8M1_13TeV-pythia8" : { "xs" :   1.35e-04 }, 
+    "RSGravToGG_kMpl-01_M-4500_TuneCUEP8M1_13TeV-pythia8" : { "xs" :   4.27e-05 }, 
+    "RSGravToGG_kMpl-01_M-5000_TuneCUEP8M1_13TeV-pythia8" : { "xs" :   1.40e-05 }, 
+    "RSGravToGG_kMpl-01_M-5500_TuneCUEP8M1_13TeV-pythia8" : { "xs" :   4.96e-06 }, 
+    "RSGravToGG_kMpl-01_M-6000_TuneCUEP8M1_13TeV-pythia8" : { "xs" :   1.63e-06 }, 
+    "RSGravToGG_kMpl-01_M-6500_TuneCUEP8M1_13TeV-pythia8" : { "xs" :   5.80e-07 }, 
+    "RSGravToGG_kMpl-01_M-7000_TuneCUEP8M1_13TeV-pythia8" : { "xs" :   1.99e-07 }, 
+    "RSGravToGG_kMpl-02_M-500_TuneCUEP8M1_13TeV-pythia8" : { "xs" :    1.44e+02 }, 
+    "RSGravToGG_kMpl-02_M-750_TuneCUEP8M1_13TeV-pythia8" : { "xs" :    2.05e+01 }, 
+    "RSGravToGG_kMpl-02_M-1000_TuneCUEP8M1_13TeV-pythia8" : { "xs" :   4.92e+00 }, 
+    "RSGravToGG_kMpl-02_M-1500_TuneCUEP8M1_13TeV-pythia8" : { "xs" :   5.28e-01 }, 
+    "RSGravToGG_kMpl-02_M-2000_TuneCUEP8M1_13TeV-pythia8" : { "xs" :   9.61e-02 }, 
+    "RSGravToGG_kMpl-02_M-3000_TuneCUEP8M1_13TeV-pythia8" : { "xs" :   6.01e-03 }, 
+    "RSGravToGG_kMpl-02_M-4000_TuneCUEP8M1_13TeV-pythia8" : { "xs" :   5.45e-04 }, 
+    "RSGravToGG_kMpl-02_M-5000_TuneCUEP8M1_13TeV-pythia8" : { "xs" :   5.84e-05 }, 
+    "RSGravToGG_kMpl-02_M-6000_TuneCUEP8M1_13TeV-pythia8" : { "xs" :   7.11e-06 }, 
+    "RSGravToGG_kMpl-02_M-7000_TuneCUEP8M1_13TeV-pythia8" : { "xs" :   1.08e-06 } 
 
 } 

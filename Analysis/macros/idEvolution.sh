@@ -42,11 +42,17 @@ wwbase=$www/$target/tune
 ## emacs -nw ${wwbase}/ptDep/README.txt ${src}/${label}eff_areas.json
 
 
-./idEvolution.py --load idEvolution_isolations.json --load ${src}/${label}eff_areas.json  -O ${wwbase}/unCorrectedVars  -i ${src}/output.root/photonDumper/trees  --weight 'weight*(pt>75 && pt<1000)' --wread ${src}/${label}wei.root --pt-corr-var 'log(pt)' --no-pt-corr --no-rho-corr --no-offset-corr
+### ./idEvolution.py --load idEvolution_isolations.json --load ${src}/${label}eff_areas.json  -O ${wwbase}/unCorrectedVars  -i ${src}/output.root/photonDumper/trees  --weight 'weight*(pt>75 && pt<1000)' --wread ${src}/${label}wei.root --pt-corr-var 'log(pt)' --no-pt-corr --no-rho-corr --no-offset-corr
+### 
+### ./idEvolution.py --load idEvolution_isolations.json --load ${src}/${label}eff_areas.json  -O ${wwbase}/rhoCorrectedVars  -i ${src}/output.root/photonDumper/trees  --weight 'weight*(pt>75 && pt<1000)' --wread ${src}/${label}wei.root --pt-corr-var 'log(pt)' --no-pt-corr --no-offset-corr
+### 
+### ./idEvolution.py --load idEvolution_isolations.json --load ${src}/${label}eff_areas.json  -O ${wwbase}/correctedVars  -i ${src}/output.root/photonDumper/trees  --weight 'weight*(pt>75 && pt<1000)' --wread ${src}/${label}wei.root --pt-corr-var 'log(pt)'
 
-./idEvolution.py --load idEvolution_isolations.json --load ${src}/${label}eff_areas.json  -O ${wwbase}/rhoCorrectedVars  -i ${src}/output.root/photonDumper/trees  --weight 'weight*(pt>75 && pt<1000)' --wread ${src}/${label}wei.root --pt-corr-var 'log(pt)' --no-pt-corr --no-offset-corr
+### ./idEvolution.py --load idEvolution_isolations.json --load ${src}/${label}eff_areas.json  -O ${wwbase}/ptCorrectedVars  -i ${src}/output.root/photonDumper/trees  --weight 'weight*(pt>75 && pt<1000)' --wread ${src}/${label}wei.root --pt-corr-var 'log(pt)' --no-offset-corr
 
-./idEvolution.py --load idEvolution_isolations.json --load ${src}/${label}eff_areas.json  -O ${wwbase}/correctedVars  -i ${src}/output.root/photonDumper/trees  --weight 'weight*(pt>75 && pt<1000)' --wread ${src}/${label}wei.root --pt-corr-var 'log(pt)'
+set -x
+
+./idEvolution.py --load idEvolution_isolations.json --load ${src}/${label}eff_areas.json  -O ${wwbase}/ptCorrectedVars  -i ${src}/output.root/photonDumper/trees  --weight 'weight*(pt>75 && pt<1000)' --wread ${src}/${label}wei.root --pt-corr-var pt --no-offset-corr
 
 
 ### ./idEvolution.py --load idEvolution_isolations.json --load ${src}/${label}eff_areas.json  -O ${wwbase}/offset  -i ${src}/output.root/photonDumper/trees  --weight 'weight*(pt>75 && pt<1000)' --wread ${src}/${label}wei.root --pt-corr-var 'log(pt)' --fit-median

@@ -40,6 +40,11 @@ class DiPhotonAnalysis(object):
         self.photonSelections = []
         self.splitByIso = []
         self.splitDumpers = []
+
+        self.keepFFOnly = False
+        self.keepPFOnly = False
+        self.keepPOnly  = False
+        self.keepFOnly  = False
         
         if sortTemplate:
             self.sortTemplate = sortTemplate.clone()
@@ -94,7 +99,7 @@ class DiPhotonAnalysis(object):
                     self.addTriggeredDumpers(process,splitByIso=splitByIso)
                     trg = None
         
-        print "AAAAAAAAAAAAAAa", jobConfig.processId, jobConfig.processType, self.splitByIso, splitByIso
+        print jobConfig.processId, jobConfig.processType, self.splitByIso, splitByIso
         ## add execution paths for analysis selections
         for coll,dumper in self.analysisSelections+self.photonSelections:
             if not self.useDumper(process,dumper,splitByIso): 
@@ -169,7 +174,8 @@ class DiPhotonAnalysis(object):
         process.options = cms.untracked.PSet( allowUnscheduled = cms.untracked.bool(True) )
 
         if jobConfig.dumpPython != "":
-            pyout = open(jobConfig.dumpPython,"w+")
+            from gzip import open
+            pyout = open("%s.gz" % jobConfig.dumpPython,"w+")
             pyout.write( process.dumpPython() )
             pyout.close()
         
@@ -239,16 +245,30 @@ class DiPhotonAnalysis(object):
             dumperTemplate = self.dumperTemplate
 
         diphoColl  = "%sDiPhotons" % label
-        dumperName = label
+        postSelect = None
+        if self.keepFFOnly:
+            postSelect = "leadingPhoton.genMatchType != 1 && subLeadingPhoton.genMatchType != 1"
+        elif self.keepPFOnly:
+            postSelect = "(leadingPhoton.genMatchType != 1) != (subLeadingPhoton.genMatchType != 1 )"
+            
+        sortDiPhoColl = "sorted"+diphoColl if postSelect else diphoColl
         
+        
+        dumperName = label
         ## register diphoton selector and associated dumper
         setattr(process,"all"+diphoColl,selectorTemplate.clone())
         if selectN:
-            setattr(process,diphoColl,self.sortTemplate.clone(src=cms.InputTag("all"+diphoColl),
-                                                              maxNumber=cms.uint32(selectN),
-                                                              ))
+            setattr(process,sortDiPhoColl,self.sortTemplate.clone(src=cms.InputTag("all"+diphoColl),
+                                                                  maxNumber=cms.uint32(selectN),
+                                                                  ))
         else:
-            setattr(process,diphoColl,self.sortTemplate.clone(src=cms.InputTag("all"+diphoColl)))            
+            setattr(process,sortDiPhoColl,self.sortTemplate.clone(src=cms.InputTag("all"+diphoColl)))
+            
+        if postSelect:
+            setattr(process,diphoColl,simpleTemplate.clone(src=cms.InputTag(sortDiPhoColl),
+                                                           cut=cms.string(postSelect))
+                                                           )
+            
         setattr(process,dumperName,dumperTemplate.clone(src=cms.InputTag(diphoColl), 
                                                         dumpTrees=cms.untracked.bool(dumpTrees),
                                                         dumpWorkspace=cms.untracked.bool(dumpWorkspace),
@@ -395,12 +415,26 @@ class DiPhotonAnalysis(object):
             
         phoColl  = "%sPhotons" % label
         dumperName = "%sSinglePho" % label
+        postSelect = None
+        if self.keepFOnly:
+            postSelect = "genMatchType != 1"
+        elif self.keepPOnly:
+            postSelect = "genMatchType == 1"
+            
+        sortPhoColl = "sorted"+phoColl if postSelect else phoColl
         
         ## register photon selector and associated dumper
         if selectN:
             sys.exit("selectN not supported for single photon selection. Please do something about it.",-1)
         else:
-            setattr(process,phoColl,selectorTemplate.clone())
+            setattr(process,sortPhoColl,selectorTemplate.clone())
+
+        if postSelect:
+            setattr(process,phoColl,singlePhoSimpleTemplate.clone(src=cms.InputTag(sortPhoColl),
+                                                                  cut=cms.string(postSelect))
+                    )
+        
+
         setattr(process,dumperName,dumperTemplate.clone(src=cms.InputTag(phoColl), 
                                                         dumpTrees=cms.untracked.bool(dumpTrees),
                                                         dumpWorkspace=cms.untracked.bool(dumpWorkspace),

@@ -37,8 +37,9 @@
              
      "#" : "mc dataset",
      "mc" : [
-             "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)s",
-               "QCD_HT_100toInf_13TeV:output.root/%(sel)s",
+               "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)sGenIso",
+               "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)sNonGenIso",
+               "QCD_Pt_30toInf_13TeV:output.root/%(sel)s",
                "GJets_HT_100toInf_13TeV:output.root/%(sel)s"            
             ],
 
@@ -51,7 +52,9 @@
 
      "#" : "mc dataset",
       "signals" : { 
-      "grav_02_5000" : [ "RSGravToGG_kMpl_02_M_5000_13TeV:output.root/%(sel)s"	]
+      "grav_02_3000" : [ "RSGravToGG_kMpl_02_M_3000_TuneCUEP8M1_13TeV_pythia8_13TeV:output.root/%(sel)sGenIso",
+      "RSGravToGG_kMpl_02_M_3000_TuneCUEP8M1_13TeV_pythia8_13TeV:output.root/%(sel)sNonGenIso"
+      	]
       
       },
       "_signals" : { 

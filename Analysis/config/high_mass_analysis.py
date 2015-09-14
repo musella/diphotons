@@ -215,7 +215,7 @@ histogramsSinglePho = [
     "phoPixSeed>>phoPixSeed(2,-0.5,1.5)",
     ]
 
-if not "EXOSpring15_v3" in customize.datasetName():
+if not "EXOSpring15_v3" in customize.datasetName() or "EXOSpring15_v3v8" in customize.datasetName():
     variables.extend( [
             "leadRndConeChIso := leadingView.extraChIsoWrtChoosenVtx('rnd03')",
             "leadRndConeChIso0 := leadingView.extraChIsoWrtChoosenVtx('rnd03_0')",
@@ -306,7 +306,43 @@ if not "EXOSpring15_v3" in customize.datasetName():
             "phoRndConeChIso7>>phoRndConeChIso(120,-10,50)",
             "phoRndConeChIso8>>phoRndConeChIso(120,-10,50)"
             ])
+else:
+    variables.extend( [
+            "leadRndConeChIso  := 999",
+            "leadRndConeChIso0 := 999",
+            "leadRndConeChIso1 := 999",
+            "leadRndConeChIso2 := 999",
+            "leadRndConeChIso3 := 999",
+            "leadRndConeChIso4 := 999",
+            "leadRndConeChIso5 := 999",
+            "leadRndConeChIso6 := 999",
+            "leadRndConeChIso7 := 999",
+            "leadRndConeChIso8 := 999",
+            
+            "subleadRndConeChIso  := 999",
+            "subleadRndConeChIso0 := 999",
+            "subleadRndConeChIso1 := 999",
+            "subleadRndConeChIso2 := 999",
+            "subleadRndConeChIso3 := 999",
+            "subleadRndConeChIso4 := 999",
+            "subleadRndConeChIso5 := 999",
+            "subleadRndConeChIso6 := 999",
+            "subleadRndConeChIso7 := 999",
+            "subleadRndConeChIso8 := 999",
+            ])
 
+    variablesSinglePho.extend([    
+            "phoRndConeChIso  := 999",
+            "phoRndConeChIso0 := 999",
+            "phoRndConeChIso1 := 999",
+            "phoRndConeChIso2 := 999",
+            "phoRndConeChIso3 := 999",
+            "phoRndConeChIso4 := 999",
+            "phoRndConeChIso5 := 999",
+            "phoRndConeChIso6 := 999",
+            "phoRndConeChIso7 := 999",
+            "phoRndConeChIso8 := 999",
+            ])
 
 cfgTools.addCategories(diphotonDumper,
                        [## cuts are applied in cascade
@@ -367,8 +403,8 @@ dumpBits=["HLT_DoublePhoton60","HLT_DoublePhoton85","HLT_Photon250_NoHE","HLT_Ph
 askTriggerOnMc=False
 
 if customize.selection == "diphoton":
-    dataTriggers=["HLT_DoublePhoton60*","HLT_DoublePhoton85*","HLT_Photon250_NoHE*","HLT_Photon165_HE*"]
-    mcTriggers=dataTriggers
+    mcTriggers=["HLT_DoublePhoton85*","HLT_Photon250_NoHE*","HLT_Photon165_HE*"] ## "HLT_DoublePhoton60*",
+    dataTriggers=mcTriggers
 elif customize.selection == "photon":
     dataTriggers=["HLT_Photon165*"]
     mcTriggers=dataTriggers
@@ -378,7 +414,6 @@ elif customize.selection == "photon":
 elif customize.selection == "electron":
     dataTriggers=["HLT_Ele23_WPLoose*"]
     mcTriggers=[]
-    dumpBits.append("HLT_DoublePhoton60","HLT_DoublePhoton85")
     invertEleVeto=True
 elif customize.selection == "dielectron":
     dataTriggers=["*"]
@@ -412,6 +447,10 @@ cfgTools.dumpOnly(minimalDumper,
                    "leadBlockChIso","subleadBlockChIso",
                    "leadRndConePhoIso","leadRndConeChIso",
                    "subleadRndConePhoIso","subleadRndConeChIso",
+                   "leadRndConeChIso0","leadRndConeChIso1","leadRndConeChIso2","leadRndConeChIso3",
+                   "leadRndConeChIso4","leadRndConeChIso5","leadRndConeChIso6","leadRndConeChIso7","leadRndConeChIso8",
+                   "subleadRndConeChIso0","subleadRndConeChIso1","subleadRndConeChIso2","subleadRndConeChIso3",
+                   "subleadRndConeChIso4","subleadRndConeChIso5","subleadRndConeChIso6","subleadRndConeChIso7","subleadRndConeChIso8",
                    "leadMatchType","leadGenIso",
                    "subleadMatchType","subleadGenIso",
                    "leadPhoIsoEA","subleadPhoIsoEA",
@@ -427,6 +466,8 @@ cfgTools.dumpOnly(minimalPhotonDumper,
                   ["leadPt","leadEta","leadPhi",
                    "leadBlockPhoIso","leadBlockChIso",
                    "leadRndConePhoIso","leadRndConeChIso","leadRndConeChIso",
+                   "phoRndConeChIso0","phoRndConeChIso1","phoRndConeChIso2","phoRndConeChIso3",
+                   "phoRndConeChIso4","phoRndConeChIso5","phoRndConeChIso6","phoRndConeChIso7","phoRndConeChIso8",
                    "leadMatchType","leadGenIso",
                    "leadPhoIsoEA","leadPhoIso",
                    "leadChIso","leadScEta","leadSigmaIeIe"
@@ -443,6 +484,12 @@ analysis = DiPhotonAnalysis(diphotonDumper,
                             askTriggerOnMc=askTriggerOnMc, ## if mcTriggers is not empty will still compute efficiencies
                             singlePhoDumperTemplate=photonDumper
                             )
+
+# drop samples overlap
+if "GJet-HT" in customize.datasetName():
+    analysis.keepPFOnly = True
+elif "QCD" in customize.datasetName():
+    analysis.keepFFOnly = True
 
 ## kinematic selection
 analysis.addKinematicSelection(process,dumpTrees=True,splitByIso=True

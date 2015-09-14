@@ -22,18 +22,18 @@
 				 "leadPhoIsoOffset := -2. -1.3*(abs(leadScEta)<1.5)-1.6*(abs(leadScEta)>1.5)",
 				 
 				 "subleadChIsoPtCorr := 0.039*(abs(subleadScEta)<1.5)-0.029*(abs(subleadScEta)>1.5)",        
-				 "subleadChIsoOffset := -1+ 2.2*(abs(subleadScEta)<1.5)+2.1*(abs(subleadScEta)>1.5)", 
+				 "subleadChIsoOffset := -2+ 2.2*(abs(subleadScEta)<1.5)+2.1*(abs(subleadScEta)>1.5)", 
 				 
 				 "subleadPhoIsoMyEA := 0.22*(abs(subleadScEta)>=2.2 && abs(subleadScEta)<2.5)+0.17*(abs(subleadScEta)<0.9)+0.14*(abs(subleadScEta)>=2. && abs(subleadScEta)<2.2)+0.11*(abs(subleadScEta)>=1.5 && abs(subleadScEta)<2.)+0.14*(abs(subleadScEta)>=0.9 && abs(subleadScEta)<1.5)",
 				 "subleadPhoIsoPtCorr := 0.47*(abs(subleadScEta)<1.5)+0.48*(abs(subleadScEta)>1.5)", 
-				 "subleadPhoIsoOffset := -2. -1.3*(abs(subleadScEta)<1.5)-1.6*(abs(subleadScEta)>1.5)",
+				 "subleadPhoIsoOffset := -3. -1.3*(abs(subleadScEta)<1.5)-1.6*(abs(subleadScEta)>1.5)",
 				 
 				 "ebHoE := TMath::Max( (abs(leadScEta) < 1.5)*leadHoE, (abs(subleadScEta) < 1.5)*subleadHoE )",
 				 "eeHoE := TMath::Max( (abs(leadScEta) > 1.5)*leadHoE, (abs(subleadScEta) > 1.5)*subleadHoE )",
 				 "lebChIso := TMath::Log( 1 + TMath::Max( (abs(leadScEta) < 1.5)*leadChIso, (abs(subleadScEta) < 1.5)*subleadChIso ) )",
 				 "leeChIso := TMath::Log( 1 + TMath::Max( (abs(leadScEta) > 1.5)*leadChIso, (abs(subleadScEta) > 1.5)*subleadChIso ) )",
-				 "leadCorrPhoIso    := TMath::Max( leadPhoIso-leadPhoIsoMyEA*rho-leadPhoIsoPtCorr*log(leadPt), -5)",
-				 "subleadCorrPhoIso    := TMath::Max( subleadPhoIso-subleadPhoIsoMyEA*rho-subleadPhoIsoPtCorr*log(subleadPt), -5)",
+				 "leadCorrPhoIso    := TMath::Max( leadPhoIso-leadPhoIsoMyEA*rho-leadPhoIsoPtCorr*log(leadPt), 0)",
+				 "subleadCorrPhoIso    := TMath::Max( subleadPhoIso-subleadPhoIsoMyEA*rho-subleadPhoIsoPtCorr*log(subleadPt), 0",
 				 "ebPhoIso := TMath::Max( (abs(leadScEta) < 1.5)*leadCorrPhoIso-5*(abs(leadScEta) > 1.5), (abs(subleadScEta) < 1.5)*subleadCorrPhoIso-5*(abs(subleadScEta) > 1.5))",
 				 "eePhoIso := TMath::Max( (abs(leadScEta) > 1.5)*leadCorrPhoIso-5*(abs(leadScEta) < 1.5), (abs(subleadScEta) > 1.5)*subleadCorrPhoIso-5*(abs(subleadScEta) < 1.5)) ",
 				 "leadEB := abs(leadScEta) < 1.5",
@@ -141,7 +141,7 @@
 					]
 		},
 	    
-	    "weights"             : { "pp" : "100.*weight", "non_pp" : "10.*weight", "sig" : "weight"  
+	    "weights"             : { "pp" : "10.*weight", "non_pp" : "10.*weight", "sig" : "weight"  
 		    },
 	    "##" : "'Ultraviolet' cutoff in number of events",
 		"minevents"           : { "pp" : 0.0001, "non_pp" : 0.0001, "sig" : 0.001  },
