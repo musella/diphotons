@@ -21,7 +21,7 @@ void hggPaperStyle()
   hggStyle->SetCanvasColor(kWhite);
   
   hggStyle->SetCanvasDefH(600); //Height of canvas
-  hggStyle->SetCanvasDefW(600); //Width of canvas
+  hggStyle->SetCanvasDefW(800); //Width of canvas
   hggStyle->SetCanvasDefX(0);   //POsition on screen
   hggStyle->SetCanvasDefY(0);
 

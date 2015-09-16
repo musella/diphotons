@@ -39,6 +39,14 @@ wwbase=$www/$target/tune
 ### 
 ### ./idEvolution.py --load idEvolution_pt_dep.json --load ${src}/${label}eff_areas.json  -O ${wwbase}/ptDep  -i ${src}/output.root/photonDumper/trees  --weight 'weight*(pt>75 && pt<1000)' --wread ${src}/${label}wei.root --binningMaxErr 0.1 --binningTarget 100 --fit-expression "[0]+[1]*log(x)"
 
+### ./idEvolution.py --load idEvolution_pt_dep.json --load ${src}/${label}eff_areas.json  -O ${wwbase}/ptLinDep  -i ${src}/output.root/photonDumper/trees  --weight 'weight*(pt>75 && pt<1000)' --binningMaxErr 0.1 --binningTarget 100 --fit-expression "pol1"
+### 
+### ./idEvolution.py --load idEvolution_pt_dep.json --load ${src}/${label}eff_areas.json  -O ${wwbase}/ptLinSplitDep  -i ${src}/output.root/photonDumper/trees  --weight 'weight*(pt>75 && pt<1000)' --binningMaxErr 0.1 --binningTarget 100 --fit-expression "pol1" \
+###     --categories 'isEBHighR9 := abs(scEta)<1.5 && r9>=0.94' \
+###     --categories 'isEEHighR9 := abs(scEta)>1.5 && r9>=0.94' \
+###     --categories 'isEBLowR9  := abs(scEta)<1.5 && r9<0.94' \
+###     --categories 'isEELowR9  := abs(scEta)>1.5 && r9<0.94'
+
 ## emacs -nw ${wwbase}/ptDep/README.txt ${src}/${label}eff_areas.json
 
 
@@ -53,6 +61,7 @@ wwbase=$www/$target/tune
 set -x
 
 ./idEvolution.py --load idEvolution_isolations.json --load ${src}/${label}eff_areas.json  -O ${wwbase}/ptCorrectedVars  -i ${src}/output.root/photonDumper/trees  --weight 'weight*(pt>75 && pt<1000)' --wread ${src}/${label}wei.root --pt-corr-var pt --no-offset-corr
+
 
 
 ### ./idEvolution.py --load idEvolution_isolations.json --load ${src}/${label}eff_areas.json  -O ${wwbase}/offset  -i ${src}/output.root/photonDumper/trees  --weight 'weight*(pt>75 && pt<1000)' --wread ${src}/${label}wei.root --pt-corr-var 'log(pt)' --fit-median

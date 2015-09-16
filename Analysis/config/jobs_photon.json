@@ -3,7 +3,10 @@
 
 
     	    "Data" : [ "/SinglePhoton" 
-	    ],
+	    ]
+    },
+
+    "_processes" : {
 
 	    "GGJets_M-200To13000-sherpa" : [
 	    				"/GGJets_M-1000To2000_Pt-50_13TeV-sherpa",
@@ -34,6 +37,6 @@
 
 	    },
 
-    "cmdLine" : "campaign=EXOSpring15_v850ns selection=photon lumiMask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Cert_246908-255031_13TeV_PromptReco_Collisions15_25ns_JSON_v2.txt ptLead=170 ptSublead=170"
+    "cmdLine" : "campaign=EXOSpring15_v825ns selection=photon lumiMask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Cert_246908-255031_13TeV_PromptReco_Collisions15_25ns_JSON_v2.txt ptLead=170 ptSublead=170"
 
 }

@@ -52,6 +52,11 @@ customize.options.register ('trigger',
                             VarParsing.VarParsing.multiplicity.singleton, # singleton or list
                             VarParsing.VarParsing.varType.string,          # string, int, or float
                             "trigger")
+customize.options.register ('idversion',
+                            "", # default value
+                            VarParsing.VarParsing.multiplicity.singleton, # singleton or list
+                            VarParsing.VarParsing.varType.string,          # string, int, or float
+                            "idversion")
 customize.parse()
 
 #
@@ -121,6 +126,7 @@ variables=["mass","pt","rapidity",
            ]
 
 histograms=["mass>>mass(1500,0,15000)",
+            "mass>>lowmass(560,60,200)",
             "pt>>pt(200,0,200)",
             "rapidity>>rapidity(200,-5,5)",
             "deltaEta>>deltaEta(200,0,5)",
@@ -195,7 +201,9 @@ variablesSinglePho=[
     "phoPhoIso  := egPhotonIso", 
     "phoNeutIso := egNeutralHadronIso",
     "phoHoE     := hadTowOverEm",
-    "phoSigmaIeIe := (?r9>0.8||egChargedHadronIso<20||egChargedHadronIso/pt<0.3?full5x5_sigmaIetaIeta:sigmaIetaIeta)",
+    "phoSigmaIeIe := full5x5_sigmaIetaIeta",
+    "phoSigmaIpIp := sqrt(sipip)",
+    "eMax","e2nd","eTop","eBottom","eLeft","eRight",
     "phoPixSeed  := hasPixelSeed",
     "phoPassEleVeto := passElectronVeto",
     ]
@@ -204,6 +212,7 @@ variablesSinglePho=[
 histogramsSinglePho = [
     "phoPt>>phoPt(145,100,3000)",
     "phoEta>>phoEta(55,-2.75,2.75)",
+    "phoPhi>>phoPhi(65,-3.25,3.25)",
     
     "phoBlockChIso>>phoBlockChIso(120,-10,50)",
     "phoBlockPhoIso>>phoBlockPhoIso(120,-10,50)",
@@ -213,6 +222,7 @@ histogramsSinglePho = [
     "phoHoE>>phoHoE(40,0,0.2)",
     "phoSigmaIeIe>>phoSigmaIeIe(50,0,5.e-2)",
     "phoPixSeed>>phoPixSeed(2,-0.5,1.5)",
+    "phoScEta:phoPhi>>phoEtaVsPhi(65,-3.25,3.25,55,-2.75,2.75)"
     ]
 
 if not "EXOSpring15_v3" in customize.datasetName() or "EXOSpring15_v3v8" in customize.datasetName():
@@ -366,6 +376,7 @@ photonDumper.maxCandPerEvent=2
 photonDumper.nameTemplate = "$PROCESS_$SQRTS_$LABEL_$SUBCAT"
 cfgTools.addCategories(photonDumper,
                        [## cuts are applied in cascade
+                        ("EBAnomalous","abs(superCluster.eta)<1.4442 && sqrt(sipip)<0.01 && full5x5_sigmaIetaIeta>0.0105",0),
                         ("EBHighR9","abs(superCluster.eta)<1.4442 && r9>0.94",0),
                         ("EBLowR9", "abs(superCluster.eta)<1.4442",0),
                         ("EEHighR9","r9>0.94",0),
@@ -461,19 +472,6 @@ cfgTools.dumpOnly(minimalDumper,
                    ])
 
 
-minimalPhotonDumper = photonDumper.clone()
-cfgTools.dumpOnly(minimalPhotonDumper,
-                  ["leadPt","leadEta","leadPhi",
-                   "leadBlockPhoIso","leadBlockChIso",
-                   "leadRndConePhoIso","leadRndConeChIso","leadRndConeChIso",
-                   "phoRndConeChIso0","phoRndConeChIso1","phoRndConeChIso2","phoRndConeChIso3",
-                   "phoRndConeChIso4","phoRndConeChIso5","phoRndConeChIso6","phoRndConeChIso7","phoRndConeChIso8",
-                   "leadMatchType","leadGenIso",
-                   "leadPhoIsoEA","leadPhoIso",
-                   "leadChIso","leadScEta","leadSigmaIeIe"
-                   ])
-
-
 from diphotons.Analysis.DiPhotonAnalysis import DiPhotonAnalysis
 analysis = DiPhotonAnalysis(diphotonDumper,
                             massCut=customize.massCut,ptLead=customize.ptLead,ptSublead=customize.ptSublead,scaling=customize.scaling, ## kinematic cuts
@@ -498,10 +496,21 @@ analysis.addKinematicSelection(process,dumpTrees=True,splitByIso=True
 
 ## analysis selections
 # CiC
-from diphotons.Analysis.highMassCiCDiPhotons_cfi import highMassCiCDiPhotons, highMassCiCDiPhotonsSB
+if customize.idversion != "":
+    if customize.idversion == "V2":
+        from diphotons.Analysis.highMassCiCDiPhotons_cfi import highMassCiCDiPhotonsV2   as highMassCiCDiPhotons
+        from diphotons.Analysis.highMassCiCDiPhotons_cfi import highMassCiCDiPhotonsSBV2 as highMassCiCDiPhotonsSB
+    else:
+        print "Unknown ID version %s " % customize.idversion
+        sys.exit(-1)
+else:
+    from diphotons.Analysis.highMassCiCDiPhotons_cfi import highMassCiCDiPhotons, highMassCiCDiPhotonsSB
+
 if invertEleVeto:
-    highMassCiCDiPhotons.variables[-1] = "-(passElectronVeto-1)"
-    highMassCiCDiPhotonsSB.variables[-1] = "-(passElectronVeto-1)"
+    ## highMassCiCDiPhotons.variables[-1] = "-(passElectronVeto-1)"
+    ## highMassCiCDiPhotonsSB.variables[-1] = "-(passElectronVeto-1)"
+    highMassCiCDiPhotons.variables[-1] = "hasPixelSeed"
+    highMassCiCDiPhotonsSB.variables[-1] = "hasPixelSeed"
 if doDoublePho:
     analysis.addAnalysisSelection(process,"cic",highMassCiCDiPhotons,dumpTrees=True,dumpWorkspace=False,dumpHistos=True,splitByIso=True,
                                   dumperTemplate=minimalDumper,
@@ -518,16 +527,26 @@ if doDoublePho:
                                   dumperTemplate=minimalDumper,
                                   nMinusOne=[## Sidebands
                                              ## removeIndex, (ignoreIndex(es),ingnoreNtimes), dumpTree, dumpWorkspace, dumpHistos, splitByIso
-                                             ((0,1),(4,1),"NoChIsoSingleSB",  True, False,True,False),
-                                             ((0,1),(4,2),"NoChIsoDoubleSB",  True, False,True,False)
+                                             ((0),(4,1),"NoChIsoSingleSB",  True, False,True,False),
+                                             ((0),(4,2),"NoChIsoDoubleSB",  True, False,True,False)
                                              ]
                                   )
 
 # single photon selection
-from diphotons.Analysis.highMassCiCPhotons_cfi import highMassCiCPhotons, highMassCiCPhotonsSB
+if customize.idversion != "":
+    if customize.idversion == "V2":
+        from diphotons.Analysis.highMassCiCPhotons_cfi import highMassCiCPhotonsV2 as highMassCiCPhotons
+        from diphotons.Analysis.highMassCiCPhotons_cfi import highMassCiCPhotonsSBV2 as highMassCiCPhotonsSB
+    else:
+        print "Unknown ID version %s " % customize.idversion
+        sys.exit(-1)
+else:
+    from diphotons.Analysis.highMassCiCPhotons_cfi import highMassCiCPhotons, highMassCiCPhotonsSB
 if invertEleVeto:
-    highMassCiCPhotons.variables[-1] = "-(passElectronVeto-1)"
-    highMassCiCPhotonsSB.variables[-1] = "-(passElectronVeto-1)"
+    ## highMassCiCPhotons.variables[-1] = "-(passElectronVeto-1)"
+    ## highMassCiCPhotonsSB.variables[-1] = "-(passElectronVeto-1)"
+    highMassCiCPhotons.variables[-1] = "hasPixelSeed"
+    highMassCiCPhotonsSB.variables[-1] = "hasPixelSeed"
 if doSinglePho:
     analysis.addPhotonAnalysisSelection(process,"cic",highMassCiCPhotons,dumpTrees=False,dumpWorkspace=False,dumpHistos=True,splitByIso=True,
                                         dumperTemplate=photonDumper,
@@ -544,7 +563,7 @@ if doSinglePho:
                                         dumperTemplate=photonDumper,
                                         nMinusOne=[## Sidebands
                                                    ## removeIndex, (ignoreIndex(es),ingnoreNtimes), dumpTree, dumpWorkspace, dumpHistos, splitByIso
-                                                   ((0,1),(4,1),"NoChIsoSB",  True, False,True,False),
+                                                   ((0),(4,1),"NoChIsoSB",  True, False,True,False),
                                                    ]
                               )
 
