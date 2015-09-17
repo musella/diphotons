@@ -4,25 +4,18 @@
         "isEE := abs(scEta)>1.5"
     ], 
     "infile": "output.root", 
-    "reweight": rewei.root::absScEta", 
+    "reweight": "rewei.root::absScEta", 
     "variables": [
         "absScEta := scEta*((scEta>=0.)-(scEta<0.))[100,0.,2.5]", 
-        "pt[500,200,2000]"
-    ], 
-    "weight": "weight*(pt>100)", 
+        "pt[500,70,1000]"
+    ],
     "wrng": {
-        "isEB": [
-            0.000, 
-            1.500
-        ], 
-        "isEE": [
-            1.500, 
-            2.500
-        ]
+        "isEB": [ [0.0,1.5], [0.000, 1.450] ], 
+        "isEE": [ [1.5,2.5], [1.60,  2.300] ]
     }, 
     "wvars": [
         "pt", 
         "absScEta"
     ], 
-    "xvar": "pt[100000,200,2000]"
+    "xvar": "pt[100000,70,1000]"
 }

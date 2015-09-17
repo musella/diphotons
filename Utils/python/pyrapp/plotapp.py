@@ -294,7 +294,7 @@ class PlotApp(PyRApp):
                     datahists = [ self.readProcess(datafile,*subprocs,plot=plotname,plotmodifs=plotmodifs,category=catname,group=group) for subprocs in dataprocs ]
                     
                 # collect histograms
-                allhists = datahists+bkghists+sighists
+                allhists = datahists+list(reversed(bkghists))+sighists
                 if len(allhists) == 0:
                     print "Nothing to plot for %s %s" % (plotname,catname)
                     continue
@@ -310,6 +310,7 @@ class PlotApp(PyRApp):
                 
                 # allocate canvas and legend and draw frame
                 canv,leg = self.makeCanvAndLeg("%s_%s" % ( plotname, catname), legPos )
+                pads=[canv]
                 if doRatio:
                     ratio =  [ float(f) for f in drawmethod.split("DrawRatio")[1].split("[")[1].split("]")[0].split(",") ][0]
                     pads  = [ROOT.TPad("%s_main"%canv.GetName(),"%s_main"%canv.GetName(),0.,1.-ratio,1.,1.),
@@ -356,10 +357,16 @@ class PlotApp(PyRApp):
                         leg.AddEntry(h,"",legopt)
             
                 # adjust yaxis
-                frame.GetYaxis().SetRangeUser(ymin,ymax*1.2)
+                if canv.GetLogy():
+                    frame.GetYaxis().SetRangeUser(ymin,ymax*15)
+                else:
+                    frame.GetYaxis().SetRangeUser(ymin,ymax*1.2)
                 leg.Draw("same")
-                canv.RedrawAxis()
-            
+                for pad in pads:
+                    pad.RedrawAxis()
+                    pad.Modified()
+                    pad.Update()
+                
                 if doRatio:
                     pads[1].cd()
                     ratio = datastk.GetStack().At(datastk.GetStack().GetEntries()-1).Clone("%s_%s_ratio" % (plotname,catname))
@@ -371,7 +378,7 @@ class PlotApp(PyRApp):
                     
                     scaleFonts(ratio,pads[0].GetHNDC()/pads[1].GetHNDC())
                     
-                    ratio.Draw("hist")
+                    ratio.Draw("e")
                     pads[0].cd()
                     
                 # if needed draw inset with zoom-in
@@ -422,17 +429,17 @@ class PlotApp(PyRApp):
             hname = names[iplot]
             h = style_utils.apply(h,subproc[hname])
         
-        sum = histos[0].Clone("%s_%s_%s" %( plot, name, category) )
-        sum.SetTitle(title)
+        hsum = histos[0].Clone("%s_%s_%s" %( plot, name, category) )
+        hsum.SetTitle(title)
         
         for h in histos[1:]:
-            sum.Add(h)
+            hsum.Add(h)
 
-        self.keep(sum,True)
-        sum = style_utils.apply(sum,plotmodifs)
-        sum = style_utils.apply(sum,style)
+        self.keep(hsum,True)
+        hsum = style_utils.apply(hsum,plotmodifs)
+        hsum = style_utils.apply(hsum,style)
         
-        return sum
+        return hsum
 
     #
     # Read plots from globe histogram files
@@ -443,6 +450,7 @@ class PlotApp(PyRApp):
         for s in samples:
             sfin = fin
             if ":" in s:
+                sa = s
                 s,fname = s.split(":")
                 folder = None
                 if ".root/" in fname:
@@ -450,7 +458,15 @@ class PlotApp(PyRApp):
                 ## print fname, folder
                 sfin = self.open(fname, folder=self.options.input_dir)
                 if folder:
-                    sfin = sfin.Get(folder)
+                    try:
+                        sfin = sfin.Get(folder)
+                    except Exception, e:
+                        print "Unable to read %s from %s" % ( folder, fname)
+                        print e
+                        sfin = None
+                if not sfin:
+                    print "Could not read %s, %s" % (sa, self.options.input_dir)
+                    sys.exit(1)
             if group:
                 h = None
                 for gr in group:
@@ -652,6 +668,14 @@ class PlotApp(PyRApp):
         ROOT.myColorC3tr = ROOT.gROOT.GetListOfColors().Last().GetNumber()+2;
         tmp = ROOT.gROOT.GetColor( ROOT.myColorC3 )
         self.keep( ROOT.TColor( ROOT.myColorC3tr, tmp.GetRed(), tmp.GetGreen(), tmp.GetBlue(), "", 0.5  ) )
+
+        ROOT.myColorD1   = ROOT.TColor.GetColor("#7E822E")
+        ROOT.myColorD2   = ROOT.TColor.GetColor("#BABB8C")
+        ROOT.myColorD3   = ROOT.TColor.GetColor("#C3C49E")
+        ROOT.myColorD4   = ROOT.TColor.GetColor("#E3E3D0")
+        ROOT.myColorD3tr = ROOT.gROOT.GetListOfColors().Last().GetNumber()+2;
+        tmp = ROOT.gROOT.GetColor( ROOT.myColorD3 )
+        self.keep( ROOT.TColor( ROOT.myColorD3tr, tmp.GetRed(), tmp.GetGreen(), tmp.GetBlue(), "", 0.5  ) )
         
         ROOT.myColorB0   = ROOT.TColor.GetColor("#540000")
         ROOT.myColorB1   = ROOT.TColor.GetColor("#cc0000")

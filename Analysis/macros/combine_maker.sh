@@ -5,6 +5,9 @@ version=$1 && shift
 
 fitname=2D 
 www=~/www/exo/
+if [[ $(whoami) == "mquittna" ]]; then
+    www=/afs/cern.ch/user/m/mquittna/www/diphoton/Phys14/
+fi
 
 shapes="default_shapes"
 
@@ -21,10 +24,24 @@ while [[ -n $1 ]]; do
 	    www=$2
 	    shift
 	    ;;
+	--verbose)
+	    verbose="--verbose"
+	    ;;
+	--redo-input)
+	    rerun="1"
+	    shift
+	    ;;
 	--label)
 	    addlabel=$2
 	    shift
 	    ;;
+	--use-templates)
+	    templates="semiparam"
+	    opts="$opts $1"
+	    ;;
+        --mix-templates)
+            mix="--mix-templates"
+            ;;
 	--bkg-shapes)
 	    shapes=$(echo $(basename $2 | sed 's%.json%%'))
 	    opts="$opts $1"
@@ -69,6 +86,7 @@ fi
 
 label="$shapes"
 [[ -n $covariance ]] && label="${label}_${covariance}"
+[[ -n $templates ]] && label="${label}_${templates}"
 [[ -n $bias ]] && label="${label}_${bias}"
 [[ -n $templates ]] && label="${label}_${templates}"
 [[ -n $addlabel ]] && label="${label}_${addlabel}"
@@ -76,6 +94,8 @@ label="$shapes"
 input=${version}_${fitname}_final_ws.root
 input_log=${version}_${fitname}_final_ws.log
 treesdir=~musella/public/workspace/exo/
+ls $treesdir/$version
+[[ ! -d $treesdir/$version ]] && treesdir=$PWD
 workdir=${version}_${fitname}_${label}_lumi_${lumi}
 
 if [[ -n $bias ]]; then
@@ -88,22 +108,22 @@ mkdir $workdir
 
 mkdir $www/$version
 
-if [[ ! -f $input ]]; then
+if [[ -n $rerun  ]] || [[ ! -f $input ]]; then
     echo "**************************************************************************************************************************"
     echo "creating $input"
     echo "**************************************************************************************************************************"
     subset=$fitname
     if [[ "$fitname" == "2D" ]]; then
-	subset="2D,singlePho"
-	mix="--mix-templates"
+        subset="2D,singlePho"
+        mix="--mix-templates"
     fi
-    ./templates_maker.py --load templates_maker.json,templates_maker_fits.json --only-subset $subset $mix --input-dir $treesdir/$version -o $input 2>&1 | tee $input_log
+    ./templates_maker.py --load templates_maker.json,templates_maker_fits.json --only-subset $subset $mix --input-dir $treesdir/$version -o $input $verbose 2>&1 | tee $input_log
     echo "**************************************************************************************************************************"
-elif [[ -n$mix ]]; then
+elif [[ -n $mix ]]; then
     echo "**************************************************************************************************************************"
     echo "running event mixing"
-    echo "**************************************************************************************************************************"
-    ./templates_maker.py --read-ws $input $mix 2>&1 | tee mix_$input_log
+    echo "**************************************************************************************************************************"    
+    ./templates_maker.py --load templates_maker_fits.json --read-ws $input $mix $verbose 2>&1 | tee mix_$input_log
     echo "**************************************************************************************************************************"
 fi
 	    

@@ -19,8 +19,8 @@ class DiPhotonAnalysis(object):
     def __init__(self,dumperTemplate,
                  massCut=500.,ptLead=200.,ptSublead=200.,scaling=False,computeMVA=False,
                  genIsoDefinition=("userFloat('genIso')",10.),
-                 dataTriggers=["HLT_DoublePhoton85*","HLT_Photon250_NoHE*"],
-                 mcTriggers=["HLT_DoublePhoton85*","HLT_Photon250_NoHE*"],
+                 dataTriggers=["HLT_DoublePhoton60*","HLT_DoublePhoton85*","HLT_Photon250_NoHE*"],
+                 mcTriggers=["HLT_DoublePhoton60*","HLT_DoublePhoton85*","HLT_Photon250_NoHE*"],
                  askTriggerOnMc=False,sortTemplate=False,singlePhoDumperTemplate=False):
         
         super(DiPhotonAnalysis,self).__init__()
@@ -40,6 +40,11 @@ class DiPhotonAnalysis(object):
         self.photonSelections = []
         self.splitByIso = []
         self.splitDumpers = []
+
+        self.keepFFOnly = False
+        self.keepPFOnly = False
+        self.keepPOnly  = False
+        self.keepFOnly  = False
         
         if sortTemplate:
             self.sortTemplate = sortTemplate.clone()
@@ -69,8 +74,8 @@ class DiPhotonAnalysis(object):
                            VarParsing.VarParsing.multiplicity.singleton, # singleton or list
                            VarParsing.VarParsing.varType.bool,          # string, int, or float
                            "dumpConfig")
-        jobConfig(process)
-
+        jobConfig.parse()
+        
         trg = None
         splitByIso = False
         print jobConfig.processId
@@ -78,7 +83,7 @@ class DiPhotonAnalysis(object):
         if jobConfig.processType == "data":
             ## data and MC menus may not be identical
             trg = self.getHltFilter(process)
-            trg.HLTPaths=self.dataTriggeres            
+            trg.HLTPaths=self.dataTriggers            
         
         else:
             if "GGJet" in jobConfig.processId or "DiPhoton" in jobConfig.processId or "RSGravToGG" in jobConfig.processId or jobConfig.processType == "signal":
@@ -101,6 +106,9 @@ class DiPhotonAnalysis(object):
                 continue
             self.addPath(process,dumper,trg)
         
+        print jobConfig.parsed
+        jobConfig(process)
+
         if jobConfig.dumpConfig:
             print 
             print "------------------------------------------------------------------------------------"
@@ -166,7 +174,8 @@ class DiPhotonAnalysis(object):
         process.options = cms.untracked.PSet( allowUnscheduled = cms.untracked.bool(True) )
 
         if jobConfig.dumpPython != "":
-            pyout = open(jobConfig.dumpPython,"w+")
+            from gzip import open
+            pyout = open("%s.gz" % jobConfig.dumpPython,"w+")
             pyout.write( process.dumpPython() )
             pyout.close()
         
@@ -236,16 +245,30 @@ class DiPhotonAnalysis(object):
             dumperTemplate = self.dumperTemplate
 
         diphoColl  = "%sDiPhotons" % label
-        dumperName = label
+        postSelect = None
+        if self.keepFFOnly:
+            postSelect = "leadingPhoton.genMatchType != 1 && subLeadingPhoton.genMatchType != 1"
+        elif self.keepPFOnly:
+            postSelect = "(leadingPhoton.genMatchType != 1) != (subLeadingPhoton.genMatchType != 1 )"
+            
+        sortDiPhoColl = "sorted"+diphoColl if postSelect else diphoColl
         
+        
+        dumperName = label
         ## register diphoton selector and associated dumper
         setattr(process,"all"+diphoColl,selectorTemplate.clone())
         if selectN:
-            setattr(process,diphoColl,self.sortTemplate.clone(src=cms.InputTag("all"+diphoColl),
-                                                              maxNumber=cms.uint32(selectN),
-                                                              ))
+            setattr(process,sortDiPhoColl,self.sortTemplate.clone(src=cms.InputTag("all"+diphoColl),
+                                                                  maxNumber=cms.uint32(selectN),
+                                                                  ))
         else:
-            setattr(process,diphoColl,self.sortTemplate.clone(src=cms.InputTag("all"+diphoColl)))            
+            setattr(process,sortDiPhoColl,self.sortTemplate.clone(src=cms.InputTag("all"+diphoColl)))
+            
+        if postSelect:
+            setattr(process,diphoColl,simpleTemplate.clone(src=cms.InputTag(sortDiPhoColl),
+                                                           cut=cms.string(postSelect))
+                                                           )
+            
         setattr(process,dumperName,dumperTemplate.clone(src=cms.InputTag(diphoColl), 
                                                         dumpTrees=cms.untracked.bool(dumpTrees),
                                                         dumpWorkspace=cms.untracked.bool(dumpWorkspace),
@@ -353,7 +376,7 @@ class DiPhotonAnalysis(object):
                                         )
         
         if self.computeMVA:
-            sys.exit("MVA computation not supported for signle photon selection. Plase do something about it.",-1)
+            sys.exit("MVA computation not supported for single photon selection. Please do something about it.",-1)
             
         self.photonSelections += self.addPhoSelection(process,"kin",template,dumperTemplate,
                                                       dumpTrees=dumpTrees,dumpWorkspace=dumpWorkspace,dumpHistos=dumpHistos,splitByIso=splitByIso,selectN=False)
@@ -392,12 +415,26 @@ class DiPhotonAnalysis(object):
             
         phoColl  = "%sPhotons" % label
         dumperName = "%sSinglePho" % label
+        postSelect = None
+        if self.keepFOnly:
+            postSelect = "genMatchType != 1"
+        elif self.keepPOnly:
+            postSelect = "genMatchType == 1"
+            
+        sortPhoColl = "sorted"+phoColl if postSelect else phoColl
         
         ## register photon selector and associated dumper
         if selectN:
-            sys.exit("selectN not supported for single photon selection. Plase do something about it.",-1)
+            sys.exit("selectN not supported for single photon selection. Please do something about it.",-1)
         else:
-            setattr(process,phoColl,selectorTemplate.clone())
+            setattr(process,sortPhoColl,selectorTemplate.clone())
+
+        if postSelect:
+            setattr(process,phoColl,singlePhoSimpleTemplate.clone(src=cms.InputTag(sortPhoColl),
+                                                                  cut=cms.string(postSelect))
+                    )
+        
+
         setattr(process,dumperName,dumperTemplate.clone(src=cms.InputTag(phoColl), 
                                                         dumpTrees=cms.untracked.bool(dumpTrees),
                                                         dumpWorkspace=cms.untracked.bool(dumpWorkspace),
@@ -485,29 +522,35 @@ class DiPhotonAnalysis(object):
         return modules
 
     # ----------------------------------------------------------------------------------------------------------------------
-    def addTriggeredDumpers(self,process,dumperTemplate=None,splitByIso=False):
+    def addTriggeredDumpers(self,process,splitByIso=False):
         
         for coll,dumper in self.analysisSelections:
             if not self.useDumper(process,dumper,splitByIso):
                 continue
-            self.addTriggeredDumper(process,coll,dumperTemplate)
+            self.addTriggeredDumper(process,coll)
+
+        for coll,dumper in self.photonSelections:
+            if not self.useDumper(process,dumper,splitByIso):
+                continue
+            self.addTriggeredDumper(process,coll,isSingle=True)
             
-        if len(self.photonSelections) > 0:
-            sys.exit("Triggered dumpers not supported for single photon selection. Plase do something about it.",-1)
+        ### if len(self.photonSelections) > 0:
+        ###     sys.exit("Triggered dumpers not supported for single photon selection. Please do something about it.",-1)
             
     # ----------------------------------------------------------------------------------------------------------------------
-    def addTriggeredDumper(self,process,label,dumperTemplate=None):
+    def addTriggeredDumper(self,process,label,dumperTemplate=None,isSingle=False):
         if not dumperTemplate:
-            dumperTemplate = self.dumperTemplate
+            dumperTemplate = self.dumperTemplate if not isSingle else self.singlePhoDumperTemplate
         
-        if not "DiPhotons" in label:
-            diphoColl  = "%sDiPhotons" % label
+        lab = "DiPhotons" if not isSingle else "Photons"
+        if not lab in label:
+            coll  = "%s%s" % (label,lab)
         else:
-            diphoColl  = label
+            coll  = label
         dumperName = "%sTrg" % label
         
         trg = self.getHltFilter(process)
-        setattr(process,dumperName,dumperTemplate.clone(src=cms.InputTag(diphoColl), 
+        setattr(process,dumperName,dumperTemplate.clone(src=cms.InputTag(coll), 
                                                         dumpTrees=cms.untracked.bool(False),
                                                         dumpWorkspace=cms.untracked.bool(False),
                                                         dumpHistos=cms.untracked.bool(True),
@@ -515,7 +558,7 @@ class DiPhotonAnalysis(object):
                 )
                 
         self.addPath(process,dumperName,trg)
-                
+        
     
     # ----------------------------------------------------------------------------------------------------------------------
     def addPath(self,process,module,trg):

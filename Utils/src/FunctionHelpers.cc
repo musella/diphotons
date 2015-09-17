@@ -1,5 +1,7 @@
 #include "../interface/FunctionHelpers.h"
 #include "TTreeFormula.h"
+#include "TFitResult.h"
+#include "TCanvas.h"
 
 using namespace std;
 
@@ -129,8 +131,9 @@ WrapDecorr::~WrapDecorr()
 }
 
 // ------------------------------------------------------------------------------------------------
-SliceFitter::SliceFitter( TH2 *histo, TString formula, float ymin, float ymax, bool normalize, bool yonly )
+SliceFitter::SliceFitter( TH2 *histo, TString formula, float ymin, float ymax, float fmin, float fmax, bool normalize, bool yonly, int sliding )
 {
+    plots_ = new TList();
     yonly_ = yonly;
     hist_ = ( TH1 * )histo->ProjectionX()->Clone();
     hist_->SetDirectory( 0 );
@@ -138,39 +141,62 @@ SliceFitter::SliceFitter( TH2 *histo, TString formula, float ymin, float ymax, b
     ymax_ = ymax;
     xmin_ = histo->GetXaxis()->GetXmin();
     xmax_ = histo->GetXaxis()->GetXmax();
+    sliding_ = sliding;
     if( normalize ) {
         hist_->Scale( 1. / hist_->Integral() );
     }
-    for( int jj = 0; jj < hist_->GetNbinsX() + 1; ++jj ) {
-        float w = hist_->GetBinWidth( jj );
-        hist_->SetBinContent( jj, hist_->GetBinContent( jj ) / w );
-        hist_->SetBinError( jj, hist_->GetBinError( jj ) / w );
-    }
-    for( int ii = 0; ii < histo->GetNbinsX() + 1; ++ii ) {
-        TH1 *proj = histo->ProjectionY( Form( "%s_%d", histo->GetName(), ii ), ii, ii );
+    // for( int jj = 0; jj < hist_->GetNbinsX() + 1; ++jj ) {
+    //     float w = hist_->GetBinWidth( jj );
+    //     hist_->SetBinContent( jj, hist_->GetBinContent( jj ) / w );
+    //     hist_->SetBinError( jj, hist_->GetBinError( jj ) / w );
+    // }
+    for( int ii = 1; ii < histo->GetNbinsX() + 1; ++ii ) {
+        int imin = ii, imax = ii;
+        if( sliding_ > 0 ) {
+            imin = ii - sliding_;
+            imax = ii + sliding_;
+            while( imin <  1 ) { 
+                ++imin; ++imax;
+            }
+            while( imax > histo->GetNbinsX() ) {
+                --imin, --imax;
+            }
+            imin = max(1,imin);
+            imax = min(histo->GetNbinsX(), imax);
+            /// cout << "sliding " << imin << " " << ii << " " << imax << endl;
+        }
+        TH1 *proj = histo->ProjectionY( Form( "%s_%d", histo->GetName(), ii ), imin, imax );
 
         proj->Scale( 1. / proj->Integral() );
 
-        for( int jj = 0; jj < proj->GetNbinsX() + 1; ++jj ) {
-            float w = proj->GetBinWidth( jj );
-            proj->SetBinContent( jj, proj->GetBinContent( jj ) / w );
-            proj->SetBinError( jj, proj->GetBinError( jj ) / w );
-        }
-
-        /// cout << proj->Integral() << endl;
-        /// proj->Print();
+        // for( int jj = 0; jj < proj->GetNbinsX() + 1; ++jj ) {
+        //     float w = proj->GetBinWidth( jj );
+        //     proj->SetBinContent( jj, proj->GetBinContent( jj ) / w );
+        //     proj->SetBinError( jj, proj->GetBinError( jj ) / w );
+        // }
 
         sliceFits_.push_back( TF1( Form( "%s_%d", histo->GetName(), ii ), formula, ymin, ymax ) );
-        proj->Fit( &sliceFits_.back(), "QR" );
+        proj->Fit( &sliceFits_.back(), "Q+", "", fmin, fmax );
+        /// cout << sliceFits_.back().GetExpFormula("P") << " " << sliceFits_.back().Integral(ymin,ymax) << endl;
+        integrals_.push_back( sliceFits_.back().Integral(ymin_,ymax_) );
 
+        TCanvas * canv = new TCanvas(proj->GetName(),proj->GetName());
+        canv->cd();
+        proj->DrawCopy();
+        //// canv->SaveAs(Form("%s.png",proj->GetName()));
+        //// canv->SaveAs(Form("%s.root",proj->GetName()));
+        plots_->Add(canv);
+        
         delete proj;
+        /// delete canv;
     }
+    cout << this << " " << plots_ << endl;
 }
 
 // ------------------------------------------------------------------------------------------------
 const TF1 &SliceFitter::getSlice( double x )
 {
-    int bin = hist_->FindBin( x );
+    int bin = hist_->FindBin( x )-1;
     return sliceFits_[bin];
 }
 
@@ -178,16 +204,28 @@ const TF1 &SliceFitter::getSlice( double x )
 double SliceFitter::operator()( double *x, double *p )
 {
     if( x[0] < xmin_ || x[0] > xmax_ || x[1] < ymin_ || x[1] > ymax_ ) { return 0.; }
-    int bin = hist_->FindBin( x[0] );
+    int bin = hist_->FindBin( x[0] ) -1;
     if( bin < ( int )sliceFits_.size() ) {
-        return ( yonly_ ? 1. : hist_->GetBinContent( bin ) ) * std::max( 0., sliceFits_[bin].Eval( x[1] ) );
+        return ( yonly_ ? 1. : hist_->GetBinContent( bin ) ) * std::max( 0., sliceFits_[bin].Eval( x[1] )/integrals_[bin] );
     }
     return 0.;
+}
+
+
+// ------------------------------------------------------------------------------------------------
+TList * SliceFitter::getPlots()
+{
+    TList * ret = plots_;
+    plots_ = 0;
+    cout << this << " " << ret << " " << plots_ << endl;
+    return ret;
 }
 
 // ------------------------------------------------------------------------------------------------
 SliceFitter::~SliceFitter()
 {
+    cout << this << " being destroyed...." << endl;
+    if( plots_ ) { delete plots_; }
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -201,8 +239,8 @@ TF2 *SliceFitter::asTF2( TString name )
 void fillReweight( TString xvar, TString yvar, TString sel, TF2 &wei, TTree &in, TTree &out )
 {
     float rewei, xr, yr, sr;
-    TTreeFormula x( "x", xvar, &in );
-    TTreeFormula y( "x", yvar, &in );
+    TTreeFormula x( "xv", xvar, &in );
+    TTreeFormula y( "xv", yvar, &in );
     TTreeFormula w( "w", sel, &in );
 
     out.Branch( "rewei", &rewei, "rewei/F" );

@@ -1,0 +1,18 @@
+{
+
+    "_processes" : {
+    	    "Data" : [ "/DoubleEG" 
+	    ]
+	    },
+    "processes" : {
+    	    "Data" : [ "/SingleElectron" 
+	    ],
+
+	    "DYJetsToLL_M-50_TuneCUETP8M1-amcatnloFXFX-pythia8" : [
+	    				["/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8",{"args":["maxEvents=5000000"]}]
+		]
+
+	    },
+
+    "cmdLine" : "campaign=EXOSpring15_v825ns  selection=electron massCut=60 ptLead=30 ptSublead=25 lumiMask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Cert_246908-255031_13TeV_PromptReco_Collisions15_25ns_JSON_v2.txt"
+}

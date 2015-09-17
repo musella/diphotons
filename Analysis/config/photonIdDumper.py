@@ -54,7 +54,8 @@ variables=["pt := pt","energy := energy","eta := eta","phi := phi",
            
            "etaWidth := superCluster.etaWidth","phiWidth := superCluster.phiWidth",
            "covIphiIphi := sipip",
-           "chgIsoWrtWorstVtx := pfChgIsoWrtWorstVtx03","phoIso03 := pfPhoIso03",
+           "chgIsoWrtWorstVtx := pfChgIsoWrtWorstVtx03",
+           "phoIso03 := pfPhoIso03",
            "chgIsoWrtVtx0 := pfChgIso03WrtVtx0",
            "hcalTowerSumEtConeDR03 := hcalTowerSumEtConeDR03",
            "trkSumPtHollowConeDR03 := trkSumPtHollowConeDR03",
@@ -62,7 +63,7 @@ variables=["pt := pt","energy := energy","eta := eta","phi := phi",
            
            ## "idMVA := phoIdMvaWrtChosenVtx",
            "genIso := userFloat('genIso')", 
-           "etrue := ? hasMatchedGenPhoton ? matchedGenPhoton.energy : 0",
+           ## "etrue := ? hasMatchedGenPhoton ? matchedGenPhoton.energy : 0",
            "sigmaIetaIeta := sigmaIetaIeta",
            "r9 := r9",
            "esEffSigmaRR := esEffSigmaRR",
@@ -73,23 +74,23 @@ variables=["pt := pt","energy := energy","eta := eta","phi := phi",
            "egNeutralHadronIso := egNeutralHadronIso",
            "egPhotonIso := egPhotonIso" ,
            
-           "rndConeDeltaPhi := userFloat('rnd03_rndcone_deltaphi')",
-           "fprRndConeDeltaPhi := userFloat('fprRnd03_rndcone_deltaphi')",
+           ## "rndConeDeltaPhi := userFloat('rnd03_rndcone_deltaphi')",
+           ## "fprRndConeDeltaPhi := userFloat('fprRnd03_rndcone_deltaphi')",
            
-           "rndConeChIso := extraChgIsoWrtVtx0('rnd03')",
-           "stdChIso := extraChgIsoWrtVtx0('std03')",
+           ## "rndConeChIso := extraChgIsoWrtVtx0('rnd03')",
+           ## "stdChIso := extraChgIsoWrtVtx0('std03')",
            
-           "fprRndConeChIso := extraChgIsoWrtVtx0('fprRnd03')",
-           "fprChIso := extraChgIsoWrtVtx0('fpr03')",
+           ## "fprRndConeChIso := extraChgIsoWrtVtx0('fprRnd03')",
+           ## "fprChIso := extraChgIsoWrtVtx0('fpr03')",
                       
-           "rndConePhoIso := extraPhoIso('rnd03')",
-           "stdPhoIso := extraPhoIso('std03')",
+           ## "rndConePhoIso := extraPhoIso('rnd03')",
+           ## "stdPhoIso := extraPhoIso('std03')",
            
-           "fprRndConePhoIso := extraPhoIso('fprRnd03')",
-           "fprPhoIso := extraPhoIso('fpr03')",
+           ## "fprRndConePhoIso := extraPhoIso('fprRnd03')",
+           ## "fprPhoIso := extraPhoIso('fpr03')",
            
-           "fprRndNoMapConePhoIso := extraPhoIso('fprRndNoMap03')",
-           "fprNoMapPhoIso := extraPhoIso('fprNoMap03')",
+           ## "fprRndNoMapConePhoIso := extraPhoIso('fprRndNoMap03')",
+           ## "fprNoMapPhoIso := extraPhoIso('fprNoMap03')",
            ]
 
 ## list of histograms to be plotted
@@ -106,7 +107,7 @@ cfgTools.addCategory(process.photonDumper,
                      "Reject",
                      "   abs(superCluster.eta)>=1.4442&&abs(superCluster.eta)<=1.566 "
                      "|| abs(superCluster.eta)>=2.5 "
-                     "|| pt<100",
+                     "|| pt<75",
                      -1 ## if nSubcat is -1 do not store anythings
                      )
 

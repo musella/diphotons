@@ -14,15 +14,22 @@
     "#" : "  fromat is <sample-name>:[[input-file][/file-folder]] order irrelevant                                                               ",
 	
     "#" : "data to be fit                                                                                                       ",
-    "data" : [
+    "_data" : [
                "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)sGenIso",
                "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)sNonGenIso",
                "QCD_HT_100toInf_13TeV:output.root/%(sel)s",
                "GJets_HT_100toInf_13TeV:output.root/%(sel)s"            
              ],
 
+    "data" : [
+               "Data_13TeV:output.root/%(sel)s"
+             ],
+
     "#" : "data used for template making",
     "templates" : [
+               "Data_13TeV:output.root/%(sel)s"
+             ],
+    "_templates" : [
                "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)s",
                "QCD_HT_100toInf_13TeV:output.root/%(sel)s",
                "GJets_HT_100toInf_13TeV:output.root/%(sel)s"            
@@ -30,6 +37,13 @@
              
      "#" : "mc dataset",
      "mc" : [
+               "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)sGenIso",
+               "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)sNonGenIso",
+               "QCD_Pt_30toInf_13TeV:output.root/%(sel)s",
+               "GJets_HT_100toInf_13TeV:output.root/%(sel)s"            
+            ],
+
+     "_mc" : [
              "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)sGenIso",
                "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)sNonGenIso",
                "QCD_HT_100toInf_13TeV:output.root/%(sel)s",
@@ -37,7 +51,27 @@
             ],
 
      "#" : "mc dataset",
-      "signals" : {
+      "signals" : { 
+      "grav_02_3000" : [ "RSGravToGG_kMpl_02_M_3000_TuneCUEP8M1_13TeV_pythia8_13TeV:output.root/%(sel)sGenIso",
+      "RSGravToGG_kMpl_02_M_3000_TuneCUEP8M1_13TeV_pythia8_13TeV:output.root/%(sel)sNonGenIso"
+      	]
+      
+      },
+      "_signals" : { 
+      "grav_001_2000": [ "RSGravToGG_kMpl_001_M_2000_13TeV:output.root/%(sel)s"],
+      "grav_001_3000": [ "RSGravToGG_kMpl_001_M_3000_13TeV:output.root/%(sel)s"],
+      "grav_001_500" : [ "RSGravToGG_kMpl_001_M_500_13TeV:output.root/%(sel)s"	],
+      "grav_01_1000" : [ "RSGravToGG_kMpl_01_M_1000_13TeV:output.root/%(sel)s"	],
+      "grav_01_3500" : [ "RSGravToGG_kMpl_01_M_3500_13TeV:output.root/%(sel)s"	],
+      "grav_01_4000" : [ "RSGravToGG_kMpl_01_M_4000_13TeV:output.root/%(sel)s"	],
+      "grav_01_5000" : [ "RSGravToGG_kMpl_01_M_5000_13TeV:output.root/%(sel)s"	],
+      "grav_01_7000" : [ "RSGravToGG_kMpl_01_M_7000_13TeV:output.root/%(sel)s"	],
+      "grav_02_1000" : [ "RSGravToGG_kMpl_02_M_1000_13TeV:output.root/%(sel)s"	],
+      "grav_02_4000" : [ "RSGravToGG_kMpl_02_M_4000_13TeV:output.root/%(sel)s"	],
+      "grav_02_5000" : [ "RSGravToGG_kMpl_02_M_5000_13TeV:output.root/%(sel)s" ]
+      
+      },
+      "_signals" : {
      	       	 "grav_001_750" : ["RSGravToGG_kMpl_001_M_750_13TeV:output.root/%(sel)sGenIso",
 		       		  "RSGravToGG_kMpl_001_M_750_13TeV:output.root/%(sel)sNonGenIso"
 		       		  ],
@@ -87,7 +121,7 @@
     "#" : " %(cat)s is replaced with the category name                 ", 
     "treeName": "trees/%(sample)s_%(cat)s",
 
-    "preselection" : "leadChIso < 15. && subleadChIso < 15. && mass > 250",   "#" : "preselection cut applied to all trees",
+    "preselection" : "(leadChIso < 15. && subleadChIso < 15. && mass > 250)",   "#" : "preselection cut applied to all trees",
     "selection"    : "cicNoChIso",                              "#" : "nominal selection",
     
     "#" : "---------------------------------------------------------------------------------------------------------------------",
@@ -104,7 +138,7 @@
                "phoIsSB    := (((phoPhoIso - rho*phoPhoIsoEA) -0.002*phoPt < 2. ) && (phoIsEB    && (phoSigmaIeIe    > 0.012) ))||( ((phoPhoIso - rho*phoPhoIsoEA) -0.002*phoPt < 11. ) &&!phoIsEB    && (phoSigmaIeIe>0.035 )  )",
                "leadIsEB    := abs(leadScEta) < 1.5",
                "subleadIsEB := abs(subleadScEta) < 1.5",
-               "leadIsSB := (((leadPhoIso - rho*leadPhoIsoEA) -0.002*leadPt < 2. ) && (leadIsEB    && (leadSigmaIeIe    > 0.012) ))||( ((leadPhoIso - rho*leadPhoIsoEA) -0.002*leadPt < 11. ) &&!leadIsEB    && (leadSigmaIeIe>0.035     )  )",
+               "leadIsSB := (((leadPhoIso - rho*leadPhoIsoEA) -0.002*leadPt < 2. ) && (leadIsEB    && (leadSigmaIeIe    > 0.012) ))||( ((leadPhoIso - rho*leadPhoIsoEA) -0.002*leadPt < 11. ) &&!leadIsEB    && (leadSigmaIeIe>0.035    )  )",
                "subleadIsSB := ((((subleadPhoIso - rho*subleadPhoIsoEA) -0.002*subleadPt < 2. ) && (subleadIsEB    && (subleadSigmaIeIe    > 0.012) ))||( ((subleadPhoIso - rho*subleadPhoIsoEA) -0.002*subleadPt < 11. ) &&!subleadIsEB    && (subleadSigmaIeIe>0.035     )) )",
                "leadPrompt    := leadGenIso < 10. && leadMatchType == 1",
                "leadFake      := ! leadPrompt",

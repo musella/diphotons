@@ -26,6 +26,8 @@ public:
     virtual int getNcat() { return categoryYields_.size(); };
 
     virtual void clear() { categoryYields_.clear(); };
+    virtual void setMu(RooRealVar *mu) {};
+    virtual void setShape( int x ) {};
 
     virtual std::string name() const { return ""; };
 

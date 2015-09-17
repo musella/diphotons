@@ -15,8 +15,8 @@
 
 enum samp { iRS, iQCD, iGJets, iGG, nSamples };
 
-float xPos[nSamples+1] = {0.70,0.70,0.70,0.70};
-float yOff[nSamples+1] = {0,1,2,3};
+float xPos[nSamples+1] = {0.70,0.70,0.70,0.70,0.70};
+float yOff[nSamples+1] = {0,1,2,3,4};
 
 const Float_t _tsize   = 0.03;
 const Float_t _xoffset = 0.20;
@@ -142,7 +142,7 @@ public:
   void Draw(const int &rebin=1) {
     
     Color_t _sampleColor[nSamples];
-    _sampleColor[iRS  ]  = kBlue+1;
+    _sampleColor[iRS  ]   = kBlue+1;
     _sampleColor[iGJets ] = kViolet-9;
     _sampleColor[iGG    ] = kGreen-9;
     _sampleColor[iQCD   ] = kAzure-9;
@@ -157,13 +157,16 @@ public:
     
     THStack* hstack = new THStack();
     for (int i=0; i<nSamples; i++) {
-      
+
       // in case the user doesn't set it
       if( !_hist[i] ) continue;
       
       _hist[i]->Rebin(rebin);
       _hist[i]->SetLineColor(_lineColor[i]);
       
+      // rescale gg with k-factor=1.6
+      // if (i == iGG) _hist[i]->Scale(1.6);  // chiaraaaaaaaaaaa
+
       // signal gets overlaid
       if (i == iRS) continue;
       _hist[i]->SetFillColor(_sampleColor[i]);
@@ -173,6 +176,7 @@ public:
     }
     
     if(_hist[iRS]) _hist[iRS]->SetLineWidth(3);
+
     if(_data) _data->Rebin(rebin);
     if(_data) _data->SetLineColor  (kBlack);
     if(_data) _data->SetMarkerStyle(kFullCircle);
@@ -190,7 +194,7 @@ public:
       if(_hist[iRS]) _hist[iRS]->Draw("hist,same");
       if(_data) _data->Draw("ep,same");
     }
-    // hstack->SetTitle("CMS preliminary");  // chiara
+    hstack->SetTitle("CMS preliminary");  
     
     Float_t theMax = hstack->GetMaximum();
     Float_t theMin = hstack->GetMinimum();
@@ -201,7 +205,7 @@ public:
     }
     
     if (_data) {
-      
+            
       Float_t dataMax = GetMaximumIncludingErrors(_data);
       
       if (dataMax > theMax) theMax = dataMax;
@@ -229,27 +233,27 @@ public:
 	THStackAxisFonts(hstack, "y", TString::Format("entries / %.0f %s", _hist[iGG]->GetBinWidth(0),_units.Data()));
       }
     }
-    
+
     // total mess to get it nice, should be redone
     size_t j=0;
     TString rsLabel = " RS Graviton";
     if(_mass != 0) rsLabel.Form(" m_{G}=%d",_mass);
 
-    if(_data        ) { DrawLegend(xPos[j], 0.84 - yOff[j]*_yoffset, _data,         " data",    "lp"); j++; }
-    if(_hist[iRS   ]) { DrawLegend(xPos[j], 0.84 - yOff[j]*_yoffset, _hist[iRS  ],   rsLabel, "l" ); j++; }
-    if(_hist[iGG   ]) { DrawLegend(xPos[j], 0.84 - yOff[j]*_yoffset, _hist[iGG   ], " gg",      "f" ); j++; }
-    if(_hist[iGJets]) { DrawLegend(xPos[j], 0.84 - yOff[j]*_yoffset, _hist[iGJets], " g+jets",  "f" ); j++; }
-    if(_hist[iQCD])   { DrawLegend(xPos[j], 0.84 - yOff[j]*_yoffset, _hist[iQCD],   " QCD",  "f" ); j++; }
+    if(_data        ) { DrawLegend(xPos[j], 0.75 - yOff[j]*_yoffset, _data,         " data",    "lp"); j++; }
+    if(_hist[iRS   ]) { DrawLegend(xPos[j], 0.75 - yOff[j]*_yoffset, _hist[iRS  ],   rsLabel, "l" ); j++; }
+    if(_hist[iGG   ]) { DrawLegend(xPos[j], 0.75 - yOff[j]*_yoffset, _hist[iGG   ], " gg",      "f" ); j++; }
+    if(_hist[iGJets]) { DrawLegend(xPos[j], 0.75 - yOff[j]*_yoffset, _hist[iGJets], " g+jets",  "f" ); j++; }
+    if(_hist[iQCD])   { DrawLegend(xPos[j], 0.75 - yOff[j]*_yoffset, _hist[iQCD],   " QCD",  "f" ); j++; }
 
     // TLatex* luminosity = new TLatex(0.9, 0.815, TString::Format("L = %.1f pb^{-1}",_lumi));
-    TLatex* luminosity = new TLatex(0.9, 0.615, TString::Format("L = %.1f pb^{-1}",_lumi));
+    TLatex* luminosity = new TLatex(0.86, 0.515, TString::Format("L = %.1f pb^{-1}",_lumi));
     luminosity->SetNDC();
     luminosity->SetTextAlign(32);
     luminosity->SetTextFont(42);
     luminosity->SetTextSize(_tsize);
     luminosity->Draw("same");
   }
-  
+
   void setLumi(const float &l) { _lumi = l; }
   void setLabel(const TString &s) { _xLabel = s; }
   void setUnits(const TString &s) { _units = s; }

@@ -38,6 +38,7 @@ class Load:
             
         if option.dest == "__opts__":
             dest = parser.values
+            appendlst = False
         else:
             dest = getattr(parser.values,option.dest)
             

@@ -12,12 +12,13 @@
 	      
 	     ],
 
-    "bkg" : [
+    "_bkg" : [
 	      ["jetjet","j j",
 	      [["colors","myColorC1"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",1],["legopt","f"],["SetFillColor","myColorC3tr"]],
-	      { "QCD_HT_100toInf_13TeV:output.root/%(sel)s" : [] }
-	      ],
-	      
+	      { "QCD_Pt_30toInf_13TeV:output.root/%(sel)s" : [] }
+	      ]
+    ],	      
+    "bkg" : [
 	      ["gjet","#gamma j",
 	      [["colors","myColorA1"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",1],["legopt","f"],["SetFillColor","myColorA3tr"]],
 	      { "GJets_HT_100toInf_13TeV:output.root/%(sel)s" : [] }

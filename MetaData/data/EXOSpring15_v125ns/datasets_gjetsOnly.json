@@ -1,0 +1,1583 @@
+{
+    "/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/musella-EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2-a7f089b9a439c245189cf8643d38aeca/USER": {
+        "files": [
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_1.root", 
+                "nevents": 49882, 
+                "weights": 49882.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_10.root", 
+                "nevents": 49989, 
+                "weights": 49989.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_11.root", 
+                "nevents": 4652, 
+                "weights": 4652.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_12.root", 
+                "nevents": 840, 
+                "weights": 840.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_13.root", 
+                "nevents": 6990, 
+                "weights": 6990.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_14.root", 
+                "nevents": 49700, 
+                "weights": 49700.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_15.root", 
+                "nevents": 49989, 
+                "weights": 49989.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_16.root", 
+                "nevents": 9992, 
+                "weights": 9992.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_17.root", 
+                "nevents": 15596, 
+                "weights": 15596.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_18.root", 
+                "nevents": 49329, 
+                "weights": 49329.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_19.root", 
+                "nevents": 49729, 
+                "weights": 49729.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_2.root", 
+                "nevents": 49830, 
+                "weights": 49830.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_20.root", 
+                "nevents": 49926, 
+                "weights": 49926.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_21.root", 
+                "nevents": 49574, 
+                "weights": 49574.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_22.root", 
+                "nevents": 34148, 
+                "weights": 34148.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_23.root", 
+                "nevents": 49506, 
+                "weights": 49506.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_24.root", 
+                "nevents": 49982, 
+                "weights": 49982.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_25.root", 
+                "nevents": 49548, 
+                "weights": 49548.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_26.root", 
+                "nevents": 22304, 
+                "weights": 22304.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_27.root", 
+                "nevents": 24823, 
+                "weights": 24823.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_28.root", 
+                "nevents": 49326, 
+                "weights": 49326.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_29.root", 
+                "nevents": 37264, 
+                "weights": 37264.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_3.root", 
+                "nevents": 49702, 
+                "weights": 49702.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_30.root", 
+                "nevents": 49538, 
+                "weights": 49538.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_31.root", 
+                "nevents": 49993, 
+                "weights": 49993.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_32.root", 
+                "nevents": 49380, 
+                "weights": 49380.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_33.root", 
+                "nevents": 49979, 
+                "weights": 49979.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_34.root", 
+                "nevents": 49327, 
+                "weights": 49327.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_35.root", 
+                "nevents": 49715, 
+                "weights": 49715.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_36.root", 
+                "nevents": 49774, 
+                "weights": 49774.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_37.root", 
+                "nevents": 49617, 
+                "weights": 49617.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_38.root", 
+                "nevents": 11191, 
+                "weights": 11191.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_39.root", 
+                "nevents": 49981, 
+                "weights": 49981.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_4.root", 
+                "nevents": 49508, 
+                "weights": 49508.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_40.root", 
+                "nevents": 16848, 
+                "weights": 16848.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_41.root", 
+                "nevents": 49981, 
+                "weights": 49981.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_42.root", 
+                "nevents": 49714, 
+                "weights": 49714.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_43.root", 
+                "nevents": 49691, 
+                "weights": 49691.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_44.root", 
+                "nevents": 49534, 
+                "weights": 49534.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_45.root", 
+                "nevents": 49501, 
+                "weights": 49501.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_46.root", 
+                "nevents": 49281, 
+                "weights": 49281.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_47.root", 
+                "nevents": 49474, 
+                "weights": 49474.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_48.root", 
+                "nevents": 49813, 
+                "weights": 49813.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_49.root", 
+                "nevents": 49682, 
+                "weights": 49682.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_5.root", 
+                "nevents": 49986, 
+                "weights": 49986.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_50.root", 
+                "nevents": 49899, 
+                "weights": 49899.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_51.root", 
+                "nevents": 18271, 
+                "weights": 18271.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_52.root", 
+                "nevents": 49975, 
+                "weights": 49975.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_53.root", 
+                "nevents": 4061, 
+                "weights": 4061.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_54.root", 
+                "nevents": 49926, 
+                "weights": 49926.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_55.root", 
+                "nevents": 10517, 
+                "weights": 10517.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_56.root", 
+                "nevents": 49969, 
+                "weights": 49969.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_57.root", 
+                "nevents": 49812, 
+                "weights": 49812.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_58.root", 
+                "nevents": 25973, 
+                "weights": 25973.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_59.root", 
+                "nevents": 26355, 
+                "weights": 26355.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_6.root", 
+                "nevents": 49876, 
+                "weights": 49876.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_7.root", 
+                "nevents": 23415, 
+                "weights": 23415.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_8.root", 
+                "nevents": 49993, 
+                "weights": 49993.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_9.root", 
+                "nevents": 21025, 
+                "weights": 21025.0
+            }
+        ]
+    },
+    "/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/musella-EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2-a7f089b9a439c245189cf8643d38aeca/USER": {
+        "files": [
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_1.root", 
+                "nevents": 8735, 
+                "weights": 8735.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_10.root", 
+                "nevents": 38282, 
+                "weights": 38282.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_100.root", 
+                "nevents": 49544, 
+                "weights": 49544.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_101.root", 
+                "nevents": 49573, 
+                "weights": 49573.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_102.root", 
+                "nevents": 37637, 
+                "weights": 37637.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_11.root", 
+                "nevents": 49735, 
+                "weights": 49735.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_12.root", 
+                "nevents": 682, 
+                "weights": 682.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_13.root", 
+                "nevents": 49936, 
+                "weights": 49936.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_14.root", 
+                "nevents": 49999, 
+                "weights": 49999.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_15.root", 
+                "nevents": 49858, 
+                "weights": 49858.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_16.root", 
+                "nevents": 49975, 
+                "weights": 49975.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_17.root", 
+                "nevents": 49627, 
+                "weights": 49627.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_18.root", 
+                "nevents": 37480, 
+                "weights": 37480.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_19.root", 
+                "nevents": 49839, 
+                "weights": 49839.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_2.root", 
+                "nevents": 49960, 
+                "weights": 49960.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_20.root", 
+                "nevents": 49962, 
+                "weights": 49962.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_21.root", 
+                "nevents": 43336, 
+                "weights": 43336.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_22.root", 
+                "nevents": 49578, 
+                "weights": 49578.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_23.root", 
+                "nevents": 49643, 
+                "weights": 49643.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_24.root", 
+                "nevents": 49909, 
+                "weights": 49909.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_25.root", 
+                "nevents": 49918, 
+                "weights": 49918.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_26.root", 
+                "nevents": 49924, 
+                "weights": 49924.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_27.root", 
+                "nevents": 49789, 
+                "weights": 49789.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_28.root", 
+                "nevents": 49444, 
+                "weights": 49444.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_29.root", 
+                "nevents": 49600, 
+                "weights": 49600.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_3.root", 
+                "nevents": 10438, 
+                "weights": 10438.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_30.root", 
+                "nevents": 35683, 
+                "weights": 35683.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_31.root", 
+                "nevents": 49783, 
+                "weights": 49783.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_32.root", 
+                "nevents": 49888, 
+                "weights": 49888.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_33.root", 
+                "nevents": 49859, 
+                "weights": 49859.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_34.root", 
+                "nevents": 49890, 
+                "weights": 49890.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_35.root", 
+                "nevents": 49973, 
+                "weights": 49973.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_36.root", 
+                "nevents": 16111, 
+                "weights": 16111.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_37.root", 
+                "nevents": 12999, 
+                "weights": 12999.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_38.root", 
+                "nevents": 49879, 
+                "weights": 49879.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_39.root", 
+                "nevents": 49829, 
+                "weights": 49829.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_4.root", 
+                "nevents": 49945, 
+                "weights": 49945.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_40.root", 
+                "nevents": 49829, 
+                "weights": 49829.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_41.root", 
+                "nevents": 49852, 
+                "weights": 49852.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_42.root", 
+                "nevents": 49974, 
+                "weights": 49974.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_43.root", 
+                "nevents": 1895, 
+                "weights": 1895.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_44.root", 
+                "nevents": 5815, 
+                "weights": 5815.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_45.root", 
+                "nevents": 17530, 
+                "weights": 17530.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_46.root", 
+                "nevents": 1497, 
+                "weights": 1497.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_47.root", 
+                "nevents": 1494, 
+                "weights": 1494.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_48.root", 
+                "nevents": 49916, 
+                "weights": 49916.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_49.root", 
+                "nevents": 49434, 
+                "weights": 49434.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_5.root", 
+                "nevents": 805, 
+                "weights": 805.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_50.root", 
+                "nevents": 49708, 
+                "weights": 49708.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_51.root", 
+                "nevents": 49391, 
+                "weights": 49391.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_52.root", 
+                "nevents": 1414, 
+                "weights": 1414.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_53.root", 
+                "nevents": 1441, 
+                "weights": 1441.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_54.root", 
+                "nevents": 28421, 
+                "weights": 28421.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_55.root", 
+                "nevents": 49609, 
+                "weights": 49609.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_56.root", 
+                "nevents": 49651, 
+                "weights": 49651.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_57.root", 
+                "nevents": 49963, 
+                "weights": 49963.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_58.root", 
+                "nevents": 49983, 
+                "weights": 49983.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_59.root", 
+                "nevents": 49978, 
+                "weights": 49978.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_6.root", 
+                "nevents": 49441, 
+                "weights": 49441.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_60.root", 
+                "nevents": 49342, 
+                "weights": 49342.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_61.root", 
+                "nevents": 49930, 
+                "weights": 49930.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_62.root", 
+                "nevents": 49943, 
+                "weights": 49943.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_63.root", 
+                "nevents": 49529, 
+                "weights": 49529.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_64.root", 
+                "nevents": 49937, 
+                "weights": 49937.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_65.root", 
+                "nevents": 49474, 
+                "weights": 49474.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_66.root", 
+                "nevents": 49413, 
+                "weights": 49413.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_67.root", 
+                "nevents": 49481, 
+                "weights": 49481.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_68.root", 
+                "nevents": 49363, 
+                "weights": 49363.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_69.root", 
+                "nevents": 49373, 
+                "weights": 49373.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_7.root", 
+                "nevents": 49322, 
+                "weights": 49322.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_70.root", 
+                "nevents": 33993, 
+                "weights": 33993.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_71.root", 
+                "nevents": 48874, 
+                "weights": 48874.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_72.root", 
+                "nevents": 49844, 
+                "weights": 49844.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_73.root", 
+                "nevents": 49936, 
+                "weights": 49936.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_74.root", 
+                "nevents": 10848, 
+                "weights": 10848.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_75.root", 
+                "nevents": 49947, 
+                "weights": 49947.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_76.root", 
+                "nevents": 49929, 
+                "weights": 49929.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_77.root", 
+                "nevents": 49879, 
+                "weights": 49879.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_78.root", 
+                "nevents": 49367, 
+                "weights": 49367.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_79.root", 
+                "nevents": 3593, 
+                "weights": 3593.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_8.root", 
+                "nevents": 49955, 
+                "weights": 49955.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_80.root", 
+                "nevents": 49601, 
+                "weights": 49601.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_81.root", 
+                "nevents": 49594, 
+                "weights": 49594.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_82.root", 
+                "nevents": 16496, 
+                "weights": 16496.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_83.root", 
+                "nevents": 30000, 
+                "weights": 30000.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_84.root", 
+                "nevents": 49663, 
+                "weights": 49663.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_85.root", 
+                "nevents": 49529, 
+                "weights": 49529.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_86.root", 
+                "nevents": 49802, 
+                "weights": 49802.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_87.root", 
+                "nevents": 49405, 
+                "weights": 49405.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_88.root", 
+                "nevents": 49659, 
+                "weights": 49659.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_89.root", 
+                "nevents": 49509, 
+                "weights": 49509.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_9.root", 
+                "nevents": 3034, 
+                "weights": 3034.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_90.root", 
+                "nevents": 49640, 
+                "weights": 49640.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_91.root", 
+                "nevents": 49556, 
+                "weights": 49556.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_92.root", 
+                "nevents": 42096, 
+                "weights": 42096.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_93.root", 
+                "nevents": 49820, 
+                "weights": 49820.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_94.root", 
+                "nevents": 49782, 
+                "weights": 49782.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_95.root", 
+                "nevents": 36410, 
+                "weights": 36410.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_96.root", 
+                "nevents": 15120, 
+                "weights": 15120.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_97.root", 
+                "nevents": 22239, 
+                "weights": 22239.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_98.root", 
+                "nevents": 49911, 
+                "weights": 49911.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/150716_210957/0000/diphotonsMicroAOD_99.root", 
+                "nevents": 49946, 
+                "weights": 49946.0
+            }
+        ]
+    },
+    "/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/musella-EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1-a7f089b9a439c245189cf8643d38aeca/USER": {
+        "files": [
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_1.root", 
+                "nevents": 30128, 
+                "weights": 30128.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_10.root", 
+                "nevents": 21342, 
+                "weights": 21342.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_11.root", 
+                "nevents": 260, 
+                "weights": 260.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_12.root", 
+                "nevents": 49733, 
+                "weights": 49733.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_13.root", 
+                "nevents": 6565, 
+                "weights": 6565.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_14.root", 
+                "nevents": 7869, 
+                "weights": 7869.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_15.root", 
+                "nevents": 49817, 
+                "weights": 49817.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_16.root", 
+                "nevents": 17126, 
+                "weights": 17126.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_17.root", 
+                "nevents": 2494, 
+                "weights": 2494.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_18.root", 
+                "nevents": 20492, 
+                "weights": 20492.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_19.root", 
+                "nevents": 49981, 
+                "weights": 49981.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_2.root", 
+                "nevents": 49974, 
+                "weights": 49974.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_20.root", 
+                "nevents": 6428, 
+                "weights": 6428.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_21.root", 
+                "nevents": 2221, 
+                "weights": 2221.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_22.root", 
+                "nevents": 15723, 
+                "weights": 15723.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_23.root", 
+                "nevents": 8236, 
+                "weights": 8236.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_24.root", 
+                "nevents": 49585, 
+                "weights": 49585.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_25.root", 
+                "nevents": 49897, 
+                "weights": 49897.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_26.root", 
+                "nevents": 49835, 
+                "weights": 49835.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_27.root", 
+                "nevents": 49496, 
+                "weights": 49496.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_28.root", 
+                "nevents": 49890, 
+                "weights": 49890.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_29.root", 
+                "nevents": 49211, 
+                "weights": 49211.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_3.root", 
+                "nevents": 831, 
+                "weights": 831.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_30.root", 
+                "nevents": 49636, 
+                "weights": 49636.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_31.root", 
+                "nevents": 49373, 
+                "weights": 49373.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_32.root", 
+                "nevents": 49732, 
+                "weights": 49732.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_33.root", 
+                "nevents": 49575, 
+                "weights": 49575.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_34.root", 
+                "nevents": 45862, 
+                "weights": 45862.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_35.root", 
+                "nevents": 49516, 
+                "weights": 49516.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_36.root", 
+                "nevents": 49650, 
+                "weights": 49650.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_37.root", 
+                "nevents": 49935, 
+                "weights": 49935.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_38.root", 
+                "nevents": 49920, 
+                "weights": 49920.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_4.root", 
+                "nevents": 3080, 
+                "weights": 3080.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_40.root", 
+                "nevents": 49573, 
+                "weights": 49573.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_41.root", 
+                "nevents": 49640, 
+                "weights": 49640.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_42.root", 
+                "nevents": 49963, 
+                "weights": 49963.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_43.root", 
+                "nevents": 49701, 
+                "weights": 49701.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_44.root", 
+                "nevents": 49935, 
+                "weights": 49935.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_45.root", 
+                "nevents": 20775, 
+                "weights": 20775.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_46.root", 
+                "nevents": 49462, 
+                "weights": 49462.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_47.root", 
+                "nevents": 34318, 
+                "weights": 34318.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_48.root", 
+                "nevents": 49589, 
+                "weights": 49589.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_49.root", 
+                "nevents": 49286, 
+                "weights": 49286.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_5.root", 
+                "nevents": 814, 
+                "weights": 814.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_50.root", 
+                "nevents": 49922, 
+                "weights": 49922.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_51.root", 
+                "nevents": 3521, 
+                "weights": 3521.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_52.root", 
+                "nevents": 49283, 
+                "weights": 49283.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_53.root", 
+                "nevents": 49945, 
+                "weights": 49945.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_54.root", 
+                "nevents": 49015, 
+                "weights": 49015.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_55.root", 
+                "nevents": 1528, 
+                "weights": 1528.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_56.root", 
+                "nevents": 49891, 
+                "weights": 49891.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_57.root", 
+                "nevents": 49890, 
+                "weights": 49890.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_58.root", 
+                "nevents": 28666, 
+                "weights": 28666.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_59.root", 
+                "nevents": 1488, 
+                "weights": 1488.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_6.root", 
+                "nevents": 4818, 
+                "weights": 4818.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_60.root", 
+                "nevents": 1258, 
+                "weights": 1258.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_61.root", 
+                "nevents": 7271, 
+                "weights": 7271.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_62.root", 
+                "nevents": 10625, 
+                "weights": 10625.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_63.root", 
+                "nevents": 676, 
+                "weights": 676.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_64.root", 
+                "nevents": 43372, 
+                "weights": 43372.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_65.root", 
+                "nevents": 36736, 
+                "weights": 36736.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_66.root", 
+                "nevents": 49794, 
+                "weights": 49794.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_67.root", 
+                "nevents": 22431, 
+                "weights": 22431.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_68.root", 
+                "nevents": 49926, 
+                "weights": 49926.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_69.root", 
+                "nevents": 34935, 
+                "weights": 34935.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_7.root", 
+                "nevents": 1515, 
+                "weights": 1515.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_70.root", 
+                "nevents": 49952, 
+                "weights": 49952.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_71.root", 
+                "nevents": 49982, 
+                "weights": 49982.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_72.root", 
+                "nevents": 32519, 
+                "weights": 32519.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_73.root", 
+                "nevents": 4391, 
+                "weights": 4391.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_74.root", 
+                "nevents": 2887, 
+                "weights": 2887.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_75.root", 
+                "nevents": 296, 
+                "weights": 296.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_76.root", 
+                "nevents": 49963, 
+                "weights": 49963.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_77.root", 
+                "nevents": 34817, 
+                "weights": 34817.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_78.root", 
+                "nevents": 4823, 
+                "weights": 4823.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_79.root", 
+                "nevents": 13487, 
+                "weights": 13487.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_8.root", 
+                "nevents": 956, 
+                "weights": 956.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211119/0000/diphotonsMicroAOD_9.root", 
+                "nevents": 49869, 
+                "weights": 49869.0
+            }
+        ]
+    },
+    "/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/musella-EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1-a7f089b9a439c245189cf8643d38aeca/USER": {
+        "files": [
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_1.root", 
+                "nevents": 1912, 
+                "weights": 1912.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_10.root", 
+                "nevents": 26984, 
+                "weights": 26984.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_11.root", 
+                "nevents": 49961, 
+                "weights": 49961.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_12.root", 
+                "nevents": 49900, 
+                "weights": 49900.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_13.root", 
+                "nevents": 49812, 
+                "weights": 49812.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_14.root", 
+                "nevents": 30151, 
+                "weights": 30151.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_15.root", 
+                "nevents": 48183, 
+                "weights": 48183.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_16.root", 
+                "nevents": 5609, 
+                "weights": 5609.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_17.root", 
+                "nevents": 45910, 
+                "weights": 45910.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_18.root", 
+                "nevents": 1233, 
+                "weights": 1233.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_19.root", 
+                "nevents": 40777, 
+                "weights": 40777.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_2.root", 
+                "nevents": 9798, 
+                "weights": 9798.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_20.root", 
+                "nevents": 24500, 
+                "weights": 24500.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_21.root", 
+                "nevents": 5163, 
+                "weights": 5163.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_22.root", 
+                "nevents": 49789, 
+                "weights": 49789.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_23.root", 
+                "nevents": 49947, 
+                "weights": 49947.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_24.root", 
+                "nevents": 50000, 
+                "weights": 50000.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_25.root", 
+                "nevents": 49777, 
+                "weights": 49777.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_26.root", 
+                "nevents": 730, 
+                "weights": 730.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_28.root", 
+                "nevents": 49950, 
+                "weights": 49950.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_29.root", 
+                "nevents": 49909, 
+                "weights": 49909.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_3.root", 
+                "nevents": 49895, 
+                "weights": 49895.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_30.root", 
+                "nevents": 8532, 
+                "weights": 8532.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_31.root", 
+                "nevents": 49909, 
+                "weights": 49909.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_32.root", 
+                "nevents": 49726, 
+                "weights": 49726.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_33.root", 
+                "nevents": 24486, 
+                "weights": 24486.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_34.root", 
+                "nevents": 49865, 
+                "weights": 49865.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_35.root", 
+                "nevents": 49466, 
+                "weights": 49466.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_36.root", 
+                "nevents": 49753, 
+                "weights": 49753.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_37.root", 
+                "nevents": 49970, 
+                "weights": 49970.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_38.root", 
+                "nevents": 49951, 
+                "weights": 49951.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_39.root", 
+                "nevents": 49923, 
+                "weights": 49923.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_4.root", 
+                "nevents": 6563, 
+                "weights": 6563.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_40.root", 
+                "nevents": 49926, 
+                "weights": 49926.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_41.root", 
+                "nevents": 49755, 
+                "weights": 49755.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_43.root", 
+                "nevents": 49979, 
+                "weights": 49979.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_44.root", 
+                "nevents": 49878, 
+                "weights": 49878.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_45.root", 
+                "nevents": 31330, 
+                "weights": 31330.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_46.root", 
+                "nevents": 49787, 
+                "weights": 49787.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_47.root", 
+                "nevents": 49867, 
+                "weights": 49867.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_48.root", 
+                "nevents": 4457, 
+                "weights": 4457.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_49.root", 
+                "nevents": 5345, 
+                "weights": 5345.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_5.root", 
+                "nevents": 49608, 
+                "weights": 49608.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_50.root", 
+                "nevents": 28076, 
+                "weights": 28076.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_51.root", 
+                "nevents": 49582, 
+                "weights": 49582.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_52.root", 
+                "nevents": 49952, 
+                "weights": 49952.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_54.root", 
+                "nevents": 49970, 
+                "weights": 49970.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_55.root", 
+                "nevents": 49835, 
+                "weights": 49835.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_56.root", 
+                "nevents": 49996, 
+                "weights": 49996.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_57.root", 
+                "nevents": 1567, 
+                "weights": 1567.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_58.root", 
+                "nevents": 49964, 
+                "weights": 49964.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_59.root", 
+                "nevents": 7722, 
+                "weights": 7722.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_6.root", 
+                "nevents": 49841, 
+                "weights": 49841.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_60.root", 
+                "nevents": 49857, 
+                "weights": 49857.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_61.root", 
+                "nevents": 6134, 
+                "weights": 6134.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_62.root", 
+                "nevents": 16874, 
+                "weights": 16874.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_63.root", 
+                "nevents": 2303, 
+                "weights": 2303.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_64.root", 
+                "nevents": 740, 
+                "weights": 740.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_65.root", 
+                "nevents": 42532, 
+                "weights": 42532.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_66.root", 
+                "nevents": 49935, 
+                "weights": 49935.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_67.root", 
+                "nevents": 2404, 
+                "weights": 2404.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_68.root", 
+                "nevents": 2895, 
+                "weights": 2895.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_69.root", 
+                "nevents": 6524, 
+                "weights": 6524.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_7.root", 
+                "nevents": 2424, 
+                "weights": 2424.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_70.root", 
+                "nevents": 8393, 
+                "weights": 8393.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_71.root", 
+                "nevents": 2351, 
+                "weights": 2351.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_72.root", 
+                "nevents": 37876, 
+                "weights": 37876.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_73.root", 
+                "nevents": 49983, 
+                "weights": 49983.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_74.root", 
+                "nevents": 49876, 
+                "weights": 49876.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_75.root", 
+                "nevents": 38676, 
+                "weights": 38676.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_76.root", 
+                "nevents": 49977, 
+                "weights": 49977.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_77.root", 
+                "nevents": 208, 
+                "weights": 208.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_8.root", 
+                "nevents": 24184, 
+                "weights": 24184.0
+            }, 
+            {
+                "name": "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/150716_211121/0000/diphotonsMicroAOD_9.root", 
+                "nevents": 2411, 
+                "weights": 2411.0
+            }
+        ]
+    }
+}

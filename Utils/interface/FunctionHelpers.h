@@ -9,6 +9,7 @@
 #include "TH1.h"
 #include "TH2.h"
 #include "THnSparse.h"
+#include "TList.h"
 
 #include <list>
 #include <set>
@@ -256,7 +257,7 @@ public:
 class  SliceFitter : public HistoConverter
 {
 public:
-    SliceFitter( TH2 *g, TString formula, float ymin, float ymax, bool normalize = false, bool yonly = false );
+    SliceFitter( TH2 *g, TString formula, float ymin, float ymax, float fmin, float fmax, bool normalize = false, bool yonly = false, int sliding = 0 );
     ~SliceFitter();
     double operator()( double *x, double *p ) ;
 
@@ -266,11 +267,16 @@ public:
     const TF1 &getSlice( double x );
 
     TF2 *asTF2( TString name );
+    
+    TList * getPlots();
 
 private:
     std::vector<TF1> sliceFits_;
+    std::vector<float> integrals_;
     float xmin_, xmax_, ymin_, ymax_;
+    int sliding_;
     bool yonly_;
+    TList * plots_;
 };
 
 

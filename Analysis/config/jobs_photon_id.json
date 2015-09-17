@@ -1,0 +1,49 @@
+{
+
+    "processes" : {
+
+
+		"GJets-HT-100toInf" : [
+				    "/GJets_HT-40To100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8",
+				    "/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8",
+				    "/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8",
+				    "/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8",
+				    "/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"
+		]
+    },
+
+    "_processes" : {
+
+
+	    "GGJets_M-200To13000-sherpa" : [
+	    				"/GGJets_M-1000To2000_Pt-50_13TeV-sherpa",
+	    				"/GGJets_M-2000To4000_Pt-50_13TeV-sherpa",
+					"/GGJets_M-200To500_Pt-50_13TeV-sherpa",
+					"/GGJets_M-4000To6000_Pt-50_13TeV-sherpa",
+					"/GGJets_M-500To1000_Pt-50_13TeV-sherpa",
+					"/GGJets_M-6000To8000_Pt-50_13TeV-sherpa",
+					"/GGJets_M-8000To13000_Pt-50_13TeV-sherpa"
+		],
+
+		"GJets-HT-100toInf" : [
+				    "/GJets_HT-40To100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8",
+				    "/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8",
+				    "/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8",
+				    "/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8",
+				    "/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"
+		],
+		
+                 "QCD-Pt-30toInf" : [ 
+				     "/QCD_Pt-120to170_EMEnriched_TuneCUETP8M1_13TeV_pythia8",
+				     "/QCD_Pt-170to300_EMEnriched_TuneCUETP8M1_13TeV_pythia8",
+				     "/QCD_Pt-300toInf_EMEnriched_TuneCUETP8M1_13TeV_pythia8",
+				     "/QCD_Pt-30to50_EMEnriched_TuneCUETP8M1_13TeV_pythia8",
+				     "/QCD_Pt-50to80_EMEnriched_TuneCUETP8M1_13TeV_pythia8",
+				     "/QCD_Pt-80to120_EMEnriched_TuneCUETP8M1_13TeV_pythia8"
+		]
+
+	    },
+
+    "cmdLine" : "campaign=EXOSpring15_v850ns"
+
+}
