@@ -154,9 +154,6 @@
 	      ["rapidity"		,[["Rebin",4],["ytitle","Events / %(binw)s"],["xtitle","y_{#gamma #gamma} (GeV)"],["xrange",[-3,3]],["overflow",[null]]]
 					,null,null],
 					
-	      ["cosDeltaPhi"		,[["Rebin",5],["ytitle","Events / %(binw)s"],["xtitle","cos(#Delta#phi_{#gamma #gamma})"]]
-					,null,null],
-
 	      ["leadPt"			,[["Rebin",2],["ytitle","Events / %(binw)s GeV"],["xtitle","p_{T}(#gamma 1) (GeV)"],["xrange",[100.0,1000.0]],["overflow",[null]]]
 					,null,null],
 

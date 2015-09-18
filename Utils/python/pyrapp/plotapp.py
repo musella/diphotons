@@ -174,6 +174,8 @@ class PlotApp(PyRApp):
                                     default=None,help="default: %default"),
                         make_option("--data-file",dest="data_file",action="store",type="string",
                                     default=None,help="default: %default"),
+                        make_option("--lumi",dest="lumi",action="store",type="float",
+                                    default=None,help="default: %default"),
                         make_option("--sig-file",dest="sig_file",action="store",type="string",
                                     default=None,help="default: %default"),
                         make_option("--bkg-file",dest="bkg_file",action="store",type="string",
@@ -281,12 +283,14 @@ class PlotApp(PyRApp):
                 # read background MC
                 if bkg != None and not "bkg" in skip:
                     bkgfile, bkgprocs = bkg
-                    bkghists = [ self.readProcess(bkgfile,*subprocs,plot=plotname,plotmodifs=plotmodifs,category=catname,group=group) for subprocs in bkgprocs ]
+                    bkghists = [ self.readProcess(bkgfile,*subprocs,plot=plotname,plotmodifs=plotmodifs,category=catname,group=group,scale=options.lumi) 
+                                 for subprocs in bkgprocs ]
                     
                 # read signal MC
                 if sig != None and not "sig" in skip:
                     sigfile, sigprocs = sig
-                    sighists = [ self.readProcess(sigfile,*subprocs,plot=plotname,plotmodifs=plotmodifs,category=catname,group=group) for subprocs in sigprocs ]
+                    sighists = [ self.readProcess(sigfile,*subprocs,plot=plotname,plotmodifs=plotmodifs,category=catname,group=group,scale=options.lumi) 
+                                 for subprocs in sigprocs ]
                     
                 # read data
                 if data != None and not "data" in skip:
@@ -419,7 +423,7 @@ class PlotApp(PyRApp):
     #
     # Read histograms for a given process, applying manipulators
     #
-    def readProcess(self,fin,name,title,style,subproc,plot,plotmodifs,category,group):
+    def readProcess(self,fin,name,title,style,subproc,plot,plotmodifs,category,group,scale=None):
         
         ## print "readProcess", fin,name,title,style,subproc,plot,plotmodifs,category
         names = subproc.keys()               
@@ -438,6 +442,9 @@ class PlotApp(PyRApp):
         self.keep(hsum,True)
         hsum = style_utils.apply(hsum,plotmodifs)
         hsum = style_utils.apply(hsum,style)
+        
+        if scale:
+            hsum.Scale(scale)
         
         return hsum
 

@@ -9,7 +9,7 @@
 	    ],
 
 	    "DYJetsToLL_M-50_TuneCUETP8M1-amcatnloFXFX-pythia8" : [
-	    				"/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8"
+	    				["/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8",{"args":["maxEvents=5000000"]}]
 		]
 
 	    },

@@ -75,6 +75,7 @@ diphotonDumper.maxCandPerEvent=1
 diphotonDumper.nameTemplate = "$PROCESS_$SQRTS_$LABEL_$SUBCAT"
 
 variables=["mass","pt","rapidity",
+           "genMass := genP4.mass",
            "deltaEta                 := abs( leadingPhoton.eta - subLeadingPhoton.eta )",
            "cosDeltaPhi              := cos( leadingPhoton.phi - subLeadingPhoton.phi )",
            "leadPt                   :=leadingPhoton.pt",
@@ -222,7 +223,7 @@ histogramsSinglePho = [
     "phoHoE>>phoHoE(40,0,0.2)",
     "phoSigmaIeIe>>phoSigmaIeIe(50,0,5.e-2)",
     "phoPixSeed>>phoPixSeed(2,-0.5,1.5)",
-    "phoScEta:phoPhi>>phoEtaVsPhi(65,-3.25,3.25,55,-2.75,2.75)"
+    "phoScEta:phoPhi>>phoEtaVsPhi(65,-3.25,3.25:55,-2.75,2.75)"
     ]
 
 if not "EXOSpring15_v3" in customize.datasetName() or "EXOSpring15_v3v8" in customize.datasetName():
@@ -423,8 +424,10 @@ elif customize.selection == "photon":
     doDoublePho=False
     askTriggerOnMc=True
 elif customize.selection == "electron":
-    dataTriggers=["HLT_Ele23_WPLoose*"]
-    mcTriggers=[]
+    ## dataTriggers=["HLT_Ele23_WPLoose*"]
+    ## mcTriggers=[]
+    dataTriggers=["HLT_Ele27_eta2p1_WPLoose_Gsf_v*"]
+    mcTriggers=["HLT_Ele27_eta2p1_WP75_Gsf_v*"]
     invertEleVeto=True
 elif customize.selection == "dielectron":
     dataTriggers=["*"]
@@ -438,20 +441,21 @@ if customize.options.trigger != "":
     mcTriggers = dataTriggers
     
 from HLTrigger.HLTfilters.hltHighLevel_cfi import hltHighLevel
-for name in set(dumpBits):
+dumpBits=set(dumpBits)
+if len(dumpBits) > 0:
     if doDoublePho:
         diphotonDumper.globalVariables.addTriggerBits = cms.PSet(
-            tag=cms.InputTag("TriggerResults","","HLT"),bits=cms.vstring(name)
+            tag=cms.InputTag("TriggerResults","","HLT"),bits=cms.vstring(dumpBits)
             )
     if doSinglePho:
         photonDumper.globalVariables.addTriggerBits = cms.PSet(
-            tag=cms.InputTag("TriggerResults","","HLT"),bits=cms.vstring(name)
+            tag=cms.InputTag("TriggerResults","","HLT"),bits=cms.vstring(dumpBits)
             )
             
 
 minimalDumper = diphotonDumper.clone()
 cfgTools.dumpOnly(minimalDumper,
-                  ["mass","pt",
+                  ["mass","pt","genMass",
                    "leadPt","leadEta","leadScEta","leadPhi",
                    "subleadPt","subleadEta","subleadScEta","subleadPhi",
                    "leadBlockPhoIso","subleadBlockPhoIso",

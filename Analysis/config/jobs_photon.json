@@ -3,10 +3,7 @@
 
 
     	    "Data" : [ "/SinglePhoton" 
-	    ]
-    },
-
-    "_processes" : {
+	    ],
 
 	    "GGJets_M-200To13000-sherpa" : [
 	    				"/GGJets_M-1000To2000_Pt-50_13TeV-sherpa",
