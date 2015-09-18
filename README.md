@@ -41,9 +41,10 @@ cd flashgg
 git remote add musella git@github.com:musella/flashgg.git
 git fetch musella
 if [[ -n ${FLASHGG_BRANCH} ]]; then
-	git co -b musella/${FLASHGG_BRANCH}
+	git checkout musella/${FLASHGG_BRANCH}
+	git checkout -b ${FLASHGG_BRANCH}
 elif [[ -n ${FLASHGG_TAG} ]]; then
-	git co -b topic_${FLASHGG_TAG} ${FLASHGG_TAG}
+	git checkout -b topic_${FLASHGG_TAG} ${FLASHGG_TAG}
 fi
 #git checkout -b Spring15BetaV2 Spring15BetaV2
 
