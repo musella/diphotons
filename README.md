@@ -18,7 +18,7 @@ forked the flashgg and this repository.
 # Spring15 settings
 PROJECT_AREA=EXO_7_4_6_patch2
 CMSSW_VERSION=CMSSW_7_4_6_patch2 
-## FLASHGG_TA=
+## FLASHGG_TAG=
 FLASHGG_BRANCH=topic_Spring15BV2 # set empty if you want the master (safe as long as you are not producing MicroAOD)
 
 # read github name from git config
@@ -41,7 +41,7 @@ cd flashgg
 git remote add musella git@github.com:musella/flashgg.git
 git fetch musella
 if [[ -n ${FLASHGG_BRANCH} ]]; then
-	git co musella/${FLASHGG_TAG}
+	git co -b musella/${FLASHGG_BRANCH}
 elif [[ -n ${FLASHGG_TAG} ]]; then
 	git co -b topic_${FLASHGG_TAG} ${FLASHGG_TAG}
 fi
