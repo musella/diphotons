@@ -43,6 +43,7 @@ git fetch musella
 if [[ -n ${FLASHGG_BRANCH} ]]; then
 	git checkout musella/${FLASHGG_BRANCH}
 	git checkout -b ${FLASHGG_BRANCH}
+	git branch --set-upstream musella/${FLASHGG_BRANCH} ${FLASHGG_BRANCH}
 elif [[ -n ${FLASHGG_TAG} ]]; then
 	git checkout -b topic_${FLASHGG_TAG} ${FLASHGG_TAG}
 fi
