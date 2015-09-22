@@ -6,7 +6,7 @@
 # Data:        sampleID>10000
 
 # DY
-./submitBatchTnP.py --cfg tnpAnaBATCH.py DYLL 0 101 pippo 2008.4  1 
+./submitBatchTnP.py --cfg tnpAnaBATCH.py DYLL 0 101 pippo 6025.2  1 
 
 # Data
 ./submitBatchTnP.py --cfg tnpAnaBATCH.py DoubleEG  0 10001 pippo 1  1 
