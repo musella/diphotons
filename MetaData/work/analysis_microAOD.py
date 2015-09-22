@@ -19,7 +19,7 @@ process.options=cms.untracked.PSet(
     wantSummary = cms.untracked.bool(True)
     )
 
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32( 1000 ) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32( 100 ) )
 process.MessageLogger.cerr.FwkReport.reportEvery = 100
 process.MessageLogger.cerr.threshold = 'ERROR' # can't get suppressWarning to work: disable all warnings for now
 # process.MessageLogger.suppressWarning.extend(['SimpleMemoryCheck','MemoryCheck']) # this would have been better...
@@ -44,7 +44,8 @@ process.source = cms.Source("PoolSource",
         ## "/store/data/Run2015B/DoubleEG/MINIAOD/PromptReco-v1/000/251/096/00000/8A2D533C-5626-E511-AF3C-02163E011FAB.root")
         ## "/store/mc/RunIISpring15DR74/GGJets_M-1000To2000_Pt-50_13TeV-sherpa/MINIAODSIM/Asympt25ns_MCRUN2_74_V9-v3/40000/14933A04-1A3C-E511-979C-AC162DABCAF8.root"
         "/store/data/Run2015B/DoubleEG/MINIAOD/PromptReco-v1/000/251/244/00000/C47A9CF9-6227-E511-908E-02163E014509.root"
-        ## "root://eoscms//eos/cms/store/mc/RunIISpring15DR74/ADDGravToGG_MS-6000_NED-4_KK-1_M-2000To4000_13TeV-sherpa/MINIAODSIM/Asympt25ns_MCRUN2_74_V9-v1/20000/76CA81A9-1024-E511-8D9F-3417EBE6471D.root"
+        ##"root://eoscms//eos/cms/store/mc/RunIISpring15DR74/ADDGravToGG_MS-6000_NED-4_KK-1_M-2000To4000_13TeV-sherpa/MINIAODSIM/Asympt25ns_MCRUN2_74_V9-v1/20000/76CA81A9-1024-E511-8D9F-3417EBE6471D.root"
+        ##"/store/mc/RunIISpring15DR74/WJetsToLNu_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/MINIAODSIM/Asympt25ns_MCRUN2_74_V9-v1/00000/D8905344-2002-E511-9106-0CC47A13CB02.root"
         )
                             )
 
@@ -152,6 +153,11 @@ process.myPreselectedPhotons = cms.EDFilter("PhotonSelector",
                                             cut=cms.string("(r9>0.8||egChargedHadronIso<20||egChargedHadronIso/pt<0.3) && pt>50 && egChargedHadronIso<15")
                                             )
 
+process.myPreselectedElectrons = cms.EDFilter("ElectronSelector",  
+                                              src=cms.InputTag("flashggElectrons"),   
+                                              cut=cms.string("pt>20")  
+                                              )
+
 # need to allow unscheduled processes otherwise reclustering function will fail
 # this is because of the jet clustering tool, and we have to live with it for now.
 process.options = cms.untracked.PSet(
@@ -162,7 +168,7 @@ from flashgg.MicroAOD.flashggJets_cfi import addFlashggPFCHSLegJets
 # call the function, it takes care of everything else.
 addFlashggPFCHSLegJets(process)
 
-process.p = cms.Path(process.flashggMicroAODSequence*process.myPreselectedPhotons)
+process.p = cms.Path(process.flashggMicroAODSequence*process.myPreselectedPhotons*process.myPreselectedElectrons)
 
 process.e = cms.EndPath(process.out)
 
