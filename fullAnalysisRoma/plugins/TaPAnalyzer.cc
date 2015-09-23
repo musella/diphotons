@@ -102,6 +102,7 @@ private:
   TH1F *h_selection;
   
   //---output tree branches variables
+  bool ptRatioFlip_;
   edm::Service<TFileService> fs_;
   TTree* outTree_;
   
@@ -140,6 +141,7 @@ private:
   vector <int>   gamma_presel={};
   vector <int>   gamma_fullsel={};
   
+  vector <float> ptRatio={};
   vector <float> invMass={};
   vector <int> eleIndex={};
   vector <int> gammaIndex={};
@@ -162,6 +164,7 @@ TaPAnalyzer::TaPAnalyzer(const edm::ParameterSet& iConfig):
   kfac_         = iConfig.getUntrackedParameter<double>("kfac",1.); 
   sumDataset_   = iConfig.getUntrackedParameter<double>("sumDataset",-999.);
   genInfo_      = iConfig.getParameter<edm::InputTag>("generatorInfo");   
+  ptRatioFlip_  = false;
 };
 
 TaPAnalyzer::~TaPAnalyzer() { };
@@ -507,7 +510,7 @@ void TaPAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
   } // HLT    
   accGammaSize = gamma_pt.size();   
       
-  //---invariant mass
+  //---invariant mass and pt ratio
   for(int iGam=0; iGam<accGammaSize; ++iGam) {
     for(int iEle=0; iEle<accEleSize; ++iEle)  {
       
@@ -518,6 +521,22 @@ void TaPAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
       invMass.push_back((thisGamma+thisEle).M()); 
       eleIndex.push_back(iEle);   
       gammaIndex.push_back(iGam);    
+      if(thisGamma.Pt() > thisEle.Pt()) 
+	{
+	  if(ptRatioFlip_)
+	    ptRatio.push_back(thisEle.Pt()/thisGamma.Pt());
+	  else
+	    ptRatio.push_back(thisGamma.Pt()/thisEle.Pt());
+	  ptRatioFlip_ = !ptRatioFlip_;
+	} 
+      else 
+	{
+	  if(ptRatioFlip_)
+	    ptRatio.push_back(thisGamma.Pt()/thisEle.Pt());
+	  else
+	    ptRatio.push_back(thisEle.Pt()/thisGamma.Pt());
+	  ptRatioFlip_ = !ptRatioFlip_;
+	}
     }
   }
   
@@ -548,7 +567,8 @@ void TaPAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
   gamma_eleveto.clear();
   gamma_presel.clear();
   gamma_fullsel.clear();
-  //---invariant mass
+  //---invariant mass and ptratio
+  ptRatio.clear();
   invMass.clear();
   eleIndex.clear();
   gammaIndex.clear();
@@ -617,6 +637,7 @@ void TaPAnalyzer::bookOutputTree()
     outTree_->Branch("gamma_presel", "std::vector<int>", &gamma_presel);
     outTree_->Branch("gamma_fullsel", "std::vector<int>", &gamma_fullsel);
 
+    outTree_->Branch("ptRatio","std::vector<float>", &ptRatio);
     outTree_->Branch("invMass","std::vector<float>", &invMass);
     outTree_->Branch("eleIndex","std::vector<int>", &eleIndex);
     outTree_->Branch("gammaIndex","std::vector<int>", &gammaIndex);
