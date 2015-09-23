@@ -51,7 +51,7 @@ void tnpTreeFormat(const char* filename, float lumiForW) {
   Int_t           nvtx  = 0;
   Float_t         pu_weight = 0;
   Float_t         perEveW   = 0;
-  Float_t         totXsec = 0;
+  float           totXsec = 0;
   vector<float>   *electron_eta = 0;
   vector<float>   *electron_pt = 0;
   vector<bool>    *isTagMediumEle    = 0;
@@ -133,8 +133,6 @@ void tnpTreeFormat(const char* filename, float lumiForW) {
     theTreeNew->Branch("weight", &weight, "weight/F");
   }
 
-  float xsecToWeight = 3.*2008.4;   // chiara! fixme in the job submission
-
   for(int i=0; i<nentriesOrig; i++) {
     
     if (i%10000 == 0) std::cout << ">>> Event # " << i << " / " << nentriesOrig << " entries" << std::endl; 
@@ -143,7 +141,8 @@ void tnpTreeFormat(const char* filename, float lumiForW) {
     for (unsigned int ii=0; ii<invMass->size(); ii++) {
       
       mass = (float)(invMass->at(ii));
-      if (mass<60 || mass>120) continue;
+      // if (mass<60 || mass>120) continue;
+      if (mass<60 || mass>4000) continue;
       
       // further selection on tag 
       if (!isTagMediumEle->at(eleIndex->at(ii)))    continue;
@@ -161,7 +160,7 @@ void tnpTreeFormat(const char* filename, float lumiForW) {
 
       // weights
       if (run==1) {   // MC                                                                                                                   
-	xsecWeight = perEveW * lumiForW * xsecToWeight / sampleSumWeight;
+	xsecWeight = perEveW * lumiForW * totXsec / sampleSumWeight;
 	weight     = xsecWeight * pu_weight;
       } else {
 	xsecWeight = 1.;
