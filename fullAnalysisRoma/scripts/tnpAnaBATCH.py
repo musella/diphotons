@@ -1,10 +1,10 @@
 import FWCore.ParameterSet.Config as cms
 import FWCore.Utilities.FileUtils as FileUtils
 
-isMC = False
-is25ns = False   
+isMC = True;
+is25ns = True;   
 is2012B = False;    
-is2012C = True;  
+is2012C = False;  
 is2012D = False;   
 
 process = cms.Process("tnpAna")
@@ -42,10 +42,17 @@ process.source = cms.Source("PoolSource",
                             )
 
 # to apply the json file offline
-if (isMC==False and is2012C):
-    print "applying 2012C json"                                
+if (isMC==False and is2012C and is25ns):
+    print "applying 2012C json for 25ns"                                
     process.source.lumisToProcess = cms.untracked.VLuminosityBlockRange("254231:1-254231:24", "254232:1-254232:81", "254790:90", "254790:93-254790:630", "254790:633-254790:697", "254790:701-254790:715", "254790:719-254790:784", "254852:47-254852:94", "254879:52", "254879:54-254879:140", "254906:1-254906:75", "254907:1-254907:52")
 
+if (isMC==False and is2012C and is25ns==False):
+    print "applying 2012C json for 50ns - only run 254833"                                
+    process.source.lumisToProcess = cms.untracked.VLuminosityBlockRange("254833:43-254833:43", "254833:46-254833:861", "254833:863-254833:1505", "254833:1507-254833:1582", "254833:1584-254833:1632")
+
+if (isMC==False and is2012B):
+    print "applying 2012B json (50ns)"                                
+    lumisToProcess = cms.untracked.VLuminosityBlockRange("251244:85-251244:86", "251244:88-251244:93", "251244:96-251244:121", "251244:123-251244:156", "251244:158-251244:428", "251244:430-251244:442", "251251:1-251251:31", "251251:33-251251:97", "251251:99-251251:167", "251252:1-251252:283", "251252:285-251252:505", "251252:507-251252:554", "251521:39-251521:42", "251561:1-251561:94", "251562:1-251562:439", "251562:443-251562:691", "251643:1-251643:216", "251643:222-251643:606", "251721:1-251721:36", "251883:56", "251883:58-251883:60", "251883:62-251883:437") 
 
 process.load("flashgg/MicroAOD/flashggPhotons_cfi")
 process.load("flashgg/MicroAOD/flashggDiPhotons_cfi")
