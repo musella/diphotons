@@ -15,7 +15,7 @@
 
 enum samp { iWJets, iWW, iWZ, iZZ, iTT, iDY, nSamples };
 
-float xPos[nSamples+1] = {0.70,0.70,0.70,0.70,0.70,0.70};
+float xPos[nSamples+1] = {0.70,0.70,0.70,0.70,0.70,0.70,0.7};
 float yOff[nSamples+1] = {0,1,2,3,4,5,6};
 
 const Float_t _tsize   = 0.03;
@@ -106,8 +106,11 @@ void DrawLegend(Float_t x1,
 class TnPPlot {
   
 public: 
-  TnPPlot() { _hist.resize(nSamples,0); _breakdown = false; _mass = 0; }
+  TnPPlot() { _hist.resize(nSamples,0); _data = 0; _breakdown = false; _mass = 0; }
   void setMCHist   (const samp &s, TH1F * h)  { _hist[s]       = h;  } 
+  void setDataHist (TH1F * h)                 { _data          = h;  }
+
+  TH1F* getDataHist() { return _data; }
   
   void setMass(const int &m) {_mass=m;}
 
@@ -158,20 +161,29 @@ public:
       
       _hist[i]->Rebin(rebin);
       _hist[i]->SetLineColor(_lineColor[i]);
-      
-      // signal gets overlaid
       _hist[i]->SetFillColor(_sampleColor[i]);
       _hist[i]->SetFillStyle(1001);
       
       hstack->Add(_hist[i]);
     }
-    
+  
+    if(_data) _data->Rebin(rebin);
+    if(_data) _data->SetLineColor  (kBlack);
+    if(_data) _data->SetMarkerStyle(kFullCircle);
+  
     hstack->Draw("hist");
+    if(_data) _data->Draw("ep,same");
+    
     hstack->SetTitle("CMS preliminary");  
     
     Float_t theMax = hstack->GetMaximum();
     Float_t theMin = hstack->GetMinimum();
     
+    if (_data) {
+      Float_t dataMax = GetMaximumIncludingErrors(_data);
+      if (dataMax > theMax) theMax = dataMax;
+    }
+
     if (gPad->GetLogy()) {
       hstack->SetMaximum(1.2 * theMax);
       hstack->SetMinimum(0.1);  
@@ -196,6 +208,7 @@ public:
 
     // total mess to get it nice, should be redone
     size_t j=0;
+    if(_data        ) { DrawLegend(xPos[j], 0.75 - yOff[j]*_yoffset, _data,         " data",    "lp"); j++; }
     if(_hist[iDY   ]) { DrawLegend(xPos[j], 0.75 - yOff[j]*_yoffset, _hist[iDY  ],   "DY", "f" ); j++; }
     if(_hist[iWJets]) { DrawLegend(xPos[j], 0.75 - yOff[j]*_yoffset, _hist[iWJets   ], " W+jets",      "f" ); j++; }
     if(_hist[iWW])    { DrawLegend(xPos[j], 0.75 - yOff[j]*_yoffset, _hist[iWW],   " WW",  "f" ); j++; }
@@ -225,6 +238,7 @@ public:
   
 private: 
   std::vector<TH1F*> _hist;
+  TH1F* _data;
   
   //MWL
   float    _lumi;
