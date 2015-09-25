@@ -10,6 +10,10 @@ process = cms.Process("Analysis")
 #
 process.load("FWCore.MessageService.MessageLogger_cfi")
 
+process.load("Configuration.StandardSequences.GeometryDB_cff")
+process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff")
+from Configuration.AlCa.GlobalTag import GlobalTag
+
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32( 1000 )
 
@@ -59,6 +63,12 @@ customize.options.register ('idversion',
                             "idversion")
 customize.parse()
 
+from Configuration.AlCa.autoCond import autoCond
+if customize.options.processType == "data":
+    process.GlobalTag = GlobalTag(process.GlobalTag, autoCond['run2_data'].replace("::All","") )
+else:
+    process.GlobalTag = GlobalTag(process.GlobalTag, autoCond['run2_mc'].replace("::All",""))
+
 #
 # define minitrees and histograms
 #
@@ -76,6 +86,8 @@ diphotonDumper.nameTemplate = "$PROCESS_$SQRTS_$LABEL_$SUBCAT"
 
 variables=["mass","pt","rapidity",
            "genMass := genP4.mass",
+           "genLeadPt := ?leadingPhoton.hasMatchedGenPhoton?leadingPhoton.matchedGenPhoton.pt:0",
+           "genSubLeadPt := ?subLeadingPhoton.hasMatchedGenPhoton?subLeadingPhoton.matchedGenPhoton.pt:0",
            "deltaEta                 := abs( leadingPhoton.eta - subLeadingPhoton.eta )",
            "cosDeltaPhi              := cos( leadingPhoton.phi - subLeadingPhoton.phi )",
            "leadPt                   :=leadingPhoton.pt",
@@ -128,6 +140,7 @@ variables=["mass","pt","rapidity",
 
 histograms=["mass>>mass(1500,0,15000)",
             "mass>>lowmass(560,60,200)",
+            "genMass>>genmass(1500,0,15000)",            
             "pt>>pt(200,0,200)",
             "rapidity>>rapidity(200,-5,5)",
             "deltaEta>>deltaEta(200,0,5)",
@@ -183,6 +196,7 @@ histograms=["mass>>mass(1500,0,15000)",
 
 variablesSinglePho=[
     "phoPt                   :=pt",
+    "genPt                   :=?hasMatchedGenPhoton?matchedGenPhoton.pt:0",
     "phoEta                  :=eta",
     "phoR9                   :=r9",
     "phoScEta                :=superCluster.eta",
@@ -212,6 +226,7 @@ variablesSinglePho=[
 
 histogramsSinglePho = [
     "phoPt>>phoPt(145,100,3000)",
+    "genPt>>phoPt(145,100,3000)",
     "phoEta>>phoEta(55,-2.75,2.75)",
     "phoPhi>>phoPhi(65,-3.25,3.25)",
     
@@ -415,7 +430,7 @@ dumpBits=["HLT_DoublePhoton60","HLT_DoublePhoton85","HLT_Photon250_NoHE","HLT_Ph
 askTriggerOnMc=False
 
 if customize.selection == "diphoton":
-    mcTriggers=["HLT_DoublePhoton85*","HLT_Photon250_NoHE*","HLT_Photon165_HE*"] ## "HLT_DoublePhoton60*",
+    mcTriggers=["HLT_DoublePhoton85*","HLT_Photon250_NoHE*"] ## "HLT_DoublePhoton60*",
     dataTriggers=mcTriggers
 elif customize.selection == "photon":
     dataTriggers=["HLT_Photon165*"]
@@ -453,6 +468,20 @@ if len(dumpBits) > 0:
             )
             
 
+
+from flashgg.Taggers.genDiphotonDumper_cfi import genDiphotonDumper
+cfgTools.addCategories(genDiphotonDumper,
+                       [("EB","max(abs(leadingPhoton.eta),abs(subLeadingPhoton.eta))<1.4442",0),
+                        ("EE","1",0)
+                        ],
+                       variables=["genMass := mass","pt",
+                                  "genLeadPt := leadingPhoton.pt",
+                                  "genSubeadPt := subLeadingPhoton.pt",
+                                  ],
+                       histograms=["genMass>>genmass(1500,0,15000)",
+                                   ]
+                       )
+
 minimalDumper = diphotonDumper.clone()
 cfgTools.dumpOnly(minimalDumper,
                   ["mass","pt","genMass",
@@ -480,7 +509,7 @@ from diphotons.Analysis.DiPhotonAnalysis import DiPhotonAnalysis
 analysis = DiPhotonAnalysis(diphotonDumper,
                             massCut=customize.massCut,ptLead=customize.ptLead,ptSublead=customize.ptSublead,scaling=customize.scaling, ## kinematic cuts
                             computeMVA=False,
-                            genIsoDefinition=("userFloat('genIso')",10.),
+                            genIsoDefinition=("genIso",10.),
                             dataTriggers=dataTriggers,
                             mcTriggers=mcTriggers,
                             askTriggerOnMc=askTriggerOnMc, ## if mcTriggers is not empty will still compute efficiencies
@@ -516,6 +545,9 @@ if invertEleVeto:
     highMassCiCDiPhotons.variables[-1] = "hasPixelSeed"
     highMassCiCDiPhotonsSB.variables[-1] = "hasPixelSeed"
 if doDoublePho:
+    if( customize.processType!="data" ):
+        analysis.addGenOnlySelection(process,genDiphotonDumper)
+    
     analysis.addAnalysisSelection(process,"cic",highMassCiCDiPhotons,dumpTrees=True,dumpWorkspace=False,dumpHistos=True,splitByIso=True,
                                   dumperTemplate=minimalDumper,
                                   nMinusOne=[(0,"NoChIso",        True, False,True), ## removeIndex(es), label, dumpTree, dumpWorkspace, dumpHistos
