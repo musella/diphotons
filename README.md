@@ -151,7 +151,8 @@ source /cvmfs/cms.cern.ch/crab3/crab.sh
 voms-proxy-init --voms cms --valid 168:00
 
 ## CAMPAIGN=AN_Phys14_samples
-CAMPAIGN=EXOSpring15_v1
+## CAMPAIGN=EXOSpring15_v1
+CAMPAIGN=EXOSpring15_7412_v1
 
 cd ${CMSSW_BASE}/src/flashgg/MetaData/work
 
@@ -162,7 +163,7 @@ ln -sf  ${CMSSW_BASE}/src/diphotons/MetaData/work/analysis_microAOD.py .
 cat crabConfig_TEMPLATE.py > mycrabConfig_TEMPLATE.py
 cat >> mycrabConfig_TEMPLATE.py << EOF
 
-config.Data.allowNonValidInputDataset=True
+## config.Data.allowNonValidInputDataset=True
 EOF
 
 # edit list of samples to be actually submitted (and check the crab template)

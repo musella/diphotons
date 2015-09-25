@@ -226,7 +226,7 @@ histogramsSinglePho = [
     "phoScEta:phoPhi>>phoEtaVsPhi(65,-3.25,3.25:55,-2.75,2.75)"
     ]
 
-if not "EXOSpring15_v3" in customize.datasetName() or "EXOSpring15_v3v8" in customize.datasetName():
+if customize.datasetName() and (not "EXOSpring15_v3" in customize.datasetName() or "EXOSpring15_v3v8" in customize.datasetName()):
     variables.extend( [
             "leadRndConeChIso := leadingView.extraChIsoWrtChoosenVtx('rnd03')",
             "leadRndConeChIso0 := leadingView.extraChIsoWrtChoosenVtx('rnd03_0')",
@@ -488,10 +488,11 @@ analysis = DiPhotonAnalysis(diphotonDumper,
                             )
 
 # drop samples overlap
-if "GJet-HT" in customize.datasetName():
-    analysis.keepPFOnly = True
-elif "QCD" in customize.datasetName():
-    analysis.keepFFOnly = True
+if customize.datasetName():
+    if "GJet-HT" in customize.datasetName():
+        analysis.keepPFOnly = True
+    elif "QCD" in customize.datasetName():
+        analysis.keepFFOnly = True
 
 ## kinematic selection
 analysis.addKinematicSelection(process,dumpTrees=True,splitByIso=True

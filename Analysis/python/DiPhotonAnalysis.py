@@ -1,7 +1,7 @@
 import FWCore.ParameterSet.Config as cms
 import FWCore.ParameterSet.VarParsing as VarParsing
 
-from flashgg.MicroAOD.flashggPreselectedDiPhotons_cfi import flashggPreselectedDiPhotons as simpleTemplate
+simpleTemplate = cms.EDFilter( "DiPhotonCandidateSelector", src = cms.InputTag("flashggDiPhotons") )
 singlePhoSimpleTemplate = cms.EDFilter("PhotonSelector",src = cms.InputTag("flashggPhotons"),)
 
 from diphotons.Analysis.diphotonsWithMVA_cfi import diphotonsWithMVA
