@@ -97,10 +97,9 @@ def getQuantilesGraphs(histo,probs,twosided=False,errors=True,sign=1):
                 nint = proj.Integral( quant1mh, quant1ph ) + proj.Integral( quant2mh, quant2ph )
                 fq = nint / (2.*h*ntot)
                 
-                err = 1./(2.*sqrt(ntot)*fq)
-
                 graphs[ig/2].SetPoint(ix-1,histo.GetXaxis().GetBinCenter(ix),quant)
                 if errors:
+                    err = 1./(2.*sqrt(ntot)*fq)
                     graphs[ig/2].SetPointError(ix-1,histo.GetXaxis().GetBinWidth(ix)*0.5,err)
                 else:
                     graphs[ig/2].SetPointError(ix-1,histo.GetXaxis().GetBinWidth(ix)*0.5,0.)
@@ -113,10 +112,9 @@ def getQuantilesGraphs(histo,probs,twosided=False,errors=True,sign=1):
                 nint = proj.Integral( quantmh, quantph )
                 fq = nint / (2.*h*ntot)
                 
-                err = 1./(2.*sqrt(ntot)*fq)
-                
                 graphs[ig].SetPoint(ix-1,histo.GetXaxis().GetBinCenter(ix),quant)
                 if errors:
+                    err = 1./(2.*sqrt(ntot)*fq)
                     graphs[ig].SetPointError(ix-1,histo.GetXaxis().GetBinWidth(ix)*0.5,err)
                 else:
                     graphs[ig].SetPointError(ix-1,histo.GetXaxis().GetBinWidth(ix)*0.5,0.)
