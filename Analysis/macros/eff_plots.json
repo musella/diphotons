@@ -45,7 +45,8 @@
 	}, 
 	
     "plots": [
-	      ["mass" ,[["Rebin",5],["ytitle","Events / %(binw)s GeV"],["xtitle","m_{#gamma #gamma} (GeV)"],["xrange",[300.0,6000.0]]],null,null],
+	      ["genmass" ,[["Rebin",5],["ytitle","Events / %(binw)s GeV"],["xtitle","m^{GEN}_{#gamma #gamma} (GeV)"],["xrange",[300.0,10000.0]]],null,null],
+	      ["mass" ,[["Rebin",5],["ytitle","Events / %(binw)s GeV"],["xtitle","m^{RECO}_{#gamma #gamma} (GeV)"],["xrange",[300.0,10000.0]]],null,null],
 	      ["leadPt" ,[["Rebin",5],["ytitle","Events / %(binw)s GeV"],["xtitle","p_{T}(#gamma 1) (GeV)"],["xrange",[100.0,6000.0]]],null,null],
 	      ["subleadPt" ,[["Rebin",5],["ytitle","Events / %(binw)s GeV"],["xtitle","p_{T}(#gamma 2) (GeV)"],["xrange",[100.0,6000.0]]],null,null]
 	      ],
