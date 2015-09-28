@@ -649,10 +649,13 @@ void TaPAnalyzer::endJob() { }
 float TaPAnalyzer::effectiveAreaEle03(float theEta) {
   
     float theEA = -999;			   
-    if (fabs(theEta)<0.800) theEA = 0.1013; 
-    else if (fabs(theEta)<1.300) theEA = 0.0988;
-    else if (fabs(theEta)<2.000) theEA = 0.0572;
-    else if (fabs(theEta)<2.200) theEA = 0.0842; 
+    if(fabs(theEta) < 1) theEA = 0.1752; 
+    else if(fabs(theEta) < 1.479) theEA = 0.1862;
+    else if(fabs(theEta) < 2.0) theEA = 0.1411;
+    else if(fabs(theEta) < 2.2) theEA = 0.1534;
+    else if(fabs(theEta) < 2.3) theEA = 0.1903;
+    else if(fabs(theEta) < 2.4) theEA = 0.2243;
+    else if(fabs(theEta) < 2.5) theEA = 0.2687; 
 
     return theEA;
 }
@@ -674,33 +677,34 @@ Ptr<reco::Vertex> TaPAnalyzer::chooseElectronVertex( Ptr<flashgg::Electron> &ele
 
 // Egamma Cut based ID
 
-bool TaPAnalyzer::isMediumEle(float scEta, float hoe, float dphi, float deta, float sIeIe, float ep, float d0, float dz, float reliso, int missHits, bool passConvVeto) { 
-
+bool TaPAnalyzer::isMediumEle(float scEta, float hoe, float dphi, float deta, float sIeIe,
+                              float ep, float d0, float dz, float reliso, int missHits, bool passConvVeto)
+{ 
     bool okDeta, okDphi, okSieIe, okHoE, okEp, okD0, okDz, okIso, okMH, okConv;
  
-    if (fabs(scEta)<1.5) {
-
-        okDeta  = fabs(deta) < 0.008925;
-        okDphi  = fabs(dphi) < 0.035973;
-        okSieIe = sIeIe < 0.009996;
-        okHoE   = hoe < 0.050537;
-        okD0    = fabs(d0) < 0.012235;
-        okDz    = fabs(dz) < 0.042020;
-        okEp    = fabs(ep) < 0.091942;
-        okIso   = reliso < 0.107587;
-        okMH    = missHits<=1;
+    if (fabs(scEta)<1.479)
+    { 
+        okSieIe = sIeIe < 0.0101;
+        okDeta  = fabs(deta) < 0.0103;
+        okDphi  = fabs(dphi) < 0.0336;
+        okHoE   = hoe < 0.0876;
+        okIso   = reliso < 0.0766;
+        okEp    = fabs(ep) < 0.0174;
+        okD0    = fabs(d0) < 0.0118;
+        okDz    = fabs(dz) < 0.373;
+        okMH    = missHits<=2;
         okConv  = passConvVeto;
-
-    } else {
-
-        okDeta  = fabs(deta) < 0.007429;
-        okDphi  = fabs(dphi) < 0.067879;
-        okSieIe = sIeIe < 0.030135 ;
-        okHoE   = hoe < 0.086782;
-        okD0    = fabs(d0) < 0.036719;
-        okDz    = fabs(dz) < 0.138142 ;
-        okEp    = fabs(ep) < 0.100683 ;
-        okIso   = reliso < 0.113254;
+    }
+    else
+    {
+        okSieIe = sIeIe < 0.0283;
+        okDeta  = fabs(deta) < 0.00733;
+        okDphi  = fabs(dphi) < 0.114;
+        okHoE   = hoe < 0.0678;
+        okIso   = reliso < 0.0678;
+        okEp    = fabs(ep) < 0.0898;
+        okD0    = fabs(d0) < 0.0739;
+        okDz    = fabs(dz) < 0.602;
         okMH    = missHits<=1;
         okConv  = passConvVeto;
     }
@@ -710,33 +714,34 @@ bool TaPAnalyzer::isMediumEle(float scEta, float hoe, float dphi, float deta, fl
 }
 
 
-bool TaPAnalyzer::isTightEle(float scEta, float hoe, float dphi, float deta, float sIeIe, float ep, float d0, float dz, float reliso, int missHits, bool passConvVeto) {
- 
+bool TaPAnalyzer::isTightEle(float scEta, float hoe, float dphi, float deta, float sIeIe,
+                             float ep, float d0, float dz, float reliso, int missHits, bool passConvVeto)
+{ 
     bool okDeta, okDphi, okSieIe, okHoE, okEp, okD0, okDz, okIso, okMH, okConv;
-                                                                                                                                      
-    if (fabs(scEta)<1.5) {
 
-        okDeta  = fabs(deta) < 0.006046;
-        okDphi  = fabs(dphi) < 0.028092;
-        okSieIe = sIeIe < 0.009947;
-        okHoE   = hoe < 0.045772;
-        okD0    = fabs(d0) < 0.008790;
-        okDz    = fabs(dz) < 0.021226;
-        okEp    = fabs(ep) < 0.020118;
-        okIso   = reliso < 0.069527;
-        okMH    = missHits<=1;
+    if (fabs(scEta)<1.479)
+    {
+        okSieIe = sIeIe < 0.0101;
+        okDeta  = fabs(deta) < 0.00926;
+        okDphi  = fabs(dphi) < 0.0336;
+        okHoE   = hoe < 0.0597;
+        okIso   = reliso < 0.0354;
+        okEp    = fabs(ep) < 0.012;
+        okD0    = fabs(d0) < 0.0111;
+        okDz    = fabs(dz) < 0.0466;
+        okMH    = missHits<=2;
         okConv  = passConvVeto;
-
-    } else {
-
-        okDeta  = fabs(deta) < 0.007057;
-        okDphi  = fabs(dphi) < 0.030159;
-        okSieIe = sIeIe < 0.028237;
-        okHoE   = hoe < 0.067778;
-        okD0    = fabs(d0) < 0.027984;
-        okDz    = fabs(dz) < 0.133431 ;
-        okEp    = fabs(ep) < 0.098919 ;
-        okIso   = reliso < 0.078265;
+    }
+    else
+    {        
+        okSieIe = sIeIe < 0.0279;
+        okDeta  = fabs(deta) < 0.00724;
+        okDphi  = fabs(dphi) < 0.0918;
+        okHoE   = hoe < 0.0615;
+        okIso   = reliso < 0.0646;
+        okEp    = fabs(ep) < 0.00999;
+        okD0    = fabs(d0) < 0.0351;
+        okDz    = fabs(dz) < 0.417;
         okMH    = missHits<=1;
         okConv  = passConvVeto;
     }
@@ -808,8 +813,9 @@ bool TaPAnalyzer::isGammaPresel( float sceta, float pt, float r9, float chiso) {
     return isPresel;
 }
 
-bool TaPAnalyzer::isGammaSelected( float rho, float pt, float sceta, float r9, float chiso, float nhiso, float phoiso, float hoe, float sieie, bool passElectronVeto) {
-
+bool TaPAnalyzer::isGammaSelected(float rho, float pt, float sceta, float r9, float chiso,
+                                  float nhiso, float phoiso, float hoe, float sieie, bool passElectronVeto)
+{
     // classes: 0 = EB highR9, 1 = EB low R9, 2 = EE high R9, 3 = EE lowR9
     int etaclass = fabs(sceta)>1.5;
     int r9class  = r9<0.94;                   
@@ -817,8 +823,8 @@ bool TaPAnalyzer::isGammaSelected( float rho, float pt, float sceta, float r9, f
 
     // cuts - hardcoded, v1
     float chiso_cut[4]     = { 5., 5., 5., 5. };     
-    float phoiso_cut[4]    = { 1., 1., 0., 0. };  
-    float sieie_cut[4]     = { 1.05e-02, 1.05e-02, 2.82e-02, 2.80e-02 };                                                                       
+    float phoiso_cut[4]    = { 1., 1., 0., 0. };
+    float sieie_cut[4]     = { 1.05e-02, 1.05e-02, 2.82e-02, 2.80e-02 };
     float sieie_infCut[4]  = { 0.001, 0.001, 0.001, 0.001 };
     float hoe_cut[4]       = { 0.05, 0.05, 0.05, 0.05 };
   
