@@ -537,7 +537,7 @@ void TaPAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 	    if(thisRecoGamma.DeltaR(myGenPos)<0.3) matchMC = true;  
 	  }
 
-	  // saturation
+	  // saturation - to be implemented when we have the rechits back (chiara)
 	  bool isKsaturated = false;
 	  // DetId seedDetId = ( (g1->superCluster())->seed() )->seed();
 	  // if (g1->recHits()) {
