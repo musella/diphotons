@@ -54,6 +54,8 @@ process.tnpAna = cms.EDAnalyzer('TaPAnalyzer',
                                 bits = cms.InputTag("TriggerResults","","HLT"),
                                 objects = cms.InputTag("selectedPatTrigger"),
 
+                                MetTag=cms.InputTag('slimmedMETs'),
+
                                 generatorInfo = cms.InputTag("generator"),
                                 dopureweight = cms.untracked.int32(0),
                                 sampleIndex  = cms.untracked.int32(1), 
