@@ -21,6 +21,7 @@
 #include "DataFormats/Common/interface/TriggerResults.h"     
 #include "DataFormats/PatCandidates/interface/TriggerObjectStandAlone.h"     
 #include "DataFormats/PatCandidates/interface/PackedTriggerPrescales.h"   
+#include "DataFormats/PatCandidates/interface/MET.h"
 
 #include "SimDataFormats/PileupSummaryInfo/interface/PileupSummaryInfo.h"
 #include "SimDataFormats/GeneratorProducts/interface/GenEventInfoProduct.h"
@@ -79,7 +80,9 @@ private:
   edm::InputTag genInfo_; 
   edm::EDGetTokenT<edm::TriggerResults> triggerBits_;
   edm::EDGetTokenT<pat::TriggerObjectStandAloneCollection> triggerObjects_;  
-  
+  EDGetTokenT<View<pat::MET> > MetToken_;
+  EDGetTokenT<View<reco::GenParticle> > genPartToken_;
+
   // sample-dependent parameters needed for the analysis
   int dopureweight_;
   int sampleIndex_;
@@ -117,6 +120,9 @@ private:
   float  pu_n;
   float sumDataset;
   float perEveW;
+
+  float t1pfmet;
+  float pfmet;
   
   int accEleSize;
   vector <float> electron_pt={};
@@ -125,6 +131,7 @@ private:
   vector <bool>  isTagTightEle={};
   vector <bool>  isTagMediumEle={};
   vector <bool>  electron_matchHLT={};
+  vector <bool>  electron_matchMC={};
   
   int  accGammaSize;                
   vector <float> gamma_pt={};
@@ -140,6 +147,7 @@ private:
   vector <float> gamma_eleveto={};
   vector <int>   gamma_presel={};
   vector <int>   gamma_fullsel={};
+  vector <bool>  gamma_matchMC={};
   
   vector <float> ptRatio={};
   vector <float> invMass={};
@@ -155,7 +163,9 @@ TaPAnalyzer::TaPAnalyzer(const edm::ParameterSet& iConfig):
   photonToken_(consumes<View<flashgg::Photon> >(iConfig.getUntrackedParameter<InputTag> ("PhotonTag", InputTag("flashggPhotons")))),
   PileUpToken_(consumes<View<PileupSummaryInfo> >(iConfig.getUntrackedParameter<InputTag> ("PileUpTag", InputTag("addPileupInfo")))),
   triggerBits_(consumes<edm::TriggerResults>(iConfig.getParameter<edm::InputTag>("bits"))),
-  triggerObjects_(consumes<pat::TriggerObjectStandAloneCollection>(iConfig.getParameter<edm::InputTag>("objects")))
+  triggerObjects_(consumes<pat::TriggerObjectStandAloneCollection>(iConfig.getParameter<edm::InputTag>("objects"))),
+  MetToken_( consumes<View<pat::MET> >(iConfig.getParameter<InputTag>("MetTag" ))),
+  genPartToken_(consumes<View<reco::GenParticle> >(iConfig.getUntrackedParameter<InputTag> ("GenParticlesTag", InputTag("flashggPrunedGenParticles"))))
 { 
   dopureweight_ = iConfig.getUntrackedParameter<int>("dopureweight", 0);
   sampleIndex_  = iConfig.getUntrackedParameter<int>("sampleIndex",0);
@@ -204,7 +214,16 @@ void TaPAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
   
   edm::Handle<GenEventInfoProduct> genInfo;      
   if (sampleID>0 && sampleID<10000) iEvent.getByLabel(genInfo_,genInfo);  
+
+  edm::Handle<View<reco::GenParticle> > genParticles;
+  if (sampleID>0 && sampleID<10000) iEvent.getByToken( genPartToken_, genParticles );
   
+  Handle<View<pat::MET> > METs;
+  iEvent.getByToken( MetToken_, METs );
+  if( METs->size() != 1 ) std::cout << "WARNING number of MET is not equal to 1" << std::endl; 
+  Ptr<pat::MET> theMET = METs->ptrAt( 0 );
+  t1pfmet = theMET->pt();
+  pfmet   = theMET->uncorrectedPt();
 
   // --------------------------------------------------
   // Event info
@@ -346,6 +365,26 @@ void TaPAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
     if (foundOne) {
       
       h_selection->Fill(3.,perEveW);
+
+
+      // Gen level match
+      TLorentzVector myGenEle(0,0,0,0);  
+      TLorentzVector myGenPos(0,0,0,0);  
+      if (sampleID>0 && sampleID<10000) {   
+	for( unsigned int genLoop = 0 ; genLoop < genParticles->size(); genLoop++ ) {
+	  int status = genParticles->ptrAt( genLoop )->status();
+	  int pdgid  = genParticles->ptrAt( genLoop )->pdgId();
+	  if ( abs(pdgid)==11 && status==23 ) {
+	    if (genParticles->ptrAt( genLoop )->mother(0)) {
+	      if (genParticles->ptrAt( genLoop )->mother(0)->pdgId()==23) {
+		float ptgen  = genParticles->ptrAt( genLoop )->pt();
+		float etagen = genParticles->ptrAt( genLoop )->eta();
+		float phigen = genParticles->ptrAt( genLoop )->phi();
+		if (pdgid==11)  myGenPos.SetPtEtaPhiM(ptgen, etagen, phigen, 0.);
+		if (pdgid==-11) myGenEle.SetPtEtaPhiM(ptgen, etagen, phigen, 0.);
+	      }}}}
+      }
+
       
       // ----------------------------------------------------  
       // 3) at least one tag candidate
@@ -395,7 +434,14 @@ void TaPAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 	      if(thisRecoEle.DeltaR(thisHLTob)<0.3)
 		matchHLT = true;
 	    }
-	  
+
+	  // Match with MC truth
+	  bool matchMC = false; 
+	  if (sampleID>0 && sampleID<10000) {  
+	    if(thisRecoEle.DeltaR(myGenEle)<0.3) matchMC = true;  
+	    if(thisRecoEle.DeltaR(myGenPos)<0.3) matchMC = true;  
+	  }
+
 	  // ID
 	  float HoE = Electron->hcalOverEcal();
 	  float DeltaPhiIn = Electron->deltaPhiSuperClusterTrackAtVtx();
@@ -441,7 +487,8 @@ void TaPAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 	  electron_phi.push_back(Electron->superCluster()->phi());
 	  isTagTightEle.push_back(tightEle);
 	  isTagMediumEle.push_back(mediumEle);
-	  electron_matchHLT.push_back(matchHLT);                
+	  electron_matchHLT.push_back(matchHLT);
+	  electron_matchMC.push_back(matchMC);                
 	}  // tag
       accEleSize = electron_pt.size();
       
@@ -472,9 +519,20 @@ void TaPAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 	  Ptr<flashgg::Photon> g1 = objs_pho->ptrAt( theOrigIndex );
 	  
 	  // kinematics
-	  float scEta  = (g1->superCluster())->eta();         
-	  float pt     = g1->et();
+	  float scEta = (g1->superCluster())->eta();         
+	  float pt    = g1->et();
+	  float eta   = g1->eta();
+	  float phi   = g1->phi();
 	  
+	  // Match with MC truth
+	  bool matchMC = false; 
+	  TLorentzVector thisRecoGamma(0,0,0,0);
+	  thisRecoGamma.SetPtEtaPhiM(pt,eta,phi,0);
+	  if (sampleID>0 && sampleID<10000) {  
+	    if(thisRecoGamma.DeltaR(myGenEle)<0.3) matchMC = true;  
+	    if(thisRecoGamma.DeltaR(myGenPos)<0.3) matchMC = true;  
+	  }
+
 	  // preselection and full sel
 	  float R9noZS    = g1->full5x5_r9();    
 	  float HoE       = g1->hadTowOverEm();
@@ -505,6 +563,8 @@ void TaPAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 	  gamma_eleveto.push_back(g1->passElectronVeto());
 	  gamma_presel.push_back(passPresel);
 	  gamma_fullsel.push_back(passFullSelel);
+	  gamma_matchMC.push_back(matchMC);
+
 	} // probe
     } // vertex
   } // HLT    
@@ -553,6 +613,7 @@ void TaPAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
   isTagTightEle.clear();
   isTagMediumEle.clear();
   electron_matchHLT.clear();
+  electron_matchMC.clear();
   //---probe
   gamma_pt.clear();
   gamma_eta.clear();
@@ -567,6 +628,8 @@ void TaPAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
   gamma_eleveto.clear();
   gamma_presel.clear();
   gamma_fullsel.clear();
+  gamma_matchMC.clear();
+
   //---invariant mass and ptratio
   ptRatio.clear();
   invMass.clear();
@@ -614,6 +677,9 @@ void TaPAnalyzer::bookOutputTree()
     outTree_->Branch("sumDataset", &sumDataset, "sumDataset/F");
     outTree_->Branch("perEveW", &perEveW, "perEveW/F");
 
+    outTree_->Branch("t1pfmet", &t1pfmet, "t1pfmet/F");
+    outTree_->Branch("pfmet", &pfmet, "pfmet/F");
+
     outTree_->Branch("accEleSize", &accEleSize, "accEleSize/I");
     outTree_->Branch("electron_pt", "std::vector<float>", &electron_pt);
     outTree_->Branch("electron_eta", "std::vector<float>", &electron_eta);
@@ -621,6 +687,7 @@ void TaPAnalyzer::bookOutputTree()
     outTree_->Branch("isTagTightEle", "std::vector<bool>", &isTagTightEle );
     outTree_->Branch("isTagMediumEle", "std::vector<bool>", &isTagMediumEle );
     outTree_->Branch("electron_matchHLT", "std::vector<bool>", &electron_matchHLT );
+    outTree_->Branch("electron_matchMC", "std::vector<bool>", &electron_matchMC );
  
     outTree_->Branch("accGammaSize",  &accGammaSize,  "accGammaSize/I");   
     outTree_->Branch("gamma_pt", "std::vector<float>", &gamma_pt);
@@ -636,6 +703,7 @@ void TaPAnalyzer::bookOutputTree()
     outTree_->Branch("gamma_eleveto", "std::vector<float>", &gamma_eleveto);
     outTree_->Branch("gamma_presel", "std::vector<int>", &gamma_presel);
     outTree_->Branch("gamma_fullsel", "std::vector<int>", &gamma_fullsel);
+    outTree_->Branch("gamma_matchMC", "std::vector<bool>", &gamma_matchMC );
 
     outTree_->Branch("ptRatio","std::vector<float>", &ptRatio);
     outTree_->Branch("invMass","std::vector<float>", &invMass);
@@ -676,76 +744,77 @@ Ptr<reco::Vertex> TaPAnalyzer::chooseElectronVertex( Ptr<flashgg::Electron> &ele
 }
 
 // Egamma Cut based ID
-
 bool TaPAnalyzer::isMediumEle(float scEta, float hoe, float dphi, float deta, float sIeIe,
-                              float ep, float d0, float dz, float reliso, int missHits, bool passConvVeto)
-{ 
-    bool okDeta, okDphi, okSieIe, okHoE, okEp, okD0, okDz, okIso, okMH, okConv;
- 
-    if (fabs(scEta)<1.479)
+			      float ep, float d0, float dz, float reliso, int missHits, bool passConvVeto) 
+{
+  
+  bool okDeta, okDphi, okSieIe, okHoE, okEp, okD0, okDz, okIso, okMH, okConv;
+  
+  if (fabs(scEta)<1.479)
     { 
-        okSieIe = sIeIe < 0.0101;
-        okDeta  = fabs(deta) < 0.0103;
-        okDphi  = fabs(dphi) < 0.0336;
-        okHoE   = hoe < 0.0876;
-        okIso   = reliso < 0.0766;
-        okEp    = fabs(ep) < 0.0174;
-        okD0    = fabs(d0) < 0.0118;
-        okDz    = fabs(dz) < 0.373;
-        okMH    = missHits<=2;
-        okConv  = passConvVeto;
-    }
-    else
-    {
-        okSieIe = sIeIe < 0.0283;
-        okDeta  = fabs(deta) < 0.00733;
-        okDphi  = fabs(dphi) < 0.114;
-        okHoE   = hoe < 0.0678;
-        okIso   = reliso < 0.0678;
-        okEp    = fabs(ep) < 0.0898;
-        okD0    = fabs(d0) < 0.0739;
-        okDz    = fabs(dz) < 0.602;
-        okMH    = missHits<=1;
-        okConv  = passConvVeto;
-    }
-
-    bool okFullSel = okDeta && okDphi && okSieIe && okHoE && okEp && okD0 && okDz && okIso && okMH && okConv;
-    return okFullSel;
+      okSieIe = sIeIe < 0.0101;
+      okDeta  = fabs(deta) < 0.0103;
+      okDphi  = fabs(dphi) < 0.0336;
+      okHoE   = hoe < 0.0876;
+      okIso   = reliso < 0.0766;
+      okEp    = fabs(ep) < 0.0174;
+      okD0    = fabs(d0) < 0.0118;
+      okDz    = fabs(dz) < 0.373;
+      okMH    = missHits<=2;
+      okConv  = passConvVeto;
+      
+    } else {
+    
+    okSieIe = sIeIe < 0.0283;
+    okDeta  = fabs(deta) < 0.00733;
+    okDphi  = fabs(dphi) < 0.114;
+    okHoE   = hoe < 0.0678;
+    okIso   = reliso < 0.0678;
+    okEp    = fabs(ep) < 0.0898;
+    okD0    = fabs(d0) < 0.0739;
+    okDz    = fabs(dz) < 0.602;
+    okMH    = missHits<=1;
+    okConv  = passConvVeto;
+  }
+  
+  bool okFullSel = okDeta && okDphi && okSieIe && okHoE && okEp && okD0 && okDz && okIso && okMH && okConv;
+  return okFullSel;
 }
 
 
 bool TaPAnalyzer::isTightEle(float scEta, float hoe, float dphi, float deta, float sIeIe,
-                             float ep, float d0, float dz, float reliso, int missHits, bool passConvVeto)
+			     float ep, float d0, float dz, float reliso, int missHits, bool passConvVeto)
 { 
+ 
     bool okDeta, okDphi, okSieIe, okHoE, okEp, okD0, okDz, okIso, okMH, okConv;
-
+                                                                                                                                      
     if (fabs(scEta)<1.479)
-    {
-        okSieIe = sIeIe < 0.0101;
-        okDeta  = fabs(deta) < 0.00926;
-        okDphi  = fabs(dphi) < 0.0336;
-        okHoE   = hoe < 0.0597;
-        okIso   = reliso < 0.0354;
-        okEp    = fabs(ep) < 0.012;
-        okD0    = fabs(d0) < 0.0111;
-        okDz    = fabs(dz) < 0.0466;
-        okMH    = missHits<=2;
-        okConv  = passConvVeto;
-    }
+      {
+	okSieIe = sIeIe < 0.0101;
+	okDeta  = fabs(deta) < 0.00926;
+	okDphi  = fabs(dphi) < 0.0336;
+	okHoE   = hoe < 0.0597;
+	okIso   = reliso < 0.0354;
+	okEp    = fabs(ep) < 0.012;
+	okD0    = fabs(d0) < 0.0111;
+	okDz    = fabs(dz) < 0.0466;
+	okMH    = missHits<=2;
+	okConv  = passConvVeto;
+      }
     else
-    {        
-        okSieIe = sIeIe < 0.0279;
-        okDeta  = fabs(deta) < 0.00724;
-        okDphi  = fabs(dphi) < 0.0918;
-        okHoE   = hoe < 0.0615;
-        okIso   = reliso < 0.0646;
-        okEp    = fabs(ep) < 0.00999;
-        okD0    = fabs(d0) < 0.0351;
-        okDz    = fabs(dz) < 0.417;
-        okMH    = missHits<=1;
-        okConv  = passConvVeto;
-    }
-
+      {        
+	okSieIe = sIeIe < 0.0279;
+	okDeta  = fabs(deta) < 0.00724;
+	okDphi  = fabs(dphi) < 0.0918;
+	okHoE   = hoe < 0.0615;
+	okIso   = reliso < 0.0646;
+	okEp    = fabs(ep) < 0.00999;
+	okD0    = fabs(d0) < 0.0351;
+	okDz    = fabs(dz) < 0.417;
+	okMH    = missHits<=1;
+	okConv  = passConvVeto;
+      }
+    
     bool okFullSel = okDeta && okDphi && okSieIe && okHoE && okEp && okD0 && okDz && okIso && okMH && okConv;
     return okFullSel;
 }
@@ -813,9 +882,8 @@ bool TaPAnalyzer::isGammaPresel( float sceta, float pt, float r9, float chiso) {
     return isPresel;
 }
 
-bool TaPAnalyzer::isGammaSelected(float rho, float pt, float sceta, float r9, float chiso,
-                                  float nhiso, float phoiso, float hoe, float sieie, bool passElectronVeto)
-{
+bool TaPAnalyzer::isGammaSelected( float rho, float pt, float sceta, float r9, float chiso, float nhiso, float phoiso, float hoe, float sieie, bool passElectronVeto) {
+
     // classes: 0 = EB highR9, 1 = EB low R9, 2 = EE high R9, 3 = EE lowR9
     int etaclass = fabs(sceta)>1.5;
     int r9class  = r9<0.94;                   
@@ -823,8 +891,8 @@ bool TaPAnalyzer::isGammaSelected(float rho, float pt, float sceta, float r9, fl
 
     // cuts - hardcoded, v1
     float chiso_cut[4]     = { 5., 5., 5., 5. };     
-    float phoiso_cut[4]    = { 1., 1., 0., 0. };
-    float sieie_cut[4]     = { 1.05e-02, 1.05e-02, 2.82e-02, 2.80e-02 };
+    float phoiso_cut[4]    = { 1., 1., 0., 0. };  
+    float sieie_cut[4]     = { 1.05e-02, 1.05e-02, 2.82e-02, 2.80e-02 };                                                                       
     float sieie_infCut[4]  = { 0.001, 0.001, 0.001, 0.001 };
     float hoe_cut[4]       = { 0.05, 0.05, 0.05, 0.05 };
   
