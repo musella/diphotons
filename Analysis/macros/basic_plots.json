@@ -7,7 +7,7 @@
     "data" : [
 	      ["Data","Data",
 	      [["SetBinErrorOption",1],["colors","kBlack"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","pe"],["SetMarkerStyle","kFullCircle"],["SetFillColor","kWhite"]],
-	      { "Data_13TeV:output.root/%(sel)s" : [] }
+	      { "Data_13TeV:__infile__/%(sel)s" : [] }
 	      ]
 	      
     ],
@@ -17,53 +17,53 @@
 
     "bkg" : [
       	      ["jetjet","j j",
-	      [["colors","myColorD1"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",65.7e-3],["legopt","f"],["SetFillColor","myColorC3tr"]],
-	      { "QCD_Pt_30toInf_13TeV:output.root/%(sel)s" : [] }
+	      [["colors","myColorD1"],["SetLineWidth",2],["SetFillStyle",1001],["legopt","f"],["SetFillColor","myColorC3tr"]],
+	      { "QCD_Pt_30toInf_13TeV:__infile__/%(sel)s" : [] }
 	      ],
 	      
 	      ["gjet","#gamma j",
-	      [["colors","myColorA1"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",65.7e-3],["legopt","f"],["SetFillColor","myColorA3tr"]],
-	      { "GJets_HT_100toInf_13TeV:output.root/%(sel)s" : [] }
+	      [["colors","myColorA1"],["SetLineWidth",2],["SetFillStyle",1001],["legopt","f"],["SetFillColor","myColorA3tr"]],
+	      { "GJets_HT_100toInf_13TeV:__infile__/%(sel)s" : [] }
 	      ],
 
 	      ["ggjet_iso","#gamma #gamma",
-	      [["colors","myColorB1"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",65.7e-3],["legopt","f"],["SetFillColor","myColorB3tr"]],
-	      { "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)s" : [] }
+	      [["colors","myColorB1"],["SetLineWidth",2],["SetFillStyle",1001],["legopt","f"],["SetFillColor","myColorB3tr"]],
+	      { "GGJets_M_200To13000_sherpa_13TeV:__infile__/%(sel)s" : [] }
 	      ]
 	      
 	     ],
 
     "_bkg" : [
 	      ["ggjet_nonIso","non iso #gamma #gamma",
-	      [["colors","myColorC1"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",65.7e-3],["legopt","f"],["SetFillColor","myColorC3tr"]],
-	      { "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)sNonGenIso" : [] }
+	      [["colors","myColorC1"],["SetLineWidth",2],["SetFillStyle",1001],["legopt","f"],["SetFillColor","myColorC3tr"]],
+	      { "GGJets_M_200To13000_sherpa_13TeV:__infile__/%(sel)sNonGenIso" : [] }
 	      ],
 	      
 	      ["ggjet_iso","iso #gamma #gamma",
-	      [["colors","myColorB1"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",65.7e-3],["legopt","f"],["SetFillColor","myColorB3tr"]],
-	      { "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)sGenIso" : [] }
+	      [["colors","myColorB1"],["SetLineWidth",2],["SetFillStyle",1001],["legopt","f"],["SetFillColor","myColorB3tr"]],
+	      { "GGJets_M_200To13000_sherpa_13TeV:__infile__/%(sel)sGenIso" : [] }
 	      ]
     	      ],
 
     "_sig" :  ["rsg_02_5000","G #rightarrow #gamma #gamma (k/M_{PL}=0.1 M_{G}=5TeV)",
-	      [["colors","kAzure"],["SetLineWidth",2],["SetFillStyle",0],["Scale",65.7e-3],["legopt","f"],["SetFillColor","kWhite"]],
-	      { "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)s" : [], "QCD_HT_100toInf_13TeV:output.root/%(sel)s" : [], "GJets_HT_100toInf_13TeV:output.root/%(sel)s" : [], "RSGravToGG_kMpl_02_M_5000_13TeV:output.root/%(sel)s" : [] }
+	      [["colors","kAzure"],["SetLineWidth",2],["SetFillStyle",0],["legopt","f"],["SetFillColor","kWhite"]],
+	      { "GGJets_M_200To13000_sherpa_13TeV:__infile__/%(sel)s" : [], "QCD_HT_100toInf_13TeV:__infile__/%(sel)s" : [], "GJets_HT_100toInf_13TeV:__infile__/%(sel)s" : [], "RSGravToGG_kMpl_02_M_5000_13TeV:__infile__/%(sel)s" : [] }
 	      ],
 	      
     "_sig" : [
 	      ["rsg_02_5000","G #rightarrow #gamma #gamma (k/M_{PL}=0.2 M_{G}=5TeV)",
-	      [["colors","kAzure"],["SetLineWidth",2],["SetFillStyle",0],["Scale",65.7e-3],["legopt","f"],["SetFillColor","kWhite"]],
-	      { "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)s" : [], "QCD_HT_100toInf_13TeV:output.root/%(sel)s" : [], "GJets_HT_100toInf_13TeV:output.root/%(sel)s" : [], "RSGravToGG_kMpl_02_M_5000_13TeV:output.root/%(sel)s" : [] }
+	      [["colors","kAzure"],["SetLineWidth",2],["SetFillStyle",0],["legopt","f"],["SetFillColor","kWhite"]],
+	      { "GGJets_M_200To13000_sherpa_13TeV:__infile__/%(sel)s" : [], "QCD_HT_100toInf_13TeV:__infile__/%(sel)s" : [], "GJets_HT_100toInf_13TeV:__infile__/%(sel)s" : [], "RSGravToGG_kMpl_02_M_5000_13TeV:__infile__/%(sel)s" : [] }
 	      ],
 	      
 	      ["rsg_01_3000","G #rightarrow #gamma #gamma (k/M_{PL}=0.1 M_{G}=3TeV)",
-	      [["colors","kOrange"],["SetLineWidth",2],["SetFillStyle",0],["Scale",65.7e-3],["legopt","f"],["SetFillColor","kWhite"]],
-	      { "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)s" : [], "QCD_HT_100toInf_13TeV:output.root/%(sel)s" : [], "GJets_HT_100toInf_13TeV:output.root/%(sel)s" : [], "RSGravToGG_kMpl_01_M_3000_13TeV:output.root/%(sel)s" : [] }
+	      [["colors","kOrange"],["SetLineWidth",2],["SetFillStyle",0],["legopt","f"],["SetFillColor","kWhite"]],
+	      { "GGJets_M_200To13000_sherpa_13TeV:__infile__/%(sel)s" : [], "QCD_HT_100toInf_13TeV:__infile__/%(sel)s" : [], "GJets_HT_100toInf_13TeV:__infile__/%(sel)s" : [], "RSGravToGG_kMpl_01_M_3000_13TeV:__infile__/%(sel)s" : [] }
 	      ],
 	      
 	      ["rsg_01_1500","G #rightarrow #gamma #gamma (k/M_{PL}=0.1 M_{G}=1.5TeV)",
 	      [["colors","kMagenta"],["SetLineWidth",2],["SetFillStyle",0],["Scale",40e-2],["legopt","f"],["SetFillColor","kWhite"]],
-	      { "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)s" : [], "QCD_HT_100toInf_13TeV:output.root/%(sel)s" : [], "GJets_HT_100toInf_13TeV:output.root/%(sel)s" : [], "RSGravToGG_kMpl_01_M_1500_13TeV:output.root/%(sel)s" : [] }
+	      { "GGJets_M_200To13000_sherpa_13TeV:__infile__/%(sel)s" : [], "QCD_HT_100toInf_13TeV:__infile__/%(sel)s" : [], "GJets_HT_100toInf_13TeV:__infile__/%(sel)s" : [], "RSGravToGG_kMpl_01_M_1500_13TeV:__infile__/%(sel)s" : [] }
 	      ]
 
     ],
@@ -71,52 +71,49 @@
     "_sig" : [
 	      ["rsg_02_5000","G #rightarrow #gamma #gamma (k/M_{PL}=0.2 M_{G}=5TeV)",
 	      [["colors","kRed"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","f"],["SetFillColor","kWhite"]],
-	      { "RSGravToGG_kMpl_02_M_5000_13TeV:output.root/%(sel)s" : [] }
+	      { "RSGravToGG_kMpl_02_M_5000_13TeV:__infile__/%(sel)s" : [] }
 	      ],
 	      
 	      ["rsg_02_3000","G #rightarrow #gamma #gamma (k/M_{PL}=0.2 M_{G}=3TeV)",
 	      [["colors","kRed"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","f"],["SetFillColor","kWhite"]],
-	      { "RSGravToGG_kMpl_02_M_3000_13TeV:output.root/%(sel)s" : [] }
+	      { "RSGravToGG_kMpl_02_M_3000_13TeV:__infile__/%(sel)s" : [] }
 	      ],
 	      
 	      ["rsg_02_1500","G #rightarrow #gamma #gamma (k/M_{PL}=0.2 M_{G}=1.5TeV)",
 	      [["colors","kRed"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","f"],["SetFillColor","kWhite"]],
-	      { "RSGravToGG_kMpl_02_M_1500_13TeV:output.root/%(sel)s" : [] }
+	      { "RSGravToGG_kMpl_02_M_1500_13TeV:__infile__/%(sel)s" : [] }
 	      ],
 
 	      ["rsg_01_3000","G #rightarrow #gamma #gamma (k/M_{PL}=0.1 M_{G}=3TeV)",
 	      [["colors","kBlue"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","f"],["SetFillColor","kWhite"]],
-	      { "RSGravToGG_kMpl_01_M_3000_13TeV:output.root/%(sel)s" : [] }
+	      { "RSGravToGG_kMpl_01_M_3000_13TeV:__infile__/%(sel)s" : [] }
 	      ],
 	      
 	      ["rsg_01_1500","G #rightarrow #gamma #gamma (k/M_{PL}=0.1 M_{G}=1.5TeV)",
 	      [["colors","kBlue"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","f"],["SetFillColor","kWhite"]],
-	      { "RSGravToGG_kMpl_01_M_1500_13TeV:output.root/%(sel)s" : [] }
+	      { "RSGravToGG_kMpl_01_M_1500_13TeV:__infile__/%(sel)s" : [] }
 	      ],
 
 	      ["rsg_001_5000","G #rightarrow #gamma #gamma (k/M_{PL}=0.01 M_{G}=5TeV)",
 	      [["colors","kGreen"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","f"],["SetFillColor","kWhite"]],
-	      { "RSGravToGG_kMpl_001_M_5000_13TeV:output.root/%(sel)s" : [] }
+	      { "RSGravToGG_kMpl_001_M_5000_13TeV:__infile__/%(sel)s" : [] }
 	      ],
 	      
 	      ["rsg_001_1500","G #rightarrow #gamma #gamma (k/M_{PL}=0.01 M_{G}=1.5TeV)",
 	      [["colors","kGreen"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","f"],["SetFillColor","kWhite"]],
-	      { "RSGravToGG_kMpl_001_M_1500_13TeV:output.root/%(sel)s" : [] }
+	      { "RSGravToGG_kMpl_001_M_1500_13TeV:__infile__/%(sel)s" : [] }
 	      ],
 
 	      ["rsg_001_750","G #rightarrow #gamma #gamma (k/M_{PL}=0.01 M_{G}=0.75TeV)",
 	      [["colors","kGreen"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","f"],["SetFillColor","kWhite"]],
-	      { "RSGravToGG_kMpl_001_M_750_13TeV:output.root/%(sel)s" : [] }
+	      { "RSGravToGG_kMpl_001_M_750_13TeV:__infile__/%(sel)s" : [] }
 	      ]
 
     ],
 
     "_data": null,
-    "bkg_file" : "_per_subproc_", 
-    "_sig_file" : "_per_subproc_", 
+    "bkg_file" : "output.root", 
     "data_file"  : "output.root",
-    "_data_file"  : "output_data.root",
-    "_bkg_file"  : "output.root",
     "sig_file"  : "output.root",
 
     "_categories": ["EBHighR9","EBLowR9","EEHighR9","EELowR9"], 
