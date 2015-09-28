@@ -1,10 +1,10 @@
 import FWCore.ParameterSet.Config as cms
 import FWCore.Utilities.FileUtils as FileUtils
 
-isMC = True;
-is25ns = True;   
+isMC = False;
+is25ns = False;   
 is2012B = False;    
-is2012C = False;  
+is2012C = True;  
 is2012D = False;   
 
 process = cms.Process("tnpAna")
@@ -68,6 +68,7 @@ process.tnpAna = cms.EDAnalyzer('TaPAnalyzer',
                                 PileupTag = cms.untracked.InputTag('addPileupInfo'),
                                 bits = cms.InputTag("TriggerResults","","HLT"),
                                 objects = cms.InputTag("selectedPatTrigger"),
+                                MetTag=cms.InputTag('slimmedMETs'),
                                 generatorInfo = cms.InputTag("generator"),
                                 dopureweight = PU,
                                 sampleIndex  = SI,
