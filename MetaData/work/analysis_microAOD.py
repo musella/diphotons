@@ -44,8 +44,9 @@ process.source = cms.Source("PoolSource",
         ## "/store/data/Run2015B/DoubleEG/MINIAOD/PromptReco-v1/000/251/096/00000/8A2D533C-5626-E511-AF3C-02163E011FAB.root")
         ## "/store/mc/RunIISpring15DR74/GGJets_M-1000To2000_Pt-50_13TeV-sherpa/MINIAODSIM/Asympt25ns_MCRUN2_74_V9-v3/40000/14933A04-1A3C-E511-979C-AC162DABCAF8.root"
         ## "/store/data/Run2015B/DoubleEG/MINIAOD/PromptReco-v1/000/251/244/00000/C47A9CF9-6227-E511-908E-02163E014509.root"
-        "/store/data/Run2015D/DoubleEG/MINIAOD/PromptReco-v3/000/256/630/00000/827EBF7D-5D5F-E511-A2A8-02163E01454A.root"
+        ## "/store/data/Run2015D/DoubleEG/MINIAOD/PromptReco-v3/000/256/630/00000/827EBF7D-5D5F-E511-A2A8-02163E01454A.root"
         ## "root://eoscms//eos/cms/store/mc/RunIISpring15DR74/ADDGravToGG_MS-6000_NED-4_KK-1_M-2000To4000_13TeV-sherpa/MINIAODSIM/Asympt25ns_MCRUN2_74_V9-v1/20000/76CA81A9-1024-E511-8D9F-3417EBE6471D.root"
+        "/store/mc/RunIISpring15DR74/RSGravToGG_kMpl-001_M-6000_TuneCUEP8M1_13TeV-pythia8/MINIAODSIM/Asympt50ns_MCRUN2_74_V9A-v1/30000/3A9530E2-292B-E511-9F05-003048FFCB8C.root"
         )
                             )
 
@@ -148,6 +149,7 @@ process.out.outputCommands.extend([### "keep *_eventCount_*_*",
                                     "drop *_flashggPreselectedDiPhotons_*_*",
                                     "keep *_reducedEgamma_*_*",
                                     "keep *_flashggElectrons_*_*",
+                                    "keep *_BeamHaloSummary_*_*"
                                     ]
                                    )
 process.out.outputCommands.extend(microAODHLTOutputCommand)

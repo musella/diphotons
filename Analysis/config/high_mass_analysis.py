@@ -146,7 +146,7 @@ histograms=["mass>>mass(1500,0,15000)",
             "deltaEta>>deltaEta(200,0,5)",
             "cosDeltaPhi>>cosDeltaPhi(200,0,1)",
             "global.rho>>rho(20,0,50)",
-            "global.nvtx>>nvtx(20,0,50)",
+            "global.nvtx>>nvtx(51,0.5,50.5)",
             
             "leadPt>>phoPt(150,0,3000)",
             "subleadPt>>phoPt(150,0,3000)",
@@ -162,7 +162,7 @@ histograms=["mass>>mass(1500,0,15000)",
             "leadPhoIso>>leadPhoIso(120,-10,50)",
             "leadNeutIso>>leadNeutIso(120,-10,50)",
             "leadHoE>>leadHoE(40,0,0.2)",
-            "leadSigmaIeIe>>leadSigmaIeIe(50,0,5.e-2)",
+            "leadSigmaIeIe>>leadSigmaIeIe(320,0,3.2e-2)",
             "leadPixSeed>>leadPixSeed(2,-0.5,1.5)",
             "leadPassEleVeto>>leadPassEleVeto(2,-0.5,1.5)",
             
@@ -172,7 +172,7 @@ histograms=["mass>>mass(1500,0,15000)",
             "subleadPhoIso>>subleadPhoIso(120,-10,50)",
             "subleadNeutIso>>subleadNeutIso(120,-10,50)",
             "subleadHoE>>subleadHoE(40,0,0.2)",
-            "subleadSigmaIeIe>>subleadSigmaIeIe(50,0,5.e-2)",
+            "subleadSigmaIeIe>>subleadSigmaIeIe(320,0,3.2e-2)",
             "subleadPixSeed>>subleadPixSeed(2,-0.5,1.5)",
             "subleadPassEleVeto>>subleadPassEleVeto(2,-0.5,1.5)",
             
@@ -181,8 +181,8 @@ histograms=["mass>>mass(1500,0,15000)",
             "subleadChIso>>phoChIso(120,-10,50)",
             "leadPhoIso>>phoPhoIso(120,-10,50)",
             "subleadPhoIso>>phoPhoIso(120,-10,50)",
-            "leadSigmaIeIe>>phoSigmaIeIe(50,0,5.e-2)",
-            "subleadSigmaIeIe>>phoSigmaIeIe(50,0,5.e-2)",
+            "leadSigmaIeIe>>phoSigmaIeIe(320,0,3.2e-2)",
+            "subleadSigmaIeIe>>phoSigmaIeIe(320,0,3.2e-2)",
             "leadHoE>>phoHoE(40,0,0.2)",                                   
             "subleadHoE>>phoHoE(40,0,0.2)",                                   
             "leadPassEleVeto>>phoPassEleVeto(2,-0.5,1.5)",
@@ -241,7 +241,7 @@ histogramsSinglePho = [
     "phoScEta:phoPhi>>phoEtaVsPhi(65,-3.25,3.25:55,-2.75,2.75)"
     ]
 
-if not "EXOSpring15_v3" in customize.datasetName() or "EXOSpring15_v3v8" in customize.datasetName():
+if customize.datasetName() and (not "EXOSpring15_v3" in customize.datasetName() or "EXOSpring15_v3v8" in customize.datasetName()):
     variables.extend( [
             "leadRndConeChIso := leadingView.extraChIsoWrtChoosenVtx('rnd03')",
             "leadRndConeChIso0 := leadingView.extraChIsoWrtChoosenVtx('rnd03_0')",
@@ -517,10 +517,11 @@ analysis = DiPhotonAnalysis(diphotonDumper,
                             )
 
 # drop samples overlap
-if "GJet-HT" in customize.datasetName():
-    analysis.keepPFOnly = True
-elif "QCD" in customize.datasetName():
-    analysis.keepFFOnly = True
+if customize.datasetName():
+    if "GJet-HT" in customize.datasetName():
+        analysis.keepPFOnly = True
+    elif "QCD" in customize.datasetName():
+        analysis.keepFFOnly = True
 
 ## kinematic selection
 analysis.addKinematicSelection(process,dumpTrees=True,splitByIso=True

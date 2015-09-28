@@ -219,13 +219,14 @@ class PyRApp(object):
     def open(self,name,option="",folder=None):
         tdir = None
         fname = name
-        if folder:
+        if folder and not fname.startswith("/"):
             if not os.path.exists(folder):
                 os.mkdir(folder)
             fname = "%s/%s" % ( folder, name )
         if ".root/" in name:
             fname, tdir = name.split(".root/")
             fname += ".root"
+        print fname
         if not fname.endswith(".root"):
             return open(fname,option)
         option = self.normalizeTFileOptions(option)

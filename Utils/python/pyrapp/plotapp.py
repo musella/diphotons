@@ -458,10 +458,11 @@ class PlotApp(PyRApp):
                 sa = s
                 s,fname = s.split(":")
                 folder = None
-                if ".root/" in fname:
+                if ".root/" in fname or "__infile__/" in fname:
                     fname, folder = fname.rsplit("/",1)
                 ## print fname, folder
-                sfin = self.open(fname, folder=self.options.input_dir)
+                if fname != "__infile__":
+                    sfin = self.open(fname, folder=self.options.input_dir)
                 if folder:
                     try:
                         sfin = sfin.Get(folder)
