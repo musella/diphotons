@@ -4,12 +4,13 @@
 #include "TROOT.h"
 #include "TH1F.h"
 #include "TFile.h"
+#include "TFrame.h"
 #include "TCanvas.h"
 #include "TLegend.h"
 #include "TPaveText.h"
 #include <iostream>
 
-#include "../interface/DiphotonUtils.h"
+//#include "../interface/DiphotonUtils.h"
 
 #define NVARIABLES 16
 #define NCUTS 4
@@ -52,10 +53,8 @@ int main(int argc, char* argv[])
     gStyle->SetMarkerStyle(20);
     gStyle->SetMarkerSize(1.0);
     gStyle->SetMarkerColor(1);
-
-    DiphotonPlot *myPlot = new DiphotonPlot();
-    myPlot->setStyle();
     gStyle->SetOptStat("");
+
     TString plotsDir="TaPplots/";
     system("mkdir -p TaPplots");
 
