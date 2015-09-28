@@ -12,6 +12,30 @@ class MicroAODCustomize(fggMicroAODCustomize):
         if "QCD" in self.datasetName:
             ##     process.flashggPreselectedDiPhotons.filter = cms.bool(True)
             process.myPreselectedPhotons.filter = cms.bool(True)
+
+        if "WWTo2L2Nu" in self.datasetName:
+            process.myPreselectedElectrons.filter = cms.bool(True)
+
+        if "ZZTo4L" in self.datasetName:
+            process.myPreselectedElectrons.filter = cms.bool(True)
+
+        if "WZJets" in self.datasetName:
+            process.myPreselectedElectrons.filter = cms.bool(True)
+
+        if "WJetsToLNu" in self.datasetName:
+            process.myPreselectedElectrons.filter = cms.bool(True)
+
+        if "WWTo2L2Nu" in self.datasetName:
+            process.myPreselectedPhotons.filter = cms.bool(True)
+
+        if "ZZTo4L" in self.datasetName:
+            process.myPreselectedPhotons.filter = cms.bool(True)
+
+        if "WZJets" in self.datasetName:
+            process.myPreselectedPhotons.filter = cms.bool(True)
+
+        if "WJetsToLNu" in self.datasetName:
+            process.myPreselectedPhotons.filter = cms.bool(True)
             
 
 # customization object

@@ -2,6 +2,10 @@ import FWCore.ParameterSet.Config as cms
 import FWCore.Utilities.FileUtils as FileUtils
 
 isMC = True
+is25ns = True
+is2012B = False;
+is2012C = True;
+is2012D = False;
 
 process = cms.Process("tnpAna")
 
@@ -12,23 +16,26 @@ process.load("Configuration.StandardSequences.MagneticField_cff")
 process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff")
 
 from Configuration.AlCa.GlobalTag import GlobalTag
-if (isMC):
-    process.GlobalTag = GlobalTag(process.GlobalTag, 'MCRUN2_74_V9A', '')           # 50ns
-    #process.GlobalTag = GlobalTag(process.GlobalTag, 'MCRUN2_74_V9', '')            # 25ns
-else:
-    process.GlobalTag = GlobalTag(process.GlobalTag, 'GR_P_V56', '')
 
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32( 1000 ) )
+if (isMC and is25ns==False):
+    process.GlobalTag = GlobalTag(process.GlobalTag, 'MCRUN2_74_V9A', '')     
+elif (isMC and is25ns):  
+    process.GlobalTag = GlobalTag(process.GlobalTag, 'MCRUN2_74_V9', '')      
+elif (isMC==False and is2012B):
+    process.GlobalTag = GlobalTag(process.GlobalTag, '74X_dataRun2_Prompt_v1', '')
+elif (isMC==False and is2012C): 
+    process.GlobalTag = GlobalTag(process.GlobalTag, '74X_dataRun2_Prompt_v1', '')
+elif ((isMC==False and is2012D)):
+    process.GlobalTag = GlobalTag(process.GlobalTag, '74X_dataRun2_Prompt_v2', '')
+print process.GlobalTag
+
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32( -1 ) )
 
 process.source = cms.Source("PoolSource",
-                            fileNames=cms.untracked.vstring([])
+                            fileNames=cms.untracked.vstring(
+        "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v3/Spring15BetaV2-2-gfceadad/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/EXOSpring15_v3-Spring15BetaV2-2-gfceadad-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3/150807_132311/0000/diphotonsMicroAOD_10.root"
+        )
                             )
-
-#inputFileList = open("../scripts/lists_Spring15v1/50ns/data/DoubleEG.list", "r")
-inputFileList = open("../scripts/lists_Spring15v1/50ns/MC/DYLL.list", "r")
-
-for line in inputFileList:
-    process.source.fileNames.append(line);
 
 process.load("flashgg/MicroAOD/flashggPhotons_cfi")
 process.load("flashgg/MicroAOD/flashggElectrons_cfi")
@@ -47,11 +54,13 @@ process.tnpAna = cms.EDAnalyzer('TaPAnalyzer',
                                 bits = cms.InputTag("TriggerResults","","HLT"),
                                 objects = cms.InputTag("selectedPatTrigger"),
 
+                                MetTag=cms.InputTag('slimmedMETs'),
+
                                 generatorInfo = cms.InputTag("generator"),
                                 dopureweight = cms.untracked.int32(0),
-                                sampleIndex  = cms.untracked.int32(0),   # 5
+                                sampleIndex  = cms.untracked.int32(1), 
                                 puWFileName  = cms.string('xxx'),   # chiara  
-                                xsec         = cms.untracked.double(1.),
+                                xsec         = cms.untracked.double(6025),
                                 kfac         = cms.untracked.double(1.),
                                 sumDataset   = cms.untracked.double(1.)
                                 )
