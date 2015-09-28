@@ -22,6 +22,9 @@
 #include "DataFormats/PatCandidates/interface/TriggerObjectStandAlone.h"     
 #include "DataFormats/PatCandidates/interface/PackedTriggerPrescales.h"   
 #include "DataFormats/PatCandidates/interface/MET.h"
+#include "DataFormats/EcalRecHit/interface/EcalRecHitCollections.h"
+#include "DataFormats/EcalDetId/interface/EBDetId.h"
+#include "DataFormats/EcalDetId/interface/EEDetId.h"
 
 #include "SimDataFormats/PileupSummaryInfo/interface/PileupSummaryInfo.h"
 #include "SimDataFormats/GeneratorProducts/interface/GenEventInfoProduct.h"
@@ -61,7 +64,7 @@ private:
   
   // photons
   bool isGammaPresel( float sceta, float pt, float r9, float chiso);
-  bool isGammaSelected( float rho, float pt, float sceta, float r9, float chiso, float nhiso, float phoiso, float hoe, float sieie, bool passElectronVeto);
+  bool isGammaSelected( float rho, float pt, float sceta, float r9, float chiso, float nhiso, float phoiso, float hoe, float sieie, bool passElectronVeto, bool satur);
   int effectiveAreaGammaRegion(float sceta);
   
   // electrons
@@ -148,6 +151,7 @@ private:
   vector <int>   gamma_presel={};
   vector <int>   gamma_fullsel={};
   vector <bool>  gamma_matchMC={};
+  vector <bool>  gamma_kSaturated={};
   
   vector <float> ptRatio={};
   vector <float> invMass={};
@@ -217,7 +221,7 @@ void TaPAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 
   edm::Handle<View<reco::GenParticle> > genParticles;
   if (sampleID>0 && sampleID<10000) iEvent.getByToken( genPartToken_, genParticles );
-  
+
   Handle<View<pat::MET> > METs;
   iEvent.getByToken( MetToken_, METs );
   if( METs->size() != 1 ) std::cout << "WARNING number of MET is not equal to 1" << std::endl; 
@@ -533,6 +537,15 @@ void TaPAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 	    if(thisRecoGamma.DeltaR(myGenPos)<0.3) matchMC = true;  
 	  }
 
+	  // saturation
+	  bool isKsaturated = false;
+	  // DetId seedDetId = ( (g1->superCluster())->seed() )->seed();
+	  // if (g1->recHits()) {
+	  // if (seedDetId) {
+	  //EcalRecHitCollection::const_iterator itseed = g1->recHits()->find( seedDetId );    
+	  //isKsaturated = itseed->checkFlag(EcalRecHit::kSaturated);
+	  // }}	  
+
 	  // preselection and full sel
 	  float R9noZS    = g1->full5x5_r9();    
 	  float HoE       = g1->hadTowOverEm();
@@ -545,7 +558,7 @@ void TaPAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 	  bool  eleVeto = g1->passElectronVeto();
 	  
 	  bool passPresel    = isGammaPresel( scEta, pt, R9noZS, chIso); 
-	  bool passFullSelel = isGammaSelected( rho, pt, scEta, R9noZS, chIso, neuIso, phoIso, HoE, sieienoZS, eleVeto); 
+	  bool passFullSelel = isGammaSelected( rho, pt, scEta, R9noZS, chIso, neuIso, phoIso, HoE, sieienoZS, eleVeto, isKsaturated); 
 	  
 	  if(passPresel)
 	    atLeastOneProbe = true;
@@ -564,6 +577,7 @@ void TaPAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 	  gamma_presel.push_back(passPresel);
 	  gamma_fullsel.push_back(passFullSelel);
 	  gamma_matchMC.push_back(matchMC);
+	  gamma_kSaturated.push_back(isKsaturated);
 
 	} // probe
     } // vertex
@@ -629,6 +643,7 @@ void TaPAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
   gamma_presel.clear();
   gamma_fullsel.clear();
   gamma_matchMC.clear();
+  gamma_kSaturated.clear();
 
   //---invariant mass and ptratio
   ptRatio.clear();
@@ -704,6 +719,7 @@ void TaPAnalyzer::bookOutputTree()
     outTree_->Branch("gamma_presel", "std::vector<int>", &gamma_presel);
     outTree_->Branch("gamma_fullsel", "std::vector<int>", &gamma_fullsel);
     outTree_->Branch("gamma_matchMC", "std::vector<bool>", &gamma_matchMC );
+    outTree_->Branch("gamma_kSaturated", "std::vector<bool>", &gamma_kSaturated );
 
     outTree_->Branch("ptRatio","std::vector<float>", &ptRatio);
     outTree_->Branch("invMass","std::vector<float>", &invMass);
@@ -882,7 +898,7 @@ bool TaPAnalyzer::isGammaPresel( float sceta, float pt, float r9, float chiso) {
     return isPresel;
 }
 
-bool TaPAnalyzer::isGammaSelected( float rho, float pt, float sceta, float r9, float chiso, float nhiso, float phoiso, float hoe, float sieie, bool passElectronVeto) {
+bool TaPAnalyzer::isGammaSelected( float rho, float pt, float sceta, float r9, float chiso, float nhiso, float phoiso, float hoe, float sieie, bool passElectronVeto, bool satur) {
 
     // classes: 0 = EB highR9, 1 = EB low R9, 2 = EE high R9, 3 = EE lowR9
     int etaclass = fabs(sceta)>1.5;
@@ -890,26 +906,36 @@ bool TaPAnalyzer::isGammaSelected( float rho, float pt, float sceta, float r9, f
     int theclass = 2.*etaclass + r9class;                  
 
     // cuts - hardcoded, v1
-    float chiso_cut[4]     = { 5., 5., 5., 5. };     
-    float phoiso_cut[4]    = { 1., 1., 0., 0. };  
-    float sieie_cut[4]     = { 1.05e-02, 1.05e-02, 2.82e-02, 2.80e-02 };                                                                       
+    float chiso_cut[4]     = { 5., 5., 5., 5. };
+    float phoiso_cut[4]    = { 2.75, 2.75, 2., 2. };
+    float sieie_cut[4]     = { 1.05e-02, 1.05e-02, 2.80e-02, 2.80e-02 };   
+    float sieieKSat_cut[4] = { 0.0112, 0.0112, 0.03, 0.03 };   
     float sieie_infCut[4]  = { 0.001, 0.001, 0.001, 0.001 };
-    float hoe_cut[4]       = { 0.05, 0.05, 0.05, 0.05 };
+    float hoe_cut[4]       = { 0.05, 0.05, 0.05, 0.05 };                   
   
     // effective areas - hardcoded 
-    float phIsoAE[5] = { 0.21,0.20,0.14,0.22,0.31 };
+    float phIsoAE[5] = { 0.17,0.14,0.11,0.14,0.22 };
+
+    // alpha values - hardcoded
+    float phIsoAlpha[5] = { 2.5,2.5,2.5,2.5,2.5 };
+
+    // kappa values - hardcoded
+    float phIsoKappa[5]= { 0.0045,0.0045,0.0045,0.003,0.003 };
 
     // EA corrections 
     int theEAregion  = effectiveAreaGammaRegion(sceta);   
-    float corrPhIso1 = phoiso - rho*phIsoAE[theEAregion];
 
-    // pT correction
-    float corrPhIso = corrPhIso1 - 0.002*pt;
+    // full correction
+    float corrPhIso = phIsoAlpha[theEAregion] + phoiso - rho*phIsoAE[theEAregion] - phIsoKappa[theEAregion]*pt;
 
     if (chiso > chiso_cut[theclass])      return false;
     if (corrPhIso > phoiso_cut[theclass]) return false;
     if (hoe > hoe_cut[theclass])          return false;
-    if (sieie > sieie_cut[theclass])      return false;
+    if (!satur) {
+      if (sieie > sieie_cut[theclass])    return false;
+    } else {
+      if (sieie > sieieKSat_cut[theclass]) return false;      
+    }
     if (sieie < sieie_infCut[theclass])   return false;
 
     // electron veto 
