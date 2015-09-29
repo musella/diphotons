@@ -159,6 +159,12 @@ process.myPreselectedPhotons = cms.EDFilter("PhotonSelector",
                                             cut=cms.string("(r9>0.8||egChargedHadronIso<20||egChargedHadronIso/pt<0.3) && pt>50 && egChargedHadronIso<15")
                                             )
 
+process.myPreselectedElectrons = cms.EDFilter("ElectronSelector",
+                                              src=cms.InputTag("flashggElectrons"),
+                                              cut=cms.string("pt>20")
+                                              )
+
+
 # need to allow unscheduled processes otherwise reclustering function will fail
 # this is because of the jet clustering tool, and we have to live with it for now.
 process.options = cms.untracked.PSet(
@@ -169,7 +175,7 @@ process.options = cms.untracked.PSet(
 ### # call the function, it takes care of everything else.
 ### addFlashggPFCHSLegJets(process)
 
-process.p = cms.Path(process.flashggMicroAODSequence*process.myPreselectedPhotons)
+process.p = cms.Path(process.flashggMicroAODSequence+process.myPreselectedPhotons+process.myPreselectedElectrons)
 
 process.e = cms.EndPath(process.out)
 

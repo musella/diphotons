@@ -306,10 +306,9 @@ class PlotApp(PyRApp):
                 frame = allhists[0].Clone("%s_%s_frame" % (plotname,catname) )
                 frame.Reset("ICE")
                 frame.SetEntries(0)
-                self.keep(frame,True)
                 ymax = 0.
                 ymin = 0.
-                
+
                 # allocate canvas and legend and draw frame
                 canv,leg = self.makeCanvAndLeg("%s_%s" % ( plotname, catname), legPos )
                 pads=[canv]
@@ -364,6 +363,8 @@ class PlotApp(PyRApp):
                 else:
                     frame.GetYaxis().SetRangeUser(ymin,ymax*1.2)
                 leg.Draw("same")
+                self.keep(frame,True)
+
                 for pad in pads:
                     pad.RedrawAxis()
                     pad.Modified()
@@ -382,7 +383,7 @@ class PlotApp(PyRApp):
                     
                     ratio.Draw("e")
                     pads[0].cd()
-                    
+                
                 # if needed draw inset with zoom-in
                 ##   DrawInset[rngmin,rngmax,posx1,posy1,posx2,posy2]
                 if "DrawInset" in drawmethod:

@@ -105,10 +105,13 @@
 
 					,null,null,["sig"]],
 
-	      ["leadSigmaIeIe"		,[["ytitle","Events / %(binw)s GeV"],["xtitle","#gamma_{1} #sigma_{i#eta i#eta}"],["overflow",[null]]]
+	      ["leadSigmaIeIe"		,[["Rebin",2],["ytitle","Events / %(binw)s"],["xtitle","#gamma_{1} #sigma_{i#eta i#eta}"],["overflow",[null]]]
 					,null,null,["sig"]],
 
-	      ["subleadSigmaIeIe"	,[["ytitle","Events / %(binw)s GeV"],["xtitle","#gamma_{2} #sigma_{i#eta i#eta}"],["overflow",[null]]]
+	      ["subleadSigmaIeIe"	,[["Rebin",2],["ytitle","Events / %(binw)s"],["xtitle","#gamma_{2} #sigma_{i#eta i#eta}"],["overflow",[null]]]
+					,null,null,["sig"]],
+
+	      ["phoSigmaIeIe"	,[["Rebin",2],["ytitle","Events / %(binw)s"],["xtitle","#gamma #sigma_{i#eta i#eta}"],["overflow",[null]]]
 					,null,null,["sig"]],
 	      			    
 	      ["leadPassEleVeto"	,[["ytitle","Events"],["xtitle","#gamma_{1} pass electron veto"]]
@@ -132,7 +135,7 @@
 
     "selections" : [
         ["cic",""],
-        ["cicNoSigmaIetaIeta","noSiEiE",["lowmass","leadSigmaIeIe","subleadSigmaIeIe"]],
+        ["cicNoSigmaIetaIeta","noSiEiE",["lowmass","leadSigmaIeIe","subleadSigmaIeIe","phoSigmaIeIe"]],
         ["cicNoChIso","noChIso",["lowmass","leadChIso","subleadChIso","nvtx","rho","phoRndConeChIso"]],
         ["cicNoPhoIso","noPhoIso",["lowmass","leadPhoIso","subleadPhoIso","nvtx","rho"]],
         ["cicNoHoverE","noHoE",["lowmass","leadHoE","subleadHoE"]],
@@ -156,9 +159,14 @@
 	"*pt*"  : [["logy",1e-2]],
 	    "*HoE*"  : [["logy",1e-3]],
 	"*rat"   : ["SetGridy"],
-	    "*ratio" : [["ytitle","Data / MC"],["applyTo",["GetYaxis",[["SetNdivisions",505],["SetRangeUser",[0.5,1.5]]]]]],
-	    "lowmass*ratio" : [["ytitle","Data / MC"],["applyTo",["GetYaxis",[["SetNdivisions",505],["SetRangeUser",[0,2]]]]]]
-	},	 
+        "*ratio" : [["ytitle","Data / MC"],["applyTo",["GetYaxis",[["SetNdivisions",505],["SetRangeUser",[0.5,1.5]]]]]],
+        "lowmass*ratio" : [["ytitle","Data / MC"],["applyTo",["GetYaxis",[["SetNdivisions",505],["SetRangeUser",[0,2]]]]]],
+     	"*SigmaIeIe_EB*_frame" : [ ["xrange",[3e-3,1.5e-2]] ],	 
+     	"*SigmaIeIe_EE*_frame" : [ ["xrange",[1.8e-2,3e-2]],["yrezoom",0.25] ],
+     	"*SigmaIeIe_EB*_ratio" : [ ["xrange",[3e-3,1.5e-2]] ],	 
+     	"*SigmaIeIe_EE*_ratio" : [ ["xrange",[1.8e-2,3e-2]] ]
+
+	},
     "postproc" : {
     },
 

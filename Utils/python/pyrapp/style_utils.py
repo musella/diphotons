@@ -27,6 +27,13 @@ def ztitle(h,tit):
     h.GetZaxis().SetTitle(tit)
 
 # -----------------------------------------------------------------------------------------------------------
+def yrezoom(h,scale):
+    last=h.GetMaximum()
+    first=h.GetMinimum()
+    last=first+(last-first)*scale 
+    h.GetYaxis().SetRangeUser(first,last)
+
+# -----------------------------------------------------------------------------------------------------------
 def logy(h,ymin=None):
     if h.IsA().InheritsFrom(ROOT.TPad.Class()):
         h.SetLogy()
