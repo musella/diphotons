@@ -47,7 +47,8 @@ class DiPhotonAnalysis(object):
         self.keepPFOnly = False
         self.keepPOnly  = False
         self.keepFOnly  = False
-        
+        self.vetoGenDiphotons = False
+
         if sortTemplate:
             self.sortTemplate = sortTemplate.clone()
         else:
@@ -234,16 +235,21 @@ class DiPhotonAnalysis(object):
         if not hasattr(process,"flashggGenDiPhotons"):
             process.load("flashgg.MicroAOD.flashggGenDiPhotons_cfi")
                         
+        extraCut = ""
+        if self.vetoGenDiphotons:
+            extraCut = "&& (mass <= %1.5g)" % self.vetoGenDiphotons
         selectorTemplate = cms.EDFilter("GenDiPhotonSelector",src=cms.InputTag("flashggGenDiPhotons"),
                                         cut=cms.string("mass > %(massCut)f"
                                                        "&& leadingPhoton.pt > %(ptLead)f %(scalingFunc)s && subLeadingPhoton.pt > %(ptSublead)f %(scalingFunc)s"
                                                        "&& (abs(leadingPhoton.eta)    < 1.4442 || abs(leadingPhoton.eta)    > 1.566)"
                                                        "&& (abs(subLeadingPhoton.eta) < 1.4442 || abs(subLeadingPhoton.eta) > 1.566)"
                                                        "&& (abs(subLeadingPhoton.eta) < 1.5    || abs(subLeadingPhoton.eta) < 1.5  )" 
+                                                       "%(extraCut)s"
                                                        % { "massCut" : self.massCut, 
                                                            "ptLead"  : self.ptLead,
                                                            "ptSublead" : self.ptSublead,
-                                                           "scalingFunc" : self.scalingFunc
+                                                           "scalingFunc" : self.scalingFunc,
+                                                           "extraCut" : extraCut
                                                            }
                                                        )
                                         )
@@ -261,7 +267,7 @@ class DiPhotonAnalysis(object):
         Add analysis selection to the process.
         Also adds the kinematic selection in case it hasn't been, but no tree is asked for it.
         """
-    
+
         if not hasattr(process,"kinDiPhotons"):
             self.addKinematicSelection(process,dumpTrees=False,dumperTemplate=dumperTemplate)
             
@@ -290,7 +296,8 @@ class DiPhotonAnalysis(object):
             postSelect = "leadingPhoton.genMatchType != 1 && subLeadingPhoton.genMatchType != 1"
         elif self.keepPFOnly:
             postSelect = "(leadingPhoton.genMatchType != 1) != (subLeadingPhoton.genMatchType != 1 )"
-            
+        elif self.vetoGenDiphotons:
+            postSelect = "genP4.mass <= %1.5g" % self.vetoGenDiphotons
         sortDiPhoColl = "sorted"+diphoColl if postSelect else diphoColl
         
         

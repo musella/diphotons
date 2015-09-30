@@ -167,9 +167,11 @@ void tnpTreeFormat(const char* filename, float lumiForW) {
       if (electron_pt->at(eleIndex->at(ii))<30)     continue;
       if (!isTagTightEle->at(eleIndex->at(ii)))     continue;
       if (!electron_matchHLT->at(eleIndex->at(ii))) continue;   
+      //if (!electron_matchMC->at(eleIndex->at(ii)))  continue;   
       
       // further selection on probe
-      if (!gamma_presel->at(gammaIndex->at(ii)))   continue;
+      if (!gamma_presel->at(gammaIndex->at(ii)))  continue;
+      //if (!gamma_matchMC->at(gammaIndex->at(ii))) continue;
       
       // now making flat tree
       massRaw = (float)(invMassRaw->at(ii));
