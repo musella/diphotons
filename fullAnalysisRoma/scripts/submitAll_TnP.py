@@ -15,9 +15,9 @@
 ./submitBatchTnP.py --cfg tnpAnaBATCH.py WJetsToLNu_HT-2500ToInf  0 4 pippo 0.02865 1 
 ./submitBatchTnP.py --cfg tnpAnaBATCH.py WW2L2nu                  0 5 pippo 10.48  1 
 ./submitBatchTnP.py --cfg tnpAnaBATCH.py WZjets                   0 6 pippo 5.257  1 
-./submitBatchTnP.py --cfg tnpAnaBATCH.py ZZ4l                     0 7 pippo 1.256  1 
-./submitBatchTnP.py --cfg tnpAnaBATCH.py TTjets                   0 8 pippo 509.1  1 
+#./submitBatchTnP.py --cfg tnpAnaBATCH.py ZZ4l                     0 7 pippo 1.256  1 
+#./submitBatchTnP.py --cfg tnpAnaBATCH.py TTjets                   0 8 pippo 509.1  1 
 
 # Data
 ##./submitBatchTnP.py --cfg tnpAnaBATCH.py singleEle  0 10001 pippo 1  1 
-
+##./submitBatchTnP.py --cfg tnpAnaBATCH.py singleEle2015D 0 10001 pippo 1  1

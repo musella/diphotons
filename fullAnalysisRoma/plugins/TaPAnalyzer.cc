@@ -85,6 +85,8 @@ private:
   edm::EDGetTokenT<pat::TriggerObjectStandAloneCollection> triggerObjects_;  
   EDGetTokenT<View<pat::MET> > MetToken_;
   EDGetTokenT<View<reco::GenParticle> > genPartToken_;
+  edm::EDGetTokenT<EcalRecHitCollection> ecalHitEBToken_;
+  edm::EDGetTokenT<EcalRecHitCollection> ecalHitEEToken_;
 
   // sample-dependent parameters needed for the analysis
   int dopureweight_;
@@ -125,10 +127,11 @@ private:
   float perEveW;
 
   float t1pfmet;
-  float pfmet;
   
   int accEleSize;
   vector <float> electron_pt={};
+  vector <float> electron_ene={};
+  vector <float> electron_scRawEne={};
   vector <float> electron_eta={};
   vector <float> electron_phi={};
   vector <bool>  isTagTightEle={};
@@ -144,6 +147,7 @@ private:
   vector <float> gamma_sieie={};
   vector <float> gamma_hoe ={};
   vector <float> gamma_scRawEne={};
+  vector <float> gamma_ene={};
   vector <float> gamma_chiso={};
   vector <float> gamma_phoiso={};
   vector <float> gamma_neuiso={};
@@ -155,6 +159,7 @@ private:
   
   vector <float> ptRatio={};
   vector <float> invMass={};
+  vector <float> invMassRaw={};
   vector <int> eleIndex={};
   vector <int> gammaIndex={};
 };  
@@ -169,7 +174,9 @@ TaPAnalyzer::TaPAnalyzer(const edm::ParameterSet& iConfig):
   triggerBits_(consumes<edm::TriggerResults>(iConfig.getParameter<edm::InputTag>("bits"))),
   triggerObjects_(consumes<pat::TriggerObjectStandAloneCollection>(iConfig.getParameter<edm::InputTag>("objects"))),
   MetToken_( consumes<View<pat::MET> >(iConfig.getParameter<InputTag>("MetTag" ))),
-  genPartToken_(consumes<View<reco::GenParticle> >(iConfig.getUntrackedParameter<InputTag> ("GenParticlesTag", InputTag("flashggPrunedGenParticles"))))
+  genPartToken_(consumes<View<reco::GenParticle> >(iConfig.getUntrackedParameter<InputTag> ("GenParticlesTag", InputTag("flashggPrunedGenParticles")))),
+  ecalHitEBToken_(consumes<EcalRecHitCollection>(iConfig.getParameter<edm::InputTag>("reducedBarrelRecHitCollection"))),
+  ecalHitEEToken_(consumes<EcalRecHitCollection>(iConfig.getParameter<edm::InputTag>("reducedEndcapRecHitCollection")))
 { 
   dopureweight_ = iConfig.getUntrackedParameter<int>("dopureweight", 0);
   sampleIndex_  = iConfig.getUntrackedParameter<int>("sampleIndex",0);
@@ -222,12 +229,16 @@ void TaPAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
   edm::Handle<View<reco::GenParticle> > genParticles;
   if (sampleID>0 && sampleID<10000) iEvent.getByToken( genPartToken_, genParticles );
 
+  Handle< EcalRecHitCollection > EcalBarrelRecHits;
+  iEvent.getByToken(ecalHitEBToken_, EcalBarrelRecHits);
+  Handle< EcalRecHitCollection > EcalEndcapRecHits;
+  iEvent.getByToken(ecalHitEEToken_, EcalEndcapRecHits);
+
   Handle<View<pat::MET> > METs;
   iEvent.getByToken( MetToken_, METs );
   if( METs->size() != 1 ) std::cout << "WARNING number of MET is not equal to 1" << std::endl; 
   Ptr<pat::MET> theMET = METs->ptrAt( 0 );
   t1pfmet = theMET->pt();
-  pfmet   = theMET->uncorrectedPt();
 
   // --------------------------------------------------
   // Event info
@@ -487,6 +498,8 @@ void TaPAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 	  
 	  // Variables for the tree - for each electron in the acceptance - todo
 	  electron_pt.push_back(elePt);
+	  electron_ene.push_back(Electron->energy());
+	  electron_scRawEne.push_back(Electron->superCluster()->rawEnergy());
 	  electron_eta.push_back(Electron->superCluster()->eta());
 	  electron_phi.push_back(Electron->superCluster()->phi());
 	  isTagTightEle.push_back(tightEle);
@@ -537,16 +550,7 @@ void TaPAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 	    if(thisRecoGamma.DeltaR(myGenPos)<0.3) matchMC = true;  
 	  }
 
-	  // saturation - to be implemented when we have the rechits back (chiara)
-	  bool isKsaturated = false;
-	  // DetId seedDetId = ( (g1->superCluster())->seed() )->seed();
-	  // if (g1->recHits()) {
-	  // if (seedDetId) {
-	  //EcalRecHitCollection::const_iterator itseed = g1->recHits()->find( seedDetId );    
-	  //isKsaturated = itseed->checkFlag(EcalRecHit::kSaturated);
-	  // }}	  
-
-	  // preselection and full sel
+	  // preselection
 	  float R9noZS    = g1->full5x5_r9();    
 	  float HoE       = g1->hadTowOverEm();
 	  float sieienoZS = g1->full5x5_sigmaIetaIeta();   
@@ -557,7 +561,26 @@ void TaPAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 	  
 	  bool  eleVeto = g1->passElectronVeto();
 	  
-	  bool passPresel    = isGammaPresel( scEta, pt, R9noZS, chIso); 
+	  bool passPresel = isGammaPresel( scEta, pt, R9noZS, chIso); 
+
+	  // saturation 
+	  bool isKsaturated = false;
+	  if (passPresel) {
+	    DetId seedDetId = ( (g1->superCluster())->seed() )->seed();
+	    if(seedDetId) {
+	      if(seedDetId.subdetId()==EcalEndcap) {
+		EcalRecHitCollection::const_iterator itseed = EcalEndcapRecHits->find( seedDetId );
+		if (itseed != EcalEndcapRecHits->end())
+		  isKsaturated = itseed->checkFlag(EcalRecHit::kSaturated);
+	      } else {
+		EcalRecHitCollection::const_iterator itseed = EcalBarrelRecHits->find( seedDetId );
+		if (itseed != EcalBarrelRecHits->end())
+		  isKsaturated = itseed->checkFlag(EcalRecHit::kSaturated);     
+	      }
+	    }
+	  }
+
+	  // full selection
 	  bool passFullSelel = isGammaSelected( rho, pt, scEta, R9noZS, chIso, neuIso, phoIso, HoE, sieienoZS, eleVeto, isKsaturated); 
 	  
 	  if(passPresel)
@@ -570,6 +593,7 @@ void TaPAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 	  gamma_sieie.push_back(g1->full5x5_sigmaIetaIeta());
 	  gamma_hoe.push_back(g1->hadTowOverEm());
 	  gamma_scRawEne.push_back(g1->superCluster()->rawEnergy());
+	  gamma_ene.push_back(g1->energy());
 	  gamma_chiso.push_back(g1->egChargedHadronIso());
 	  gamma_phoiso.push_back(g1->egPhotonIso());
 	  gamma_neuiso.push_back(g1->egNeutralHadronIso());
@@ -593,6 +617,15 @@ void TaPAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
       thisGamma.SetPtEtaPhiM(gamma_pt[iGam],gamma_eta[iGam],gamma_phi[iGam],0); 
       thisEle.SetPtEtaPhiM(electron_pt[iEle],electron_eta[iEle],electron_phi[iEle],0); 
       invMass.push_back((thisGamma+thisEle).M()); 
+
+      TLorentzVector thisGammaRaw(0,0,0,0); 
+      TLorentzVector thisEleRaw(0,0,0,0); 
+      float rawPtGamma = gamma_pt[iGam]*gamma_scRawEne[iGam]/gamma_ene[iGam];
+      thisGammaRaw.SetPtEtaPhiM(rawPtGamma,gamma_eta[iGam],gamma_phi[iGam],0); 
+      float rawPtEle = electron_pt[iEle]*electron_scRawEne[iGam]/electron_ene[iGam];
+      thisEleRaw.SetPtEtaPhiM(rawPtEle,electron_eta[iEle],electron_phi[iEle],0); 
+      invMassRaw.push_back((thisGammaRaw+thisEleRaw).M()); 
+
       eleIndex.push_back(iEle);   
       gammaIndex.push_back(iGam);    
       if(thisGamma.Pt() > thisEle.Pt()) 
@@ -622,6 +655,8 @@ void TaPAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
       
   //---tag
   electron_pt.clear();
+  electron_ene.clear();
+  electron_scRawEne.clear();
   electron_eta.clear();
   electron_phi.clear();
   isTagTightEle.clear();
@@ -636,6 +671,7 @@ void TaPAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
   gamma_sieie.clear();
   gamma_hoe.clear();
   gamma_scRawEne.clear();
+  gamma_ene.clear();
   gamma_chiso.clear();
   gamma_phoiso.clear();
   gamma_neuiso.clear();
@@ -648,6 +684,7 @@ void TaPAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
   //---invariant mass and ptratio
   ptRatio.clear();
   invMass.clear();
+  invMassRaw.clear();
   eleIndex.clear();
   gammaIndex.clear();
 }
@@ -693,10 +730,11 @@ void TaPAnalyzer::bookOutputTree()
     outTree_->Branch("perEveW", &perEveW, "perEveW/F");
 
     outTree_->Branch("t1pfmet", &t1pfmet, "t1pfmet/F");
-    outTree_->Branch("pfmet", &pfmet, "pfmet/F");
 
     outTree_->Branch("accEleSize", &accEleSize, "accEleSize/I");
     outTree_->Branch("electron_pt", "std::vector<float>", &electron_pt);
+    outTree_->Branch("electron_ene", "std::vector<float>", &electron_ene);
+    outTree_->Branch("electron_scRawEne", "std::vector<float>", &electron_scRawEne);
     outTree_->Branch("electron_eta", "std::vector<float>", &electron_eta);
     outTree_->Branch("electron_phi", "std::vector<float>", &electron_phi);
     outTree_->Branch("isTagTightEle", "std::vector<bool>", &isTagTightEle );
@@ -712,6 +750,7 @@ void TaPAnalyzer::bookOutputTree()
     outTree_->Branch("gamma_sieie", "std::vector<float>", &gamma_sieie);
     outTree_->Branch("gamma_hoe", "std::vector<float>", &gamma_hoe);
     outTree_->Branch("gamma_scRawEne", "std::vector<float>", &gamma_scRawEne);
+    outTree_->Branch("gamma_ene", "std::vector<float>", &gamma_ene);
     outTree_->Branch("gamma_chiso", "std::vector<float>", &gamma_chiso);
     outTree_->Branch("gamma_phoiso", "std::vector<float>", &gamma_phoiso);
     outTree_->Branch("gamma_neuiso", "std::vector<float>", &gamma_neuiso);
@@ -723,6 +762,7 @@ void TaPAnalyzer::bookOutputTree()
 
     outTree_->Branch("ptRatio","std::vector<float>", &ptRatio);
     outTree_->Branch("invMass","std::vector<float>", &invMass);
+    outTree_->Branch("invMassRaw","std::vector<float>", &invMassRaw);
     outTree_->Branch("eleIndex","std::vector<int>", &eleIndex);
     outTree_->Branch("gammaIndex","std::vector<int>", &gammaIndex);
 }
