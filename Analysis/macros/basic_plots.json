@@ -127,10 +127,16 @@
 	"EEHighR9" : ["EEHighR9"],
 	"EELowR9"  : ["EELowR9"]
 	}, 
-	
+
+	"_plots" : [	
+	      ["mass"			,[["xtitle","m_{#gamma #gamma} (GeV)"],
+					  ["xrange",[100.0,1050.0]],["overflow",[null]],["rebin",[[100,150,180,200,250,300,400,500,600,700,800,1000,1050]]],
+					  "density",["ytitle","Events / %(binw)s GeV"]
+					]
+					,null,null]],
     "plots": [
 	      ["mass"			,[["xtitle","m_{#gamma #gamma} (GeV)"],
-					  ["xrange",[100.0,1050.0]],["overflow",[null]],["rebin",[[100,150,200,250,300,400,500,600,700,800,1000,1050]]],
+					  ["xrange",[100.0,1050.0]],["overflow",[null]],["rebin",[[100,150,180,200,250,300,400,500,600,700,800,1000,1050]]],
 					  "density",["ytitle","Events / %(binw)s GeV"]
 					]
 					,null,null],
@@ -178,11 +184,9 @@
 
 					,null,null,["sig"]],
 	      ["leadHoE"		,[["xtitle","#gamma_{1} H/E"],
-	      				["rebin",[[0.005,0.01,0.05,0.1,0.11]]],["overflow",[null]],"density",["ytitle","Events / %(binw)s"]
-	      				]
+					  ["ytitle","Events / %(binw)s"],["overflow",[null]]]
 					,null,null,["sig"]],
-	      ["subleadHoE"		,[["ytitle","Events / %(binw)s GeV"],["xtitle","#gamma_{2} H/E"],["overflow",[null]]]
-
+	    ["subleadHoE"		,[["ytitle","Events / %(binw)s GeV"],["xtitle","#gamma_{2} H/E"],["overflow",[null]]]
 					,null,null,["sig"]],
 
 	      ["leadSigmaIeIe"		,[["ytitle","Events / %(binw)s GeV"],["xtitle","#gamma_{1} #sigma_{i#eta i#eta}"],["overflow",[null]]]
@@ -212,13 +216,13 @@
 	      ],
 
     "_selections" : [
-        ["kin","kinOnly"]
+        ["cicNoChIso","noChIso",["mass","leadChIso","subleadChIso","nvtx","rho","phoRndConeChIso","leadHoE","subleadHoE","leadPixSeed","subleadPixSeed"]]
     ],
 
     "selections" : [
         ["cic",""],
         ["cicNoSigmaIetaIeta","noSiEiE",["mass","leadSigmaIeIe","subleadSigmaIeIe"]],
-        ["cicNoChIso","noChIso",["mass","leadChIso","subleadChIso","nvtx","rho","phoRndConeChIso"]],
+        ["cicNoChIso","noChIso",["mass","leadChIso","subleadChIso","nvtx","rho","phoRndConeChIso","leadHoE","subleadHoE","leadPixSeed","subleadPixSeed"]],
         ["cicNoPhoIso","noPhoIso",["mass","leadPhoIso","subleadPhoIso","nvtx","rho"]],
         ["cicNoHoverE","noHoE",["mass","leadHoE","subleadHoE"]],
         ["cicNoEleVeto","noEleVeto",["mass","leadPassEleVeto","subleadPassEleVeto","leadPixSeed","subleadPixSeed"]],
@@ -236,7 +240,7 @@
 	      
     "styles": { 
 	"*mass*" : [["logy",5e-2]],
-	"*Iso*"  : [["logy",1e-3]],
+	"*Iso*"  : [["logy",1e-2]],
 	"*Pt*"  : [["logy",1e-1]],
 	"*pt*"  : [["logy",1e-2]],
 	"*HoE*"  : [["logy",1e-3]],

@@ -1,6 +1,19 @@
 {
-    "processes" : {
+    "_processes" : {
 
+
+	"Data" : [ 
+	       "/DoubleEG"
+	    ],
+	    "GGJets_M-200To13000-sherpa" : [
+	    				[ "/GGJets_M-200To500_Pt-50_13TeV-sherpa", {"njobs" : 50 } ],
+	    				"/GGJets_M-1000To2000_Pt-50_13TeV-sherpa",
+	    				"/GGJets_M-2000To4000_Pt-50_13TeV-sherpa",
+					"/GGJets_M-4000To6000_Pt-50_13TeV-sherpa",
+					"/GGJets_M-500To1000_Pt-50_13TeV-sherpa",
+					"/GGJets_M-6000To8000_Pt-50_13TeV-sherpa",
+					"/GGJets_M-8000To13000_Pt-50_13TeV-sherpa"
+		],
 
 	    "RSGravToGG_kMpl-01_M-1000_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-01_M-1000_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 5 } ] ],
 	    "RSGravToGG_kMpl-01_M-1250_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-01_M-1250_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 5 } ] ],
@@ -20,59 +33,7 @@
 	    "RSGravToGG_kMpl-01_M-6000_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-01_M-6000_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 5 } ] ],
 	    "RSGravToGG_kMpl-01_M-6500_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-01_M-6500_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 5 } ] ],
 	    "RSGravToGG_kMpl-01_M-7000_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-01_M-7000_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 5 } ] ],
-	    "RSGravToGG_kMpl-01_M-750_TuneCUEP8M1_13TeV-pythia8"  : [ [ "/RSGravToGG_kMpl-01_M-750_TuneCUEP8M1_13TeV-pythia8",  { "njobs" : 5 } ] ]
-    },
-
-    "_processes" : {
-
-	"Data" : [ 
-	       "/DoubleEG"
-	    ],
-	    "GGJets_M-200To13000-sherpa" : [
-	    				[ "/GGJets_M-200To500_Pt-50_13TeV-sherpa", {"njobs" : 50 } ],
-	    				"/GGJets_M-1000To2000_Pt-50_13TeV-sherpa",
-	    				"/GGJets_M-2000To4000_Pt-50_13TeV-sherpa",
-					"/GGJets_M-4000To6000_Pt-50_13TeV-sherpa",
-					"/GGJets_M-500To1000_Pt-50_13TeV-sherpa",
-					"/GGJets_M-6000To8000_Pt-50_13TeV-sherpa",
-					"/GGJets_M-8000To13000_Pt-50_13TeV-sherpa"
-		],
-
-	"Data" : [ 
-	       "/DoubleEG"
-	    ],
-	    
-	    
-	    "DYJetsToLL_M-50_TuneCUETP8M1-amcatnloFXFX-pythia8" : [
-								   [ "/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8", {"args": ["maxEvents=3000000"]} ]
-								   ],
-	    "GGJets_M-200To13000-sherpa" : [
-	    				[ "/GGJets_M-200To500_Pt-50_13TeV-sherpa", {"njobs" : 20 } ],
-	    				"/GGJets_M-1000To2000_Pt-50_13TeV-sherpa",
-	    				"/GGJets_M-2000To4000_Pt-50_13TeV-sherpa",
-					"/GGJets_M-4000To6000_Pt-50_13TeV-sherpa",
-					"/GGJets_M-500To1000_Pt-50_13TeV-sherpa",
-					"/GGJets_M-6000To8000_Pt-50_13TeV-sherpa",
-					"/GGJets_M-8000To13000_Pt-50_13TeV-sherpa"
-		],
-
-		"GJets-HT-100toInf" : [
-				    "/GJets_HT-40To100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8",
-				    "/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8",
-				    [ "/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8", { "njobs" : 20 } ],
-				    "/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8",
-				    "/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"
-		],
-		
-                 "QCD-Pt-30toInf" : [ 
-				     "/QCD_Pt-120to170_EMEnriched_TuneCUETP8M1_13TeV_pythia8",
-				     "/QCD_Pt-170to300_EMEnriched_TuneCUETP8M1_13TeV_pythia8",
-				     "/QCD_Pt-300toInf_EMEnriched_TuneCUETP8M1_13TeV_pythia8",
-				     "/QCD_Pt-30to50_EMEnriched_TuneCUETP8M1_13TeV_pythia8",
-				     "/QCD_Pt-50to80_EMEnriched_TuneCUETP8M1_13TeV_pythia8",
-				     "/QCD_Pt-80to120_EMEnriched_TuneCUETP8M1_13TeV_pythia8"
-				      ],
-
+	    "RSGravToGG_kMpl-01_M-750_TuneCUEP8M1_13TeV-pythia8"  : [ [ "/RSGravToGG_kMpl-01_M-750_TuneCUEP8M1_13TeV-pythia8",  { "njobs" : 5 } ] ],
 
 	    "RSGravToGG_kMpl-01_M-1000_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-01_M-1000_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 5 } ] ],
 	    "RSGravToGG_kMpl-01_M-1250_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-01_M-1250_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 5 } ] ],
@@ -115,11 +76,52 @@
 	    "RSGravToGG_kMpl-02_M-6000_TuneCUEP8M1_13TeV-pythia8" :  [ [ "/RSGravToGG_kMpl-02_M-6000_TuneCUEP8M1_13TeV-pythia8"  , { "njobs" : 5 } ] ],
 	    "RSGravToGG_kMpl-02_M-7000_TuneCUEP8M1_13TeV-pythia8" :  [ [ "/RSGravToGG_kMpl-02_M-7000_TuneCUEP8M1_13TeV-pythia8"  , { "njobs" : 5 } ] ],
 	    "RSGravToGG_kMpl-02_M-750_TuneCUEP8M1_13TeV-pythia8" :   [ [ "/RSGravToGG_kMpl-02_M-750_TuneCUEP8M1_13TeV-pythia8"   , { "njobs" : 5 } ] ]
+    },
+
+    "processes" : {
+
+	    "GGJets_M-200To13000-sherpa" : [
+	    				["/DiPhotonJetsBox_MGG-80toInf_13TeV-Sherpa", {"njobs" : 30 } ],
+	    				"/GGJets_M-1000To2000_Pt-50_13TeV-sherpa"]
+					},
+
+    "_processes" : {
+
+	    "DYJetsToLL_M-50_TuneCUETP8M1-amcatnloFXFX-pythia8" : [
+								   [ "/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8", {"args": ["maxEvents=3000000"]} ]
+								   ],
+	    "GGJets_M-200To13000-sherpa" : [
+	    				["/DiPhotonJetsBox_MGG-80toInf_13TeV-Sherpa", {"njobs" : 30 } ],
+					["/GGJets_M-200To500_Pt-50_13TeV-sherpa", {"njobs" : 20 } ],
+	    				"/GGJets_M-1000To2000_Pt-50_13TeV-sherpa",
+	    				"/GGJets_M-2000To4000_Pt-50_13TeV-sherpa",
+					"/GGJets_M-4000To6000_Pt-50_13TeV-sherpa",
+					"/GGJets_M-500To1000_Pt-50_13TeV-sherpa",
+					"/GGJets_M-6000To8000_Pt-50_13TeV-sherpa",
+					"/GGJets_M-8000To13000_Pt-50_13TeV-sherpa"
+		],
+
+		"GJets-HT-100toInf" : [
+				    "/GJets_HT-40To100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8",
+				    "/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8",
+				    [ "/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8", { "njobs" : 20 } ],
+				    "/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8",
+				    "/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"
+		],
+		
+                 "QCD-Pt-30toInf" : [ 
+				     "/QCD_Pt-120to170_EMEnriched_TuneCUETP8M1_13TeV_pythia8",
+				     "/QCD_Pt-170to300_EMEnriched_TuneCUETP8M1_13TeV_pythia8",
+				     "/QCD_Pt-300toInf_EMEnriched_TuneCUETP8M1_13TeV_pythia8",
+				     "/QCD_Pt-30to50_EMEnriched_TuneCUETP8M1_13TeV_pythia8",
+				     "/QCD_Pt-50to80_EMEnriched_TuneCUETP8M1_13TeV_pythia8",
+				     "/QCD_Pt-80to120_EMEnriched_TuneCUETP8M1_13TeV_pythia8"
+				      ]
 	    
 	    },
 
 	
-	"cmdLine" : "campaign=EXOSpring15_v825ns selection=diphoton lumiMask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Cert_246908-255031_13TeV_PromptReco_Collisions15_25ns_JSON_v2.txt"
+	"cmdLine" : "campaign=EXOSpring15_7412_v2_38T selection=diphoton lumiMask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Cert_246908-256869_13TeV_PromptReco_Collisions15_25ns_JSON.txt trigger=HLT_DoublePhoton60_v* ptLead=75 ptSublead=75 massCut=180"
 	
 
 }

@@ -56,6 +56,11 @@ customize.options.register ('trigger',
                             VarParsing.VarParsing.multiplicity.singleton, # singleton or list
                             VarParsing.VarParsing.varType.string,          # string, int, or float
                             "trigger")
+customize.options.register ('mctrigger',
+                            "", # default value
+                            VarParsing.VarParsing.multiplicity.singleton, # singleton or list
+                            VarParsing.VarParsing.varType.string,          # string, int, or float
+                            "mctrigger")
 customize.options.register ('idversion',
                             "", # default value
                             VarParsing.VarParsing.multiplicity.singleton, # singleton or list
@@ -453,7 +458,11 @@ elif customize.selection == "dielectron":
         
 if customize.options.trigger != "":
     dataTriggers = customize.options.trigger.split(",")
-    mcTriggers = dataTriggers
+    mcTriggers = [] ## dataTriggers
+    
+
+if customize.options.mctrigger != "":
+    mcTriggers = customize.options.mctrigger.split(",")
     
 from HLTrigger.HLTfilters.hltHighLevel_cfi import hltHighLevel
 dumpBits=set(dumpBits)
@@ -522,7 +531,8 @@ if customize.datasetName():
         analysis.keepPFOnly = True
     elif "QCD" in customize.datasetName():
         analysis.keepFFOnly = True
-
+    elif "DiPhotonJetsBox_MGG-80toInf_13TeV-Sherpa" in customize.datasetName():
+        analysis.vetoGenDiphotons = 200.
 ## kinematic selection
 analysis.addKinematicSelection(process,dumpTrees=True,splitByIso=True
                                )
