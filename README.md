@@ -16,8 +16,8 @@ forked the flashgg and this repository.
 ## FLASHGG_TAG=diphtons_phys14
 
 # Spring15 settings
-PROJECT_AREA=EXO_7_4_6_patch2
-CMSSW_VERSION=CMSSW_7_4_6_patch2 
+PROJECT_AREA=EXO_7_4_12
+CMSSW_VERSION=CMSSW_7_4_12
 ## FLASHGG_TAG=
 FLASHGG_BRANCH=topic_diphotons_7412 # set empty if you want the master (safe as long as you are not producing MicroAOD)
 
