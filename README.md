@@ -19,7 +19,7 @@ forked the flashgg and this repository.
 PROJECT_AREA=EXO_7_4_6_patch2
 CMSSW_VERSION=CMSSW_7_4_6_patch2 
 ## FLASHGG_TAG=
-FLASHGG_BRANCH=topic_Spring15BV2 # set empty if you want the master (safe as long as you are not producing MicroAOD)
+FLASHGG_BRANCH=topic_diphotons_7412 # set empty if you want the master (safe as long as you are not producing MicroAOD)
 
 # read github name from git config
 MY_GITHUB_NAME=$(git config --get user.github)
