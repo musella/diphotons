@@ -72,13 +72,92 @@ class AutoPlot(PyRApp):
                 make_option("--file",action="callback", dest="files", type="string", callback=optpars_utils.ScratchAppend(),
                             default=[]),
                 make_option("--histograms",action="callback", dest="histograms", type="string", callback=optpars_utils.ScratchAppend(),
-                            default=["mass>>mass(1500,0,15000)",           
-                                     "leadPt>>leadPt(150,0,3000)",
-                                     "leadPt>>subleadPt(150,0,3000)",
+                            default=["mass>>mass(1500,0,15000)",
+                                     "mass>>lowmass(560,60,200)",
+                                     "genMass>>genmass(1500,0,15000)",            
+                                     "pt>>pt(200,0,200)",
+                                     "rapidity>>rapidity(200,-5,5)",
+                                     "deltaEta>>deltaEta(200,0,5)",
+                                     "cosDeltaPhi>>cosDeltaPhi(200,0,1)",
+                                     "rho>>rho(20,0,50)",
+                                     "nvtx>>nvtx(51,0.5,50.5)",
+                                     
                                      "leadPt>>phoPt(150,0,3000)",
                                      "subleadPt>>phoPt(150,0,3000)",
+                                     
+                                     "leadPt>>leadPt(150,0,3000)",
+                                     "subleadPt>>subleadPt(150,0,3000)",
                                      "leadEta>>leadEta(55,-2.75,2.75)",
                                      "subleadEta>>subleadEta(55,-2.75,2.75)",
+                                     
+                                     "leadChIso>>leadChIso(120,-10,50)",
+                                     "leadPhoIso>>leadPhoIso(120,-10,50)",
+                                     "leadNeutIso>>leadNeutIso(120,-10,50)",
+                                     "leadHoE>>leadHoE(40,0,0.2)",
+                                     "leadSigmaIeIe>>leadSigmaIeIe(320,0,3.2e-2)",
+                                     "leadPixSeed>>leadPixSeed(2,-0.5,1.5)",
+                                     "leadPassEleVeto>>leadPassEleVeto(2,-0.5,1.5)",
+                                     
+                                     "subleadChIso>>subleadChIso(120,-10,50)",
+                                     "subleadPhoIso>>subleadPhoIso(120,-10,50)",
+                                     "subleadNeutIso>>subleadNeutIso(120,-10,50)",
+                                     "subleadHoE>>subleadHoE(40,0,0.2)",
+                                     "subleadSigmaIeIe>>subleadSigmaIeIe(320,0,3.2e-2)",
+                                     "subleadPixSeed>>subleadPixSeed(2,-0.5,1.5)",
+                                     "subleadPassEleVeto>>subleadPassEleVeto(2,-0.5,1.5)",
+                                     
+                                     
+                                     "leadChIso>>phoChIso(120,-10,50)",
+                                     "subleadChIso>>phoChIso(120,-10,50)",
+                                     "leadPhoIso>>phoPhoIso(120,-10,50)",
+                                     "subleadPhoIso>>phoPhoIso(120,-10,50)",
+                                     "leadSigmaIeIe>>phoSigmaIeIe(320,0,3.2e-2)",
+                                     "subleadSigmaIeIe>>phoSigmaIeIe(320,0,3.2e-2)",
+                                     "leadHoE>>phoHoE(40,0,0.2)",                                   
+                                     "subleadHoE>>phoHoE(40,0,0.2)",                                   
+                                     "leadPassEleVeto>>phoPassEleVeto(2,-0.5,1.5)",
+                                     "subleadPassEleVeto>>phoPassEleVeto(2,-0.5,1.5)",
+                                     
+                                     
+                                     "leadRndConeChIso0>>leadRndConeChIso(120,-10,50)",
+                                     "leadRndConeChIso1>>leadRndConeChIso(120,-10,50)",
+                                     "leadRndConeChIso2>>leadRndConeChIso(120,-10,50)",
+                                     "leadRndConeChIso3>>leadRndConeChIso(120,-10,50)",
+                                     "leadRndConeChIso4>>leadRndConeChIso(120,-10,50)",
+                                     "leadRndConeChIso5>>leadRndConeChIso(120,-10,50)",
+                                     "leadRndConeChIso6>>leadRndConeChIso(120,-10,50)",
+                                     "leadRndConeChIso7>>leadRndConeChIso(120,-10,50)",
+                                     "leadRndConeChIso8>>leadRndConeChIso(120,-10,50)",
+                                     
+                                     "subleadRndConeChIso0>>subleadRndConeChIso(120,-10,50)",
+                                     "subleadRndConeChIso1>>subleadRndConeChIso(120,-10,50)",
+                                     "subleadRndConeChIso2>>subleadRndConeChIso(120,-10,50)",
+                                     "subleadRndConeChIso3>>subleadRndConeChIso(120,-10,50)",
+                                     "subleadRndConeChIso4>>subleadRndConeChIso(120,-10,50)",
+                                     "subleadRndConeChIso5>>subleadRndConeChIso(120,-10,50)",
+                                     "subleadRndConeChIso6>>subleadRndConeChIso(120,-10,50)",
+                                     "subleadRndConeChIso7>>subleadRndConeChIso(120,-10,50)",
+                                     "subleadRndConeChIso8>>subleadRndConeChIso(120,-10,50)",
+                                     
+                                     "leadRndConeChIso0>>phoRndConeChIso(120,-10,50)",
+                                     "leadRndConeChIso1>>phoRndConeChIso(120,-10,50)",
+                                     "leadRndConeChIso2>>phoRndConeChIso(120,-10,50)",
+                                     "leadRndConeChIso3>>phoRndConeChIso(120,-10,50)",
+                                     "leadRndConeChIso4>>phoRndConeChIso(120,-10,50)",
+                                     "leadRndConeChIso5>>phoRndConeChIso(120,-10,50)",
+                                     "leadRndConeChIso6>>phoRndConeChIso(120,-10,50)",
+                                     "leadRndConeChIso7>>phoRndConeChIso(120,-10,50)",
+                                     "leadRndConeChIso8>>phoRndConeChIso(120,-10,50)",
+                                     
+                                     "subleadRndConeChIso0>>phoRndConeChIso(120,-10,50)",
+                                     "subleadRndConeChIso1>>phoRndConeChIso(120,-10,50)",
+                                     "subleadRndConeChIso2>>phoRndConeChIso(120,-10,50)",
+                                     "subleadRndConeChIso3>>phoRndConeChIso(120,-10,50)",
+                                     "subleadRndConeChIso4>>phoRndConeChIso(120,-10,50)",
+                                     "subleadRndConeChIso5>>phoRndConeChIso(120,-10,50)",
+                                     "subleadRndConeChIso6>>phoRndConeChIso(120,-10,50)",
+                                     "subleadRndConeChIso7>>phoRndConeChIso(120,-10,50)",
+                                     "subleadRndConeChIso8>>phoRndConeChIso(120,-10,50)",
                                      ]),
                 make_option("--cut",action="store", dest="cut", type="string",
                             default="1"),
@@ -122,11 +201,12 @@ class AutoPlot(PyRApp):
         weight = ROOT.TTreeFormula(self.weight,self.weight,tree)
         
         handy = map( lambda x: (myvars[x[0]],myvars[x[1]],x[2]), histos )
-        print "Fllining %s (%s enties)" % (tree.GetName(), tree.GetEntries())
+        print "Filling %s (%s entries) selection: %s" % (tree.GetName(), tree.GetEntries(), self.selection)
         for iev in xrange(tree.GetEntries()):
         ## for iev in xrange(1):
-            tree.GetEntry(iev)            
-            if selection.EvalInstance() == 0: continue
+            tree.GetEntry(iev)  
+            if selection.EvalInstance() == 0: 
+                continue
             for h in handy:
                 if h[1]:
                     h[2].Fill(h[0].EvalInstance(),h[1].EvalInstance(),weight.EvalInstance())
