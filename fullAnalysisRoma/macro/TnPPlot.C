@@ -13,10 +13,10 @@
 #include <iostream>
 #endif
 
-enum samp { iWJets, iWW, iWZ, iZZ, iTT, iDY, nSamples };
+enum samp { iWJets, iWW, iWZ, iZZ, iGJ, iGG, iQCD, iTT, iDY, nSamples };
 
-float xPos[nSamples+1] = {0.70,0.70,0.70,0.70,0.70,0.70,0.7};
-float yOff[nSamples+1] = {0,1,2,3,4,5,6};
+float xPos[nSamples+1] = {0.70,0.70,0.70,0.70,0.70,0.70,0.70,0.70,0.70,0.70};
+float yOff[nSamples+1] = {0,1,2,3,4,5,6,7,8,9};
 
 const Float_t _tsize   = 0.03;
 const Float_t _xoffset = 0.20;
@@ -141,15 +141,21 @@ public:
     _sampleColor[iWW    ] = kGreen-9;
     _sampleColor[iWZ   ]  = kAzure-9;
     _sampleColor[iZZ   ]  = kOrange-9;
+    _sampleColor[iGJ   ]  = kPink-9;
+    _sampleColor[iGG   ]  = kGreen-5;
+    _sampleColor[iQCD  ]  = kYellow-9;
     _sampleColor[iTT   ]  = kRed-9;
 
     Color_t _lineColor[nSamples];
     _lineColor[iDY  ]  = kBlue+1;
     _lineColor[iWJets] = kViolet;   
     _lineColor[iWW   ] = kGreen;
-    _lineColor[iWZ  ] = kAzure;
-    _lineColor[iZZ  ] = kOrange;
-    _lineColor[iTT  ] = kRed;
+    _lineColor[iWZ  ]  = kAzure;
+    _lineColor[iZZ  ]  = kOrange;
+    _lineColor[iGJ  ]  = kPink;
+    _lineColor[iGG  ]  = kGreen+4;
+    _lineColor[iQCD ]  = kYellow;
+    _lineColor[iTT  ]  = kRed;
     
     if(!gPad) new TCanvas();
     
@@ -214,6 +220,9 @@ public:
     if(_hist[iWW])    { DrawLegend(xPos[j], 0.75 - yOff[j]*_yoffset, _hist[iWW],   " WW",  "f" ); j++; }
     if(_hist[iWZ])    { DrawLegend(xPos[j], 0.75 - yOff[j]*_yoffset, _hist[iWZ],   " WZ",  "f" ); j++; }
     if(_hist[iZZ])    { DrawLegend(xPos[j], 0.75 - yOff[j]*_yoffset, _hist[iZZ],   " ZZ",  "f" ); j++; }
+    if(_hist[iGJ])    { DrawLegend(xPos[j], 0.75 - yOff[j]*_yoffset, _hist[iGJ],   " g+jets",  "f" ); j++; }
+    if(_hist[iGG])    { DrawLegend(xPos[j], 0.75 - yOff[j]*_yoffset, _hist[iGG],   " gg+jets",  "f" ); j++; }
+    if(_hist[iQCD])   { DrawLegend(xPos[j], 0.75 - yOff[j]*_yoffset, _hist[iQCD],  " qcd",  "f" ); j++; }
     if(_hist[iTT])    { DrawLegend(xPos[j], 0.75 - yOff[j]*_yoffset, _hist[iTT],   " ttjets",  "f" ); j++; }
 
     TLatex* luminosity = new TLatex(0.86, 0.495, TString::Format("L = %.1f pb^{-1}",_lumi));

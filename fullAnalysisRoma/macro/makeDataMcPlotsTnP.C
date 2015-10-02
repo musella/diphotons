@@ -12,7 +12,7 @@
 
 #include <iostream>
 
-#define NSPECIES 7
+#define NSPECIES 10
 #define NVARIABLES 1
 #define NCUTS 1
 
@@ -34,22 +34,29 @@ void makeDataMcPlotsTnP(float lumi, bool blindData=false)
   // chiara
   TString species[NSPECIES];
   species[0]="Data";
-  species[6]="DY";
+  species[9]="DY";
   species[1]="Wjets";
   species[2]="WW";
   species[3]="WZ";
   species[4]="ZZ";
-  species[5]="ttjets";
+  species[5]="g+jets";
+  species[6]="gg+jets";
+  species[7]="qcd";
+  species[8]="ttjets";
 
   // chiara
   TString files[NSPECIES];
   files[0]="/afs/cern.ch/work/c/crovelli/public/TaP_spring15_7412v2/formatted/Formatted_singleEle2015D_all.root";     
-  files[6]="/afs/cern.ch/work/c/crovelli/public/TaP_spring15_7412v2/formatted/Formatted_DYLL_all.root";
+  files[9]="/afs/cern.ch/work/c/crovelli/public/TaP_spring15_7412v2/formatted/Formatted_DYLL_all.root";
   files[1]="/afs/cern.ch/work/c/crovelli/public/TaP_spring15_7412v2/formatted/Formatted_WJetsToLNu_HT-600ToInf_all.root";
   files[2]="/afs/cern.ch/work/c/crovelli/public/TaP_spring15_7412v2/formatted/Formatted_WW2L2nu_all.root";
   files[3]="/afs/cern.ch/work/c/crovelli/public/TaP_spring15_7412v2/formatted/Formatted_WZjets_all.root";
   files[4]="/afs/cern.ch/work/c/crovelli/public/TaP_spring15_7412v2/formatted/Formatted_ZZ4l_all.root";
-  files[5]="/afs/cern.ch/work/c/crovelli/public/TaP_spring15_7412v2/formatted/Formatted_TTjets_all.root";
+  files[5]="/afs/cern.ch/work/c/crovelli/public/TaP_spring15_7412v2/formatted/Formatted_GJets_HT-100toInf_all.root";
+  files[6]="/afs/cern.ch/work/c/crovelli/public/TaP_spring15_7412v2/formatted/Formatted_GGJets_M-200To13000_all.root";
+  files[7]="/afs/cern.ch/work/c/crovelli/public/TaP_spring15_7412v2/formatted/Formatted_QCD_HT-100ToInf_all.root";
+  files[8]="/afs/cern.ch/work/c/crovelli/public/TaP_spring15_7412v2/formatted/Formatted_TTjets_all.root";
+  
 
 
   TString plotsDir="./tnpPlots/";
@@ -71,18 +78,17 @@ void makeDataMcPlotsTnP(float lumi, bool blindData=false)
 
   // chiara
   int nbins[NVARIABLES];
-  nbins[0]=65;
-  // nbins[0]=50;
+  nbins[0]=60;
 
   // chiara
   float range[NVARIABLES][2]; // N variables, min, max
   // mgg
-  // range[0][0]=60.;
-  // range[0][1]=120.;
+  range[0][0]=60.;
+  range[0][1]=120.;
   // range[0][0]=200.;
   // range[0][1]=1500.;
-  range[0][0]=60.;
-  range[0][1]=1000.;
+  // range[0][0]=60.;
+  // range[0][1]=1000.;
 
   // chiara
   TString xaxisLabel[NVARIABLES];
@@ -107,9 +113,9 @@ void makeDataMcPlotsTnP(float lumi, bool blindData=false)
   TString cut[NCUTS];
   // cut[0]="(mass>200 && mass<1500)*";
   // cut[0]="(mass>200 && mass<1500 && abs(tag_absEta)<1.5 && abs(probe_absEta)<1.5)*";
-  // cut[0]="(mass>60 && mass<120)*";
+  cut[0]="(mass>60 && mass<120 && probe_fullsel)*";
   // cut[0]="(mass>60 && mass<120 && abs(tag_absEta)<1.5 && abs(probe_absEta)<1.5)*";
-  cut[0]="(mass>60 && mass<1500)*"   // && tag_pt>35 && probe_pt>35 && probe_fullsel)*";
+  // cut[0]="(mass>60 && mass<1500 && tag_pt>35 && probe_pt>35 && probe_fullsel)*";   // && tag_pt>35 && probe_pt>35 && probe_fullsel)*";
 
   char lumistr[100];
   sprintf(lumistr,"%.1f",lumi);
@@ -155,12 +161,15 @@ void makeDataMcPlotsTnP(float lumi, bool blindData=false)
       myPlot.addLabel("");
       myPlot.setLabel((xaxisLabel[z]).Data());
       myPlot.setUnits((units[z]).Data());
-      myPlot.setMCHist(iDY,    histos[6][j][z]);
+      myPlot.setMCHist(iDY,    histos[9][j][z]);
       myPlot.setMCHist(iWJets, histos[1][j][z]);
       myPlot.setMCHist(iWW,    histos[2][j][z]);
       myPlot.setMCHist(iWZ,    histos[3][j][z]);
       myPlot.setMCHist(iZZ,    histos[4][j][z]);
-      myPlot.setMCHist(iTT,    histos[5][j][z]);
+      myPlot.setMCHist(iGJ,    histos[5][j][z]);
+      myPlot.setMCHist(iGG,    histos[6][j][z]);
+      myPlot.setMCHist(iQCD,   histos[7][j][z]);
+      myPlot.setMCHist(iTT,    histos[8][j][z]);
 
       if(!blindData) myPlot.setDataHist(histos[0][j][z]);
 
