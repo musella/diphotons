@@ -48,10 +48,10 @@ def main():
     #inputlist="lists_Spring15v8/25ns/data/"+dataset+".list"
     #inputweights="lists_Spring15v8/25ns/data/"+dataset+".weight"
 
-    #inputlist="lists_Spring15_7412v2/25ns/data/"+dataset+".list"
-    #inputweights="lists_Spring15_7412v2/25ns/data/"+dataset+".weight"
-    inputlist="lists_Spring15_7412v2/25ns/MC/"+dataset+".list"
-    inputweights="lists_Spring15_7412v2/25ns/MC/"+dataset+".weight"
+    inputlist="lists_Spring15_7412v2/25ns/data/"+dataset+".list"
+    inputweights="lists_Spring15_7412v2/25ns/data/"+dataset+".weight"
+    #inputlist="lists_Spring15_7412v2/25ns/MC/"+dataset+".list"
+    #inputweights="lists_Spring15_7412v2/25ns/MC/"+dataset+".weight"
 
     output = dataset
 

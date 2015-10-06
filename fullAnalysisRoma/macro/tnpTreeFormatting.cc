@@ -160,7 +160,7 @@ void tnpTreeFormat(const char* filename, float lumiForW) {
     for (unsigned int ii=0; ii<invMass->size(); ii++) {
       
       mass = (float)(invMass->at(ii));
-      if (mass<60 || mass>120) continue;
+      if (mass<70 || mass>110) continue;
       // if (mass<60 || mass>4000) continue;
       
       // further selection on tag 
@@ -198,7 +198,7 @@ void tnpTreeFormat(const char* filename, float lumiForW) {
       }
 
       // remove negative weights to follow egamma prescriptions
-      if (run==1 && weight<0) continue;
+      // if (run==1 && weight<0) continue;
 
       treeNew->Fill();
     }
