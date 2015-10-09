@@ -157,6 +157,12 @@
 	      ["rapidity"		,[["Rebin",4],["ytitle","Events / %(binw)s"],["xtitle","y_{#gamma #gamma} (GeV)"],["xrange",[-3,3]],["overflow",[null]]]
 					,null,null],
 					
+	      ["leadEta"		,[["Rebin",4],["ytitle","Events / %(binw)s"],["xtitle","#eta_(#gamma 1)"],["xrange",[-2.6,2.6]]]
+					,null,null],
+	      ["subleadEta"		,[["Rebin",4],["ytitle","Events / %(binw)s"],["xtitle","#eta_(#gamma 2)"],["xrange",[-2.6,2.6]]]
+					,null,null],
+
+
 	      ["leadPt"			,[["Rebin",2],["ytitle","Events / %(binw)s GeV"],["xtitle","p_{T}(#gamma 1) (GeV)"],["xrange",[100.0,1000.0]],["overflow",[null]]]
 					,null,null],
 
@@ -220,6 +226,11 @@
     ],
 
     "selections" : [
+        ["cic",""],
+        ["cicNoChIso","noChIso",["mass","leadChIso","subleadChIso","nvtx","rho","phoRndConeChIso","leadHoE","subleadHoE","leadPixSeed","subleadPixSeed","leadEta","subleadEta"]]
+		    ],
+
+    "_selections" : [
         ["cic",""],
         ["cicNoSigmaIetaIeta","noSiEiE",["mass","leadSigmaIeIe","subleadSigmaIeIe"]],
         ["cicNoChIso","noChIso",["mass","leadChIso","subleadChIso","nvtx","rho","phoRndConeChIso","leadHoE","subleadHoE","leadPixSeed","subleadPixSeed"]],
