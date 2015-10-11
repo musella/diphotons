@@ -11,36 +11,6 @@ from getpass import getuser
 
 from math import sqrt
 
-# ----------------------------------------------------------------------------------------------------
-def computeShapeWithUnc(histo,extraerr=None):
-    histo.Scale(1./histo.Integral())
-    if not extraerr:
-        return
-    for xb in range(histo.GetNbinsX()+1):
-        for yb in range(histo.GetNbinsX()+1):
-            ib = histo.GetBin(xb,yb)            
-            err = histo.GetBinError(ib)
-            bbyb = extraerr*histo.GetBinContent(ib)
-            err = sqrt( err*err + bbyb*bbyb )
-            histo.SetBinError(ib,err)
-
-    return
-    denom = histo.Clone("temp")
-    denom.Reset("ICE")
-    error = ROOT.Double(0.)
-    entries = histo.GetEntries()
-    try:
-        integral = histo.IntegralAndError(-1,-1,error) 
-    except:
-        integral = histo.IntegralAndError(-1,-1,-1,-1,error) 
-    for xb in range(denom.GetNbinsX()+1):
-        for yb in range(denom.GetNbinsX()+1):
-            ib = histo.GetBin(xb,yb)            
-            denom.SetBinContent(ib,integral)
-            denom.SetBinError(ib,error)
-    histo.Divide(histo,denom,1.,1.,"B")
-    del denom
-    
 
 ## ----------------------------------------------------------------------------------------------------------------------------------------
 class rooImport:
@@ -136,6 +106,7 @@ class TemplatesApp(PlotApp):
                                     help="Preselection cuts to be applied."),
                         make_option("--selection",dest="selection",action="store",type="string",
                                     help="(Di-)Photon selection to be used for analysis. In dataset definition it replaces '%(sel)s'."),                
+<<<<<<< HEAD
                         make_option("--fit-categories",dest="fit_categories",action="callback",type="string",callback=optpars_utils.ScratchAppend(),help="sets specific category for fit, e.g. EBEB or EBEE",default=["EBEB","EBEE"]),
                         make_option("--fit-massbins",dest="fit_massbins",action="callback",type="string",callback=optpars_utils.ScratchAppend(),help="sets massbins for fit or templates comparison: first integer is total number of massbins, 2. how many bins we want to run over, 3. startbin",default=["5","5","0"]),
                         make_option("--fit-templates",dest="fit_templates",action="callback",type="string",callback=optpars_utils.ScratchAppend(),help="get templates for fit: either unrolled_template,unrolled_template_mix or unrolled_mctruth",default=["unrolled_template"]),
@@ -147,18 +118,18 @@ class TemplatesApp(PlotApp):
                                     help="purity either as fraction or as number of events in signalregion.Choose 'fraction' or 'events'"),
                         make_option("--plot-mctruth",dest="plotMCtruth",action="callback",callback=optpars_utils.ScratchAppend(),type="string",
                                     default=["mctruth"]),
+=======
+>>>>>>> 7e5a5fb... still byggy
                         make_option("--aliases",dest="aliases",action="callback",type="string",callback=optpars_utils.ScratchAppend(),
                                     default=[],
                                     help="List of aliases to be defined for each tree. They can be used for selection or variable definition"),
-                        make_option("--plot-purity",dest="plot_purity",action="store_true",default=False,
-                                    help="Plot purities, purity vs massbin and pull function",
-                                    ),
-                        make_option("--fits",dest="fits",action="callback",callback=optpars_utils.Load(),type="string",
-                                    default={},help="List of templates fits to be performed. Categories, componentd and templates can be specified."),
                         make_option("--mix",dest="mix",action="callback",callback=optpars_utils.Load(),type="string",
                                     default={},help="Configuration for event mixing."),
+<<<<<<< HEAD
                         make_option("--comparisons",dest="comparisons",action="callback",callback=optpars_utils.Load(),type="string",
                                     default={},help="Configuration for templates comparison."),
+=======
+>>>>>>> 7e5a5fb... still byggy
                         make_option("--skip-templates",dest="skip_templates",action="store_true",
                                     default=False,help="Skip templates generation (even if not reading back from ws)"),
                         make_option("--dataset-variables",dest="dataset_variables",action="callback",callback=optpars_utils.ScratchAppend(),type="string",
@@ -167,20 +138,6 @@ class TemplatesApp(PlotApp):
                                     default="",help="Expression used to define datasets weight."),
                         ]
                   ), ("General templates preparation options", [
-                        make_option("--compare-templates",dest="compare_templates",action="store_true",default=False,
-                                    help="Make templates comparison plots",
-                                    ),
-                        make_option("--nominal-fit",dest="nominal_fit",action="store_true",default=False,
-                                    help="do fit templates",
-                                    ),
-                        make_option("--build-3dtemplates",dest="build_3dtemplates",action="store_true",
-                                    default=False,
-                                     help="build 3d templates with unrolled variable and mass",
-                                    ), 
-                        make_option("--corr-singlePho",dest="corr_singlePho",action="store_true",
-                                    default=False,
-                                     help="correlation sieie and chiso single fake photon",
-                                    ), 
                         make_option("--do-reweight",dest="do_reweight",action="store_true",default=False,
                                     help="Reweight templates to data.",
                                     ),
@@ -314,19 +271,7 @@ class TemplatesApp(PlotApp):
                 print "calling mix templates"
             self.mixTemplates(options,args)
             
-        if options.compare_templates:
-            self.compareTemplates(options,args)
             
-        if options.nominal_fit:
-            self.nominalFit(options,args)
-        if options.plot_purity:
-            self.plotPurity(options,args)
-        if options.corr_singlePho:
-            self.corrSinglePho(options,args)
-        if options.build_3dtemplates:
-            self.build3dTemplates(options,args)
-     #   if options.plotMCtruth:
-      #      self.plotMCtruth(options,args)
         
 
     ## ------------------------------------------------------------------------------------------------------------
@@ -347,7 +292,6 @@ class TemplatesApp(PlotApp):
         fout.cd()
         cfg = { "fits"   : options.fits,
                 "mix"    : options.mix,
-                "comparisons"    : options.comparisons,
                 "stored" : self.store_.keys(),
                 }
         for name in self.save_params_:
@@ -426,8 +370,6 @@ class TemplatesApp(PlotApp):
             
         if not options.mix_templates:
             options.mix = cfg.get("mix",{})
-        if not options.compare_templates:
-            options.comparisons = cfg.get("comparisons",{})
 
         for name in self.save_params_:
             val = cfg.get(name,None)
@@ -503,6 +445,7 @@ class TemplatesApp(PlotApp):
     
     
     ## ------------------------------------------------------------------------------------------------------------
+<<<<<<< HEAD
     
     def compareTemplates(self,options,args):
         fout = self.openOut(options)
@@ -1534,6 +1477,8 @@ class TemplatesApp(PlotApp):
         self.keep( [cpu,g_mctruthpp,g_templatepp,g_ratiopp] )
         self.autosave(True)
     ## ------------------------------------------------------------------------------------------------------------
+=======
+>>>>>>> 7e5a5fb... still byggy
     def prepareTemplates(self,options,args):
         
         fout = self.openOut(options)
