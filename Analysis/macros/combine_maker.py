@@ -137,7 +137,7 @@ class CombineApp(TemplatesApp):
                                     ),
                         make_option("--signal-name",dest="signal_name",action="store",type="string",
                                     default=None,
-                                    help="Signal name to generate the dataset and/or datacard"),            
+                                    help="Signal name to generate the dataset and/or fwhm computation and/or datacard"),            
                         make_option("--generate-datacard",dest="generate_datacard",action="store_true",default=False,
                                     help="Generate datacard",
                                     ),
@@ -167,6 +167,9 @@ class CombineApp(TemplatesApp):
                                     ),
                         make_option("--compute-fwhm",dest="compute_fwhm",action="store_true",default=False,
                                     help="Compute the Full Width Half Maximum (FWHM) when generating signals",
+                                    ),
+                        make_option("--compute-fwhm-for-input-signal",dest="compute_fwhm_for_input_signal",action="store_true",default=False,
+                                    help="Compute the Full Width at Half Maximum (FWHM) from already generated signal dataHist (provide corresponding root file and name of signal - used for parametric signal)",
                                     ),
                         make_option("--generate-ws-bkgnbias",dest="generate_ws_bkgnbias",action="store_true",default=False,
                                     help="Read signal and background workspaces and generate background+bias model",
@@ -227,6 +230,7 @@ class CombineApp(TemplatesApp):
         ROOT.gSystem.Load("libdiphotonsUtils")
         if ROOT.gROOT.GetVersionInt() >= 60000:
             ROOT.gSystem.Load("libdiphotonsRooUtils")
+        ROOT.gSystem.Load("libHiggsAnalysisCombinedLimit")
         
         self.pdfPars_ = ROOT.RooArgSet()
 
@@ -259,7 +263,7 @@ class CombineApp(TemplatesApp):
         self.save_params_.append("fit_name")
 
         self.setup(options,args)
-        
+        self.save_params_.append("luminosity")
         if options.fit_background:
             self.fitBackground(options,args)
             
@@ -271,6 +275,9 @@ class CombineApp(TemplatesApp):
         
         if options.generate_datacard:
             self.generateDatacard(options,args)
+            
+        if options.compute_fwhm_for_input_signal:
+             self.computeFWHM(options, args)
 
 
     def lumiScale(self,name):
@@ -1089,6 +1096,92 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         # done
         self.saveWs(options)
        
+## ------------------------------------------------------------------------------------------------------------
+    def computeFWHM(self, options, args):
+        print "--------------------------------------------------------------------------------------------------------------------------"
+        print " Computing FWHM for signals using ROODATAHIST in provided signal workspace"
+        print 
+
+        fit = options.fits[options.fit_name]
+        fitname = options.fit_name
+        isRootFileProvided = False
+
+        if(len(options.read_ws) > 0):
+            isRootFileProvided = True
+
+            
+        if options.signal_name:
+            signals = [options.signal_name]
+            
+        if (len(signals) == 0 or options.fit_name == None or isRootFileProvided == False):
+            print "Please provide --signal-name and --fit-name and read-ws containing signal data sets"
+            return
+
+        list_fwhm = {}
+
+        
+
+        for signame in signals:
+            sublist_fwhm = {}
+            for cat in fit["categories"]:
+
+                roobs = self.buildRooVar(*(self.getVar(options.observable)), recycle=False, importToWs=True)
+                #roobs.setBins(5000,"cache")
+                roobs.setRange("fullRange",roobs.getMin(),roobs.getMax())
+
+                binned = self.rooData("signal_%s_%s" % (signame,cat)) #ROODATAHIST SIGNAL
+                #signalPdf = ROOT.RooHistPdf("signal_model_%s_%s"% (signame,cat),"signalPdf_%s_%s"% (signame,cat),ROOT.RooArgSet(roobs),signalDataHist)
+                
+                for comp in options.components :
+                    if len(options.fwhm_output_file) != 0:
+                        file_fwhm = self.open(options.fwhm_output_file,"a",folder=options.ws_dir)
+                    else:
+                        file_fwhm = self.open("fwhm_%s.json" % fitname,"a",folder=options.ws_dir)
+                    # plot signal histogram and compute FWHM
+                    canv = ROOT.TCanvas("signal_%s" % (cat),"signal" )
+                    nBins = 1000
+                    if (options.set_bins_fwhm != None):
+                        if (signame in options.set_bins_fwhm.keys()):
+                            nBins = int(options.set_bins_fwhm[signame])
+                    roobs.setBins(nBins)
+                    hist = binned.createHistogram("sigHist",roobs)
+                    halfMaxVal = 0.5*hist.GetMaximum()
+                    maxBin = hist.GetMaximumBin()
+                  
+                    binLeft=binRight=xWidth=xLeft=xRight=0
+
+                    for ibin in range(1,maxBin):
+                        binVal = hist.GetBinContent(ibin)
+                        if (binVal >= halfMaxVal):
+                            binLeft = ibin
+                            break;
+                    for ibin in range(maxBin+1,hist.GetXaxis().GetNbins()+1):
+                        binVal = hist.GetBinContent(ibin)
+                        if (binVal < halfMaxVal):
+                            binRight = ibin-1
+                            break;
+                    if (binLeft > 0 and binRight > 0 ):
+                        xLeft = hist.GetXaxis().GetBinCenter(binLeft)
+                        xRight = hist.GetXaxis().GetBinCenter(binRight)
+                        xWidth = xRight-xLeft
+                        print ("FWHM = %f" % (xWidth))
+                        hist.GetXaxis().SetRangeUser(hist.GetXaxis().GetBinCenter(maxBin)-5*xWidth,hist.GetXaxis().GetBinCenter(maxBin)+5*xWidth)
+                        hist.Draw("HIST")
+                        #canv.SaveAs(options.output_file.replace(".root","_%s_hist.png" % (cat))
+                        canv.SaveAs(options.read_ws.replace(".root",("%s_hist.png" % cat)))
+                        sublist_fwhm[cat] = "%f" % xWidth
+                    else:
+                        print
+                        print("Did not succeed to compute the FWHM")
+                        print
+
+            list_fwhm[signame] = sublist_fwhm
+                        
+            json_output = json.dumps(list_fwhm, indent=4)
+            file_fwhm.write("%s\n" % json_output)            
+            options.fwhm_input_file=list_fwhm # in case we run also generateWsBkgnbias                 
+                    
+
  ## ------------------------------------------------------------------------------------------------------------
     def generateSignalDataset(self,options,args):
         
@@ -1109,7 +1202,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             prefix_output = options.output_file.replace(".root","")
             options.signal_root_file = options.output_file ## copy this in case we want to run --generate-datacard at the same time
             if not options.cardname:
-                options.cardname = "dacard_%s.txt" % prefix_output
+                options.cardname = "datacard_%s.txt" % prefix_output
         
         ## book roo observable
         roobs = self.buildRooVar(*(self.getVar(options.observable)), recycle=False, importToWs=True)
