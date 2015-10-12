@@ -23,8 +23,8 @@ PDFName = "pdfSignalPlusBackground"
 
 ################################################
 #specifies the binning of parameters
-EfficiencyBins = cms.PSet(probe_pt = cms.vdouble( 110, 500 ),
-                          probe_absEta = cms.vdouble( 1.5, 2.5 ),
+EfficiencyBins = cms.PSet(probe_pt = cms.vdouble( 20, 30 ),
+                          probe_absEta = cms.vdouble( 0.0, 1.5 ),
                           )
 
 EfficiencyBinningSpecification = cms.PSet(
@@ -64,8 +64,8 @@ process.GsfElectronToId = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
 
             ## ------------ signal --------------------
             # EB, 20-30
-            #"RooCBExGaussShape::signalResPass(mass,meanP[0.0,-1.,1.],sigmaP[1.,0.01,3.1],alphaP[1.,0.01,5.0],nP[0.96],sigmaP_2[1.000,0.1,15.00])", 
-            #"RooCBExGaussShape::signalResFail(mass,meanF[0.0,-1.,1.],sigmaF[3.,0.01,4.0],alphaF[1.,0.,5.0],nF[0.05],sigmaF_2[1.,0.001,15.000])",
+            "RooCBExGaussShape::signalResPass(mass,meanP[0.0,-1.,1.],sigmaP[1.,0.01,5.0],alphaP[1.,0.01,5.0],nP[0.96],sigmaP_2[1.000,0.1,15.00])", 
+            "RooCBExGaussShape::signalResFail(mass,meanF[0.0,-1.,1.],sigmaF[5.,0.01,7.0],alphaF[1.,0.,5.0],nF[0.05],sigmaF_2[1.,0.001,15.000])",
 
             # EB, 30-40
             #"RooCBExGaussShape::signalResPass(mass,meanP[0.0,-1.,1.],sigmaP[1.,0.01,3.1],alphaP[1.,0.01,5.0],nP[50.],sigmaP_2[1.000,0.1,15.00])", 
@@ -88,7 +88,7 @@ process.GsfElectronToId = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
             #"RooCBExGaussShape::signalResFail(mass,meanF[1.2,-1.,1.5],sigmaF[1.,0.01,3.1],alphaF[1.,0.,5.0],nF[2.3],sigmaF_2[1.,0.001,3.000])", 
 
             # EB, 110-150
-            #"RooCBExGaussShape::signalResPass(mass,meanP[1.0,0.,1.5],sigmaP[1.,0.01,3.1],alphaP[1.,0.01,5.0],nP[4.3],sigmaP_2[1.000,0.1,15.00])", 
+            #"RooCBExGaussShape::signalResPass(mass,meanP[1.0,-0.05,1.5],sigmaP[1.,0.01,3.1],alphaP[1.,0.01,5.0],nP[4.3],sigmaP_2[1.000,0.1,15.00])", 
             #"RooCBExGaussShape::signalResFail(mass,meanF[-0.5,-1.5,0.],sigmaF[1.,0.01,3.1],alphaF[1.,0.,5.0],nF[1.3],sigmaF_2[1.,0.001,15.000])", 
 
             # EB, 150-250
@@ -120,8 +120,8 @@ process.GsfElectronToId = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
             #"RooCBExGaussShape::signalResFail(mass,meanF[-0.5,-2.,0.],sigmaF[3.,0.01,5.0],alphaF[1.,0.,5.0],nF[29.],sigmaF_2[1.,0.001,15.000])",  
 
             # EE, 110-500
-            "RooCBExGaussShape::signalResPass(mass,meanP[-0.1,-1.,0.],sigmaP[1.,0.01,5.0],alphaP[1.,0.01,50.0],nP[10.],sigmaP_2[1.000,0.1,15.00])",  
-            "RooCBExGaussShape::signalResFail(mass,meanF[-0.5,-2.,0.],sigmaF[3.,0.01,5.0],alphaF[1.,0.,5.0],nF[0.4],sigmaF_2[1.,0.001,15.000])",  
+            #"RooCBExGaussShape::signalResPass(mass,meanP[-0.1,-2.,2.],sigmaP[1.,0.01,5.0],alphaP[1.,0.01,50.0],nP[10.],sigmaP_2[1.000,0.1,15.00])",  
+            #"RooCBExGaussShape::signalResFail(mass,meanF[-0.5,-5.,0.],sigmaF[3.,0.01,5.0],alphaF[1.,0.,5.0],nF[0.4],sigmaF_2[1.,0.001,15.000])",  
 
             "ZGeneratorLineShape::signalPhy(mass)", ### NLO line shape 
 
@@ -131,14 +131,14 @@ process.GsfElectronToId = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
 
             ## ------------ background --------------------
             # EB
-            #"RooExponential::backgroundPass(mass, aPass[-0.1, -1., 0.])",     # 20-50
+            "RooExponential::backgroundPass(mass, aPass[-0.1, -1., 0.])",     # 20-50
             #"RooExponential::backgroundPass(mass, aPass[-0.1, -1., 1.])",     # >=50
-            #"RooExponential::backgroundFail(mass, aFail[-0.1, -1., 0.1])",    # <110
+            "RooExponential::backgroundFail(mass, aFail[-0.1, -1., 0.1])",    # <110
             #"RooExponential::backgroundFail(mass, aFail[-0.1, -1., 1.])",     # >=110
 
             # EE
-            "RooExponential::backgroundPass(mass, aPass[-0.1, -1., 1.])",     
-            "RooExponential::backgroundFail(mass, aFail[-0.1, -1., 1.])",     
+            #"RooExponential::backgroundPass(mass, aPass[-0.1, -1., 1.])",     
+            #"RooExponential::backgroundFail(mass, aFail[-0.1, -1., 1.])",     
 
 
             "efficiency[0.5,0,1]",  

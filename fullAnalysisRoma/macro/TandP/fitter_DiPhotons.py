@@ -23,8 +23,8 @@ PDFName = "pdfSignalPlusBackground"
 
 ################################################
 #specifies the binning of parameters
-EfficiencyBins = cms.PSet(probe_pt = cms.vdouble( 110, 500 ),
-                          probe_absEta = cms.vdouble( 1.5, 2.5 ),
+EfficiencyBins = cms.PSet(probe_pt = cms.vdouble( 20, 30 ),
+                          probe_absEta = cms.vdouble( 0.0, 1.5 ),
                           )
 
 EfficiencyBinningSpecificationMC = cms.PSet(
@@ -80,17 +80,17 @@ process.GsfElectronToId = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
                                          PDFs = cms.PSet(pdfSignalPlusBackground = cms.vstring(
 
             # Free fit to fix N in EB
-            #"RooCBExGaussShape::signalResPass(mass,meanP[0.0,-1.,1.],sigmaP[1.,0.01,3.1],alphaP[1.,0.01,5.0],nP[2.,0.1,5.000],sigmaP_2[1.000,0.1,15.00])",   
-            #"RooCBExGaussShape::signalResFail(mass,meanF[0.0,-1.,1.],sigmaF[3.,0.01,4.],alphaF[1.,0.,5.0],nF[3,0.01,25.0],sigmaF_2[1.,0.001,15.000])",     # 20-50
+            "RooCBExGaussShape::signalResPass(mass,meanP[0.0,-1.,1.],sigmaP[1.,0.01,3.1],alphaP[1.,0.01,5.0],nP[2.,0.1,5.000],sigmaP_2[1.000,0.1,15.00])",   
+            "RooCBExGaussShape::signalResFail(mass,meanF[0.0,-1.,1.],sigmaF[3.,0.01,4.],alphaF[1.,0.,5.0],nF[3,0.01,25.0],sigmaF_2[1.,0.001,15.000])",     # 20-50
             #"RooCBExGaussShape::signalResFail(mass,meanF[1.2,-1.,1.5],sigmaF[1.,0.01,3.1],alphaF[1.,0.,5.0],nF[10,0.01,50.0],sigmaF_2[1.,0.001,3.000])",   # >=50
 
             # Free fit to fix N in EE
             #"RooCBExGaussShape::signalResPass(mass,meanP[0.0,-5.,5.],sigmaP[1.,0.01,5.0],alphaP[1.,0.01,50.0],nP[2.,0.1,50.000],sigmaP_2[1.000,0.1,15.00])",   # 20-50 
-            "RooCBExGaussShape::signalResPass(mass,meanP[-0.5,-3.,0.],sigmaP[1.,0.01,5.0],alphaP[1.,0.01,50.0],nP[2.,0.1,50.000],sigmaP_2[1.000,0.1,15.00])",   # >=50
+            #"RooCBExGaussShape::signalResPass(mass,meanP[-0.5,-3.,0.],sigmaP[1.,0.01,5.0],alphaP[1.,0.01,50.0],nP[2.,0.1,50.000],sigmaP_2[1.000,0.1,15.00])",   # >=50
             #"RooCBExGaussShape::signalResFail(mass,meanF[0.0,-5.,5.],sigmaF[3.,0.01,5.0],alphaF[1.,0.,5.0],nF[3,0.1,10.0],sigmaF_2[1.,0.001,15.000])",         # 20-30
             #"RooCBExGaussShape::signalResFail(mass,meanF[0.0,-5.,5.],sigmaF[3.,0.01,5.0],alphaF[1.,0.,5.0],nF[3,0.1,50.0],sigmaF_2[1.,0.001,15.000])",         # 30-50 
             #"RooCBExGaussShape::signalResFail(mass,meanF[-0.5,-3.,0.],sigmaF[3.,0.01,5.0],alphaF[1.,0.,5.0],nF[3,0.1,50.0],sigmaF_2[1.,0.001,15.000])",        # 50-60 
-            "RooCBExGaussShape::signalResFail(mass,meanF[-0.5,-2.,0.],sigmaF[3.,0.01,5.0],alphaF[1.,0.,5.0],nF[3,0.1,50.0],sigmaF_2[1.,0.001,15.000])",         # >=60
+            #"RooCBExGaussShape::signalResFail(mass,meanF[-0.5,-2.,0.],sigmaF[3.,0.01,5.0],alphaF[1.,0.,5.0],nF[3,0.1,50.0],sigmaF_2[1.,0.001,15.000])",         # >=60
 
             "ZGeneratorLineShape::signalPhy(mass)", ### NLO line shape
 

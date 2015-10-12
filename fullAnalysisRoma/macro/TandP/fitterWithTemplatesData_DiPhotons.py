@@ -62,8 +62,8 @@ process.GsfElectronToId = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
             # endcap signal
             #"RooGaussian::signalResPass(mass, meanP[.0,-5.000,5.000],sigmaP[0.956,0.00,5.000])",    # 20-80
             #"RooGaussian::signalResPass(mass, meanP[.0,-2.000,2.000],sigmaP[0.956,0.00,5.000])",    # 80-110
-            #"RooGaussian::signalResPass(mass, meanP[.0,-2.000,5.000],sigmaP[0.956,0.00,5.000])",    # >=110
-            #"RooGaussian::signalResFail(mass, meanF[.0,-5.000,5.000],sigmaF[0.956,0.00,5.000])",    # all
+            #"RooGaussian::signalResPass(mass, meanP[.0,-2.000,5.000],sigmaP[0.956,0.00,5.000])",     # >=110
+            #"RooGaussian::signalResFail(mass, meanF[.0,-5.000,5.000],sigmaF[0.956,0.00,5.000])",     # all 
             
             # both EB and EE signal            
             "ZGeneratorLineShape::signalPhyPass(mass,\"MCtemplates.root\", \"hMass_20.000000To30.000000_0.000000To1.500000_Pass\")",
@@ -78,7 +78,8 @@ process.GsfElectronToId = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
             #"RooExponential::backgroundPass(mass, aPass[-0.1, -1., 0.1])",   # 40-60 
             "RooExponential::backgroundPass(mass, aPass[-0.1, -1., 0.])",    # 20-40
             "RooExponential::backgroundFail(mass, aFail[-0.1, -1., 0.1])",   # 20-110
-            #"RooExponential::backgroundFail(mass, aFail[-0.1, -1., 0.2])",   # >110
+            #"RooExponential::backgroundFail(mass, aFail[-0.1, -1., 0.2])",   # >110, EB
+            #"RooExponential::backgroundFail(mass, aFail[-1., -1.2, -0.8])",   # >110, EE            
 
 
             # to study the background fit systematics

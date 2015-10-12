@@ -26,8 +26,8 @@ PDFName = "pdfSignalPlusBackground"
 #EfficiencyBins = cms.PSet(probe_pt = cms.vdouble( 20, 40, 60, 100, 200, 500 ),
 #                          probe_absEta = cms.vdouble( 0.0, 1.5),     
 #                          )     
-EfficiencyBins = cms.PSet(probe_pt = cms.vdouble( 60, 500 ),
-                          probe_absEta = cms.vdouble( 1.5, 2.5),     
+EfficiencyBins = cms.PSet(probe_pt = cms.vdouble( 20, 30 ),
+                          probe_absEta = cms.vdouble( 0.0, 1.5),     
                           )     
 
 EfficiencyBinningSpecificationMC = cms.PSet(
@@ -80,8 +80,8 @@ process.GsfElectronToId = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
                                          PDFs = cms.PSet(pdfSignalPlusBackground = cms.vstring(
             "RooGaussian::signalResPass(mass, meanP[.0,-5.000,5.000],sigmaP[0.956,0.00,5.000])",
             "RooGaussian::signalResFail(mass, meanF[.0,-5.000,5.000],sigmaF[0.956,0.00,5.000])",
-            "ZGeneratorLineShape::signalPhyPass(mass,\"MCtemplates.root\", \"hMass_60.000000To500.000000_1.500000To2.500000_Pass\")",
-            "ZGeneratorLineShape::signalPhyFail(mass,\"MCtemplates.root\", \"hMass_60.000000To500.000000_1.500000To2.500000_Fail\")",
+            "ZGeneratorLineShape::signalPhyPass(mass,\"MCtemplates.root\", \"hMass_20.000000To30.000000_0.000000To1.500000_Pass\")",
+            "ZGeneratorLineShape::signalPhyFail(mass,\"MCtemplates.root\", \"hMass_20.000000To30.000000_0.000000To1.500000_Fail\")",
             "RooCMSShape::backgroundPass(mass, alphaPass[60.,50.,70.], betaPass[0.001, 0.,0.1], gammaPass[0.1, 0, 1], peakPass[90.0])",
             "RooCMSShape::backgroundFail(mass, alphaFail[60.,50.,70.], betaFail[0.001, 0.,0.1], gammaFail[0.1, 0, 1], peakFail[90.0])",
             "FCONV::signalPass(mass, signalPhyPass, signalResPass)",
