@@ -151,8 +151,8 @@ class TemplatesFitApp(TemplatesApp):
             self.corrSinglePho(options,args)
         if options.build_3dtemplates:
             self.build3dTemplates(options,args)
-        #if options.jackknife:
-         #   self.Jackknife(options,args)
+        if options.jackknife:
+            self.Jackknife(options,args)
         
 
     ## ------------------------------------------------------------------------------------------------------------
@@ -1444,40 +1444,34 @@ class TemplatesFitApp(TemplatesApp):
                         hists[0].Draw()
                         self.keep(c12)
                         self.autosave(True)
-                    self.plotJK(self.options,full_hist,hists,name)
+                    self.varJK(self.options,full_hist,hists,name)
         self.saveWs(options,fout)
     
     ## ------------------------------------------------------------------------------------------------------------
-    def plotJK(self,options,full_hist,hists,name):
+    def varJK(self,options,full_hist,hists,name):
         ROOT.TH1D.SetDefaultSumw2(True)
         #rms for
-        ntuple_rms = ROOT.TNtuple("tree_rms_%s" % (name),"tree_rms_%s" % (name),"rms_bin:rms_diffbinLowCurrent:rms_diffbinCurrentHigh" )
+        ntuple_rms = ROOT.TNtuple("tree_rms_%s" % (name),"tree_rms_%s" % (name),"rms_bin" )
         self.store_[ntuple_rms.GetName()] =ntuple_rms
+        hist_diff=ROOT.TH2D("hdiff_%s"% (name),"hdiff_%s"% (name),full_hist[0].GetNbinsX(),0.,full_hist[0].GetNbinsX(),full_hist[0].GetNbinsX(),0.,full_hist[0].GetNbinsX())
         for bin in range(1,full_hist[0].GetNbinsX()+1):
             hist_rms=ROOT.TH1D("hRMS_%s_%i"% (name,bin),"hRMS_%s_%i"% (name,bin),5*len(hists),0.0,3.0)
-            hist_diffLow=ROOT.TH1D("hdiffLow_%s_%i"% (name,bin),"hdiffLow_%s_%i"% (name,bin),10*len(hists),-3.0,3.0)
-            hist_diffHigh=ROOT.TH1D("hdiffHigh_%s_%i"% (name,bin),"hdiffHigh_%s_%i"% (name,bin),10*len(hists),-3.0,3.0)
+            rms_bins=[]
+            diff_arrays=[] #goal to have all differences in an array
             for hist in hists:
-                bin_diffLow=0.
-                bin_diffHigh=0.
                 if full_hist[0].GetBinContent(bin)!=0:
                     bincont=hist.GetBinContent(bin)/full_hist[0].GetBinContent(bin)
                     hist_rms.Fill(bincont)
-                else: hist_rms.Fill(0.)
-                if bin==1:
-                    bin_diffHigh=(bincont - hist.GetBinContent(bin+1)/full_hist[0].GetBinContent(bin+1))
-                elif bin==full_hist[0].GetNbinsX():
-                    bin_diffLow=(hist.GetBinContent(bin-1)/full_hist[0].GetBinContent(bin-1)-bincont)
-                else:
-                    bin_diffLow=(hist.GetBinContent(bin-1)/full_hist[0].GetBinContent(bin-1)-bincont)
-                    bin_diffHigh=(bincont - hist.GetBinContent(bin+1)/full_hist[0].GetBinContent(bin+1))
-                if bin_diffLow !=0:hist_diffLow.Fill(bin_diffLow)
-                if bin_diffHigh !=0:hist_diffHigh.Fill(bin_diffHigh)
+                    rms_bins.append(bincont)
+               # for i in range (bin,full_hist[0].GetNbinsX())
+               #    diffHigh[i].Fill(bincont - hist.GetBinContent(bin+i)/full_hist[0].GetBinContent(bin+i)
+               # else:
+                #    bin_diffLow=(hist.GetBinContent(bin-1)/full_hist[0].GetBinContent(bin-1)-bincont)
+               #     bin_diffHigh=(bincont - hist.GetBinContent(bin+1)/full_hist[0].GetBinContent(bin+1))
+              #  if bin_diffLow !=0:hist_diffLow.Fill(bin_diffLow)
             if options.verbose:
                 print "mean" ,hist_rms.GetMean()
                 print "rms" , hist_rms.GetRMS()
-                print "diff Low" , hist_diffLow.GetMean()
-                print "diff Low" , hist_diffHigh.GetMean()
                 if hist_rms.GetMean()!=0:
                     canv = ROOT.TCanvas("cRMS_%s_%i" % (name,bin),"cRMS_%s_%i"% (name,bin) )
                     canv.cd()
@@ -1488,24 +1482,15 @@ class TemplatesFitApp(TemplatesApp):
                     hist_rms.GetYaxis().SetTitle("# pseudosamples") 
                     hist_rms.SetTitle("RMS for %s ChIso bin %i" %(name,bin) )
                     self.keep( [canv] )
-                if hist_diffLow.GetMean()!=0:
-                    canv1 = ROOT.TCanvas("cRMSdiffLow_%s_%i%i" % (name,bin-1,bin),"cRMSdiffLow_%s_%i%i"% (name,bin-1,bin) )
-                    canv1.cd()
-                    hist_diffLow.Draw("HIST E2")
-                    hist_diffLow.GetXaxis().SetTitle("bin%i%i_{JK}/bin%i%i_{full_dataset}" %(bin-1,bin,bin-1,bin)) 
-                    hist_diffLow.GetYaxis().SetTitle("# pseudosamples") 
-                    hist_diffLow.GetXaxis().SetLimits(hist_diffLow.GetMean()-3*hist_diffLow.GetRMS(),hist_diffLow.GetMean()+3*hist_diffLow.GetRMS())
-                    self.keep( [canv1] )
-                if hist_diffHigh.GetMean()!=0:
-                    canv2 = ROOT.TCanvas("cRMSdiffHigh_%s_%i%i" % (name,bin,bin+1),"cRMSdiffHigh_%s_%i%i"% (name,bin,bin+1) )
-                    canv2.cd()
-                    hist_diffHigh.Draw("HIST E2")
-                    hist_diffHigh.GetXaxis().SetTitle("bin%i%i_{JK}/bin%i%i_{full_dataset}" %(bin,bin+1,bin,bin+1)) 
-                    hist_diffHigh.GetXaxis().SetLimits(hist_diffHigh.GetMean()-3*hist_diffHigh.GetRMS(),hist_diffHigh.GetMean()+3*hist_diffHigh.GetRMS())
-                    hist_diffHigh.GetYaxis().SetTitle("# pseudosamples") 
-                    self.keep( [canv2] )
-            ntuple_rms.Fill(hist_rms.GetRMS(),hist_diffLow.GetRMS(),hist_diffHigh.GetRMS())
-            self.autosave(True)
+                    self.autosave(True)
+       #get variance        
+        for bin in range(1,full_hist[0].GetNbinsX()+1):
+            rmsbin=hist_rms.GetRMS()
+            n=0
+            for j in range(len(hists)):
+                n=n+pow((rmsbin-rms_bins[j]),2)
+            var_rmsbin=(len(hists)-1)/float(len(hists))*n
+            ntuple_rms.Fill(var_rmsbin)
 
 
     ## ------------------------------------------------------------------------------------------------------------
