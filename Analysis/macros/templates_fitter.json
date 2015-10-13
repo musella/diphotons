@@ -25,6 +25,12 @@
 		"mass_binning" :"mass[13000,200.0,13000.0]"
 		}
 	},
+"jackknife":{ 
+            "categories":["EBEB","EBEE"],
+            "components": ["pf","ff"],
+            "template_binning" : [ 0.0,0.1,5.0,15.0],
+	    "mass_binning" :"mass[13000,200.0,13000.0]"
+},
     "corrPlot":{
                 "categories" :["EB","EE"]
     },
@@ -67,3 +73,6 @@
     }
 
 }
+
+
+

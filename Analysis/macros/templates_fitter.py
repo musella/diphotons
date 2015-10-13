@@ -6,9 +6,11 @@ from copy import deepcopy as copy
 import os, json
 from pprint import pprint
 import array
+from getpass import getuser
 from templates_maker import TemplatesApp
 
 from getpass import getuser
+import random
 
 from math import sqrt
 
@@ -58,16 +60,8 @@ class TemplatesFitApp(TemplatesApp):
     
     ## ------------------------------------------------------------------------------------------------------------
     def __init__(self,option_list=[],option_groups=[]):
-        """ 
-        Constructor
-        """
-        super(TemplatesApp,self).__init__(option_groups=[
+        super(TemplatesFitApp,self).__init__(option_groups=[
                 ( "Fit definition options. Usually specified through JSON configuration (see templates_maker.json for details)", [
-                        make_option("--preselection",dest="preselection",action="store",type="string",
-                                    default="",
-                                    help="Preselection cuts to be applied."),
-                        make_option("--selection",dest="selection",action="store",type="string",
-                                    help="(Di-)Photon selection to be used for analysis. In dataset definition it replaces '%(sel)s'."),                
                         make_option("--fit-categories",dest="fit_categories",action="callback",type="string",callback=optpars_utils.ScratchAppend(),help="sets specific category for fit, e.g. EBEB or EBEE",default=["EBEB","EBEE"]),
                         make_option("--fit-massbins",dest="fit_massbins",action="callback",type="string",callback=optpars_utils.ScratchAppend(),help="sets massbins for fit or templates comparison: first integer is total number of massbins, 2. how many bins we want to run over, 3. startbin",default=["1","1","0"]),
                         make_option("--fit-templates",dest="fit_templates",action="callback",type="string",callback=optpars_utils.ScratchAppend(),help="get templates for fit: either unrolled_template,unrolled_template_mix or unrolled_mctruth",default=["unrolled_template"]),
@@ -79,15 +73,8 @@ class TemplatesFitApp(TemplatesApp):
                                     help="purity either as fraction or as number of events in signalregion.Choose 'fraction' or 'events'"),
                         make_option("--plot-mctruth",dest="plotMCtruth",action="callback",callback=optpars_utils.ScratchAppend(),type="string",
                                     default=["mctruth"]),
-                        make_option("--aliases",dest="aliases",action="callback",type="string",callback=optpars_utils.ScratchAppend(),
-                                    default=[],
-                                    help="List of aliases to be defined for each tree. They can be used for selection or variable definition"),
                         make_option("--plot-purity",dest="plot_purity",action="store_true",default=False,
                                     help="Plot purities, purity vs massbin and pull function",
-                                    ),
-                        make_option("--mix-templates",dest="mix_templates",action="store_true",
-                                    default=False,
-                                    help="Mix templates.",
                                     ),
                         make_option("--fits",dest="fits",action="callback",callback=optpars_utils.Load(),type="string",
                                     default={},help="List of templates fits to be performed. Categories, componentd and templates can be specified."),
@@ -96,14 +83,6 @@ class TemplatesFitApp(TemplatesApp):
                                     default=[],
                                     help="Binning of the parametric observable to be used for templates",
                                     ),                        
-                        make_option("--comparisons",dest="comparisons",action="callback",callback=optpars_utils.Load(),type="string",
-                                    default={},help="Configuration for templates comparison."),
-                        make_option("--skip-templates",dest="skip_templates",action="store_true",
-                                    default=False,help="Skip templates generation (even if not reading back from ws)"),
-                        make_option("--dataset-variables",dest="dataset_variables",action="callback",callback=optpars_utils.ScratchAppend(),type="string",
-                                    default=[],help="List of variables to be added to dataets."),
-                        make_option("--weight-expression",dest="weight_expression",action="store",type="string",
-                                    default="",help="Expression used to define datasets weight."),
                         ]
                   ), ("General templates preparation options", [
                         make_option("--compare-templates",dest="compare_templates",action="store_true",default=False,
@@ -119,58 +98,28 @@ class TemplatesFitApp(TemplatesApp):
                         make_option("--corr-singlePho",dest="corr_singlePho",action="store_true",
                                     default=False,
                                      help="correlation sieie and chiso single fake photon",
-                                    ), 
-                        make_option("--do-reweight",dest="do_reweight",action="store_true",default=False,
-                                    help="Reweight templates to data.",
                                     ),
-                        make_option("--reweight-variables",dest="reweight_variables",action="callback",callback=optpars_utils.ScratchAppend(),
-                                    default=[],
-                                    help="List of variables to be used for reweighting.",
+                        make_option("--jackknife",dest="jackknife",action="store_true",default=False,
+                        
+                                    help="Plot RMS etc from jk pseudosamples",
                                     ),
                         make_option("--extra-shape-unc",dest="extra_shape_unc",action="store",type="float",
                                     default=None,
                                     help="Add extra uncertainty to template shapes (implemented only for plotting)",
                                     ),
-                        make_option("--read-ws","-r",dest="read_ws",type="string",
-                                    default=[],action="callback",callback=optpars_utils.ScratchAppend(),
-                                    help="workspace input file.",
-                                    ),
-                        make_option("--ws-dir","-w",dest="ws_dir",action="store",type="string",
-                                    default=None,
-                                    help="Folder to be used to read and write workspaces"
-                                    ),
-                        make_option("--output-file","-o",dest="output_file",action="store",type="string",
-                                    default=None,
-                                    help="Output file.",
-                                    ),
-                        make_option("--store-new-only",dest="store_new_only",action="store_true",
-                                    default=False,
-                                    help="Only store new objects in output file.",
-                                    ),
-                        make_option("--store-inputs",dest="store_inputs",action="store_true",
-                                    default=False,
-                                    help="Store all used input datasets.",
-                                    ),
-                        make_option("--mc-file",dest="mc_file",action="store",type="string",
-                                    default=None,help="default: %default"),
-                        make_option("--only-subset",dest="only_subset",action="callback",type="string", callback=optpars_utils.ScratchAppend(),
-                    default=[],help="default: %default"),
                         ]
                       )
             ]+option_groups,option_list=option_list)
         
+
         ## load ROOT (and libraries)
         global ROOT, style_utils, RooFit
         import ROOT
         from ROOT import RooFit
-        from ROOT import RooAbsData
         import diphotons.Utils.pyrapp.style_utils as style_utils
         ROOT.gSystem.Load("libdiphotonsUtils")
         if ROOT.gROOT.GetVersionInt() >= 60000:
             ROOT.gSystem.Load("libdiphotonsRooUtils")
-            ROOT.gSystem.AddIncludePath("-I$CMSSW_BASE/include")
-            ROOT.gROOT.ProcessLine('#include "diphotons/Utils/interface/DataSetFiller.h"')
-            ROOT.gROOT.ProcessLine('#include "diphotons/Utils/interface/DataSetMixer.h"')
 
         ROOT.gStyle.SetOptStat(111111)
 
@@ -188,6 +137,8 @@ class TemplatesFitApp(TemplatesApp):
         ROOT.RooMsgService.instance().setGlobalKillBelow(RooFit.FATAL)
         ROOT.TH1D.SetDefaultSumw2(True)
         
+        options.store_new_only=True
+        self.setup(options,args)
         
         if options.compare_templates:
             self.compareTemplates(options,args)
@@ -200,6 +151,8 @@ class TemplatesFitApp(TemplatesApp):
             self.corrSinglePho(options,args)
         if options.build_3dtemplates:
             self.build3dTemplates(options,args)
+        #if options.jackknife:
+         #   self.Jackknife(options,args)
         
 
     ## ------------------------------------------------------------------------------------------------------------
@@ -250,7 +203,6 @@ class TemplatesFitApp(TemplatesApp):
                     templatebins=ROOT.RooBinning(len(template_binning)-1,template_binning,"templatebins" )
 ### list to store templates for each category
                     templates = []
-                    return
                     for idim in range(fit["ndim"]):
                         isoargs.add(self.buildRooVar("templateNdim%dDim%d" % ( fit["ndim"],idim),template_binning,recycle=True))
                     if d2:
@@ -393,7 +345,7 @@ class TemplatesFitApp(TemplatesApp):
 
     ## ------------------------------------------------------------------------------------------------------------
 
-    def histounroll(self,templatelist, template_binning,isoargs,comp,cat,mcut_s,prepfit,sigRegionlow,sigRegionup,extra_shape_unc=None):
+    def histounroll(self,templatelist, template_binning,isoargs,comp,cat,mcut_s,prepfit,sigRegionlow,sigRegionup,extra_shape_unc=None,plot=True):
         pad_it=0
         c1=ROOT.TCanvas("d2hist_%s" % cat,"2d hists per category",1000,1000) 
         c1.Divide(1,2)
@@ -411,23 +363,22 @@ class TemplatesFitApp(TemplatesApp):
             tempur.fillHistogram(temp2d,ROOT.RooArgList(isoargs))
            # print "integral 2d  histo", temp2d.Integral()
             temp2dx=temp2d.ProjectionX("%s_X" %tempur.GetName())
-            ## temp2dx.Scale(1./temp2dx.Integral())
-            if "truth" in temp2dx.GetName():
-                computeShapeWithUnc(temp2dx)
-            else:
-                computeShapeWithUnc(temp2dx,extra_shape_unc)
-            temp2dx.SetTitle("%s_X" %tempur.GetName())
-            temp2dy=temp2d.ProjectionY("%s_Y" %tempur.GetName())
-            ## temp2dy.Scale(1./temp2dy.Integral())
-            if "truth" in temp2dy.GetName():
-                computeShapeWithUnc(temp2dy)
-            else:
-                computeShapeWithUnc(temp2dy,extra_shape_unc)
-            ## draw projections as a check
-            histlsX.append(temp2dx)
-            temp2dy.SetTitle("%s_Y" %tempur.GetName())
-            histlsY.append(temp2dy)
-            if len(templatelist) >1:
+            if plot:
+                if "truth" in temp2dx.GetName():
+                    computeShapeWithUnc(temp2dx)
+                else:
+                    computeShapeWithUnc(temp2dx,extra_shape_unc)
+                temp2dx.SetTitle("%s_X" %tempur.GetName())
+                temp2dy=temp2d.ProjectionY("%s_Y" %tempur.GetName())
+                if "truth" in temp2dy.GetName():
+                    computeShapeWithUnc(temp2dy)
+                else:
+                    computeShapeWithUnc(temp2dy,extra_shape_unc)
+                ## draw projections as a check
+                histlsX.append(temp2dx)
+                temp2dy.SetTitle("%s_Y" %tempur.GetName())
+                histlsY.append(temp2dy)
+            if len(templatelist) >1 and plot:
                 ## temp2d.Scale(1./temp2d.Integral())
                 if "truth" in temp2d.GetName():
                     computeShapeWithUnc(temp2d)
@@ -469,10 +420,11 @@ class TemplatesFitApp(TemplatesApp):
                 rootemplate_binning=ROOT.RooBinning(len(template_binning),template_binning,"rootemplate_binning")
                 unrollvar=ROOT.RooArgList(templateNdim2d_unroll) 
               #  templateNdim2d_unroll.setBinning(rootemplate_binning)
-            c1.cd(pad_it)
-            ROOT.gPad.SetLogz()
-            temp2d.Draw("COLZ")
-            temp2d.GetZaxis().SetRangeUser(1e-8,1)
+            if plot:
+                c1.cd(pad_it)
+                ROOT.gPad.SetLogz()
+                temp2d.Draw("COLZ")
+                temp2d.GetZaxis().SetRangeUser(1e-8,1)
             bin=0
             temp1dunroll=ROOT.TH1F("hist_%s" % (tempur.GetName()),"hist_%s"% (tempur.GetName()),len(tempunroll_binning)-1,tempunroll_binning)
             for bin1, bin2 in binslist:
@@ -493,13 +445,14 @@ class TemplatesFitApp(TemplatesApp):
                 roodatahist_1dunroll=ROOT.RooDataHist("unrolled_%s" % (tempur.GetName()),"unrolled_%s_zerobins%u" %(tempur.GetName(),fail),unrollvar, temp1dunroll)
                 roodatahist_1dunroll.Print()
                 self.workspace_.rooImport(roodatahist_1dunroll,ROOT.RooFit.RecycleConflictNodes())
-        if len(histlistunroll) >1:
+        if len(histlistunroll) >1 and plot:
             title="histo_%s_%s_%s" %(comp,cat,mcut_s)
             self.plotHistos(histlsX,"%s_X" %title,"charged isolation_X",template_binning,False,True,False,True)
             self.plotHistos(histlsY,"%s_Y" %title,"charged isolation_Y",template_binning,False,True,False,True)
             self.plotHistos(histlistunroll,"%s_unrolled" % (title),"charged isolation",tempunroll_binning,False,True,False,True)
             self.keep( [c1] )
             self.autosave(True)
+        else: return histlistunroll 
 
 
     ## ------------------------------------------------------------------------------------------------------------
@@ -1070,7 +1023,7 @@ class TemplatesFitApp(TemplatesApp):
                         if extended_fit:
                             pu_npf=1-pu_npp
                             err_npf=0.
-                        err_pf=0.
+                        err_pf=err_pp
                     print "err_pp " ,err_pp, " err_pf " ,err_pf
                     print
                     self.plotFit(observable,fitUnrolledPdf,rooPdfs,data_massc,components,cat,log=True) 
@@ -1164,25 +1117,25 @@ class TemplatesFitApp(TemplatesApp):
                     g_templatepp=ROOT.TGraphErrors(tree_template.GetEntries())
                     g_templatepf=ROOT.TGraphErrors(tree_template.GetEntries())
                     nentries=tree_template.GetEntries()
-                if not data:
-                    if not opt=="mctruth":
-                        tree_templatemc=self.treeData("fitresult_fraction_mc_unrolled_%s_%s_%s"%(opt,dim, cat))
-                        g_templateppmc=ROOT.TGraphErrors(tree_templatemc.GetEntries())
-                        g_templatepfmc=ROOT.TGraphErrors(tree_templatemc.GetEntries())
                     tree_mctruth=self.treeData("fitresult_fraction_mc_unrolled_mctruth_%s_%s"%( dim, cat))
                     nentries=tree_mctruth.GetEntries()
-                    tree_truthpp=self.treeData("%s_pp_%s_%s"%(treetruthname, dim, cat))
-                    tree_truthpf=self.treeData("%s_pf_%s_%s"%(treetruthname,dim, cat))
-                    tree_truthff=self.treeData("%s_ff_%s_%s"%(treetruthname,dim, cat))
-                    if tree_truthff!=None:
-                        g_truthff=ROOT.TGraphErrors(tree_truthff.GetEntries())
-                    else:
-                        g_truthff=ROOT.TGraphErrors()
-                        print "no truth ff component"
+                if not opt=="mctruth":
+                    tree_templatemc=self.treeData("fitresult_fraction_mc_unrolled_%s_%s_%s"%(opt,dim, cat))
+                    g_templateppmc=ROOT.TGraphErrors(tree_templatemc.GetEntries())
+                    g_templatepfmc=ROOT.TGraphErrors(tree_templatemc.GetEntries())
+                tree_truthpp=self.treeData("%s_pp_%s_%s"%(treetruthname, dim, cat))
+                tree_truthpf=self.treeData("%s_pf_%s_%s"%(treetruthname,dim, cat))
+                tree_truthff=self.treeData("%s_ff_%s_%s"%(treetruthname,dim, cat))
+                if tree_truthff!=None:
+                    g_truthff=ROOT.TGraphErrors(tree_truthff.GetEntries())
+                else:
+                    g_truthff=ROOT.TGraphErrors()
+                    print "no truth ff component"
+                g_truthpp=ROOT.TGraphErrors(tree_truthpp.GetEntries())
+                g_truthpf=ROOT.TGraphErrors(tree_truthpf.GetEntries())
+                if not data:
                     g_mctruthpp=ROOT.TGraphErrors(tree_mctruth.GetEntries())
                     g_mctruthpp_sumw2on=ROOT.TGraphErrors(tree_mctruth.GetEntries())
-                    g_truthpp=ROOT.TGraphErrors(tree_truthpp.GetEntries())
-                    g_truthpf=ROOT.TGraphErrors(tree_truthpf.GetEntries())
                     g_pullpp=ROOT.TGraphErrors(nentries)
                     g_mctruthpf=ROOT.TGraphErrors(tree_mctruth.GetEntries())
                     g_mctruthpf_sumw2on=ROOT.TGraphErrors(tree_mctruth.GetEntries())
@@ -1198,25 +1151,25 @@ class TemplatesFitApp(TemplatesApp):
                         g_templatepf.SetPointError(mb,tree_template.masserror,tree_template.error_pf)
                         g_templatepp.SetPoint(mb,tree_template.massbin,tree_template.purity_pp)
                         g_templatepp.SetPointError(mb,tree_template.masserror,tree_template.error_pp)
-                    if not data:
-                        if not opt=="mctruth":
-                            tree_templatemc.GetEntry(mb)
-                            g_templatepfmc.SetPoint(mb,tree_templatemc.massbin,tree_templatemc.purity_pf)
-                            g_templatepfmc.SetPointError(mb,tree_templatemc.masserror,tree_templatemc.error_pf)
-                            g_templateppmc.SetPoint(mb,tree_templatemc.massbin,tree_templatemc.purity_pp)
-                            g_templateppmc.SetPointError(mb,tree_templatemc.masserror,tree_templatemc.error_pp)
-                        tree_mctruth.GetEntry(mb)
-                        tree_truthpp.GetEntry(mb)
-                        tree_truthpf.GetEntry(mb)
-                        if tree_truthff!=None:
-                            tree_truthff.GetEntry(mb)
-                        g_truthpp.SetPoint(mb,tree_truthpp.massbin,tree_truthpp.frac_pu)
-                        g_truthpp.SetPointError(mb,tree_truthpp.masserror,0.)
-                        g_truthpf.SetPoint(mb,tree_truthpf.massbin,tree_truthpf.frac_pu)
-                        g_truthpf.SetPointError(mb,tree_truthpf.masserror,0.)
-                        g_truthff.SetPoint(mb,tree_truthff.massbin,tree_truthff.frac_pu)
-                        g_truthff.SetPointError(mb,tree_truthff.masserror,0.)
+                    if not opt=="mctruth":
+                        tree_templatemc.GetEntry(mb)
+                        g_templatepfmc.SetPoint(mb,tree_templatemc.massbin,tree_templatemc.purity_pf)
+                        g_templatepfmc.SetPointError(mb,tree_templatemc.masserror,tree_templatemc.error_pf)
+                        g_templateppmc.SetPoint(mb,tree_templatemc.massbin,tree_templatemc.purity_pp)
+                        g_templateppmc.SetPointError(mb,tree_templatemc.masserror,tree_templatemc.error_pp)
+                    tree_truthpp.GetEntry(mb)
+                    tree_truthpf.GetEntry(mb)
+                    if tree_truthff!=None:
+                        tree_truthff.GetEntry(mb)
+                    g_truthpp.SetPoint(mb,tree_truthpp.massbin,tree_truthpp.frac_pu)
+                    g_truthpp.SetPointError(mb,tree_truthpp.masserror,0.)
+                    g_truthpf.SetPoint(mb,tree_truthpf.massbin,tree_truthpf.frac_pu)
+                    g_truthpf.SetPointError(mb,tree_truthpf.masserror,0.)
+                    g_truthff.SetPoint(mb,tree_truthff.massbin,tree_truthff.frac_pu)
+                    g_truthff.SetPointError(mb,tree_truthff.masserror,0.)
                     
+                    if not data:
+                        tree_mctruth.GetEntry(mb)
                         g_mctruthpp.SetPoint(mb,tree_mctruth.massbin,tree_mctruth.purity_pp)
                         g_mctruthpp_sumw2on.SetPoint(mb,tree_mctruth.massbin,tree_mctruth.purity_pp)
                         g_mctruthpp.SetPointError(mb,tree_mctruth.masserror,tree_mctruth.error_pp)
@@ -1262,7 +1215,7 @@ class TemplatesFitApp(TemplatesApp):
                         sumw2off="sumw2off"
                         self.plotPurityMassbins(cat,pu_val,opt,sumw2off,g_templateppmc,g_templatepfmc,None,g_truthpp,g_truthpf,g_truthff,g_mctruthpp,g_mctruthpf)
                 else:
-                    self.plotPurityMassbins(cat,pu_val,opt,"data",g_templatepp,g_templatepf)
+                    self.plotPurityMassbins(cat,pu_val,opt,"data",g_templatepp,g_templatepf,None,g_truthpp,g_truthpf,g_truthff,g_templateppmc,g_templatepfmc)
             ## ------------------------------------------------------------------------------------------------------------
     def pullFunction(self,g_pull,h_pull,cat,comp,opt,pu_val):
         leg = ROOT.TLegend(0.5,0.8,0.9,0.9)
@@ -1313,8 +1266,16 @@ class TemplatesFitApp(TemplatesApp):
         ROOT.gPad.SetLogx()
         cpu.cd(1)
         if not opt=="mctruth":
-            g_templatepp.SetMarkerColor(ROOT.kBlue+1)
-            g_templatepp.SetLineColor(ROOT.kBlue+1)
+            if opt2=="data":
+                g_templatepp.SetMarkerColor(ROOT.kBlue+1)
+                g_templatepp.SetLineColor(ROOT.kBlue+1)
+                g_mctruthpp.SetMarkerColor(ROOT.kCyan+1)
+                g_mctruthpp.SetLineColor(ROOT.kCyan+1)
+            else:
+                g_templatepp.SetMarkerColor(ROOT.kCyan+1)
+                g_templatepp.SetLineColor(ROOT.kCyan+1)
+                g_mctruthpp.SetMarkerColor(ROOT.kRed)
+                g_mctruthpp.SetLineColor(ROOT.kRed)
             g_templatepp.SetMarkerSize(1.3)
             g_templatepp.SetMarkerStyle(20)
             g_templatepp.GetXaxis().SetTitle("Diphoton mass [GeV]")
@@ -1322,45 +1283,53 @@ class TemplatesFitApp(TemplatesApp):
             g_templatepp.GetYaxis().SetRangeUser(0.,1.6)
             g_templatepp.GetXaxis().SetLimits(200.,15000.)
             g_templatepp.Draw("AP")
+        g_truthpp.SetMarkerColor(ROOT.kYellow+2)
+        g_truthpp.SetLineColor(ROOT.kYellow+2)
+        g_truthpf.SetMarkerColor(ROOT.kGreen+1)
+        g_truthpf.SetLineColor(ROOT.kGreen+1)
+        g_truthff.SetMarkerColor(ROOT.kGreen+2)
+        g_truthff.SetLineColor(ROOT.kGreen+2)
+        g_mctruthpp.SetMarkerStyle(20)
+        g_truthpp.SetMarkerStyle(20)
+        g_truthpf.SetMarkerStyle(20)
+        g_truthff.SetMarkerStyle(20)
+        g_mctruthpp.SetMarkerSize(1.3)
+        g_mctruthpp.GetXaxis().SetTitle("Diphoton mass [GeV]")
+        g_mctruthpp.GetYaxis().SetTitle("purity")
+        g_mctruthpp.GetYaxis().SetRangeUser(0.,1.6)
+        g_mctruthpp.GetXaxis().SetLimits(200.,15000.)
+  #      g_mctruthpp.Draw("P SAME")
+   #     g_mctruthpf.Draw("P SAME")
         if not opt2=="data":
-            g_truthpp.SetMarkerColor(ROOT.kYellow+2)
-            g_truthpp.SetLineColor(ROOT.kYellow+2)
-            g_truthpf.SetMarkerColor(ROOT.kGreen+1)
-            g_truthpf.SetLineColor(ROOT.kGreen+1)
-            g_truthff.SetMarkerColor(ROOT.kGreen+3)
-            g_truthff.SetLineColor(ROOT.kGreen+3)
-            g_mctruthpp.SetMarkerColor(ROOT.kRed)
-            g_mctruthpp.SetLineColor(ROOT.kRed)
-            g_mctruthpp.SetMarkerStyle(20)
-            g_truthpp.SetMarkerStyle(20)
-            g_truthpf.SetMarkerStyle(20)
-            g_truthff.SetMarkerStyle(20)
-            g_mctruthpp.SetMarkerSize(1.3)
-            if opt=="mctruth":
-                g_mctruthpp.GetXaxis().SetTitle("Diphoton mass [GeV]")
-                g_mctruthpp.GetYaxis().SetTitle("purity")
-                g_mctruthpp.GetYaxis().SetRangeUser(0.,1.6)
-                g_mctruthpp.GetXaxis().SetLimits(200.,15000.)
-                g_mctruthpp.Draw("AP")
-                leg.AddEntry(g_mctruthpp,"pp mctruth template","lp")  
-                g_mctruthpf.Draw("P SAME")
-                leg.AddEntry(g_mctruthpf,"pf mctruth template","lp")
-            leg.AddEntry(g_truthpp,"pp truth","lp")  
-            leg.AddEntry(g_truthpf,"pf truth","lp")  
-            leg.AddEntry(g_truthff,"ff truth","lp")  
-            g_truthpp.Draw("P SAME")
-            g_truthpf.Draw("P SAME")
-            g_truthff.Draw("P SAME")
-            g_mctruthpf.SetMarkerColor(ROOT.kOrange+7)
-            g_mctruthpf.SetLineColor(ROOT.kOrange+7)
-            g_mctruthpf.SetMarkerStyle(20)
-            g_mctruthpf.SetMarkerSize(1.3)
-        if not opt=="mctruth":
-            g_templatepf.Draw("P SAME")
+            leg.AddEntry(g_mctruthpp,"pp mctruth template","lp")  
+            leg.AddEntry(g_mctruthpf,"pf mctruth template","lp")
+            leg.AddEntry(g_templatepp,"pp template mc","lp")  
+            leg.AddEntry(g_templatepf,"pf %s mc"% opt,"pl")  
+        if opt2=="data":
+#            leg.AddEntry(g_mctruthpp,"pp mc template","lp")  
+ #           leg.AddEntry(g_mctruthpf,"pf mc %s" % opt,"lp")
             leg.AddEntry(g_templatepp,"pp template","lp")  
             leg.AddEntry(g_templatepf,"pf %s"% opt,"pl")  
-            g_templatepf.SetMarkerColor(ROOT.kBlack)
-            g_templatepf.SetLineColor(ROOT.kBlack)
+        g_templatepf.Draw("P SAME")
+       # leg.AddEntry(g_truthpp,"pp truth","lp")  
+       # leg.AddEntry(g_truthpf,"pf truth","lp")  
+       # leg.AddEntry(g_truthff,"ff truth","lp")  
+       # g_truthpp.Draw("P SAME")
+       # g_truthpf.Draw("P SAME")
+       # g_truthff.Draw("P SAME")
+        g_mctruthpf.SetMarkerStyle(20)
+        g_mctruthpf.SetMarkerSize(1.3)
+        if not opt=="mctruth":
+            if opt2=="data":
+                g_templatepf.SetMarkerColor(ROOT.kBlack)
+                g_templatepf.SetLineColor(ROOT.kBlack)
+                g_mctruthpf.SetMarkerColor(ROOT.kGreen+3)
+                g_mctruthpf.SetLineColor(ROOT.kGreen+3)
+            else:
+                g_templatepf.SetMarkerColor(ROOT.kGreen+4)
+                g_templatepf.SetLineColor(ROOT.kGreen+4)
+                g_mctruthpf.SetMarkerColor(ROOT.kOrange+7)
+                g_mctruthpf.SetLineColor(ROOT.kOrange+7)
             g_templatepf.SetMarkerStyle(20)
             g_templatepf.SetMarkerSize(1.3)  
             
@@ -1399,12 +1368,154 @@ class TemplatesFitApp(TemplatesApp):
                 g_ratiopf.Draw("P SAME")
                 self.keep( [g_mctruthpf,g_ratiopf] )
             self.keep( [g_mctruthpp,g_ratiopp] )
+        self.keep( [g_mctruthpf] )
+        self.keep( [g_mctruthpp] )
         self.keep( [cpu,g_templatepp,g_templatepf] )
         self.autosave(True)
 
+    ## ------------------------------------------------------------------------------------------------------------
+    
+    def Jackknife(self,options,args):
+        fout = self.openOut(options)
+        fout.Print()
+        fout.cd()
+        fit=options.fits["2D"]
+        for cat in options.jackknife.get("categories", fit["categories"]):
+            isoargs=ROOT.RooArgSet("isoargs")
+            setargs=ROOT.RooArgSet("setargs")
+            massargs=ROOT.RooArgSet("massargs")
+            mass_var,mass_b=self.getVar(options.jackknife.get("mass_binning"))
+            mass=self.buildRooVar(mass_var,mass_b,recycle=True)
+            massargs.add(mass)
+            if len(options.template_binning) > 0:
+                template_binning = array.array('d',options.template_binning)
+            else:
+                template_binning = array.array('d',options.jackknife.get("template_binning"))
+            templatebins=ROOT.RooBinning(len(template_binning)-1,template_binning,"templatebins" )
+            for idim in range(fit["ndim"]):
+                isoargs.add(self.buildRooVar("templateNdim%dDim%d" % ( fit["ndim"],idim),template_binning,recycle=True))
+            setargs.add(isoargs)
+            setargs.add(massargs)
+            dset_data = self.reducedRooData("data_2D_%s" % (cat),massargs)
+            dset_data.Print()
+            mass_split= [int(x) for x in options.fit_massbins]
+            diphomass=self.massquantiles(dset_data,massargs,mass_b,mass_split)
+            for mb in range(mass_split[2],mass_split[1]):
+                massbin=(diphomass[mb]+diphomass[mb+1])/2.
+                masserror=(diphomass[mb+1]-diphomass[mb])/2. 
+                cut=ROOT.TCut("mass>%f && mass<%f"% (diphomass[mb],diphomass[mb+1]))
+                cut_s= "%1.0f_%2.0f"% (diphomass[mb],diphomass[mb+1])
+                print cut.GetTitle()
+                for comp in options.jackknife.get("components",fit["components"]) :
+                    name="%s_%s_%s" %(comp,cat,cut_s)
+                    print name
+                    full_temp = self.reducedRooData( "template_mix_%s_kDSinglePho2D_%s" % (comp,cat),setargs)
+                    full_template =full_temp.Clone("%s_%s"%(full_temp.GetName(),cut_s))
+                    full_template=full_template.reduce(cut.GetTitle())
+                    print full_template
+                    full_hist=self.histounroll([full_template],template_binning,isoargs,comp,cat,cut_s,True,min(template_binning),max(template_binning),extra_shape_unc=options.extra_shape_unc,plot=False)
+
+                    #TODO get number of pseudosamples more elegant
+                    if options.verbose:
+                        c1=ROOT.TCanvas("c1_%s"%name,"c1_%s"%name)
+                        full_hist[0].Draw()
+                        self.keep(c1)
+                    mix=options.mix.get("kDSinglePho2D")
+                    jks=int(mix.get("jk_source",10))
+                    jkt=int(mix.get("jk_target",10))
+                    print "jks ",jks, " jkt ", jkt
+                    temps_all = []
+                    temps = []
+                    for s in range(jks):
+                        temp = self.reducedRooData( "template_mix_%s_%i_kDSinglePho2D_%s" % (comp,s,cat),setargs)
+                        temps_all.append(temp)
+                    for t in range(jkt):
+                        temp = self.reducedRooData( "template_mix_%s_kDSinglePho2D_%i_%s" % (comp,t,cat),setargs)
+                        temps_all.append(temp)
+                    for template in temps_all:
+                        template_massc=template.Clone("%s_%s"%(template.GetName(),cut_s))
+                        template_massc=template_massc.reduce(cut.GetTitle())
+                        temps.append(template_massc)
+                    print "number of pseudo samples", len(temps)
+                    print temps
+                    hists=self.histounroll(temps,template_binning,isoargs,comp,cat,cut_s,True,min(template_binning),max(template_binning),extra_shape_unc=options.extra_shape_unc,plot=False)
+                    if options.verbose:
+                        c12=ROOT.TCanvas("c12_%s"%name,"c12_%s"%name)
+                        hists[0].Draw()
+                        self.keep(c12)
+                        self.autosave(True)
+                    self.plotJK(self.options,full_hist,hists,name)
+        self.saveWs(options,fout)
+    
+    ## ------------------------------------------------------------------------------------------------------------
+    def plotJK(self,options,full_hist,hists,name):
+        ROOT.TH1D.SetDefaultSumw2(True)
+        #rms for
+        ntuple_rms = ROOT.TNtuple("tree_rms_%s" % (name),"tree_rms_%s" % (name),"rms_bin:rms_diffbinLowCurrent:rms_diffbinCurrentHigh" )
+        self.store_[ntuple_rms.GetName()] =ntuple_rms
+        for bin in range(1,full_hist[0].GetNbinsX()+1):
+            hist_rms=ROOT.TH1D("hRMS_%s_%i"% (name,bin),"hRMS_%s_%i"% (name,bin),5*len(hists),0.0,3.0)
+            hist_diffLow=ROOT.TH1D("hdiffLow_%s_%i"% (name,bin),"hdiffLow_%s_%i"% (name,bin),10*len(hists),-3.0,3.0)
+            hist_diffHigh=ROOT.TH1D("hdiffHigh_%s_%i"% (name,bin),"hdiffHigh_%s_%i"% (name,bin),10*len(hists),-3.0,3.0)
+            for hist in hists:
+                bin_diffLow=0.
+                bin_diffHigh=0.
+                if full_hist[0].GetBinContent(bin)!=0:
+                    bincont=hist.GetBinContent(bin)/full_hist[0].GetBinContent(bin)
+                    hist_rms.Fill(bincont)
+                else: hist_rms.Fill(0.)
+                if bin==1:
+                    bin_diffHigh=(bincont - hist.GetBinContent(bin+1)/full_hist[0].GetBinContent(bin+1))
+                elif bin==full_hist[0].GetNbinsX():
+                    bin_diffLow=(hist.GetBinContent(bin-1)/full_hist[0].GetBinContent(bin-1)-bincont)
+                else:
+                    bin_diffLow=(hist.GetBinContent(bin-1)/full_hist[0].GetBinContent(bin-1)-bincont)
+                    bin_diffHigh=(bincont - hist.GetBinContent(bin+1)/full_hist[0].GetBinContent(bin+1))
+                if bin_diffLow !=0:hist_diffLow.Fill(bin_diffLow)
+                if bin_diffHigh !=0:hist_diffHigh.Fill(bin_diffHigh)
+            if options.verbose:
+                print "mean" ,hist_rms.GetMean()
+                print "rms" , hist_rms.GetRMS()
+                print "diff Low" , hist_diffLow.GetMean()
+                print "diff Low" , hist_diffHigh.GetMean()
+                if hist_rms.GetMean()!=0:
+                    canv = ROOT.TCanvas("cRMS_%s_%i" % (name,bin),"cRMS_%s_%i"% (name,bin) )
+                    canv.cd()
+                    hist_rms.Draw("HIST E2")
+                    hist_rms.GetXaxis().SetLimits(max(0.,hist_rms.GetMean()-3*hist_rms.GetRMS()),hist_rms.GetMean()+3*hist_rms.GetRMS())
+                    ROOT.gStyle.SetOptStat(111111)
+                    hist_rms.GetXaxis().SetTitle("bin_{JK}/bin_{full_dataset}") 
+                    hist_rms.GetYaxis().SetTitle("# pseudosamples") 
+                    hist_rms.SetTitle("RMS for %s ChIso bin %i" %(name,bin) )
+                    self.keep( [canv] )
+                if hist_diffLow.GetMean()!=0:
+                    canv1 = ROOT.TCanvas("cRMSdiffLow_%s_%i%i" % (name,bin-1,bin),"cRMSdiffLow_%s_%i%i"% (name,bin-1,bin) )
+                    canv1.cd()
+                    hist_diffLow.Draw("HIST E2")
+                    hist_diffLow.GetXaxis().SetTitle("bin%i%i_{JK}/bin%i%i_{full_dataset}" %(bin-1,bin,bin-1,bin)) 
+                    hist_diffLow.GetYaxis().SetTitle("# pseudosamples") 
+                    hist_diffLow.GetXaxis().SetLimits(hist_diffLow.GetMean()-3*hist_diffLow.GetRMS(),hist_diffLow.GetMean()+3*hist_diffLow.GetRMS())
+                    self.keep( [canv1] )
+                if hist_diffHigh.GetMean()!=0:
+                    canv2 = ROOT.TCanvas("cRMSdiffHigh_%s_%i%i" % (name,bin,bin+1),"cRMSdiffHigh_%s_%i%i"% (name,bin,bin+1) )
+                    canv2.cd()
+                    hist_diffHigh.Draw("HIST E2")
+                    hist_diffHigh.GetXaxis().SetTitle("bin%i%i_{JK}/bin%i%i_{full_dataset}" %(bin,bin+1,bin,bin+1)) 
+                    hist_diffHigh.GetXaxis().SetLimits(hist_diffHigh.GetMean()-3*hist_diffHigh.GetRMS(),hist_diffHigh.GetMean()+3*hist_diffHigh.GetRMS())
+                    hist_diffHigh.GetYaxis().SetTitle("# pseudosamples") 
+                    self.keep( [canv2] )
+            ntuple_rms.Fill(hist_rms.GetRMS(),hist_diffLow.GetRMS(),hist_diffHigh.GetRMS())
+            self.autosave(True)
+
+
+    ## ------------------------------------------------------------------------------------------------------------
+    
 
 # -----------------------------------------------------------------------------------------------------------
 # actual main
 if __name__ == "__main__":
     app = TemplatesFitApp()
     app.run()
+
+
+
