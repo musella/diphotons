@@ -1,5 +1,6 @@
 #include "RooFit.h"
 
+#include "RooDataHist.h"
 #include "Riostream.h"
 #include "Riostream.h"
 #include <cmath>
@@ -17,13 +18,14 @@ using namespace std;
 
 //_____________________________________________________________________________
 RooSlicePdf::RooSlicePdf(const char *name, const char *title, TH2 * histo, 
-			 RooAbsReal& _x, RooAbsReal& _p, Double_t * _widths //, RooAbsPdf * __ppdf
+			 RooAbsReal& _x, RooRealVar& _p, Double_t * _widths, int sliding, RooAbsPdf * __ppdf
 	) :
 	RooAbsPdf(name, title), 
 	histo_(dynamic_cast<TH2*>(histo->Clone(Form("histo_%s",name)))),	
-	/// pdf_(__ppdf),
+	pdf_(__ppdf),
 	// widths_(&_widths[0],&_widths[histo_->GetNbinsY()]),
-	x_("x","Dependent",this,_x), p_("p","Parameter",this,_p)
+	x_("x","Dependent",this,_x), p_("p","Parameter",this,_p),
+	xset_(_x)
 {
 	histo_->SetDirectory(0);
 	
@@ -60,86 +62,202 @@ RooSlicePdf::RooSlicePdf(const char *name, const char *title, TH2 * histo,
 	histo_->SetBinError(0,0,0.);
 	histo_->SetBinContent(nbinsx+1,nbinsy+1,0.);
 	histo_->SetBinError(nbinsx+1,nbinsy+1,0.);
+	
+	
+	RooArgList xlist(_x);
+	// this->Print("V");
+	for(int ib=0; ib<nbinsx; ++ib) {
+		int imin = ib+1, imax = ib+1;
+		if( sliding > 0 ) {
+			imin = ib - sliding;
+			imax = ib + sliding;
+			while( imin <  1 ) { 
+				++imin; ++imax;
+			}
+			while( imax > histo_->GetNbinsX() ) {
+				--imin, --imax;
+			}
+			imin = max(1,imin);
+			imax = min(histo_->GetNbinsX(), imax);
+			/// cout << "sliding " << imin << " " << ii << " " << imax << endl;
+		}
+		TH1 * slice = histo_->ProjectionY("",imin,imax);
+		slice->Scale(1./slice->Integral());
+		// slice->Print("all");
+		// cout << slice ->Integral() << endl;
+		RooDataHist * data = new RooDataHist(Form("%s_slice%d",name,ib),Form("%s_slice%d",name,ib),xlist,slice);
+		slices_.push_back( data );
+		pdfs_.push_back( new RooHistPdf(Form("%s_slice%d",name,ib),Form("%s_slice%d",name,ib),xset_,*(slices_.back())) );
+		// pdfs_.back().Print("V");
+		// pdfs_.back()->setDirtyInhibit(true);
+		pdfs_.back()->setUnitNorm(true);
+		/// pdfs_.back()->verboseDirty(true);
+		bins_.push_back(histo_->GetXaxis()->GetBinLowEdge(ib+1));
+	}
+	bins_.push_back(histo_->GetXaxis()->GetXmax());
+	xset_.add(_p);
+
+	if( pdf_ ) {
+		norm_ = pdf_->createIntegral(RooArgSet(_p));
+		for(size_t ibin=0; ibin<bins_.size()-1; ++ibin){
+			_p.setRange(Form("%s_slice%lu",GetName(),ibin),bins_[ibin],bins_[ibin+1]);
+			norms_.push_back( pdf_->createIntegral(RooArgSet(_p),Form("%s_slice%lu",GetName(),ibin)) );
+		}
+	}
 }
 
 
 //_____________________________________________________________________________
 RooSlicePdf::RooSlicePdf(const RooSlicePdf& other, const char* name) :
-	RooAbsPdf(other, name), 
+	RooAbsPdf(other, name), // != 0 ? name : Form("%s_clone",other.GetName())), 
 	histo_(dynamic_cast<TH2*>(other.histo_->Clone(Form("histo_%s",name)))),
-	/// pdf_(other.pdf_),
+	bins_(other.bins_),
+	norms_(other.norms_),
+	slices_(other.slices_),
+	pdfs_(other.pdfs_),
 	widths_(other.widths_),
-	x_("x",this,other.x_), p_("p",this,other.p_)
+	pdf_(other.pdf_), norm_(other.norm_),
+	x_("x",this,other.x_), p_("p",this,other.p_),
+	xset_(other.xset_)
 {
 	histo_->SetDirectory(0);
+	/// if( pdf_ ) {
+	/// 	norm_ = pdf_->createIntegral(RooArgSet(p_.arg()));
+	/// 	for(size_t ibin=0; ibin<bins_.size()-1; ++ibin){
+	/// 		norms_.push_back( pdf_->createIntegral(RooArgSet(p_.arg()),Form("%s_slice%lu",GetName(),ibin)) );
+	/// 	}
+	/// }
 }
 
 //_____________________________________________________________________________
 Int_t RooSlicePdf::getAnalyticalIntegral(RooArgSet& allVars, RooArgSet& analVars, const char* rangeName) const 
 {
 	int code = matchArgs(allVars,analVars,x_);
-	/// if( code > 0 ) { 
-	/// 	code += matchArgs(allVars,analVars,p_);
-	/// }
+	if( code > 0 && pdf_ != 0) { 
+		code += matchArgs(allVars,analVars,p_);
+	} else if( pdf_ != 0 && matchArgs(allVars,analVars,p_) ) {
+		code = 3;
+	}
 	
-	/// if( analytic 
-	///     /// && (pdf_ == 0 || pdf_->getAnalyticalIntegral(allVars,analVars,rangeName) ) ) return 1 ;
 	return code;
 }
 
 //_____________________________________________________________________________
 Double_t RooSlicePdf::analyticalIntegral(Int_t code, const char* rangeName) const 
 {
-	assert( code == 1 || code == 2);
+	assert( code == 1 || code == 2 || code == 3);
 
 	Double_t ret(0) ;
-	const Double_t eps = 1.e-300;
-	Double_t x1 = x_.min(rangeName);
-	Double_t x2 = x_.max(rangeName);		
-
+	const Double_t eps = 1e-300;
+	//// Double_t x1 = x_.min(rangeName);
+	//// Double_t x2 = x_.max(rangeName);		
+	
 	int slice1;
 	int slice2;
-	if( code == 2 ) {
-		slice1 = histo_->GetXaxis()->FindBin(p_.min(rangeName));
-		slice2 = histo_->GetXaxis()->FindBin(p_.max(rangeName));
+	if( code == 3 ) {
+		slice1 = 0;
+		slice2 = (int)bins_.size()-1;
+	} if( code == 2 ) {
+		Double_t p1 = p_.min(rangeName);
+		Double_t p2 = p_.max(rangeName);
+		
+		if( (p1 < bins_.front() && p2 < bins_.front()) || (p1 > bins_.front() && p2 > bins_.front()) ) { return eps; }
+		
+		p1 = max(bins_.front(),p1);
+		p2 = min(bins_.back(),p2);
+		
+		slice1 = std::lower_bound(bins_.begin(),bins_.end(),p1) - bins_.begin();
+		slice2 = std::lower_bound(bins_.begin(),bins_.end(),p2) - bins_.begin();
+		slice1 = min(0,slice1);
+		slice2 = max((int)bins_.size()-1,slice2);
 	} else {
-		slice1 = histo_->GetXaxis()->FindBin(p_);
-		slice2 = slice1;
+		if(p_<bins_.front() || p_>bins_.back()) { return eps; }
+		
+		slice1 = std::lower_bound(bins_.begin(),bins_.end(),p_) - bins_.begin();
+		slice2 = slice1+1;
 	}
 	
-	int nbinsy = histo_->GetNbinsY();
-	if( x1 <= histo_->GetYaxis()->GetBinLowEdge(1) && x2 >= histo_->GetYaxis()->GetBinUpEdge(nbinsy) ) { 
-	 	ret = 1.;
-	} else { 
-		/// cout << "analyticalIntegral " << code << " " << x1 << " " << x2 << " "<< slice1 << " "<< slice2 << endl;
-		for(int slice = slice1; slice<=slice2; ++slice ) {
-			Double_t slicesum = 0.;
-			for(int ib=0; ib<nbinsy; ++ib) {
-				Double_t low  = histo_->GetYaxis()->GetBinLowEdge(ib+1);
-				Double_t high = histo_->GetYaxis()->GetBinUpEdge(ib+1);
-				Double_t binc = histo_->GetBinContent(slice,ib+1);
-				
-				Double_t xhigh = min(high,x2);
-				Double_t xlow  = max(low,x1);
-				Double_t overlap = (xhigh - xlow)/(high-low);
-				//// cout << "low=" << low << " high=" << high << " xlow=" << xlow << " xhigh=" << xhigh << " binc=" << binc << " overlap="<<overlap 
-				////      << " width=" << widths_[ib] << endl;
-				if( overlap > 0. ) {
-					slicesum += binc * overlap * widths_[ib];
-				}
-			}
-			Double_t wei = 1.;
-			ret += slicesum * wei;
+	// cout << slice1 << " " << slice2 << endl;
+	auto * myobs = this->getObservables(xset_);
+	// myobs->Print();
+	// /double norm = 0;
+	for(int slice = slice1; slice<slice2; ++slice ) {
+		// cout << slice << endl;
+		auto * slicepdf = pdfs_[slice];
+		// cout << slicepdf << endl;
+		auto * sliceobs = slicepdf->getObservables(xset_);
+		// cout << sliceobs << endl;
+		// sliceobs->Print();
+		*sliceobs = *myobs;
+		double sliceint = ( code == 3 ? pdfs_[slice]->getVal() : pdfs_[slice]->createIntegral(xset_,rangeName)->getVal()) ;
+		cout << sliceint << endl;
+		/// if( code == 3 ) { norm += sliceint; }
+		if( pdf_ ) {
+			*(norms_[slice]->getObservables(xset_)) = *(this->getObservables(xset_));
+			double intg = norms_[slice]->getVal(); // / norm_->getVal();
+			// double intg = pdf_->createIntegral( RooArgSet(p_.arg()),Form("%s_slice%d",GetName(),slice))->getVal(); // / pdf_->createIntegral(RooArgSet(p_.arg()))->getVal();
+			sliceint *= intg;
 		}
+		ret += sliceint;
 	}
+	/// *(norm_->getObservables(xset_)) = *(this->getObservables(xset_));
+	/// ret /= norm_->getVal();
+	/// if( code == 3 ) {
+	/// 	ret /= norm;
+	/// }
+	
+	///// if( code == 2 ) {
+	///// 	slice1 = histo_->GetXaxis()->FindBin(p_.min(rangeName));
+	///// 	slice2 = histo_->GetXaxis()->FindBin(p_.max(rangeName));
+	///// } else {
+	///// 	slice1 = histo_->GetXaxis()->FindBin(p_);
+	///// 	slice2 = slice1;
+	///// }
+	///// 
+	///// int nbinsy = histo_->GetNbinsY();
+	///// if( x1 <= histo_->GetYaxis()->GetBinLowEdge(1) && x2 >= histo_->GetYaxis()->GetBinUpEdge(nbinsy) ) { 
+	/////  	ret = 1.;
+	///// } else { 
+	///// 	/// cout << "analyticalIntegral " << code << " " << x1 << " " << x2 << " "<< slice1 << " "<< slice2 << endl;
+	///// 	for(int slice = slice1; slice<=slice2; ++slice ) {
+	///// 		Double_t slicesum = 0.;
+	///// 		for(int ib=0; ib<nbinsy; ++ib) {
+	///// 			Double_t low  = histo_->GetYaxis()->GetBinLowEdge(ib+1);
+	///// 			Double_t high = histo_->GetYaxis()->GetBinUpEdge(ib+1);
+	///// 			Double_t binc = histo_->GetBinContent(slice,ib+1);
+	///// 			
+	///// 			Double_t xhigh = min(high,x2);
+	///// 			Double_t xlow  = max(low,x1);
+	///// 			Double_t overlap = (xhigh - xlow)/(high-low);
+	///// 			//// cout << "low=" << low << " high=" << high << " xlow=" << xlow << " xhigh=" << xhigh << " binc=" << binc << " overlap="<<overlap 
+	///// 			////      << " width=" << widths_[ib] << endl;
+	///// 			if( overlap > 0. ) {
+	///// 				slicesum += binc * overlap * widths_[ib];
+	///// 			}
+	///// 		}
+	///// 		Double_t wei = 1.;
+	///// 		ret += slicesum * wei;
+	///// 	}
+	///// }
+	
+	cout << code << " (" << slice1 << " " << slice2 << ") " << " (" << x_ << " " << p_ << ") " << ret << endl;
+	
 	return max(ret,eps);
 }
 
 //_____________________________________________________________________________
 Double_t RooSlicePdf::evaluate() const{
-	int ibin = histo_->FindBin(p_,x_);
-	val_ = histo_->GetBinContent( ibin );
-	//// if( pdf_ ) { val_ *= pdf_->getVal(); };
-	/// cout << p_ << " " << x_ << " " << " " << ibin << " " << val_ << endl;
+	
+	if(p_<bins_.front() || p_>=bins_.back()) { return 1e-4; }
+	
+	int jbin = std::lower_bound(bins_.begin(),bins_.end(),p_) - bins_.begin();
+	if( jbin >= (int)pdfs_.size() ) { return 1e-4; }
+	// cout << jbin << endl;
+	*(pdfs_[jbin]->getObservables(xset_)) = *(this->getObservables(xset_));
+	val_ = pdfs_[jbin]->getVal();
+	if( pdf_ ) {
+		*(pdf_->getObservables(xset_)) = *(this->getObservables(xset_));
+		val_ *= pdf_->getVal() / norm_->getVal();
+	}
 	return val_;
 }

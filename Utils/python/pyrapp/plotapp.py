@@ -461,7 +461,7 @@ class PlotApp(PyRApp):
                 folder = None
                 if ".root/" in fname or "__infile__/" in fname:
                     fname, folder = fname.rsplit("/",1)
-                ## print fname, folder
+                ## print fname, folder, sfin
                 if fname != "__infile__":
                     sfin = self.open(fname, folder=self.options.input_dir)
                 if folder:
