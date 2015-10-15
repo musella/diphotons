@@ -149,6 +149,7 @@ process.out.outputCommands.extend([### "keep *_eventCount_*_*",
                                     "drop *_flashggPreselectedDiPhotons_*_*",
                                     "keep *_reducedEgamma_*_*",
                                     "keep *_flashggElectrons_*_*",
+                                    "drop *_flashggSelectedElectrons_*_*",
                                     "keep *_BeamHaloSummary_*_*"
                                     ]
                                    )

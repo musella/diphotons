@@ -15,92 +15,130 @@
 	
     "#" : "data to be fit                                                                                                       ",
     "_data" : [
-               "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)sGenIso",
-               "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)sNonGenIso",
-               "QCD_HT_100toInf_13TeV:output.root/%(sel)s",
-               "GJets_HT_100toInf_13TeV:output.root/%(sel)s"            
+               "GGJets_M_200To13000_sherpa_13TeV:__infile__/%(sel)sGenIso",
+               "GGJets_M_200To13000_sherpa_13TeV:__infile__/%(sel)sNonGenIso",
+               "QCD_HT_100toInf_13TeV:__infile__/%(sel)s",
+               "GJets_HT_100toInf_13TeV:__infile__/%(sel)s"            
              ],
 
     "data" : [
-               "Data_13TeV:output.root/%(sel)s"
+               "Data_13TeV:__infile__/%(sel)s"
              ],
 
     "#" : "data used for template making",
     "templates" : [
-               "Data_13TeV:output.root/%(sel)s"
+               "Data_13TeV:__infile__/%(sel)s"
              ],
     "_templates" : [
-               "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)s",
-               "QCD_HT_100toInf_13TeV:output.root/%(sel)s",
-               "GJets_HT_100toInf_13TeV:output.root/%(sel)s"            
+               "GGJets_M_200To13000_sherpa_13TeV:__infile__/%(sel)s",
+               "QCD_HT_100toInf_13TeV:__infile__/%(sel)s",
+               "GJets_HT_100toInf_13TeV:__infile__/%(sel)s"            
              ],
              
      "#" : "mc dataset",
      "mc" : [
-               "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)sGenIso",
-               "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)sNonGenIso",
-               "QCD_Pt_30toInf_13TeV:output.root/%(sel)s",
-               "GJets_HT_100toInf_13TeV:output.root/%(sel)s"            
+               "GGJets_M_200To13000_sherpa_13TeV:__infile__/%(sel)sGenIso",
+               "GGJets_M_200To13000_sherpa_13TeV:__infile__/%(sel)sNonGenIso",
+               "QCD_Pt_30toInf_13TeV:__infile__/%(sel)s",
+               "GJets_HT_100toInf_13TeV:__infile__/%(sel)s"            
             ],
 
      "_mc" : [
-             "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)sGenIso",
-               "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)sNonGenIso",
-               "QCD_HT_100toInf_13TeV:output.root/%(sel)s",
-               "GJets_HT_100toInf_13TeV:output.root/%(sel)s"            
+             "GGJets_M_200To13000_sherpa_13TeV:__infile__/%(sel)sGenIso",
+               "GGJets_M_200To13000_sherpa_13TeV:__infile__/%(sel)sNonGenIso",
+               "QCD_HT_100toInf_13TeV:__infile__/%(sel)s",
+               "GJets_HT_100toInf_13TeV:__infile__/%(sel)s"            
             ],
 
      "#" : "mc dataset",
       "signals" : { 
-      "grav_02_3000" : [ "RSGravToGG_kMpl_02_M_3000_TuneCUEP8M1_13TeV_pythia8_13TeV:output.root/%(sel)sGenIso",
-      "RSGravToGG_kMpl_02_M_3000_TuneCUEP8M1_13TeV_pythia8_13TeV:output.root/%(sel)sNonGenIso"
-      	]
+
+	   "grav_01_1000" : [ "RSGravToGG_kMpl_01_M_1000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_1000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	   "grav_01_1250" : [ "RSGravToGG_kMpl_01_M_1250_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_1250_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	   "grav_01_1500" : [ "RSGravToGG_kMpl_01_M_1500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_1500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	   "grav_01_1750" : [ "RSGravToGG_kMpl_01_M_1750_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_1750_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	   "grav_01_2000" : [ "RSGravToGG_kMpl_01_M_2000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_2000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	   "grav_01_2250" : [ "RSGravToGG_kMpl_01_M_2250_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_2250_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	   "grav_01_2750" : [ "RSGravToGG_kMpl_01_M_2750_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_2750_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	   "grav_01_3000" : [ "RSGravToGG_kMpl_01_M_3000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_3000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	   "grav_01_3500" : [ "RSGravToGG_kMpl_01_M_3500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_3500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	   "grav_01_4000" : [ "RSGravToGG_kMpl_01_M_4000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_4000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	   "grav_01_4500" : [ "RSGravToGG_kMpl_01_M_4500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_4500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	   "grav_01_5000" : [ "RSGravToGG_kMpl_01_M_5000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_5000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	   "grav_01_500" : [ "RSGravToGG_kMpl_01_M_500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	   "grav_01_5500" : [ "RSGravToGG_kMpl_01_M_5500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_5500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	   "grav_01_6000" : [ "RSGravToGG_kMpl_01_M_6000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_6000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	   "grav_01_6500" : [ "RSGravToGG_kMpl_01_M_6500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_6500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	   "grav_01_7000" : [ "RSGravToGG_kMpl_01_M_7000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_7000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	   "grav_01_750" : [ "RSGravToGG_kMpl_01_M_750_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_750_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	   
+	   
+	   "grav_001_1000" : [ "RSGravToGG_kMpl_001_M_1000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_001_M_1000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	   "grav_001_1500" : [ "RSGravToGG_kMpl_001_M_1500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_001_M_1500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	    "grav_001_2000" : [ "RSGravToGG_kMpl_001_M_2000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_001_M_2000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	    "grav_001_3000" : [ "RSGravToGG_kMpl_001_M_3000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_001_M_3000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	    "grav_001_4000" : [ "RSGravToGG_kMpl_001_M_4000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_001_M_4000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	    "grav_001_5000" : [ "RSGravToGG_kMpl_001_M_5000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_001_M_5000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	    "grav_001_500" : [ "RSGravToGG_kMpl_001_M_500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_001_M_500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	    "grav_001_6000" : [ "RSGravToGG_kMpl_001_M_6000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_001_M_6000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	    "grav_001_7000" : [ "RSGravToGG_kMpl_001_M_7000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_001_M_7000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	    "grav_001_750" : [ "RSGravToGG_kMpl_001_M_750_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_001_M_750_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	    "grav_02_1000" : [ "RSGravToGG_kMpl_02_M_1000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_02_M_1000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	    "grav_02_1500" : [ "RSGravToGG_kMpl_02_M_1500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_02_M_1500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	    "grav_02_2000" : [ "RSGravToGG_kMpl_02_M_2000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_02_M_2000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	    "grav_02_3000" : [ "RSGravToGG_kMpl_02_M_3000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_02_M_3000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	    "grav_02_4000" : [ "RSGravToGG_kMpl_02_M_4000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_02_M_4000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	    "grav_02_5000" : [ "RSGravToGG_kMpl_02_M_5000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_02_M_5000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	    "grav_02_500" : [ "RSGravToGG_kMpl_02_M_500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_02_M_500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	    "grav_02_7000" : [ "RSGravToGG_kMpl_02_M_7000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_02_M_7000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	    "grav_02_750" : [ "RSGravToGG_kMpl_02_M_750_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_02_M_750_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ]
       
       },
       "_signals" : { 
-      "grav_001_2000": [ "RSGravToGG_kMpl_001_M_2000_13TeV:output.root/%(sel)s"],
-      "grav_001_3000": [ "RSGravToGG_kMpl_001_M_3000_13TeV:output.root/%(sel)s"],
-      "grav_001_500" : [ "RSGravToGG_kMpl_001_M_500_13TeV:output.root/%(sel)s"	],
-      "grav_01_1000" : [ "RSGravToGG_kMpl_01_M_1000_13TeV:output.root/%(sel)s"	],
-      "grav_01_3500" : [ "RSGravToGG_kMpl_01_M_3500_13TeV:output.root/%(sel)s"	],
-      "grav_01_4000" : [ "RSGravToGG_kMpl_01_M_4000_13TeV:output.root/%(sel)s"	],
-      "grav_01_5000" : [ "RSGravToGG_kMpl_01_M_5000_13TeV:output.root/%(sel)s"	],
-      "grav_01_7000" : [ "RSGravToGG_kMpl_01_M_7000_13TeV:output.root/%(sel)s"	],
-      "grav_02_1000" : [ "RSGravToGG_kMpl_02_M_1000_13TeV:output.root/%(sel)s"	],
-      "grav_02_4000" : [ "RSGravToGG_kMpl_02_M_4000_13TeV:output.root/%(sel)s"	],
-      "grav_02_5000" : [ "RSGravToGG_kMpl_02_M_5000_13TeV:output.root/%(sel)s" ]
+      "grav_001_2000": [ "RSGravToGG_kMpl_001_M_2000_13TeV:__infile__/%(sel)s"],
+      "grav_001_3000": [ "RSGravToGG_kMpl_001_M_3000_13TeV:__infile__/%(sel)s"],
+      "grav_001_500" : [ "RSGravToGG_kMpl_001_M_500_13TeV:__infile__/%(sel)s"	],
+      "grav_01_1000" : [ "RSGravToGG_kMpl_01_M_1000_13TeV:__infile__/%(sel)s"	],
+      "grav_01_3500" : [ "RSGravToGG_kMpl_01_M_3500_13TeV:__infile__/%(sel)s"	],
+      "grav_01_4000" : [ "RSGravToGG_kMpl_01_M_4000_13TeV:__infile__/%(sel)s"	],
+      "grav_01_5000" : [ "RSGravToGG_kMpl_01_M_5000_13TeV:__infile__/%(sel)s"	],
+      "grav_01_7000" : [ "RSGravToGG_kMpl_01_M_7000_13TeV:__infile__/%(sel)s"	],
+      "grav_02_1000" : [ "RSGravToGG_kMpl_02_M_1000_13TeV:__infile__/%(sel)s"	],
+      "grav_02_4000" : [ "RSGravToGG_kMpl_02_M_4000_13TeV:__infile__/%(sel)s"	],
+      "grav_02_5000" : [ "RSGravToGG_kMpl_02_M_5000_13TeV:__infile__/%(sel)s" ]
       
       },
       "_signals" : {
-     	       	 "grav_001_750" : ["RSGravToGG_kMpl_001_M_750_13TeV:output.root/%(sel)sGenIso",
-		       		  "RSGravToGG_kMpl_001_M_750_13TeV:output.root/%(sel)sNonGenIso"
+     	       	 "grav_001_750" : ["RSGravToGG_kMpl_001_M_750_13TeV:__infile__/%(sel)sGenIso",
+		       		  "RSGravToGG_kMpl_001_M_750_13TeV:__infile__/%(sel)sNonGenIso"
 		       		  ],
-     	       	 "grav_001_1500" : ["RSGravToGG_kMpl_001_M_1500_13TeV:output.root/%(sel)sGenIso",
-		       		  "RSGravToGG_kMpl_001_M_1500_13TeV:output.root/%(sel)sNonGenIso"
+     	       	 "grav_001_1500" : ["RSGravToGG_kMpl_001_M_1500_13TeV:__infile__/%(sel)sGenIso",
+		       		  "RSGravToGG_kMpl_001_M_1500_13TeV:__infile__/%(sel)sNonGenIso"
 		       		  ],
-      	       	 "grav_01_1500" : ["RSGravToGG_kMpl_01_M_1500_13TeV:output.root/%(sel)sGenIso",
-		       		  "RSGravToGG_kMpl_01_M_1500_13TeV:output.root/%(sel)sNonGenIso"
+      	       	 "grav_01_1500" : ["RSGravToGG_kMpl_01_M_1500_13TeV:__infile__/%(sel)sGenIso",
+		       		  "RSGravToGG_kMpl_01_M_1500_13TeV:__infile__/%(sel)sNonGenIso"
 		       		  ],
-      	       	 "grav_02_1500" : ["RSGravToGG_kMpl_02_M_1500_13TeV:output.root/%(sel)sGenIso",
-		       		  "RSGravToGG_kMpl_02_M_1500_13TeV:output.root/%(sel)sNonGenIso"
+      	       	 "grav_02_1500" : ["RSGravToGG_kMpl_02_M_1500_13TeV:__infile__/%(sel)sGenIso",
+		       		  "RSGravToGG_kMpl_02_M_1500_13TeV:__infile__/%(sel)sNonGenIso"
 		       		  ],
-     	       	 "grav_02_3000" : ["RSGravToGG_kMpl_02_M_3000_13TeV:output.root/%(sel)sGenIso",
-		       		  "RSGravToGG_kMpl_02_M_3000_13TeV:output.root/%(sel)sNonGenIso"
+     	       	 "grav_02_3000" : ["RSGravToGG_kMpl_02_M_3000_13TeV:__infile__/%(sel)sGenIso",
+		       		  "RSGravToGG_kMpl_02_M_3000_13TeV:__infile__/%(sel)sNonGenIso"
 		       		  ],
-     	       	 "grav_01_3000" : ["RSGravToGG_kMpl_01_M_3000_13TeV:output.root/%(sel)sGenIso",
-		       		  "RSGravToGG_kMpl_01_M_3000_13TeV:output.root/%(sel)sNonGenIso"
+     	       	 "grav_01_3000" : ["RSGravToGG_kMpl_01_M_3000_13TeV:__infile__/%(sel)sGenIso",
+		       		  "RSGravToGG_kMpl_01_M_3000_13TeV:__infile__/%(sel)sNonGenIso"
 		       		  ],
-     	       	 "grav_02_5000" : ["RSGravToGG_kMpl_02_M_5000_13TeV:output.root/%(sel)sGenIso",
-		       		  "RSGravToGG_kMpl_02_M_5000_13TeV:output.root/%(sel)sNonGenIso"
+     	       	 "grav_02_5000" : ["RSGravToGG_kMpl_02_M_5000_13TeV:__infile__/%(sel)sGenIso",
+		       		  "RSGravToGG_kMpl_02_M_5000_13TeV:__infile__/%(sel)sNonGenIso"
 		       		  ],
-     	       	 "grav_001_5000" : ["RSGravToGG_kMpl_001_M_5000_13TeV:output.root/%(sel)sGenIso",
-		       		  "RSGravToGG_kMpl_001_M_5000_13TeV:output.root/%(sel)sNonGenIso"
+     	       	 "grav_001_5000" : ["RSGravToGG_kMpl_001_M_5000_13TeV:__infile__/%(sel)sGenIso",
+		       		  "RSGravToGG_kMpl_001_M_5000_13TeV:__infile__/%(sel)sNonGenIso"
 		       		  ]
             },
 
     "#" : "file names for different datasets. Files folder can be specified by --input-dir on the command line",
     "data_file"  : "output.root",
     "mc_file"    : "output.root",
+    "sig_file"    : null,  "#" : "implies to use same as mc",
     "templates_file" : null, "#" : "implies to use same as data",
 
     "#" : "categories for the input datasets",
@@ -121,7 +159,8 @@
     "#" : " %(cat)s is replaced with the category name                 ", 
     "treeName": "trees/%(sample)s_%(cat)s",
 
-    "preselection" : "(leadChIso < 15. && subleadChIso < 15. && mass > 250)",   "#" : "preselection cut applied to all trees",
+    "preselection" : "(leadChIso < 15. && subleadChIso < 15. && ((mass > 200 && max(abs(leadScEta),abs(subleadScEta))<1.5) || mass > 300) ) && ( max(abs(leadScEta),abs(subleadScEta))<1.5 || (leadPt>100 && subleadPt>100 )  )",   
+	"#" : "preselection cut applied to all trees",
     "selection"    : "cicNoChIso",                              "#" : "nominal selection",
     
     "#" : "---------------------------------------------------------------------------------------------------------------------",
