@@ -442,12 +442,13 @@ elif customize.selection == "photon":
     mcTriggers=dataTriggers
     doSinglePho=True
     doDoublePho=False
-    askTriggerOnMc=True
+    ## askTriggerOnMc=True
 elif customize.selection == "electron":
     ## dataTriggers=["HLT_Ele23_WPLoose*"]
     ## mcTriggers=[]
     dataTriggers=["HLT_Ele27_eta2p1_WPLoose_Gsf_v*"]
     mcTriggers=["HLT_Ele27_eta2p1_WP75_Gsf_v*"]
+    askTriggerOnMc=True
     invertEleVeto=True
 elif customize.selection == "dielectron":
     dataTriggers=["*"]
@@ -459,7 +460,8 @@ elif customize.selection == "dielectron":
 if customize.options.trigger != "":
     dataTriggers = customize.options.trigger.split(",")
     mcTriggers = [] ## dataTriggers
-    
+    dumpBits.extend( map(lambda x: x.rstrip("*"), dataTriggers)  )
+    askTriggerOnMc=False
 
 if customize.options.mctrigger != "":
     mcTriggers = customize.options.mctrigger.split(",")
@@ -525,18 +527,27 @@ analysis = DiPhotonAnalysis(diphotonDumper,
                             singlePhoDumperTemplate=photonDumper
                             )
 
-# drop samples overlap
+dumpKinTree=False
 if customize.datasetName():
+    # drop samples overlap
     if "GJet-HT" in customize.datasetName():
         analysis.keepPFOnly = True
     elif "QCD" in customize.datasetName():
         analysis.keepFFOnly = True
     elif "DiPhotonJetsBox_MGG-80toInf_13TeV-Sherpa" in customize.datasetName():
         analysis.vetoGenDiphotons = 200.
+    
+    # alyaws get full info for signal
+    if "Grav" in customize.datasetName():
+        dumpKinTree=True
+        minimalDumper=diphotonDumper
+
+
 ## kinematic selection
-analysis.addKinematicSelection(process,dumpTrees=True,splitByIso=True
+analysis.addKinematicSelection(process,dumpTrees=dumpKinTree,splitByIso=True
                                )
 
+if not dumpKinTree: minimalDumper=diphotonDumper
 
 ## analysis selections
 # CiC

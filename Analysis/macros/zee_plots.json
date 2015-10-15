@@ -18,7 +18,7 @@
     "bkg" : [
     	      ["dy","DY #rightarrow ee",
 	      [["colors","myColorD1"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",1],["legopt","f"],["SetFillColor","myColorD3tr"]],
-	      { "DYJetsToLL_M_50_TuneCUETP8M1_amcatnloFXFX_pythia8_13TeV:__infile__/%(sel)sDiPhotonsTrg" : [] }
+	      { "DYJetsToLL_M_50_TuneCUETP8M1_amcatnloFXFX_pythia8_13TeV:__infile__/%(sel)s" : [] }
 	      ]
 	      
 	      
