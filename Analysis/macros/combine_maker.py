@@ -36,6 +36,7 @@ class CombineApp(TemplatesApp):
                                     help="Fit to consider"),
                         make_option("--observable",dest="observable",action="store",type="string",
                                     ## default="mgg[2650,300,6000]",
+                                    ## default="mgg[2650,320,6000]",
                                     default="mgg[4900,200,10000]",
                                     help="Observable used in the fit default : [%default]",
                                     ),
@@ -74,6 +75,14 @@ class CombineApp(TemplatesApp):
                                     ## type="string",default=[114,300,6000],
                                     ## type="string",default=[134,300,7000],
                                     type="string",default=[200,225,250,275,300,325,350,375,400,450,500,1050],
+                                    ## type="string",default=[320,350,375,400,450,500,1050],
+                                    help="Binning to be used for plots",
+                                    ),
+                        make_option("--cat-plot-binning",dest="cat_plot_binning",action="callback",callback=optpars_utils.Load(scratch=True),
+                                    ## type="string",default=[114,300,6000],
+                                    ## type="string",default=[134,300,7000],
+                                    type="string",default={ "EBEEE": [320,350,375,400,450,500,1050] },
+                                    ## type="string",default=[320,350,375,400,450,500,1050],
                                     help="Binning to be used for plots",
                                     ),
                         make_option("--plot-signal-binning",dest="plot_signal_binning",action="callback",callback=optpars_utils.ScratchAppend(float),
@@ -1021,8 +1030,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                                     plot_binning=list(unrol_binning), bias_funcs={} )
                     
                 ## plot the fit result
-                self.plotBkgFit(options,plreduced,pdf,roobs,"%s%s" % (comp,cat),poissonErrs=True)
-
+                self.plotBkgFit(options,plreduced,pdf,roobs,"%s%s" % (comp,cat),poissonErrs=True, plot_binning=options.cat_plot_binning.get(cat,options.plot_binning))
+                
                 ## normalization has to be called <pdfname>_norm or combine won't find it
                 if options.norm_as_fractions:
                     # normalization is n_tot * frac_comp

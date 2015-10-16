@@ -159,7 +159,7 @@
     "#" : " %(cat)s is replaced with the category name                 ", 
     "treeName": "trees/%(sample)s_%(cat)s",
 
-    "preselection" : "(leadChIso < 15. && subleadChIso < 15. && ((mass > 200 && max(abs(leadScEta),abs(subleadScEta))<1.5) || mass > 300) ) && ( max(abs(leadScEta),abs(subleadScEta))<1.5 || (leadPt>100 && subleadPt>100 )  )",   
+    "preselection" : "(leadChIso < 15. && subleadChIso < 15. && ((mass > 200 && max(abs(leadScEta),abs(subleadScEta))<1.5) || mass > 320) )",   
 	"#" : "preselection cut applied to all trees",
     "selection"    : "cicNoChIso",                              "#" : "nominal selection",
     
