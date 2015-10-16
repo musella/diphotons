@@ -16,9 +16,10 @@ forked the flashgg and this repository.
 ## FLASHGG_TAG=diphtons_phys14
 
 # Spring15 settings
-PROJECT_AREA=EXO_7_4_6_patch2
-CMSSW_VERSION=CMSSW_7_4_6_patch2 
-FLASHGG_TAG=Spring15BetaV2_MetaV1 # set empty if you want the master (safe as long as you are not producing MicroAOD)
+PROJECT_AREA=EXO_7_4_12
+CMSSW_VERSION=CMSSW_7_4_12
+## FLASHGG_TAG=
+FLASHGG_BRANCH=topic_diphotons_7412 # set empty if you want the master (safe as long as you are not producing MicroAOD)
 
 # read github name from git config
 MY_GITHUB_NAME=$(git config --get user.github)
@@ -37,10 +38,16 @@ git clone https://github.com/cms-analysis/flashgg.git
 
 ## make sure we use a consistent flashgg tag
 cd flashgg
-#git remote add musella git@github.com:musella/flashgg.git
-#git fetch musella
-#[[ -n ${FLASHGG_TAG} ]] && git co -b topic_${FLASHGG_TAG} ${FLASHGG_TAG} 
-git checkout -b Spring15BetaV2 Spring15BetaV2
+git remote add musella git@github.com:musella/flashgg.git
+git fetch musella
+if [[ -n ${FLASHGG_BRANCH} ]]; then
+	git checkout musella/${FLASHGG_BRANCH}
+	git checkout -b ${FLASHGG_BRANCH}
+	git branch --set-upstream musella/${FLASHGG_BRANCH} ${FLASHGG_BRANCH}
+elif [[ -n ${FLASHGG_TAG} ]]; then
+	git checkout -b topic_${FLASHGG_TAG} ${FLASHGG_TAG}
+fi
+#git checkout -b Spring15BetaV2 Spring15BetaV2
 
 cd ${CMSSW_BASE}/src
 bash flashgg/setup.sh 2>&1 | tee flashgg/setup.log
@@ -144,7 +151,8 @@ source /cvmfs/cms.cern.ch/crab3/crab.sh
 voms-proxy-init --voms cms --valid 168:00
 
 ## CAMPAIGN=AN_Phys14_samples
-CAMPAIGN=EXOSpring15_v1
+## CAMPAIGN=EXOSpring15_v1
+CAMPAIGN=EXOSpring15_7412_v1
 
 cd ${CMSSW_BASE}/src/flashgg/MetaData/work
 
@@ -155,7 +163,7 @@ ln -sf  ${CMSSW_BASE}/src/diphotons/MetaData/work/analysis_microAOD.py .
 cat crabConfig_TEMPLATE.py > mycrabConfig_TEMPLATE.py
 cat >> mycrabConfig_TEMPLATE.py << EOF
 
-config.Data.allowNonValidInputDataset=True
+## config.Data.allowNonValidInputDataset=True
 EOF
 
 # edit list of samples to be actually submitted (and check the crab template)

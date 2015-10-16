@@ -217,6 +217,8 @@ class IdEvolution(PlotApp):
                                      type="string",default={}),
                          make_option("--fit-median",dest="fitMedian",action="store_true",
                                      default=False),
+                         make_option("--fit-range",dest="fitRange",action="callback",type="string",callback=optpars_utils.ScratchAppend(float),
+                                     default=[]),
                          make_option("--fit-expression",dest="fitExpression",action="store",type="string",
                                      default="pol1"),
                          make_option("--rho-corr",dest="rhoCorr",action="store_true",
@@ -295,7 +297,8 @@ class IdEvolution(PlotApp):
             win = self.open(fnam)
             
         if options.fitMedian:
-            sigQuantiles = [0.05,0.10,0.5,0.9,0.95,0.99]
+            sigQuantiles = [0.5,0.95,0.97,0.98,0.99]
+            ## sigQuantiles = [0.05,0.10,0.5,0.9,0.95]
             ## sigQuantiles = [0.25,0.4,0.5,0.6,0.75]
             bkgQuantiles = []
         else:
@@ -371,10 +374,11 @@ class IdEvolution(PlotApp):
             tree = fin.Get(tnam)
             trees[tnam] = tree
             self.setAliases(tree)
-        trees[sig].SetAlias("_extra_weight_",self.options.weights[0])
-        trees[bkg].SetAlias("_extra_weight_",self.options.weights[1])
-        self.options.weight = "(%s) * _extra_weight_" % options.weight
-
+        if len(self.options.weights) == 2:
+            trees[sig].SetAlias("_extra_weight_",self.options.weights[0])
+            trees[bkg].SetAlias("_extra_weight_",self.options.weights[1])
+            self.options.weight = "(%s) * _extra_weight_" % options.weight
+            
         if win or options.wread:
             if not options.wread:
                 fwei = self.open("%s/wei.root" % options.outdir, "recreate")
@@ -451,7 +455,13 @@ class IdEvolution(PlotApp):
                         style_utils.colors(pdf1D,sigColors[0])
                         
                         if options.fitMedian:
-                            func = ROOT.TF1("fit_%s_%s_%s" % (cat,name,var),options.fitExpression,pdf2D.GetXaxis().GetXmin(),pdf2D.GetXaxis().GetXmax())
+                            if len(self.options.fitRange)>0:
+                                rngmin,rngmax = self.options.fitRange
+                            else:
+                                rngmin,rngmax = pdf2D.GetXaxis().GetXmin(),pdf2D.GetXaxis().GetXmax()
+                            print self.options.fitRange
+                            print rngmin, rngmax
+                            func = ROOT.TF1("fit_%s_%s_%s" % (cat,name,var),options.fitExpression,rngmin,rngmax)
                             for i,p in enumerate(plots[cat][name][var]):
                                 fp = func.Clone("%s_%d" %( func.GetName(),i))
                                 ## fp.SetParameters(pdf1D.GetMean(),0.)
@@ -506,9 +516,9 @@ class IdEvolution(PlotApp):
                 else:
                     canv = ROOT.TCanvas("qtiles_%s"%name,name)
                 
-                legSig = ROOT.TLegend(0.7,0.7,0.9,0.9)
                 legBkg = ROOT.TLegend(0.5,0.7,0.7,0.9)
-
+                legSig = legBkg if self.options.fitMedian else ROOT.TLegend(0.7,0.7,0.9,0.9)
+                
                 for gr,col,qt in zip(sigGraphs,sigColors,sigQuantiles):
                     if var in efficiencies:
                         label = "#varepsilon(sig)"

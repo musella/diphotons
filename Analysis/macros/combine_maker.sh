@@ -4,16 +4,17 @@
 version=$1 && shift
 
 fitname=2D 
-www=~/www/exo/
+www=~/www/exo/spring15_7412
 if [[ $(whoami) == "mquittna" ]]; then
     www=/afs/cern.ch/user/m/mquittna/www/diphoton/Phys14/
 fi
 
 shapes="default_shapes"
-
-[[ $1 =~ "^[0-9]+$" ]] && lumi=$1 && shift
+default_model=""
 
 opts=""
+input_opts=""
+data_version=""
 while [[ -n $1 ]]; do
     case $1 in
 	--fit-name)
@@ -29,7 +30,6 @@ while [[ -n $1 ]]; do
 	    ;;
 	--redo-input)
 	    rerun="1"
-	    shift
 	    ;;
 	--label)
 	    addlabel=$2
@@ -44,7 +44,13 @@ while [[ -n $1 ]]; do
             ;;
 	--bkg-shapes)
 	    shapes=$(echo $(basename $2 | sed 's%.json%%'))
-	    opts="$opts $1"
+	    opts="$opts $1 $2"
+	    shift
+	    ;;
+	--default-model)
+	    default_model=$2
+	    opts="$opts $1 $2"
+	    shift
 	    ;;
 	--use-templates)
 	    templates="use_templates"
@@ -65,8 +71,17 @@ while [[ -n $1 ]]; do
 	    fwhm="$2"
 	    opts="$opts $1"
 	    ;;
-	--luminosity)
+	--lumi*)
 	    lumi=$2
+	    shift
+	    ;;
+	--data-file)
+	    input_opts="$input_opts $1 $2"
+	    data_version="$(basename $(dirname $2))"
+	    shift
+	    ;;
+	--*-file)
+	    input_opts="$input_opts $1 $2"
 	    shift
 	    ;;
 	*)
@@ -80,11 +95,16 @@ shift
 echo $version $lumi
 
 if [[ -z $version ]] || [[ -z $lumi ]]; then
-    echo "usage: $0 <analysis_version> <lumi> [run_options]"
+    echo "usage: $0 <analysis_version> --lumi <lumi> [run_options]"
     exit 0
 fi
 
+input_folder=$version
+
+[[ -n $data_version ]] && version=$data_version
+
 label="$shapes"
+[[ -n $default_model ]] && label="${label}_${default_model}"
 [[ -n $covariance ]] && label="${label}_${covariance}"
 [[ -n $templates ]] && label="${label}_${templates}"
 [[ -n $bias ]] && label="${label}_${bias}"
@@ -108,6 +128,7 @@ mkdir $workdir
 
 mkdir $www/$version
 
+set -x
 if [[ -n $rerun  ]] || [[ ! -f $input ]]; then
     echo "**************************************************************************************************************************"
     echo "creating $input"
@@ -117,7 +138,7 @@ if [[ -n $rerun  ]] || [[ ! -f $input ]]; then
         subset="2D,singlePho"
         mix="--mix-templates"
     fi
-    ./templates_maker.py --load templates_maker.json,templates_maker_fits.json --only-subset $subset $mix --input-dir $treesdir/$version -o $input $verbose 2>&1 | tee $input_log
+    ./templates_maker.py --load templates_maker.json,templates_maker_fits.json --only-subset $subset $mix --input-dir $treesdir/$input_folder -o $input $verbose $input_opts 2>&1 | tee $input_log
     echo "**************************************************************************************************************************"
 elif [[ -n $mix ]]; then
     echo "**************************************************************************************************************************"

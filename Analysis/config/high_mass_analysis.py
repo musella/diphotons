@@ -10,6 +10,10 @@ process = cms.Process("Analysis")
 #
 process.load("FWCore.MessageService.MessageLogger_cfi")
 
+process.load("Configuration.StandardSequences.GeometryDB_cff")
+process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff")
+from Configuration.AlCa.GlobalTag import GlobalTag
+
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32( 1000 )
 
@@ -52,12 +56,23 @@ customize.options.register ('trigger',
                             VarParsing.VarParsing.multiplicity.singleton, # singleton or list
                             VarParsing.VarParsing.varType.string,          # string, int, or float
                             "trigger")
+customize.options.register ('mctrigger',
+                            "", # default value
+                            VarParsing.VarParsing.multiplicity.singleton, # singleton or list
+                            VarParsing.VarParsing.varType.string,          # string, int, or float
+                            "mctrigger")
 customize.options.register ('idversion',
                             "", # default value
                             VarParsing.VarParsing.multiplicity.singleton, # singleton or list
                             VarParsing.VarParsing.varType.string,          # string, int, or float
                             "idversion")
 customize.parse()
+
+from Configuration.AlCa.autoCond import autoCond
+if customize.options.processType == "data":
+    process.GlobalTag = GlobalTag(process.GlobalTag, autoCond['run2_data'].replace("::All","") )
+else:
+    process.GlobalTag = GlobalTag(process.GlobalTag, autoCond['run2_mc'].replace("::All",""))
 
 #
 # define minitrees and histograms
@@ -75,6 +90,9 @@ diphotonDumper.maxCandPerEvent=1
 diphotonDumper.nameTemplate = "$PROCESS_$SQRTS_$LABEL_$SUBCAT"
 
 variables=["mass","pt","rapidity",
+           "genMass := genP4.mass",
+           "genLeadPt := ?leadingPhoton.hasMatchedGenPhoton?leadingPhoton.matchedGenPhoton.pt:0",
+           "genSubLeadPt := ?subLeadingPhoton.hasMatchedGenPhoton?subLeadingPhoton.matchedGenPhoton.pt:0",
            "deltaEta                 := abs( leadingPhoton.eta - subLeadingPhoton.eta )",
            "cosDeltaPhi              := cos( leadingPhoton.phi - subLeadingPhoton.phi )",
            "leadPt                   :=leadingPhoton.pt",
@@ -127,12 +145,13 @@ variables=["mass","pt","rapidity",
 
 histograms=["mass>>mass(1500,0,15000)",
             "mass>>lowmass(560,60,200)",
+            "genMass>>genmass(1500,0,15000)",            
             "pt>>pt(200,0,200)",
             "rapidity>>rapidity(200,-5,5)",
             "deltaEta>>deltaEta(200,0,5)",
             "cosDeltaPhi>>cosDeltaPhi(200,0,1)",
             "global.rho>>rho(20,0,50)",
-            "global.nvtx>>nvtx(20,0,50)",
+            "global.nvtx>>nvtx(51,0.5,50.5)",
             
             "leadPt>>phoPt(150,0,3000)",
             "subleadPt>>phoPt(150,0,3000)",
@@ -148,7 +167,7 @@ histograms=["mass>>mass(1500,0,15000)",
             "leadPhoIso>>leadPhoIso(120,-10,50)",
             "leadNeutIso>>leadNeutIso(120,-10,50)",
             "leadHoE>>leadHoE(40,0,0.2)",
-            "leadSigmaIeIe>>leadSigmaIeIe(50,0,5.e-2)",
+            "leadSigmaIeIe>>leadSigmaIeIe(320,0,3.2e-2)",
             "leadPixSeed>>leadPixSeed(2,-0.5,1.5)",
             "leadPassEleVeto>>leadPassEleVeto(2,-0.5,1.5)",
             
@@ -158,7 +177,7 @@ histograms=["mass>>mass(1500,0,15000)",
             "subleadPhoIso>>subleadPhoIso(120,-10,50)",
             "subleadNeutIso>>subleadNeutIso(120,-10,50)",
             "subleadHoE>>subleadHoE(40,0,0.2)",
-            "subleadSigmaIeIe>>subleadSigmaIeIe(50,0,5.e-2)",
+            "subleadSigmaIeIe>>subleadSigmaIeIe(320,0,3.2e-2)",
             "subleadPixSeed>>subleadPixSeed(2,-0.5,1.5)",
             "subleadPassEleVeto>>subleadPassEleVeto(2,-0.5,1.5)",
             
@@ -167,8 +186,8 @@ histograms=["mass>>mass(1500,0,15000)",
             "subleadChIso>>phoChIso(120,-10,50)",
             "leadPhoIso>>phoPhoIso(120,-10,50)",
             "subleadPhoIso>>phoPhoIso(120,-10,50)",
-            "leadSigmaIeIe>>phoSigmaIeIe(50,0,5.e-2)",
-            "subleadSigmaIeIe>>phoSigmaIeIe(50,0,5.e-2)",
+            "leadSigmaIeIe>>phoSigmaIeIe(320,0,3.2e-2)",
+            "subleadSigmaIeIe>>phoSigmaIeIe(320,0,3.2e-2)",
             "leadHoE>>phoHoE(40,0,0.2)",                                   
             "subleadHoE>>phoHoE(40,0,0.2)",                                   
             "leadPassEleVeto>>phoPassEleVeto(2,-0.5,1.5)",
@@ -182,6 +201,7 @@ histograms=["mass>>mass(1500,0,15000)",
 
 variablesSinglePho=[
     "phoPt                   :=pt",
+    "genPt                   :=?hasMatchedGenPhoton?matchedGenPhoton.pt:0",
     "phoEta                  :=eta",
     "phoR9                   :=r9",
     "phoScEta                :=superCluster.eta",
@@ -211,6 +231,7 @@ variablesSinglePho=[
 
 histogramsSinglePho = [
     "phoPt>>phoPt(145,100,3000)",
+    "genPt>>phoPt(145,100,3000)",
     "phoEta>>phoEta(55,-2.75,2.75)",
     "phoPhi>>phoPhi(65,-3.25,3.25)",
     
@@ -222,10 +243,10 @@ histogramsSinglePho = [
     "phoHoE>>phoHoE(40,0,0.2)",
     "phoSigmaIeIe>>phoSigmaIeIe(50,0,5.e-2)",
     "phoPixSeed>>phoPixSeed(2,-0.5,1.5)",
-    "phoScEta:phoPhi>>phoEtaVsPhi(65,-3.25,3.25,55,-2.75,2.75)"
+    "phoScEta:phoPhi>>phoEtaVsPhi(65,-3.25,3.25:55,-2.75,2.75)"
     ]
 
-if not "EXOSpring15_v3" in customize.datasetName() or "EXOSpring15_v3v8" in customize.datasetName():
+if customize.datasetName() and (not "EXOSpring15_v3" in customize.datasetName() or "EXOSpring15_v3v8" in customize.datasetName()):
     variables.extend( [
             "leadRndConeChIso := leadingView.extraChIsoWrtChoosenVtx('rnd03')",
             "leadRndConeChIso0 := leadingView.extraChIsoWrtChoosenVtx('rnd03_0')",
@@ -414,17 +435,20 @@ dumpBits=["HLT_DoublePhoton60","HLT_DoublePhoton85","HLT_Photon250_NoHE","HLT_Ph
 askTriggerOnMc=False
 
 if customize.selection == "diphoton":
-    mcTriggers=["HLT_DoublePhoton85*","HLT_Photon250_NoHE*","HLT_Photon165_HE*"] ## "HLT_DoublePhoton60*",
+    mcTriggers=["HLT_DoublePhoton85*","HLT_Photon250_NoHE*"] ## "HLT_DoublePhoton60*",
     dataTriggers=mcTriggers
 elif customize.selection == "photon":
     dataTriggers=["HLT_Photon165*"]
     mcTriggers=dataTriggers
     doSinglePho=True
     doDoublePho=False
-    askTriggerOnMc=True
+    ## askTriggerOnMc=True
 elif customize.selection == "electron":
-    dataTriggers=["HLT_Ele23_WPLoose*"]
-    mcTriggers=[]
+    ## dataTriggers=["HLT_Ele23_WPLoose*"]
+    ## mcTriggers=[]
+    dataTriggers=["HLT_Ele27_eta2p1_WPLoose_Gsf_v*"]
+    mcTriggers=["HLT_Ele27_eta2p1_WP75_Gsf_v*"]
+    askTriggerOnMc=True
     invertEleVeto=True
 elif customize.selection == "dielectron":
     dataTriggers=["*"]
@@ -435,23 +459,43 @@ elif customize.selection == "dielectron":
         
 if customize.options.trigger != "":
     dataTriggers = customize.options.trigger.split(",")
-    mcTriggers = dataTriggers
+    mcTriggers = [] ## dataTriggers
+    dumpBits.extend( map(lambda x: x.rstrip("*"), dataTriggers)  )
+    askTriggerOnMc=False
+
+if customize.options.mctrigger != "":
+    mcTriggers = customize.options.mctrigger.split(",")
     
 from HLTrigger.HLTfilters.hltHighLevel_cfi import hltHighLevel
-for name in set(dumpBits):
+dumpBits=set(dumpBits)
+if len(dumpBits) > 0:
     if doDoublePho:
         diphotonDumper.globalVariables.addTriggerBits = cms.PSet(
-            tag=cms.InputTag("TriggerResults","","HLT"),bits=cms.vstring(name)
+            tag=cms.InputTag("TriggerResults","","HLT"),bits=cms.vstring(dumpBits)
             )
     if doSinglePho:
         photonDumper.globalVariables.addTriggerBits = cms.PSet(
-            tag=cms.InputTag("TriggerResults","","HLT"),bits=cms.vstring(name)
+            tag=cms.InputTag("TriggerResults","","HLT"),bits=cms.vstring(dumpBits)
             )
             
 
+
+from flashgg.Taggers.genDiphotonDumper_cfi import genDiphotonDumper
+cfgTools.addCategories(genDiphotonDumper,
+                       [("EB","max(abs(leadingPhoton.eta),abs(subLeadingPhoton.eta))<1.4442",0),
+                        ("EE","1",0)
+                        ],
+                       variables=["genMass := mass","pt",
+                                  "genLeadPt := leadingPhoton.pt",
+                                  "genSubeadPt := subLeadingPhoton.pt",
+                                  ],
+                       histograms=["genMass>>genmass(1500,0,15000)",
+                                   ]
+                       )
+
 minimalDumper = diphotonDumper.clone()
 cfgTools.dumpOnly(minimalDumper,
-                  ["mass","pt",
+                  ["mass","pt","genMass",
                    "leadPt","leadEta","leadScEta","leadPhi",
                    "subleadPt","subleadEta","subleadScEta","subleadPhi",
                    "leadBlockPhoIso","subleadBlockPhoIso",
@@ -476,23 +520,34 @@ from diphotons.Analysis.DiPhotonAnalysis import DiPhotonAnalysis
 analysis = DiPhotonAnalysis(diphotonDumper,
                             massCut=customize.massCut,ptLead=customize.ptLead,ptSublead=customize.ptSublead,scaling=customize.scaling, ## kinematic cuts
                             computeMVA=False,
-                            genIsoDefinition=("userFloat('genIso')",10.),
+                            genIsoDefinition=("genIso",10.),
                             dataTriggers=dataTriggers,
                             mcTriggers=mcTriggers,
                             askTriggerOnMc=askTriggerOnMc, ## if mcTriggers is not empty will still compute efficiencies
                             singlePhoDumperTemplate=photonDumper
                             )
 
-# drop samples overlap
-if "GJet-HT" in customize.datasetName():
-    analysis.keepPFOnly = True
-elif "QCD" in customize.datasetName():
-    analysis.keepFFOnly = True
+dumpKinTree=False
+if customize.datasetName():
+    # drop samples overlap
+    if "GJet-HT" in customize.datasetName():
+        analysis.keepPFOnly = True
+    elif "QCD" in customize.datasetName():
+        analysis.keepFFOnly = True
+    elif "DiPhotonJetsBox_MGG-80toInf_13TeV-Sherpa" in customize.datasetName():
+        analysis.vetoGenDiphotons = 200.
+    
+    # alyaws get full info for signal
+    if "Grav" in customize.datasetName():
+        dumpKinTree=True
+        minimalDumper=diphotonDumper
+
 
 ## kinematic selection
-analysis.addKinematicSelection(process,dumpTrees=True,splitByIso=True
+analysis.addKinematicSelection(process,dumpTrees=dumpKinTree,splitByIso=True
                                )
 
+if not dumpKinTree: minimalDumper=diphotonDumper
 
 ## analysis selections
 # CiC
@@ -512,6 +567,9 @@ if invertEleVeto:
     highMassCiCDiPhotons.variables[-1] = "hasPixelSeed"
     highMassCiCDiPhotonsSB.variables[-1] = "hasPixelSeed"
 if doDoublePho:
+    if( customize.processType!="data" ):
+        analysis.addGenOnlySelection(process,genDiphotonDumper)
+    
     analysis.addAnalysisSelection(process,"cic",highMassCiCDiPhotons,dumpTrees=True,dumpWorkspace=False,dumpHistos=True,splitByIso=True,
                                   dumperTemplate=minimalDumper,
                                   nMinusOne=[(0,"NoChIso",        True, False,True), ## removeIndex(es), label, dumpTree, dumpWorkspace, dumpHistos

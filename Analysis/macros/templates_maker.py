@@ -1544,8 +1544,10 @@ class TemplatesApp(PlotApp):
         self.datasets_["data"] = self.openDataset(None,options.data_file,options.infile,options.data)
         self.datasets_["mc"]   = self.openDataset(None,options.mc_file,options.infile,options.mc)
         self.datasets_["templates"]   = self.openDataset(None,options.data_file,options.infile,options.templates)
+        if not options.sig_file:
+            options.sig_file = options.mc_file
         for name,trees in options.signals.iteritems():
-            self.datasets_[name] = self.openDataset(None,options.mc_file,options.infile,trees)        
+            self.datasets_[name] = self.openDataset(None,options.sig_file,options.infile,trees)        
         # used by parent class PlotApp to read in objects
         self.template_ = options.treeName
         
@@ -1671,7 +1673,7 @@ class TemplatesApp(PlotApp):
                 for cat in categories.keys():
                     print "tree: template %s - %s" % (component,cat)
                     tree=self.treeData("template_%s_%s_%s" % (component,name,cat) )
-                    tree.Print()
+                    ## tree.Print()
                     print "tree entries", tree.GetEntries()
                     h1=ROOT.TH1F("h1","h1",2,0.,1.)
                     tree.Draw("1>>h1","weight","goff")

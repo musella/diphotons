@@ -97,10 +97,9 @@ def getQuantilesGraphs(histo,probs,twosided=False,errors=True,sign=1):
                 nint = proj.Integral( quant1mh, quant1ph ) + proj.Integral( quant2mh, quant2ph )
                 fq = nint / (2.*h*ntot)
                 
-                err = 1./(2.*sqrt(ntot)*fq)
-
                 graphs[ig/2].SetPoint(ix-1,histo.GetXaxis().GetBinCenter(ix),quant)
                 if errors:
+                    err = 1./(2.*sqrt(ntot)*fq)
                     graphs[ig/2].SetPointError(ix-1,histo.GetXaxis().GetBinWidth(ix)*0.5,err)
                 else:
                     graphs[ig/2].SetPointError(ix-1,histo.GetXaxis().GetBinWidth(ix)*0.5,0.)
@@ -113,10 +112,9 @@ def getQuantilesGraphs(histo,probs,twosided=False,errors=True,sign=1):
                 nint = proj.Integral( quantmh, quantph )
                 fq = nint / (2.*h*ntot)
                 
-                err = 1./(2.*sqrt(ntot)*fq)
-                
                 graphs[ig].SetPoint(ix-1,histo.GetXaxis().GetBinCenter(ix),quant)
                 if errors:
+                    err = 1./(2.*sqrt(ntot)*fq)
                     graphs[ig].SetPointError(ix-1,histo.GetXaxis().GetBinWidth(ix)*0.5,err)
                 else:
                     graphs[ig].SetPointError(ix-1,histo.GetXaxis().GetBinWidth(ix)*0.5,0.)
@@ -173,6 +171,8 @@ class PlotApp(PyRApp):
                         make_option("-i","--infile",dest="infile",action="store",type="string",
                                     default=None,help="default: %default"),
                         make_option("--data-file",dest="data_file",action="store",type="string",
+                                    default=None,help="default: %default"),
+                        make_option("--lumi",dest="lumi",action="store",type="float",
                                     default=None,help="default: %default"),
                         make_option("--sig-file",dest="sig_file",action="store",type="string",
                                     default=None,help="default: %default"),
@@ -281,12 +281,14 @@ class PlotApp(PyRApp):
                 # read background MC
                 if bkg != None and not "bkg" in skip:
                     bkgfile, bkgprocs = bkg
-                    bkghists = [ self.readProcess(bkgfile,*subprocs,plot=plotname,plotmodifs=plotmodifs,category=catname,group=group) for subprocs in bkgprocs ]
+                    bkghists = [ self.readProcess(bkgfile,*subprocs,plot=plotname,plotmodifs=plotmodifs,category=catname,group=group,scale=options.lumi) 
+                                 for subprocs in bkgprocs ]
                     
                 # read signal MC
                 if sig != None and not "sig" in skip:
                     sigfile, sigprocs = sig
-                    sighists = [ self.readProcess(sigfile,*subprocs,plot=plotname,plotmodifs=plotmodifs,category=catname,group=group) for subprocs in sigprocs ]
+                    sighists = [ self.readProcess(sigfile,*subprocs,plot=plotname,plotmodifs=plotmodifs,category=catname,group=group,scale=options.lumi) 
+                                 for subprocs in sigprocs ]
                     
                 # read data
                 if data != None and not "data" in skip:
@@ -304,10 +306,9 @@ class PlotApp(PyRApp):
                 frame = allhists[0].Clone("%s_%s_frame" % (plotname,catname) )
                 frame.Reset("ICE")
                 frame.SetEntries(0)
-                self.keep(frame,True)
                 ymax = 0.
                 ymin = 0.
-                
+
                 # allocate canvas and legend and draw frame
                 canv,leg = self.makeCanvAndLeg("%s_%s" % ( plotname, catname), legPos )
                 pads=[canv]
@@ -362,6 +363,8 @@ class PlotApp(PyRApp):
                 else:
                     frame.GetYaxis().SetRangeUser(ymin,ymax*1.2)
                 leg.Draw("same")
+                self.keep(frame,True)
+
                 for pad in pads:
                     pad.RedrawAxis()
                     pad.Modified()
@@ -380,7 +383,7 @@ class PlotApp(PyRApp):
                     
                     ratio.Draw("e")
                     pads[0].cd()
-                    
+                
                 # if needed draw inset with zoom-in
                 ##   DrawInset[rngmin,rngmax,posx1,posy1,posx2,posy2]
                 if "DrawInset" in drawmethod:
@@ -419,7 +422,7 @@ class PlotApp(PyRApp):
     #
     # Read histograms for a given process, applying manipulators
     #
-    def readProcess(self,fin,name,title,style,subproc,plot,plotmodifs,category,group):
+    def readProcess(self,fin,name,title,style,subproc,plot,plotmodifs,category,group,scale=None):
         
         ## print "readProcess", fin,name,title,style,subproc,plot,plotmodifs,category
         names = subproc.keys()               
@@ -439,6 +442,9 @@ class PlotApp(PyRApp):
         hsum = style_utils.apply(hsum,plotmodifs)
         hsum = style_utils.apply(hsum,style)
         
+        if scale:
+            hsum.Scale(scale)
+        
         return hsum
 
     #
@@ -453,10 +459,11 @@ class PlotApp(PyRApp):
                 sa = s
                 s,fname = s.split(":")
                 folder = None
-                if ".root/" in fname:
+                if ".root/" in fname or "__infile__/" in fname:
                     fname, folder = fname.rsplit("/",1)
-                ## print fname, folder
-                sfin = self.open(fname, folder=self.options.input_dir)
+                ## print fname, folder, sfin
+                if fname != "__infile__":
+                    sfin = self.open(fname, folder=self.options.input_dir)
                 if folder:
                     try:
                         sfin = sfin.Get(folder)

@@ -42,10 +42,16 @@ def main():
     xsection = args[4]
     kfactor = args[5]
 
-    #inputlist="lists_Spring15v1/50ns/MC/"+dataset+".list"
-    #inputweights="lists_Spring15v1/50ns/MC/"+dataset+".weight"
-    inputlist="lists_Spring15v2/50ns/data/"+dataset+".list"
-    inputweights="lists_Spring15v2/50ns/data/"+dataset+".weight"
+    #
+    #inputlist="lists_Spring15v8/25ns/MC/"+dataset+".list"
+    #inputweights="lists_Spring15v8/25ns/MC/"+dataset+".weight"
+    #inputlist="lists_Spring15v8/25ns/data/"+dataset+".list"
+    #inputweights="lists_Spring15v8/25ns/data/"+dataset+".weight"
+
+    #inputlist="lists_Spring15_7412v2/25ns/data/"+dataset+".list"
+    #inputweights="lists_Spring15_7412v2/25ns/data/"+dataset+".weight"
+    inputlist="lists_Spring15_7412v2/25ns/MC/"+dataset+".list"
+    inputweights="lists_Spring15_7412v2/25ns/MC/"+dataset+".weight"
 
     output = dataset
 

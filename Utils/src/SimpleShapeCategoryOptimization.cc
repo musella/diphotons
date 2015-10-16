@@ -326,10 +326,10 @@ SecondOrderModel::SecondOrderModel( std::string name,
 };
 
 // ------------------------------------------------------------------------------------------------
-void SecondOrderModel::setShape( shape_t x )
+void SecondOrderModel::setShape( int x )
 {
     if( likeg_ != 0 ) { delete likeg_; }
-    shape_ = x;
+    shape_ = (shape_t)x;
     if( shape_ == automatic ) {
         shape_ = ( type_ == AbsModel::sig ? gaus : expo );
     }
@@ -559,6 +559,8 @@ double SimpleShapeFomProvider::operator()( std::vector<AbsModel *> sig, std::vec
     }
 
     /// double fom = 0.;
+    cout << "AAAAAAAAAAAAA "<< sig.size() << endl;
+    cout << "AAAAAAAAAAAAA "<< sig[0] << endl;
     size_t ncat = sig[0]->getNcat();
     size_t totcat = ncat * nSubcats_;
 

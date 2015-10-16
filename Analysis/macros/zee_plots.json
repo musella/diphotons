@@ -1,0 +1,180 @@
+{
+    "drawopts" : ["Draw,DrawRatio[0.7]","e","hist","hist nostack"],
+    "legpos"  : [0.580,0.70,0.930,0.91],
+
+    "sig" : null,
+
+    "data" : [
+	      ["Data","Data",
+	      [["SetBinErrorOption",1],["colors","kBlack"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","pe"],["SetMarkerStyle","kFullCircle"],["SetFillColor","kWhite"]],
+	      { "Data_13TeV:__infile__/%(sel)s" : [] }
+	      ]
+	      
+    ],
+	      
+    "50ns" :  ["Scale",42.5e-3],
+    "25ns" :  ["Scale",15.9e-3],
+
+    "bkg" : [
+    	      ["dy","DY #rightarrow ee",
+	      [["colors","myColorD1"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",1],["legopt","f"],["SetFillColor","myColorD3tr"]],
+	      { "DYJetsToLL_M_50_TuneCUETP8M1_amcatnloFXFX_pythia8_13TeV:__infile__/%(sel)s" : [] }
+	      ]
+	      
+	      
+	     ],
+
+    "bkg_file" : "output.root", 
+    "data_file"  : "output.root",
+    "sig_file"  : "output.root",
+
+    "_categories": ["EBHighR9","EBLowR9","EEHighR9","EELowR9"], 
+    "categories" : [],
+
+    "groups": {
+        "EB"       : ["EBHighR9","EBLowR9"],
+        "EE"       : ["EEHighR9","EELowR9"],
+        "EBHighR9" : ["EBHighR9"],
+	"EBLowR9"  : ["EBLowR9"],
+	"EEHighR9" : ["EEHighR9"],
+	"EELowR9"  : ["EELowR9"]
+	}, 
+	
+    "plots": [
+	      ["lowmass"		,[["Rebin",4],["xtitle","m_{#gamma #gamma} (GeV)"],
+					  ["xrange",[60.0,120.0]],["overflow",[null]],
+					  ["ytitle","Events / %(binw)s GeV"]
+					]
+					,null,null],
+	      ["mass"		,[["Rebin",2],["xtitle","m_{#gamma #gamma} (GeV)"],
+					  ["xrange",[60,1050]],["overflow",[null]],
+					  ["ytitle","Events / %(binw)s GeV"]
+					]
+					,null,null],
+
+	      ["pt"			,[["xtitle","p_T_{#gamma #gamma} (GeV)"],["overflow",[null]],
+	      				["rebin",[[0,5,10,15,20,25,30,35,40,50,55,60,100,200]]],"density",["ytitle","Events / %(binw)s GeV"]
+	      				]
+					,null,null],
+
+	      ["nvtx"			,[["ytitle","Events / bin"],["xtitle","N_{vtx}"],["overflow",[null]]	      				
+	      				]
+					,null,null],
+
+	      ["rho"			,[["ytitle","Events / %(binw)s GeV"],["xtitle","#rho_{PU} (GeV)"],["overflow",[null]]	      				
+	      				]
+					,null,null],
+
+	      ["leadPt"			,[["ytitle","Events / %(binw)s GeV"],["xtitle","p_{T}(#gamma 1) (GeV)"],["xrange",[0,200]],["overflow",[null]]]
+					,null,null],
+
+	      ["subleadPt"		,[["ytitle","Events / %(binw)s GeV"],["xtitle","p_{T}(#gamma 2) (GeV)"],["xrange",[0,200]],["overflow",[null]]]
+					,null,null],
+
+	      ["leadEta"		,[["ytitle","Events / %(binw)s"],["xtitle","#eta_{SC}(#gamma 1)"]]
+					,null,null],
+
+	      ["subleadEta"		,[["ytitle","Events / %(binw)s"],["xtitle","#eta_{SC}(#gamma 2)"]]
+					,null,null],
+
+	      ["leadChIso"		,[["xtitle","#gamma_{1} charged isolation (GeV)"],["xrange",[0,16]],
+	      				["overflow",[null]],"density",["ytitle","Events / %(binw)s GeV"]
+	      				]
+					,null,null,["sig"]],
+
+	      ["subleadChIso"		,[["xtitle","#gamma_{2} charged isolation (GeV)"],["xrange",[0,16]],
+	      				["overflow",[null]],"density",["ytitle","Events / %(binw)s GeV"]
+	      				]
+					,null,null,["sig"]],
+
+	      ["leadPhoIso"		,[["xtitle","#gamma_{1} photon isolation (GeV)"],["xrange",[0,16]],
+	       				["overflow",[null]],"density",["ytitle","Events / %(binw)s GeV"]
+	      				]
+					,null,null,["sig"]],
+
+	      ["subleadPhoIso"		,[["xtitle","#gamma_{2} photon isolation (GeV)"],["xrange",[0,16]],
+	      				["overflow",[null]],"density",["ytitle","Events / %(binw)s GeV"]
+	      				]
+
+					,null,null,["sig"]],
+	      ["leadHoE"		,[["xtitle","#gamma_{1} H/E"],
+	      				["overflow",[null]],"density",["ytitle","Events / %(binw)s"]
+	      				]
+					,null,null,["sig"]],
+	      ["subleadHoE"		,[["ytitle","Events / %(binw)s GeV"],["xtitle","#gamma_{2} H/E"],["overflow",[null]]]
+
+					,null,null,["sig"]],
+
+	      ["leadSigmaIeIe"		,[["Rebin",2],["ytitle","Events / %(binw)s"],["xtitle","#gamma_{1} #sigma_{i#eta i#eta}"],["overflow",[null]]]
+					,null,null,["sig"]],
+
+	      ["subleadSigmaIeIe"	,[["Rebin",2],["ytitle","Events / %(binw)s"],["xtitle","#gamma_{2} #sigma_{i#eta i#eta}"],["overflow",[null]]]
+					,null,null,["sig"]],
+
+	      ["phoSigmaIeIe"	,[["Rebin",2],["ytitle","Events / %(binw)s"],["xtitle","#gamma #sigma_{i#eta i#eta}"],["overflow",[null]]]
+					,null,null,["sig"]],
+	      			    
+	      ["leadPassEleVeto"	,[["ytitle","Events"],["xtitle","#gamma_{1} pass electron veto"]]
+					,null,null,["sig"]],
+
+	      ["subleadPassEleVeto"	,[["ytitle","Events"],["xtitle","#gamma_{2} pass electron veto"]]
+					,null,null,["sig"]],
+
+	      ["leadPixSeed"	,[["ytitle","Events"],["xtitle","#gamma_{1} has pixel seed"]]
+					,null,null,["sig"]],
+
+	      ["subleadPixSeed"	,[["ytitle","Events"],["xtitle","#gamma_{2} has pixel seed"]]
+					,null,null,["sig"]]
+				
+
+	      ],
+
+    "_selections" : [
+        ["kin","kinOnly"]
+    ],
+
+    "selections" : [
+        ["cic",""],
+        ["cicNoSigmaIetaIeta","noSiEiE",["lowmass","leadSigmaIeIe","subleadSigmaIeIe","phoSigmaIeIe"]],
+        ["cicNoChIso","noChIso",["lowmass","leadChIso","subleadChIso","nvtx","rho","phoRndConeChIso"]],
+        ["cicNoPhoIso","noPhoIso",["lowmass","leadPhoIso","subleadPhoIso","nvtx","rho"]],
+        ["cicNoHoverE","noHoE",["lowmass","leadHoE","subleadHoE"]],
+        ["cicNoEleVeto","noEleVeto",["lowmass","leadPassEleVeto","subleadPassEleVeto","leadPixSeed","subleadPixSeed"]],
+        ["cicSBNoChIsoSingleSB","chIsoSingleSB",["lowmass","leadChIso","subleadChIso","nvtx","rho","phoRndConeChIso"]],
+        ["cicSBNoChIsoDoubleSB","chIsoDoubleSB",["lowmass","leadChIso","subleadChIso","nvtx","rho","phoRndConeChIso"]]
+
+    ],
+
+    "_selections" : [
+        ["cicNoChIsoSingleSB","chIsoSingleSB"],
+        ["cicNoChIsoDoubleSB","chIsoDoubleSB"],
+        ["cicNoPhoIsoSingleSB","phoIsoSingleSB"],
+        ["cicNoPhoIsoDoubleSB","phoIsoDoubleSB"]
+    ],
+	      
+    "styles": { 
+	"mass_*" : [["logy",5e-2]],
+	"*Iso*"  : [["logy",1e-3]],
+	"*Pt*"  : [["logy",1e-1]],
+	"*pt*"  : [["logy",1e-2]],
+	    "*HoE*"  : [["logy",1e-3]],
+	"*rat"   : ["SetGridy"],
+        "*ratio" : [["ytitle","Data / MC"],["applyTo",["GetYaxis",[["SetNdivisions",505],["SetRangeUser",[0.5,1.5]]]]]],
+        "lowmass*ratio" : [["ytitle","Data / MC"],["applyTo",["GetYaxis",[["SetNdivisions",505],["SetRangeUser",[0,2]]]]]],
+     	"*SigmaIeIe_EB*_frame" : [ ["xrange",[3e-3,1.5e-2]] ],	 
+     	"*SigmaIeIe_EE*_frame" : [ ["xrange",[1.8e-2,3e-2]],["yrezoom",0.25] ],
+     	"*SigmaIeIe_EB*_ratio" : [ ["xrange",[3e-3,1.5e-2]] ],	 
+     	"*SigmaIeIe_EE*_ratio" : [ ["xrange",[1.8e-2,3e-2]] ]
+
+	},
+    "postproc" : {
+    },
+
+    "template": "histograms/%(sample)s_%(cat)s%(name)s",
+
+    "rootstyle_extra" : [
+    		  "TGaxis::SetMaxDigits(3);",
+		  "TH1::SetDefaultSumw2(1);"
+    ]
+    
+}
