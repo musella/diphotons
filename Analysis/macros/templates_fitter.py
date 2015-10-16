@@ -1421,10 +1421,8 @@ class TemplatesFitApp(TemplatesApp):
                         full_hist[0].Draw()
                         self.keep(c1)
                     mix=options.mix.get("kDSinglePho2D")
-                  #  jks=int(mix.get("jk_source",10))
-                   # jkt=int(mix.get("jk_target",10))
-                    jks=int(mix.get("jk_source",2))
-                    jkt=int(mix.get("jk_target",2))
+                    jks=int(mix.get("jk_source",10))
+                    jkt=int(mix.get("jk_target",10))
                     print "jks ",jks, " jkt ", jkt
                     temps_all = []
                     temps = []
@@ -1453,8 +1451,7 @@ class TemplatesFitApp(TemplatesApp):
     def varJK(self,options,full_hist,hists,name):
         ROOT.TH1D.SetDefaultSumw2(True)
         #rms for
-#        num_bins=full_hist[0].GetNbinsX()
-        num_bins=3
+        num_bins=full_hist[0].GetNbinsX()
         ntuple_rms = ROOT.TNtuple("tree_rms_%s" % (name),"tree_rms_%s" % (name),"rms_bin" )
         self.store_[ntuple_rms.GetName()] =ntuple_rms
         hist_diffHigh=ROOT.TH2D("hdiffHigh_%s"% (name),"hdiffHigh_%s"% (name),num_bins,0.,num_bins,num_bins,0.,num_bins)
