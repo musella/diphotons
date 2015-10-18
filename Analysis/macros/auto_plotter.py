@@ -6,6 +6,7 @@ from copy import deepcopy as copy
 import os
 
 from pprint import pprint
+from fnmatch import fnmatch
 
 # -----------------------------------------------------------------------------------------------------------
 def getObjects(folders,names=None,types=None):
@@ -69,6 +70,8 @@ class AutoPlot(PyRApp):
                             default=[]),
                 make_option("--move",action="callback", dest="move", type="string", callback=optpars_utils.ScratchAppend(),
                             default=[]),
+                make_option("--prescale",action="callback", dest="prescale", type="string", callback=optpars_utils.ScratchAppend(),
+                            default=[]),
                 make_option("--file",action="callback", dest="files", type="string", callback=optpars_utils.ScratchAppend(),
                             default=[]),
                 make_option("--histograms",action="callback", dest="histograms", type="string", callback=optpars_utils.ScratchAppend(),
@@ -81,6 +84,11 @@ class AutoPlot(PyRApp):
                                      "cosDeltaPhi>>cosDeltaPhi(200,0,1)",
                                      "rho>>rho(20,0,50)",
                                      "nvtx>>nvtx(51,0.5,50.5)",
+                                     
+                                     "leadR9>>leadR9(100,0.5,1.1)",
+                                     "subleadR9>>subleadR9(100,0.5,1.1)",
+                                     "leadR9>>phoR9(100,0.5,1.1)",
+                                     "subleadR9>>phoR9(100,0.5,1.1)",
                                      
                                      "leadPt>>phoPt(150,0,3000)",
                                      "subleadPt>>phoPt(150,0,3000)",
@@ -186,13 +194,13 @@ class AutoPlot(PyRApp):
         return folder,map(lambda x: (x,self.mkTreeHistos(folder,x)), trees )
     
     # -------------------------------------------------------------------------------------------------------
-    def fillAllHistograms(self,histos):
-        return histos[0],map(lambda x: self.fillHistograms(*x), histos[1] )
+    def fillAllHistograms(self,target):
+        folder, histos = target
+        return folder,map(lambda x: self.fillHistograms(*x), histos )
 
     # -------------------------------------------------------------------------------------------------------
     def fillHistograms(self,tree,histos):
         allvars = list(set(filter( lambda x: x != None, reduce( lambda x,y: x+y,  map( lambda x: [x[0],x[1]], histos )))))
-        ## tree.SetBranchStatus("*",0)
         myvars = { None: None }
         for v in allvars:
             myvars[v] = ROOT.TTreeFormula(v,v,tree)
@@ -201,17 +209,23 @@ class AutoPlot(PyRApp):
         weight = ROOT.TTreeFormula(self.weight,self.weight,tree)
         
         handy = map( lambda x: (myvars[x[0]],myvars[x[1]],x[2]), histos )
-        print "Filling %s (%s entries) selection: %s" % (tree.GetName(), tree.GetEntries(), self.selection)
-        for iev in xrange(tree.GetEntries()):
-        ## for iev in xrange(1):
-            tree.GetEntry(iev)  
+        
+        step = 1
+        for key,val in self.prescale.iteritems():
+            if fnmatch(tree.GetName(),key): step=val
+        nevt = tree.GetEntries()/step
+        rescale = float(step)
+        
+        print "Filling %s (%s entries %d prescale) selection: %s" % (tree.GetName(), tree.GetEntries(),step,self.selection)
+        for iev in xrange(nevt):
+            tree.GetEntry(iev*step)  
             if selection.EvalInstance() == 0: 
                 continue
             for h in handy:
                 if h[1]:
-                    h[2].Fill(h[0].EvalInstance(),h[1].EvalInstance(),weight.EvalInstance())
+                    h[2].Fill(h[0].EvalInstance(),h[1].EvalInstance(),weight.EvalInstance()*rescale)
                 else:
-                    h[2].Fill(h[0].EvalInstance(),weight.EvalInstance())
+                    h[2].Fill(h[0].EvalInstance(),weight.EvalInstance()*rescale)
         return map( lambda x: x[2], handy )
 
     def getDestination(self,origin):
@@ -229,6 +243,10 @@ class AutoPlot(PyRApp):
         for mv in options.move: 
             mvTo = mv.split(":")
             self.destinations[mvTo[0]]=mvTo[1]
+        self.prescale={}
+        for ps in options.prescale: 
+            prescale = ps.split(":")
+            self.prescale[prescale[0]]=int(prescale[1])
         print self.destinations
         
         output = self.open(options.output,"recreate")

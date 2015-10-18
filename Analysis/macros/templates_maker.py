@@ -588,7 +588,6 @@ class TemplatesApp(PlotApp):
                     print "--------------------------------------------------------------------------------------------------------------------------"
                     print
                 
-
         if options.mix_templates:
             self.doMixTemplates(options,args)
 
