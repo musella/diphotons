@@ -1422,10 +1422,8 @@ class TemplatesFitApp(TemplatesApp):
                         full_hist[0].Draw()
                         self.keep(c1)
                     mix=options.mix.get("kDSinglePho2D")
-                   # jks=int(mix.get("jk_source",10))
-                   # jkt=int(mix.get("jk_target",10))
-                    jks=int(mix.get("jk_source",4))
-                    jkt=int(mix.get("jk_target",4))
+                    jks=int(mix.get("jk_source",10))
+                    jkt=int(mix.get("jk_target",10))
                     print "jks ",jks, " jkt ", jkt
                     temps_all = []
                     temps = []
@@ -1448,7 +1446,6 @@ class TemplatesFitApp(TemplatesApp):
                         self.keep(c12)
                         self.autosave(True)
                     self.varJK(self.options,full_hist,hists,name)
-                    return
         self.saveWs(options,fout)
     
     ## ------------------------------------------------------------------------------------------------------------
@@ -1457,13 +1454,13 @@ class TemplatesFitApp(TemplatesApp):
         num_bins=full_hist[0].GetNbinsX()
         ntuple_rms = ROOT.TNtuple("tree_rms_%s" % (name),"tree_rms_%s" % (name),"rms_bin" )
         self.store_[ntuple_rms.GetName()] =ntuple_rms
-        hist_diffHigh=ROOT.TH2D("hdiffHigh_%s"% (name),"hdiffHigh_%s"% (name),num_bins,0.,num_bins,num_bins,0.,num_bins)
+        hist_diffHigh=ROOT.TH2D("hdiffHigh_%s"% (name),"Variance for %s of the difference of # entries between two bins, bin_{X-(X+1)}"%name,num_bins-1,0.,num_bins-1,num_bins-1,1.,num_bins)
         hist_var=ROOT.TH1D("hvar_%s"% (name),"hvar_%s"% (name),num_bins,0.0,num_bins)
         var_bins=[] #goal to have all differences in an array
         bincont_bins=[]
         #2d array with:y columns,x rows
-        rms_diffHigh = [ [  [] for y in range(num_bins-1-x)] for x in range(num_bins-1)]
-        rms_dHigh = [ [ 0. for y in range(num_bins-1-x)] for x in range(num_bins-1)]
+        diffHigh = [ [  [] for col in range(num_bins-1-row)] for row in range(num_bins-1)]
+        mean_dHigh = [ [ 0. for col in range(num_bins-1-row)] for row in range(num_bins-1)]
         for bin in range(1,num_bins+1):
            #get #of entries for current bin
             rms_bin=0
@@ -1475,8 +1472,7 @@ class TemplatesFitApp(TemplatesApp):
                 #get difference of # entries between current and next bin to calculate RMS for this value (diffHigh)
                 for i in range (bin+1,num_bins+1):
                     if full_hist[0].GetBinContent(i) >0. and not bin ==num_bins:
-                        rms_diffHigh[bin-1][i-bin-1].append(bincont - hist.GetBinContent(i)/full_hist[0].GetBinContent(i))
-            
+                        diffHigh[bin-1][i-bin-1].append(bincont - hist.GetBinContent(i)/full_hist[0].GetBinContent(i))
             #get variance for #of entries for each bin
             #get rms for #of entries for current bin
             rmsbin=rms_bin/len(hists)
@@ -1485,7 +1481,7 @@ class TemplatesFitApp(TemplatesApp):
                 n=n+pow((rmsbin-bincont_bins[j]),2)
             var_rmsbin=(len(hists)-1)/float(len(hists))*n
             hist_var.SetBinContent(bin,var_rmsbin)
-            ntuple_rms.Fill(var_rmsbin) 
+            ntuple_rms.Fill(var_rmsbin)
         #draw variance of #of entries for each bin
         canv = ROOT.TCanvas("cvar_%s" % (name),"cvar_%s"% (name) )
         canv.cd()
@@ -1498,28 +1494,31 @@ class TemplatesFitApp(TemplatesApp):
 
 
 
-       #calculate RMS for diffHigh of each bin difference
+       #get mean for diffHigh of each bin difference
         for row in range(num_bins-1):
-            add_hists=0
             for col in range(num_bins-1-row):
-                for j in rms_diffHigh[row][col]:
-                    add_hists=pow(j,2)+add_hists
-                rms_dHigh[row][col]=sqrt(1/(len(hists))*(add_hists))
+                add_hists=0
+                for j in diffHigh[row][col]:
+                    add_hists=j+add_hists
+                mean_dHigh[row][col]=add_hists/len(hists)
 
         #calculate variance for this diffHigh~ (RMS-currentdiffHigh)
         for row in range(num_bins-1):
             for col in range(num_bins-1-row):
                 var_diff=0
                 for j in range(len(hists)):
-                   var_diff=var_diff+pow((rms_dHigh[row][col]-rms_diffHigh[row][col][j]),2)
-             #   print "var_diff", var_diff, "row",row ,"col", col
+                   var_diff=var_diff+pow((mean_dHigh[row][col]-diffHigh[row][col][j]),2)
+                var_rmsbin=(len(hists)-1)/float(len(hists))*var_diff
+                print "mean ", mean_dHigh[row][col], "var_diff", var_diff, "row",row+1 ,"col", col+1
                 hist_diffHigh.SetBinContent(row+1,col+1,var_diff)
-        #plot variance for each bin difference from bin1 - binX
-     #   cHigh=ROOT.TCanvas("chigh_%s"% name,"chigh_%s"% name)
-     #   hist_diffHigh.SetTitle("Variance for %s %i of the difference of # entries between two bins" %(name,bin) )
-     #   cHigh.cd()
-     #   hist_diffHigh.Draw("colz")
-     #   self.keep([cHigh])
+       #plot variance for each bin difference from bin1 - binX
+        cHigh=ROOT.TCanvas("chigh_%s"% name,"chigh_%s"% name)
+        hist_diffHigh.GetXaxis().SetTitle("bin X") 
+        hist_diffHigh.GetYaxis().SetTitle("bin X+1") 
+        cHigh.cd()
+        hist_diffHigh.Draw("colz")
+        hist_diffHigh.SetTitle("Variance for %s difference of # entries between two bins, bin_{X-(X+1)}" %(name) )
+        self.keep([cHigh])
         self.autosave(True)
 
 
