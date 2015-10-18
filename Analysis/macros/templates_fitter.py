@@ -1215,6 +1215,7 @@ class TemplatesFitApp(TemplatesApp):
                         sumw2off="sumw2off"
                         self.plotPurityMassbins(cat,pu_val,opt,sumw2off,g_templateppmc,g_templatepfmc,None,g_truthpp,g_truthpf,g_truthff,g_mctruthpp,g_mctruthpf)
                 else:
+                 #   self.plotPurityMassbins(cat,pu_val,opt,"data",g_templatepp,g_templatepf,None,g_truthpp,g_truthpf,g_truthff,g_templateppmc,g_templatepfmc)
                     self.plotPurityMassbins(cat,pu_val,opt,"data",g_templatepp,g_templatepf,None,g_truthpp,g_truthpf,g_truthff,g_templateppmc,g_templatepfmc)
             ## ------------------------------------------------------------------------------------------------------------
     def pullFunction(self,g_pull,h_pull,cat,comp,opt,pu_val):
@@ -1421,8 +1422,10 @@ class TemplatesFitApp(TemplatesApp):
                         full_hist[0].Draw()
                         self.keep(c1)
                     mix=options.mix.get("kDSinglePho2D")
-                    jks=int(mix.get("jk_source",10))
-                    jkt=int(mix.get("jk_target",10))
+                   # jks=int(mix.get("jk_source",10))
+                   # jkt=int(mix.get("jk_target",10))
+                    jks=int(mix.get("jk_source",4))
+                    jkt=int(mix.get("jk_target",4))
                     print "jks ",jks, " jkt ", jkt
                     temps_all = []
                     temps = []
@@ -1440,92 +1443,85 @@ class TemplatesFitApp(TemplatesApp):
                     print temps
                     hists=self.histounroll(temps,template_binning,isoargs,comp,cat,cut_s,True,min(template_binning),max(template_binning),extra_shape_unc=options.extra_shape_unc,plot=False)
                     if options.verbose:
-                        c12=ROOT.TCanvas("c12_%s"%name,"c12_%s"%name)
-                        hists[0].Draw()
+                        c12=ROOT.TCanvas("c12_1%s"%name,"c12_1%s"%name)
+                        hists[1].Draw()
                         self.keep(c12)
                         self.autosave(True)
                     self.varJK(self.options,full_hist,hists,name)
+                    return
         self.saveWs(options,fout)
     
     ## ------------------------------------------------------------------------------------------------------------
     def varJK(self,options,full_hist,hists,name):
         ROOT.TH1D.SetDefaultSumw2(True)
-        #rms for
         num_bins=full_hist[0].GetNbinsX()
         ntuple_rms = ROOT.TNtuple("tree_rms_%s" % (name),"tree_rms_%s" % (name),"rms_bin" )
         self.store_[ntuple_rms.GetName()] =ntuple_rms
         hist_diffHigh=ROOT.TH2D("hdiffHigh_%s"% (name),"hdiffHigh_%s"% (name),num_bins,0.,num_bins,num_bins,0.,num_bins)
+        hist_var=ROOT.TH1D("hvar_%s"% (name),"hvar_%s"% (name),num_bins,0.0,num_bins)
         var_bins=[] #goal to have all differences in an array
-        #columns, rows
-        rms_bins=[]
-        rms_diffHigh = [ [  [] for x in range(num_bins-1-x)] for x in range(num_bins-1)]
-        rms_dHigh = [ [ 0. for x in range(num_bins-1-x)] for x in range(num_bins-1)]
+        bincont_bins=[]
+        #2d array with:y columns,x rows
+        rms_diffHigh = [ [  [] for y in range(num_bins-1-x)] for x in range(num_bins-1)]
+        rms_dHigh = [ [ 0. for y in range(num_bins-1-x)] for x in range(num_bins-1)]
         for bin in range(1,num_bins+1):
-            hist_rms=ROOT.TH1D("hRMS_%s_%i"% (name,bin),"hRMS_%s_%i"% (name,bin),5*len(hists),0.0,3.0)
-   #         print "bin", bin 
-          #  for i in range (bin+1,num_bins+1):
-           #     print "bin", bin , " i ", i
+           #get #of entries for current bin
+            rms_bin=0
             for hist in hists:
                 if full_hist[0].GetBinContent(bin)!=0:
                     bincont=hist.GetBinContent(bin)/full_hist[0].GetBinContent(bin)
-                    hist_rms.Fill(bincont)
-                    rms_bins.append(bincont)
-            #    else: print "bin", bin, "full hist zero" , full_hist[0].GetBinContent(bin)
+                    rms_bin=rms_bin+bincont
+                    bincont_bins.append(bincont)
+                #get difference of # entries between current and next bin to calculate RMS for this value (diffHigh)
                 for i in range (bin+1,num_bins+1):
                     if full_hist[0].GetBinContent(i) >0. and not bin ==num_bins:
                         rms_diffHigh[bin-1][i-bin-1].append(bincont - hist.GetBinContent(i)/full_hist[0].GetBinContent(i))
-               # else:
-                #    bin_diffLow=(hist.GetBinContent(bin-1)/full_hist[0].GetBinContent(bin-1)-bincont)
-               #     bin_diffHigh=(bincont - hist.GetBinContent(bin+1)/full_hist[0].GetBinContent(bin+1))
-              #  if bin_diffLow !=0:hist_diffLow.Fill(bin_diffLow)
-            if options.verbose:
-                print "mean" ,hist_rms.GetMean()
-                print "rms" , hist_rms.GetRMS()
-                if hist_rms.GetMean()!=0:
-                    canv = ROOT.TCanvas("cRMS_%s_%i" % (name,bin),"cRMS_%s_%i"% (name,bin) )
-                    canv.cd()
-                    hist_rms.Draw("HIST E2")
-                    hist_rms.GetXaxis().SetLimits(max(0.,hist_rms.GetMean()-3*hist_rms.GetRMS()),hist_rms.GetMean()+3*hist_rms.GetRMS())
-                    ROOT.gStyle.SetOptStat(111111)
-                    hist_rms.GetXaxis().SetTitle("bin_{JK}/bin_{full_dataset}") 
-                    hist_rms.GetYaxis().SetTitle("# pseudosamples") 
-                    hist_rms.SetTitle("RMS for %s ChIso bin %i" %(name,bin) )
-                    self.keep( [canv] )
+            
+            #get variance for #of entries for each bin
+            #get rms for #of entries for current bin
+            rmsbin=rms_bin/len(hists)
+            n=0
+            for j in range(len(hists)):
+                n=n+pow((rmsbin-bincont_bins[j]),2)
+            var_rmsbin=(len(hists)-1)/float(len(hists))*n
+            hist_var.SetBinContent(bin,var_rmsbin)
+            ntuple_rms.Fill(var_rmsbin) 
+        #draw variance of #of entries for each bin
+        canv = ROOT.TCanvas("cvar_%s" % (name),"cvar_%s"% (name) )
+        canv.cd()
+        hist_var.Draw("HIST E2")
+        ROOT.gStyle.SetOptStat(111111)
+        hist_var.GetXaxis().SetTitle("bin_{JK}/bin_{full_dataset}") 
+        hist_var.GetYaxis().SetTitle("variance of # entries per bin") 
+        hist_var.SetTitle("Var for %s ChIso" %(name) )
+        self.keep( [canv] )
 
 
 
-       #get variance        
+       #calculate RMS for diffHigh of each bin difference
         for row in range(num_bins-1):
             add_hists=0
             for col in range(num_bins-1-row):
                 for j in rms_diffHigh[row][col]:
-                    print j
                     add_hists=pow(j,2)+add_hists
                 rms_dHigh[row][col]=sqrt(1/(len(hists))*(add_hists))
 
-
+        #calculate variance for this diffHigh~ (RMS-currentdiffHigh)
         for row in range(num_bins-1):
             for col in range(num_bins-1-row):
                 var_diff=0
                 for j in range(len(hists)):
-                  # print rms_diffHigh[row][col][j]
                    var_diff=var_diff+pow((rms_dHigh[row][col]-rms_diffHigh[row][col][j]),2)
-                print "var_diff", var_diff, "row",row ,"col", col
+             #   print "var_diff", var_diff, "row",row ,"col", col
                 hist_diffHigh.SetBinContent(row+1,col+1,var_diff)
-        cHigh=ROOT.TCanvas("chigh_%s"% name,"chigh_%s"% name)
-        cHigh.cd()
-        hist_diffHigh.Draw("colz")
-        self.keep([cHigh])
+        #plot variance for each bin difference from bin1 - binX
+     #   cHigh=ROOT.TCanvas("chigh_%s"% name,"chigh_%s"% name)
+     #   hist_diffHigh.SetTitle("Variance for %s %i of the difference of # entries between two bins" %(name,bin) )
+     #   cHigh.cd()
+     #   hist_diffHigh.Draw("colz")
+     #   self.keep([cHigh])
         self.autosave(True)
-        #for rms of bin
-        for bin in range(1,num_bins):
-            rmsbin=hist_rms.GetRMS()
-            n=0
-            for j in range(len(hists)):
-                n=n+pow((rmsbin-rms_bins[j]),2)
-            var_rmsbin=(len(hists)-1)/float(len(hists))*n
-            ntuple_rms.Fill(var_rmsbin) 
-        
+
 
     ## ------------------------------------------------------------------------------------------------------------
     
