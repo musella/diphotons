@@ -99,7 +99,7 @@ class TemplatesFitApp(TemplatesApp):
                                     default=False,
                                      help="correlation sieie and chiso single fake photon",
                                     ),
-                        make_option("--jackknife",dest="jackknife",action="store_true",default=False,
+                        make_option("--jackknife",dest="jack_knife",action="store_true",default=False,
                         
                                     help="Plot RMS etc from jk pseudosamples",
                                     ),
@@ -137,7 +137,6 @@ class TemplatesFitApp(TemplatesApp):
         ROOT.RooMsgService.instance().setGlobalKillBelow(RooFit.FATAL)
         ROOT.TH1D.SetDefaultSumw2(True)
         
-        options.store_new_only=True
         self.setup(options,args)
         
         if options.compare_templates:
@@ -151,8 +150,8 @@ class TemplatesFitApp(TemplatesApp):
             self.corrSinglePho(options,args)
         if options.build_3dtemplates:
             self.build3dTemplates(options,args)
-#        if options.jackknife:
- #           self.Jackknife(options,args)
+        if options.jack_knife:
+            self.Jackknife(options,args)
         
 
     ## ------------------------------------------------------------------------------------------------------------
@@ -228,32 +227,9 @@ class TemplatesFitApp(TemplatesApp):
                     #if not doDataMc:
                     templates.append(truth)
 ### loop over templates
-                    for template,mapping in templatesls.iteritems():
-                        print template, mapping
-                        if "mix" in template:
-                            mixname = template.split(":")[-1]
-                            print "template_mix_%s_%s_%s" % (compname,mixname,mapping.get(cat,cat))
-                            templatename= "template_mix_%s_%s_%s" % (compname,mixname,mapping.get(cat,cat))
-                        elif "template_mc" in template:
-                            tempname = template.split(":")[-1]
-                            print "template_mc_%s_%s_%s" % (compname,tempname,mapping.get(cat,cat))
-                            templatename= "template_mc_%s_%s_%s" % (compname,tempname,mapping.get(cat,cat))
-                        else:
-                            print "template_%s_%s_%s" % (compname,template,mapping.get(cat,cat))
-                            templatename= "template_%s_%s_%s" % (compname,template,mapping.get(cat,cat))
-                        tempdata = self.reducedRooData(templatename,setargs,False,sel=weight_cut,redo=ReDo)
-
-                        #if "mix" in template and not prepfit:
-                        if "mix" in template:
-                            mixname=mixname[11:]
-                            templatename=( "reduced_template_mix_%s_%s_%s" % (compname,mixname,mapping.get(cat,cat)))
-                            print templatename
-                            tempdata.SetName(templatename)
-                        tempdata.Print()
-                        if tempdata.sumEntries() ==0:
-                            print "!!!!!!!!!!!! attention dataset ", templatename, " has no entries !!!!!!!!!!!!!!!!!"
-                        else:
-                            templates.append(tempdata)
+                    tempdatals=self.buildTemplates(templatesls,setargs,weight_cut,compname,cat) 
+                    for temp in tempdatals:
+                        templates.append(temp)
 ###------------------- split in massbins
                     masserror = array.array('d',[])
                     
@@ -263,12 +239,9 @@ class TemplatesFitApp(TemplatesApp):
                     setargs.Print()
                     dset_data = self.reducedRooData("data_%s_%s" % (fitname,catd),setargs,False,sel=weight_cut,redo=ReDo)
                     dset_mc = self.reducedRooData("mc_%s_%s" % (fitname,catd),setargs,False,sel=weight_cut,redo=ReDo)
-                   # dset_data = self.reducedRooData("data_%s_%s" % (fitname,catd),setargs,False,redo=ReDo)
                     print "number of entries after reduced"
-                    dset_data.Print()
                     mass_split= [int(x) for x in options.fit_massbins]
                     diphomass=self.massquantiles(dset_data,massargs,mass_b,mass_split)
-                   # if not doDataMc:
                     truth_pp= "mctruth_%s_%s_%s" % (compname,fitname,cat)
                     if d2:
                         tp_mcpu = ROOT.TNtuple("tree_truth_purity_all_%s_%s_%s" % (compname,fitname,cat),"tree_truth_purity_%s_%s_%s" % (compname,fitname,cat),"number_pu:frac_pu:massbin:masserror" )
@@ -286,25 +259,17 @@ class TemplatesFitApp(TemplatesApp):
                         print cut.GetTitle()
                         if d2:
                             cut_sigregion=ROOT.TCut("templateNdim2Dim0< %f && templateNdim2Dim1< %f" %(sigRegionup1D,sigRegionup1D))
-                            dset_massc = dset_data.Clone("%s_mb_%s"%(dset_data.GetName()[8:],cut_s))
-                            dset_massc=dset_massc.reduce(cut.GetTitle())
-                            dset_massc.Print()
-                            dset_massc_mc = dset_mc.Clone("%s_mb_%s"%(dset_mc.GetName()[8:],cut_s))
-                            dset_massc_mc=dset_massc_mc.reduce(cut.GetTitle())
-                            dset_massc_mc.Print()
-                            temp_massc_truth = templates[0].Clone("temp_truthinformation")
-                            temp_massc_truth=temp_massc_truth.reduce(cut.GetTitle())
+                            dset_massc=self.masscutTemplates(dset_data,cut,cut_s)
+                            dset_massc_mc=self.masscutTemplates(dset_mc,cut,cut_s)
+                            temp_massc_truth=self.masscutTemplates(templates[0],cut,cut_s,"temp_truthinformation")
                             number_pu=temp_massc_truth.sumEntries()
                             frac_pu=number_pu/dset_massc_mc.sumEntries()
                             templates_massc=[]
                             for temp_m in templates:
-                                temp_massc = temp_m.Clone("%s_mb_%s"%(temp_m.GetName()[8:],cut_s))
-                                temp_massc=temp_massc.reduce(cut.GetTitle())
-                                temp_massc.Print()
+                                temp_massc=self.masscutTemplates(temp_m,cut,cut_s)
                                 if temp_massc.sumEntries() ==0:
                                     print "!!!!!!!!!!!! attention dataset ", temp_massc, " has no entries !!!!!!!!!!!!!!!!!"
-                                else:
-                                    templates_massc.append(temp_massc)
+                                else:templates_massc.append(temp_massc)
 ###---------------get truth information per massbin and in signal range
                             #data_massc_truth = dset_massc.Clone("data_truthinformation")
                             #data_massc_truth=data_massc_truth.reduce(cut_sigregion.GetTitle())
@@ -346,6 +311,43 @@ class TemplatesFitApp(TemplatesApp):
                             self.histounroll_book(template_binning,isoargs)
 
     ## ------------------------------------------------------------------------------------------------------------
+    def buildTemplates(self,templatesls,setargs, weight_cut=None,compname="pf",cat="EBEB"):
+        templs=[]
+        for template,mapping in templatesls.iteritems():
+            print template, mapping
+            if "mix" in template:
+                mixname = template.split(":")[-1]
+                print "template_mix_%s_%s_%s" % (compname,mixname,mapping.get(cat,cat))
+                templatename= "template_mix_%s_%s_%s" % (compname,mixname,mapping.get(cat,cat))
+            elif "template_mc" in template:
+                tempname = template.split(":")[-1]
+                print "template_mc_%s_%s_%s" % (compname,tempname,mapping.get(cat,cat))
+                templatename= "template_mc_%s_%s_%s" % (compname,tempname,mapping.get(cat,cat))
+            else:
+                print "template_%s_%s_%s" % (compname,template,mapping.get(cat,cat))
+                templatename= "template_%s_%s_%s" % (compname,template,mapping.get(cat,cat))
+            tempdata = self.reducedRooData(templatename,setargs,False,sel=weight_cut,redo=True)
+
+            if "mix" in template:
+                mixname=mixname[11:]
+                templatename=( "reduced_template_mix_%s_%s_%s" % (compname,mixname,mapping.get(cat,cat)))
+                print templatename
+                tempdata.SetName(templatename)
+            tempdata.Print()
+            if tempdata.sumEntries() ==0:
+                print "!!!!!!!!!!!! attention dataset ", templatename, " has no entries !!!!!!!!!!!!!!!!!"
+            else:
+                templs.append(tempdata)
+        return templs
+    ## ------------------------------------------------------------------------------------------------------------
+    def masscutTemplates(self,dset,cut,cut_s,name=None):
+        name=dset.GetName()[8:]
+        dset_massc = dset.Clone("%s_mb_%s"%(name,cut_s))
+        dset_massc=dset_massc.reduce(cut.GetTitle())
+        dset_massc.Print()
+        return dset_massc
+    ## ------------------------------------------------------------------------------------------------------------
+
 
     def histounroll(self,templatelist, template_binning,isoargs,comp,cat,mcut_s,prepfit,sigRegionlow,sigRegionup,extra_shape_unc=None,plot=True):
         pad_it=0
@@ -1441,8 +1443,7 @@ class TemplatesFitApp(TemplatesApp):
                     name="%s_%s_%s" %(comp,cat,cut_s)
                     print name
                     full_temp = self.reducedRooData( "template_mix_%s_kDSinglePho2D_%s" % (comp,cat),setargs)
-                    full_template =full_temp.Clone("%s_%s"%(full_temp.GetName(),cut_s))
-                    full_template=full_template.reduce(cut.GetTitle())
+                    full_template =self.masscutTemplates(full_temp,cut,cut_s,"%s_%s"%(full_temp.GetName(),cut_s))
                     print full_template
                     full_hist=self.histounroll([full_template],template_binning,isoargs,comp,cat,cut_s,True,min(template_binning),max(template_binning),extra_shape_unc=options.extra_shape_unc,plot=False)
 
@@ -1466,8 +1467,7 @@ class TemplatesFitApp(TemplatesApp):
                         temp = self.reducedRooData( "template_mix_%s_kDSinglePho2D_%i_%s" % (comp,t,cat),setargs)
                         temps_all.append(temp)
                     for template in temps_all:
-                        template_massc=template.Clone("%s_%s"%(template.GetName(),cut_s))
-                        template_massc=template_massc.reduce(cut.GetTitle())
+                        template_massc=self.masscutTemplates(template,cut,cut_s,"%s_%s"%(template.GetName(),cut_s))
                         temps.append(template_massc)
                     print "number of pseudo samples", len(temps)
                     print temps
@@ -1477,7 +1477,7 @@ class TemplatesFitApp(TemplatesApp):
                         hists[1].Draw()
                         self.keep(c12)
                         self.autosave(True)
-                    self.varJK(self.options,full_hist,hists,name)
+                    #self.varJK(self.options,full_hist,hists,name)
         self.saveWs(options,fout)
     
     ## ------------------------------------------------------------------------------------------------------------
