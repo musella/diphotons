@@ -151,8 +151,8 @@ class TemplatesFitApp(TemplatesApp):
             self.corrSinglePho(options,args)
         if options.build_3dtemplates:
             self.build3dTemplates(options,args)
-        if options.jackknife:
-            self.Jackknife(options,args)
+#        if options.jackknife:
+ #           self.Jackknife(options,args)
         
 
     ## ------------------------------------------------------------------------------------------------------------
@@ -275,6 +275,8 @@ class TemplatesFitApp(TemplatesApp):
                       #  ntp_mcpu = ROOT.TNtuple("tree_truth_purity_signalregion_%s_%s_%s" % (compname,fitname,cat),"tree_truth_purity_signalrange_%s_%s_%s" % (compname,fitname,cat),"number_pu:frac_pu:massbin:masserror" )
                       #  self.store_[ntp_mcpu.GetName()] =ntp_mcpu
                         self.store_[tp_mcpu.GetName()] =tp_mcpu
+
+                    
                     for mb in range(mass_split[2],mass_split[1]):
                         massbin=(diphomass[mb]+diphomass[mb+1])/2.
                         masserror=(diphomass[mb+1]-diphomass[mb])/2.
@@ -890,6 +892,11 @@ class TemplatesFitApp(TemplatesApp):
             hist_Eta=[]
             categories = options.fit_categories
             mass_split= [int(x) for x in options.fit_massbins]
+            #TODO in json
+            jk=True
+            if jk==True:
+                    jks=int(options.jackknife.get("jk_source"))
+                    jkt=int(options.jackknife.get("jk_target"))
             for cat in categories:
                 print "-----------------------------------------------------------------"
                 if cat=="EEEB": catd="EBEE" 
@@ -912,11 +919,16 @@ class TemplatesFitApp(TemplatesApp):
               #  data=data.binnedClone()
                 data.Print()
                 tree_mass=self.treeData("%s_pp_2D_%s"%(options.plotPurity["treetruth"], cat))
+                #tree_mass=self.treeData("data_2D_%s"%(catd))
                 if not dodata:
                     tp = ROOT.TNtuple("tree_fitresult_fraction%s%s_%s_%s" % (dset,tempname,dim,cat),"tree_fitresult_fraction_%s_%s_%s" % (tempname,dim,cat),"purity_pp:error_pp_sumw2on:error_pp:purity_pf:error_pf_sumw2on:error_pf:massbin:masserror" )
                 else:
                     tp = ROOT.TNtuple("tree_fitresult_fraction%s%s_%s_%s" % (dset,tempname,dim,cat),"tree_fitresult_fraction_%s_%s_%s" % (tempname,dim,cat),"purity_pp:error_pp:purity_pf:error_pf:massbin:masserror" )
                 self.store_[tp.GetName()] = tp
+                if dodata and jk:
+                    for i in range(jks+jkt):
+                        tpi = ROOT.TNtuple("tree_fitresult_fraction%s%s_jk%i_%s_%s" % (dset,tempname,i,dim,cat),"tree_fitresult_fraction_%s_jk%i_%s_%s" % (tempname,i,dim,cat),"purity_pp:error_pp:purity_pf:error_pf:massbin:masserror" )
+                        self.store_[tpi.GetName()] = tpi
                 if extended_fit:
                     ntp = ROOT.TNtuple("tree_fitresult_events%s%s_%s_%s" % (dset,tempname,dim,cat),"tree_fitresult_events_%s_%s_%s" % (tempname,dim,cat),"norm:purity_pp:error_pp_sumw2off:error_pp_sumw2on:purity_pf:error_pf_sumw2off:error_pf_sumw2on:massbin:masserror" )
                     self.store_[ntp.GetName()] = ntp
@@ -956,6 +968,24 @@ class TemplatesFitApp(TemplatesApp):
                             pu_estimates_roopdf.add(fpf)
                     rooPdfs=[]
                     ArgListPdf=ROOT.RooArgList()
+                    
+                    
+                    #fit all jack knifes
+                    if jk==True:
+                        tempname_new="unrolled_template"
+                        dim_new="2D"
+                        for i in range(jks):
+                            tempJK = self.reducedRooData( "%s%spf_%i_%s_%s"%(tempname_new,dset,i,dim_new,cat),setargs)
+                            tempJK_massc=tempJK.Clone("%s_%s"%(full_temp.GetName(),cut_s))
+                            tempJK_massc=tempJK_massc.reduce(cut.GetTitle())
+                            rooHistPdf=ROOT.RooHistPdf("pdf_%s"% histo.GetName(),"pdf_%s"% histo.GetTitle(),ROOT.RooArgSet(obsls),tempJK_massc)
+                            print rooHistPdf
+                        #for i in range(jkt):
+                        #    histo = self.rooData("%s%spf_%s_%i_%s_mb_%s"%(tempname_new,dset,dim_new,i,cat,cut_s))
+                        #    rooHistPdf=ROOT.RooHistPdf("pdf_%s"% histo.GetName(),"pdf_%s"% histo.GetTitle(),ROOT.RooArgSet(obsls),histo)
+                   #save histos in array, propagate name
+                            print rooHistPdf
+                    return
                     i=0
                     for comp in nomFit["components"]:
                         print "%s%s%s_%s_%s_mb_%s"%(tempname,dset,comp, dim,cat,cut_s)
@@ -976,7 +1006,7 @@ class TemplatesFitApp(TemplatesApp):
                         #return
                         histo = self.rooData("%s%s%s_%s_%s_mb_%s"%(tempname_new,dset,comp, dim_new,cat,cut_s))
                         rooHistPdf=ROOT.RooHistPdf("pdf_%s"% histo.GetName(),"pdf_%s"% histo.GetTitle(),ROOT.RooArgSet(obsls),histo)
-                        
+                         
                         if options.verbose:
                             histo.Print("v")
                             rooHistPdf.Print()
@@ -1422,9 +1452,11 @@ class TemplatesFitApp(TemplatesApp):
                         full_hist[0].Draw()
                         self.keep(c1)
                     mix=options.mix.get("kDSinglePho2D")
-                    jks=int(mix.get("jk_source",10))
-                    jkt=int(mix.get("jk_target",10))
+                    print mix
+                    jks=int(options.jackknife.get("jk_source"))
+                    jkt=int(options.jackknife.get("jk_target"))
                     print "jks ",jks, " jkt ", jkt
+
                     temps_all = []
                     temps = []
                     for s in range(jks):
@@ -1454,31 +1486,33 @@ class TemplatesFitApp(TemplatesApp):
         num_bins=full_hist[0].GetNbinsX()
         ntuple_rms = ROOT.TNtuple("tree_rms_%s" % (name),"tree_rms_%s" % (name),"rms_bin" )
         self.store_[ntuple_rms.GetName()] =ntuple_rms
-        hist_diffHigh=ROOT.TH2D("hdiffHigh_%s"% (name),"Variance for %s of the difference of # entries between two bins, bin_{X-(X+1)}"%name,num_bins-1,0.,num_bins-1,num_bins-1,1.,num_bins)
+        hist_diffHigh=ROOT.TH2D("hdiffHigh_%s"% (name),"Variance for %s of the difference of # entries between two bins, bin_{X-(X+1)}"%name,num_bins,0.,num_bins,num_bins,0.,num_bins)
         hist_var=ROOT.TH1D("hvar_%s"% (name),"hvar_%s"% (name),num_bins,0.0,num_bins)
         var_bins=[] #goal to have all differences in an array
         bincont_bins=[]
         #2d array with:y columns,x rows
-        diffHigh = [ [  [] for col in range(num_bins-1-row)] for row in range(num_bins-1)]
-        mean_dHigh = [ [ 0. for col in range(num_bins-1-row)] for row in range(num_bins-1)]
+        diffHigh = [ [  [] for col in range(num_bins)] for row in range(num_bins)]
+        mean_dHigh = [ [ 0. for col in range(num_bins)] for row in range(num_bins)]
         for bin in range(1,num_bins+1):
            #get #of entries for current bin
-            rms_bin=0
+            mean_bin=0
             for hist in hists:
                 if full_hist[0].GetBinContent(bin)!=0:
                     bincont=hist.GetBinContent(bin)/full_hist[0].GetBinContent(bin)
-                    rms_bin=rms_bin+bincont
+                    mean_bin=mean_bin+bincont
                     bincont_bins.append(bincont)
+                else:
+                    bincont_bins.append()
                 #get difference of # entries between current and next bin to calculate RMS for this value (diffHigh)
-                for i in range (bin+1,num_bins+1):
-                    if full_hist[0].GetBinContent(i) >0. and not bin ==num_bins:
-                        diffHigh[bin-1][i-bin-1].append(bincont - hist.GetBinContent(i)/full_hist[0].GetBinContent(i))
+                for i in range (1,num_bins+1):
+                    if full_hist[0].GetBinContent(i) >0.:
+                        diffHigh[bin-1][i-1].append(bincont - hist.GetBinContent(i)/full_hist[0].GetBinContent(i))
             #get variance for #of entries for each bin
             #get rms for #of entries for current bin
-            rmsbin=rms_bin/len(hists)
+            mean_bin=mean_bin/len(hists)
             n=0
             for j in range(len(hists)):
-                n=n+pow((rmsbin-bincont_bins[j]),2)
+                n=n+pow((mean_bin-bincont_bins[j]),2)
             var_rmsbin=(len(hists)-1)/float(len(hists))*n
             hist_var.SetBinContent(bin,var_rmsbin)
             ntuple_rms.Fill(var_rmsbin)
@@ -1495,16 +1529,16 @@ class TemplatesFitApp(TemplatesApp):
 
 
        #get mean for diffHigh of each bin difference
-        for row in range(num_bins-1):
-            for col in range(num_bins-1-row):
+        for row in range(num_bins):
+            for col in range(num_bins):
                 add_hists=0
                 for j in diffHigh[row][col]:
                     add_hists=j+add_hists
                 mean_dHigh[row][col]=add_hists/len(hists)
 
         #calculate variance for this diffHigh~ (RMS-currentdiffHigh)
-        for row in range(num_bins-1):
-            for col in range(num_bins-1-row):
+        for row in range(num_bins):
+            for col in range(num_bins):
                 var_diff=0
                 for j in range(len(hists)):
                    var_diff=var_diff+pow((mean_dHigh[row][col]-diffHigh[row][col][j]),2)
