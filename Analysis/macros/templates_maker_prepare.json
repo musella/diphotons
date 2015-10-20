@@ -150,7 +150,7 @@
 			"bins"       : [ "mass", [500.0,1300.0] ],                                       "#" : "kinematic bins in which the fit is run ",
             "template_binning" : [ 0.0,0.1, 5.0, 15.0 ],                                   "#" : "template varaible binning              ",
 
-            "components" : [ "pp", "pf", "ff" ],                                             "#" : "list of fit components                 ",
+            "components" : [ "pp", "pf", "ff" ],         
             "#" :"format is <fit-category-name>: { <config> }",
             "categories" : {
                 "EBEB" : { 
@@ -192,6 +192,8 @@
 		        "sel"  : "cicNoChIso", "#" : "event selection",
                         "dataset" : ["data"],    "#" : "input dataset. can be data,mc or templates",
                         "_dataset" : ["data","mc"],    "#" : "input dataset. can be data,mc or templates",
+                        "jk":0.1,
+                                    "#" : "list of fit components                 ",
                         "#" : "How to fill different categories. Logic is the same as for the 'fill' instructions above",
                         "fill_categories" : {
                         "_EBEB" :{"TMath::Even(event) " : [ "leadRndConeChIso", "subleadRndConeChIso" ],

@@ -571,9 +571,6 @@ class TemplatesApp(PlotApp):
                         dat="_mc_"
                     cats = {}
                     presel = cfg.get("presel",preselection)
-                    #TODO implement in json
-                    jk=True
-                    #if jk and component=="pp":
                     for cat,fill in cfg["fill_categories"].iteritems():
                         if cat.startswith("_"): continue
                         config = { "src" : categories[cat]["src"],
@@ -581,14 +578,31 @@ class TemplatesApp(PlotApp):
                                    }
                         cats[cat] = config
                     
-                    #if jk and component=="pp":
-                    #    self.buildRooDataSet(trees,"template%s%s" % (dat,component),name,fit,cats,fulllist,weight,presel,storeTrees)
-                    #else:
+                        
                         self.buildRooDataSet(trees,"template%s%s" % (dat,component),name,fit,cats,fulllist,weight,presel,storeTrees)
-                    
 
                     for cat in categories.keys():
                         tree=self.treeData("template%s%s_%s_%s" % (dat,component,name,cat) )
+                        jk=cfg.get("jk",0) 
+                        if jk !=0 and component=="pp":
+                            n= int(tree.GetEntries())
+                            d=jk*n
+                            g=n/d
+                            if n % d != 0:
+                                g += 1
+                            g=int(g)
+                            print "computing partitions: n=%d d=%d g=%i" % (n,d,g)
+                            all_events= range(n)
+                            random.shuffle(all_events)
+                            for j in range(g):
+                                self.buildRooDataSet(trees,"template%s%s_%i" % (dat,component,j),name,fit,cats,fulllist,weight,presel,storeTrees)
+                                lo=int(1+d*j)
+                                hi=int(d+d*j)
+                                tree_temp=tree.CloneTree(0)
+                                tree_temp.SetName("template%s%s__%i_%s_%s" %(dat,component,j,name,cat))
+                                for k in all_events:
+                                    if not(k>= lo and k < hi ): tree_temp.Fill(tree.GetEntry(k))
+                                print "template -%s - %s %i" % (component,cat,j), self.rooData("template%s%s_%i_%s_%s" % (dat,component,j,name,cat) ).sumEntries()
                         print tree
                         print "template -%s - %s" % (component,cat), self.rooData("template%s%s_%s_%s" % (dat,component,name,cat) ).sumEntries()
                         print "number of entries template %s - %s" % (component,cat), self.rooData("template%s%s_%s_%s" % (dat,component,name,cat) ).numEntries()
