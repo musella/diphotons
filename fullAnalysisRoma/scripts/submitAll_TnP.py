@@ -44,6 +44,7 @@
 #./submitBatchTnP.py --cfg tnpAnaBATCH.py QCD_HT-2000ToInf  0 27 pippo 2.520e+01 1
 
 # Data
-./submitBatchTnP.py --cfg tnpAnaBATCH.py singleEle2015C  0 10001 pippo 1  1 
+#./submitBatchTnP.py --cfg tnpAnaBATCH.py singleEle2015C  0 10001 pippo 1  1 
 ./submitBatchTnP.py --cfg tnpAnaBATCH.py singleEle2015Dv0 0 10001 pippo 1  1
 ./submitBatchTnP.py --cfg tnpAnaBATCH.py singleEle2015Dv1 0 10001 pippo 1  1
+./submitBatchTnP.py --cfg tnpAnaBATCH.py singleEle2015Dv2v3v4 0 10001 pippo 1  1
