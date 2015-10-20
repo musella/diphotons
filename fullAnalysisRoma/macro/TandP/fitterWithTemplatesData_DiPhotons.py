@@ -37,7 +37,10 @@ process.GsfElectronToId = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
                                          doCutAndCount = cms.bool(False),
                                          floatShapeParameters = cms.bool(True),
                                          binnedFit = cms.bool(True),
-                                         binsForFit = cms.uint32(40),
+                                         binsForFit = cms.uint32(40),          # 20-150 EB
+                                         #binsForFit = cms.uint32(30),          # >=150 EB
+                                         #binsForFit = cms.uint32(40),          # 20-80 EE
+                                         #binsForFit = cms.uint32(25),           # >=80 EE
                                          # defines all the real variables of the probes available in the input tree and intended for use in the efficiencies
                                          Variables = cms.PSet(mass = cms.vstring("Tag-Probe Mass", "70.0", "110.0", "GeV/c^{2}"),
                                                               probe_pt = cms.vstring("Probe E_{T}", "0", "500", "GeV/c"),
@@ -54,16 +57,19 @@ process.GsfElectronToId = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
 
 
             # barrel signal
-            "RooGaussian::signalResPass(mass, meanP[.0,-5.000,5.000],sigmaP[0.956,0.00,5.000])",    #20-110
-            "RooGaussian::signalResFail(mass, meanF[.0,-5.000,5.000],sigmaF[0.956,0.00,5.000])",    #20-110 
-            #"RooGaussian::signalResPass(mass, meanP[.0,-5.000,2.000],sigmaP[0.956,0.00,5.000])",    #>=110
-            #"RooGaussian::signalResFail(mass, meanF[.0,-5.000,5.000],sigmaF[0.956,0.00,5.000])",    #>=110
+            "RooGaussian::signalResPass(mass, meanP[.0,-5.000,5.000],sigmaP[0.956,0.00,5.000])",     #20-80
+            #"RooGaussian::signalResPass(mass, meanP[.0,-1.000,5.000],sigmaP[0.956,0.00,5.000])",     #80-110
+            #"RooGaussian::signalResPass(mass, meanP[.0,-5.000,2.000],sigmaP[0.956,0.00,5.000])",      #>=110
+            "RooGaussian::signalResFail(mass, meanF[.0,-5.000,5.000],sigmaF[0.956,0.00,5.000])",     #20-110 
+            #"RooGaussian::signalResFail(mass, meanF[.0,-5.000,5.000],sigmaF[0.956,0.00,5.000])",      #>=110
 
             # endcap signal
-            #"RooGaussian::signalResPass(mass, meanP[.0,-5.000,5.000],sigmaP[0.956,0.00,5.000])",    # 20-80
-            #"RooGaussian::signalResPass(mass, meanP[.0,-2.000,2.000],sigmaP[0.956,0.00,5.000])",    # 80-110
-            #"RooGaussian::signalResPass(mass, meanP[.0,-2.000,5.000],sigmaP[0.956,0.00,5.000])",     # >=110
-            #"RooGaussian::signalResFail(mass, meanF[.0,-5.000,5.000],sigmaF[0.956,0.00,5.000])",     # all 
+            #"RooGaussian::signalResPass(mass, meanP[.0,-4.000,4.000],sigmaP[0.956,0.00,5.000])",      # 20-80
+            #"RooGaussian::signalResPass(mass, meanP[.0,-4.000,2.000],sigmaP[0.956,0.00,4.000])",      # 80-110
+            #"RooGaussian::signalResPass(mass, meanP[.0,-3.000,4.000],sigmaP[0.956,0.00,5.000])",       # >=110
+            #"RooGaussian::signalResFail(mass, meanF[.0,-3.000,3.000],sigmaF[0.956,0.00,5.000])",      # 20-80 
+            #"RooGaussian::signalResFail(mass, meanF[.0,-5.000,5.000],sigmaF[0.956,0.00,5.000])",      # 80-110
+            #"RooGaussian::signalResFail(mass, meanF[.0,-4.000,3.000],sigmaF[0.956,0.00,5.000])",       # >=110
             
             # both EB and EE signal            
             "ZGeneratorLineShape::signalPhyPass(mass,\"MCtemplates.root\", \"hMass_20.000000To30.000000_0.000000To1.500000_Pass\")",
@@ -74,33 +80,39 @@ process.GsfElectronToId = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
 
 
             # nominal background fit
-            #"RooExponential::backgroundPass(mass, aPass[-0.1, -1., 0.2])",   # >60
-            #"RooExponential::backgroundPass(mass, aPass[-0.1, -1., 0.1])",   # 40-60 
             "RooExponential::backgroundPass(mass, aPass[-0.1, -1., 0.])",    # 20-40
-            "RooExponential::backgroundFail(mass, aFail[-0.1, -1., 0.1])",   # 20-110
-            #"RooExponential::backgroundFail(mass, aFail[-0.1, -1., 0.2])",   # >110, EB
-            #"RooExponential::backgroundFail(mass, aFail[-1., -1.2, -0.8])",   # >110, EE            
+            #"RooExponential::backgroundPass(mass, aPass[-0.1, -1., 0.1])",   # 40-60 
+            #"RooExponential::backgroundPass(mass, aPass[-0.1, -1., 0.2])",    # >60
+            "RooExponential::backgroundFail(mass, aFail[-0.1, -1., 0.1])",    # 20-110 EB, all EE
+            #"RooExponential::backgroundFail(mass, aFail[-0.1, -1., 0.2])",    # >110, EB
 
 
             # to study the background fit systematics
             # EB 
-            #"RooCMSShape::backgroundPass(mass, alphaPass[60.,50.,120.], betaPass[0.001, 0.,5.], gammaPass[0.001, 0.,1.0], peakPass[90.0])",        # 20-40                       
-            #"RooCMSShape::backgroundPass(mass, alphaPass[60.,50.,120.], betaPass[0.001, 0.,5.], gammaPass[0.001, 0.,0.05], peakPass[90.0])",       # 40-50                        
-            #"RooCMSShape::backgroundPass(mass, alphaPass[80.,60.,100.], betaPass[0.001, 0.,10.], gammaPass[0.001, 0.,5.], peakPass[90.0])",        # 50-60                       
-            #"RooCMSShape::backgroundPass(mass, alphaPass[80.,60.,100.], betaPass[1., 0.,10.], gammaPass[0.001, 0.,5.], peakPass[90.0])",           # 60-110                    
-            #"RooCMSShape::backgroundPass(mass, alphaPass[60.,50.,70.], betaPass[0.001, 0.,0.1], gammaPass[0.001, 0.,1.], peakPass[90.0])",         # >=110                     
-            #"RooCMSShape::backgroundFail(mass, alphaFail[60.,50.,70.], betaFail[0.001, 0.,0.1], gammaFail[0.0001, -1.,1.0], peakFail[90.0])",      # all
+            #"RooCMSShape::backgroundPass(mass, alphaPass[60.,50.,120.], betaPass[0.001, 0.,1.], gammaPass[0.01, 0.,.5], peakPass[90.0])",         # 20-40                       
+            #"RooCMSShape::backgroundPass(mass, alphaPass[60.,50.,120.], betaPass[10., 5.,15.], gammaPass[0.001, 0.,0.08], peakPass[90.0])",       # 40-50          
+            #"RooCMSShape::backgroundPass(mass, alphaPass[80.,60.,120.], betaPass[10., 5.,40.], gammaPass[0.001, -0.5,0.5], peakPass[90.0])",      # 50-60          
+            #"RooCMSShape::backgroundPass(mass, alphaPass[80.,60.,120.], betaPass[50., 25.,70.], gammaPass[0.001, -0.5,5.], peakPass[90.0])",      # 60-80                    
+            #"RooCMSShape::backgroundPass(mass, alphaPass[80.,60.,120.], betaPass[50., 25.,70.], gammaPass[0., -2.,1.], peakPass[90.0])",          # 80-110
+            #"RooCMSShape::backgroundPass(mass, alphaPass[80.,60.,120.], betaPass[50., 25.,71.], gammaPass[0., -2.,1.2], peakPass[90.0])",         # 110-150
+            #"RooCMSShape::backgroundPass(mass, alphaPass[80.,60.,120.], betaPass[0.001, 0.,0.1], gammaPass[0.001, -0.01,1.], peakPass[90.0])",    # 150-250
+            #"RooCMSShape::backgroundPass(mass, alphaPass[80.,60.,120.], betaPass[0.001, 0.,0.2], gammaPass[0.001, -0.01,1.], peakPass[90.0])",    # 250-500 
+            #"RooCMSShape::backgroundFail(mass, alphaFail[60.,50.,70.], betaFail[0.001, 0.,0.1], gammaFail[0.0001, -1.,1.0], peakFail[90.0])",     # 20-110
+            #"RooCMSShape::backgroundFail(mass, alphaFail[60.,50.,72.], betaFail[0.001, 0.,0.1], gammaFail[0.0001, -1.,1.0], peakFail[90.0])",     # 110-250
+            #"RooCMSShape::backgroundFail(mass, alphaFail[60.,50.,72.], betaFail[0.001, 0.,0.1], gammaFail[0.0001, 0.,1.0], peakFail[90.0])",      # 250-500
 
             # EE
-            #"RooCMSShape::backgroundPass(mass, alphaPass[60.,50.,120.], betaPass[0.001, 0.,5.], gammaPass[0.001, 0.,1.0], peakPass[90.0])",         # 20-50                       
-            #"RooCMSShape::backgroundFail(mass, alphaFail[60.,50.,70.], betaFail[0.001, 0.,0.1], gammaFail[0.0001, -1.,1.0], peakFail[90.0])",       # 20-50
-            #"RooCMSShape::backgroundPass(mass, alphaPass[60.,50.,120.], betaPass[0.001, 0.,10.], gammaPass[0.001, 0.,5.], peakPass[90.0])",         # 50-60
-            #"RooCMSShape::backgroundFail(mass, alphaFail[60.,50.,80.], betaFail[0.001, 0.,0.1], gammaFail[0.0001, -1.,1.0], peakFail[90.0])",       # 50-60
-            #"RooCMSShape::backgroundPass(mass, alphaPass[110.,100.,120.], betaPass[0.001, 0.,5.], gammaPass[0.001, 0.,2.], peakPass[90.0])",        # 60-80
+            #"RooCMSShape::backgroundPass(mass, alphaPass[100.,50.,120.], betaPass[0.001, 0.,5.], gammaPass[0.001, 0.,1.0], peakPass[90.0])",        # 20-40                
+            #"RooCMSShape::backgroundFail(mass, alphaFail[60.,50.,70.], betaFail[0.001, 0.,0.1], gammaFail[0.0001, -1.,1.0], peakFail[90.0])",       # 20-40
+            #"RooCMSShape::backgroundPass(mass, alphaPass[100.,50.,130.], betaPass[0.01, 0.,10.], gammaPass[0.001, 0.,6.], peakPass[90.0])",         # 40-50
+            #"RooCMSShape::backgroundFail(mass, alphaFail[60.,50.,80.], betaFail[0.1, 0.02,0.2], gammaFail[0.05, 0.,1.0], peakFail[90.0])",          # 40-50
+            #"RooCMSShape::backgroundPass(mass, alphaPass[100.,50.,130.], betaPass[0.01, 0.,10.], gammaPass[0.001, 0.,5.], peakPass[90.0])",         # 50-60
+            #"RooCMSShape::backgroundFail(mass, alphaFail[60.,50.,80.], betaFail[0.1, 0.02,0.2], gammaFail[0.05, 0.,1.0], peakFail[90.0])",          # 50-60
+            #"RooCMSShape::backgroundPass(mass, alphaPass[100.,50.,130.], betaPass[0.01, 0.,10.], gammaPass[0.001, 0.,1.], peakPass[90.0])",        # 60-80
             #"RooCMSShape::backgroundFail(mass, alphaFail[90.,60.,120.], betaFail[0.001, 0.,0.1], gammaFail[0.0001, -1.,1.0], peakFail[90.0])",      # 60-80
-            #"RooCMSShape::backgroundPass(mass, alphaPass[110.,100.,120.], betaPass[0.001, 0.,5.], gammaPass[1., 0.,3.5], peakPass[90.0])",          # 80-110
-            #"RooCMSShape::backgroundFail(mass, alphaFail[90.,60.,120.], betaFail[0.001, 0.,0.1], gammaFail[0.0001, -1.,1.0], peakFail[90.0])",      # 80-110
-            #"RooCMSShape::backgroundPass(mass, alphaPass[110.,100.,120.], betaPass[0.001, 0.,5.], gammaPass[0., -1.,1.], peakPass[90.0])",           # >110
+            #"RooCMSShape::backgroundPass(mass, alphaPass[110.,90.,120.], betaPass[0.01, 0.,10.], gammaPass[0.001, 0.,1.], peakPass[90.0])",          # 80-110
+            #"RooCMSShape::backgroundFail(mass, alphaFail[90.,60.,120.], betaFail[0.001, 0.,0.15], gammaFail[0.0001, -1.,1.0], peakFail[90.0])",      # 80-110
+            #"RooCMSShape::backgroundPass(mass, alphaPass[110.,100.,120.], betaPass[0.001, 0.,5.], gammaPass[0.001, 0.,1.], peakPass[90.0])",           # >110
             #"RooCMSShape::backgroundFail(mass, alphaFail[90.,60.,120.], betaFail[0.001, 0.,0.1], gammaFail[0.0001, -1.,1.0], peakFail[90.0])",       # >110
 
             "efficiency[0.5,0,1]",

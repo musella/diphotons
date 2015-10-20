@@ -76,24 +76,28 @@ process.GsfElectronToId = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
             #"RooCBExGaussShape::signalResFail(mass,meanF[0.0,-1.,1.],sigmaF[3.,0.01,4.0],alphaF[1.,0.,5.0],nF[25.],sigmaF_2[1.,0.001,15.000])",
 
             # EB, 50-60
-            #"RooCBExGaussShape::signalResPass(mass,meanP[0.0,-1.5,1.5],sigmaP[1.,0.01,3.1],alphaP[1.,0.01,5.0],nP[4.3],sigmaP_2[1.000,0.1,15.00])", 
+            #"RooCBExGaussShape::signalResPass(mass,meanP[0.0,-1.5,1.5],sigmaP[1.,0.01,3.1],alphaP[1.,0.01,10.0],nP[4.3],sigmaP_2[1.000,0.1,15.00])", 
             #"RooCBExGaussShape::signalResFail(mass,meanF[1.2,-1.,1.5],sigmaF[1.,0.01,3.1],alphaF[1.,0.,5.0],nF[50.],sigmaF_2[1.,0.001,3.000])", 
 
             # EB, 60-80
             #"RooCBExGaussShape::signalResPass(mass,meanP[0.0,-1.5,1.5],sigmaP[1.,0.01,3.1],alphaP[1.,0.01,5.0],nP[4.6],sigmaP_2[1.000,0.1,15.00])", 
-            #"RooCBExGaussShape::signalResFail(mass,meanF[1.2,-1.,1.5],sigmaF[1.,0.01,3.1],alphaF[1.,0.,5.0],nF[3.1],sigmaF_2[1.,0.001,3.000])", 
+            #"RooCBExGaussShape::signalResFail(mass,meanF[1.2,-1.1,1.5],sigmaF[1.,0.01,3.1],alphaF[1.,0.,5.0],nF[3.1],sigmaF_2[1.,0.001,5.000])", 
 
             # EB, 80-110
             #"RooCBExGaussShape::signalResPass(mass,meanP[0.0,-1.5,1.5],sigmaP[1.,0.01,3.1],alphaP[1.,0.01,5.0],nP[50.],sigmaP_2[1.000,0.1,15.00])", 
-            #"RooCBExGaussShape::signalResFail(mass,meanF[1.2,-1.,1.5],sigmaF[1.,0.01,3.1],alphaF[1.,0.,5.0],nF[2.3],sigmaF_2[1.,0.001,3.000])", 
+            #"RooCBExGaussShape::signalResFail(mass,meanF[1.2,-1.5,1.5],sigmaF[1.,0.01,3.1],alphaF[1.,0.,5.0],nF[2.3],sigmaF_2[1.,0.001,5.000])", 
 
             # EB, 110-150
             #"RooCBExGaussShape::signalResPass(mass,meanP[1.0,-0.05,1.5],sigmaP[1.,0.01,3.1],alphaP[1.,0.01,5.0],nP[4.3],sigmaP_2[1.000,0.1,15.00])", 
-            #"RooCBExGaussShape::signalResFail(mass,meanF[-0.5,-1.5,0.],sigmaF[1.,0.01,3.1],alphaF[1.,0.,5.0],nF[1.3],sigmaF_2[1.,0.001,15.000])", 
+            #"RooCBExGaussShape::signalResFail(mass,meanF[-0.5,-1.8,0.],sigmaF[1.,0.01,3.1],alphaF[1.,0.,5.0],nF[1.3],sigmaF_2[1.,0.001,15.000])", 
 
             # EB, 150-250
             #"RooCBExGaussShape::signalResPass(mass,meanP[1.0,0.,1.5],sigmaP[1.,0.01,3.1],alphaP[1.,0.01,5.0],nP[50.],sigmaP_2[1.000,0.1,15.00])", 
             #"RooCBExGaussShape::signalResFail(mass,meanF[-0.5,-1.5,0.],sigmaF[1.,0.01,3.1],alphaF[1.,0.,5.0],nF[3.9],sigmaF_2[1.,0.001,15.000])", 
+
+            # EB, 250-500
+            #"RooCBExGaussShape::signalResPass(mass,meanP[1.0,-0.05,1.5],sigmaP[1.,0.01,3.1],alphaP[1.,0.01,5.0],nP[4.],sigmaP_2[1.000,0.1,15.00])", 
+            #"RooCBExGaussShape::signalResFail(mass,meanF[-0.5,-1.5,0.],sigmaF[1.,0.01,3.1],alphaF[1.,0.,5.0],nF[0.7],sigmaF_2[1.,0.001,15.000])", 
 
             # EE, 20-30
             #"RooCBExGaussShape::signalResPass(mass,meanP[0.0,-5.,5.],sigmaP[1.,0.01,5.0],alphaP[1.,0.01,50.0],nP[3.],sigmaP_2[1.000,0.1,15.00])",    
@@ -108,16 +112,16 @@ process.GsfElectronToId = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
             #"RooCBExGaussShape::signalResFail(mass,meanF[0.0,-5.,5.],sigmaF[3.,0.01,5.0],alphaF[1.,0.,5.0],nF[24.],sigmaF_2[1.,0.001,15.000])",        
 
             # EE, 50-60
-            #"RooCBExGaussShape::signalResPass(mass,meanP[-0.1,-0.5,0.],sigmaP[1.,0.01,5.0],alphaP[1.,0.01,50.0],nP[27.],sigmaP_2[1.000,0.1,15.00])",  
+            #"RooCBExGaussShape::signalResPass(mass,meanP[-1.5,-2.,-1.],sigmaP[1.,0.01,5.0],alphaP[1.,0.01,50.0],nP[27.],sigmaP_2[1.000,0.1,15.00])",  
             #"RooCBExGaussShape::signalResFail(mass,meanF[-0.5,-3.,0.],sigmaF[3.,0.01,5.0],alphaF[1.,0.,5.0],nF[50.],sigmaF_2[1.,0.001,15.000])",     
 
             # EE, 60-80
-            #"RooCBExGaussShape::signalResPass(mass,meanP[-0.1,-0.5,0.],sigmaP[1.,0.01,5.0],alphaP[1.,0.01,50.0],nP[22.],sigmaP_2[1.000,0.1,15.00])",  
-            #"RooCBExGaussShape::signalResFail(mass,meanF[-0.5,-2.,0.],sigmaF[3.,0.01,5.0],alphaF[1.,0.,5.0],nF[4.3],sigmaF_2[1.,0.001,15.000])",  
+            #"RooCBExGaussShape::signalResPass(mass,meanP[-1.5,-2.,-1.0],sigmaP[0.5,0.001,4.0],alphaP[1.,0.01,50.0],nP[20.,15,40],sigmaP_2[1.000,0.1,15.00])",  
+            #"RooCBExGaussShape::signalResFail(mass,meanF[-1.,-1.5,-0.7],sigmaF[3.,0.01,5.0],alphaF[1.,0.,5.0],nF[4.3],sigmaF_2[1.,0.001,15.000])",  
 
             # EE, 80-110
-            #"RooCBExGaussShape::signalResPass(mass,meanP[-0.1,-1.,0.],sigmaP[1.,0.01,5.0],alphaP[1.,0.01,50.0],nP[22.],sigmaP_2[1.000,0.1,15.00])",  
-            #"RooCBExGaussShape::signalResFail(mass,meanF[-0.5,-2.,0.],sigmaF[3.,0.01,5.0],alphaF[1.,0.,5.0],nF[29.],sigmaF_2[1.,0.001,15.000])",  
+            #"RooCBExGaussShape::signalResPass(mass,meanP[-1.,-3.,0.],sigmaP[1.,0.01,5.0],alphaP[1.,0.01,50.0],nP[22.],sigmaP_2[1.000,0.1,15.00])",  
+            #"RooCBExGaussShape::signalResFail(mass,meanF[-1.,-3.,0.],sigmaF[3.,0.01,5.0],alphaF[1.,0.,5.0],nF[29.],sigmaF_2[1.,0.001,15.000])",  
 
             # EE, 110-500
             #"RooCBExGaussShape::signalResPass(mass,meanP[-0.1,-2.,2.],sigmaP[1.,0.01,5.0],alphaP[1.,0.01,50.0],nP[10.],sigmaP_2[1.000,0.1,15.00])",  

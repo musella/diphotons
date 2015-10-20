@@ -17,7 +17,7 @@ process.MessageLogger.cerr.FwkReport.reportEvery = 1000
 ##                                              
 ################################################
 
-InputFileName = "/afs/cern.ch/work/c/crovelli/public/TaP_spring15_7412v2/formattedZ/Formatted_DYLL_all__161pb.root"
+InputFileName = "/afs/cern.ch/work/c/crovelli/public/TaP_spring15_7412v2/formattedZ/Formatted_DYLL_all__553pb.root"
 OutputFilePrefix = "efficiency-mc-fullSel"
 PDFName = "pdfSignalPlusBackground"
 
