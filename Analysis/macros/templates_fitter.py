@@ -895,9 +895,8 @@ class TemplatesFitApp(TemplatesApp):
             hist_Eta=[]
             categories = options.fit_categories
             mass_split= [int(x) for x in options.fit_massbins]
-            #TODO in json
-            jk=True
-            if jk==True:
+            jk=nomFit.get("jackknife",False)
+            if jk:
                 jks=int(options.jackknife.get("jk_source"))
                 jkt=int(options.jackknife.get("jk_target"))
                 num=jks+jkt
@@ -927,9 +926,10 @@ class TemplatesFitApp(TemplatesApp):
                 #tree_mass=self.treeData("data_2D_%s"%(catd))
                 if not dodata:
                     tp = ROOT.TNtuple("tree_fitresult_fraction%s%s_%s_%s" % (dset,tempname,dim,cat),"tree_fitresult_fraction_%s_%s_%s" % (tempname,dim,cat),"purity_pp:error_pp_sumw2on:error_pp:purity_pf:error_pf_sumw2on:error_pf:massbin:masserror" )
-                else:
+                    self.store_[tp.GetName()] = tp
+                elif not jk:
                     tp = ROOT.TNtuple("tree_fitresult_fraction%s%s_%s_%s" % (dset,tempname,dim,cat),"tree_fitresult_fraction_%s_%s_%s" % (tempname,dim,cat),"purity_pp:error_pp:purity_pf:error_pf:massbin:masserror" )
-                self.store_[tp.GetName()] = tp
+                    self.store_[tp.GetName()] = tp
                 if dodata:
                     tps=[]
                     for i in range(num):
@@ -977,6 +977,7 @@ class TemplatesFitApp(TemplatesApp):
                     pdf_collections=[ ]
                     i=0
                     if not jk:
+                        print "right"
                         pdf_set=ROOT.RooArgList() 
                         for comp in nomFit["components"]:
                             print "%s%s%s_%s_%s_mb_%s"%(tempname,dset,comp, dim,cat,cut_s)
@@ -1001,6 +1002,7 @@ class TemplatesFitApp(TemplatesApp):
                             i=i+1
                         pdf_collections.append(pdf_set)
                     else:
+                        print "wrong"
                         for i in range(num):
                             pdf_set=ROOT.RooArgList()
                             for comp in nomFit["components"]:
@@ -1490,29 +1492,58 @@ class TemplatesFitApp(TemplatesApp):
     def plotJKpurity(self,options,cat,dim,tps):
         jks=int(options.jackknife.get("jk_source"))
         jkt=int(options.jackknife.get("jk_target"))
-        cpurity = ROOT.TCanvas("cpurityJK_%s" % (cat),"cpurityJK_%s" % (cat))
-        cpurity.cd()
-        ROOT.gPad.SetLogx()
-        #nom_tree =self.treeData("tree_fitresult_fraction_unrolled_template_mix_2D_%s" % (cat))
-        #g_purity=ROOT.TGraphErrors(nom_tree.GetEntries()+len(tps))
-        g_purity=ROOT.TGraphErrors(3*len(tps))
+      #   tree_fitresult_fraction_unrolled_template_mix_2D_EBEB
+        nom_tree =self.treeData("fitresult_fraction_unrolled_template_mix_2D_%s" % (cat))
+        nentries= nom_tree.GetEntries()
+        g_purity=ROOT.TGraphErrors(nentries*len(tps))
+        g_ratio=ROOT.TGraphErrors(nentries)
+        histos=[]
+        rms=[]
+        for mb in range(nentries):
+            h_p=ROOT.TH1D("h_p%s_%i"%(cat,mb),"h_p%s_%i"%(cat,mb),10*len(tps),.3,1.)
+            histos.append(h_p)
         g_purity.GetXaxis().SetTitle("Diphoton mass [GeV]")
         g_purity.GetYaxis().SetTitle("purity")
         #g_purity.GetYaxis().SetRangeUser(0.,1.6)
         i=1
         for tree_template in tps:
-            nentries=tree_template.GetEntries()
-            for mb in range(0,nentries):
+            for mb in range(nentries):
                 tree_template.GetEntry(mb)
+                histos[mb].Fill(tree_template.purity_pp)
                 g_purity.SetPoint(mb+i,tree_template.massbin,tree_template.purity_pp)
                 g_purity.SetPointError(mb+i,tree_template.masserror,tree_template.error_pp)
             i=i+nentries
+        
+        for mb in range(nentries):
+            cmb = ROOT.TCanvas("cJKmb_%s_%i" % (cat,mb),"cJKmb_%s_%i" % (cat,mb))
+            cmb.cd()
+            histos[mb].Draw("HIST E2")
+            rms_bin=histos[mb].GetRMS()*(len(tps)-1)/sqrt(len(tps))
+            rms.append(rms_bin)
+            histos[mb].GetXaxis().SetTitle("Diphoton mass %i"%mb)
+            self.keep( [cmb,histos[mb]] )
+            print rms[mb] 
+            g_ratio.SetPoint(mb,nom_tree.massbin,nom_tree.purity_pp)
+            g_ratio.SetPointError(mb,nom_tree.masserror,rms_bin)
+        cpurity = ROOT.TCanvas("cpurityJK_%s" % (cat),"cpurityJK_%s" % (cat))
+        cpurity.Divide(1,2)
+        cpurity.cd(1)
+        ROOT.gPad.SetPad(0., 0.5, 1., 1.0)
+        ROOT.gPad.SetLogx()
         g_purity.SetMarkerSize(1.3)
         g_purity.SetMarkerStyle(20)
         g_purity.Draw("AP")
         g_purity.GetXaxis().SetLimits(200.,13000.)
+        cpurity.cd(2)
+        ROOT.gPad.SetPad(0., 0., 1., 0.5)
+        ROOT.gPad.SetLogx()
+        g_ratio.Draw("AP" )
+        g_ratio.GetXaxis().SetTitle("Diphoton mass [GeV]")
+        
         #TODO do ratio to g_purity nominal
-        self.keep( [cpurity,g_purity] )
+        
+        
+        self.keep( [cpurity,g_purity,g_ratio] )
         self.autosave(True)
         
     ## ------------------------------------------------------------------------------------------------------------

@@ -571,13 +571,20 @@ class TemplatesApp(PlotApp):
                         dat="_mc_"
                     cats = {}
                     presel = cfg.get("presel",preselection)
+                    #TODO implement in json
+                    jk=True
+                    #if jk and component=="pp":
                     for cat,fill in cfg["fill_categories"].iteritems():
                         if cat.startswith("_"): continue
                         config = { "src" : categories[cat]["src"],
                                    "fill": fill
                                    }
                         cats[cat] = config
-                    self.buildRooDataSet(trees,"template%s%s" % (dat,component),name,fit,cats,fulllist,weight,presel,storeTrees)
+                    
+                    #if jk and component=="pp":
+                    #    self.buildRooDataSet(trees,"template%s%s" % (dat,component),name,fit,cats,fulllist,weight,presel,storeTrees)
+                    #else:
+                        self.buildRooDataSet(trees,"template%s%s" % (dat,component),name,fit,cats,fulllist,weight,presel,storeTrees)
                     
 
                     for cat in categories.keys():

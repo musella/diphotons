@@ -26,9 +26,12 @@
 		}
 	},
 "jackknife":{ 
+        "jk_source": 10.0 ,
+        "jk_target": 10.0 ,
             "categories":["EBEB","EBEE"],
             "components": ["pf","ff"],
             "template_binning" : [ 0.0,0.1,5.0,15.0],
+			
 	    "mass_binning" :"mass[13000,200.0,13000.0]"
 },
     "corrPlot":{
@@ -54,6 +57,7 @@
                 "lowerLimitSigRegion": "0.", 
                 "_upperLimitSigRegion": "4.", 
                 "extended_fit":false,
+				"jackknife":true,
 		"mass_binning" :"mass[13000,0.0,13000.0]"
         }
     },

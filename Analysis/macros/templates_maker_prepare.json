@@ -376,11 +376,11 @@
             "templates" : {
                 "p" : {
                     "sel" : "cicNoChIsoSinglePho",
-                    "_dataset" : ["data"],
-                    "dataset" : ["data","mc"],
+                    "dataset" : ["data"],
+                    "_dataset" : ["data","mc"],
                         "fill_categories" : { 
-                            "_EB" : { "phoIsEB  " : ["phoRndConeChIso"]},
-                            "EB" : { "phoIsEB && 1 " : ["phoRndConeChIso8"],
+                            "EB" : { "phoIsEB  " : ["phoRndConeChIso"]},
+                            "_EB" : { "phoIsEB && 1 " : ["phoRndConeChIso8"],
     								 "phoIsEB && 2" : ["phoRndConeChIso0"],
     								 "phoIsEB && 3" : ["phoRndConeChIso1"],
     								 "phoIsEB && 4" : ["phoRndConeChIso2"],
@@ -390,8 +390,8 @@
     								 "phoIsEB && 8" : ["phoRndConeChIso6"],
     								 "phoIsEB && 9" : ["phoRndConeChIso7"]
 									},
-                            "_EE" : { "!phoIsEB" : ["phoRndConeChIso"]},
-                            "EE" : { "!phoIsEB && 1" : ["phoRndConeChIso8"],
+                            "EE" : { "!phoIsEB" : ["phoRndConeChIso"]},
+                            "_EE" : { "!phoIsEB && 1" : ["phoRndConeChIso8"],
                             		 "!phoIsEB && 2" : ["phoRndConeChIso0"],
                             		 "!phoIsEB && 3" : ["phoRndConeChIso1"],
                             		 "!phoIsEB && 4" : ["phoRndConeChIso2"],
@@ -401,8 +401,8 @@
                             		 "!phoIsEB && 8" : ["phoRndConeChIso6"],
                             		 "!phoIsEB && 9" : ["phoRndConeChIso7"]
 									},
-                            "_eta_inclusive" : {  "phoIsEB ||!phoIsEB " : ["phoRndConeChIso8"]},
-                            "eta_inclusive" : {  "phoIsEB ||!phoIsEB && 1" : ["phoRndConeChIso8"], 
+                            "eta_inclusive" : {  "phoIsEB ||!phoIsEB " : ["phoRndConeChIso8"]},
+                            "_eta_inclusive" : {  "phoIsEB ||!phoIsEB && 1" : ["phoRndConeChIso8"], 
                             					 "phoIsEB ||!phoIsEB && 2" : ["phoRndConeChIso0"], 
                             					 "phoIsEB ||!phoIsEB && 3" : ["phoRndConeChIso1"], 
                             					 "phoIsEB ||!phoIsEB && 4" : ["phoRndConeChIso2"], 
@@ -475,6 +475,8 @@
 
     "mix" : { 
 	"kDSinglePho2D" : {
+        "jk_source": 0.1 ,
+        "jk_target": 0.1 ,
 		"target" : "2D",
 		"ptLeadMin" : 100.0, "ptSubleadMin" : 100.0, "massMin" : 200.0,
 		"pt" : "phoPt", "eta" : "phoEta", "phi" : "phoPhi", "energy" : "phoEnergy",
@@ -512,9 +514,11 @@
 	},
 
 	"_kDSinglePho2DMC" : {
+        "jk_source": 0.0 ,
+        "jk_target": 0.0 ,
 
 		"target" : "2D:mc",
-		"ptLeadMin" : 100.0, "ptSubleadMin" : 100.0, "massMin" : 200.0,
+		"ptLeadMin" : 75.0, "ptSubleadMin" : 75.0, "massMin" : 200.0,
 		"pt" : "phoPt", "eta" : "phoEta", "phi" : "phoPhi", "energy" : "phoEnergy",
 		"sources" : { 
 		    "pf" : [ "singlePho:mc_p", "singlePho:mc_f" ],
@@ -551,3 +555,5 @@
     }
 
 }
+
+
