@@ -579,6 +579,7 @@ class TemplatesApp(PlotApp):
                         cats[cat] = config
                     self.buildRooDataSet(trees,"template%s%s" % (dat,component),name,fit,cats,fulllist,weight,presel,storeTrees)
                     
+
                     for cat in categories.keys():
                         tree=self.treeData("template%s%s_%s_%s" % (dat,component,name,cat) )
                         print tree
