@@ -341,7 +341,8 @@ class TemplatesFitApp(TemplatesApp):
         return templs
     ## ------------------------------------------------------------------------------------------------------------
     def masscutTemplates(self,dset,cut,cut_s,name=None):
-        name=dset.GetName()[8:]
+        if name==None:
+            name=dset.GetName()[8:]
         dset_massc = dset.Clone("%s_mb_%s"%(name,cut_s))
         dset_massc=dset_massc.reduce(cut.GetTitle())
         dset_massc.Print()
@@ -897,8 +898,10 @@ class TemplatesFitApp(TemplatesApp):
             #TODO in json
             jk=True
             if jk==True:
-                    jks=int(options.jackknife.get("jk_source"))
-                    jkt=int(options.jackknife.get("jk_target"))
+                jks=int(options.jackknife.get("jk_source"))
+                jkt=int(options.jackknife.get("jk_target"))
+                num=jks+jkt
+            else:num=1
             for cat in categories:
                 print "-----------------------------------------------------------------"
                 if cat=="EEEB": catd="EBEE" 
@@ -927,11 +930,14 @@ class TemplatesFitApp(TemplatesApp):
                 else:
                     tp = ROOT.TNtuple("tree_fitresult_fraction%s%s_%s_%s" % (dset,tempname,dim,cat),"tree_fitresult_fraction_%s_%s_%s" % (tempname,dim,cat),"purity_pp:error_pp:purity_pf:error_pf:massbin:masserror" )
                 self.store_[tp.GetName()] = tp
-                if dodata and jk:
-                    for i in range(jks+jkt):
-                        tpi = ROOT.TNtuple("tree_fitresult_fraction%s%s_jk%i_%s_%s" % (dset,tempname,i,dim,cat),"tree_fitresult_fraction_%s_jk%i_%s_%s" % (tempname,i,dim,cat),"purity_pp:error_pp:purity_pf:error_pf:massbin:masserror" )
+                if dodata:
+                    tps=[]
+                    for i in range(num):
+                        if not jk:
+                            tpi = ROOT.TNtuple("tree_fitresult_fraction%s%s_%s_%s" % (dset,tempname,dim,cat),"tree_fitresult_fraction_%s_%s_%s" % (tempname,dim,cat),"purity_pp:error_pp:purity_pf:error_pf:massbin:masserror" )
+                        else: tpi = ROOT.TNtuple("tree_fitresult_fraction%s%s_jk%i_%s_%s" % (dset,tempname,i,dim,cat),"tree_fitresult_fraction_%s_jk%i_%s_%s" % (tempname,i,dim,cat),"purity_pp:error_pp:purity_pf:error_pf:massbin:masserror" )
                         self.store_[tpi.GetName()] = tpi
-                if extended_fit:
+                        tps.append(tpi)
                     ntp = ROOT.TNtuple("tree_fitresult_events%s%s_%s_%s" % (dset,tempname,dim,cat),"tree_fitresult_events_%s_%s_%s" % (tempname,dim,cat),"norm:purity_pp:error_pp_sumw2off:error_pp_sumw2on:purity_pf:error_pf_sumw2off:error_pf_sumw2on:massbin:masserror" )
                     self.store_[ntp.GetName()] = ntp
                 rng= range(0,tree_mass.GetEntries())
@@ -968,98 +974,90 @@ class TemplatesFitApp(TemplatesApp):
                         elif len(components)<3:
                             fpf= ROOT.RooFormulaVar("fpf","fpf","(@0*(1-@1)) ",ROOT.RooArgList(jnorm,jpp))
                             pu_estimates_roopdf.add(fpf)
-                    rooPdfs=[]
-                    ArgListPdf=ROOT.RooArgList()
-                    
-                    
-                    #fit all jack knifes
-                    if jk==True:
-                        tempname_new="unrolled_template"
-                        dim_new="2D"
-                        for i in range(jks):
-                            tempJK = self.reducedRooData( "%s%spf_%i_%s_%s"%(tempname_new,dset,i,dim_new,cat),setargs)
-                            tempJK_massc=tempJK.Clone("%s_%s"%(full_temp.GetName(),cut_s))
-                            tempJK_massc=tempJK_massc.reduce(cut.GetTitle())
-                            rooHistPdf=ROOT.RooHistPdf("pdf_%s"% histo.GetName(),"pdf_%s"% histo.GetTitle(),ROOT.RooArgSet(obsls),tempJK_massc)
-                            print rooHistPdf
-                        #for i in range(jkt):
-                        #    histo = self.rooData("%s%spf_%s_%i_%s_mb_%s"%(tempname_new,dset,dim_new,i,cat,cut_s))
-                        #    rooHistPdf=ROOT.RooHistPdf("pdf_%s"% histo.GetName(),"pdf_%s"% histo.GetTitle(),ROOT.RooArgSet(obsls),histo)
-                   #save histos in array, propagate name
-                            print rooHistPdf
-                    return
+                    pdf_collections=[ ]
                     i=0
-                    for comp in nomFit["components"]:
-                        print "%s%s%s_%s_%s_mb_%s"%(tempname,dset,comp, dim,cat,cut_s)
-                        tempname_new=None
-                        dim_new=None
-                        if tempname=="unrolled_template_mix" and not dodata:
-                            dim_new="2DMC"
-                            dset="_"
-                        else:
-                            dim_new=dim
-                        if tempname=="unrolled_mctruth":
-                            dset="_"
-                        if i==0 and  tempname=="unrolled_template_mix":
-                            tempname_new="unrolled_template"
-                            dim_new="2D"
-                        else: tempname_new=tempname
-                        #print "%s%s%s_%s_%s_mb_%s"%(tempname_new,dset,comp, dim_new,cat,cut_s)
-                        #return
-                        histo = self.rooData("%s%s%s_%s_%s_mb_%s"%(tempname_new,dset,comp, dim_new,cat,cut_s))
-                        rooHistPdf=ROOT.RooHistPdf("pdf_%s"% histo.GetName(),"pdf_%s"% histo.GetTitle(),ROOT.RooArgSet(obsls),histo)
+                    if not jk:
+                        pdf_set=ROOT.RooArgList() 
+                        for comp in nomFit["components"]:
+                            print "%s%s%s_%s_%s_mb_%s"%(tempname,dset,comp, dim,cat,cut_s)
+                            if tempname=="unrolled_template_mix" and not dodata:
+                                dim_new="2DMC"
+                                dset="_"
+                            else:dim_new=dim
+                            if tempname=="unrolled_mctruth": dset="_"
+                            if i==0 and  tempname=="unrolled_template_mix":
+                                tempname_new="unrolled_template"
+                                dim_new="2D"
+                            else: tempname_new=tempname
+                            histo = self.rooData("%s%s%s_%s_%s_mb_%s"%(tempname_new,dset,comp, dim_new,cat,cut_s))
+                            rooHistPdf=ROOT.RooHistPdf("pdf_%s"% histo.GetName(),"pdf_%s"% histo.GetTitle(),ROOT.RooArgSet(obsls),histo)
                          
-                        if options.verbose:
-                            histo.Print("v")
-                            rooHistPdf.Print()
-                        if extended_fit:
                             self.keep([rooHistPdf])
-                            rooExtPdf=ROOT.RooExtendPdf("extpdf_%s"% histo.GetName(),"extpdf_%s"% histo.GetTitle(),rooHistPdf,pu_estimates_roopdf[i],"sigRegion")
-                            rooExtPdf.Print()
-                            rooPdfs.append(rooExtPdf)
-                            ArgListPdf.add(rooExtPdf)
-                        else:
-                            rooPdfs.append(rooHistPdf)
-                            ArgListPdf.add(rooHistPdf)
-                        i=i+1
-                    if options.verbose:
-                        ArgListPdf.Print()
-                    if extended_fit:
-                        fitUnrolledPdf=ROOT.RooAddPdf("fitPdfs_%s%s%s_%s_mb_%s" % (tempname_new,dset,cat,dim_new,cut_s),"fitPdfs_%s_%s_%s_mb_%s" % (tempname_new,cat,dim_new,cut_s),ArgListPdf  )
+                            if extended_fit:
+                                rooExtPdf=ROOT.RooExtendPdf("extpdf_%s"% histo.GetName(),"extpdf_%s"% histo.GetTitle(),rooHistPdf,pu_estimates_roopdf[i],"sigRegion")
+                                pdf_set.add(rooExtPdf)
+                            else:
+                                pdf_set.add(rooHistPdf)
+                            i=i+1
+                        pdf_collections.append(pdf_set)
                     else:
-                        fitUnrolledPdf=ROOT.RooAddPdf("fitPdfs_%s%s%s_%s_mb_%s" % (tempname_new,dset,cat,dim_new,cut_s),"fitPdfs_%s_%s_%s_mb_%s" % (tempname_new,cat,dim_new,cut_s),ArgListPdf,pu_estimates  )
-                    self.workspace_.rooImport(fitUnrolledPdf)
+                        for i in range(num):
+                            pdf_set=ROOT.RooArgList()
+                            for comp in nomFit["components"]:
+                                if comp=="pp":
+                                    histo = self.rooData("unrolled_template_pp_2D_%s_mb_%s"%(cat,cut_s))
+                                    rooHistPdf=ROOT.RooHistPdf("pdf_%s"% histo.GetName(),"pdf_%s"% histo.GetName(),ROOT.RooArgSet(obsls),histo)
+                                elif comp=="pf":
+                                    if i < jks: name= "unrolled_template_mix_pf_2D_%i_%s_mb_%s"%(i,cat,cut_s)
+                                    elif i>= jks:name= "unrolled_template_mix_pf_%i_2D_%s_mb_%s"%(i-jks,cat,cut_s)
+                                    histo = self.rooData(name)
+                                    rooHistPdf=ROOT.RooHistPdf("pdf_%s"% histo.GetName(),"pdf_%s"% histo.GetName(),ROOT.RooArgSet(obsls),histo)
+                                self.keep([rooHistPdf])
+                                pdf_set.add(rooHistPdf)
+                            pdf_collections.append(pdf_set)
+                    for k in range(num):
+                        ArgListPdf=None
+                        jpp.setVal(0.6)
+                        jpf.setVal(0.4)
+                        ArgListPdf=pdf_collections[k]
+                        if extended_fit:
+                            fitUnrolledPdf=ROOT.RooAddPdf("fitPdfs_%s%s%s_%s_mb_%s" % (tempnam,dset,cat,dim,cut_s),"fitPdfs_%s_%s_%s_mb_%s" % (tempname,cat,dim,cut_s),ArgListPdf  )
+                        else:
+                            fitUnrolledPdf=ROOT.RooAddPdf("fitPdfs_%s%s%s_%s_mb_%s" % (tempname,dset,cat,dim,cut_s),"fitPdfs_%s_%s_%s_mb_%s" % (tempname,cat,dim,cut_s),ArgListPdf,pu_estimates  )
+                        self.workspace_.rooImport(fitUnrolledPdf)
               #save roofitresult in outputfile
-                    fit_studies = fitUnrolledPdf.fitTo(data_massc, RooFit.NumCPU(8),RooFit.Strategy(2),RooFit.Extended(extended_fit),RooFit.SumW2Error(False),RooFit.Save(True))
-                    pu_pp=fpp.getParameter("jpp").getVal()
-                    err_pp=fpp.getParameter("jpp").getError()
-                    if extended_fit:
-                        norm=fpp.getParameter("jnorm").getVal()
-                        norm_err=fpp.getParameter("jnorm").getError()
-                        pu_npp=fpp.getVal()
-                        err_npp=fpp.getPropagatedError(fit_mcstudies)
-                    if len(components)>2:
-                        pu_pf=fpf.getParameter("jpf").getVal()
-                        err_pf=fpf.getParameter("jpf").getError()
+                        fit_studies = fitUnrolledPdf.fitTo(data_massc, RooFit.NumCPU(8),RooFit.Strategy(2),RooFit.Extended(extended_fit),RooFit.SumW2Error(False),RooFit.Save(True))
+                        pu_pp=fpp.getParameter("jpp").getVal()
+                        err_pp=fpp.getParameter("jpp").getError()
                         if extended_fit:
-                            pu_npf=fpf.getVal()
-                            err_npf=fpf.getPropagatedError(fit_mcstudies)
-                        covariance_studies=fit_studies.covarianceMatrix()
-                        correlation_studies=fit_studies.correlationMatrix()
-                        self.workspace_.rooImport(covariance_studies, "covariance_studies")
-                        self.workspace_.rooImport(correlation_studies,"correlation_studies")
-                        self.workspace_.rooImport(fit_studies,"fit_studies")
-                    else: 
-                        pu_pf=1-pu_pp
-                        print "pu_pf ", pu_pf
-                        if extended_fit:
-                            pu_npf=1-pu_npp
-                            err_npf=0.
-                        err_pf=err_pp
-                    print "err_pp " ,err_pp, " err_pf " ,err_pf
-                    print
-                    self.plotFit(observable,fitUnrolledPdf,rooPdfs,data_massc,components,cat,log=True) 
-                    self.plotFit(observable,fitUnrolledPdf,rooPdfs,data_massc,components,cat,log=False)
+                            norm=fpp.getParameter("jnorm").getVal()
+                            norm_err=fpp.getParameter("jnorm").getError()
+                            pu_npp=fpp.getVal()
+                            err_npp=fpp.getPropagatedError(fit_mcstudies)
+                        if len(components)>2:
+                            pu_pf=fpf.getParameter("jpf").getVal()
+                            err_pf=fpf.getParameter("jpf").getError()
+                            if extended_fit:
+                                pu_npf=fpf.getVal()
+                                err_npf=fpf.getPropagatedError(fit_mcstudies)
+                            covariance_studies=fit_studies.covarianceMatrix()
+                            correlation_studies=fit_studies.correlationMatrix()
+                            self.workspace_.rooImport(covariance_studies, "covariance_studies_%i"%i)
+                            self.workspace_.rooImport(correlation_studies,"correlation_studies_%i"%i)
+                            self.workspace_.rooImport(fit_studies,"fit_studies_%i" %i)
+                        else: 
+                            pu_pf=1-pu_pp
+                            print "pu_pf ", pu_pf
+                            if extended_fit:
+                                pu_npf=1-pu_npp
+                                err_npf=0.
+                            err_pf=err_pp
+                        print "err_pp " ,err_pp, " err_pf " ,err_pf
+                        print
+                        if dodata:
+                            tps[k].Fill(pu_pp,err_pp,pu_pf,err_pf,tree_mass.massbin,tree_mass.masserror)
+                        self.plotFit(observable,fitUnrolledPdf,ArgListPdf,data_massc,components,cat,log=True,i=k) 
+                        self.plotFit(observable,fitUnrolledPdf,ArgListPdf,data_massc,components,cat,log=False,i=k)
     #ML fit to weighted dataset: SumW2Error takes statistics of dataset into account, scales with number of events in datasetif ON good for MC comparison, takes limited statistics of MC dataset into account
   #  if OUT treated as if it would be data- for data MC comparison
                     print "-------------------------------------------------------------------------"
@@ -1089,18 +1087,23 @@ class TemplatesFitApp(TemplatesApp):
                         ntp.Fill(norm,pu_npp,puerr_npp,err_npp,pu_npf,puerr_npf,err_npf,tree_mass.massbin,tree_mass.masserror )
                     if not dodata:
                         tp.Fill(pu_pp,puerr_pp,err_pp,pu_pf,puerr_pf,err_pf,tree_mass.massbin,tree_mass.masserror )
-                    else:
-                        tp.Fill(pu_pp,err_pp,pu_pf,err_pf,tree_mass.massbin,tree_mass.masserror )
+                self.plotJKpurity(options,cat,dim,tps)
                 print "done fit ...."
                 print 
     ## ---------------#--------------------------------------------------------------------------------------------
-    def plotFit(self,roovar,rooaddpdf,roopdfs,data,components,cat,log):
+    
+    
+    
+    
+    
+    ## ---------------#--------------------------------------------------------------------------------------------
+    def plotFit(self,roovar,rooaddpdf,roopdfs,data,components,cat,log,i=None):
         ROOT.TH1F.SetDefaultSumw2(True)
         b=ROOT.TLatex()
         b.SetNDC()
         b.SetTextSize(0.06)
         b.SetTextColor(ROOT.kRed)
-        cFit = ROOT.TCanvas("c%s_%u_%s" %(rooaddpdf.GetName(),len(components),log),"cFit",1200,800)
+        cFit = ROOT.TCanvas("c%s_%u_%s_%i" %(rooaddpdf.GetName(),len(components),log,i),"cFit",1200,800)
         leg =ROOT.TLegend(0.5,0.8,0.35,0.9)
         leg.SetTextSize(0.03)
         leg.SetTextFont(42);
@@ -1442,8 +1445,9 @@ class TemplatesFitApp(TemplatesApp):
                 for comp in options.jackknife.get("components",fit["components"]) :
                     name="%s_%s_%s" %(comp,cat,cut_s)
                     print name
-                    full_temp = self.reducedRooData( "template_mix_%s_kDSinglePho2D_%s" % (comp,cat),setargs)
-                    full_template =self.masscutTemplates(full_temp,cut,cut_s,"%s_%s"%(full_temp.GetName(),cut_s))
+                    full_temp = self.reducedRooData( "template_mix_%s_kDSinglePho2D_%s" % (comp,cat),setargs,redo=True)
+                    full_temp.SetName("template_mix_%s_2D_%s" % (comp,cat))
+                    full_template =self.masscutTemplates(full_temp,cut,cut_s,"%s"% (full_temp.GetName()))
                     print full_template
                     full_hist=self.histounroll([full_template],template_binning,isoargs,comp,cat,cut_s,True,min(template_binning),max(template_binning),extra_shape_unc=options.extra_shape_unc,plot=False)
 
@@ -1461,13 +1465,15 @@ class TemplatesFitApp(TemplatesApp):
                     temps_all = []
                     temps = []
                     for s in range(jks):
-                        temp = self.reducedRooData( "template_mix_%s_%i_kDSinglePho2D_%s" % (comp,s,cat),setargs)
+                        temp = self.reducedRooData( "template_mix_%s_%i_kDSinglePho2D_%s" % (comp,s,cat),setargs,redo=True)
+                        temp.SetName("template_mix_%s_%i_2D_%s" % (comp,s,cat))
                         temps_all.append(temp)
                     for t in range(jkt):
-                        temp = self.reducedRooData( "template_mix_%s_kDSinglePho2D_%i_%s" % (comp,t,cat),setargs)
+                        temp = self.reducedRooData( "template_mix_%s_kDSinglePho2D_%i_%s" % (comp,t,cat),setargs,redo=True)
+                        temp.SetName("template_mix_%s_2D_%i_%s" % (comp,t,cat))
                         temps_all.append(temp)
                     for template in temps_all:
-                        template_massc=self.masscutTemplates(template,cut,cut_s,"%s_%s"%(template.GetName(),cut_s))
+                        template_massc =self.masscutTemplates(template,cut,cut_s,"%s"% (template.GetName()))
                         temps.append(template_massc)
                     print "number of pseudo samples", len(temps)
                     print temps
@@ -1480,6 +1486,35 @@ class TemplatesFitApp(TemplatesApp):
                     #self.varJK(self.options,full_hist,hists,name)
         self.saveWs(options,fout)
     
+    ## ------------------------------------------------------------------------------------------------------------
+    def plotJKpurity(self,options,cat,dim,tps):
+        jks=int(options.jackknife.get("jk_source"))
+        jkt=int(options.jackknife.get("jk_target"))
+        cpurity = ROOT.TCanvas("cpurityJK_%s" % (cat),"cpurityJK_%s" % (cat))
+        cpurity.cd()
+        ROOT.gPad.SetLogx()
+        #nom_tree =self.treeData("tree_fitresult_fraction_unrolled_template_mix_2D_%s" % (cat))
+        #g_purity=ROOT.TGraphErrors(nom_tree.GetEntries()+len(tps))
+        g_purity=ROOT.TGraphErrors(3*len(tps))
+        g_purity.GetXaxis().SetTitle("Diphoton mass [GeV]")
+        g_purity.GetYaxis().SetTitle("purity")
+        #g_purity.GetYaxis().SetRangeUser(0.,1.6)
+        i=1
+        for tree_template in tps:
+            nentries=tree_template.GetEntries()
+            for mb in range(0,nentries):
+                tree_template.GetEntry(mb)
+                g_purity.SetPoint(mb+i,tree_template.massbin,tree_template.purity_pp)
+                g_purity.SetPointError(mb+i,tree_template.masserror,tree_template.error_pp)
+            i=i+nentries
+        g_purity.SetMarkerSize(1.3)
+        g_purity.SetMarkerStyle(20)
+        g_purity.Draw("AP")
+        g_purity.GetXaxis().SetLimits(200.,13000.)
+        #TODO do ratio to g_purity nominal
+        self.keep( [cpurity,g_purity] )
+        self.autosave(True)
+        
     ## ------------------------------------------------------------------------------------------------------------
     def varJK(self,options,full_hist,hists,name):
         ROOT.TH1D.SetDefaultSumw2(True)
