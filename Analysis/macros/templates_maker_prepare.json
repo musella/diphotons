@@ -150,7 +150,8 @@
 			"bins"       : [ "mass", [500.0,1300.0] ],                                       "#" : "kinematic bins in which the fit is run ",
             "template_binning" : [ 0.0,0.1, 5.0, 15.0 ],                                   "#" : "template varaible binning              ",
 
-            "components" : [ "pp", "pf", "ff" ],         
+            "components" : [ "pp", "pf", "ff" ],                                             "#" : "list of fit components                 ",
+            "#" :"categories in which to split the fit       ",
             "#" :"format is <fit-category-name>: { <config> }",
             "categories" : {
                 "EBEB" : { 
