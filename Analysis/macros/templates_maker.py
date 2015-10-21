@@ -1,5 +1,4 @@
 #!/bin/env python
-
 from diphotons.Utils.pyrapp import *
 from optparse import OptionParser, make_option
 from copy import deepcopy as copy
@@ -564,12 +563,15 @@ class TemplatesApp(PlotApp):
             for component,cfg in fit["templates"].iteritems():
                 if component.startswith("_"): continue
               #templates (data) is default one
-                for dat in cfg.get("dataset","templates"):
+                if options.prep_data:
+                    datasets=cfg.get("dataset","templates")
+                else: datasets=cfg.get("datasetmc","templates")  
+                for dat in datasets:
                     print dat
                     trees = self.prepareTrees(dat,cfg["sel"],options.verbose,"Templates selection for %s %s" % (dat,component))
                     if dat=="data" or dat=="templates":
                         dat="_"
-                    elif dat=="templatesMC" or dat=="mc":
+                    if not options.prep_data and dat=="templatesMC" or dat=="mc":
                         dat="_mc_"
                     cats = {}
                     presel = cfg.get("presel",preselection)
@@ -586,7 +588,7 @@ class TemplatesApp(PlotApp):
                     for cat in categories.keys():
                         tree=self.treeData("template%s%s_%s_%s" % (dat,component,name,cat) )
                         jk=cfg.get("jk",0) 
-                        if jk !=0 and component=="pp":
+                        if jk !=0 and component=="pp" and options.prep_data:
                             n= int(tree.GetEntries())
                             d=n/jk
                             g=jk
@@ -709,8 +711,8 @@ class TemplatesApp(PlotApp):
                         if jks !=0 and scomp!="p":
                             tree_all=self.treeData(legname)
                             n= int(tree_all.GetEntries())
-                            d=jks*n
-                            g=n/d
+                            d=n/jks
+                            g=jks
                             if n % d != 0:
                                 g += 1
                             g=int(g)
@@ -732,7 +734,7 @@ class TemplatesApp(PlotApp):
                     rndmatch     = fill.get("rndmatch",0.)
                     
                     print "legs  :", " ".join(legnams)
-                    print "type  :", mixType
+                    print "type   :", mixType
                     if jks==0: g=0
                     for j in range(g+1):
                         if j==0:
@@ -782,8 +784,8 @@ class TemplatesApp(PlotApp):
                             if j==0 and jkt!=0:
                                 target_all          = self.treeData(dataname)
                                 nt= int(target_all.GetEntries())
-                                dt=jkt*nt
-                                gt=nt/dt
+                                dt=nt/jkt
+                                gt=jkt
                                 if nt % dt != 0:
                                     gt += 1
                                 gt=int(gt)

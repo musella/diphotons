@@ -2,13 +2,13 @@
     "comparisons" : {
 	"fit2DTruth" : { "fit" : "2D",
 		"_templates" : { "mix:kDSinglePho2DMC" : {},"template_mc:2D":{}, "mix:kDSinglePho2D" : {},"2D":{} },
-		"_templates" : { "mix:kDSinglePho2DMC" : {}, "mix:kDSinglePho2D" : {}},
-		"templates" : { "mix:kDSinglePho2D" : {} },
+		"templates" : { "mix:kDSinglePho2DMC" : {}, "mix:kDSinglePho2D" : {}},
+		"_templates" : { "mix:kDSinglePho2D" : {} },
 		"_templates" : { "2D":{} },
                 "categories" : ["EBEB","EBEE"],
-                "_components": ["pf","ff",  ["pp",{ "2D" : {},"template_mc:2D":{}}] 
+                "components": ["pf","ff",  ["pp",{ "2D" : {},"template_mc:2D":{}}] 
                 ],
-                "components": ["pf","ff",  ["pp",{ "2D" : {}}] 
+                "_components": ["pf","ff",  ["pp",{ "2D" : {}}] 
                 ],
                 "prepfit": true,
                 "weight_cut": "weight < 5.",
@@ -51,7 +51,6 @@
                 "extended_fit":false
          },
         "2_components":{
-				"data":true,
         		"dimensions" :"2D", 
         		"observable": "templateNdim2d_unroll",
                 "components": ["pp","pf"],
@@ -59,12 +58,11 @@
                 "_upperLimitSigRegion": "4.", 
                 "extended_fit":false,
 				"jackknife_pf":false,
-				"jackknife_pp":true,
+				"jackknife_pp":false,
 		"mass_binning" :"mass[13000,0.0,13000.0]"
         }
     },
    "plotPurity":{
-                "data":true,
                 "treetruth":"truth_purity_all",
                 "_treetruth":"truth_purity_signalregion",
                 "dimensions" :"2D", 

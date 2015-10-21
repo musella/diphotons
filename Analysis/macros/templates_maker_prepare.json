@@ -191,8 +191,8 @@
                 "pp" : { 
 		        "sel"  : "cicNoChIso", "#" : "event selection",
                         "dataset" : ["data"],    "#" : "input dataset. can be data,mc or templates",
-                        "_dataset" : ["data","mc"],    "#" : "input dataset. can be data,mc or templates",
-                        "jk":10,
+                        "datasetmc" : ["data","mc"],    "#" : "input dataset. can be data,mc or templates",
+                        "jk":0.0,
                                     "#" : "list of fit components                 ",
                         "#" : "How to fill different categories. Logic is the same as for the 'fill' instructions above",
                         "fill_categories" : {
@@ -243,7 +243,7 @@
                 "pf" : { 
 		        "sel"  : "cicSBNoChIsoSingleSB", 
                         "dataset" : ["templates"],    "#" : "input dataset. can be data,mc or templates",
-                        "_dataset" : ["templates","templatesMC"],    "#" : "input dataset. can be data,mc or templates",
+                        "datasetmc" : ["templates","templatesMC"],    "#" : "input dataset. can be data,mc or templates",
                         "#" : "pseudo-random swap, but taking care to take the random cone isolation for the signal-region photon",
                         "#" : "  and the photon isolation for the side-band one                                                  ",
                         "fill_categories" : { 
@@ -333,7 +333,7 @@
                  },
                  "ff" : { "sel"  : "cicSBNoChIsoDoubleSB",        
                         "dataset" : ["templates"],    "#" : "input dataset. can be data,mc or templates",
-                        "_dataset" : ["templates","templatesMC"],    "#" : "input dataset. can be data,mc or templates",
+                        "datasetmc" : ["templates","templatesMC"],    "#" : "input dataset. can be data,mc or templates",
                          "fill_categories" : {
                          "EBEB" :{ "TMath::Even(event)  &&  leadIsSB && subleadIsSB  " : [ "leadChIso", "subleadChIso" ],
                                  "! TMath::Even(event)  && leadIsSB && subleadIsSB ": [ "subleadChIso", "leadChIso" ]
@@ -379,48 +379,17 @@
                 "p" : {
                     "sel" : "cicNoChIsoSinglePho",
                     "dataset" : ["data"],
-                    "_dataset" : ["data","mc"],
+                    "datasetmc" : ["data","mc"],
                         "fill_categories" : { 
                             "EB" : { "phoIsEB  " : ["phoRndConeChIso"]},
-                            "_EB" : { "phoIsEB && 1 " : ["phoRndConeChIso8"],
-    								 "phoIsEB && 2" : ["phoRndConeChIso0"],
-    								 "phoIsEB && 3" : ["phoRndConeChIso1"],
-    								 "phoIsEB && 4" : ["phoRndConeChIso2"],
-    								 "phoIsEB && 5" : ["phoRndConeChIso3"],
-    				                 		 "phoIsEB && 6" : ["phoRndConeChIso4"],
-    								 "phoIsEB && 7" : ["phoRndConeChIso5"],
-    								 "phoIsEB && 8" : ["phoRndConeChIso6"],
-    								 "phoIsEB && 9" : ["phoRndConeChIso7"]
-									},
                             "EE" : { "!phoIsEB" : ["phoRndConeChIso"]},
-                            "_EE" : { "!phoIsEB && 1" : ["phoRndConeChIso8"],
-                            		 "!phoIsEB && 2" : ["phoRndConeChIso0"],
-                            		 "!phoIsEB && 3" : ["phoRndConeChIso1"],
-                            		 "!phoIsEB && 4" : ["phoRndConeChIso2"],
-                            		 "!phoIsEB && 5" : ["phoRndConeChIso3"],
-                            		 "!phoIsEB && 6" : ["phoRndConeChIso4"],
-                            		 "!phoIsEB && 7" : ["phoRndConeChIso5"],
-                            		 "!phoIsEB && 8" : ["phoRndConeChIso6"],
-                            		 "!phoIsEB && 9" : ["phoRndConeChIso7"]
-									},
-                            "eta_inclusive" : {  "phoIsEB ||!phoIsEB " : ["phoRndConeChIso8"]},
-                            "_eta_inclusive" : {  "phoIsEB ||!phoIsEB && 1" : ["phoRndConeChIso8"], 
-                            					 "phoIsEB ||!phoIsEB && 2" : ["phoRndConeChIso0"], 
-                            					 "phoIsEB ||!phoIsEB && 3" : ["phoRndConeChIso1"], 
-                            					 "phoIsEB ||!phoIsEB && 4" : ["phoRndConeChIso2"], 
-                            					 "phoIsEB ||!phoIsEB && 5" : ["phoRndConeChIso3"], 
-                            					 "phoIsEB ||!phoIsEB && 6" : ["phoRndConeChIso4"], 
-                            					 "phoIsEB ||!phoIsEB && 7" : ["phoRndConeChIso5"], 
-                            					 "phoIsEB ||!phoIsEB && 8" : ["phoRndConeChIso6"], 
-                            					 "phoIsEB ||!phoIsEB && 9" : ["phoRndConeChIso7"] 
-
-											}
-                    }
+                            "eta_inclusive" : {  "phoIsEB ||!phoIsEB " : ["phoRndConeChIso"]}
+	    				}
                 },
                 "f" : { 
                     "sel" : "cicSBNoChIsoSBSinglePho",
                     "dataset" : ["templates"],
-                    "_dataset" : ["templates","templatesMC"],
+                    "datasetmc" : ["templates","templatesMC"],
                         "fill_categories" : { 
                         "EB" : { "phoIsEB && phoIsSB" : ["phoChIso"] },
                         "EE" : { "!phoIsEB && phoIsSB" : ["phoChIso"] },
@@ -430,7 +399,7 @@
                 "f1" : { 
                     "sel" : "cicSBNoChIsoSBSinglePho",
                     "dataset" : ["templates"],
-                    "_dataset" : ["templates","templatesMC"],
+                    "datasetmc" : ["templates","templatesMC"],
                         "fill_categories" : { 
                         "EB" : { "TMath::Even(event) && phoIsEB && phoIsSB" : ["phoChIso"] },
                         "EE" : { "TMath::Even(event) && !phoIsEB && phoIsSB" : ["phoChIso"] },
@@ -440,35 +409,15 @@
                 "f2" : { 
                     "sel" : "cicSBNoChIsoSBSinglePho",
                     "dataset" : ["templates"],
-                    "_dataset" : ["templates","templatesMC"],
+                    "datasetmc" : ["templates","templatesMC"],
                         "fill_categories" : { 
                         "EB" : { "!TMath::Even(event) && phoIsEB && phoIsSB" : ["phoChIso"] },
                         "EE" : { "!TMath::Even(event) && !phoIsEB && phoIsSB" : ["phoChIso"] },
                         "eta_inclusive" : { "!TMath::Even(event) && phoIsSB" : ["phoChIso"] }
                     }
                 }
-            },
-	    "_templates" : {
-	    	"_fwhigh" : { 
-                    "sel" : "cicSBNoChIsoSBSinglePho",
-                    "dataset" : ["templates","templatesMC"],
-                        "fill_categories" : { 
-                        	"EB" : { "phoIsSB && weight >=1." : ["phoChIso"] },
-                        	"EE" : { "phoIsSB && weight >=1." : ["phoChIso"] },
-                        	"eta_inclusive" : { "phoIsSB && weight>=1."  : ["phoChIso"] }
-                	}
-				},
-                "_fwlow" : { 
-                    "sel" : "cicSBNoChIsoSBSinglePho",
-                    "dataset" : ["templates","templatesMC"],
-                        "fill_categories" : { 
-                        	"EB" : { "phoIsSB && weight <1." : ["phoChIso"] },
-                        	"EE" : { "phoIsSB && weight <1." : ["phoChIso"] },
-                        	"eta_inclusive" : { "phoIsSB && weight <1." : ["phoChIso"] }
-					}
-				}
-	    }
-        }
+            }
+}
 },
     "#" : "---------------------------------------------------------------------------------------------------------------------",
     "#" : "Template mixing                                                                                                      ",
@@ -477,10 +426,10 @@
 
     "mix" : { 
 	"kDSinglePho2D" : {
-        "jk_source": 0.1 ,
-        "jk_target": 0.1 ,
+        "jk_source": 0.0 ,
+        "jk_target": 0.0 ,
 		"target" : "2D",
-		"ptLeadMin" : 100.0, "ptSubleadMin" : 100.0, "massMin" : 200.0,
+		"ptLeadMin" : 170.0, "ptSubleadMin" : 170.0, "massMin" : 200.0,
 		"pt" : "phoPt", "eta" : "phoEta", "phi" : "phoPhi", "energy" : "phoEnergy",
 		"sources" : { 
 		    "pf" : [ "singlePho:p", "singlePho:f" ],
@@ -520,7 +469,7 @@
         "jk_target": 0.0 ,
 
 		"target" : "2D:mc",
-		"ptLeadMin" : 75.0, "ptSubleadMin" : 75.0, "massMin" : 200.0,
+		"ptLeadMin" : 170.0, "ptSubleadMin" : 170.0, "massMin" : 200.0,
 		"pt" : "phoPt", "eta" : "phoEta", "phi" : "phoPhi", "energy" : "phoEnergy",
 		"sources" : { 
 		    "pf" : [ "singlePho:mc_p", "singlePho:mc_f" ],
@@ -557,5 +506,4 @@
     }
 
 }
-
 

@@ -91,6 +91,9 @@ class TemplatesFitApp(TemplatesApp):
                         make_option("--nominal-fit",dest="nominal_fit",action="store_true",default=False,
                                     help="do fit templates",
                                     ),
+                        make_option("--fit-mc",dest="fit_mc",action="store_true",default=False,
+                                    help="do fit with mc ",
+                                    ),
                         make_option("--build-3dtemplates",dest="build_3dtemplates",action="store_true",
                                     default=False,
                                      help="build 3d templates with unrolled variable and mass",
@@ -693,7 +696,7 @@ class TemplatesFitApp(TemplatesApp):
     ## ------------------------------------------------------------------------------------------------------------
 
     def plotHistos(self,histlist,title,titlex,template_bins,dim1,doDataMc,logx=False,logy=False,numEntries=None):
-        leg = ROOT.TLegend(0.334,0.7,0.75,0.9  )
+        leg = ROOT.TLegend(0.334,0.8,0.75,0.9  )
         leg.SetTextSize(0.03)
         leg.SetTextFont(42);
         leg.SetFillColor(ROOT.kWhite)
@@ -750,7 +753,7 @@ class TemplatesFitApp(TemplatesApp):
         histlist[histstart].GetXaxis().SetLimits(minX,max(template_bins))
         histlist[histstart].GetYaxis().SetRangeUser(ymin*0.5,ymax*2.)
         if "unroll" in title:
-           histlist[histstart].GetYaxis().SetRangeUser(ymin*0.5,ymax*30.)
+           histlist[histstart].GetYaxis().SetRangeUser(ymin*0.5,ymax*60.)
         leg.Draw()
         #change for data mc comparison 
         if not doDataMc:
@@ -915,7 +918,8 @@ class TemplatesFitApp(TemplatesApp):
                 data_book=self.rooData("hist2d_forUnrolled")
                 data_book.Print()
                 unrolledVar=ROOT.RooHistFunc(observable.GetName(),observable.GetName(),isoargs,data_book)
-                dodata=nomFit.get("data")
+                if not options.fit_mc: dodata=True
+                else: dodata=False
                 if dodata:
                     dset="_"
                 else:
@@ -1103,7 +1107,8 @@ class TemplatesFitApp(TemplatesApp):
                         ntp.Fill(norm,pu_npp,puerr_npp,err_npp,pu_npf,puerr_npf,err_npf,tree_mass.massbin,tree_mass.masserror )
                     if not dodata:
                         tp.Fill(pu_pp,puerr_pp,err_pp,pu_pf,puerr_pf,err_pf,tree_mass.massbin,tree_mass.masserror )
-                self.plotJKpurity(options,cat,dim,tps,jkID)
+                if jkpf or jkpp:
+                    self.plotJKpurity(options,cat,dim,tps,jkID)
                 print "done fit ...."
                 print 
     ## ---------------#--------------------------------------------------------------------------------------------
@@ -1158,22 +1163,24 @@ class TemplatesFitApp(TemplatesApp):
         dim=options.plotPurity["dimensions"]
         categories = options.plotPurity["categories"]
         closure = options.plot_closure
-        data=options.plotPurity.get("data",True)
+        if options.fit_mc: data=False
+        else:data=True
         purity_values = options.plot_purityvalue
         for opt,pu_val in zip(closure,purity_values):
             for cat in categories:
                 print cat
-                if not opt=="mctruth":
+                if data:
                     tree_template=self.treeData("fitresult_fraction_unrolled_%s_%s_%s"%(opt,dim, cat))
                     g_templatepp=ROOT.TGraphErrors(tree_template.GetEntries())
                     g_templatepf=ROOT.TGraphErrors(tree_template.GetEntries())
                     nentries=tree_template.GetEntries()
+                if not data:
+                    print "fitresult_fraction_mc_unrolled_%s_%s_%s"%(opt,dim, cat)
                     tree_mctruth=self.treeData("fitresult_fraction_mc_unrolled_mctruth_%s_%s"%( dim, cat))
-                    nentries=tree_mctruth.GetEntries()
-                if not opt=="mctruth":
                     tree_templatemc=self.treeData("fitresult_fraction_mc_unrolled_%s_%s_%s"%(opt,dim, cat))
                     g_templateppmc=ROOT.TGraphErrors(tree_templatemc.GetEntries())
                     g_templatepfmc=ROOT.TGraphErrors(tree_templatemc.GetEntries())
+                    nentries=tree_templatemc.GetEntries()
                 tree_truthpp=self.treeData("%s_pp_%s_%s"%(treetruthname, dim, cat))
                 tree_truthpf=self.treeData("%s_pf_%s_%s"%(treetruthname,dim, cat))
                 tree_truthff=self.treeData("%s_ff_%s_%s"%(treetruthname,dim, cat))
@@ -1196,13 +1203,13 @@ class TemplatesFitApp(TemplatesApp):
                     if ((tree_truthpp.GetEntries()!=nentries)):
                         print "number of entries in trees dont agree"
                 for mb in range(0,nentries):
-                    if not opt=="mctruth":
+                    if data:
                         tree_template.GetEntry(mb)
                         g_templatepf.SetPoint(mb,tree_template.massbin,tree_template.purity_pf)
                         g_templatepf.SetPointError(mb,tree_template.masserror,tree_template.error_pf)
                         g_templatepp.SetPoint(mb,tree_template.massbin,tree_template.purity_pp)
                         g_templatepp.SetPointError(mb,tree_template.masserror,tree_template.error_pp)
-                    if not opt=="mctruth":
+                    else:
                         tree_templatemc.GetEntry(mb)
                         g_templatepfmc.SetPoint(mb,tree_templatemc.massbin,tree_templatemc.purity_pf)
                         g_templatepfmc.SetPointError(mb,tree_templatemc.masserror,tree_templatemc.error_pf)
@@ -1350,8 +1357,8 @@ class TemplatesFitApp(TemplatesApp):
         g_mctruthpp.GetYaxis().SetTitle("purity")
         g_mctruthpp.GetYaxis().SetRangeUser(0.,1.6)
         g_mctruthpp.GetXaxis().SetLimits(200.,15000.)
-  #      g_mctruthpp.Draw("P SAME")
-   #     g_mctruthpf.Draw("P SAME")
+        g_mctruthpp.Draw("P SAME")
+        g_mctruthpf.Draw("P SAME")
         if not opt2=="data":
             leg.AddEntry(g_mctruthpp,"pp mctruth template","lp")  
             leg.AddEntry(g_mctruthpf,"pf mctruth template","lp")
