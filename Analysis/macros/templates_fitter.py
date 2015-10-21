@@ -895,11 +895,18 @@ class TemplatesFitApp(TemplatesApp):
             hist_Eta=[]
             categories = options.fit_categories
             mass_split= [int(x) for x in options.fit_massbins]
-            jk=nomFit.get("jackknife",False)
-            if jk:
+            jkpf=nomFit.get("jackknife_pf",False)
+            jkpp=nomFit.get("jackknife_pp",False)
+            jkID="non existing"
+
+            if jkpf:
+                jkID="jkpf"
                 jks=int(options.jackknife.get("jk_source"))
                 jkt=int(options.jackknife.get("jk_target"))
                 num=jks+jkt
+            elif jkpp:
+                jkID="jkpp"
+                num=int(options.jackknife.get("jk_pp"))
             else:num=1
             for cat in categories:
                 print "-----------------------------------------------------------------"
@@ -927,15 +934,15 @@ class TemplatesFitApp(TemplatesApp):
                 if not dodata:
                     tp = ROOT.TNtuple("tree_fitresult_fraction%s%s_%s_%s" % (dset,tempname,dim,cat),"tree_fitresult_fraction_%s_%s_%s" % (tempname,dim,cat),"purity_pp:error_pp_sumw2on:error_pp:purity_pf:error_pf_sumw2on:error_pf:massbin:masserror" )
                     self.store_[tp.GetName()] = tp
-                elif not jk:
+                elif not (jkpf or jkpp):
                     tp = ROOT.TNtuple("tree_fitresult_fraction%s%s_%s_%s" % (dset,tempname,dim,cat),"tree_fitresult_fraction_%s_%s_%s" % (tempname,dim,cat),"purity_pp:error_pp:purity_pf:error_pf:massbin:masserror" )
                     self.store_[tp.GetName()] = tp
                 if dodata:
                     tps=[]
                     for i in range(num):
-                        if not jk:
-                            tpi = ROOT.TNtuple("tree_fitresult_fraction%s%s_%s_%s" % (dset,tempname,dim,cat),"tree_fitresult_fraction_%s_%s_%s" % (tempname,dim,cat),"purity_pp:error_pp:purity_pf:error_pf:massbin:masserror" )
-                        else: tpi = ROOT.TNtuple("tree_fitresult_fraction%s%s_jk%i_%s_%s" % (dset,tempname,i,dim,cat),"tree_fitresult_fraction_%s_jk%i_%s_%s" % (tempname,i,dim,cat),"purity_pp:error_pp:purity_pf:error_pf:massbin:masserror" )
+                        if not (jkpf or jkpp):tpi = ROOT.TNtuple("tree_fitresult_fraction%s%s_%s_%s" % (dset,tempname,dim,cat),"tree_fitresult_fraction_%s_%s_%s" % (tempname,dim,cat),"purity_pp:error_pp:purity_pf:error_pf:massbin:masserror" )
+                        elif jkpf: tpi = ROOT.TNtuple("tree_fitresult_fraction%s%s_jkpf%i_%s_%s" % (dset,tempname,i,dim,cat),"tree_fitresult_fraction_%s_jk%i_%s_%s" % (tempname,i,dim,cat),"purity_pp:error_pp:purity_pf:error_pf:massbin:masserror" )
+                        elif jkpp: tpi = ROOT.TNtuple("tree_fitresult_fraction%s%s_jkpp%i_%s_%s" % (dset,tempname,i,dim,cat),"tree_fitresult_fraction_%s_jk%i_%s_%s" % (tempname,i,dim,cat),"purity_pp:error_pp:purity_pf:error_pf:massbin:masserror" )
                         self.store_[tpi.GetName()] = tpi
                         tps.append(tpi)
                     ntp = ROOT.TNtuple("tree_fitresult_events%s%s_%s_%s" % (dset,tempname,dim,cat),"tree_fitresult_events_%s_%s_%s" % (tempname,dim,cat),"norm:purity_pp:error_pp_sumw2off:error_pp_sumw2on:purity_pf:error_pf_sumw2off:error_pf_sumw2on:massbin:masserror" )
@@ -976,8 +983,7 @@ class TemplatesFitApp(TemplatesApp):
                             pu_estimates_roopdf.add(fpf)
                     pdf_collections=[ ]
                     i=0
-                    if not jk:
-                        print "right"
+                    if not (jkpf or jkpp):
                         pdf_set=ROOT.RooArgList() 
                         for comp in nomFit["components"]:
                             print "%s%s%s_%s_%s_mb_%s"%(tempname,dset,comp, dim,cat,cut_s)
@@ -1002,18 +1008,25 @@ class TemplatesFitApp(TemplatesApp):
                             i=i+1
                         pdf_collections.append(pdf_set)
                     else:
-                        print "wrong"
                         for i in range(num):
                             pdf_set=ROOT.RooArgList()
                             for comp in nomFit["components"]:
-                                if comp=="pp":
-                                    histo = self.rooData("unrolled_template_pp_2D_%s_mb_%s"%(cat,cut_s))
-                                    rooHistPdf=ROOT.RooHistPdf("pdf_%s"% histo.GetName(),"pdf_%s"% histo.GetName(),ROOT.RooArgSet(obsls),histo)
-                                elif comp=="pf":
-                                    if i < jks: name= "unrolled_template_mix_pf_2D_%i_%s_mb_%s"%(i,cat,cut_s)
-                                    elif i>= jks:name= "unrolled_template_mix_pf_%i_2D_%s_mb_%s"%(i-jks,cat,cut_s)
-                                    histo = self.rooData(name)
-                                    rooHistPdf=ROOT.RooHistPdf("pdf_%s"% histo.GetName(),"pdf_%s"% histo.GetName(),ROOT.RooArgSet(obsls),histo)
+                                if jkpf:
+                                    if comp=="pp":
+                                        histo = self.rooData("unrolled_template_pp_2D_%s_mb_%s"%(cat,cut_s))
+                                        rooHistPdf=ROOT.RooHistPdf("pdf_%s"% histo.GetName(),"pdf_%s"% histo.GetName(),ROOT.RooArgSet(obsls),histo)
+                                    elif comp=="pf":
+                                        if i < jks: name= "unrolled_template_mix_pf_2D_%i_%s_mb_%s"%(i,cat,cut_s)
+                                        elif i>= jks:name= "unrolled_template_mix_pf_%i_2D_%s_mb_%s"%(i-jks,cat,cut_s)
+                                        histo = self.rooData(name)
+                                        rooHistPdf=ROOT.RooHistPdf("pdf_%s"% histo.GetName(),"pdf_%s"% histo.GetName(),ROOT.RooArgSet(obsls),histo)
+                                else:
+                                    if comp=="pp":
+                                        histo = self.rooData("unrolled_template_pp_%i_2D_%s_mb_%s"%(i,cat,cut_s))
+                                        rooHistPdf=ROOT.RooHistPdf("pdf_%s"% histo.GetName(),"pdf_%s"% histo.GetName(),ROOT.RooArgSet(obsls),histo)
+                                    elif comp=="pf":
+                                        histo = self.rooData("unrolled_template_mix_pf_2D_%s_mb_%s"%(cat,cut_s))
+                                        rooHistPdf=ROOT.RooHistPdf("pdf_%s"% histo.GetName(),"pdf_%s"% histo.GetName(),ROOT.RooArgSet(obsls),histo)
                                 self.keep([rooHistPdf])
                                 pdf_set.add(rooHistPdf)
                             pdf_collections.append(pdf_set)
@@ -1022,6 +1035,7 @@ class TemplatesFitApp(TemplatesApp):
                         jpp.setVal(0.6)
                         jpf.setVal(0.4)
                         ArgListPdf=pdf_collections[k]
+                        ArgListPdf.Print()
                         if extended_fit:
                             fitUnrolledPdf=ROOT.RooAddPdf("fitPdfs_%s%s%s_%s_mb_%s" % (tempnam,dset,cat,dim,cut_s),"fitPdfs_%s_%s_%s_mb_%s" % (tempname,cat,dim,cut_s),ArgListPdf  )
                         else:
@@ -1089,7 +1103,7 @@ class TemplatesFitApp(TemplatesApp):
                         ntp.Fill(norm,pu_npp,puerr_npp,err_npp,pu_npf,puerr_npf,err_npf,tree_mass.massbin,tree_mass.masserror )
                     if not dodata:
                         tp.Fill(pu_pp,puerr_pp,err_pp,pu_pf,puerr_pf,err_pf,tree_mass.massbin,tree_mass.masserror )
-                self.plotJKpurity(options,cat,dim,tps)
+                self.plotJKpurity(options,cat,dim,tps,jkID)
                 print "done fit ...."
                 print 
     ## ---------------#--------------------------------------------------------------------------------------------
@@ -1447,33 +1461,39 @@ class TemplatesFitApp(TemplatesApp):
                 for comp in options.jackknife.get("components",fit["components"]) :
                     name="%s_%s_%s" %(comp,cat,cut_s)
                     print name
-                    full_temp = self.reducedRooData( "template_mix_%s_kDSinglePho2D_%s" % (comp,cat),setargs,redo=True)
-                    full_temp.SetName("template_mix_%s_2D_%s" % (comp,cat))
-                    full_template =self.masscutTemplates(full_temp,cut,cut_s,"%s"% (full_temp.GetName()))
-                    print full_template
-                    full_hist=self.histounroll([full_template],template_binning,isoargs,comp,cat,cut_s,True,min(template_binning),max(template_binning),extra_shape_unc=options.extra_shape_unc,plot=False)
+                    #full_temp = self.reducedRooData( "template_mix_%s_kDSinglePho2D_%s" % (comp,cat),setargs,redo=True)
+                    #full_temp.SetName("template_mix_%s_2D_%s" % (comp,cat))
+                    #full_template =self.masscutTemplates(full_temp,cut,cut_s,"%s"% (full_temp.GetName()))
+                    #print full_template
+                    #full_hist=self.histounroll([full_template],template_binning,isoargs,comp,cat,cut_s,True,min(template_binning),max(template_binning),extra_shape_unc=options.extra_shape_unc,plot=False)
 
                     #TODO get number of pseudosamples more elegant
                     if options.verbose:
                         c1=ROOT.TCanvas("c1_%s"%name,"c1_%s"%name)
                         full_hist[0].Draw()
                         self.keep(c1)
-                    mix=options.mix.get("kDSinglePho2D")
-                    print mix
-                    jks=int(options.jackknife.get("jk_source"))
-                    jkt=int(options.jackknife.get("jk_target"))
-                    print "jks ",jks, " jkt ", jkt
 
                     temps_all = []
                     temps = []
-                    for s in range(jks):
-                        temp = self.reducedRooData( "template_mix_%s_%i_kDSinglePho2D_%s" % (comp,s,cat),setargs,redo=True)
-                        temp.SetName("template_mix_%s_%i_2D_%s" % (comp,s,cat))
-                        temps_all.append(temp)
-                    for t in range(jkt):
-                        temp = self.reducedRooData( "template_mix_%s_kDSinglePho2D_%i_%s" % (comp,t,cat),setargs,redo=True)
-                        temp.SetName("template_mix_%s_2D_%i_%s" % (comp,t,cat))
-                        temps_all.append(temp)
+                    if not comp=="pp":
+                        jks=int(options.jackknife.get("jk_source"))
+                        jkt=int(options.jackknife.get("jk_target"))
+                        print "jks ",jks, " jkt ", jkt
+                        for s in range(jks):
+                            temp = self.reducedRooData( "template_mix_%s_%i_kDSinglePho2D_%s" % (comp,s,cat),setargs,redo=True)
+                            temp.SetName("template_mix_%s_%i_2D_%s" % (comp,s,cat))
+                            temps_all.append(temp)
+                        for t in range(jkt):
+                            temp = self.reducedRooData( "template_mix_%s_kDSinglePho2D_%i_%s" % (comp,t,cat),setargs,redo=True)
+                            temp.SetName("template_mix_%s_2D_%i_%s" % (comp,t,cat))
+                            temps_all.append(temp)
+                    else:
+                        jkp=int(options.jackknife.get("jk_pp"))
+                        for s in range(jks):
+                            temp = self.reducedRooData( "template_%s_%i_2D_%s" % (comp,s,cat),setargs,redo=True)
+                            temp.SetName("template_%s_%i_2D_%s" % (comp,s,cat))
+                            temps_all.append(temp)
+
                     for template in temps_all:
                         template_massc =self.masscutTemplates(template,cut,cut_s,"%s"% (template.GetName()))
                         temps.append(template_massc)
@@ -1489,7 +1509,7 @@ class TemplatesFitApp(TemplatesApp):
         self.saveWs(options,fout)
     
     ## ------------------------------------------------------------------------------------------------------------
-    def plotJKpurity(self,options,cat,dim,tps):
+    def plotJKpurity(self,options,cat,dim,tps,jkID="jk"):
         jks=int(options.jackknife.get("jk_source"))
         jkt=int(options.jackknife.get("jk_target"))
       #   tree_fitresult_fraction_unrolled_template_mix_2D_EBEB
@@ -1501,7 +1521,7 @@ class TemplatesFitApp(TemplatesApp):
         g_puratio=ROOT.TGraphErrors(nentries)
         histos=[]
         for mb in range(nentries):
-            h_p=ROOT.TH1D("h_p%s_%i"%(cat,mb),"h_p%s_%i"%(cat,mb),10*len(tps),.3,1.)
+            h_p=ROOT.TH1D("h_p%s_%s_%i"%(jkID,cat,mb),"h_p%s_%s_%i"%(jkID,cat,mb),50*len(tps),.3,1.)
             histos.append(h_p)
         g_purity.GetXaxis().SetTitle("Diphoton mass [GeV]")
         g_purity.GetYaxis().SetTitle("purity")
@@ -1515,11 +1535,12 @@ class TemplatesFitApp(TemplatesApp):
             i=i+nentries
         
         for mb in range(nentries):
-            cmb = ROOT.TCanvas("cJKmb_%s_%i" % (cat,mb),"cJKmb_%s_%i" % (cat,mb))
+            cmb = ROOT.TCanvas("cJK%s_%s_%i" % (jkID,cat,mb),"cJK%s_%s_%i" % (jkID,cat,mb))
             cmb.cd()
             histos[mb].Draw("HIST E2")
             rms=histos[mb].GetRMS()*(len(tps)-1)/sqrt(len(tps))
             histos[mb].GetXaxis().SetTitle("Diphoton mass %i"%mb)
+            histos[mb].GetXaxis().SetLimits( histos[mb].GetMean()-3*histos[mb].GetRMS(),histos[mb].GetMean()+3*histos[mb].GetRMS())
             self.keep( [cmb,histos[mb]] )
             nom_tree.GetEntry(mb)
             g_ratio.SetPoint(mb+1,nom_tree.massbin,nom_tree.purity_pp)
@@ -1530,7 +1551,7 @@ class TemplatesFitApp(TemplatesApp):
             print mb, rms, err
             g_puerr.SetPointError(mb+1,nom_tree.masserror,err)
             g_puratio.SetPointError(mb+1,nom_tree.masserror,err/nom_tree.purity_pp)
-        cpurity = ROOT.TCanvas("cpurityJK_%s" % (cat),"cpurityJK_%s" % (cat))
+        cpurity = ROOT.TCanvas("cpurity%s_%s" % (jkID,cat),"cpurity%s_%s" % (jkID,cat))
         cpurity.Divide(1,2)
         cpurity.cd(1)
         ROOT.gPad.SetGridx()
@@ -1550,11 +1571,11 @@ class TemplatesFitApp(TemplatesApp):
         g_ratio.SetMarkerStyle(20)
         g_ratio.Draw("AP" )
         g_ratio.GetXaxis().SetTitle("Diphoton mass [GeV]")
-        g_ratio.GetYaxis().SetTitleSize( g_purity.GetYaxis().GetTitleSize() *4.5/4. )
-        g_ratio.GetYaxis().SetLabelSize( g_purity.GetYaxis().GetLabelSize()*6./4.  )
-        g_ratio.GetYaxis().SetTitleOffset(g_purity.GetYaxis().GetTitleOffset()*4.5/4. )
-        g_ratio.GetXaxis().SetTitleSize( g_purity.GetXaxis().GetTitleSize() *5./4. )
-        g_ratio.GetXaxis().SetLabelSize( g_purity.GetXaxis().GetLabelSize()*6./4. )
+        g_ratio.GetYaxis().SetTitleSize( g_purity.GetYaxis().GetTitleSize() )
+        g_ratio.GetYaxis().SetLabelSize( g_purity.GetYaxis().GetLabelSize()  )
+        g_ratio.GetYaxis().SetTitleOffset(g_purity.GetYaxis().GetTitleOffset() )
+        g_ratio.GetXaxis().SetTitleSize( g_purity.GetXaxis().GetTitleSize()  )
+        g_ratio.GetXaxis().SetLabelSize( g_purity.GetXaxis().GetLabelSize() )
         g_ratio.GetYaxis().SetTitle("purity + JK stat error")
         g_ratio.GetXaxis().SetLimits(200.,13000.)
         g_ratio.GetYaxis().SetRangeUser(0.4,1.)
@@ -1565,7 +1586,7 @@ class TemplatesFitApp(TemplatesApp):
         cpu.cd(1)
         ROOT.gPad.SetGridx()
         ROOT.gPad.SetGridy()
-        leg =ROOT.TLegend(0.65,0.2,0.85,0.5)
+        leg =ROOT.TLegend(0.4,0.2,0.7,0.5)
         leg.SetFillColor(ROOT.kWhite)
         leg.AddEntry(g_puerr,"full stat. error","l")
         leg.AddEntry(g_ratio,"JK error","l")
@@ -1573,9 +1594,12 @@ class TemplatesFitApp(TemplatesApp):
         ROOT.gPad.SetLogx()
         g_puerr.SetMarkerSize(1.3)
         g_puerr.SetMarkerStyle(20)
+        g_puerr.SetLineWidth(2)
+        g_ratio.SetLineWidth(2)
         g_ratio.SetMarkerColor(ROOT.kRed+1)
         g_ratio.SetLineColor(g_ratio.GetMarkerColor())
         g_puerr.Draw("AP")
+        g_puerr.GetXaxis().SetTitle("Diphoton mass [GeV]")
         g_ratio.Draw("P SAME")
         leg.Draw()
         g_puerr.GetXaxis().SetLimits(200.,13000.)
@@ -1590,13 +1614,13 @@ class TemplatesFitApp(TemplatesApp):
         g_puratio.GetYaxis().SetTitle("fullerr/purity")
         g_puratio.GetXaxis().SetLimits(200.,13000.)
         g_puratio.GetYaxis().SetRangeUser(-0.3,0.3)
-        g_puratio.GetYaxis().SetTitleSize( g_purity.GetYaxis().GetTitleSize() *4.5/4. )
-        g_puratio.GetYaxis().SetLabelSize( g_purity.GetYaxis().GetLabelSize()*6./4.  )
-        g_puratio.GetYaxis().SetTitleOffset(g_purity.GetYaxis().GetTitleOffset()*4.5/4. )
-        g_puratio.GetXaxis().SetTitleSize( g_purity.GetXaxis().GetTitleSize() *5./4. )
-        g_puratio.GetXaxis().SetLabelSize( g_purity.GetXaxis().GetLabelSize()*6./4. )
+        g_puratio.GetYaxis().SetTitleSize( g_puratio.GetYaxis().GetTitleSize() *6./4. )
+        g_puratio.GetYaxis().SetLabelSize( g_puratio.GetYaxis().GetLabelSize()*6./4.  )
+        g_puratio.GetYaxis().SetTitleOffset(g_puratio.GetYaxis().GetTitleOffset()*4./6. )
+        g_puratio.GetXaxis().SetTitleSize( g_puratio.GetXaxis().GetTitleSize() *6./4. )
+        g_puratio.GetXaxis().SetLabelSize( g_puratio.GetXaxis().GetLabelSize()*6./4. )
         
-        
+       #TODO new function for last plot to add JKpp and JKpf error 
         self.keep( [cpu,cpurity,g_purity,g_ratio] )
         self.autosave(True)
         

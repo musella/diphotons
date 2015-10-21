@@ -192,7 +192,7 @@
 		        "sel"  : "cicNoChIso", "#" : "event selection",
                         "dataset" : ["data"],    "#" : "input dataset. can be data,mc or templates",
                         "_dataset" : ["data","mc"],    "#" : "input dataset. can be data,mc or templates",
-                        "jk":0.1,
+                        "jk":10,
                                     "#" : "list of fit components                 ",
                         "#" : "How to fill different categories. Logic is the same as for the 'fill' instructions above",
                         "fill_categories" : {

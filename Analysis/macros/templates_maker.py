@@ -586,26 +586,28 @@ class TemplatesApp(PlotApp):
                         jk=cfg.get("jk",0) 
                         if jk !=0 and component=="pp":
                             n= int(tree.GetEntries())
-                            d=jk*n
-                            g=n/d
-                            if n % d != 0:
-                                g += 1
+                            d=n/jk
+                            g=jk
+                            #if n % d != 0:
+                            #    g += 1
                             g=int(g)
                             print "computing partitions: n=%d d=%d g=%i" % (n,d,g)
                             all_events= range(n)
                             random.shuffle(all_events)
                             for j in range(g):
-                                self.buildRooDataSet(trees,"template%s%s_%i" % (dat,component,j),name,fit,cats,fulllist,weight,presel,storeTrees)
                                 lo=int(1+d*j)
                                 hi=int(d+d*j)
+                                print lo, hi
                                 tree_temp=tree.CloneTree(0)
-                                tree_temp.SetName("template%s%s__%i_%s_%s" %(dat,component,j,name,cat))
+                                tree_temp.SetName("tree_template%s%s_%i_%s_%s" %(dat,component,j,name,cat))
                                 for k in all_events:
                                     if not(k>= lo and k < hi ): tree_temp.Fill(tree.GetEntry(k))
-                                print "template -%s - %s %i" % (component,cat,j), self.rooData("template%s%s_%i_%s_%s" % (dat,component,j,name,cat) ).sumEntries()
-                        print tree
-                        print "template -%s - %s" % (component,cat), self.rooData("template%s%s_%s_%s" % (dat,component,name,cat) ).sumEntries()
-                        print "number of entries template %s - %s" % (component,cat), self.rooData("template%s%s_%s_%s" % (dat,component,name,cat) ).numEntries()
+                                self.store_[tree_temp.GetName()] = tree_temp
+                                print"template%s%s_%i_%s_%s" % (dat,component,j,name,cat), self.rooData("template%s%s_%i_%s_%s" % (dat,component,j,name,cat),autofill=True,cloneFrom="template%s%s_%s_%s" % (dat,component,name,cat)).sumEntries()
+                
+                        else:
+                            print "template -%s - %s" % (component,cat), self.rooData("template%s%s_%s_%s" % (dat,component,name,cat) ).sumEntries()
+                            print "number of entries template %s - %s" % (component,cat), self.rooData("template%s%s_%s_%s" % (dat,component,name,cat) ).numEntries()
                     print 
                     print "--------------------------------------------------------------------------------------------------------------------------"
                     print
@@ -904,7 +906,8 @@ class TemplatesApp(PlotApp):
 
 
     ## ------------------------------------------------------------------------------------------------------------
-    def rooData(self,name,autofill=True,rooset=None,weight="weight",sel=None,redo=False,quiet=False):
+    def rooData(self,name,autofill=True,rooset=None,weight="weight",sel=None,redo=False,quiet=False,cloneFrom=False):
+            
         if name in self.cache_ and not redo:
             return self.cache_[name]        
         dataset = self.workspace_.data(name)
@@ -913,6 +916,11 @@ class TemplatesApp(PlotApp):
             if self.store_inputs_ and dataset:
                 self.workspace_.rooImport(dataset)
                 
+        if not dataset and cloneFrom:
+            origin=self.rooData(cloneFrom)
+            dataset=origin.emptyClone()
+            dataset.SetName(name)
+            self.workspace_.rooImport(dataset)
         if not dataset:
             if not quiet:
                 print "warning : dataset %s not found" % name
