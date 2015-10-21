@@ -156,6 +156,8 @@ class TemplatesApp(PlotApp):
                                     default=False,help="prepare templates only with data, no mc, signals, or templatesMC,mctruth)"),
                         make_option("--prepare-nosignal",dest="prep_nosig",action="store_true",
                                     default=False,help="prepare templates without signals"),
+                        make_option("--mix-mc",dest="mix_mc",action="store_true",
+                                    default=False,help="template mixing also with MC"),
                         make_option("--only-subset",dest="only_subset",action="callback",type="string", callback=optpars_utils.ScratchAppend(),
                     default=[],help="default: %default"),
                         ]
@@ -635,6 +637,7 @@ class TemplatesApp(PlotApp):
         
         for name, mix in options.mix.iteritems():
             if name.startswith("_"): continue
+            if not options.mix_mc and name.startswith("kDSinglePho2DMC"): continue
             print
             print "--------------------------------------------------------------------------------------------------------------------------"
             print "Mixing %s" % name
