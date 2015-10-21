@@ -191,7 +191,9 @@
 				"subleadPhoIsoEE    := ((subleadPhoIso - rho*subleadPhoIsoEA) -0.002*subleadPt < 0. ) && !subleadIsEB",
                "leadPhoIsoEB    := ((leadPhoIso - rho*leadPhoIsoEA) -0.002*leadPt < 1. ) && leadIsEB ",
 				"leadPhoIsoEE    := ((leadPhoIso - rho*leadPhoIsoEA) -0.002*leadPt < 0. )&& !leadIsEB",
-	       "mgg := mass"
+	       "mgg := mass",
+	       "mggEBEB := mass",
+	       "mggEBEE := mass"
     ],
 
     "rootstyle_extra" : [

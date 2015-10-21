@@ -27,6 +27,7 @@ while [[ -n $1 ]]; do
 	    ;;
 	--verbose)
 	    verbose="--verbose"
+	    opts="$opts --verbose"
 	    ;;
 	--redo-input)
 	    rerun="1"
