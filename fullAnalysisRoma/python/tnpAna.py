@@ -4,7 +4,7 @@ import FWCore.Utilities.FileUtils as FileUtils
 isMC = True
 is25ns = True
 is2012B = False;
-is2012C = True;
+is2012C = False;
 is2012D = False;
 
 process = cms.Process("tnpAna")
@@ -33,7 +33,10 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32( -1 ) )
 
 process.source = cms.Source("PoolSource",
                             fileNames=cms.untracked.vstring(
-        "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v3/Spring15BetaV2-2-gfceadad/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/EXOSpring15_v3-Spring15BetaV2-2-gfceadad-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3/150807_132311/0000/diphotonsMicroAOD_10.root"
+        # DY
+        "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_7412_v2_mc_25ns/diphotons_7412_v1/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/EXOSpring15_7412_v2_mc_25ns-diphotons_7412_v1-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3/150928_214844/0000/diphotonsMicroAOD_1.root",
+        # singleEle
+        #"/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_7412_v2/diphotons_7412_v1/SingleElectron/EXOSpring15_7412_v2-diphotons_7412_v1-v0-Run2015C-PromptReco-v1/150927_235231/0000/diphotonsMicroAOD_11.root"
         )
                             )
 
@@ -55,6 +58,9 @@ process.tnpAna = cms.EDAnalyzer('TaPAnalyzer',
                                 objects = cms.InputTag("selectedPatTrigger"),
 
                                 MetTag=cms.InputTag('slimmedMETs'),
+
+                                reducedBarrelRecHitCollection = cms.InputTag('reducedEgamma','reducedEBRecHits'), 
+                                reducedEndcapRecHitCollection = cms.InputTag('reducedEgamma','reducedEERecHits'),
 
                                 generatorInfo = cms.InputTag("generator"),
                                 dopureweight = cms.untracked.int32(0),

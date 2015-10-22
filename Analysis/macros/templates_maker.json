@@ -29,10 +29,10 @@
     "templates" : [
                "Data_13TeV:__infile__/%(sel)s"
              ],
-    "_templates" : [
+    "templatesMC" : [
                "GGJets_M_200To13000_sherpa_13TeV:__infile__/%(sel)s",
-               "QCD_HT_100toInf_13TeV:__infile__/%(sel)s",
-               "GJets_HT_100toInf_13TeV:__infile__/%(sel)s"            
+               "GJets_HT_100toInf_13TeV:__infile__/%(sel)s",      
+               "QCD_Pt_30toInf_13TeV:__infile__/%(sel)s"
              ],
              
      "#" : "mc dataset",
@@ -160,7 +160,8 @@
     "treeName": "trees/%(sample)s_%(cat)s",
 
     "preselection" : "(leadChIso < 15. && subleadChIso < 15. && ((mass > 200 && max(abs(leadScEta),abs(subleadScEta))<1.5) || mass > 320) )",   
-	"#" : "preselection cut applied to all trees",
+    "_preselection" : "(leadChIso < 15. && subleadChIso < 15. && ((mass > 200 && max(abs(leadScEta),abs(subleadScEta))<1.5) || mass > 300) ) && ( max(abs(leadScEta),abs(subleadScEta))<1.5 || (leadPt>100 && subleadPt>100 )  )",                                                                                                                      
+    "_preselection" : "(leadChIso < 15. && subleadChIso < 15. && leadPt> 75. && subleadPt > 75. && mass > 200. && (max(abs(leadScEta),abs(subleadScEta))<1.5 ||  mass > 300.)&&( max(abs(leadScEta),abs(subleadScEta))<1.5  || !(leadPixSeed||subleadPixSeed) ))",	"#" : "preselection cut applied to all trees",
     "selection"    : "cicNoChIso",                              "#" : "nominal selection",
     
     "#" : "---------------------------------------------------------------------------------------------------------------------",
@@ -174,25 +175,27 @@
     "aliases"  : [ 
 
                "phoIsEB    := abs(phoScEta) < 1.5",
-               "phoIsSB    := (((phoPhoIso - rho*phoPhoIsoEA) -0.002*phoPt < 2. ) && (phoIsEB    && (phoSigmaIeIe    > 0.012) ))||( ((phoPhoIso - rho*phoPhoIsoEA) -0.002*phoPt < 11. ) &&!phoIsEB    && (phoSigmaIeIe>0.035 )  )",
+               "phoIsSB    := (((phoPhoIso - rho*phoPhoIsoEA) -0.0045*phoPt < 2. ) && (phoIsEB    && (phoSigmaIeIe    > 0.012) ))||( ((phoPhoIso - rho*phoPhoIsoEA) -0.003*phoPt < 11. ) &&!phoIsEB    && (phoSigmaIeIe>0.035 )  )",
                "leadIsEB    := abs(leadScEta) < 1.5",
                "subleadIsEB := abs(subleadScEta) < 1.5",
-               "leadIsSB := (((leadPhoIso - rho*leadPhoIsoEA) -0.002*leadPt < 2. ) && (leadIsEB    && (leadSigmaIeIe    > 0.012) ))||( ((leadPhoIso - rho*leadPhoIsoEA) -0.002*leadPt < 11. ) &&!leadIsEB    && (leadSigmaIeIe>0.035    )  )",
-               "subleadIsSB := ((((subleadPhoIso - rho*subleadPhoIsoEA) -0.002*subleadPt < 2. ) && (subleadIsEB    && (subleadSigmaIeIe    > 0.012) ))||( ((subleadPhoIso - rho*subleadPhoIsoEA) -0.002*subleadPt < 11. ) &&!subleadIsEB    && (subleadSigmaIeIe>0.035     )) )",
+               "leadIsSB := (((leadPhoIso - rho*leadPhoIsoEA) -0.0045*leadPt < 2. ) && (leadIsEB    && (leadSigmaIeIe    > 0.012) ))||( ((leadPhoIso - rho*leadPhoIsoEA) -0.003*leadPt < 11. ) &&!leadIsEB    && (leadSigmaIeIe>0.035    )  )",
+               "subleadIsSB := ((((subleadPhoIso - rho*subleadPhoIsoEA) -0.0045*subleadPt < 2. ) && (subleadIsEB    && (subleadSigmaIeIe    > 0.012) ))||( ((subleadPhoIso - rho*subleadPhoIsoEA) -0.003*subleadPt < 11. ) &&!subleadIsEB    && (subleadSigmaIeIe>0.035     )) )",
                "leadPrompt    := leadGenIso < 10. && leadMatchType == 1",
                "leadFake      := ! leadPrompt",
                "subleadPrompt := subleadGenIso < 10. && subleadMatchType == 1",
                "subleadFake   := ! subleadPrompt",
                "phoPrompt := phoGenIso < 10. && phoMatchType == 1",
                "phoFake   := ! phoPrompt",
-               "phoPhoIsoEB    := ((phoPhoIso - rho*phoPhoIsoEA) -0.002*phoPt < 1. ) && phoIsEB",
-				"phoPhoIsoEE    := ((phoPhoIso - rho*phoPhoIsoEA) -0.002*phoPt < 0. )&& !phoIsEB",
-               "subleadPhoIsoEB    := ((subleadPhoIso - rho*subleadPhoIsoEA) -0.002*subleadPt < 1. ) && subleadIsEB ",
-				"subleadPhoIsoEE    := ((subleadPhoIso - rho*subleadPhoIsoEA) -0.002*subleadPt < 0. ) && !subleadIsEB",
-               "leadPhoIsoEB    := ((leadPhoIso - rho*leadPhoIsoEA) -0.002*leadPt < 1. ) && leadIsEB ",
-				"leadPhoIsoEE    := ((leadPhoIso - rho*leadPhoIsoEA) -0.002*leadPt < 0. )&& !leadIsEB",
-	       "mgg := mass"
-    ],
+               "phoPhoIsoEB    := ((phoPhoIso - rho*phoPhoIsoEA) -0.0045*phoPt < 0.25 ) && phoIsEB",
+				"phoPhoIsoEE    := ((phoPhoIso - rho*phoPhoIsoEA) -0.003*phoPt < -0.5 )&& !phoIsEB",
+               "subleadPhoIsoEB    := ((subleadPhoIso - rho*subleadPhoIsoEA) -0.0045*subleadPt < 0.25 ) && subleadIsEB ",
+				"subleadPhoIsoEE    := ((subleadPhoIso - rho*subleadPhoIsoEA) -0.003*subleadPt < -0.5 ) && !subleadIsEB",
+               "leadPhoIsoEB    := ((leadPhoIso - rho*leadPhoIsoEA) -0.0045*leadPt < 0.25 ) && leadIsEB ",
+				"leadPhoIsoEE    := ((leadPhoIso - rho*leadPhoIsoEA) -0.003*leadPt < -0.5 )&& !leadIsEB",
+	       "mgg := mass",
+	       "mggEBEB := mass",
+               "mggEBEE := mass"    
+	       ],
 
     "rootstyle_extra" : [
                   "TGaxis::SetMaxDigits(3);",

@@ -65,6 +65,7 @@ void tnpTreeFormat(const char* filename, float lumiForW) {
   vector<bool>    *gamma_matchMC  = 0;
   vector<bool>    *gamma_kSaturated = 0;
   vector<float>   *invMass    = 0;
+  vector<float>   *invMassRaw = 0;
   vector<int>     *eleIndex   = 0;
   vector<int>     *gammaIndex = 0;
 
@@ -89,6 +90,7 @@ void tnpTreeFormat(const char* filename, float lumiForW) {
   TBranch        *b_gamma_matchMC;
   TBranch        *b_gamma_kSaturated;
   TBranch        *b_invMass; 
+  TBranch        *b_invMassRaw; 
   TBranch        *b_eleIndex;  
   TBranch        *b_gammaIndex;
 
@@ -113,6 +115,7 @@ void tnpTreeFormat(const char* filename, float lumiForW) {
   treeOrig->SetBranchAddress("gamma_matchMC", &gamma_matchMC, &b_gamma_matchMC);        
   treeOrig->SetBranchAddress("gamma_kSaturated", &gamma_kSaturated, &b_gamma_kSaturated);        
   treeOrig->SetBranchAddress("invMass", &invMass, &b_invMass);
+  treeOrig->SetBranchAddress("invMassRaw", &invMassRaw, &b_invMassRaw);
   treeOrig->SetBranchAddress("eleIndex", &eleIndex, &b_eleIndex);
   treeOrig->SetBranchAddress("gammaIndex", &gammaIndex, &b_gammaIndex);
 
@@ -123,6 +126,7 @@ void tnpTreeFormat(const char* filename, float lumiForW) {
   int probe_matchMC, probe_kSaturated;
   int probe_fullsel;
   float mass;
+  float massRaw;
   float xsecWeight, weight;
   
   for(int i=0; i<(int)trees.size();i++) {
@@ -143,6 +147,7 @@ void tnpTreeFormat(const char* filename, float lumiForW) {
     theTreeNew->Branch("probe_matchMC",&probe_matchMC,"probe_matchMC/I");
     theTreeNew->Branch("probe_kSaturated",&probe_kSaturated,"probe_kSaturated/I");
     theTreeNew->Branch("mass", &mass, "mass/F");
+    theTreeNew->Branch("massRaw", &massRaw, "massRaw/F");
     theTreeNew->Branch("xsecWeight", &xsecWeight, "xsecWeight/F");
     theTreeNew->Branch("weight", &weight, "weight/F");
   }
@@ -162,11 +167,14 @@ void tnpTreeFormat(const char* filename, float lumiForW) {
       if (electron_pt->at(eleIndex->at(ii))<30)     continue;
       if (!isTagTightEle->at(eleIndex->at(ii)))     continue;
       if (!electron_matchHLT->at(eleIndex->at(ii))) continue;   
+      //if (!electron_matchMC->at(eleIndex->at(ii)))  continue;   
       
       // further selection on probe
-      if (!gamma_presel->at(gammaIndex->at(ii)))   continue;
+      if (!gamma_presel->at(gammaIndex->at(ii)))  continue;
+      //if (!gamma_matchMC->at(gammaIndex->at(ii))) continue;
       
       // now making flat tree
+      massRaw = (float)(invMassRaw->at(ii));
       tag_absEta = fabs(electron_eta->at(eleIndex->at(ii)));
       tag_pt = electron_pt->at(eleIndex->at(ii));
       tag_matchMC = electron_matchMC->at(eleIndex->at(ii));

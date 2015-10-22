@@ -43,13 +43,14 @@ void makeDataMcPlotsTnP(float lumi, bool blindData=false)
 
   // chiara
   TString files[NSPECIES];
-  files[0]="/afs/cern.ch/work/c/crovelli/public/spring15_v3v8/formatted/Formatted_singleEle_ALL.root";     
-  files[6]="/afs/cern.ch/work/c/crovelli/public/spring15_v3v8/formatted/Formatted_DYLL_all.root";
-  files[1]="/afs/cern.ch/work/c/crovelli/public/spring15_v3v8/formatted/Formatted_WJetsToLNu_HT-600ToInf_ALL.root";
-  files[2]="/afs/cern.ch/work/c/crovelli/public/spring15_v3v8/formatted/Formatted_WW2L2nu_ALL.root";
-  files[3]="/afs/cern.ch/work/c/crovelli/public/spring15_v3v8/formatted/Formatted_WZjets_ALL.root";
-  files[4]="/afs/cern.ch/work/c/crovelli/public/spring15_v3v8/formatted/Formatted_ZZ4l_ALL.root";
-  files[5]="/afs/cern.ch/work/c/crovelli/public/spring15_v3v8/formatted/Formatted_TTjets_ALL.root";
+  files[0]="/afs/cern.ch/work/c/crovelli/public/TaP_spring15_7412v2/formatted/Formatted_singleEle2015D_all.root";     
+  files[6]="/afs/cern.ch/work/c/crovelli/public/TaP_spring15_7412v2/formatted/Formatted_DYLL_all.root";
+  files[1]="/afs/cern.ch/work/c/crovelli/public/TaP_spring15_7412v2/formatted/Formatted_WJetsToLNu_HT-600ToInf_all.root";
+  files[2]="/afs/cern.ch/work/c/crovelli/public/TaP_spring15_7412v2/formatted/Formatted_WW2L2nu_all.root";
+  files[3]="/afs/cern.ch/work/c/crovelli/public/TaP_spring15_7412v2/formatted/Formatted_WZjets_all.root";
+  files[4]="/afs/cern.ch/work/c/crovelli/public/TaP_spring15_7412v2/formatted/Formatted_ZZ4l_all.root";
+  files[5]="/afs/cern.ch/work/c/crovelli/public/TaP_spring15_7412v2/formatted/Formatted_TTjets_all.root";
+
 
   TString plotsDir="./tnpPlots/";
 
@@ -108,7 +109,7 @@ void makeDataMcPlotsTnP(float lumi, bool blindData=false)
   // cut[0]="(mass>200 && mass<1500 && abs(tag_absEta)<1.5 && abs(probe_absEta)<1.5)*";
   // cut[0]="(mass>60 && mass<120)*";
   // cut[0]="(mass>60 && mass<120 && abs(tag_absEta)<1.5 && abs(probe_absEta)<1.5)*";
-  cut[0]="(mass>60 && mass<1500)*";
+  cut[0]="(mass>60 && mass<1500)*"   // && tag_pt>35 && probe_pt>35 && probe_fullsel)*";
 
   char lumistr[100];
   sprintf(lumistr,"%.1f",lumi);

@@ -148,7 +148,7 @@
 					],
     "plots": [
 	      ["mass"			,[["xtitle","m_{#gamma #gamma} (GeV)"],
-					  ["xrange",[100.0,1050.0]],["overflow",[null]],["rebin",[[200,210,220,230,240,250,260,270,300,325,350,375,400,450,500,1050]]],
+					  ["xrange",[100.0,750.0]],["overflow",[null]],["rebin",[[200,250,275,300,325,350,400,450,500,750]]],
 					  "density",["ytitle","Events / %(binw)s GeV"]
 					]
 					,null,null],
@@ -208,10 +208,10 @@
 	    ["subleadHoE"		,[["ytitle","Events / %(binw)s GeV"],["xtitle","#gamma_{2} H/E"],["overflow",[null]]]
 					,null,null,["sig"]],
 
-	      ["leadSigmaIeIe"		,[["Rebin",2],["ytitle","Events / %(binw)s"],["xtitle","#gamma_{1} #sigma_{i#eta i#eta}"],["overflow",[null]]]
+	      ["leadSigmaIeIe"		,[["Rebin",6],["ytitle","Events / %(binw)s"],["xtitle","#gamma_{1} #sigma_{i#eta i#eta}"],["overflow",[null]]]
 					,null,null,["sig"]],
 
-	      ["subleadSigmaIeIe"	,[["Rebin",2],["ytitle","Events / %(binw)s"],["xtitle","#gamma_{2} #sigma_{i#eta i#eta}"],["overflow",[null]]]
+	      ["subleadSigmaIeIe"	,[["Rebin",6],["ytitle","Events / %(binw)s"],["xtitle","#gamma_{2} #sigma_{i#eta i#eta}"],["overflow",[null]]]
 					,null,null,["sig"]],
 	      			    
 	      ["leadPassEleVeto"	,[["ytitle","Events"],["xtitle","#gamma_{1} pass electron veto"]]
@@ -238,12 +238,16 @@
         ["cicNoChIso","noChIso"]
     ],
 
+    "selections" : [
+        ["cicNoSigmaIetaIeta","noSiEiE",["mass","leadSigmaIeIe","subleadSigmaIeIe"]]
+    ],
+
     "_selections" : [
         ["cic",""],
         ["cicNoChIso","noChIso"]
 		    ],
 
-    "selections" : [
+    "_selections" : [
         ["cic",""],
         ["cicNoChIso","noChIso"],
         ["cicNoSigmaIetaIeta","noSiEiE",["mass","leadSigmaIeIe","subleadSigmaIeIe"]],
