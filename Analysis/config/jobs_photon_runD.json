@@ -1,0 +1,13 @@
+{
+	"processes" : {
+	"Data" : [ 
+	       "/SinglePhoton/musella-EXOSpring15_7412_v2-diphotons_7412_v1-v0-Run2015D-PromptReco-v3-670beb3f5d63542be793d0153b3d499f/USER",
+	       "/SinglePhoton/musella-EXOSpring15_7412_v2-diphotons_7412_v1-v1-Run2015D-PromptReco-v3-ecc4df1f1f1089530c52bb6a4f9284e6/USER",
+	       "/SinglePhoton/musella-EXOSpring15_7412_v2-diphotons_7412_v1-v2-Run2015D-PromptReco-v3-ecc4df1f1f1089530c52bb6a4f9284e6/USER",
+	       "/SinglePhoton/musella-EXOSpring15_7412_v2-diphotons_7412_v1-v3-Run2015D-PromptReco-v3-ecc4df1f1f1089530c52bb6a4f9284e6/USER"
+	    ]
+	},
+	
+	"cmdLine" : "campaign=EXOSpring15_7412_v2_38T lumiMask=/afs/cern.ch/user/m/musella/public/workspace/exo/Cert_246908-258159_13TeV_PromptReco_Collisions15_JSON_Custom.txt selection=photon idversion=V2 ptLead=75 ptSublead=75 trigger=HLT_Photon50_v*,HLT_Photon75_v*,HLT_Photon90_v*,HLT_Photon120_v*,HLT_Photon165_HE*"
+
+}
