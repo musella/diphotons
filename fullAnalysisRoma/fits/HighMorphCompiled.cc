@@ -269,15 +269,11 @@ void ConvolutionFromRDH(RooWorkspace* w, Int_t mass, TString coupling) {
 
   // Resolution centred in zero in mgg
   RooFormulaVar *deltaM_formula = new RooFormulaVar("deltaM_formula","","@0",RooArgList(*w->var("mgg")));
-  RooArgList pdfObsRes;
-  pdfObsRes.add(*deltaM_formula);  
 
   // Intrinsic width
   RooFormulaVar *deltaMgen_formula = new RooFormulaVar("deltaMgen_formula","","@0-@1",RooArgList(*w->var("mgg"),*mH));        // centred in mass 
   //RooFormulaVar *deltaMgen_formula = new RooFormulaVar("deltaMgen_formula","","@0",RooArgList(*w->var("mgg")));             // centred in zero
-  RooArgList pdfObsInw;
-  pdfObsInw.add(*deltaMgen_formula);
-  
+
   RooArgList histObsRes;
   histObsRes.add(*deltaM);
 
@@ -298,6 +294,22 @@ void ConvolutionFromRDH(RooWorkspace* w, Int_t mass, TString coupling) {
     TString myCut = "EBEB";   
     if (c==1) myCut = "EBEE";  
 
+    // for resolution
+    TString myDeltaM_formulaA = TString(Form("deltaM_formula_cat"+myCut+"_mass%d",mass));
+    TString myDeltaM_formula  = TString(Form(myDeltaM_formulaA+"_kpl"+coupling));   
+    deltaM_formula->SetTitle(myDeltaM_formula);
+    deltaM_formula->SetName(myDeltaM_formula);
+    RooArgList pdfObsRes;
+    pdfObsRes.add(*deltaM_formula);  
+
+    // for intrinsic width
+    TString myDeltaMgen_formulaA = TString(Form("deltaMgen_formula_cat"+myCut+"_mass%d",mass));
+    TString myDeltaMgen_formula  = TString(Form(myDeltaMgen_formulaA+"_kpl"+coupling));   
+    deltaMgen_formula->SetTitle(myDeltaMgen_formula);
+    deltaMgen_formula->SetName(myDeltaMgen_formula);
+    RooArgList pdfObsInw;
+    pdfObsInw.add(*deltaMgen_formula);
+
     // reading the roodatahists 
     TString myRDHA = TString(Form("resolRDH_mass%d_cat",mass)+myCut);     
     RooDataHist *resRDH = (RooDataHist*)fileRes->Get(myRDHA);    
@@ -306,15 +318,24 @@ void ConvolutionFromRDH(RooWorkspace* w, Int_t mass, TString coupling) {
     RooDataHist *inwRDH = (RooDataHist*)fileInw->Get(myRDHB);   
     inwRDH->Print();        
     cout << "RooDataHists taken" << endl;       
-    
+
     // creating the roohistpdfs    
-    //RooHistPdf *myHistPdfRes = new RooHistPdf("myHistPdfRes","myHistPdfRes",*mgg,*resRDH,0) ;  
+    TString myHistPdfResNameA = TString(Form("myHistPdfRes_cat"+myCut+"_mass%d",mass));
+    TString myHistPdfResName  = TString(Form(myHistPdfResNameA+"_kpl"+coupling));   
     RooHistPdf *myHistPdfRes = new RooHistPdf("myHistPdfRes","myHistPdfRes",pdfObsRes, histObsRes,*resRDH,0) ;  
+    myHistPdfRes->SetTitle(myHistPdfResName);
+    myHistPdfRes->SetName(myHistPdfResName);
     myHistPdfRes->Print(); 
-    //RooHistPdf *myHistPdfInW = new RooHistPdf("myHistPdfInW","myHistPdfInW",*mgg,*inwRDH,0) ;  
-    RooHistPdf *myHistPdfInW = new RooHistPdf("myHistPdfInW","myHistPdfInW",pdfObsInw, histObsInw,*inwRDH,0) ;  
-    myHistPdfInW->Print();        
+    //
+    TString myHistPdfInwNameA = TString(Form("myHistPdfInw_cat"+myCut+"_mass%d",mass));
+    TString myHistPdfInwName  = TString(Form(myHistPdfInwNameA+"_kpl"+coupling));   
+    RooHistPdf *myHistPdfInw = new RooHistPdf("myHistPdfInw","myHistPdfInw",pdfObsInw, histObsInw,*inwRDH,0) ;  
+    myHistPdfInw->SetTitle(myHistPdfInwName);
+    myHistPdfInw->SetName(myHistPdfInwName);
+    myHistPdfInw->Print(); 
+    //
     cout << "RooHistPdfs done" << endl;      
+
 
     // convolution    
     float fitMin = 1250.;          
@@ -325,7 +346,7 @@ void ConvolutionFromRDH(RooWorkspace* w, Int_t mass, TString coupling) {
     /*
     mgg->setRange(-500,500);
     mgg->setBins(1000);
-    RooNumConvPdf convol("convol","convol",*mgg,*myHistPdfInW,*myHistPdfRes);          
+    RooNumConvPdf convol("convol","convol",*mgg,*myHistPdfInw,*myHistPdfRes);          
     RooRealVar* W = new RooRealVar("W","W",200);    
     W->setConstant();    
     RooRealVar* C = new RooRealVar("C","C",0);  
@@ -335,7 +356,11 @@ void ConvolutionFromRDH(RooWorkspace* w, Int_t mass, TString coupling) {
 
     // analytical
     mgg->setBins(10000, "cache");
-    RooFFTConvPdf convol("convol","convol",*mgg,*myHistPdfInW,*myHistPdfRes);          
+    TString myConvNameA = TString(Form("Convolution_cat"+myCut+"_mass%d",mass));
+    TString myConvName  = TString(Form(myConvNameA+"_kpl"+coupling));   
+    RooFFTConvPdf convol("convol","convol",*mgg,*myHistPdfInw,*myHistPdfRes);          
+    convol.SetTitle(myConvName);
+    convol.SetName(myConvName);
 
     // Both
     convol.Print();     
@@ -355,7 +380,7 @@ void ConvolutionFromRDH(RooWorkspace* w, Int_t mass, TString coupling) {
     sigToFit[c]->plotOn(myPlot, LineColor(kRed), LineStyle(kDashed));         
     convol.plotOn(myPlot, LineColor(kBlue));  
     myHistPdfRes->plotOn(myPlot, LineColor(kRed));
-    myHistPdfInW->plotOn(myPlot, LineColor(kYellow));
+    myHistPdfInw->plotOn(myPlot, LineColor(kYellow));
 
     myPlot->Draw();           
     myPlot->GetYaxis()->SetRangeUser(0.01, max*3.);      
@@ -366,13 +391,19 @@ void ConvolutionFromRDH(RooWorkspace* w, Int_t mass, TString coupling) {
     canvasName = TString(Form("closure_cat"+myCut+"_log.png"));    
     c1->SaveAs(canvasName); 
 
+    // Importing the convolution in the workspace
+    w->import(convol);
+    
     delete myHistPdfRes;    
-    delete myHistPdfInW;     
+    delete myHistPdfInw;     
   }
 
   // deleting
   delete fileInw;   
   delete fileRes;      
+
+  // checking the workspace
+  w->Print();
 }
 
 //-------------------------------------------------------
