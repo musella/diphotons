@@ -3,7 +3,36 @@
 from diphotons.Utils.pyrapp import *
 from optparse import OptionParser, make_option
 from copy import deepcopy as copy
-import os, sys, glob
+import os, sys, glob, json
+
+def scaleGraph(graph,scale):
+    graph = graph.Clone()
+    graph.GetListOfFunctions().Clear()
+    ## graph.Print()
+    
+    xvals = graph.GetX()
+    yvals = graph.GetY()
+    yerrl = graph.GetEYlow()
+    yerrh = graph.GetEYhigh()
+    for ip in xrange(graph.GetN()):
+        scl = scale(xvals[ip]) 
+        ## print scl
+        graph.SetPoint( ip, xvals[ip], yvals[ip]*scl )
+        try:
+            graph.SetPointEYlow( ip, yerrl[ip]*scl )
+            graph.SetPointEYhigh( ip, yerrh[ip]*scl )
+        except:
+            pass
+    
+    ## graph.Print()
+    
+    return graph
+
+def fitFunc(graph,func):
+    
+    ## func = func.Clone()
+    graph.Fit(func)
+    return func.Clone()
 
 # -----------------------------------------------------------------------------------------------------------
 class LimitPlot(PlotApp):
@@ -11,6 +40,8 @@ class LimitPlot(PlotApp):
     def __init__(self):
         super(LimitPlot,self).__init__(option_list=[
                 make_option("--do-limits",action="store_true", dest="do_limits", 
+                            default=False),
+                make_option("--plot-xsections",action="store_true", dest="plot_xsections", 
                             default=False),
                 make_option("--asimov-expected",action="store_true", dest="asimov_expected", 
                             default=True),
@@ -46,12 +77,15 @@ class LimitPlot(PlotApp):
         
         self.loadXsections(options.x_sections)
 
+        if options.plot_xsections:
+            self.plotXsections()
+
         print options.couplings
         if len(options.couplings) == 0:
             flist = glob.glob("%s/higgsCombine_k*.%s.root" % (options.input_dir, options.method) )
         else:
             flist = [ "%s/higgsCombine_k%s.%s.root" % (options.input_dir, coup, options.method) for coup in options.couplings ]
-            
+        print options.input_dir, flist
             
         tflist = {}
         for fname in flist:
@@ -79,7 +113,7 @@ class LimitPlot(PlotApp):
             if options.do_limits:
                 print coup, tfile
                 self.plotLimit(options,coup,tfile)
-
+        
         self.autosave()
         
     def plotLimit(self,options,coup,tfile):
@@ -93,7 +127,7 @@ class LimitPlot(PlotApp):
         expected95 = ROOT.theBand( tfile, 1, 0, bandType, 0.95 )
         observed = ROOT.theBand( tfile, 1, 0, ROOT.Observed, 0.95 )
         basicStyle = [["SetMarkerSize",1],["SetLineWidth",3],
-                       ["SetTitle",";M_{G} (GeV);95% C.L. on #sigma(pp #rightarrow G #rightarrow #gamma #gamma) (pb)"]]
+                       ["SetTitle",";M_{G} (GeV);95% C.L. limit #sigma(pp#rightarrow G#rightarrow#gamma#gamma) (pb)"]]
         commonStyle = [[self.scaleByXsec,coup],"Sort"]+basicStyle
         expectedStyle = commonStyle+[["SetMarkerStyle",ROOT.kOpenCircle]]
         observedStyle = commonStyle+[["SetMarkerStyle",ROOT.kFullCircle]]
@@ -106,9 +140,6 @@ class LimitPlot(PlotApp):
         
         style_utils.apply(observed,observedStyle)
       
-        expected68.Print("V")
-        observed.Print("V")
-        
         canv  = ROOT.TCanvas("limits_k%s"%coup,"limits_k%s"%coup)
         legend = ROOT.TLegend(0.5,0.6,0.8,0.9)
         expected95.Draw("APE3")
@@ -126,7 +157,7 @@ class LimitPlot(PlotApp):
             grav = self.xsections_[coup]
             style_utils.apply( grav, basicStyle+[["SetLineStyle",9],["colors",ROOT.myColorB2]] )
             grav.Draw("L")
-            legend.AddEntry(grav,"G_{RS} #rightarrow #gamma #gamma","l").SetLineStyle(0)
+            legend.AddEntry(grav,"G_{RS}#rightarrow#gamma#gamma","l").SetLineStyle(0)
             
         self.keep(legend,True)
         legend.Draw()
@@ -156,7 +187,7 @@ class LimitPlot(PlotApp):
     def loadXsections(self,inmap):
         self.xsections_ = {}
         for name,val in inmap.iteritems():
-            if name.startswith("RSGravToGG"):
+            if name.startswith("RSGravToGG") or name.startswith("RSGravitonToGG"):
                 coup,mass = name.split("kMpl")[1].split("_Tune")[0].replace("_","").replace("-","").split("M")
                 mass = float(mass)
                 if not coup in self.xsections_:
@@ -164,8 +195,96 @@ class LimitPlot(PlotApp):
                 self.xsections_[coup].SetPoint(self.xsections_[coup].GetN(),mass,val["xs"])
         for name,val in self.xsections_.iteritems():
             val.Sort()
+
+    def plotXsections(self):
+        coups = sorted( map( lambda x: (float("0."+x[0][1:]),x[1]), self.xsections_.iteritems() ), key=lambda x: x[0] )
+        ## minc = min( map( lambda x: x[0], coups) )
+        refc = coups[-4]
+        print refc, coups
+        scaled = map( lambda x: (x[0],scaleGraph(x[1], lambda y: refc[0]*refc[0]/((x[0]*x[0])*refc[1].Eval(y)))), coups )
         
-                
+        mypol = ROOT.TF1("mypol","[0]+[1]*(x-[2])**2")
+        fit = map( lambda x: (x[0],x[1],fitFunc(x[1],mypol)),  scaled )
+        
+        rescaled = map( lambda x: (x[0],scaleGraph(x[1], lambda y: 1./(x[2].Eval(y)) )), fit )
+
+        canv = ROOT.TCanvas("xsections","xsections")
+        scaled[0][1].Draw("apl")
+        # scaled[0].GetYaxis().SetRange(0,5)
+        for g in scaled[1:]: g[1].Draw("pl")
+        print scaled
+        self.keep( list(scaled) )
+        self.keep(canv)
+
+        recanv = ROOT.TCanvas("xsections_rescaled","xsections_rescaled")
+        rescaled[0][1].Draw("apl")
+        # scaled[0].GetYaxis().SetRange(0,5)
+        for g in rescaled[1:]: g[1].Draw("pl")
+        print rescaled
+        self.keep( list(rescaled) )
+        self.keep(recanv)
+
+        params = map( lambda x: (x[0], x[2].GetParameter(0), x[2].GetParameter(1), x[2].GetParameter(2)), fit  )
+        
+        param_graphs = ROOT.TGraph(), ROOT.TGraph(), ROOT.TGraph()
+        map( lambda x: (param_graphs[0].SetPoint(param_graphs[0].GetN(),x[0],x[1]),param_graphs[1].SetPoint(param_graphs[1].GetN(),x[0],x[2]),param_graphs[2].SetPoint(param_graphs[2].GetN(),x[0],x[3])), params )
+        for ip, gr in enumerate(param_graphs):
+            gr.Sort()
+            pcanv = ROOT.TCanvas("p%d"%ip,"p%d"%ip)
+            gr.Draw()
+            self.keep( [gr,pcanv] )
+
+        p0 = ROOT.TF1("p0","pol2")
+        p0.SetParameters(1.09141,-0.0977154,-0.670345)
+
+        p1 = ROOT.TF1("p1","pol2")
+        p1.SetParameters(-3.44266e-08,5.194e-08,2.02169e-07)
+
+        p2 = ROOT.TF1("p2","pol2")
+        p2.SetParameters(2718.59,69.1401,-772.539)
+        
+        ## refc[0] = 3
+        equalized = map( lambda x: (x[0],scaleGraph(x[1], lambda y: refc[0]*refc[0]/((x[0]*x[0])*(p0.Eval(x[0]) + p1.Eval(x[0])*(y-p2.Eval(x[0]))**2)) )), coups )        
+
+        eqcanv = ROOT.TCanvas("xsections_equalized","xsections_equalized")
+        ## equalized[0][1].Draw("apl")
+        ## # scaled[0].GetYaxis().SetRange(0,5)
+        ## for g in equalized[1:]: g[1].Draw("pl")
+        ## self.keep( list(equalized) )
+        ## self.keep(eqcanv)
+
+        sumg = {}
+        for gr in equalized:
+            gr = gr[1]
+            xvals = gr.GetX()
+            yvals = gr.GetY()
+            for ip in xrange(gr.GetN()):
+                x,y = xvals[ip],yvals[ip]
+                if not x in sumg: sumg[x] = [0.,0]
+                sumg[x][0] += y
+                sumg[x][1] += 1
+        averaged = ROOT.TGraph()
+        for x,y in sumg.iteritems():
+            averaged.SetPoint(averaged.GetN(),x,y[0]/y[1])
+        averaged.Sort()
+        averaged.Draw("apl")
+        self.keep(averaged)
+        self.keep(eqcanv)
+        
+        xsec = {
+            "ref" : refc[0],
+            "p0"  : [ p0.GetParameter(0), p0.GetParameter(1), p0.GetParameter(2) ],
+            "p1"  : [ p1.GetParameter(0), p1.GetParameter(1), p1.GetParameter(2) ],
+            "p2"  : [ p2.GetParameter(0), p2.GetParameter(1), p2.GetParameter(2) ],
+            "xsec" : [ (averaged.GetX()[i],averaged.GetY()[i]) for i in xrange(averaged.GetN()) ]
+            }
+        
+        with open("xsecions.json","w+") as xsec_file:
+            xsec_file.write(json.dumps(xsec))
+            xsec_file.close()
+        
+        
+        
 # -----------------------------------------------------------------------------------------------------------
 if __name__ == "__main__":
     app = LimitPlot()

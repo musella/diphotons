@@ -80,16 +80,17 @@ class CombineApp(TemplatesApp):
                                     ## type="string",default=[114,300,6000],
                                     ## type="string",default=[134,300,7000],
                                     type="string",
-                                    default=[230,250,275,300,325,350,400,450,500,1050],
+                                    default=[230,240,250,260,270,280,290,300,310,320,330,340,360,370,390,400,410,420,440,460,500,1050],
+                                    ## default=[230,250,275,300,325,350,400,450,500,1050],
                                     ## default=[230,250,275,300,325,350,400,450,500,600,700,800,900,1000,1500,2000,4000,5000,6000,7000],
                                     help="Binning to be used for plots",
                                     ),
                         make_option("--cat-plot-binning",dest="cat_plot_binning",action="callback",callback=optpars_utils.Load(scratch=True),
                                     ## type="string",default=[114,300,6000],
                                     ## type="string",default=[134,300,7000],
-                                    type="string",default={ "EBEE": [330,360,390,420,450,500,1050] 
+                                    type="string",default={ "EBEE": [330,340,350,360,370,390,410,420,440,460,500,1050],
+                                                            ## "EBEE": [330,360,390,420,450,500,1050],
                                                             ## "EBEE": [330,360,390,420,450,500,600,700,800,900,1000,1500,2000,4000,5000,6000,7000],
-                                                            
                                                             },
                                     ## type="string",default=[320,350,375,400,450,500,1050],
                                     help="Binning to be used for plots",
@@ -154,6 +155,21 @@ class CombineApp(TemplatesApp):
                                     ),
                         make_option("--generate-signal-dataset",dest="generate_signal_dataset",action="store_true",default=False,
                                     help="Generate signal dataset",
+                                    ),
+                        make_option("--parametric-signal",dest="parametric_signal",action="store",type="string",default=None,
+                                    help="Read parametric signal from root file.",
+                                    ),
+                        make_option("--parametric-signal-prefix",dest="parametric_signal_prefix",action="store",type="string",default="grav",
+                                    help="Read parametric signal from root file.",
+                                    ),
+                        make_option("--parametric-signal-source",dest="parametric_signal_source",action="callback",callback=optpars_utils.Load(scratch=True),
+                                    type="string",
+                                    default={ "ws" : "w", 
+                                              "reparam" : {"mu" : "MH"},
+                                              "pdfs"    : { "01" : {"EBEB" : "morphCat0", "EBEE" : "morphCat1" }
+                                                            }
+                                              },
+                                    help="Details about parametric signal",
                                     ),
                         make_option("--scale-signal",dest="generate_signal_dataset",action="store_true",default=False,
                                     help="Generate signal dataset",
@@ -314,8 +330,11 @@ class CombineApp(TemplatesApp):
             self.fitBackground(options,args)
             
         if options.generate_signal_dataset:
-            self.generateSignalDataset(options,args)
-            
+            if options.parametric_signal:
+                self.generateParametricSignal(options,args)
+            else:
+                self.generateSignalDataset(options,args)
+
         if options.generate_ws_bkgnbias:
             self.generateWsBkgnbias(options,args)
         
@@ -1185,7 +1204,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         # done
         self.saveWs(options)
        
-## ------------------------------------------------------------------------------------------------------------
+    ## ------------------------------------------------------------------------------------------------------------
     def computeFWHM(self, options, args):
         print "--------------------------------------------------------------------------------------------------------------------------"
         print " Computing FWHM for signals using ROODATAHIST in provided signal workspace"
@@ -1207,8 +1226,6 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             return
 
         list_fwhm = {}
-
-        
 
         for signame in signals:
             sublist_fwhm = {}
@@ -1272,7 +1289,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             options.fwhm_input_file=list_fwhm # in case we run also generateWsBkgnbias                 
                     
 
- ## ------------------------------------------------------------------------------------------------------------
+    ## ------------------------------------------------------------------------------------------------------------
     def generateSignalDataset(self,options,args):
         
         print "--------------------------------------------------------------------------------------------------------------------------"
@@ -1312,12 +1329,20 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             templfunc.SetName(rootemplname)
             options.use_signal_datahist = False ## make sure that in the datacard we point to the pdf for signal, not to the roodatahist
             
-        for signame,trees in options.signals.iteritems():
+        ### for signame,trees in options.signals.iteritems():
+        ###     self.bookNewWs()
+        ###     
+        ###     if(isNameProvided):
+        ###         signame = options.signal_name
+
+        if(isNameProvided):
+            signals = [options.signal_name]
+        else:
+            signals = options.signals.keys()
+
+        for signame in signals:
             self.bookNewWs()
             
-            if(isNameProvided):
-                signame = options.signal_name
-        
             # In case nothing specified about the output file, set: output_file = signame.root
             if ( options.output_file == None ):
                 options.output_file = "%s.root" % (signame)
@@ -1361,6 +1386,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 if options.verbose: 
                     reduced.Print()
                     reducedPdf.Print()
+                    
                 binned = reduced.binnedClone()
                 binned.SetName("signal_%s_%s"% (signame,cat))
                 binnedPdf = reducedPdf.binnedClone()
@@ -1370,7 +1396,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     binnedPdf.Print()
                 self.workspace_.rooImport(binned)
                 self.workspace_.rooImport(binnedPdf)
-
+                
                 if options.compute_fwhm:
                     if len(options.fwhm_output_file) != 0:
                         file_fwhm = self.open(options.fwhm_output_file,"a",folder=options.ws_dir)
@@ -1486,6 +1512,45 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             file_fwhm.write("%s\n" % json_output)            
             options.fwhm_input_file=list_fwhm # in case we run also generateWsBkgnbias
   
+
+    ## ------------------------------------------------------------------------------------------------------------
+    def generateParametricSignal(self,options,args):
+        fin = self.open(options.parametric_signal)
+
+        prefix_output = options.output_file.replace(".root","")
+        options.signal_root_file = options.output_file ## copy this in case we want to run --generate-datacard at the same time
+        if not options.cardname:
+            options.cardname = "datacard_%s.txt" % prefix_output
+
+        workspace = fin.Get(options.parametric_signal_source["ws"])
+        reparam = options.parametric_signal_source.get("reparam",{})
+        reparamVars = {}
+        for key,val in reparam.iteritems():
+            dst = self.getVar(val)
+            dst = self.buildRooVar(*dst,importToWs=True,recycle=True)
+            reparamVars[key] = dst
+        
+        for coup,pdfs in options.parametric_signal_source["pdfs"].iteritems():
+            self.bookNewWs()
+            signame = options.parametric_signal_prefix
+            if coup != "": signame += "_%s" % coup
+            for cat,name in pdfs.iteritems():
+                pdf = workspace.pdf(name)
+                custom = ROOT.RooCustomizer(pdf,"")
+                obsCat = self.getObservable(cat)
+                obsIn = options.parametric_signal_source.get("obs","mgg")
+                custom.replaceArg(obsIn,obsCat)
+                for src,dst in reparamVars.iteritems():
+                    srcVar = workspace.var(src)
+                    custom.replaceArg(srcVar,dst)
+                    pdf = custom.build(True)
+                    pdf.SetName("model_signal_%s_%s" % (signame,cat))
+                    pdf.Print()
+                    self.workspace_.rooImport(pdf)
+                    
+            options.output_file = "%s_%s.root" % (prefix_output,signame)
+            self.saveWs(options)
+            
     ## ------------------------------------------------------------------------------------------------------------
     def getSignalScaleFactor(self,signame):
         coup,mass = signame.replace("grav_","").split("_")[0:2]

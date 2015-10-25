@@ -4,7 +4,7 @@
 version=$1 && shift
 
 fitname=2D 
-www=~/www/exo/spring15_7412
+www=~/www/exo/spring15_7415
 if [[ $(whoami) == "mquittna" ]]; then
     www=/afs/cern.ch/user/m/mquittna/www/diphoton/Phys14/
 fi
