@@ -37,6 +37,10 @@ class MicroAODCustomize(fggMicroAODCustomize):
         if "WJetsToLNu" in self.datasetName:
             process.myPreselectedPhotons.filter = cms.bool(True)
             
+    # signal specific customization
+    def customizeSignal(self,process):
+        process.flashggGenPhotonsExtra.defaultType = 1
+
 
 # customization object
 customize = MicroAODCustomize()
