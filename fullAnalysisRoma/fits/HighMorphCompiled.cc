@@ -26,12 +26,13 @@ using namespace std;
 
 // to be modified:
 static const Int_t NCAT = 2;  
+static const Int_t checkMass = 0;        // 0 not to check; otherwise mass to be checked
 
 // Definition of the variables in the input ntuple
 RooArgSet* defineVariables() {
 
-  RooRealVar* mgg        = new RooRealVar("mgg",        "M(gg)",       0, 9000, "GeV");   
-  RooRealVar* mggGen     = new RooRealVar("mggGen",     "M(gg) gen",   0, 9000, "GeV");   
+  RooRealVar* mgg        = new RooRealVar("mgg",        "M(gg)",        0, 7000, "GeV");   
+  RooRealVar* mggGen     = new RooRealVar("mggGen",     "M(gg) gen",    0, 7000, "GeV");   
   RooRealVar* eventClass = new RooRealVar("eventClass", "eventClass", -10,   10, "");
   RooRealVar* weight     = new RooRealVar("weight",     "weightings",   0, 1000, "");   
 
@@ -40,222 +41,7 @@ RooArgSet* defineVariables() {
   return ntplVars;
 }
 
-// Preparing the resolution histograms
-void MakeResolutionHisto(RooWorkspace *w, TString filename, bool newFile, int mass, TString coupling) {
-
-  TString myMass = TString::Format("%d",mass);
-  Int_t ncat = NCAT;
-  
-  // the roorealvar 
-  TString deltaMname = TString::Format("deltaM_mass%d",mass);
-  RooRealVar* deltaM = w->var(deltaMname);    
-
-  // Output file 
-  TFile *theResoFile;
-  if (newFile) theResoFile = new TFile(filename,"RECREATE");
-  else theResoFile = new TFile(filename,"UPDATE");
-  
-  // Input file and tree
-  TString inDir = "../macro/allFiles/";
-  TChain* sigTree = new TChain();
-  cout << "reading file " 
-       << inDir+TString(Form("FormSigMod_kpl"))+coupling+TString(Form("_M%d.root/DiPhotonTree", mass)) << endl;
-  sigTree->Add(inDir+TString(Form("FormSigMod_kpl"))+coupling+TString(Form("_M%d.root/DiPhotonTree", mass)));
-  sigTree->SetTitle("sigTree");
-  sigTree->SetName("sigTree");
-
-  // Minimal common preselection cut on mgg and mggGen
-  TString mainCut = TString::Format("mgg>=0 && mgg<=9000 && mggGen>=0 && mggGen<=9000");     
-
-  // Loop over categories
-  for (int c=0; c<ncat; ++c) {
-
-    // Histos
-    TH1D *resolH = new TH1D("resolH","resolH",200,-1000.,200.);    // chiara: qui va studiato se lasciarlo costante o dipendente dalla massa
-    resolH->Sumw2();
-  
-    // Projecting the tree into the histo
-    if (c==0) sigTree->Project("resolH","mgg-mggGen",mainCut+TString::Format("&& eventClass==0"));
-    if (c==1) sigTree->Project("resolH","mgg-mggGen",mainCut+TString::Format("&& eventClass==1"));
-
-    // Now make the roodatahist
-    RooDataHist resolRDH("resolRDH","resolRDH",*deltaM,Import(*resolH));        
-    cout << "Resolution datahist summary for mass " << mass << endl;  
-    resolRDH.Print();
-    cout << endl;  
-
-    // Saving in the root file
-    theResoFile->cd();
-    TString myCut;
-    if (c==0)      myCut = "EBEB";  
-    else if (c==1) myCut = "EBEE";
-    TString nameH = TString::Format("resolH_mass%d",mass)+TString::Format("_cat")+myCut;
-    resolH->Write(nameH);
-    TString nameRDH = TString::Format("resolRDH_mass%d",mass)+TString::Format("_cat")+myCut;
-    resolRDH.Write(nameRDH);
-
-    // Plot to check
-    TCanvas *c1 = new TCanvas("c1","c1",1);
-    RooPlot* myPlot = deltaM->frame(Range(-100,100),Bins(200));  
-    resolRDH.plotOn(myPlot, LineColor(kRed), LineStyle(kDashed));    
-    myPlot->Draw();
-    TString canvasName = TString(Form("CheckResol_Cat"+myCut+"_mass"+myMass+".png"));
-    c1->SaveAs(canvasName);       
-
-    delete resolH;
-  }
-
-  // Closing the output file
-  theResoFile->Close();
-}
-
-// Preparing the intrinsic width histogram
-void MakeIntrinsicWidthHisto(RooWorkspace *w, TString filename, bool newFile, int mass, TString coupling) {
-
-  TString myMass = TString::Format("%d",mass);
-  Int_t ncat = NCAT;
-
-  // Roorealvar 
-  TString deltaMgenName = TString::Format("deltaMgen_mass%d",mass);
-  RooRealVar* deltaMgen = w->var(deltaMgenName);    
-
-  // Output file 
-  TFile *theIntrinsicWFile;
-  if (newFile) theIntrinsicWFile = new TFile(filename,"RECREATE");
-  else theIntrinsicWFile = new TFile(filename,"UPDATE");
-  
-  // Input file and tree
-  TString inDir = "../macro/allFiles/";
-  TChain* sigTree = new TChain();
-  cout << "reading file " 
-       << inDir+TString(Form("FormSigMod_kpl"))+coupling+TString(Form("_M%d.root/DiPhotonTree", mass)) << endl;
-  sigTree->Add(inDir+TString(Form("FormSigMod_kpl"))+coupling+TString(Form("_M%d.root/DiPhotonTree", mass)));
-  sigTree->SetTitle("sigTree");
-  sigTree->SetName("sigTree");
-
-  // Minimal common preselection cut on mgg and mggGen
-  TString mainCut = TString::Format("mgg>=0 && mgg<=9000 && mggGen>=0 && mggGen<=9000");   
-
-  // Loop over categories
-  for (int c=0; c<ncat; ++c) {
-
-    // Histos
-    TH1D *intWidthH = new TH1D("intWidthH","intWidthH",250,-1000.,2000.);        // chiara: qui andra' studiato se costante o dipendente dalla massa
-    intWidthH->Sumw2();
-  
-    // Projecting the tree
-    TString express = TString::Format("mggGen-%d",mass);
-    if (c==0) sigTree->Project("intWidthH",express,mainCut+TString::Format("&& eventClass==0"));
-    if (c==1) sigTree->Project("intWidthH",express,mainCut+TString::Format("&& eventClass==1"));
-
-    // Now make the roodatahist
-    RooDataHist intWidthRDH("intWidthRDH","intWidthRDH",*deltaMgen,Import(*intWidthH));   
-    cout << "Intrinsic width datahist summary for mass " << mass << endl;  
-    intWidthRDH.Print();
-    cout << endl;  
-
-    // Saving in the root file
-    theIntrinsicWFile->cd();
-    TString myCut;
-    if (c==0)      myCut = "EBEB";  
-    else if (c==1) myCut = "EBEE";
-    TString nameH = TString::Format("intWidthH_mass%d",mass)+TString::Format("_cat")+myCut;
-    intWidthH->Write(nameH);
-    TString nameRDH = TString::Format("intWidthRDH_mass%d",mass)+TString::Format("_cat")+myCut;
-    intWidthRDH.Write(nameRDH);
-
-    // Plot to check
-    TCanvas *c1 = new TCanvas("c1","c1",1);
-    RooPlot* myPlot = deltaMgen->frame(Range(-100,100),Bins(200));  
-    intWidthRDH.plotOn(myPlot, LineColor(kRed), LineStyle(kDashed));    
-    myPlot->Draw();
-    TString canvasName = TString(Form("CheckIntrinsicWidth_Cat"+myCut+"_mass"+myMass+".png"));
-    c1->SaveAs(canvasName);       
-    
-    delete intWidthH;
-  }
-
-  // Closing the output file
-  theIntrinsicWFile->Close();
-}
-
-/*
-// Load the morphing and make a convolution
-void ConvolutionFromMorphing(RooWorkspace* w){
-
-  // Only for closure test
-  float mass = 1500; 
-  RooDataSet* sigToFit[NCAT];
-  sigToFit[0] = (RooDataSet*) w->data("SigWeight_catEBEB_mass1500");
-  sigToFit[1] = (RooDataSet*) w->data("SigWeight_catEBEE_mass1500");
-  RooRealVar* mgg = w->var("mgg");    
-
-  // Morphing variable
-  RooRealVar* mu = w->var("mu");    
-
-  TCanvas* c1 = new TCanvas("c1","PhotonsMass",0,0,800,800);   
-  c1->cd(1);
-
-  // Morphings
-  RooAbsPdf *morphInW[NCAT];
-  RooAbsPdf *morphRes[NCAT];
-  for (int c=0; c<NCAT; ++c) {   
-    cout << "---------- Category = " << c << endl; 
-
-    if (c==0) morphInW[c] = (RooAbsPdf*) w->pdf("morphInWCat0");
-    if (c==1) morphInW[c] = (RooAbsPdf*) w->pdf("morphInWCat1");
-    if (c==0) morphRes[c] = (RooAbsPdf*) w->pdf("morphResCat0");
-    if (c==1) morphRes[c] = (RooAbsPdf*) w->pdf("morphResCat1");
-    morphInW[c]->Print();
-    morphRes[c]->Print();
-
-    mu->setVal(1500);    // chiara
-    mu->setConstant();
-    
-    // convolution
-    float fitMin = 1250.;     
-    float fitMax = 1750.;     
-    
-    RooNumConvPdf convol("convol","convol",*mgg,*morphInW[c],*morphRes[c]);
-    //RooNumConvPdf convol("convol","convol",*mu,*morphRes[c],*morphInW[c]);
-    RooRealVar* W = new RooRealVar("W","W",100);    // ok?
-    W->setConstant();        
-    RooRealVar* C = new RooRealVar("C","C",-5);    // ok?
-    C->setConstant();      
-    convol.setConvolutionWindow(*C,*W);       
-    convol.Print();
-    cout << "done!!" << endl;
-
-    // Plot to check
-    TString myCut = "EBEB"; 
-    if (c==1) myCut = "EBEE";  
-    
-    //RooFitResult* fitresults = (RooFitResult* ) convol.fitTo(*sigToFit[c], SumW2Error(kFALSE), Range(fitMin,fitMax), RooFit::Save(kTRUE)); 
-    //fitresults->Print();
-
-    RooPlot* myPlot1 = mgg->frame(Range(fitMin,fitMax),Bins(100));  
-    morphInW[c]->plotOn(myPlot1, LineColor(kYellow), LineStyle(kDashed));    
-    double max = myPlot1->GetMaximum();
-    cout << "A" << endl;
-
-    //RooPlot* myPlot = mgg->frame(Range(fitMin,fitMax),Bins(100)); 
-    RooPlot* myPlot = mgg->frame();
-    myPlot->SetTitle("Convolution, cat"+myCut);     
-    sigToFit[c]->plotOn(myPlot, LineColor(kRed), LineStyle(kDashed));
-    morphRes[c]->plotOn(myPlot, LineColor(kGreen));
-    morphInW[c]->plotOn(myPlot, LineColor(kYellow));
-    convol.plotOn(myPlot, LineColor(kBlue));
-    cout << "B" << endl;
-
-    myPlot->Draw();
-    myPlot->GetYaxis()->SetRangeUser(0.01, max*1.2); 
-    TString canvasName = TString(Form("closure_cat"+myCut+".png"));
-    c1->SaveAs(canvasName);   
-  }
-}
-*/
-
-// Load the roodatahist and make a convolution 
+// Load the roodatahists and make a convolution 
 void ConvolutionFromRDH(RooWorkspace* w, Int_t mass, TString coupling) {     
 
   TString myMass = TString::Format("%d",mass);
@@ -263,13 +49,16 @@ void ConvolutionFromRDH(RooWorkspace* w, Int_t mass, TString coupling) {
   // Dataset - only for closure test   
   RooDataSet* sigToFit[NCAT];   
   
-  // RooRealVar
+  // RooRealVars
   RooRealVar* mgg = w->var("mgg");  
-  RooRealVar* mggGen = w->var("mggGen");  
   TString deltaMname = TString::Format("deltaM_mass%d",mass);
   RooRealVar* deltaM = w->var(deltaMname);    
+  deltaM->SetTitle("deltaM");     
+  deltaM->SetName("deltaM");
   TString deltaMgenName = TString::Format("deltaMgen_mass%d",mass);
   RooRealVar* deltaMgen = w->var(deltaMgenName);    
+  deltaMgen->SetTitle("deltaMgen");  
+  deltaMgen->SetName("deltaMgen");   
   TString mHname = TString::Format("mH_mass%d",mass);
   RooRealVar* mH = w->var(mHname);
   mH->setConstant();    
@@ -277,17 +66,18 @@ void ConvolutionFromRDH(RooWorkspace* w, Int_t mass, TString coupling) {
   // Resolution centred in zero in mgg
   RooFormulaVar *deltaM_formula = new RooFormulaVar("deltaM_formula","","@0",RooArgList(*w->var("mgg")));
 
-  // Intrinsic width
-  RooFormulaVar *deltaMgen_formula = new RooFormulaVar("deltaMgen_formula","","@0-@1",RooArgList(*w->var("mgg"),*mH));        // centred in mass 
-  //RooFormulaVar *deltaMgen_formula = new RooFormulaVar("deltaMgen_formula","","@0",RooArgList(*w->var("mgg")));             // centred in zero
+  // Intrinsic width centred in mH in mgg   
+  RooFormulaVar *deltaMgen_formula = new RooFormulaVar("deltaMgen_formula","","@0-@1",RooArgList(*w->var("mgg"),*mH)); 
 
+  // To move from deltaM to mgg
   RooArgList histObsRes;
   histObsRes.add(*deltaM);
 
+  // To move from deltaMgen to mgg
   RooArgList histObsInw;
   histObsInw.add(*deltaMgen);
 
-  // Files with resolution and mgg roodatahists 
+  // Files with resolution and intrinsic width RDHs
   TFile *fileInw = new TFile("IntrinsicWidthHistos.root"); 
   TFile *fileRes = new TFile("ResolutionHistos.root");  
 
@@ -321,7 +111,8 @@ void ConvolutionFromRDH(RooWorkspace* w, Int_t mass, TString coupling) {
     TString myRDHA = TString(Form("resolRDH_mass%d_cat",mass)+myCut);     
     RooDataHist *resRDH = (RooDataHist*)fileRes->Get(myRDHA);    
     resRDH->Print();   
-    TString myRDHB = TString(Form("intWidthRDH_mass%d_cat",mass)+myCut);   
+    TString myRDHBa = TString(Form("intWidthRDH_mass%d_cat",mass)+myCut);   
+    TString myRDHB = TString(Form(myRDHBa))+TString(Form("_kpl"))+TString(Form(coupling));
     RooDataHist *inwRDH = (RooDataHist*)fileInw->Get(myRDHB);   
     inwRDH->Print();        
     cout << "RooDataHists taken" << endl;       
@@ -340,14 +131,10 @@ void ConvolutionFromRDH(RooWorkspace* w, Int_t mass, TString coupling) {
     myHistPdfInw->SetTitle(myHistPdfInwName);
     myHistPdfInw->SetName(myHistPdfInwName);
     myHistPdfInw->Print(); 
-    //
+
     cout << "RooHistPdfs done" << endl;      
 
-
-    // convolution    
-    float fitMin = mass-250;          
-    float fitMax = mass+250;    
-    
+    // Now make the convolution    
 
     // numerical
     /*
@@ -374,6 +161,13 @@ void ConvolutionFromRDH(RooWorkspace* w, Int_t mass, TString coupling) {
     cout << "done!!" << endl;   
 
     // Fit and Plot 
+    int fitMin = mass-250;        
+    int fitMax = mass+250;        
+    if (mass>=2000) {
+      fitMin = mass-750;        
+      fitMax = mass+750;        
+    } 
+    
     TString myUnbDS = TString(Form("SigWeight_cat"+myCut+"_mass%d",mass));   
     sigToFit[c] = (RooDataSet*) w->data(myUnbDS); 
     sigToFit[c]->Print();      
@@ -383,23 +177,24 @@ void ConvolutionFromRDH(RooWorkspace* w, Int_t mass, TString coupling) {
     double max = myPlot1->GetMaximum(); 
 
     RooPlot* myPlot = mgg->frame(Range(fitMin,fitMax),Bins(50)); 
+    if (coupling=="001") myPlot = mgg->frame(Range(fitMin,fitMax),Bins(40));
     myPlot->SetTitle("Convolution, cat"+myCut);    
     sigToFit[c]->plotOn(myPlot, LineColor(kRed), LineStyle(kDashed));         
     convol.plotOn(myPlot, LineColor(kBlue));  
     myHistPdfRes->plotOn(myPlot, LineColor(kRed));
     myHistPdfInw->plotOn(myPlot, LineColor(kYellow));
 
+    myPlot->GetYaxis()->SetRangeUser(0.0001, max*3.);      
     myPlot->Draw();           
-    myPlot->GetYaxis()->SetRangeUser(0.01, max*3.);      
-    TString canvasName = TString(Form("closure_cat"+myCut+"_mass"+myMass+".png"));
+    TString canvasName = TString(Form("closure_cat"+myCut+"_mass"+myMass+"_kpl"+coupling+".png"));
     c1->SetLogy(0);
     c1->SaveAs(canvasName); 
     c1->SetLogy(1);
-    canvasName = TString(Form("closure_cat"+myCut+"_mass"+myMass+"_log.png"));
+    canvasName = TString(Form("closure_cat"+myCut+"_mass"+myMass+"_kpl"+coupling+"_log.png"));
     c1->SaveAs(canvasName); 
 
     // Importing the convolution in the workspace
-    w->import(convol);
+    w->import(convol);   
     
     delete myHistPdfRes;    
     delete myHistPdfInw;     
@@ -409,137 +204,10 @@ void ConvolutionFromRDH(RooWorkspace* w, Int_t mass, TString coupling) {
   delete fileInw;   
   delete fileRes;      
 
-  // checking the workspace
+  // checking the workspaces
   w->Print();
 }
 
-//-------------------------------------------------------
-/*
-// Load the morphing and make a convolution by hand tossing toy mcs
-void ConvolutionWithToysFromMorphing(RooWorkspace* w){
-
-  // Only for closure test: original dataset and variable
-  float mass = 1500; 
-  RooDataSet* sigToFit[NCAT];
-  sigToFit[0] = (RooDataSet*) w->data("SigWeight_catEBEB_mass1500");
-  sigToFit[1] = (RooDataSet*) w->data("SigWeight_catEBEE_mass1500");
-  RooRealVar* mgg = w->var("mgg");    
-
-  // Toy dataset for real work     
-  RooDataSet* pseudoData[NCAT];    
-
-  // Toy dataset for checks  
-  RooDataSet* pseudoDataCB[NCAT];   
-  RooDataSet* pseudoDataBW[NCAT];    
-
-  // Other RooRealVar   
-  RooRealVar* mggGenCB = new RooRealVar("mggGenCB", "M(gg)", -1000., 100., "GeV");  
-  RooRealVar* mggGenBW = new RooRealVar("mggGenBW", "M(gg)", 10., 9000., "GeV");  
-
-  // Morphing variable
-  RooRealVar* mu = w->var("mu");    
-
-  // Control plots
-  TCanvas* c1 = new TCanvas("c1","PhotonsMass",0,0,800,800);   
-  c1->cd(1);
-
-  // Morphings
-  RooAbsPdf *morphInW[NCAT];
-  RooAbsPdf *morphRes[NCAT];
-  for (int c=0; c<NCAT; ++c) {   
-    cout << "---------- Category = " << c << endl; 
-
-    if (c==0) morphInW[c] = (RooAbsPdf*) w->pdf("morphInWCat0");
-    if (c==1) morphInW[c] = (RooAbsPdf*) w->pdf("morphInWCat1");
-    if (c==0) morphRes[c] = (RooAbsPdf*) w->pdf("morphResCat0");
-    if (c==1) morphRes[c] = (RooAbsPdf*) w->pdf("morphResCat1");
-    morphInW[c]->Print();
-    morphRes[c]->Print();
-    mu->setVal(1500); // chiara
-    
-    // Pseudodata from our generation  
-    pseudoData[c]   = new RooDataSet("pseudoData",  "pseudoData",   RooArgSet(*mgg));       
-    pseudoDataCB[c] = new RooDataSet("pseudoDataCB","pseudoDataCB", RooArgSet(*mggGenCB));    
-    pseudoDataBW[c] = new RooDataSet("pseudoDataBW","pseudoDataBW", RooArgSet(*mggGenBW)); 
-
-    // to check the generation   
-    TH1F *H_orig = new TH1F("H_orig","H_orig",45,1250,1750);  
-    TH1F *H_toys = new TH1F("H_toys","H_toys",45,1250,1750);  
-    H_orig->Sumw2();   
-    H_toys->Sumw2();   
-    H_orig->SetTitle("");     
-    H_toys->SetTitle("");     
-    H_orig->SetLineColor(1);    
-    H_orig->SetLineColor(1);      
-    H_toys->SetLineWidth(2); 
-    H_orig->SetLineWidth(2);   
-
-    // Generation from the two morphings
-    int origEntries = sigToFit[c]->numEntries(); 
-    cout << "generating " << origEntries << " entries" << endl; 
-    for (int ii=0; ii<origEntries; ii++) {  
-      if (ii%500==0) cout << ii << endl; 
-      RooDataSet* dataCB = morphRes[c]->generate(*mggGenCB,1);  
-      RooDataSet* dataBW = morphInW[c]->generate(*mggGenBW,1);  
-      RooArgSet setCB = *dataCB->get(0);
-      RooArgSet setBW = *dataBW->get(0);  
-      RooRealVar* varCB = (RooRealVar*)setCB.find("mggGenCB");  
-      RooRealVar* varBW = (RooRealVar*)setBW.find("mggGenBW");  
-      float mggCB = varCB->getVal();  
-      float mggBW = varBW->getVal();
-      *mgg      = mggCB*mggBW;    
-      *mggGenCB = mggCB;        
-      *mggGenBW = mggBW;  
-
-      pseudoData[c]->add(RooArgSet(*mgg)); 
-      pseudoDataCB[c]->add(RooArgSet(*mggGenCB));     
-      pseudoDataBW[c]->add(RooArgSet(*mggGenBW));     
-
-      // Fill histos   
-      RooArgSet setOriginal = *sigToFit[c]->get(ii);   
-      RooRealVar* varOriginal = (RooRealVar*)setOriginal.find("mgg");
-      H_orig->Fill(varOriginal->getVal());        
-      H_toys->Fill(mggCB*mggBW);      
-
-      delete dataCB;  
-      delete dataBW;    
-    }
-
-    // Noi build a roodatahist and a rohistpdf for the generated toys
-    mgg->setRange(10,9000);   // chiara
-    mgg->setBins(890);        // chiara 
-    RooDataHist bPseudodata("bPseudodata","bPseudodata",RooArgList(*mgg),*pseudoData[c]); 
-    bPseudodata.Print();  
-    RooHistPdf rhpdf("rhpdf","rhpdf",*mgg,bPseudodata,0);
-    cout << "done!!" << endl;
-
-    // Plot to check
-    float fitMin = 1250.;     
-    float fitMax = 1750.;     
-
-    TString myCut = "EBEB"; 
-    if (c==1) myCut = "EBEE";  
-
-    RooPlot* myPlot1 = mgg->frame(Range(fitMin,fitMax),Bins(100));  
-    morphInW[c]->plotOn(myPlot1, LineColor(kYellow), LineStyle(kDashed));    
-    double max = myPlot1->GetMaximum();
-    cout << "A" << endl;
-
-    RooPlot* myPlot = mgg->frame(Range(fitMin,fitMax),Bins(100)); 
-    myPlot->SetTitle("Convolution, cat"+myCut);     
-    sigToFit[c]->plotOn(myPlot, LineColor(kRed), LineStyle(kDashed));
-    morphRes[c]->plotOn(myPlot, LineColor(kGreen));
-    morphInW[c]->plotOn(myPlot, LineColor(kYellow));
-    bPseudodata.plotOn(myPlot, LineColor(kBlue));
-    cout << "B" << endl;
-
-    myPlot->Draw();
-    myPlot->GetYaxis()->SetRangeUser(0.01, max*1.2); 
-    TString canvasName = TString(Form("closure_cat"+myCut+".png"));
-    c1->SaveAs(canvasName);   
-  }
-}
-*/
 //-------------------------------------------------------
 
 // Loading signal data and making roodatasets
@@ -562,7 +230,7 @@ void AddSigData(RooWorkspace* w, int mass, TString coupling) {
   sigTree->SetName("sigTree");
   
   // Minimal common preselection cut on mgg and mggGen
-  TString mainCut = TString::Format("mgg>=0 && mgg<=9000 && mggGen>=0 && mggGen<=9000");  
+  TString mainCut = TString::Format("mgg>=0 && mgg<=7000 && mggGen>=0 && mggGen<=7000");  
   RooDataSet sigWeighted("sigWeighted","dataset",sigTree,*ntplVars,mainCut,"weight");   
   sigWeighted.Print();
 
@@ -575,7 +243,7 @@ void AddSigData(RooWorkspace* w, int mass, TString coupling) {
   w->import(*deltaM);
 
   // nominal graviton mass
-  RooRealVar* mH = new RooRealVar("mH", "M(G)", 0, 20000, "GeV");    
+  RooRealVar* mH = new RooRealVar("mH", "M(Graviton)", 0, 10000, "GeV");    
   TString mHname = TString::Format("mH_mass%d",mass);
   mH->SetName(mHname);
   mH->SetTitle(mHname);
@@ -621,8 +289,9 @@ void AddSigData(RooWorkspace* w, int mass, TString coupling) {
   cout << "preparing dataset with observable deltaM" << endl;
   RooDataSet* signalDm[NCAT];
   for (int c=0; c<ncat; ++c) {
-    if (c==0) signalDm[c] = (RooDataSet*) sigWeighted.reduce(*w->var("deltaM"),mainCut+TString::Format("&& eventClass==0"));
-    if (c==1) signalDm[c] = (RooDataSet*) sigWeighted.reduce(*w->var("deltaM"),mainCut+TString::Format("&& eventClass==1"));
+    TString deltaMname = TString::Format("deltaM_mass%d",mass);
+    if (c==0) signalDm[c] = (RooDataSet*) sigWeighted.reduce(*w->var(deltaMname),mainCut+TString::Format("&& eventClass==0"));
+    if (c==1) signalDm[c] = (RooDataSet*) sigWeighted.reduce(*w->var(deltaMname),mainCut+TString::Format("&& eventClass==1"));
 
     TString myCut;
     if (c==0)      myCut = "EBEB";  
@@ -646,8 +315,9 @@ void AddSigData(RooWorkspace* w, int mass, TString coupling) {
   cout << "preparing dataset with observable deltaMgen" << endl;
   RooDataSet* signalDmgen[NCAT];
   for (int c=0; c<ncat; ++c) {
-    if (c==0) signalDmgen[c] = (RooDataSet*) sigWeighted.reduce(*w->var("deltaMgen"),mainCut+TString::Format("&& eventClass==0"));
-    if (c==1) signalDmgen[c] = (RooDataSet*) sigWeighted.reduce(*w->var("deltaMgen"),mainCut+TString::Format("&& eventClass==1"));
+    TString deltaMgenName = TString::Format("deltaMgen_mass%d",mass);
+    if (c==0) signalDmgen[c] = (RooDataSet*) sigWeighted.reduce(*w->var(deltaMgenName),mainCut+TString::Format("&& eventClass==0"));
+    if (c==1) signalDmgen[c] = (RooDataSet*) sigWeighted.reduce(*w->var(deltaMgenName),mainCut+TString::Format("&& eventClass==1"));
 
     TString myCut;
     if (c==0)      myCut = "EBEB";  
@@ -673,173 +343,7 @@ void AddSigData(RooWorkspace* w, int mass, TString coupling) {
   cout << endl;
 }
 
-/*
-// Interpolation
-void Interpolation(RooWorkspace* w, vector<int> masses) {
-
-  // Variables
-  RooRealVar* mgg = w->var("mgg");    
-  RooArgList varlist;
-  varlist.add(*mgg);
-
-  // For them morphing
-  RooRealVar* mu;
-  w->factory("mu[10,9000]");      // chiara
-  mu = w->var("mu");
-
-  // PDFs
-  RooArgList pdfsResCat0, pdfsResCat1;
-  RooArgList pdfsInWCat0, pdfsInWCat1;
-
-  // Files with resolution and mgg roodatahists
-  TFile *fileInw = new TFile("IntrinsicWidthHistos.root");
-  TFile *fileRes = new TFile("ResolutionHistos.root");
-
-  // Reference points
-  int numMass = (int)masses.size();
-  TVectorD paramVec(numMass); 
-
-  // To plot
-  RooPlot *frameResCat0 = mgg->frame(Range(-200,100));   
-  RooPlot *frameResCat1 = mgg->frame(Range(-200,100));   
-  RooPlot *frameInWCat0 = mgg->frame(Range(1000,2000));   // chiara  
-  RooPlot *frameInWCat1 = mgg->frame(Range(1000,2000));   // chiara  
-
-  // Loop over masses
-  for (int ii=0; ii<(int)masses.size(); ii++) {  // loop over masses
-    int theMass = masses[ii];
-    TString myMass = TString::Format("%d",theMass);
-
-    paramVec[ii] = (double)theMass; 
-
-    for (int c=0; c<NCAT; ++c) {   
-
-      cout << "---------- Category = " << c << ", mass = " << myMass << endl; 
-      TString myCut = "EBEB"; 
-      if (c==1) myCut = "EBEE";  
-
-      // reading the resolution roodatahist for this category and this mass   
-      TString myRDHA = TString(Form("resolRDH_mass%d_cat",theMass)+myCut);
-      RooDataHist *resRDH = (RooDataHist*)fileRes->Get(myRDHA);
-      resRDH->Print();
-
-      // creating the roohistpdfs
-      TString myHistPdfResName = TString::Format("myHistPdfResName%d",theMass)+TString::Format("_%d",c);
-      RooHistPdf *myHistPdfRes = new RooHistPdf(myHistPdfResName,myHistPdfResName,*mgg,*resRDH,0) ;
-      myHistPdfRes->Print();
-      if (c==0) pdfsResCat0.add(*myHistPdfRes);         
-      if (c==1) pdfsResCat1.add(*myHistPdfRes);         
-      if (c==0) myHistPdfRes->plotOn(frameResCat0,LineColor(kBlue), LineStyle(kSolid));
-      if (c==1) myHistPdfRes->plotOn(frameResCat1,LineColor(kBlue), LineStyle(kSolid));
-      cout << "roohistpdfs for resolution added" << endl;
-
-      // reading the width roodatahist for this category and this mass    
-      TString myRDHB = TString(Form("intWidthRDH_mass%d_cat",theMass)+myCut);
-      RooDataHist *inwRDH = (RooDataHist*)fileInw->Get(myRDHB);
-      inwRDH->Print();
-
-      // creating the roohistpdfs       
-      TString myHistPdfInWName = TString::Format("myHistPdfInWName%d",theMass)+TString::Format("_%d",c);
-      RooHistPdf *myHistPdfInW = new RooHistPdf(myHistPdfInWName,myHistPdfInWName,*mgg,*inwRDH,0) ;
-      myHistPdfInW->Print();
-      if (c==0) pdfsInWCat0.add(*myHistPdfInW);
-      if (c==1) pdfsInWCat1.add(*myHistPdfInW);
-      if (c==0) myHistPdfInW->plotOn(frameInWCat0,LineColor(kBlue), LineStyle(kSolid));      
-      if (c==1) myHistPdfInW->plotOn(frameInWCat1,LineColor(kBlue), LineStyle(kSolid));      
-      cout << "roohistpdfs for intrinsic width added" << endl;
-      
-    } // loop over cat
-  }   // loop over masses
-  
-
-  // Now morphing for the two categories and the two pdfs
-  cout << endl;
-  cout << "morphing for the resolution functions" << endl;
-  pdfsResCat0.Print();
-  pdfsResCat1.Print();
-  RooMomentMorph *morphResCat0 = new RooMomentMorph("morphResCat0","morphResCat0",*mu,varlist,pdfsResCat0,paramVec,RooMomentMorph::Linear);
-  morphResCat0->Print();
-  RooMomentMorph *morphResCat1 = new RooMomentMorph("morphResCat1","morphResCat1",*mu,varlist,pdfsResCat1,paramVec,RooMomentMorph::Linear);
-  morphResCat1->Print();
-  cout << endl;
-  cout << endl;
-  cout << "----------------------------" << endl;
-  cout << endl;
-  cout << "morphing for the intrinsic width functions" << endl;
-  pdfsInWCat0.Print();
-  pdfsInWCat1.Print();
-  RooMomentMorph *morphInWCat0 = new RooMomentMorph("morphInWCat0","morphInWCat0",*mu,varlist,pdfsInWCat0,paramVec,RooMomentMorph::Linear);
-  morphInWCat0->Print();
-  RooMomentMorph *morphInWCat1 = new RooMomentMorph("morphInWCat1","morphInWCat1",*mu,varlist,pdfsInWCat1,paramVec,RooMomentMorph::Linear);
-  morphInWCat1->Print();
-  cout << endl;
-  cout << endl;
-
-
-  // Importing in the workspace
-  w->import(*morphResCat0);
-  w->import(*morphResCat1);
-  w->import(*morphInWCat0);
-  w->import(*morphInWCat1);
-  w->Print();
-
-
-  // Evaluating
-  cout << endl;
-  cout << endl;
-  cout << "----------------------------" << endl;
-  cout << endl;
-  cout << "now evaluating the resolution morphing" << endl;
-  mu->setVal(1500);
-  cout << endl;
-  morphResCat0->Print();
-  cout << endl;
-  morphResCat1->Print();
-
-  cout << endl;
-  cout << endl;
-  cout << "----------------------------" << endl;
-  cout << endl;
-  cout << "now evaluating the intrinsic width morphing" << endl;
-  mu->setVal(1500);
-  cout << endl;
-  morphInWCat0->Print();
-  cout << endl;
-  morphInWCat1->Print();
-
-
-  // Making control plots
-  TCanvas *c1 = new TCanvas("c1","c1",1);
-  morphResCat0->plotOn(frameResCat0, LineColor(kRed), LineStyle(kDashed));
-  frameResCat0->Draw();
-  c1->SaveAs("testCat0res.pdf");
-  c1->SetLogy(1);
-  c1->SaveAs("testCat0resLog.pdf");
-
-  TCanvas *c2 = new TCanvas("c2","c2",1);
-  morphResCat1->plotOn(frameResCat1, LineColor(kGreen), LineStyle(kDashed));
-  frameResCat1->Draw();
-  c2->SaveAs("testCat1res.pdf");
-  c2->SetLogy(1);
-  c2->SaveAs("testCat1resLog.pdf");
-
-  TCanvas *c11 = new TCanvas("c11","c11",1);
-  morphInWCat0->plotOn(frameInWCat0, LineColor(kRed), LineStyle(kDashed));
-  frameInWCat0->Draw();
-  c11->SaveAs("testCat0inW.pdf");
-  c11->SetLogy(1);
-  c11->SaveAs("testCat0inWLog.pdf");
-
-  TCanvas *c12 = new TCanvas("c12","c12",1);
-  morphInWCat1->plotOn(frameInWCat1, LineColor(kGreen), LineStyle(kDashed));
-  frameInWCat1->Draw();
-  c12->SaveAs("testCat1inW.pdf");
-  c12->SetLogy(1);
-  c12->SaveAs("testCat1inWLog.pdf");
-}
-*/
-
-// Interpolation of convolution functions
+// Interpolation of the convolution functions
 void Interpolation(RooWorkspace* w, vector<int> masses, string coupling) {
 
   // Variables
@@ -849,7 +353,7 @@ void Interpolation(RooWorkspace* w, vector<int> masses, string coupling) {
 
   // Morphing variable
   RooRealVar* mu;
-  w->factory("mu[0,9000]");      
+  w->factory("mu[0,7000]");      
   mu = w->var("mu");
 
   // PDFs
@@ -857,11 +361,16 @@ void Interpolation(RooWorkspace* w, vector<int> masses, string coupling) {
 
   // Reference points
   int numMass = (int)masses.size();
+  if (checkMass>0) numMass = (int)masses.size() -1;
   TVectorD paramVec(numMass); 
 
   // To plot
-  RooPlot *frameCat0 = mgg->frame(Range(1000,2000));   
-  RooPlot *frameCat1 = mgg->frame(Range(1000,2000));   
+  RooPlot *frameCat0 = mgg->frame(Range(300,5500));   
+  RooPlot *frameCat1 = mgg->frame(Range(300,5500));   
+  if (checkMass!=0) {
+    frameCat0 = mgg->frame(Range(checkMass-300,checkMass+300));   
+    frameCat1 = mgg->frame(Range(checkMass-300,checkMass+300));   
+  }
 
   // To fill the pdfs
   RooHistPdf *convRhPdf;
@@ -871,7 +380,12 @@ void Interpolation(RooWorkspace* w, vector<int> masses, string coupling) {
     int theMass = masses[ii];
     TString myMass = TString::Format("%d",theMass);
     
-    paramVec[ii] = (double)theMass; 
+    if (checkMass==0) 
+      paramVec[ii] = (double)theMass;     
+    else {
+      if (theMass<checkMass)      paramVec[ii] = (double)theMass; 
+      else if (theMass>checkMass) paramVec[ii-1] = (double)theMass;
+    }
 
     for (int c=0; c<NCAT; ++c) {   
 
@@ -900,28 +414,27 @@ void Interpolation(RooWorkspace* w, vector<int> masses, string coupling) {
       convRDH->Print();
       cout << endl;
 
-      // RooHistPdf convRhPdf("convRhPdf","convRHhPdf",*mgg,*convRDH,0);
       convRhPdf = new RooHistPdf("convRhPdf","convRHhPdf",*mgg,*convRDH,0);
       TString myConvRhPdfNameA = TString(Form("ConvolutionRhPdf_cat"+myCut+"_mass%d",theMass));
       TString myConvRhPdfName  = TString(Form(myConvRhPdfNameA+"_kpl"+coupling));   
-      convRhPdf->SetTitle(myConvRhPdfName);   // chiara! questo dovrebbe chiamarsi secondo la convenzione
-      convRhPdf->SetName(myConvRhPdfName);    // chiara! questo dovrebbe chiamarsi secondo la convenzione
+      convRhPdf->SetTitle(myConvRhPdfName);   
+      convRhPdf->SetName(myConvRhPdfName);    
       cout << "done with RooHistPdf from conv"<< endl;
       convRhPdf->Print();
       cout << endl;
 
       // adding to the list of pdfs
-      // if (c==0) pdfsCat0.add(*conv);         
-      // if (c==1) pdfsCat1.add(*conv);
-      if (c==0) pdfsCat0.add(*convRhPdf);         
-      if (c==1) pdfsCat1.add(*convRhPdf);
+      if (theMass!=checkMass) {   
+	if (c==0) pdfsCat0.add(*convRhPdf);         
+	if (c==1) pdfsCat1.add(*convRhPdf);
+      } 
       if (c==0) convRhPdf->plotOn(frameCat0,LineColor(kBlue), LineStyle(kSolid));
       if (c==1) convRhPdf->plotOn(frameCat1,LineColor(kBlue), LineStyle(kSolid));
       cout << "convolutions added to the pdf list" << endl;
 
     } // loop over cat
   }   // loop over masses
-  
+
 
   // Now morphing for the two categories
   cout << endl;
@@ -929,8 +442,14 @@ void Interpolation(RooWorkspace* w, vector<int> masses, string coupling) {
   pdfsCat0.Print();
   pdfsCat1.Print();
   RooMomentMorph *morphCat0 = new RooMomentMorph("morphCat0","morphCat0",*mu,varlist,pdfsCat0,paramVec,RooMomentMorph::Linear);
+  TString morphCat0name = TString(Form("MorphCatEBEB_kpl"))+coupling;
+  morphCat0->SetTitle(morphCat0name);
+  morphCat0->SetName(morphCat0name);
   morphCat0->Print();
   RooMomentMorph *morphCat1 = new RooMomentMorph("morphCat1","morphCat1",*mu,varlist,pdfsCat1,paramVec,RooMomentMorph::Linear);
+  TString morphCat1name = TString(Form("MorphCatEBEE_kpl"))+coupling;
+  morphCat1->SetTitle(morphCat1name);
+  morphCat1->SetName(morphCat1name);
   morphCat1->Print();
   cout << endl;
   cout << endl;
@@ -940,6 +459,15 @@ void Interpolation(RooWorkspace* w, vector<int> masses, string coupling) {
   w->import(*morphCat1);
   w->Print();
 
+  // Saving the WS
+  cout<< endl; 
+  TString filename("myWSwithMorphing.root"); 
+  TFile fileWs(filename,"RECREATE");
+  fileWs.cd(); 
+  w->writeToFile(filename);       
+  cout << "Write signal workspace in: " << filename << " file" << endl;  
+  cout << endl;  
+
 
   // Evaluating
   cout << endl;
@@ -947,7 +475,8 @@ void Interpolation(RooWorkspace* w, vector<int> masses, string coupling) {
   cout << "----------------------------" << endl;
   cout << endl;
   cout << "now evaluating the morphing" << endl;
-  mu->setVal(1630);
+  if (checkMass==0) mu->setVal(3000);   
+  else mu->setVal(checkMass);   
   cout << endl;
   morphCat0->Print();
   cout << endl;
@@ -957,53 +486,66 @@ void Interpolation(RooWorkspace* w, vector<int> masses, string coupling) {
   TCanvas *c1 = new TCanvas("c1","c1",1);
   morphCat0->plotOn(frameCat0, LineColor(kRed), LineStyle(kDashed));
   frameCat0->Draw();
-  c1->SaveAs("testCat0.pdf");
+  c1->SaveAs("testCat0.png");
   c1->SetLogy(1);
-  c1->SaveAs("testCat0Log.pdf");
+  c1->SaveAs("testCat0Log.png");
 
   TCanvas *c2 = new TCanvas("c2","c2",1);
   morphCat1->plotOn(frameCat1, LineColor(kGreen), LineStyle(kDashed));
   frameCat1->Draw();
-  c2->SaveAs("testCat1.pdf");
+  c2->SaveAs("testCat1.png");
   c2->SetLogy(1);
-  c2->SaveAs("testCat1Log.pdf");
+  c2->SaveAs("testCat1Log.png");
 }
 
-// To run the analysis. Pdfs obtained here
-void runfits(string coupling="001") {
+// To run the analysis
+void runfits(string coupling="01") {
 
   RooWorkspace *w = new RooWorkspace("w");
  
   // range for the variables
-  w->factory("mgg[0,9000]");
-  w->factory("mggGen[0,9000]");
+  w->factory("mgg[0,7000]");
+  w->factory("mggGen[0,7000]");
   w->Print("v");
 
-  // range of masses - chiara: questo va splittato tra quelle che uso x la risoluzione e quelle per l'analisis
+  // range of masses
   vector<int> masses;
-  ///masses.push_back(500);
-  ///masses.push_back(750);
-  //masses.push_back(1000);
-  //masses.push_back(1250);
-  masses.push_back(1500);
-  masses.push_back(1750);
-  //masses.push_back(2000);
-  ///masses.push_back(2250);
-  /////masses.push_back(2500);
-  ///masses.push_back(2750);
-  ///masses.push_back(3000);
-  ///masses.push_back(3500);
-  ///masses.push_back(4000);
-  ///masses.push_back(4500);
-  ///masses.push_back(5000);
-  /////masses.push_back(5500);
-  ///masses.push_back(6000);
-  /////  masses.push_back(6500);
-  ///masses.push_back(7000);
+  if (coupling=="01") {
+    masses.push_back(500);
+    masses.push_back(750);
+    masses.push_back(1000);
+    masses.push_back(1250);
+    masses.push_back(1500);
+    masses.push_back(1750);
+    masses.push_back(2000);
+    masses.push_back(2250);
+    masses.push_back(2750);
+    masses.push_back(3000);
+    masses.push_back(3500);
+    masses.push_back(4000);
+    masses.push_back(4500);
+    //masses.push_back(5000);
+  } else if (coupling=="001") {
+    ////////////////////masses.push_back(500);
+    masses.push_back(750);
+    masses.push_back(1000);
+    //masses.push_back(1500);
+    masses.push_back(2000);
+    //masses.push_back(3000);
+    masses.push_back(4000);
+    masses.push_back(5000);
+  } else if (coupling=="02") {
+    masses.push_back(500);
+    masses.push_back(750);
+    masses.push_back(1000);
+    masses.push_back(1500);
+    masses.push_back(2000);
+    masses.push_back(3000);
+    masses.push_back(4000);
+    masses.push_back(5000);
+  }
 
-
-  // loading data - here the coupling is the requested one
-  // make the roodatasets with minimal selection
+  // loading data for the wanted coupling - make the roodatasets with minimal selection
   cout << endl; 
   cout << "------------------------------------------" << endl; 
   cout << endl; 
@@ -1013,41 +555,7 @@ void runfits(string coupling="001") {
     cout << "adding mass " << theMass << endl;
     AddSigData(w, theMass, coupling);   
   }
-
-
-  // make resolution histograms and roodatahists.
-  // Here the coupling is k=0.1 or k=0.01 according to the mass
-  // and independent of what you choose when running the macro
-  cout << endl; 
-  cout << endl; 
-  cout << "------------------------------------------" << endl; 
-  cout << endl; 
-  string fileResol = "ResolutionHistos.root";
-  cout << "Now prepare resolution histograms and save in root file " << fileResol << endl;
-  for (int ii=0; ii<(int)masses.size(); ii++) {
-    int theMass = masses[ii];
-    string myResKpl = "01";
-    if (theMass>5000) myResKpl = "001";                   // chiara
-    cout << "resolution at mass " << theMass << " with coupling " << myResKpl << endl;
-    if (ii==0) MakeResolutionHisto(w, fileResol, 1, theMass, myResKpl);    
-    else MakeResolutionHisto(w, fileResol, 0, theMass, myResKpl);
-  }
-
-  // make intrinsic width histograms and roodatahists.
-  // Here the coupling is the requested one
-  cout << endl; 
-  cout << endl; 
-  cout << "--------------------------------------------------------------------------" << endl; 
-  cout << endl; 
-  string fileIntrinsic = "IntrinsicWidthHistos.root";
-  cout << "Now prepare intrinsic width histograms and save in root file " << fileIntrinsic << endl;
-  for (int ii=0; ii<(int)masses.size(); ii++) {
-    int theMass = masses[ii];
-    cout << "resolution at mass " << theMass << " with coupling " << coupling << endl;
-    if (ii==0) MakeIntrinsicWidthHisto(w, fileIntrinsic, 1, theMass, coupling);    
-    else MakeIntrinsicWidthHisto(w, fileIntrinsic, 0, theMass, coupling);
-  }
-
+  
   // Now make the convolution 
   cout << endl;    
   cout << endl;    
@@ -1066,19 +574,7 @@ void runfits(string coupling="001") {
   cout << "--------------------------------------------------------------------------" << endl; 
   cout << endl;    
   cout << "Now make the interpolation" << endl; 
-  //Interpolation(w, masses);
   Interpolation(w, masses, coupling);
-  
-  /*
-  // Now make the convolution
-  cout << endl; 
-  cout << endl; 
-  cout << "--------------------------------------------------------------------------" << endl; 
-  cout << endl; 
-  cout << "Now make the convolution of the two interpolated function" << endl;
-  ConvolutionFromMorphing(w); //;, Int_t mass, TString coupling) { 
-  // ConvolutionWithToysFromMorphing(w);
-  */
 
   return;
 }
