@@ -106,6 +106,10 @@ class TemplatesFitApp(TemplatesApp):
                         
                                     help="Plot RMS etc from jk pseudosamples",
                                     ),
+                        make_option("--fixed-massbins",dest="fixed_massbins",action="store_true",default=False,
+                                    help="if you want to fix the massbins otherwise --fit-massbins",
+                                    ),
+                        
                         make_option("--extra-shape-unc",dest="extra_shape_unc",action="store",type="float",
                                     default=None,
                                     help="Add extra uncertainty to template shapes (implemented only for plotting)",
@@ -243,8 +247,16 @@ class TemplatesFitApp(TemplatesApp):
                     dset_data = self.reducedRooData("data_%s_%s" % (fitname,catd),setargs,False,sel=weight_cut,redo=ReDo)
                     dset_mc = self.reducedRooData("mc_%s_%s" % (fitname,catd),setargs,False,sel=weight_cut,redo=ReDo)
                     print "number of entries after reduced"
-                    mass_split= [int(x) for x in options.fit_massbins]
-                    diphomass=self.massquantiles(dset_data,massargs,mass_b,mass_split)
+                    if not options.fixed_massbins:
+                        mass_split= [int(x) for x in options.fit_massbins]
+                        diphomass=self.massquantiles(dset_data,massargs,mass_b,mass_split)
+                        massrange=[mass_split[2],mass_split[1]]
+                    elif options.fixed_massbins and cat=="EBEB":
+                        diphomass= [200.0, 203.8, 208.0,211.9,216.2, 221.4, 227.1,230.0,240.0,246.4,253.4,261.8,271.5,281.7,295.3,310.9,332.3,358.9,408.8,500.0,12999.0]
+                        massrange=[0,len(diphomass)-1]
+                    elif options.fixed_massbins and cat=="EBEE":
+                        diphomass=[299.5,320.0,355.5,390.8,443.9,500.0,12999.0]
+                        massrange=[0,len(diphomass)-1]
                     truth_pp= "mctruth_%s_%s_%s" % (compname,fitname,cat)
                     if d2:
                         tp_mcpu = ROOT.TNtuple("tree_truth_purity_all_%s_%s_%s" % (compname,fitname,cat),"tree_truth_purity_%s_%s_%s" % (compname,fitname,cat),"number_pu:frac_pu:massbin:masserror" )
@@ -252,8 +264,8 @@ class TemplatesFitApp(TemplatesApp):
                       #  self.store_[ntp_mcpu.GetName()] =ntp_mcpu
                         self.store_[tp_mcpu.GetName()] =tp_mcpu
 
-                    
-                    for mb in range(mass_split[2],mass_split[1]):
+                 
+                    for mb in range(massrange[0],massrange[1]):
                         massbin=(diphomass[mb]+diphomass[mb+1])/2.
                         masserror=(diphomass[mb+1]-diphomass[mb])/2.
                         
@@ -929,6 +941,8 @@ class TemplatesFitApp(TemplatesApp):
                     data = self.reducedRooData("data_2D_%s" % (catd),setargs,False,sel=weight_cut, redo=False)
                 else:
                     data = self.reducedRooData("mc_2D_%s" % (catd),setargs,False,sel=weight_cut, redo=False)
+             #   data = self.reducedRooData("data_2D_%s" % (catd),setargs,False,sel=weight_cut, redo=False)
+                print data.sumEntries()
                 data.addColumn(unrolledVar)
                 data=data.reduce(ROOT.RooArgSet(mass,observable))
               #  data=data.binnedClone()
@@ -990,7 +1004,6 @@ class TemplatesFitApp(TemplatesApp):
                     if not (jkpf or jkpp):
                         pdf_set=ROOT.RooArgList() 
                         for comp in nomFit["components"]:
-                            print "%s%s%s_%s_%s_mb_%s"%(tempname,dset,comp, dim,cat,cut_s)
                             if tempname=="unrolled_template_mix" and not dodata:
                                 dim_new="2DMC"
                                 dset="_"
@@ -998,8 +1011,14 @@ class TemplatesFitApp(TemplatesApp):
                             if tempname=="unrolled_mctruth": dset="_"
                             if i==0 and  tempname=="unrolled_template_mix":
                                 tempname_new="unrolled_template"
-                                dim_new="2D"
+                                if dodata:
+                                    dset="_"
+                                else: 
+                                    dset="_mc_"
+                                    dim_new="2D"
                             else: tempname_new=tempname
+                            
+                            print "%s%s%s_%s_%s_mb_%s"%(tempname_new,dset,comp, dim_new,cat,cut_s)
                             histo = self.rooData("%s%s%s_%s_%s_mb_%s"%(tempname_new,dset,comp, dim_new,cat,cut_s))
                             rooHistPdf=ROOT.RooHistPdf("pdf_%s"% histo.GetName(),"pdf_%s"% histo.GetTitle(),ROOT.RooArgSet(obsls),histo)
                          
@@ -1010,6 +1029,7 @@ class TemplatesFitApp(TemplatesApp):
                             else:
                                 pdf_set.add(rooHistPdf)
                             i=i+1
+
                         pdf_collections.append(pdf_set)
                     else:
                         for i in range(num):
@@ -1034,6 +1054,7 @@ class TemplatesFitApp(TemplatesApp):
                                 self.keep([rooHistPdf])
                                 pdf_set.add(rooHistPdf)
                             pdf_collections.append(pdf_set)
+                    rooHistPdf.Print()
                     for k in range(num):
                         ArgListPdf=None
                         jpp.setVal(0.6)
@@ -1046,6 +1067,8 @@ class TemplatesFitApp(TemplatesApp):
                             fitUnrolledPdf=ROOT.RooAddPdf("fitPdfs_%s%s%s_%s_mb_%s" % (tempname,dset,cat,dim,cut_s),"fitPdfs_%s_%s_%s_mb_%s" % (tempname,cat,dim,cut_s),ArgListPdf,pu_estimates  )
                         self.workspace_.rooImport(fitUnrolledPdf)
               #save roofitresult in outputfile
+                        data_massc.Print()
+                        print data_massc.sumEntries()
                         fit_studies = fitUnrolledPdf.fitTo(data_massc, RooFit.NumCPU(8),RooFit.Strategy(2),RooFit.Extended(extended_fit),RooFit.SumW2Error(False),RooFit.Save(True))
                         pu_pp=fpp.getParameter("jpp").getVal()
                         err_pp=fpp.getParameter("jpp").getError()
@@ -1110,7 +1133,7 @@ class TemplatesFitApp(TemplatesApp):
                 if jkpf or jkpp:
                     self.plotJKpurity(options,cat,dim,tps,jkID)
                 print "done fit ...."
-                print 
+                print
     ## ---------------#--------------------------------------------------------------------------------------------
     
     
@@ -1457,9 +1480,17 @@ class TemplatesFitApp(TemplatesApp):
             setargs.add(massargs)
             dset_data = self.reducedRooData("data_2D_%s" % (cat),massargs)
             dset_data.Print()
-            mass_split= [int(x) for x in options.fit_massbins]
-            diphomass=self.massquantiles(dset_data,massargs,mass_b,mass_split)
-            for mb in range(mass_split[2],mass_split[1]):
+            if not options.fixed_massbins:
+                mass_split= [int(x) for x in options.fit_massbins]
+                diphomass=self.massquantiles(dset_data,massargs,mass_b,mass_split)
+                massrange=[mass_split[2],mass_split[1]]
+            elif options.fixed_massbins and cat=="EBEB":
+                diphomass= [200.0, 203.8, 208.0,211.9,216.2, 221.4, 227.1,230.0,240.0,246.4,253.4,261.8,271.5,281.7,295.3,310.9,332.3,358.9,408.8,500.0,12999.0]
+                massrange=[0,len(diphomass)-1]
+            elif options.fixed_massbins and cat=="EBEE":
+                diphomass=[299.5,320.0,355.5,390.8,443.9,500.0,12999.0]
+                massrange=[0,len(diphomass)-1]
+            for mb in range(massrange[0],massrange[1]):
                 massbin=(diphomass[mb]+diphomass[mb+1])/2.
                 masserror=(diphomass[mb+1]-diphomass[mb])/2. 
                 cut=ROOT.TCut("mass>%f && mass<%f"% (diphomass[mb],diphomass[mb+1]))
