@@ -320,8 +320,9 @@ void runfits() {
   masses.push_back(3000);
   masses.push_back(3500);
   masses.push_back(4000);
+  masses.push_back(4500);
   masses.push_back(5000);
-  masses.push_back(6000);
+  //masses.push_back(6000);
   //masses.push_back(7000);
 
   // make resolution histograms and roodatahists using k=0.1 or k=0.01 according to the mass
@@ -334,7 +335,9 @@ void runfits() {
   for (int ii=0; ii<(int)masses.size(); ii++) {
     int theMass = masses[ii];
     string myResKpl = "01";
-    if (theMass>4000) myResKpl = "001";        
+    if (theMass>4000)  myResKpl = "001";        
+    if (theMass==4500) myResKpl = "01";  // chiara: this is to make the scan denser
+
     cout << "resolution at mass " << theMass << " with coupling " << myResKpl << endl;
     if (ii==0) MakeResolutionHisto(fileResol, 1, theMass, myResKpl);    
     else MakeResolutionHisto(fileResol, 0, theMass, myResKpl);
@@ -355,6 +358,7 @@ void runfits() {
   cout << endl;    
   cout << "Now some control plots" << endl; 
   controlPlots();
+
 
   return;
 }
