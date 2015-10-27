@@ -35,8 +35,8 @@ void MakeIntrinsicWidthHisto(TString filename, bool newFile, int mass, TString c
 
   // the roorealvar 
   RooRealVar* deltaMgen;   // chiara
-  if (coupling=="001") deltaMgen = new RooRealVar("deltaMgen", "",   -40, 40,   "GeV"); 
-  if (coupling=="01")  deltaMgen = new RooRealVar("deltaMgen", "",  -500, 500,  "GeV");
+  if (coupling=="001") deltaMgen = new RooRealVar("deltaMgen", "",   -70, 70,   "GeV"); 
+  if (coupling=="01")  deltaMgen = new RooRealVar("deltaMgen", "", -1000, 1000, "GeV");
   if (coupling=="02")  deltaMgen = new RooRealVar("deltaMgen", "", -2500, 2500, "GeV"); 
 
   // Output file 
@@ -61,8 +61,8 @@ void MakeIntrinsicWidthHisto(TString filename, bool newFile, int mass, TString c
 
     // Histos
     TH1D *intWidthH;       // chiara
-    if (coupling=="001") intWidthH = new TH1D("intWidthH","intWidthH",  40,  -40.,40.);  
-    if (coupling=="01")  intWidthH = new TH1D("intWidthH","intWidthH", 500, -500.,500.);  
+    if (coupling=="001") intWidthH = new TH1D("intWidthH","intWidthH",  70,  -70.,70.);  
+    if (coupling=="01")  intWidthH = new TH1D("intWidthH","intWidthH",1000,-1000.,1000.);  
     if (coupling=="02")  intWidthH = new TH1D("intWidthH","intWidthH",2500,-2500.,2500.);  
     intWidthH->Sumw2();
   
@@ -88,8 +88,8 @@ void MakeIntrinsicWidthHisto(TString filename, bool newFile, int mass, TString c
     // Plot to check
     TCanvas *c1 = new TCanvas("c1","c1",1);
     RooPlot* myPlot; //chiara
-    if (coupling=="001") myPlot = deltaMgen->frame(Range( -40,40), Bins(40));    
-    if (coupling=="01")  myPlot = deltaMgen->frame(Range(-500,500),Bins(500));    
+    if (coupling=="001") myPlot = deltaMgen->frame(Range(  -70,70), Bins(70));    
+    if (coupling=="01")  myPlot = deltaMgen->frame(Range(-1000,1000),Bins(1000));    
     if (coupling=="02")  myPlot = deltaMgen->frame(Range(-2500,2500),Bins(2500));    
     intWidthRDH.plotOn(myPlot, LineColor(kRed), LineStyle(kDashed));    
     myPlot->Draw();
