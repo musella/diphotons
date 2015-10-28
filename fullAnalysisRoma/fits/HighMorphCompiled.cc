@@ -27,6 +27,7 @@ using namespace std;
 // to be modified:
 static const Int_t NCAT = 2;  
 static const Int_t checkMass = 0;        // 0 not to check; otherwise mass to be checked
+static const Int_t genOnly = 1;
 
 // Definition of the variables in the input ntuple
 RooArgSet* defineVariables() {
@@ -78,8 +79,12 @@ void ConvolutionFromRDH(RooWorkspace* w, Int_t mass, TString coupling) {
   histObsInw.add(*deltaMgen);
 
   // Files with resolution and intrinsic width RDHs
-  TFile *fileInw = new TFile("IntrinsicWidthHistos.root"); 
-  TFile *fileRes = new TFile("ResolutionHistos.root");  
+  TFile *fileRes;
+  if (!genOnly) fileRes = new TFile("ResolutionHistos.root");       
+  if (genOnly)  fileRes = new TFile("ResHistosGenOnlyScan.root");
+  TFile *fileInw;
+  if (!genOnly) fileInw = new TFile("IntrinsicWidthHistos.root"); 
+  if (genOnly)  fileInw = new TFile("IntrinsicWidthHistosGenOnlyK02.root");
 
   // Plots to check
   TCanvas* c1 = new TCanvas("c1","PhotonsMass",0,0,800,800);  
@@ -160,38 +165,41 @@ void ConvolutionFromRDH(RooWorkspace* w, Int_t mass, TString coupling) {
     convol.Print();     
     cout << "done!!" << endl;   
 
-    // Fit and Plot 
-    int fitMin = mass-250;        
-    int fitMax = mass+250;        
-    if (mass>=2000) {
-      fitMin = mass-750;        
-      fitMax = mass+750;        
-    } 
-    
-    TString myUnbDS = TString(Form("SigWeight_cat"+myCut+"_mass%d",mass));   
-    sigToFit[c] = (RooDataSet*) w->data(myUnbDS); 
-    sigToFit[c]->Print();      
+    // Fit and Plot - only for full sim samples
+    if (!genOnly) {
 
-    RooPlot* myPlot1 = mgg->frame(Range(fitMin,fitMax),Bins(100));   
-    sigToFit[c]->plotOn(myPlot1, LineColor(kRed), LineStyle(kDashed));           
-    double max = myPlot1->GetMaximum(); 
-
-    RooPlot* myPlot = mgg->frame(Range(fitMin,fitMax),Bins(50)); 
-    if (coupling=="001") myPlot = mgg->frame(Range(fitMin,fitMax),Bins(40));
-    myPlot->SetTitle("Convolution, cat"+myCut);    
-    sigToFit[c]->plotOn(myPlot, LineColor(kRed), LineStyle(kDashed));         
-    convol.plotOn(myPlot, LineColor(kBlue));  
-    myHistPdfRes->plotOn(myPlot, LineColor(kRed));
-    myHistPdfInw->plotOn(myPlot, LineColor(kYellow));
-
-    myPlot->GetYaxis()->SetRangeUser(0.0001, max*3.);      
-    myPlot->Draw();           
-    TString canvasName = TString(Form("closure_cat"+myCut+"_mass"+myMass+"_kpl"+coupling+".png"));
-    c1->SetLogy(0);
-    c1->SaveAs(canvasName); 
-    c1->SetLogy(1);
-    canvasName = TString(Form("closure_cat"+myCut+"_mass"+myMass+"_kpl"+coupling+"_log.png"));
-    c1->SaveAs(canvasName); 
+      int fitMin = mass-250;        
+      int fitMax = mass+250;        
+      if (mass>=2000) {
+	fitMin = mass-750;        
+	fitMax = mass+750;        
+      } 
+      
+      TString myUnbDS = TString(Form("SigWeight_cat"+myCut+"_mass%d",mass));   
+      sigToFit[c] = (RooDataSet*) w->data(myUnbDS); 
+      sigToFit[c]->Print();      
+      
+      RooPlot* myPlot1 = mgg->frame(Range(fitMin,fitMax),Bins(100));   
+      sigToFit[c]->plotOn(myPlot1, LineColor(kRed), LineStyle(kDashed));           
+      double max = myPlot1->GetMaximum(); 
+      
+      RooPlot* myPlot = mgg->frame(Range(fitMin,fitMax),Bins(50)); 
+      if (coupling=="001") myPlot = mgg->frame(Range(fitMin,fitMax),Bins(40));
+      myPlot->SetTitle("Convolution, cat"+myCut);    
+      sigToFit[c]->plotOn(myPlot, LineColor(kRed), LineStyle(kDashed));         
+      convol.plotOn(myPlot, LineColor(kBlue));  
+      myHistPdfRes->plotOn(myPlot, LineColor(kRed));
+      myHistPdfInw->plotOn(myPlot, LineColor(kYellow));
+      
+      myPlot->GetYaxis()->SetRangeUser(0.0001, max*3.);      
+      myPlot->Draw();           
+      TString canvasName = TString(Form("closure_cat"+myCut+"_mass"+myMass+"_kpl"+coupling+".png"));
+      c1->SetLogy(0);
+      c1->SaveAs(canvasName); 
+      c1->SetLogy(1);
+      canvasName = TString(Form("closure_cat"+myCut+"_mass"+myMass+"_kpl"+coupling+"_log.png"));
+      c1->SaveAs(canvasName); 
+    }
 
     // Importing the convolution in the workspace
     w->import(convol);   
@@ -504,58 +512,128 @@ void runfits(string coupling="01") {
   RooWorkspace *w = new RooWorkspace("w");
  
   // range for the variables
-  w->factory("mgg[0,7000]");
+  w->factory("mgg[0,7000]");      
   w->factory("mggGen[0,7000]");
   w->Print("v");
 
   // range of masses
   vector<int> masses;
-  if (coupling=="01") {
-    masses.push_back(500);
-    masses.push_back(750);
-    masses.push_back(1000);
-    masses.push_back(1250);
-    masses.push_back(1500);
-    masses.push_back(1750);
-    masses.push_back(2000);
-    masses.push_back(2250);
-    masses.push_back(2750);
-    masses.push_back(3000);
-    masses.push_back(3500);
-    masses.push_back(4000);
-    masses.push_back(4500);
-    //masses.push_back(5000);
-  } else if (coupling=="001") {
-    ////////////////////masses.push_back(500);
-    masses.push_back(750);
-    masses.push_back(1000);
-    //masses.push_back(1500);
-    masses.push_back(2000);
-    //masses.push_back(3000);
-    masses.push_back(4000);
-    masses.push_back(5000);
-  } else if (coupling=="02") {
-    masses.push_back(500);
-    masses.push_back(750);
-    masses.push_back(1000);
-    masses.push_back(1500);
-    masses.push_back(2000);
-    masses.push_back(3000);
-    masses.push_back(4000);
-    masses.push_back(5000);
+  if (!genOnly) {                     // full sim samples
+    if (coupling=="01") {
+      masses.push_back(500);
+      masses.push_back(750);
+      masses.push_back(1000);
+      masses.push_back(1250);
+      masses.push_back(1500);
+      masses.push_back(1750);
+      masses.push_back(2000);
+      masses.push_back(2250);
+      masses.push_back(2750);
+      masses.push_back(3000);
+      masses.push_back(3500);
+      masses.push_back(4000);
+      masses.push_back(4500);
+      //masses.push_back(5000);
+    } else if (coupling=="001") {
+      ////////////////////masses.push_back(500);
+      masses.push_back(750);
+      masses.push_back(1000);
+      //masses.push_back(1500);
+      masses.push_back(2000);
+      //masses.push_back(3000);
+      masses.push_back(4000);
+      masses.push_back(5000);
+    } else if (coupling=="02") {  
+      masses.push_back(500);
+      masses.push_back(750);
+      masses.push_back(1000);
+      masses.push_back(1500);
+      masses.push_back(2000);
+      masses.push_back(3000);
+      masses.push_back(4000);
+      masses.push_back(5000);
+    }
+  } else {
+    if (coupling=="02") {
+      masses.push_back(500);
+      masses.push_back(625);
+      masses.push_back(750);
+      masses.push_back(875);
+      masses.push_back(1000);
+      masses.push_back(1125);
+      masses.push_back(1250);
+      masses.push_back(1375);
+      masses.push_back(1625);
+      masses.push_back(1750);
+      masses.push_back(1875);
+      masses.push_back(2000);
+      masses.push_back(2125);
+      masses.push_back(2250);
+      masses.push_back(2375);
+      masses.push_back(2500);
+      masses.push_back(2625);
+      masses.push_back(2750);
+      masses.push_back(2875);
+      masses.push_back(3000);
+      masses.push_back(3500);
+      masses.push_back(3750);
+      masses.push_back(3875);
+      masses.push_back(4000);
+      masses.push_back(4125);
+      masses.push_back(4250);
+      masses.push_back(4375);
+      masses.push_back(4625);
+      masses.push_back(4875);
+      masses.push_back(5000);
+    }
   }
 
-  // loading data for the wanted coupling - make the roodatasets with minimal selection
-  cout << endl; 
-  cout << "------------------------------------------" << endl; 
-  cout << endl; 
-  cout << "Now add signal data" << endl;
-  for (int ii=0; ii<(int)masses.size(); ii++) {
-    int theMass = masses[ii];
-    cout << "adding mass " << theMass << endl;
-    AddSigData(w, theMass, coupling);   
+  // loading data for the wanted coupling for control plots and make the roodatasets with minimal selection - full sim samples only
+  if (!genOnly) {
+    cout << endl; 
+    cout << "------------------------------------------" << endl; 
+    cout << endl; 
+    cout << "Now add signal data" << endl;
+    for (int ii=0; ii<(int)masses.size(); ii++) {
+      int theMass = masses[ii];
+      cout << "adding mass " << theMass << endl;
+      AddSigData(w, theMass, coupling);   
+    }
   }
-  
+
+
+  // preparing roorealvars for the gen only samples
+  if (genOnly) {
+    cout << endl; 
+    cout << "------------------------------------------" << endl; 
+    cout << endl; 
+    cout << "Now add mass dependent roorealvar - for gen level scan analysis" << endl;
+    for (int ii=0; ii<(int)masses.size(); ii++) {
+      int theMass = masses[ii];
+      
+      RooRealVar* deltaM = new RooRealVar("deltaM", "deltaM", -10000, 10000, "GeV");   
+      TString deltaMname = TString::Format("deltaM_mass%d",theMass);
+      deltaM->SetName(deltaMname);
+      deltaM->SetTitle(deltaMname);
+      w->import(*deltaM);
+      
+      RooRealVar* mH = new RooRealVar("mH", "mH", 0, 10000, "GeV");   
+      TString mHname = TString::Format("mH_mass%d",theMass);
+      mH->SetName(mHname);
+      mH->SetTitle(mHname);
+      mH->setVal(theMass);
+      mH->setConstant();
+      w->import(*mH);
+      
+      RooRealVar* deltaMgen = new RooRealVar("deltaMgen", "deltaMgen", -10000, 10000, "GeV");   
+      TString deltaMgenName = TString::Format("deltaMgen_mass%d",theMass);
+      deltaMgen->SetName(deltaMgenName);
+      deltaMgen->SetTitle(deltaMgenName);
+      w->import(*deltaMgen);
+    }
+    w->Print();
+  }
+
   // Now make the convolution 
   cout << endl;    
   cout << endl;    
