@@ -26,6 +26,7 @@ using namespace std;
 
 // to be modified:
 static const Int_t NCAT = 2;  
+static const Int_t genOnly = 0;
 
 // Preparing the intrinsic width histogram
 void MakeIntrinsicWidthHisto(TString filename, bool newFile, int mass, TString coupling) {
@@ -46,6 +47,7 @@ void MakeIntrinsicWidthHisto(TString filename, bool newFile, int mass, TString c
   
   // Input file and tree
   TString inDir = "../macro/allFiles/";
+  if (genOnly==1) inDir = "../macro/allFilesGenOnly/";
   TChain* sigTree = new TChain();
   cout << "reading file " 
        << inDir+TString(Form("FormSigMod_kpl"))+coupling+TString(Form("_M%d.root/DiPhotonTree", mass)) << endl;
@@ -55,6 +57,7 @@ void MakeIntrinsicWidthHisto(TString filename, bool newFile, int mass, TString c
 
   // Minimal common preselection cut on mgg and mggGen
   TString mainCut = TString::Format("mgg>=0 && mgg<=12000 && mggGen>=0 && mggGen<=12000");   
+  if (genOnly==1) mainCut = TString::Format("mggGen>=0 && mggGen<=12000");   
 
   // Loop over categories
   for (int c=0; c<ncat; ++c) {
@@ -118,6 +121,8 @@ void runfits() {
 
   for (int iCoupling=0; iCoupling<3; iCoupling++) {
 
+    if (iCoupling<2) continue;
+
     string coupling;
     if (iCoupling==0) coupling="001";
     if (iCoupling==1) coupling="01";
@@ -126,49 +131,84 @@ void runfits() {
 
     // range of masses - to be used to make the convolution
     vector<int> masses;
-    if (coupling=="01") {
-      masses.push_back(500);
-      masses.push_back(750);
-      masses.push_back(1000);
-      masses.push_back(1250);
-      masses.push_back(1500);
-      masses.push_back(1750);
-      masses.push_back(2000);
-      masses.push_back(2250);
-      //masses.push_back(2500);
-      masses.push_back(2750);
-      masses.push_back(3000);
-      masses.push_back(3500);
-      masses.push_back(4000);
-      masses.push_back(4500);
-      //masses.push_back(5000);
-      ////masses.push_back(5500);
-      ////masses.push_back(6000);
-      ////masses.push_back(7000);
-    } else if (coupling=="001") {
-      masses.push_back(500);
-      masses.push_back(750);
-      masses.push_back(1000);
-      // masses.push_back(1500);
-      masses.push_back(2000);
-      // masses.push_back(3000);
-      masses.push_back(4000);
-      masses.push_back(5000);
-      ////masses.push_back(6000);
-      ////masses.push_back(7000);
-    } else if (coupling=="02") {  
-      masses.push_back(500);
-      masses.push_back(750);
-      masses.push_back(1000);
-      masses.push_back(1500);
-      masses.push_back(2000);
-      masses.push_back(3000);
-      masses.push_back(4000);
-      masses.push_back(5000);
-      ////// masses.push_back(6000);
-      ////masses.push_back(7000);
+    if (genOnly==0) {              // full sim samples
+      if (coupling=="01") {         
+	masses.push_back(500);
+	masses.push_back(750);
+	masses.push_back(1000);
+	masses.push_back(1250);
+	masses.push_back(1500);
+	masses.push_back(1750);
+	masses.push_back(2000);
+	masses.push_back(2250);
+	//masses.push_back(2500);
+	masses.push_back(2750);
+	masses.push_back(3000);
+	masses.push_back(3500);
+	masses.push_back(4000);
+	masses.push_back(4500);
+	//masses.push_back(5000);
+	////masses.push_back(5500);
+	////masses.push_back(6000);
+	////masses.push_back(7000);
+      } else if (coupling=="001") {
+	masses.push_back(500);
+	masses.push_back(750);
+	masses.push_back(1000);
+	// masses.push_back(1500);
+	masses.push_back(2000);
+	// masses.push_back(3000);
+	masses.push_back(4000);
+	masses.push_back(5000);
+	////masses.push_back(6000);
+	////masses.push_back(7000);
+      } else if (coupling=="02") {     
+	masses.push_back(500);
+	masses.push_back(750);
+	masses.push_back(1000);
+	masses.push_back(1500);
+	masses.push_back(2000);
+	masses.push_back(3000);
+	masses.push_back(4000);
+	masses.push_back(5000);
+	////// masses.push_back(6000);
+	////masses.push_back(7000);
+      }
+    } else {
+      if (coupling=="02") {  
+	masses.push_back(500);
+	masses.push_back(625);
+	masses.push_back(750);
+	masses.push_back(875);
+	masses.push_back(1000);
+	masses.push_back(1125);
+	masses.push_back(1250);
+	masses.push_back(1375);
+	masses.push_back(1625);
+	masses.push_back(1750);
+	masses.push_back(1875);
+	masses.push_back(2000);
+	masses.push_back(2125);
+	masses.push_back(2250);
+	masses.push_back(2375);
+	masses.push_back(2500);
+	masses.push_back(2625);
+	masses.push_back(2750);
+	masses.push_back(2875);
+	masses.push_back(3000);
+	masses.push_back(3500);
+	masses.push_back(3750);
+	masses.push_back(3875);
+	masses.push_back(4000);
+	masses.push_back(4125);
+	masses.push_back(4250);
+	masses.push_back(4375);
+	masses.push_back(4625);
+	masses.push_back(4875);
+	masses.push_back(5000);
+      }
     }
-  
+
     // make intrinsic width histograms and roodatahists using the wanted coupling
     cout << endl; 
     cout << endl; 
