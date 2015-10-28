@@ -11,6 +11,7 @@
 #include "RooNumConvPdf.h"   
 #include "RooFFTConvPdf.h"
 #include "RooFitResult.h"     
+#include "RooCustomizer.h"     
 #include "TFile.h"
 #include "TH1D.h"
 #include "TTree.h"
@@ -28,12 +29,13 @@ using namespace std;
 static const Int_t NCAT = 2;  
 static const Int_t checkMass = 0;        // 0 not to check; otherwise mass to be checked
 static const Int_t genOnly = 1;
+static const Int_t inZero = 0;
 
 // Definition of the variables in the input ntuple
 RooArgSet* defineVariables() {
 
-  RooRealVar* mgg        = new RooRealVar("mgg",        "M(gg)",        0, 7000, "GeV");   
-  RooRealVar* mggGen     = new RooRealVar("mggGen",     "M(gg) gen",    0, 7000, "GeV");   
+  RooRealVar* mgg        = new RooRealVar("mgg",        "M(gg)",      300, 5050, "GeV");   
+  RooRealVar* mggGen     = new RooRealVar("mggGen",     "M(gg) gen",  300, 5050, "GeV");   
   RooRealVar* eventClass = new RooRealVar("eventClass", "eventClass", -10,   10, "");
   RooRealVar* weight     = new RooRealVar("weight",     "weightings",   0, 1000, "");   
 
@@ -52,6 +54,7 @@ void ConvolutionFromRDH(RooWorkspace* w, Int_t mass, TString coupling) {
   
   // RooRealVars
   RooRealVar* mgg = w->var("mgg");  
+  RooRealVar* zeroVar = w->var("zeroVar");
   TString deltaMname = TString::Format("deltaM_mass%d",mass);
   RooRealVar* deltaM = w->var(deltaMname);    
   deltaM->SetTitle("deltaM");     
@@ -64,11 +67,13 @@ void ConvolutionFromRDH(RooWorkspace* w, Int_t mass, TString coupling) {
   RooRealVar* mH = w->var(mHname);
   mH->setConstant();    
 
-  // Resolution centred in zero in mgg
+  // Resolution centred in zero
   RooFormulaVar *deltaM_formula = new RooFormulaVar("deltaM_formula","","@0",RooArgList(*w->var("mgg")));
+  if (inZero) deltaM_formula = new RooFormulaVar("deltaM_formula","","@0",RooArgList(*w->var("zeroVar")));
 
-  // Intrinsic width centred in mH in mgg   
+  // Intrinsic width centred in mH or in zero
   RooFormulaVar *deltaMgen_formula = new RooFormulaVar("deltaMgen_formula","","@0-@1",RooArgList(*w->var("mgg"),*mH)); 
+  if (inZero) deltaMgen_formula = new RooFormulaVar("deltaMgen_formula","","@0",RooArgList(*w->var("zeroVar"))); 
 
   // To move from deltaM to mgg
   RooArgList histObsRes;
@@ -84,7 +89,7 @@ void ConvolutionFromRDH(RooWorkspace* w, Int_t mass, TString coupling) {
   if (genOnly)  fileRes = new TFile("ResHistosGenOnlyScan.root");
   TFile *fileInw;
   if (!genOnly) fileInw = new TFile("IntrinsicWidthHistos.root"); 
-  if (genOnly)  fileInw = new TFile("IntrinsicWidthHistosGenOnlyK02.root");
+  if (genOnly)  fileInw = new TFile("IntrinsicWidthHistosGenOnly.root");
 
   // Plots to check
   TCanvas* c1 = new TCanvas("c1","PhotonsMass",0,0,800,800);  
@@ -154,44 +159,59 @@ void ConvolutionFromRDH(RooWorkspace* w, Int_t mass, TString coupling) {
     */
 
     // analytical
-    mgg->setBins(10000, "cache");
+    if (!inZero) mgg->setBins(10000, "cache");
+    if (inZero)  zeroVar->setBins(10000, "cache");
     TString myConvNameA = TString(Form("Convolution_cat"+myCut+"_mass%d",mass));
     TString myConvName  = TString(Form(myConvNameA+"_kpl"+coupling));   
-    RooFFTConvPdf convol("convol","convol",*mgg,*myHistPdfInw,*myHistPdfRes);          
-    convol.SetTitle(myConvName);
-    convol.SetName(myConvName);
+    // chiaraaaaaaaaaaa
+    //RooFFTConvPdf convol("convol","convol",*mgg,*myHistPdfInw,*myHistPdfRes);          
+    //if (inZero) convol("convol","convol",*zeroVar,*myHistPdfInw,*myHistPdfRes);          
+    RooFFTConvPdf *convol = new RooFFTConvPdf("convol","convol",*mgg,*myHistPdfInw,*myHistPdfRes);          
+    if (inZero) convol = new RooFFTConvPdf("convol","convol",*zeroVar,*myHistPdfInw,*myHistPdfRes);          
+    // chiaraaaaaaaaaaa
+    convol->SetTitle(myConvName);
+    convol->SetName(myConvName);
+
+    // chiara
+    // cout << "cambio nome start" << endl;
+    // RooFormulaVar *shiftFormula = new RooFormulaVar("shiftFormula","","@0-@1",RooArgList(*w->var("mgg"),*mH)); 
+    // RooCustomizer* cust = new RooCustomizer(convol, "shiftedMass");
+    // cust->replaceArg(*zeroVar,*shiftFormula);
+    // RooAbsPdf *newconvol = (RooAbsPdf*) cust->build();
+    // newconvol->Print();
+    // cout << "cambio nome end" << endl;
 
     // Both
-    convol.Print();     
+    convol->Print();     
     cout << "done!!" << endl;   
 
     // Fit and Plot - only for full sim samples
     if (!genOnly) {
-
       int fitMin = mass-250;        
       int fitMax = mass+250;        
       if (mass>=2000) {
 	fitMin = mass-750;        
 	fitMax = mass+750;        
+	if (inZero) {
+	  fitMin = -300;
+	  fitMax = -300;
+	}      
       } 
-      
+
       TString myUnbDS = TString(Form("SigWeight_cat"+myCut+"_mass%d",mass));   
       sigToFit[c] = (RooDataSet*) w->data(myUnbDS); 
       sigToFit[c]->Print();      
       
-      RooPlot* myPlot1 = mgg->frame(Range(fitMin,fitMax),Bins(100));   
-      sigToFit[c]->plotOn(myPlot1, LineColor(kRed), LineStyle(kDashed));           
-      double max = myPlot1->GetMaximum(); 
-      
       RooPlot* myPlot = mgg->frame(Range(fitMin,fitMax),Bins(50)); 
-      if (coupling=="001") myPlot = mgg->frame(Range(fitMin,fitMax),Bins(40));
+      if (!inZero && coupling=="001") myPlot = mgg->frame(Range(fitMin,fitMax),Bins(40));
+      if (inZero) myPlot = zeroVar->frame(Range(fitMin,fitMax),Bins(50)); 
       myPlot->SetTitle("Convolution, cat"+myCut);    
-      sigToFit[c]->plotOn(myPlot, LineColor(kRed), LineStyle(kDashed));         
-      convol.plotOn(myPlot, LineColor(kBlue));  
+      if (!inZero) sigToFit[c]->plotOn(myPlot, LineColor(kRed), LineStyle(kDashed));         
+      convol->plotOn(myPlot, LineColor(kBlue));  
       myHistPdfRes->plotOn(myPlot, LineColor(kRed));
       myHistPdfInw->plotOn(myPlot, LineColor(kYellow));
-      
-      myPlot->GetYaxis()->SetRangeUser(0.0001, max*3.);      
+      double max = myPlot->GetMaximum();   
+      myPlot->GetYaxis()->SetRangeUser(0.0001, max*1.2);      
       myPlot->Draw();           
       TString canvasName = TString(Form("closure_cat"+myCut+"_mass"+myMass+"_kpl"+coupling+".png"));
       c1->SetLogy(0);
@@ -202,7 +222,7 @@ void ConvolutionFromRDH(RooWorkspace* w, Int_t mass, TString coupling) {
     }
 
     // Importing the convolution in the workspace
-    w->import(convol);   
+    w->import(*convol);   
     
     delete myHistPdfRes;    
     delete myHistPdfInw;     
@@ -238,7 +258,7 @@ void AddSigData(RooWorkspace* w, int mass, TString coupling) {
   sigTree->SetName("sigTree");
   
   // Minimal common preselection cut on mgg and mggGen
-  TString mainCut = TString::Format("mgg>=0 && mgg<=7000 && mggGen>=0 && mggGen<=7000");  
+  TString mainCut = TString::Format("mgg>=300 && mgg<=5050 && mggGen>=300 && mggGen<=5050");  
   RooDataSet sigWeighted("sigWeighted","dataset",sigTree,*ntplVars,mainCut,"weight");   
   sigWeighted.Print();
 
@@ -356,8 +376,10 @@ void Interpolation(RooWorkspace* w, vector<int> masses, string coupling) {
 
   // Variables
   RooRealVar* mgg = w->var("mgg");    
+  RooRealVar* zeroVar = w->var("zeroVar");    
   RooArgList varlist;
-  varlist.add(*mgg);
+  if (!inZero) varlist.add(*mgg);
+  if (inZero)  varlist.add(*zeroVar);
 
   // Morphing variable
   RooRealVar* mu;
@@ -378,6 +400,10 @@ void Interpolation(RooWorkspace* w, vector<int> masses, string coupling) {
   if (checkMass!=0) {
     frameCat0 = mgg->frame(Range(checkMass-300,checkMass+300));   
     frameCat1 = mgg->frame(Range(checkMass-300,checkMass+300));   
+  }
+  if (inZero) {
+    frameCat0 = zeroVar->frame(Range(-300,300));   
+    frameCat1 = zeroVar->frame(Range(-300,300));   
   }
 
   // To fill the pdfs
@@ -412,8 +438,11 @@ void Interpolation(RooWorkspace* w, vector<int> masses, string coupling) {
       cout << endl;
 
       // moving to the corresponding roohistpdf
-      mgg->setBins(10000);
-      RooDataHist *convRDH = conv->generateBinned(*mgg,10000,kTRUE);
+      if (!inZero) mgg->setBins(10000);
+      if (inZero)  zeroVar->setBins(10000);
+      RooDataHist *convRDH;
+      if (!inZero) convRDH = conv->generateBinned(*mgg,10000,kTRUE);
+      if (inZero)  convRDH = conv->generateBinned(*zeroVar,10000,kTRUE);
       TString myConvRdhNameA = TString(Form("ConvolutionRDH_cat"+myCut+"_mass%d",theMass));
       TString myConvRdhName  = TString(Form(myConvRdhNameA+"_kpl"+coupling));   
       convRDH->SetTitle(myConvRdhName);
@@ -422,7 +451,8 @@ void Interpolation(RooWorkspace* w, vector<int> masses, string coupling) {
       convRDH->Print();
       cout << endl;
 
-      convRhPdf = new RooHistPdf("convRhPdf","convRHhPdf",*mgg,*convRDH,0);
+      if (!inZero) convRhPdf = new RooHistPdf("convRhPdf","convRHhPdf",*mgg,*convRDH,0);
+      if (inZero)  convRhPdf = new RooHistPdf("convRhPdf","convRHhPdf",*zeroVar,*convRDH,0);
       TString myConvRhPdfNameA = TString(Form("ConvolutionRhPdf_cat"+myCut+"_mass%d",theMass));
       TString myConvRhPdfName  = TString(Form(myConvRhPdfNameA+"_kpl"+coupling));   
       convRhPdf->SetTitle(myConvRhPdfName);   
@@ -512,8 +542,9 @@ void runfits(string coupling="01") {
   RooWorkspace *w = new RooWorkspace("w");
  
   // range for the variables
-  w->factory("mgg[0,7000]");      
-  w->factory("mggGen[0,7000]");
+  w->factory("mgg[300,5050]");      
+  w->factory("mggGen[300,5050]");
+  w->factory("zeroVar[-300,300]");
   w->Print("v");
 
   // range of masses
@@ -554,7 +585,73 @@ void runfits(string coupling="01") {
       masses.push_back(5000);
     }
   } else {
-    if (coupling=="02") {
+    if (coupling=="01") {
+      masses.push_back(500);
+      masses.push_back(625);
+      masses.push_back(750);
+      masses.push_back(875);
+      masses.push_back(1000);
+      masses.push_back(1125);
+      masses.push_back(1250);
+      masses.push_back(1375);
+      masses.push_back(1500);
+      masses.push_back(1625);
+      masses.push_back(1750);
+      masses.push_back(2000);
+      masses.push_back(2125);
+      masses.push_back(2250);
+      masses.push_back(2375);
+      masses.push_back(2500);
+      masses.push_back(2625);
+      masses.push_back(2750);
+      masses.push_back(2875);
+      masses.push_back(3000);
+      masses.push_back(3500);
+      masses.push_back(3625);
+      masses.push_back(3750);
+      masses.push_back(3875);
+      masses.push_back(4000);
+      masses.push_back(4125);
+      masses.push_back(4250);
+      masses.push_back(4375);
+      masses.push_back(4500);
+      masses.push_back(4625);
+      masses.push_back(4750);
+      masses.push_back(4875);
+      masses.push_back(5000);
+    } else if (coupling=="001") {
+      masses.push_back(500);
+      masses.push_back(625);
+      masses.push_back(750);
+      masses.push_back(875);
+      masses.push_back(1000);
+      masses.push_back(1125);
+      masses.push_back(1250);
+      masses.push_back(1375);
+      masses.push_back(1500);
+      masses.push_back(1625);
+      masses.push_back(1750);
+      masses.push_back(1875);
+      masses.push_back(2000);
+      masses.push_back(2125);
+      masses.push_back(2250);
+      masses.push_back(2375);
+      masses.push_back(2500);
+      masses.push_back(2625);
+      masses.push_back(2750);
+      masses.push_back(2875);
+      masses.push_back(3000);
+      masses.push_back(3625);
+      masses.push_back(3750);
+      masses.push_back(3875);
+      masses.push_back(4000);
+      masses.push_back(4125);
+      masses.push_back(4250);
+      masses.push_back(4500);
+      masses.push_back(4625);
+      masses.push_back(4750);
+      masses.push_back(5000);
+    } else if (coupling=="02") {
       masses.push_back(500);
       masses.push_back(625);
       masses.push_back(750);
