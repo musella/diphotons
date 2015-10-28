@@ -26,7 +26,7 @@ using namespace std;
 
 // to be modified:
 static const Int_t NCAT = 2;  
-static const Int_t genOnly = 0;
+static const Int_t genOnly = 1;
 
 // Preparing the intrinsic width histogram
 void MakeIntrinsicWidthHisto(TString filename, bool newFile, int mass, TString coupling) {
@@ -121,8 +121,6 @@ void runfits() {
 
   for (int iCoupling=0; iCoupling<3; iCoupling++) {
 
-    if (iCoupling<2) continue;
-
     string coupling;
     if (iCoupling==0) coupling="001";
     if (iCoupling==1) coupling="01";
@@ -174,8 +172,74 @@ void runfits() {
 	////// masses.push_back(6000);
 	////masses.push_back(7000);
       }
-    } else {
-      if (coupling=="02") {  
+    } else {                    // gen only fine scan
+      if (coupling=="01") {  
+	masses.push_back(500);
+	masses.push_back(625);
+	masses.push_back(750);
+	masses.push_back(875);
+	masses.push_back(1000);
+	masses.push_back(1125);
+	masses.push_back(1250);
+	masses.push_back(1375);
+	masses.push_back(1500);
+	masses.push_back(1625);
+	masses.push_back(1750);
+	masses.push_back(2000);
+	masses.push_back(2125);
+	masses.push_back(2250);
+	masses.push_back(2375);
+	masses.push_back(2500);
+	masses.push_back(2625);
+	masses.push_back(2750);
+	masses.push_back(2875);
+	masses.push_back(3000);
+	masses.push_back(3500);
+	masses.push_back(3625);
+	masses.push_back(3750);
+	masses.push_back(3875);
+	masses.push_back(4000);
+	masses.push_back(4125);
+	masses.push_back(4250);
+	masses.push_back(4375);
+	masses.push_back(4500);
+	masses.push_back(4625);
+	masses.push_back(4750);
+	masses.push_back(4875);
+	masses.push_back(5000);
+      } else if (coupling=="001") {  
+	masses.push_back(500);
+	masses.push_back(625);
+	masses.push_back(750);
+	masses.push_back(875);
+	masses.push_back(1000);
+	masses.push_back(1125);
+	masses.push_back(1250);
+	masses.push_back(1375);
+	masses.push_back(1500);
+	masses.push_back(1625);
+	masses.push_back(1750);
+	masses.push_back(1875);
+	masses.push_back(2000);
+	masses.push_back(2125);
+	masses.push_back(2250);
+	masses.push_back(2375);
+	masses.push_back(2500);
+	masses.push_back(2625);
+	masses.push_back(2750);
+	masses.push_back(2875);
+	masses.push_back(3000);
+	masses.push_back(3625);
+	masses.push_back(3750);
+	masses.push_back(3875);
+	masses.push_back(4000);
+	masses.push_back(4125);
+	masses.push_back(4250);
+	masses.push_back(4500);
+	masses.push_back(4625);
+	masses.push_back(4750);
+	masses.push_back(5000);
+      } else if (coupling=="02") {  
 	masses.push_back(500);
 	masses.push_back(625);
 	masses.push_back(750);
