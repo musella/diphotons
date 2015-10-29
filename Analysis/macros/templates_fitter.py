@@ -1091,7 +1091,8 @@ class TemplatesFitApp(TemplatesApp):
                             self.workspace_.rooImport(covariance_studies, "covariance_studies_%i"%i)
                             self.workspace_.rooImport(correlation_studies,"correlation_studies_%i"%i)
                             self.workspace_.rooImport(fit_studies,"fit_studies_%i" %i)
-                        else: 
+                        else:
+                            return
                             pu_pf=1-pu_pp
                             print "pu_pf ", pu_pf
                             if extended_fit:
@@ -1199,6 +1200,7 @@ class TemplatesFitApp(TemplatesApp):
                     tree_template=self.treeData("fitresult_fraction_unrolled_%s_%s_%s"%(opt,dim, cat))
                     g_templatepp=ROOT.TGraphErrors(tree_template.GetEntries())
                     g_templatepf=ROOT.TGraphErrors(tree_template.GetEntries())
+                    g_templateff=ROOT.TGraphErrors(tree_template.GetEntries())
                     nentries=tree_template.GetEntries()
                 if not data:
                     print "fitresult_fraction_mc_unrolled_%s_%s_%s"%(opt,dim, cat)
@@ -1231,16 +1233,38 @@ class TemplatesFitApp(TemplatesApp):
                 for mb in range(0,nentries):
                     if data:
                         tree_template.GetEntry(mb)
-                        g_templatepf.SetPoint(mb,tree_template.massbin,tree_template.purity_pf)
-                        g_templatepf.SetPointError(mb,tree_template.masserror,tree_template.error_pf)
-                        g_templatepp.SetPoint(mb,tree_template.massbin,tree_template.purity_pp)
-                        g_templatepp.SetPointError(mb,tree_template.masserror,tree_template.error_pp)
+                        if mb==nentries-1:
+                            massbin=5500/2.
+                            masserror=4500/2.
+                        else:
+                            massbin=tree_template.massbin
+                            masserror=tree_template.masserror
+                        pf_p=tree_template.purity_pf
+                        pf_err=tree_template.error_pf
+                        pp_p=tree_template.purity_pp
+                        pp_err=tree_template.error_pp
+                        ff_p=1-pf_p-pp_p
+                        ff_err=sqrt(pow(pf_err,2)+pow(pp_err,2))
+                        if pf_p==1 or pp_p==1: continue
+                        g_templatepf.SetPoint(mb,massbin,pf_p)
+                        g_templatepf.SetPointError(mb,masserror,pf_err)
+                        g_templatepp.SetPoint(mb,massbin,pp_p)
+                        g_templatepp.SetPointError(mb,masserror,pp_err)
+                        g_templateff.SetPoint(mb,massbin,ff_p)
+                        g_templateff.SetPointError(mb,masserror,ff_err)
+                        print"pp_p", pp_p,"pf_p", pf_p,"ff_p",ff_p,"ff_err",ff_err
                     else:
                         tree_templatemc.GetEntry(mb)
-                        g_templatepfmc.SetPoint(mb,tree_templatemc.massbin,tree_templatemc.purity_pf)
-                        g_templatepfmc.SetPointError(mb,tree_templatemc.masserror,tree_templatemc.error_pf)
-                        g_templateppmc.SetPoint(mb,tree_templatemc.massbin,tree_templatemc.purity_pp)
-                        g_templateppmc.SetPointError(mb,tree_templatemc.masserror,tree_templatemc.error_pp)
+                        if mb==nentries:
+                            massbin=5500/2.
+                            masserror=4500/2.
+                        else:
+                            massbin=tree_templatemc.massbin
+                            masserror=tree_templatemc.masserror
+                        g_templatepfmc.SetPoint(mb,massbin,tree_templatemc.purity_pf)
+                        g_templatepfmc.SetPointError(mb,masserror,tree_templatemc.error_pf)
+                        g_templateppmc.SetPoint(mb,massbin,tree_templatemc.purity_pp)
+                        g_templateppmc.SetPointError(mb,masserror,tree_templatemc.error_pp)
                     tree_truthpp.GetEntry(mb)
                     tree_truthpf.GetEntry(mb)
                     if tree_truthff!=None:
@@ -1300,7 +1324,7 @@ class TemplatesFitApp(TemplatesApp):
                         self.plotPurityMassbins(cat,pu_val,opt,sumw2off,g_templateppmc,g_templatepfmc,None,g_truthpp,g_truthpf,g_truthff,g_mctruthpp,g_mctruthpf)
                 else:
                  #   self.plotPurityMassbins(cat,pu_val,opt,"data",g_templatepp,g_templatepf,None,g_truthpp,g_truthpf,g_truthff,g_templateppmc,g_templatepfmc)
-                    self.plotPurityMassbins(cat,pu_val,opt,"data",g_templatepp,g_templatepf,None)
+                    self.plotPurityMassbins(cat,pu_val,opt,"data",g_templatepp,g_templatepf,g_templateff,None)
             ## ------------------------------------------------------------------------------------------------------------
     def pullFunction(self,g_pull,h_pull,cat,comp,opt,pu_val):
         leg = ROOT.TLegend(0.5,0.8,0.9,0.9)
@@ -1331,9 +1355,11 @@ class TemplatesFitApp(TemplatesApp):
         self.keep( [cpull] )
         self.autosave(True)
     ## ------------------------------------------------------------------------------------------------------------
-    def plotPurityMassbins(self,cat,pu_val,opt,opt2,g_templatepp=None,g_templatepf=None,g_ratiopp=None,g_truthpp=None,g_truthpf=None,g_truthff=None,g_mctruthpp=None,g_mctruthpf=None,g_ratiopf=None):
+    def plotPurityMassbins(self,cat,pu_val,opt,opt2,g_templatepp=None,g_templatepf=None,g_templateff=None,g_ratiopp=None,g_truthpp=None,g_truthpf=None,g_truthff=None,g_mctruthpp=None,g_mctruthpf=None,g_ratiopf=None):
         leg = ROOT.TLegend(0.6,0.6,0.8,0.9)
         cpu = ROOT.TCanvas("cpu_%s_%s_%s_%s" % (opt,cat,pu_val,opt2),"cpu_%s_%s_%s_%s" %(opt,cat,pu_val,opt2))
+        g_templatepf.Print()
+        g_templateff.Print()
         if not (opt2=="data" or opt2=="sumw2off") :
             cpu.Divide(1,2)
             cpu.cd(1)
@@ -1354,6 +1380,11 @@ class TemplatesFitApp(TemplatesApp):
             if opt2=="data":
                 g_templatepp.SetMarkerColor(ROOT.kBlue+1)
                 g_templatepp.SetLineColor(ROOT.kBlue+1)
+                if g_templateff:
+                    g_templateff.SetMarkerColor(ROOT.kGreen+1)
+                    g_templateff.SetLineColor(ROOT.kGreen+1)
+                    g_templateff.SetMarkerSize(1.3)
+                    g_templateff.SetMarkerStyle(20)
             else:
                 g_templatepp.SetMarkerColor(ROOT.kCyan+1)
                 g_templatepp.SetLineColor(ROOT.kCyan+1)
@@ -1364,7 +1395,7 @@ class TemplatesFitApp(TemplatesApp):
             g_templatepp.GetXaxis().SetTitle("Diphoton mass [GeV]")
             g_templatepp.GetYaxis().SetTitle("purity")
             g_templatepp.GetYaxis().SetRangeUser(0.,1.6)
-            g_templatepp.GetXaxis().SetLimits(200.,15000.)
+            g_templatepp.GetXaxis().SetLimits(200.,5000.)
             g_templatepp.Draw("AP")
         if not opt2=="data":
             g_truthpp.SetMarkerColor(ROOT.kYellow+2)
@@ -1381,7 +1412,7 @@ class TemplatesFitApp(TemplatesApp):
             g_mctruthpp.GetXaxis().SetTitle("Diphoton mass [GeV]")
             g_mctruthpp.GetYaxis().SetTitle("purity")
             g_mctruthpp.GetYaxis().SetRangeUser(0.,1.6)
-            g_mctruthpp.GetXaxis().SetLimits(200.,15000.)
+            g_mctruthpp.GetXaxis().SetLimits(200.,5000.)
         if opt=="mctruth":
             g_mctruthpp.Draw("P A")
             g_mctruthpf.Draw("P ")
@@ -1400,6 +1431,9 @@ class TemplatesFitApp(TemplatesApp):
             leg.AddEntry(g_templatepp,"pp template","lp")  
             leg.AddEntry(g_templatepf,"pf %s"% opt,"pl")  
             g_templatepf.Draw("P SAME")
+            if g_templateff:
+                leg.AddEntry(g_templateff,"ff %s"% opt,"pl")  
+                g_templateff.Draw("P SAME")
         if opt=="mctruth":
             leg.AddEntry(g_truthpp,"pp truth","lp")  
             leg.AddEntry(g_truthpf,"pf truth","lp")  
@@ -1455,7 +1489,7 @@ class TemplatesFitApp(TemplatesApp):
             g_ratiopp.GetXaxis().SetTitleSize( g_mctruthpp.GetXaxis().GetTitleSize() *5./4. )
             g_ratiopp.GetXaxis().SetLabelSize( g_mctruthpp.GetXaxis().GetLabelSize()*6./4. )
             g_ratiopp.Draw("AP")
-            g_ratiopp.GetXaxis().SetLimits(350.,15000.)
+            g_ratiopp.GetXaxis().SetLimits(350.,5000.)
             g_ratiopp.Draw("AP")
             if g_ratiopf!=None:
                 g_ratiopf.SetMarkerStyle(20)
@@ -1464,7 +1498,7 @@ class TemplatesFitApp(TemplatesApp):
             self.keep( [g_mctruthpp,g_ratiopp] )
         self.keep( [g_mctruthpf] )
         self.keep( [g_mctruthpp] )
-        self.keep( [cpu,g_templatepp,g_templatepf] )
+        self.keep( [cpu,g_templatepp,g_templatepf,g_templateff] )
         self.autosave(True)
 
     ## ------------------------------------------------------------------------------------------------------------
