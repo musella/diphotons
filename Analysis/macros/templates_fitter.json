@@ -26,11 +26,11 @@
 		}
 	},
 "jackknife":{ 
-        "jk_pp": 10.0 ,
+        "jk_pp": 0.0 ,
         "jk_source": 10.0 ,
         "jk_target": 10.0 ,
             "categories":["EBEB","EBEE"],
-            "components": ["pf","pp"],
+            "components": ["pp"],
             "template_binning" : [ 0.0,0.1,5.0,15.0],
 			
 	    "mass_binning" :"mass[13000,200.0,13000.0]"
@@ -39,18 +39,19 @@
                 "categories" :["EB","EE"]
     },
    "nominalFit":{
-        "_3_components":{
-				"data":false,
+        "3_components":{
         		"dimensions" :"2D", 
         		"observable": "templateNdim2d_unroll",
                 "components": ["pp","pf","ff"],
                 "lowerLimitSigRegion": "0.", 
                 "_upperLimitSigRegion": "9.", 
                 "_upperLimitSigRegion": "4.", 
+				"jackknife_pf":false,
+				"jackknife_pp":false,
 		"mass_binning" :"mass[13000,0.0,13000.0]",
                 "extended_fit":false
          },
-        "2_components":{
+        "_2_components":{
         		"dimensions" :"2D", 
         		"observable": "templateNdim2d_unroll",
                 "components": ["pp","pf"],
@@ -58,7 +59,7 @@
                 "_upperLimitSigRegion": "4.", 
                 "extended_fit":false,
 				"jackknife_pf":false,
-				"jackknife_pp":false,
+				"jackknife_pp":true,
 		"mass_binning" :"mass[13000,0.0,13000.0]"
         }
     },

@@ -592,8 +592,8 @@ class TemplatesApp(PlotApp):
                             n= int(tree.GetEntries())
                             d=n/jk
                             g=jk
-                            #if n % d != 0:
-                            #    g += 1
+                            if n % d != 0:
+                                g += 1
                             g=int(g)
                             print "computing partitions: n=%d d=%d g=%i" % (n,d,g)
                             all_events= range(n)

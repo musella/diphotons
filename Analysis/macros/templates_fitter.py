@@ -252,23 +252,26 @@ class TemplatesFitApp(TemplatesApp):
                         diphomass=self.massquantiles(dset_data,massargs,mass_b,mass_split)
                         massrange=[mass_split[2],mass_split[1]]
                     elif options.fixed_massbins and cat=="EBEB":
-                        diphomass= [200.0, 203.8, 208.0,211.9,216.2, 221.4, 227.1,230.0,240.0,246.4,253.4,261.8,271.5,281.7,295.3,310.9,332.3,358.9,408.8,500.0,12999.0]
+                        #diphomass= [200.0, 203.8, 208.0,211.9,216.2, 221.4, 227.1,230.0,240.0,246.4,253.4,261.8,271.5,281.7,295.3,310.9,332.3,358.9,408.8,500.0,12999.0]
+                        diphomass=[200.0,203.837538462,207.986968326,211.859433198,216.187076923,221.432967033,227.058461538,230.0,239.989450549,246.354285714,253.415384615, 261.84,271.45025641,281.651965812,295.277948718, 310.916923077,332.332307692,358.900512821,408.787692308,500.0,12999.0]
                         massrange=[0,len(diphomass)-1]
                     elif options.fixed_massbins and cat=="EBEE":
-                        diphomass=[299.5,320.0,355.5,390.8,443.9,500.0,12999.0]
+                        diphomass=[299.446153846,320.0,355.459828644,390.769230387,443.85640967,500.0,12999.0153846]
+                        #diphomass=[299.5,320.0,355.5,390.8,443.9,500.0,12999.0]
                         massrange=[0,len(diphomass)-1]
                     truth_pp= "mctruth_%s_%s_%s" % (compname,fitname,cat)
                     if d2:
                         tp_mcpu = ROOT.TNtuple("tree_truth_purity_all_%s_%s_%s" % (compname,fitname,cat),"tree_truth_purity_%s_%s_%s" % (compname,fitname,cat),"number_pu:frac_pu:massbin:masserror" )
-                      #  ntp_mcpu = ROOT.TNtuple("tree_truth_purity_signalregion_%s_%s_%s" % (compname,fitname,cat),"tree_truth_purity_signalrange_%s_%s_%s" % (compname,fitname,cat),"number_pu:frac_pu:massbin:masserror" )
+                      #  ntp_mcp = ROOT.TNtuple("tree_truth_purity_signalregion_%s_%s_%s" % (compname,fitname,cat),"tree_truth_purity_signalrange_%s_%s_%s" % (compname,fitname,cat),"number_pu:frac_pu:massbin:masserror" )
                       #  self.store_[ntp_mcpu.GetName()] =ntp_mcpu
                         self.store_[tp_mcpu.GetName()] =tp_mcpu
 
                  
                     for mb in range(massrange[0],massrange[1]):
+                       # massbin=round((diphomass[mb]+diphomass[mb+1])/2.,2)
+                       # masserror=round((diphomass[mb+1]-diphomass[mb])/2.,2)
                         massbin=(diphomass[mb]+diphomass[mb+1])/2.
                         masserror=(diphomass[mb+1]-diphomass[mb])/2.
-                        
                         cut=ROOT.TCut("mass>%f && mass<%f"% (diphomass[mb],diphomass[mb+1]))
                         cut_s= "%1.0f_%2.0f"% (diphomass[mb],diphomass[mb+1])
                         print cut.GetTitle()
@@ -291,7 +294,7 @@ class TemplatesFitApp(TemplatesApp):
                             print number_pu, " ", dset_massc_mc.sumEntries() , " ", frac_pu
                           #  number_pu_sigrange=temp_massc_truth.sumEntries()
                           #  frac_pu_sigrange=number_pu_sigrange/data_massc_truth.sumEntries()
-                            tp_mcpu.Fill(number_pu, frac_pu,massbin, masserror)
+                            tp_mcpu.Fill(number_pu,frac_pu,massbin, masserror)
                           #  ntp_mcpu.Fill(number_pu_sigrange, frac_pu_sigrange,massbin, masserror)
                         elif not d2:
                             templates_massc=templates[:]
@@ -965,14 +968,14 @@ class TemplatesFitApp(TemplatesApp):
                         tps.append(tpi)
                     ntp = ROOT.TNtuple("tree_fitresult_events%s%s_%s_%s" % (dset,tempname,dim,cat),"tree_fitresult_events_%s_%s_%s" % (tempname,dim,cat),"norm:purity_pp:error_pp_sumw2off:error_pp_sumw2on:purity_pf:error_pf_sumw2off:error_pf_sumw2on:massbin:masserror" )
                     self.store_[ntp.GetName()] = ntp
-                rng= range(0,tree_mass.GetEntries())
-                if len(mass_split)== 3:
-                    rng=range(mass_split[2],mass_split[1])
-                for mb in rng:
+                massrange= range(0,tree_mass.GetEntries())
+                if not options.fixed_massbins and len(mass_split)== 3:
+                    massrange=range(mass_split[2],mass_split[1])
+                for mb in massrange:
                     print "---------------------------------------------------" 
                     tree_mass.GetEntry(mb)
                     cut=ROOT.TCut("mass>%f && mass<%f"% (tree_mass.massbin-tree_mass.masserror,tree_mass.massbin+tree_mass.masserror))
-                    cut_s= "%1.0f_%2.0f"%  (tree_mass.massbin-tree_mass.masserror,tree_mass.massbin+tree_mass.masserror)
+                    cut_s= "%1.0f_%1.0f"%  (tree_mass.massbin-tree_mass.masserror,tree_mass.massbin+tree_mass.masserror)
                     print cut.GetTitle()
                     data_massc=data.reduce(cut.GetTitle())
                     data_massc.Print()
@@ -1297,7 +1300,7 @@ class TemplatesFitApp(TemplatesApp):
                         self.plotPurityMassbins(cat,pu_val,opt,sumw2off,g_templateppmc,g_templatepfmc,None,g_truthpp,g_truthpf,g_truthff,g_mctruthpp,g_mctruthpf)
                 else:
                  #   self.plotPurityMassbins(cat,pu_val,opt,"data",g_templatepp,g_templatepf,None,g_truthpp,g_truthpf,g_truthff,g_templateppmc,g_templatepfmc)
-                    self.plotPurityMassbins(cat,pu_val,opt,"data",g_templatepp,g_templatepf,None,g_truthpp,g_truthpf,g_truthff,g_templateppmc,g_templatepfmc)
+                    self.plotPurityMassbins(cat,pu_val,opt,"data",g_templatepp,g_templatepf,None)
             ## ------------------------------------------------------------------------------------------------------------
     def pullFunction(self,g_pull,h_pull,cat,comp,opt,pu_val):
         leg = ROOT.TLegend(0.5,0.8,0.9,0.9)
@@ -1351,8 +1354,6 @@ class TemplatesFitApp(TemplatesApp):
             if opt2=="data":
                 g_templatepp.SetMarkerColor(ROOT.kBlue+1)
                 g_templatepp.SetLineColor(ROOT.kBlue+1)
-                g_mctruthpp.SetMarkerColor(ROOT.kCyan+1)
-                g_mctruthpp.SetLineColor(ROOT.kCyan+1)
             else:
                 g_templatepp.SetMarkerColor(ROOT.kCyan+1)
                 g_templatepp.SetLineColor(ROOT.kCyan+1)
@@ -1365,48 +1366,54 @@ class TemplatesFitApp(TemplatesApp):
             g_templatepp.GetYaxis().SetRangeUser(0.,1.6)
             g_templatepp.GetXaxis().SetLimits(200.,15000.)
             g_templatepp.Draw("AP")
-        g_truthpp.SetMarkerColor(ROOT.kYellow+2)
-        g_truthpp.SetLineColor(ROOT.kYellow+2)
-        g_truthpf.SetMarkerColor(ROOT.kGreen+1)
-        g_truthpf.SetLineColor(ROOT.kGreen+1)
-        g_truthff.SetMarkerColor(ROOT.kGreen+2)
-        g_truthff.SetLineColor(ROOT.kGreen+2)
-        g_mctruthpp.SetMarkerStyle(20)
-        g_truthpp.SetMarkerStyle(20)
-        g_truthpf.SetMarkerStyle(20)
-        g_truthff.SetMarkerStyle(20)
-        g_mctruthpp.SetMarkerSize(1.3)
-        g_mctruthpp.GetXaxis().SetTitle("Diphoton mass [GeV]")
-        g_mctruthpp.GetYaxis().SetTitle("purity")
-        g_mctruthpp.GetYaxis().SetRangeUser(0.,1.6)
-        g_mctruthpp.GetXaxis().SetLimits(200.,15000.)
-        g_mctruthpp.Draw("P SAME")
-        g_mctruthpf.Draw("P SAME")
+        if not opt2=="data":
+            g_truthpp.SetMarkerColor(ROOT.kYellow+2)
+            g_truthpp.SetLineColor(ROOT.kYellow+2)
+            g_truthpf.SetMarkerColor(ROOT.kGreen+1)
+            g_truthpf.SetLineColor(ROOT.kGreen+1)
+            g_truthff.SetMarkerColor(ROOT.kGreen+2)
+            g_truthff.SetLineColor(ROOT.kGreen+2)
+            g_mctruthpp.SetMarkerStyle(20)
+            g_truthpp.SetMarkerStyle(20)
+            g_truthpf.SetMarkerStyle(20)
+            g_truthff.SetMarkerStyle(20)
+            g_mctruthpp.SetMarkerSize(1.3)
+            g_mctruthpp.GetXaxis().SetTitle("Diphoton mass [GeV]")
+            g_mctruthpp.GetYaxis().SetTitle("purity")
+            g_mctruthpp.GetYaxis().SetRangeUser(0.,1.6)
+            g_mctruthpp.GetXaxis().SetLimits(200.,15000.)
+        if opt=="mctruth":
+            g_mctruthpp.Draw("P A")
+            g_mctruthpf.Draw("P ")
+        elif not opt2=="data":
+            g_mctruthpp.Draw("P SAME")
+            g_mctruthpf.Draw("P SAME")
+        
         if not opt2=="data":
             leg.AddEntry(g_mctruthpp,"pp mctruth template","lp")  
             leg.AddEntry(g_mctruthpf,"pf mctruth template","lp")
-            leg.AddEntry(g_templatepp,"pp template mc","lp")  
-            leg.AddEntry(g_templatepf,"pf %s mc"% opt,"pl")  
+            if not opt=="mctruth":
+                leg.AddEntry(g_templatepp,"pp template mc","lp")  
+                leg.AddEntry(g_templatepf,"pf %s mc"% opt,"pl")  
+                g_templatepf.Draw("P SAME")
         if opt2=="data":
-#            leg.AddEntry(g_mctruthpp,"pp mc template","lp")  
- #           leg.AddEntry(g_mctruthpf,"pf mc %s" % opt,"lp")
             leg.AddEntry(g_templatepp,"pp template","lp")  
             leg.AddEntry(g_templatepf,"pf %s"% opt,"pl")  
-        g_templatepf.Draw("P SAME")
-       # leg.AddEntry(g_truthpp,"pp truth","lp")  
-       # leg.AddEntry(g_truthpf,"pf truth","lp")  
-       # leg.AddEntry(g_truthff,"ff truth","lp")  
-       # g_truthpp.Draw("P SAME")
-       # g_truthpf.Draw("P SAME")
-       # g_truthff.Draw("P SAME")
-        g_mctruthpf.SetMarkerStyle(20)
-        g_mctruthpf.SetMarkerSize(1.3)
+            g_templatepf.Draw("P SAME")
+        if opt=="mctruth":
+            leg.AddEntry(g_truthpp,"pp truth","lp")  
+            leg.AddEntry(g_truthpf,"pf truth","lp")  
+            leg.AddEntry(g_truthff,"ff truth","lp")  
+            g_truthpp.Draw("P SAME")
+            g_truthpf.Draw("P SAME")
+            g_truthff.Draw("P SAME")
+        if not opt2=="data":
+            g_mctruthpf.SetMarkerStyle(20)
+            g_mctruthpf.SetMarkerSize(1.3)
         if not opt=="mctruth":
             if opt2=="data":
                 g_templatepf.SetMarkerColor(ROOT.kBlack)
                 g_templatepf.SetLineColor(ROOT.kBlack)
-                g_mctruthpf.SetMarkerColor(ROOT.kGreen+3)
-                g_mctruthpf.SetLineColor(ROOT.kGreen+3)
             else:
                 g_templatepf.SetMarkerColor(ROOT.kGreen+4)
                 g_templatepf.SetLineColor(ROOT.kGreen+4)
@@ -1414,7 +1421,12 @@ class TemplatesFitApp(TemplatesApp):
                 g_mctruthpf.SetLineColor(ROOT.kOrange+7)
             g_templatepf.SetMarkerStyle(20)
             g_templatepf.SetMarkerSize(1.3)  
-            
+        elif not opt2=="data":
+            g_mctruthpf.SetMarkerColor(ROOT.kGreen+3)
+            g_mctruthpf.SetLineColor(ROOT.kGreen+3)
+            g_mctruthpf.SetMarkerColor(ROOT.kOrange+7)
+            g_mctruthpf.SetLineColor(ROOT.kOrange+7)
+
         leg.Draw()
         if not (opt2=="data" or opt2=="sumw2off"):
             g_ratiopp.SetMarkerStyle(20)
@@ -1485,10 +1497,10 @@ class TemplatesFitApp(TemplatesApp):
                 diphomass=self.massquantiles(dset_data,massargs,mass_b,mass_split)
                 massrange=[mass_split[2],mass_split[1]]
             elif options.fixed_massbins and cat=="EBEB":
-                diphomass= [200.0, 203.8, 208.0,211.9,216.2, 221.4, 227.1,230.0,240.0,246.4,253.4,261.8,271.5,281.7,295.3,310.9,332.3,358.9,408.8,500.0,12999.0]
+                diphomass=[200.0,203.837538462,207.986968326,211.859433198,216.187076923,221.432967033,227.058461538,230.0,239.989450549,246.354285714,253.415384615, 261.84,271.45025641,281.651965812,295.277948718, 310.916923077,332.332307692,358.900512821,408.787692308,500.0,12999.0]
                 massrange=[0,len(diphomass)-1]
             elif options.fixed_massbins and cat=="EBEE":
-                diphomass=[299.5,320.0,355.5,390.8,443.9,500.0,12999.0]
+                diphomass=[299.446153846,320.0,355.459828644,390.769230387,443.85640967,500.0,12999.0153846]
                 massrange=[0,len(diphomass)-1]
             for mb in range(massrange[0],massrange[1]):
                 massbin=(diphomass[mb]+diphomass[mb+1])/2.
@@ -1525,13 +1537,15 @@ class TemplatesFitApp(TemplatesApp):
                             temp = self.reducedRooData( "template_mix_%s_kDSinglePho2D_%i_%s" % (comp,t,cat),setargs,redo=True)
                             temp.SetName("template_mix_%s_2D_%i_%s" % (comp,t,cat))
                             temps_all.append(temp)
+                        print temp
                     else:
                         jkp=int(options.jackknife.get("jk_pp"))
-                        for s in range(jks):
+                        for s in range(jkp):
                             temp = self.reducedRooData( "template_%s_%i_2D_%s" % (comp,s,cat),setargs,redo=True)
                             temp.SetName("template_%s_%i_2D_%s" % (comp,s,cat))
-                            temps_all.append(temp)
-
+                        temps_all.append(temp)
+                    return
+                    print temps_all
                     for template in temps_all:
                         template_massc =self.masscutTemplates(template,cut,cut_s,"%s"% (template.GetName()))
                         temps.append(template_massc)

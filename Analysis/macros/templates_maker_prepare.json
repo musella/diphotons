@@ -192,7 +192,7 @@
 		        "sel"  : "cicNoChIso", "#" : "event selection",
                         "dataset" : ["data"],    "#" : "input dataset. can be data,mc or templates",
                         "datasetmc" : ["data","mc"],    "#" : "input dataset. can be data,mc or templates",
-                        "jk":0.0,
+                        "jk":10.0,
                                     "#" : "list of fit components                 ",
                         "#" : "How to fill different categories. Logic is the same as for the 'fill' instructions above",
                         "fill_categories" : {
@@ -426,10 +426,10 @@
 
     "mix" : { 
 	"kDSinglePho2D" : {
-        "jk_source": 0.0 ,
-        "jk_target": 0.0 ,
+        "jk_source": 10.0 ,
+        "jk_target": 10.0 ,
 		"target" : "2D",
-		"ptLeadMin" : 170.0, "ptSubleadMin" : 170.0, "massMin" : 200.0,
+		"ptLeadMin" : 100.0, "ptSubleadMin" : 100.0, "massMin" : 200.0,
 		"pt" : "phoPt", "eta" : "phoEta", "phi" : "phoPhi", "energy" : "phoEnergy",
 		"sources" : { 
 		    "pf" : [ "singlePho:p", "singlePho:f" ],
@@ -469,7 +469,7 @@
         "jk_target": 0.0 ,
 
 		"target" : "2D:mc",
-		"ptLeadMin" : 170.0, "ptSubleadMin" : 170.0, "massMin" : 200.0,
+		"ptLeadMin" : 100.0, "ptSubleadMin" : 100.0, "massMin" : 200.0,
 		"pt" : "phoPt", "eta" : "phoEta", "phi" : "phoPhi", "energy" : "phoEnergy",
 		"sources" : { 
 		    "pf" : [ "singlePho:mc_p", "singlePho:mc_f" ],
