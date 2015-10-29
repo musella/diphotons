@@ -948,10 +948,8 @@ class TemplatesFitApp(TemplatesApp):
                 print data.sumEntries()
                 data.addColumn(unrolledVar)
                 data=data.reduce(ROOT.RooArgSet(mass,observable))
-              #  data=data.binnedClone()
                 data.Print()
                 tree_mass=self.treeData("%s_pp_2D_%s"%(options.plotPurity["treetruth"], cat))
-                #tree_mass=self.treeData("data_2D_%s"%(catd))
                 if not dodata:
                     tp = ROOT.TNtuple("tree_fitresult_fraction%s%s_%s_%s" % (dset,tempname,dim,cat),"tree_fitresult_fraction_%s_%s_%s" % (tempname,dim,cat),"purity_pp:error_pp_sumw2on:error_pp:purity_pf:error_pf_sumw2on:error_pf:massbin:masserror" )
                     self.store_[tp.GetName()] = tp
@@ -1099,6 +1097,8 @@ class TemplatesFitApp(TemplatesApp):
                             self.workspace_.rooImport(fit_studies,"fit_studies_%i" %i)
                         else:
                             pu_pf=1-pu_pp
+                            pu_ff=0.
+                            err_ff=0.
                             print "pu_pf ", pu_pf
                             if extended_fit:
                                 pu_npf=1-pu_npp
