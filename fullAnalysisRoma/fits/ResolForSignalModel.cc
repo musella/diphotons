@@ -189,14 +189,14 @@ void ResolInterpolation(RooWorkspace* w, vector<int> masses) {
   fileRes->Close();
 
 
-  // Now we evaluate at the mass points when we have the gen-only samples and save the corresponding roodatahist
+  // Now we evaluate with a fine mass scan samples and save the corresponding roodatahists
   cout << endl;
   cout << endl;
   cout << "----------------------------" << endl;
   cout << endl;
-  cout << "now evaluating the morphing every 125GeV, from 500GeV to 7000GeV: doing mass " << endl;
-  for (int iGenMass=0; iGenMass<53; iGenMass++) {    
-    int thisMass = 500 + iGenMass*125;
+  cout << "now evaluating the morphing every 50GeV, from 500GeV to 5000GeV: doing mass " << endl;
+  for (int iGenMass=0; iGenMass<91; iGenMass++) {    
+    int thisMass = 500 + iGenMass*50;
     cout << thisMass << endl;
     muRes->setVal(thisMass);
     for (int c=0; c<NCAT; ++c) {   
@@ -222,8 +222,8 @@ void ResolInterpolation(RooWorkspace* w, vector<int> masses) {
   cout << "Now salving the histos in a root file" << endl;
   TFile fileFittoRes("ResHistosGenOnlyScan.root","RECREATE");
   fileFittoRes.cd();
-  for (int iGenMass=0; iGenMass<53; iGenMass++) {    
-    int thisMass = 500 + iGenMass*125;
+  for (int iGenMass=0; iGenMass<91; iGenMass++) {    
+    int thisMass = 500 + iGenMass*50;
     for (int c=0; c<NCAT; ++c) {
       TString myCut = "EBEB";
       if (c==1) myCut = "EBEE";
