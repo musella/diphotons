@@ -65,7 +65,7 @@ void ConvolutionFromRDH(RooWorkspace* w, Int_t mass, TString coupling) {
   deltaMgen->SetName("deltaMgen");   
   TString mHname = TString::Format("mH_mass%d",mass);
   RooRealVar* mH = w->var(mHname);
-  mH->setConstant();    
+  mH->setConstant();   
 
   // Resolution centred in zero
   RooFormulaVar *deltaM_formula = new RooFormulaVar("deltaM_formula","","@0",RooArgList(*w->var("mgg")));
@@ -89,7 +89,7 @@ void ConvolutionFromRDH(RooWorkspace* w, Int_t mass, TString coupling) {
   if (genOnly)  fileRes = new TFile("ResHistosGenOnlyScan.root");
   TFile *fileInw;
   if (!genOnly) fileInw = new TFile("IntrinsicWidthHistos.root"); 
-  if (genOnly)  fileInw = new TFile("IntrinsicWidthHistosGenOnly.root");
+  if (genOnly)  fileInw = new TFile("WidthHistosGenOnlyScan.root");
 
   // Plots to check
   TCanvas* c1 = new TCanvas("c1","PhotonsMass",0,0,800,800);  
@@ -120,10 +120,11 @@ void ConvolutionFromRDH(RooWorkspace* w, Int_t mass, TString coupling) {
     // reading the roodatahists 
     TString myRDHA = TString(Form("resolRDH_mass%d_cat",mass)+myCut);     
     RooDataHist *resRDH = (RooDataHist*)fileRes->Get(myRDHA);    
-    resRDH->Print();   
-    TString myRDHBa = TString(Form("intWidthRDH_mass%d_cat",mass)+myCut);   
+    resRDH->Print(); 
+    TString myRDHBa = TString(Form("widthRDH_mass%d_cat",mass)+myCut);   
     TString myRDHB = TString(Form(myRDHBa))+TString(Form("_kpl"))+TString(Form(coupling));
     RooDataHist *inwRDH = (RooDataHist*)fileInw->Get(myRDHB);   
+    cout << myRDHB << endl;
     inwRDH->Print();        
     cout << "RooDataHists taken" << endl;       
 
@@ -223,6 +224,32 @@ void ConvolutionFromRDH(RooWorkspace* w, Int_t mass, TString coupling) {
 
     // Importing the convolution in the workspace
     w->import(*convol);   
+
+    // moving to the corresponding roohistpdf
+    if (!inZero) mgg->setBins(10000);
+    if (inZero)  zeroVar->setBins(10000);
+    RooDataHist *convRDH;
+    if (!inZero) convRDH = convol->generateBinned(*mgg,10000,kTRUE);
+    if (inZero)  convRDH = convol->generateBinned(*zeroVar,10000,kTRUE);
+    TString myConvRdhNameA = TString(Form("ConvolutionRDH_cat"+myCut+"_mass%d",mass));
+    TString myConvRdhName  = TString(Form(myConvRdhNameA+"_kpl"+coupling));   
+    convRDH->SetTitle(myConvRdhName);
+    convRDH->SetName(myConvRdhName);
+    cout << "done with RooDataHist from conv" << endl;
+    convRDH->Print();
+    cout << endl;
+    
+    RooHistPdf *convRhPdf;
+    if (!inZero) convRhPdf = new RooHistPdf("convRhPdf","convRHhPdf",*mgg,*convRDH,0);
+    if (inZero)  convRhPdf = new RooHistPdf("convRhPdf","convRHhPdf",*zeroVar,*convRDH,0);
+    TString myConvRhPdfNameA = TString(Form("ConvolutionRhPdf_cat"+myCut+"_mass%d",mass));
+    TString myConvRhPdfName  = TString(Form(myConvRhPdfNameA+"_kpl"+coupling));   
+    convRhPdf->SetTitle(myConvRhPdfName);   
+    convRhPdf->SetName(myConvRhPdfName);    
+    cout << "done with RooHistPdf from conv"<< endl;
+    convRhPdf->Print();
+    w->import(*convRhPdf);
+    cout << endl;
     
     delete myHistPdfRes;    
     delete myHistPdfInw;     
@@ -231,6 +258,15 @@ void ConvolutionFromRDH(RooWorkspace* w, Int_t mass, TString coupling) {
   // deleting
   delete fileInw;   
   delete fileRes;      
+
+  // Saving the WS
+  cout<< endl; 
+  TString filename("myWSwithMorphing.root"); 
+  TFile fileWs(filename,"RECREATE");
+  fileWs.cd(); 
+  w->writeToFile(filename);       
+  cout << "Write signal workspace in: " << filename << " file" << endl;  
+  cout << endl;  
 
   // checking the workspaces
   w->Print();
@@ -584,104 +620,10 @@ void runfits(string coupling="01") {
       masses.push_back(4000);
       masses.push_back(5000);
     }
-  } else {
-    if (coupling=="01") {
-      masses.push_back(500);
-      masses.push_back(625);
-      masses.push_back(750);
-      masses.push_back(875);
-      masses.push_back(1000);
-      masses.push_back(1125);
-      masses.push_back(1250);
-      masses.push_back(1375);
-      masses.push_back(1500);
-      masses.push_back(1625);
-      masses.push_back(1750);
-      masses.push_back(2000);
-      masses.push_back(2125);
-      masses.push_back(2250);
-      masses.push_back(2375);
-      masses.push_back(2500);
-      masses.push_back(2625);
-      masses.push_back(2750);
-      masses.push_back(2875);
-      masses.push_back(3000);
-      masses.push_back(3500);
-      masses.push_back(3625);
-      masses.push_back(3750);
-      masses.push_back(3875);
-      masses.push_back(4000);
-      masses.push_back(4125);
-      masses.push_back(4250);
-      masses.push_back(4375);
-      masses.push_back(4500);
-      masses.push_back(4625);
-      masses.push_back(4750);
-      masses.push_back(4875);
-      masses.push_back(5000);
-    } else if (coupling=="001") {
-      masses.push_back(500);
-      masses.push_back(625);
-      masses.push_back(750);
-      masses.push_back(875);
-      masses.push_back(1000);
-      masses.push_back(1125);
-      masses.push_back(1250);
-      masses.push_back(1375);
-      masses.push_back(1500);
-      masses.push_back(1625);
-      masses.push_back(1750);
-      masses.push_back(1875);
-      masses.push_back(2000);
-      masses.push_back(2125);
-      masses.push_back(2250);
-      masses.push_back(2375);
-      masses.push_back(2500);
-      masses.push_back(2625);
-      masses.push_back(2750);
-      masses.push_back(2875);
-      masses.push_back(3000);
-      masses.push_back(3625);
-      masses.push_back(3750);
-      masses.push_back(3875);
-      masses.push_back(4000);
-      masses.push_back(4125);
-      masses.push_back(4250);
-      masses.push_back(4500);
-      masses.push_back(4625);
-      masses.push_back(4750);
-      masses.push_back(5000);
-    } else if (coupling=="02") {
-      masses.push_back(500);
-      masses.push_back(625);
-      masses.push_back(750);
-      masses.push_back(875);
-      masses.push_back(1000);
-      masses.push_back(1125);
-      masses.push_back(1250);
-      masses.push_back(1375);
-      masses.push_back(1625);
-      masses.push_back(1750);
-      masses.push_back(1875);
-      masses.push_back(2000);
-      masses.push_back(2125);
-      masses.push_back(2250);
-      masses.push_back(2375);
-      masses.push_back(2500);
-      masses.push_back(2625);
-      masses.push_back(2750);
-      masses.push_back(2875);
-      masses.push_back(3000);
-      masses.push_back(3500);
-      masses.push_back(3750);
-      masses.push_back(3875);
-      masses.push_back(4000);
-      masses.push_back(4125);
-      masses.push_back(4250);
-      masses.push_back(4375);
-      masses.push_back(4625);
-      masses.push_back(4875);
-      masses.push_back(5000);
+  } else {   // fast sim samples
+    for (int iGenMass=0; iGenMass<91; iGenMass++) {
+      int thisMass = 500 + iGenMass*50;
+      masses.push_back(thisMass); 
     }
   }
 
@@ -749,7 +691,7 @@ void runfits(string coupling="01") {
   cout << "--------------------------------------------------------------------------" << endl; 
   cout << endl;    
   cout << "Now make the interpolation" << endl; 
-  Interpolation(w, masses, coupling);
+  // Interpolation(w, masses, coupling);
 
   return;
 }
