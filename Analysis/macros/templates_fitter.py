@@ -961,9 +961,10 @@ class TemplatesFitApp(TemplatesApp):
                 if dodata:
                     tps=[]
                     for i in range(num):
-                        if not (jkpf or jkpp):tpi = ROOT.TNtuple("tree_fitresult_fraction%s%s_%s_%s" % (dset,tempname,dim,cat),"tree_fitresult_fraction_%s_%s_%s" % (tempname,dim,cat),"purity_pp:error_pp:purity_pf:error_pf:massbin:masserror" )
-                        elif jkpf: tpi = ROOT.TNtuple("tree_fitresult_fraction%s%s_jkpf%i_%s_%s" % (dset,tempname,i,dim,cat),"tree_fitresult_fraction_%s_jk%i_%s_%s" % (tempname,i,dim,cat),"purity_pp:error_pp:purity_pf:error_pf:massbin:masserror" )
-                        elif jkpp: tpi = ROOT.TNtuple("tree_fitresult_fraction%s%s_jkpp%i_%s_%s" % (dset,tempname,i,dim,cat),"tree_fitresult_fraction_%s_jk%i_%s_%s" % (tempname,i,dim,cat),"purity_pp:error_pp:purity_pf:error_pf:massbin:masserror" )
+                        if not (jkpf or jkpp):tpi = ROOT.TNtuple("tree_fitresult_fraction%s%s_%s_%s" % (dset,tempname,dim,cat),"tree_fitresult_fraction_%s_%s_%s" % (tempname,dim,cat),"purity_pp:error_pp:purity_pf:error_pf:purity_ff:error_ff:massbin:masserror" )
+                        #elif jkpf: tpi = ROOT.TNtuple("tree_fitresult_fraction%s%s_jkpf%i_%s_%s" % (dset,tempname,i,dim,cat),"tree_fitresult_fraction_%s_jk%i_%s_%s" % (tempname,i,dim,cat),"purity_pp:error_pp:purity_pf:error_pf:massbin:masserror" )
+
+                        #elif jkpp: tpi = ROOT.TNtuple("tree_fitresult_fraction%s%s_jkpp%i_%s_%s" % (dset,tempname,i,dim,cat),"tree_fitresult_fraction_%s_jk%i_%s_%s" % (tempname,i,dim,cat),"purity_pp:error_pp:purity_pf:error_pf:massbin:masserror" )
                         self.store_[tpi.GetName()] = tpi
                         tps.append(tpi)
                     ntp = ROOT.TNtuple("tree_fitresult_events%s%s_%s_%s" % (dset,tempname,dim,cat),"tree_fitresult_events_%s_%s_%s" % (tempname,dim,cat),"norm:purity_pp:error_pp_sumw2off:error_pp_sumw2on:purity_pf:error_pf_sumw2off:error_pf_sumw2on:massbin:masserror" )
@@ -1067,7 +1068,7 @@ class TemplatesFitApp(TemplatesApp):
                         if extended_fit:
                             fitUnrolledPdf=ROOT.RooAddPdf("fitPdfs_%s%s%s_%s_mb_%s" % (tempnam,dset,cat,dim,cut_s),"fitPdfs_%s_%s_%s_mb_%s" % (tempname,cat,dim,cut_s),ArgListPdf  )
                         else:
-                            fitUnrolledPdf=ROOT.RooAddPdf("fitPdfs_%s%s%s_%s_mb_%s" % (tempname,dset,cat,dim,cut_s),"fitPdfs_%s_%s_%s_mb_%s" % (tempname,cat,dim,cut_s),ArgListPdf,pu_estimates  )
+                            fitUnrolledPdf=ROOT.RooAddPdf("fitPdfs_%s%s%s_%s_mb_%s" % (tempname,dset,cat,dim,cut_s),"fitPdfs_%s_%s_%s_mb_%s" % (tempname,cat,dim,cut_s),ArgListPdf,pu_estimates,True )
                         self.workspace_.rooImport(fitUnrolledPdf)
               #save roofitresult in outputfile
                         data_massc.Print()
@@ -1081,8 +1082,13 @@ class TemplatesFitApp(TemplatesApp):
                             pu_npp=fpp.getVal()
                             err_npp=fpp.getPropagatedError(fit_mcstudies)
                         if len(components)>2:
-                            pu_pf=fpf.getParameter("jpf").getVal()
-                            err_pf=fpf.getParameter("jpf").getError()
+                            #pu_pf=fpf.getParameter("jpf").getVal()
+                            #err_pf=fpf.getParameter("jpf").getError()
+                            pu_pf=(1-pu_pp)*fpf.getParameter("jpf").getVal()
+                            err_pf=sqrt(pow((1-pu_pp),2)*pow(fpf.getParameter("jpf").getError(),2)+pow(pu_pf,2)*pow(err_pp,2))
+                            pu_ff=(1-fpf.getParameter("jpf").getVal())*(1-fpp.getParameter("jpp").getVal())
+                            err_ff=sqrt(pow(1-fpf.getParameter("jpf").getVal(),2)*pow(fpp.getParameter("jpp").getError(),2)+pow(1-fpp.getParameter("jpp").getVal(),2)*pow(fpf.getParameter("jpf").getError(),2))
+                          #  err_ff=sqrt(pow((1-pu_pp),2)*pow(fpf.getParameter("jpf").getError(),2)+pow(pu_pf,2)*pow(err_pp,2))
                             if extended_fit:
                                 pu_npf=fpf.getVal()
                                 err_npf=fpf.getPropagatedError(fit_mcstudies)
@@ -1092,7 +1098,6 @@ class TemplatesFitApp(TemplatesApp):
                             self.workspace_.rooImport(correlation_studies,"correlation_studies_%i"%i)
                             self.workspace_.rooImport(fit_studies,"fit_studies_%i" %i)
                         else:
-                            return
                             pu_pf=1-pu_pp
                             print "pu_pf ", pu_pf
                             if extended_fit:
@@ -1102,7 +1107,8 @@ class TemplatesFitApp(TemplatesApp):
                         print "err_pp " ,err_pp, " err_pf " ,err_pf
                         print
                         if dodata:
-                            tps[k].Fill(pu_pp,err_pp,pu_pf,err_pf,tree_mass.massbin,tree_mass.masserror)
+                           # tps[k].Fill(pu_pp,err_pp,pu_pf,err_pf,tree_mass.massbin,tree_mass.masserror)
+                            tps[k].Fill(pu_pp,err_pp,pu_pf,err_pf,pu_ff,err_ff,tree_mass.massbin,tree_mass.masserror)
                         self.plotFit(observable,fitUnrolledPdf,ArgListPdf,data_massc,components,cat,log=True,i=k) 
                         self.plotFit(observable,fitUnrolledPdf,ArgListPdf,data_massc,components,cat,log=False,i=k)
     #ML fit to weighted dataset: SumW2Error takes statistics of dataset into account, scales with number of events in datasetif ON good for MC comparison, takes limited statistics of MC dataset into account
@@ -1243,16 +1249,19 @@ class TemplatesFitApp(TemplatesApp):
                         pf_err=tree_template.error_pf
                         pp_p=tree_template.purity_pp
                         pp_err=tree_template.error_pp
-                        ff_p=1-pf_p-pp_p
-                        ff_err=sqrt(pow(pf_err,2)+pow(pp_err,2))
-                        if pf_p==1 or pp_p==1: continue
+                        #ff_p=1-pf_p-pp_p
+                        #ff_err=sqrt(pow(pf_err,2)+pow(pp_err,2))
+                        ff_p=tree_template.purity_ff
+                        ff_err=tree_template.error_ff
+                        #ff_err=sqrt(pow(pf_err,2)+pow(pp_err,2))
+                        #if pf_p==1 or pp_p==1: continue
                         g_templatepf.SetPoint(mb,massbin,pf_p)
                         g_templatepf.SetPointError(mb,masserror,pf_err)
                         g_templatepp.SetPoint(mb,massbin,pp_p)
                         g_templatepp.SetPointError(mb,masserror,pp_err)
                         g_templateff.SetPoint(mb,massbin,ff_p)
                         g_templateff.SetPointError(mb,masserror,ff_err)
-                        print"pp_p", pp_p,"pf_p", pf_p,"ff_p",ff_p,"ff_err",ff_err
+                        print mb, "pp_p", pp_p,"pf_p", pf_p,"ff_p",ff_p,"ff_err",ff_err
                     else:
                         tree_templatemc.GetEntry(mb)
                         if mb==nentries:
@@ -1358,8 +1367,6 @@ class TemplatesFitApp(TemplatesApp):
     def plotPurityMassbins(self,cat,pu_val,opt,opt2,g_templatepp=None,g_templatepf=None,g_templateff=None,g_ratiopp=None,g_truthpp=None,g_truthpf=None,g_truthff=None,g_mctruthpp=None,g_mctruthpf=None,g_ratiopf=None):
         leg = ROOT.TLegend(0.6,0.6,0.8,0.9)
         cpu = ROOT.TCanvas("cpu_%s_%s_%s_%s" % (opt,cat,pu_val,opt2),"cpu_%s_%s_%s_%s" %(opt,cat,pu_val,opt2))
-        g_templatepf.Print()
-        g_templateff.Print()
         if not (opt2=="data" or opt2=="sumw2off") :
             cpu.Divide(1,2)
             cpu.cd(1)
