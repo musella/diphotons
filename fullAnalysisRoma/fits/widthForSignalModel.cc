@@ -272,26 +272,26 @@ void controlPlots(string coupling) {
   TFile *fileMorph = new TFile("WidthHistosGenOnlyScan.root");
 
   // Some example mass - full
-  RooDataHist *full4000_catEBEB, *full4000_catEBEE; 
-  if (coupling=="001") full4000_catEBEB = (RooDataHist*)fileFull->Get("intWidthRDH_mass4000_catEBEB_kpl001");  
-  if (coupling=="01")  full4000_catEBEB = (RooDataHist*)fileFull->Get("intWidthRDH_mass4000_catEBEB_kpl01");  
-  if (coupling=="02")  full4000_catEBEB = (RooDataHist*)fileFull->Get("intWidthRDH_mass4000_catEBEB_kpl02");  
-  if (coupling=="001") full4000_catEBEE = (RooDataHist*)fileFull->Get("intWidthRDH_mass4000_catEBEE_kpl001");  
-  if (coupling=="01")  full4000_catEBEE = (RooDataHist*)fileFull->Get("intWidthRDH_mass4000_catEBEE_kpl01");  
-  if (coupling=="02")  full4000_catEBEE = (RooDataHist*)fileFull->Get("intWidthRDH_mass4000_catEBEE_kpl02");  
-  RooHistPdf *full4000_catEBEB_pdf = new RooHistPdf("full4000_catEBEB_pdf", "full4000_catEBEB_pdf", *deltaMgen,*full4000_catEBEB,0);
-  RooHistPdf *full4000_catEBEE_pdf = new RooHistPdf("full4000_catEBEE_pdf", "full4000_catEBEE_pdf", *deltaMgen,*full4000_catEBEE,0);
+  RooDataHist *full750_catEBEB, *full750_catEBEE; 
+  if (coupling=="001") full750_catEBEB = (RooDataHist*)fileFull->Get("intWidthRDH_mass750_catEBEB_kpl001");  
+  if (coupling=="01")  full750_catEBEB = (RooDataHist*)fileFull->Get("intWidthRDH_mass750_catEBEB_kpl01");  
+  if (coupling=="02")  full750_catEBEB = (RooDataHist*)fileFull->Get("intWidthRDH_mass750_catEBEB_kpl02");  
+  if (coupling=="001") full750_catEBEE = (RooDataHist*)fileFull->Get("intWidthRDH_mass750_catEBEE_kpl001");  
+  if (coupling=="01")  full750_catEBEE = (RooDataHist*)fileFull->Get("intWidthRDH_mass750_catEBEE_kpl01");  
+  if (coupling=="02")  full750_catEBEE = (RooDataHist*)fileFull->Get("intWidthRDH_mass750_catEBEE_kpl02");  
+  RooHistPdf *full750_catEBEB_pdf = new RooHistPdf("full750_catEBEB_pdf", "full750_catEBEB_pdf", *deltaMgen,*full750_catEBEB,0);
+  RooHistPdf *full750_catEBEE_pdf = new RooHistPdf("full750_catEBEE_pdf", "full750_catEBEE_pdf", *deltaMgen,*full750_catEBEE,0);
 
   // Some example mass - morphing  
-  RooDataHist *morph4000_catEBEB, *morph4000_catEBEE;
-  if (coupling=="001") morph4000_catEBEB = (RooDataHist*)fileMorph->Get("widthRDH_mass4000_catEBEB_kpl001");  
-  if (coupling=="01")  morph4000_catEBEB = (RooDataHist*)fileMorph->Get("widthRDH_mass4000_catEBEB_kpl01");  
-  if (coupling=="02")  morph4000_catEBEB = (RooDataHist*)fileMorph->Get("widthRDH_mass4000_catEBEB_kpl02");  
-  if (coupling=="001") morph4000_catEBEE = (RooDataHist*)fileMorph->Get("widthRDH_mass4000_catEBEE_kpl001");  
-  if (coupling=="01")  morph4000_catEBEE = (RooDataHist*)fileMorph->Get("widthRDH_mass4000_catEBEE_kpl01");  
-  if (coupling=="02")  morph4000_catEBEE = (RooDataHist*)fileMorph->Get("widthRDH_mass4000_catEBEE_kpl02");  
-  RooHistPdf *morph4000_catEBEB_pdf = new RooHistPdf("morph4000_catEBEB_pdf","morph4000_catEBEB_pdf",*deltaMgen,*morph4000_catEBEB,0) ;
-  RooHistPdf *morph4000_catEBEE_pdf = new RooHistPdf("morph4000_catEBEE_pdf","morph4000_catEBEE_pdf",*deltaMgen,*morph4000_catEBEE,0) ;
+  RooDataHist *morph750_catEBEB, *morph750_catEBEE;
+  if (coupling=="001") morph750_catEBEB = (RooDataHist*)fileMorph->Get("widthRDH_mass750_catEBEB_kpl001");  
+  if (coupling=="01")  morph750_catEBEB = (RooDataHist*)fileMorph->Get("widthRDH_mass750_catEBEB_kpl01");  
+  if (coupling=="02")  morph750_catEBEB = (RooDataHist*)fileMorph->Get("widthRDH_mass750_catEBEB_kpl02");  
+  if (coupling=="001") morph750_catEBEE = (RooDataHist*)fileMorph->Get("widthRDH_mass750_catEBEE_kpl001");  
+  if (coupling=="01")  morph750_catEBEE = (RooDataHist*)fileMorph->Get("widthRDH_mass750_catEBEE_kpl01");  
+  if (coupling=="02")  morph750_catEBEE = (RooDataHist*)fileMorph->Get("widthRDH_mass750_catEBEE_kpl02");  
+  RooHistPdf *morph750_catEBEB_pdf = new RooHistPdf("morph750_catEBEB_pdf","morph750_catEBEB_pdf",*deltaMgen,*morph750_catEBEB,0) ;
+  RooHistPdf *morph750_catEBEE_pdf = new RooHistPdf("morph750_catEBEE_pdf","morph750_catEBEE_pdf",*deltaMgen,*morph750_catEBEE,0) ;
 
   // check EBEB                                                   
   TCanvas *c1 = new TCanvas("c1","c1",1);
@@ -302,23 +302,23 @@ void controlPlots(string coupling) {
   RooPlot* myPlotZoom = deltaMgen->frame(Range(-300,300),Bins(300));  
   if (coupling=="001") myPlotZoom = deltaMgen->frame(Range(-12,12),Bins(12));
   if (coupling=="02")  myPlotZoom = deltaMgen->frame(Range(-500,500),Bins(500));
-  myPlot->SetTitle("mG=4000");
-  myPlotZoom->SetTitle("mG=4000");
-  morph4000_catEBEB_pdf->plotOn(myPlot, LineColor(kRed), LineStyle(kDashed));
-  full4000_catEBEB_pdf->plotOn(myPlot, LineColor(kBlue), LineStyle(kSolid));
+  myPlot->SetTitle("mG=750");
+  myPlotZoom->SetTitle("mG=750");
+  morph750_catEBEB_pdf->plotOn(myPlot, LineColor(kRed), LineStyle(kDashed));
+  full750_catEBEB_pdf->plotOn(myPlot, LineColor(kBlue), LineStyle(kSolid));
   myPlot->Draw();
-  TString canvasName = TString(Form("CheckMorphing_CatEBEB_mass4000.png"));
+  TString canvasName = TString(Form("CheckMorphing_CatEBEB_mass750.png"));
   c1->SaveAs(canvasName);
   c1->SetLogy();
-  canvasName = TString(Form("CheckMorphing_CatEBEB_mass4000_Log.png"));
+  canvasName = TString(Form("CheckMorphing_CatEBEB_mass750_Log.png"));
   c1->SaveAs(canvasName);
-  morph4000_catEBEB_pdf->plotOn(myPlotZoom, LineColor(kRed), LineStyle(kDashed));
-  full4000_catEBEB_pdf->plotOn(myPlotZoom, LineColor(kBlue), LineStyle(kSolid));
+  morph750_catEBEB_pdf->plotOn(myPlotZoom, LineColor(kRed), LineStyle(kDashed));
+  full750_catEBEB_pdf->plotOn(myPlotZoom, LineColor(kBlue), LineStyle(kSolid));
   myPlotZoom->Draw();
-  canvasName = TString(Form("CheckMorphing_CatEBEB_mass4000_Zoom.png"));
+  canvasName = TString(Form("CheckMorphing_CatEBEB_mass750_Zoom.png"));
   c1->SaveAs(canvasName);
 
-  // check EBEE                                                                                                                                                              
+  // check EBEE 
   TCanvas *c11 = new TCanvas("c11","c11",1);
   RooPlot* myPlotB; //chiara
   if (coupling=="001") myPlotB = deltaMgen->frame(Range(  -70,70), Bins(70));    
@@ -327,20 +327,20 @@ void controlPlots(string coupling) {
   RooPlot* myPlotZoomB = deltaMgen->frame(Range(-300,300),Bins(300));  
   if (coupling=="001") myPlotZoomB = deltaMgen->frame(Range(-12,12),Bins(12));
   if (coupling=="02")  myPlotZoomB = deltaMgen->frame(Range(-500,500),Bins(500));
-  myPlotB->SetTitle("mG=4000");
-  myPlotZoomB->SetTitle("mG=4000");
-  morph4000_catEBEE_pdf->plotOn(myPlotB, LineColor(kRed), LineStyle(kDashed));
-  full4000_catEBEE_pdf->plotOn(myPlotB, LineColor(kBlue), LineStyle(kSolid));
+  myPlotB->SetTitle("mG=750");
+  myPlotZoomB->SetTitle("mG=750");
+  morph750_catEBEE_pdf->plotOn(myPlotB, LineColor(kRed), LineStyle(kDashed));
+  full750_catEBEE_pdf->plotOn(myPlotB, LineColor(kBlue), LineStyle(kSolid));
   myPlotB->Draw();
-  canvasName = TString(Form("CheckMorphing_CatEBEE_mass4000.png"));
+  canvasName = TString(Form("CheckMorphing_CatEBEE_mass750.png"));
   c11->SaveAs(canvasName);
   c11->SetLogy();
-  canvasName = TString(Form("CheckMorphing_CatEBEE_mass4000_Log.png"));
+  canvasName = TString(Form("CheckMorphing_CatEBEE_mass750_Log.png"));
   c11->SaveAs(canvasName);
-  morph4000_catEBEE_pdf->plotOn(myPlotZoomB, LineColor(kRed), LineStyle(kDashed));
-  full4000_catEBEE_pdf->plotOn(myPlotZoomB, LineColor(kBlue), LineStyle(kSolid));
+  morph750_catEBEE_pdf->plotOn(myPlotZoomB, LineColor(kRed), LineStyle(kDashed));
+  full750_catEBEE_pdf->plotOn(myPlotZoomB, LineColor(kBlue), LineStyle(kSolid));
   myPlotZoomB->Draw();
-  canvasName = TString(Form("CheckMorphing_CatEBEE_mass4000_Zoom.png"));
+  canvasName = TString(Form("CheckMorphing_CatEBEE_mass750_Zoom.png"));
   c11->SaveAs(canvasName);
 }
 
@@ -352,7 +352,7 @@ void runfits() {
 
   for (int iCoupling=0; iCoupling<3; iCoupling++) {
 
-    if (iCoupling!=0) continue;           // chiara!!!
+    //// if (iCoupling!=0) continue;           // chiara!!!
 
     string coupling;
     if (iCoupling==0) coupling="001";
@@ -465,7 +465,7 @@ void runfits() {
 	masses.push_back(3625);
 	masses.push_back(3750);
 	masses.push_back(3875);
-	//	masses.push_back(4000);
+       	masses.push_back(4000);
 	masses.push_back(4125);
 	masses.push_back(4250);
 	masses.push_back(4500);
@@ -506,6 +506,7 @@ void runfits() {
       }
     }
 
+    /*
     // make intrinsic width histograms and roodatahists using the wanted coupling
     cout << endl; 
     cout << endl; 
@@ -528,6 +529,7 @@ void runfits() {
     cout << "Now make the interpolation" << endl; 
     if (iCoupling==0) WidthInterpolation(w, masses, coupling, 1); 
     else WidthInterpolation(w, masses, coupling, 0); 
+    */
 
     // control plots
     cout << endl; 
