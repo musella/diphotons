@@ -409,7 +409,7 @@ void runfits() {
       if (coupling=="01") {  
 	masses.push_back(500);
 	masses.push_back(625);
-	masses.push_back(750);
+	//masses.push_back(750);
 	masses.push_back(875);
 	masses.push_back(1000);
 	masses.push_back(1125);
@@ -443,7 +443,7 @@ void runfits() {
       } else if (coupling=="001") {  
 	masses.push_back(500);
 	masses.push_back(625);
-	masses.push_back(750);
+	//masses.push_back(750);
 	masses.push_back(875);
 	masses.push_back(1000);
 	masses.push_back(1125);
@@ -475,7 +475,7 @@ void runfits() {
       } else if (coupling=="02") {  
 	masses.push_back(500);
 	masses.push_back(625);
-	masses.push_back(750);
+	//masses.push_back(750);
 	masses.push_back(875);
 	masses.push_back(1000);
 	masses.push_back(1125);
@@ -506,7 +506,6 @@ void runfits() {
       }
     }
 
-    /*
     // make intrinsic width histograms and roodatahists using the wanted coupling
     cout << endl; 
     cout << endl; 
@@ -529,7 +528,6 @@ void runfits() {
     cout << "Now make the interpolation" << endl; 
     if (iCoupling==0) WidthInterpolation(w, masses, coupling, 1); 
     else WidthInterpolation(w, masses, coupling, 0); 
-    */
 
     // control plots
     cout << endl; 
