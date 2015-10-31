@@ -42,8 +42,8 @@ process.photonIdAnalyzer = cms.PSet(
         ),
   vertexes = cms.InputTag("offlineSlimmedPrimaryVertices"),
   
-  dumpRecHits = cms.untracked.bool(True),
-  dumpAllRechisInfo = cms.untracked.bool(True),
+  dumpRecHits = cms.untracked.bool(False),
+  dumpAllRechisInfo = cms.untracked.bool(False),
   barrelRecHits = cms.InputTag('reducedEgamma','reducedEBRecHits'),
   endcapRecHits = cms.InputTag('reducedEgamma','reducedEERecHits'),
 
@@ -105,6 +105,9 @@ addMiniTreeVars(process.photonIdAnalyzer.miniTreeCfg,
                  ("sqrt(spp)","sigmaIphiIphi"),
                  ("sep","covarianceIetaIphi"),
                  ("superCluster.etaWidth","etaWidth"),("superCluster.phiWidth","phiWidth"),
+                 
+                 ("checkStatusFlag('kSaturated')","kSaturated"),("checkStatusFlag('kWeird')","kWeird"),
+                 
                  ]
                 )
 

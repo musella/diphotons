@@ -7,5 +7,5 @@
 
 	    },
 
-    "cmdLine" : "campaign=EXOSpring15_7412_v2_38T  selection=electron massCut=60 ptLead=30 ptSublead=25 lumiMask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Cert_246908-255031_13TeV_PromptReco_Collisions15_25ns_JSON_v2.txt"
+    "cmdLine" : "campaign=EXOSpring15_7415_v2_38T  selection=electron massCut=60 ptLead=30 ptSublead=25"
 }

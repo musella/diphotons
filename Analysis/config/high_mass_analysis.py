@@ -25,6 +25,13 @@ from diphotons.MetaData.JobConfig import customize
 customize.setDefault("maxEvents",10000)
 customize.setDefault("targetLumi",1.e+3)
 
+customize.setDefault("puTarget",
+                      '4.98e+04,3.4e+05,3.94e+05,4.15e+05,6.23e+05,7.74e+05,1.27e+06,4e+06,2.08e+07,7.66e+07,1.64e+08,2.42e+08,2.8e+08,2.74e+08,2.29e+08,1.62e+08,9.64e+07,4.8e+07,2.02e+07,7.33e+06,2.36e+06,7.07e+05,2.09e+05,6.58e+04,2.34e+04,9.84e+03,4.85e+03,2.63e+03,1.46e+03,803,428,220,108,51.2,23.3,10.1,4.24,1.7,0.655,0.242,0.0859,0.0292,0.00954,0.00299,0.0009,0.00026,7.19e-05,1.91e-05,4.88e-06,1.19e-06,2.81e-07,6.33e-08'
+)
+
+## customize.setDefault("puTarget",
+##                      '3.82e+03,1.77e+05,4.26e+05,3.55e+05,5.22e+05,7.1e+05,9.13e+05,2.06e+06,9.03e+06,4.3e+07,1.19e+08,2.07e+08,2.67e+08,2.82e+08,2.55e+08,1.97e+08,1.28e+08,6.95e+07,3.18e+07,1.24e+07,4.21e+06,1.3e+06,3.84e+05,1.16e+05,3.85e+04,1.48e+04,6.8e+03,3.54e+03,1.96e+03,1.09e+03,589,308,155,74.8,34.7,15.4,6.59,2.7,1.06,0.4,0.145,0.0503,0.0168,0.00537,0.00165,0.000486,0.000137,3.73e-05,9.71e-06,2.43e-06,5.82e-07,1.34e-07')
+
 import FWCore.ParameterSet.VarParsing as VarParsing
 customize.options.register ('selection',
                             "diphoton", # default value
@@ -62,7 +69,7 @@ customize.options.register ('mctrigger',
                             VarParsing.VarParsing.varType.string,          # string, int, or float
                             "mctrigger")
 customize.options.register ('idversion',
-                            "", # default value
+                            "V2", # default value
                             VarParsing.VarParsing.multiplicity.singleton, # singleton or list
                             VarParsing.VarParsing.varType.string,          # string, int, or float
                             "idversion")
@@ -90,7 +97,19 @@ diphotonDumper.maxCandPerEvent=1
 diphotonDumper.nameTemplate = "$PROCESS_$SQRTS_$LABEL_$SUBCAT"
 
 variables=["mass","pt","rapidity",
+           "satRegressedMass := sqrt( (leadingPhoton.energyAtStep('satRegressedEnergy','initial')*subLeadingPhoton.energyAtStep('satRegressedEnergy','initial')) / (leadingPhoton.energy*subLeadingPhoton.energy) ) * genP4.mass",
+           "regressedMass := sqrt( (leadingPhoton.energyAtStep('regressedEnergy')*subLeadingPhoton.energyAtStep('regressedEnergy')) / (leadingPhoton.energy*subLeadingPhoton.energy) ) * genP4.mass",
            "genMass := genP4.mass",
+           "leadSatRegressedEnergy := leadingPhoton.userFloat('satRegressedEnergy')",
+           "subLeadSatRegressedEnergy := subLeadingPhoton.userFloat('satRegressedEnergy')",
+           "leadRegressedEnergy := leadingPhoton.userFloat('regressedEnergy')",
+           "subLeadRegressedEnergy := subLeadingPhoton.userFloat('regressedEnergy')",
+           "leadEnergy := leadingPhoton.energy",
+           "subLeadEnergy := subLeadingPhoton.energy",
+           "leadIsSat := leadingPhoton.checkStatusFlag('kSaturated')",
+           "subLeadIsSat := subLeadingPhoton.checkStatusFlag('kSaturated')",
+           "leadIsWeird := leadingPhoton.checkStatusFlag('kWeird')",
+           "subLeadIsWeird := subLeadingPhoton.checkStatusFlag('kWeird')",
            "genLeadPt := ?leadingPhoton.hasMatchedGenPhoton?leadingPhoton.matchedGenPhoton.pt:0",
            "genSubLeadPt := ?subLeadingPhoton.hasMatchedGenPhoton?subLeadingPhoton.matchedGenPhoton.pt:0",
            "deltaEta                 := abs( leadingPhoton.eta - subLeadingPhoton.eta )",
@@ -481,6 +500,9 @@ if len(dumpBits) > 0:
 
 
 from flashgg.Taggers.genDiphotonDumper_cfi import genDiphotonDumper
+from flashgg.Taggers.globalVariables_cff import globalVariables
+genDiphotonDumper.dumpGlobalVariables = True
+genDiphotonDumper.globalVariables = globalVariables
 cfgTools.addCategories(genDiphotonDumper,
                        [("EB","max(abs(leadingPhoton.eta),abs(subLeadingPhoton.eta))<1.4442",0),
                         ("EE","1",0)
@@ -495,7 +517,11 @@ cfgTools.addCategories(genDiphotonDumper,
 
 minimalDumper = diphotonDumper.clone()
 cfgTools.dumpOnly(minimalDumper,
-                  ["mass","pt","genMass",
+                  ["mass","pt","genMass","satRegressedMass","regressedMass",
+                   "leadEnergy","subLeadEnergy",
+                   "leadSatRegressedEnergy","subLeadSatRegressedEnergy",
+                   "leadRegressedEnergy","subLeadRegressedEnergy",
+                   "leadIsSat","subLeadIsSat","leadIsWeird","subLeadIsWeird",
                    "leadPt","leadEta","leadScEta","leadPhi",
                    "subleadPt","subleadEta","subleadScEta","subleadPhi",
                    "leadBlockPhoIso","subleadBlockPhoIso",
@@ -519,12 +545,12 @@ cfgTools.dumpOnly(minimalDumper,
 from diphotons.Analysis.DiPhotonAnalysis import DiPhotonAnalysis
 analysis = DiPhotonAnalysis(diphotonDumper,
                             massCut=customize.massCut,ptLead=customize.ptLead,ptSublead=customize.ptSublead,scaling=customize.scaling, ## kinematic cuts
-                            computeMVA=False,
+                            computeMVA=True,
                             genIsoDefinition=("genIso",10.),
                             dataTriggers=dataTriggers,
                             mcTriggers=mcTriggers,
                             askTriggerOnMc=askTriggerOnMc, ## if mcTriggers is not empty will still compute efficiencies
-                            singlePhoDumperTemplate=photonDumper
+                            singlePhoDumperTemplate=photonDumper,
                             )
 
 dumpKinTree=False

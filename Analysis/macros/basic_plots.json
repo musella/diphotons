@@ -238,7 +238,7 @@
         ["cicNoChIso","noChIso"]
     ],
 
-    "selections" : [
+    "_selections" : [
         ["cicNoSigmaIetaIeta","noSiEiE",["mass","leadSigmaIeIe","subleadSigmaIeIe"]]
     ],
 
@@ -247,7 +247,7 @@
         ["cicNoChIso","noChIso"]
 		    ],
 
-    "_selections" : [
+    "selections" : [
         ["cic",""],
         ["cicNoChIso","noChIso"],
         ["cicNoSigmaIetaIeta","noSiEiE",["mass","leadSigmaIeIe","subleadSigmaIeIe"]],
