@@ -24,6 +24,12 @@ while [[ -n $1 ]]; do
 	--hadd)
 	    hadd="hadd"
 	    ;;
+	--dry-run)
+	    dry="1"
+	    ;;
+	--cont)
+	    cont="1"
+	    ;;
 	*)	    
 	    args="$args $1"
 	    ;;	    
@@ -48,15 +54,17 @@ for coup in $(echo $coupl | tr ',' ' '); do
 	set $(echo $signame | tr '_' ' ')
 	kmpl=$1
 	mass=$2
-	if [[ -f $binary ]] && [[ $binary -nt $card ]]; then
-	    card=$binary
-	fi
 	log=combine_log_${method}_${label}_${kmpl}_${mass}.log
 	set -x
-	combine $libs $args -n "${label}_k${kmpl}" -m $mass $card 2>&1 | tee $log
+	ls higgsCombine${label}_k${kmpl}.${method}.mH$mass.root
+	if [[ -z $dry ]] && ( [[ -z $cont ]] ||  [[ ! -f higgsCombine${label}_k${kmpl}.${method}.mH$mass.root ]] ); then 
+	    if [[ -f $binary ]] && [[ $binary -nt $card ]]; then
+		card=$binary
+	    fi
+	    combine $libs $args -n "${label}_k${kmpl}" -m $mass $card 2>&1 | tee $log
+	    sleep 1
+	fi
 	set +x
-	
-	sleep 1
 	tail -5 $log 
 	outputs="$outputs higgsCombine${label}_k${kmpl}.${method}.mH$mass.root"
     done

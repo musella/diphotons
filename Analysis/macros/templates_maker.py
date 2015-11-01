@@ -36,6 +36,7 @@ class LookUp:
         self.container_ = target.container_
 
     def __call__(self,*args):
+        ## print args
         for ws in self.container_:
             obj = getattr(ws,self.method_)(*args)
             if obj: return obj
@@ -644,7 +645,7 @@ class TemplatesApp(PlotApp):
     ## ------------------------------------------------------------------------------------------------------------
     def mixTemplates(self,options,args):
         fout = self.openOut(options)
-        fout.Print()
+        ## fout.Print()
         fout.cd()
         self.doMixTemplates(options,args)
         self.saveWs(options,fout)

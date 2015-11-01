@@ -41,8 +41,6 @@ class LimitPlot(PlotApp):
         super(LimitPlot,self).__init__(option_list=[
                 make_option("--do-limits",action="store_true", dest="do_limits", 
                             default=False),
-                make_option("--plot-xsections",action="store_true", dest="plot_xsections", 
-                            default=False),
                 make_option("--asimov-expected",action="store_true", dest="asimov_expected", 
                             default=True),
                 make_option("--toys-expected",action="store_false", dest="asimov_expected", 
@@ -76,9 +74,6 @@ class LimitPlot(PlotApp):
         ROOT.gROOT.LoadMacro( "$CMSSW_BASE/src/HiggsAnalysis/CombinedLimit/test/plotting/bandUtils.cxx+" )
         
         self.loadXsections(options.x_sections)
-
-        if options.plot_xsections:
-            self.plotXsections()
 
         print options.couplings
         if len(options.couplings) == 0:
