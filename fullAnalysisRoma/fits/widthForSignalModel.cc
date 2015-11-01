@@ -352,8 +352,6 @@ void runfits() {
 
   for (int iCoupling=0; iCoupling<3; iCoupling++) {
 
-    //// if (iCoupling!=0) continue;           // chiara!!!
-
     string coupling;
     if (iCoupling==0) coupling="001";
     if (iCoupling==1) coupling="01";
@@ -409,7 +407,7 @@ void runfits() {
       if (coupling=="01") {  
 	masses.push_back(500);
 	masses.push_back(625);
-	//masses.push_back(750);
+	masses.push_back(750);
 	masses.push_back(875);
 	masses.push_back(1000);
 	masses.push_back(1125);
@@ -443,7 +441,7 @@ void runfits() {
       } else if (coupling=="001") {  
 	masses.push_back(500);
 	masses.push_back(625);
-	//masses.push_back(750);
+	masses.push_back(750);
 	masses.push_back(875);
 	masses.push_back(1000);
 	masses.push_back(1125);
@@ -465,7 +463,7 @@ void runfits() {
 	masses.push_back(3625);
 	masses.push_back(3750);
 	masses.push_back(3875);
-       	masses.push_back(4000);
+	masses.push_back(4000);
 	masses.push_back(4125);
 	masses.push_back(4250);
 	masses.push_back(4500);
@@ -475,7 +473,7 @@ void runfits() {
       } else if (coupling=="02") {  
 	masses.push_back(500);
 	masses.push_back(625);
-	//masses.push_back(750);
+	masses.push_back(750);
 	masses.push_back(875);
 	masses.push_back(1000);
 	masses.push_back(1125);
