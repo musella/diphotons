@@ -17,18 +17,16 @@
                 "_plot_variables":{"subleadScEta": [-2.5,-2.0,-1.5,-1.0,-0.5,0.0,0.5,1.0,1.5,2.0,2.5],"leadScEta":[-2.5,-2.0,-1.5,-1.0,-0.5,0.0,0.5,1.0,1.5,2.0,2.5],"subleadPt":[75,100,200,500,7000],"leadPt":[75,100,200,500,7000]},
                 "lowerLimitSigRegion2D": "0.", 
                 "template_binning" : [ 0.0,0.1,5.0,15.0],
-                "upperLimitSigRegion1D": "15.", 
-                "upperLimitSigRegion2D": "9.", 
                 "_template_binning" : [ 0.0,5.0,15.0],
-                "_upperLimitSigRegion2D": "4.", 
-                "_upperLimitSigRegion1D": "5.", 
+                "upperLimitSigRegion2D": "4.", 
+                "upperLimitSigRegion1D": "5.", 
 		"mass_binning" :"mass[13000,200.0,13000.0]"
 		}
 	},
 "jackknife":{ 
-        "jk_pp": 0.0 ,
-        "jk_source": 10.0 ,
-        "jk_target": 10.0 ,
+        "jk_pp": 10.0 ,
+        "jk_source": 0.0 ,
+        "jk_target": 0.0 ,
             "categories":["EBEB","EBEE"],
             "components": ["pp"],
             "template_binning" : [ 0.0,0.1,5.0,15.0],
@@ -39,27 +37,26 @@
                 "categories" :["EB","EE"]
     },
    "nominalFit":{
-        "3_components":{
+        "_3_components":{
         		"dimensions" :"2D", 
         		"observable": "templateNdim2d_unroll",
                 "components": ["pp","pf","ff"],
                 "lowerLimitSigRegion": "0.", 
-                "_upperLimitSigRegion": "9.", 
-                "_upperLimitSigRegion": "4.", 
+                "upperLimitSigRegion": "4.", 
 				"jackknife_pf":false,
 				"jackknife_pp":false,
 		"mass_binning" :"mass[13000,0.0,13000.0]",
                 "extended_fit":false
          },
-        "_2_components":{
+        "2_components":{
         		"dimensions" :"2D", 
         		"observable": "templateNdim2d_unroll",
                 "components": ["pp","pf"],
                 "lowerLimitSigRegion": "0.", 
-                "_upperLimitSigRegion": "4.", 
+                "upperLimitSigRegion": "4.", 
                 "extended_fit":false,
 				"jackknife_pf":false,
-				"jackknife_pp":true,
+				"jackknife_pp":false,
 		"mass_binning" :"mass[13000,0.0,13000.0]"
         }
     },
