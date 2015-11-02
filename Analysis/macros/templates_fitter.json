@@ -1,7 +1,6 @@
 {
     "comparisons" : {
 	"fit2DTruth" : { "fit" : "2D",
-		"_templates" : { "mix:kDSinglePho2DMC" : {},"template_mc:2D":{}, "mix:kDSinglePho2D" : {},"2D":{} },
 		"templates" : { "mix:kDSinglePho2DMC" : {}, "mix:kDSinglePho2D" : {}},
 		"_templates" : { "mix:kDSinglePho2D" : {} },
 		"_templates" : { "2D":{} },
@@ -37,7 +36,7 @@
                 "categories" :["EB","EE"]
     },
    "nominalFit":{
-        "_3_components":{
+        "3_components":{
         		"dimensions" :"2D", 
         		"observable": "templateNdim2d_unroll",
                 "components": ["pp","pf","ff"],
@@ -48,7 +47,7 @@
 		"mass_binning" :"mass[13000,0.0,13000.0]",
                 "extended_fit":false
          },
-        "2_components":{
+        "_2_components":{
         		"dimensions" :"2D", 
         		"observable": "templateNdim2d_unroll",
                 "components": ["pp","pf"],
