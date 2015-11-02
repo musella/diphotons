@@ -164,12 +164,13 @@ void ConvolutionFromRDH(RooWorkspace* w, Int_t mass, TString coupling) {
     if (inZero)  zeroVar->setBins(10000, "cache");
     TString myConvNameA = TString(Form("Convolution_cat"+myCut+"_mass%d",mass));
     TString myConvName  = TString(Form(myConvNameA+"_kpl"+coupling));   
-    // chiaraaaaaaaaaaa
-    //RooFFTConvPdf convol("convol","convol",*mgg,*myHistPdfInw,*myHistPdfRes);          
-    //if (inZero) convol("convol","convol",*zeroVar,*myHistPdfInw,*myHistPdfRes);          
     RooFFTConvPdf *convol = new RooFFTConvPdf("convol","convol",*mgg,*myHistPdfInw,*myHistPdfRes);          
     if (inZero) convol = new RooFFTConvPdf("convol","convol",*zeroVar,*myHistPdfInw,*myHistPdfRes);          
-    // chiaraaaaaaaaaaa
+    // ad hoc corrections
+    if (mass==1000 && c==1) convol->setBufferFraction(0.11);
+    if (mass==1050 && c==1) convol->setBufferFraction(0.11);
+    if (mass==3200 && c==1) convol->setBufferFraction(0.12);
+    if (mass==4650 && c==1) convol->setBufferFraction(0.11);
     convol->SetTitle(myConvName);
     convol->SetName(myConvName);
 
@@ -181,10 +182,11 @@ void ConvolutionFromRDH(RooWorkspace* w, Int_t mass, TString coupling) {
     // RooAbsPdf *newconvol = (RooAbsPdf*) cust->build();
     // newconvol->Print();
     // cout << "cambio nome end" << endl;
+    cout << "Convolution done" << endl;   
 
     // Both
     convol->Print();     
-    cout << "done!!" << endl;   
+    cout << "Convolution done and printed. now plot" << endl;   
 
     // Fit and Plot - only for full sim samples
     if (!genOnly) {
