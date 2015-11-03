@@ -8,6 +8,9 @@ import os
 from pprint import pprint
 from fnmatch import fnmatch
 
+from math import floor,sqrt
+import array
+
 # -----------------------------------------------------------------------------------------------------------
 def getObjects(folders,names=None,types=None):
     
@@ -19,6 +22,30 @@ def getObjects(folders,names=None,types=None):
         objs = filter( lambda x: x.ClassName() in types, objs )
         
     return objs
+
+def matchAny(patterns,name):
+    for p in patterns: 
+        if name == p or fnmatch(name,p): return True
+    return False
+
+def rescaleHisto(histo,scale):
+    if scale:
+        ## histo.Print("all")
+        for bin,scl in enumerate(scale):
+            cont = histo.GetBinContent(bin+1)
+            err  = histo.GetBinError(bin+1)
+            
+            if cont: err/=cont
+            cont *= scl[0]
+            if scl[1]<0.: err = 0.
+            sclerr = scl[1]/scl[0]
+            err = sqrt(err*err + sclerr*sclerr) * cont
+            histo.SetBinContent(bin+1,cont)
+            histo.SetBinError(bin+1,err)
+        ## histo.Print("all")
+        
+    return histo
+    
 
 # -----------------------------------------------------------------------------------------------------------
 def mktdir(parent,name):
@@ -43,7 +70,7 @@ def bookhisto(folder,hdef,prefix):
     if histo: return histo
     
     if nxbins == 0:
-        xbins=(len(xbins)-1,array.array('d',*xbins))
+        xbins=(len(xbins)-1,array.array('d',xbins))
     else:
         xbins=[nxbins,xbins[0],xbins[1]]
 
@@ -51,7 +78,7 @@ def bookhisto(folder,hdef,prefix):
     folder.cd()
     if yvar:
         if nybins == 0:
-            ybins=(len(ybins)-1,array.array('d',*ybins))
+            ybins=(len(ybins)-1,array.array('d',ybins))
         else:
             ybins=[nybins,ybins[0],ybins[1]]
     
@@ -68,13 +95,19 @@ class AutoPlot(PyRApp):
         super(AutoPlot,self).__init__(option_list=[
                 make_option("--selection",action="callback", dest="selections", type="string", callback=optpars_utils.ScratchAppend(),
                             default=[]),
+                make_option("--process",action="callback", dest="processes", type="string", callback=optpars_utils.ScratchAppend(),
+                            default=[]),
                 make_option("--move",action="callback", dest="move", type="string", callback=optpars_utils.ScratchAppend(),
                             default=[]),
                 make_option("--prescale",action="callback", dest="prescale", type="string", callback=optpars_utils.ScratchAppend(),
                             default=[]),
+                make_option("--scale",action="callback", dest="scale", type="string", callback=optpars_utils.Load(comma=";"),
+                            default={}),
+                make_option("--pu-rewei",action="callback", dest="pu_rewei", type="string", callback=optpars_utils.ScratchAppend(float),
+                            default=[]),
                 make_option("--file",action="callback", dest="files", type="string", callback=optpars_utils.ScratchAppend(),
                             default=[]),
-                make_option("--histograms",action="callback", dest="histograms", type="string", callback=optpars_utils.ScratchAppend(),
+                make_option("--histograms",action="callback", dest="histograms", type="string", callback=optpars_utils.ScratchAppend(comma=";"),
                             default=["mass>>mass(1500,0,15000)",
                                      "mass>>lowmass(560,60,200)",
                                      "genMass>>genmass(1500,0,15000)",            
@@ -184,7 +217,7 @@ class AutoPlot(PyRApp):
     # -------------------------------------------------------------------------------------------------------
     def mkTreeHistos(self,folder,tree):
 
-        objects = map( lambda x: (x[1],x[4],bookhisto(folder,x,tree.GetName())), self.histos )
+        objects = map( lambda x: (x[1],x[4],bookhisto(folder,x,tree.GetName()),x[0]), self.histos )
         return objects
         
     # -------------------------------------------------------------------------------------------------------
@@ -208,7 +241,11 @@ class AutoPlot(PyRApp):
         selection = ROOT.TTreeFormula(self.selection,self.selection,tree)
         weight = ROOT.TTreeFormula(self.weight,self.weight,tree)
         
-        handy = map( lambda x: (myvars[x[0]],myvars[x[1]],x[2]), histos )
+        puwei = lambda x: 1
+        if len(self.options.pu_rewei)>0:
+            puwei = lambda x: self.options.pu_rewei[ int(floor(x.npu))  ]
+        
+        handy = map( lambda x: (myvars[x[0]],myvars[x[1]],x[2],self.options.scale.get(x[3],None)), histos )
         
         step = 1
         for key,val in self.prescale.iteritems():
@@ -223,10 +260,11 @@ class AutoPlot(PyRApp):
                 continue
             for h in handy:
                 if h[1]:
-                    h[2].Fill(h[0].EvalInstance(),h[1].EvalInstance(),weight.EvalInstance()*rescale)
+                    h[2].Fill(h[0].EvalInstance(),h[1].EvalInstance(),weight.EvalInstance()*rescale*puwei(tree))
                 else:
-                    h[2].Fill(h[0].EvalInstance(),weight.EvalInstance()*rescale)
-        return map( lambda x: x[2], handy )
+                    h[2].Fill(h[0].EvalInstance(),weight.EvalInstance()*rescale*puwei(tree))
+
+        return map( lambda x: rescaleHisto(x[2],x[3]), handy )
 
     def getDestination(self,origin):
         ret = self.destinations.get(origin,origin)
@@ -255,8 +293,11 @@ class AutoPlot(PyRApp):
         infiles = map( lambda x: self.open(x), options.files )
         # get <selection>/trees folders from input files
         inputs = getObjects( getObjects( infiles, options.selections ), ["trees"] )
+        trees = map(lambda x:  (x,getObjects([x],types=["TTree"])), inputs )
+        if len(options.processes) > 0: 
+            trees = map(lambda x: (x[0],filter(lambda y: matchAny(options.processes,y.GetName()),x[1])), trees )
         # book output folders
-        outputs = map( lambda x: (mktdir(output,os.path.join(self.getDestination(os.path.basename(os.path.dirname(x.GetPath()))),"histograms")), getObjects([x],types=["TTree"])), inputs)
+        outputs = map( lambda x: (mktdir(output,os.path.join(self.getDestination(os.path.basename(os.path.dirname(x[0].GetPath()))),"histograms")), x[1]), trees  )
         # and histogras
         histograms = map(self.mkAllHistos, outputs )
         
@@ -265,7 +306,7 @@ class AutoPlot(PyRApp):
         for folder,histos in filled:
             print folder.GetPath()
             folder.cd()
-            for h in set(reduce(lambda x,y: x+y, histos)): 
+            for h in set(reduce(lambda x,y: x+y, histos, [])): 
                 h.Write(h.GetName(),ROOT.TObject.kWriteDelete)
         
         output.Close()

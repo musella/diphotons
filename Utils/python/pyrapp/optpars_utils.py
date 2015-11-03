@@ -5,27 +5,29 @@ import os
 
 # -----------------------------------------------------------------------------------------------------------
 class ScratchAppend:
-    def __init__(self,typ=str):
+    def __init__(self,typ=str,comma=","):
         self.cold = True
         self.typ = typ
+        self.comma = comma
         
     def __call__(self,option, opt_str, value, parser, *args, **kwargs):
         target = getattr(parser.values,option.dest)
         if self.cold:
             del target[:]
             self.cold = False
-        if type(value) == str and "," in value:
-            for v in value.split(","):
+        if type(value) == str and self.comma in value:
+            for v in value.split(self.comma):
                 target.append(self.typ(v))
         else:
             target.append(self.typ(value))
                                                     
 # -----------------------------------------------------------------------------
 class Load:
-    def __init__(self,scratch=False,empty={}):
+    def __init__(self,scratch=False,empty={},comma=","):
         self.cold = True
         self.scratch = scratch
         self.empty = copy.copy(empty)
+        self.comma = comma
         
     def __call__(self,option, opt_str, value, parser, *args, **kwargs):
         appendlst = True
@@ -49,7 +51,7 @@ class Load:
             setter = setattr
             getter = getattr
         
-        for cfg in value.split(","):
+        for cfg in value.split(self.comma):
             if os.path.exists(cfg):
                 cf = open(cfg)
                 strn = cf.read()
