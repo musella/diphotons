@@ -36,7 +36,7 @@
                 "categories" :["EB","EE"]
     },
    "nominalFit":{
-        "3_components":{
+        "_3_components":{
         		"dimensions" :"2D", 
         		"observable": "templateNdim2d_unroll",
                 "components": ["pp","pf","ff"],
@@ -47,7 +47,7 @@
 		"mass_binning" :"mass[13000,0.0,13000.0]",
                 "extended_fit":false
          },
-        "_2_components":{
+        "2_components":{
         		"dimensions" :"2D", 
         		"observable": "templateNdim2d_unroll",
                 "components": ["pp","pf"],
