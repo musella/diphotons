@@ -174,6 +174,10 @@ class PlotApp(PyRApp):
                                     default=None,help="default: %default"),
                         make_option("--lumi",dest="lumi",action="store",type="float",
                                     default=None,help="default: %default"),
+                        make_option("--fudge",dest="fudge",action="store",type="float",
+                                    default=1.,help="default: %default"),
+                        make_option("--sqrts",dest="sqrts",action="store",type="string",
+                                    default="13TeV",help="default: %default"),
                         make_option("--sig-file",dest="sig_file",action="store",type="string",
                                     default=None,help="default: %default"),
                         make_option("--bkg-file",dest="bkg_file",action="store",type="string",
@@ -191,6 +195,13 @@ class PlotApp(PyRApp):
         self.sig_  = None
         self.bkg_  = None
         self.init_ = False
+
+        if not self.options.lumi:
+            self.options.lumi = self.options.fudge
+            self.lumistr = None
+        else:
+            self.lumistr = "%1.2g" % self.options.lumi
+            self.options.lumi *= self.options.fudge
 
         global ROOT, style_utils
         import ROOT
@@ -630,6 +641,9 @@ class PlotApp(PyRApp):
         ROOT.hggPaperStyle()
         ROOT.hggStyle.cd()
         
+        if self.lumistr:
+            ROOT.gROOT.ProcessLine( 'lumi_%s = "%s fb^{-1}";' % (  self.options.sqrts, self.lumistr ) )
+
         ## self.dev_null = ROOT.std.ofstream("/dev/null")
         ## ROOT.std.cout.rdbuf(self.dev_null.rdbuf())
         ## ROOT.std.cerr.rdbuf(self.dev_null.rdbuf())
