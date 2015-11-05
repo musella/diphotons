@@ -45,15 +45,12 @@ void signalModelGenonlyFormat(const char* filename, TString genGenIso, TString k
   trees.push_back(treeNew);
 
   // original tree leaves
-  Float_t weight     = 0.;
-  Float_t genMass    = 0.;
+  Float_t genMass = 0.;
   
   // List of branches - original tree
-  TBranch  *b_weight;
   TBranch  *b_genMass;
 
   // Set branch addresses and branch pointers 
-  treeOrig->SetBranchAddress("weight",     &weight,     &b_weight);
   treeOrig->SetBranchAddress("genMass",    &genMass,    &b_genMass);
 
   // New variables
@@ -66,7 +63,6 @@ void signalModelGenonlyFormat(const char* filename, TString genGenIso, TString k
     // New branches
     theTreeNew->Branch("mggGen", &mggGen, "mggGen/F");
     theTreeNew->Branch("eventClass", &eventClass, "eventClass/I");
-    theTreeNew->Branch("weight", &weight, "weight/F");
   }
 
   for(int i=0; i<nentriesOrig; i++) {

@@ -36,7 +36,7 @@ void signalModelFormat(const char* filename, TString kinGenIso, TString kpl, TSt
   int nentriesOrig = treeOrig->GetEntries();   
 
 
-  TString theNewFile = TString::Format("FormSigMod_"+kinGenIso+"_kpl"+kpl+"_M"+theMass+"_cat"+cat+".root");
+  TString theNewFile = TString::Format("/tmp/crovelli/FormSigMod_"+kinGenIso+"_kpl"+kpl+"_M"+theMass+"_cat"+cat+".root");
   cout << "OutputFile: " << theNewFile << endl;
   TFile *fileNew = TFile::Open(theNewFile,"RECREATE");
   TTree *treeNew = new TTree("DiPhotonTree","reduced tree for signal model studies");
@@ -45,21 +45,21 @@ void signalModelFormat(const char* filename, TString kinGenIso, TString kpl, TSt
   trees.push_back(treeNew);
 
   // original tree leaves
-  Float_t weight     = 0.;
+  Float_t puweight   = 0.;
   Float_t mass       = 0.;
   Float_t genMass    = 0.;
   Float_t leadEta    = 0.;
   Float_t subleadEta = 0.;
   
   // List of branches - original tree
-  TBranch  *b_weight;
+  TBranch  *b_puweight;
   TBranch  *b_mass;
   TBranch  *b_genMass;
   TBranch  *b_leadEta;
   TBranch  *b_subleadEta;
 
   // Set branch addresses and branch pointers 
-  treeOrig->SetBranchAddress("weight",     &weight,     &b_weight);
+  treeOrig->SetBranchAddress("puweight",   &puweight,   &b_puweight);
   treeOrig->SetBranchAddress("mass",       &mass,       &b_mass);
   treeOrig->SetBranchAddress("genMass",    &genMass,    &b_genMass);
   treeOrig->SetBranchAddress("leadEta",    &leadEta,    &b_leadEta);
@@ -76,7 +76,7 @@ void signalModelFormat(const char* filename, TString kinGenIso, TString kpl, TSt
     theTreeNew->Branch("mgg", &mgg, "mgg/F");
     theTreeNew->Branch("mggGen", &mggGen, "mggGen/F");
     theTreeNew->Branch("eventClass", &eventClass, "eventClass/I");
-    theTreeNew->Branch("weight", &weight, "weight/F");
+    theTreeNew->Branch("puweight", &puweight, "puweight/F");
   }
 
   for(int i=0; i<nentriesOrig; i++) {
