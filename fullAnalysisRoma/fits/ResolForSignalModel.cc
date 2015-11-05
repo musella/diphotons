@@ -51,7 +51,7 @@ void MakeResolutionHisto(TString filename, bool newFile, int mass, TString coupl
   sigTree->SetName("sigTree");
 
   // Minimal common preselection cut on mgg and mggGen
-  TString mainCut = TString::Format("mgg>=0 && mgg<=12000 && mggGen>=0 && mggGen<=12000");     
+  TString mainCut = TString::Format("(mgg>=0 && mgg<=12000 && mggGen>=0 && mggGen<=12000");     
 
   // Loop over categories
   for (int c=0; c<ncat; ++c) {
@@ -61,8 +61,8 @@ void MakeResolutionHisto(TString filename, bool newFile, int mass, TString coupl
     resolH->Sumw2();
   
     // Projecting the tree into the histo
-    if (c==0) sigTree->Project("resolH","mgg-mggGen",mainCut+TString::Format("&& eventClass==0"));
-    if (c==1) sigTree->Project("resolH","mgg-mggGen",mainCut+TString::Format("&& eventClass==1"));
+    if (c==0) sigTree->Project("resolH","mgg-mggGen",mainCut+TString::Format("&& eventClass==0)*puweight"));
+    if (c==1) sigTree->Project("resolH","mgg-mggGen",mainCut+TString::Format("&& eventClass==1)*puweight"));
 
     // Now make the roodatahist
     RooDataHist resolRDH("resolRDH","resolRDH",*deltaM,Import(*resolH));        
@@ -195,9 +195,12 @@ void ResolInterpolation(RooWorkspace* w, vector<int> masses) {
   cout << "----------------------------" << endl;
   cout << endl;
   cout << "now evaluating the morphing every 50GeV, from 500GeV to 5000GeV: doing mass " << endl;
-  for (int iGenMass=0; iGenMass<91; iGenMass++) {    
-    int thisMass = 500 + iGenMass*50;
-    cout << thisMass << endl;
+
+
+  // This is to have 10GeV steps between 500 and 1500 GeV
+  for (int iGenMass=0; iGenMass<100; iGenMass++) {    
+    int thisMass = 500 + iGenMass*10;
+    cout << "Fine scan: " << thisMass << endl;    
     muRes->setVal(thisMass);
     for (int c=0; c<NCAT; ++c) {   
       TString myCut = "EBEB"; 
@@ -211,8 +214,28 @@ void ResolInterpolation(RooWorkspace* w, vector<int> masses) {
       fittResolRDH->SetTitle(myFitRDH);
       fittResolRDH->SetName(myFitRDH);
       w->import(*fittResolRDH);
-    }
+    }   
   }
+  // Then 50GeV steps between 1500 and 5000 GeV
+  for (int iGenMass=0; iGenMass<71; iGenMass++) {    
+    int thisMass = 1500 + iGenMass*50;
+    cout << "Coarser scan: " << thisMass << endl;
+    muRes->setVal(thisMass);
+    for (int c=0; c<NCAT; ++c) {   
+      TString myCut = "EBEB"; 
+      if (c==1) myCut = "EBEE";  
+      RooDataHist *fittResolRDH; 
+      deltaM->setBins(600);       // chiara
+      if(c==0) fittResolRDH = morphResCat0->generateBinned(*deltaM,10000,kTRUE);
+      if(c==1) fittResolRDH = morphResCat1->generateBinned(*deltaM,10000,kTRUE);
+      fittResolRDH->Print();
+      TString myFitRDH = TString(Form("resolRDH_mass%d_cat",thisMass)+myCut);
+      fittResolRDH->SetTitle(myFitRDH);
+      fittResolRDH->SetName(myFitRDH);
+      w->import(*fittResolRDH);
+    }   
+  }
+
 
   // Finally saving in a second rootfile
   cout << endl;
@@ -222,8 +245,9 @@ void ResolInterpolation(RooWorkspace* w, vector<int> masses) {
   cout << "Now salving the histos in a root file" << endl;
   TFile fileFittoRes("ResHistosGenOnlyScan.root","RECREATE");
   fileFittoRes.cd();
-  for (int iGenMass=0; iGenMass<91; iGenMass++) {    
-    int thisMass = 500 + iGenMass*50;
+
+  for (int iGenMass=0; iGenMass<100; iGenMass++) {    
+    int thisMass = 500 + iGenMass*10;
     for (int c=0; c<NCAT; ++c) {
       TString myCut = "EBEB";
       if (c==1) myCut = "EBEE";
@@ -232,6 +256,17 @@ void ResolInterpolation(RooWorkspace* w, vector<int> masses) {
       RDH->Write();
     }
   }
+  for (int iGenMass=0; iGenMass<71; iGenMass++) {    
+    int thisMass = 1500 + iGenMass*50;
+    for (int c=0; c<NCAT; ++c) {
+      TString myCut = "EBEB";
+      if (c==1) myCut = "EBEE";
+      TString myFitRDH = TString(Form("resolRDH_mass%d_cat",thisMass)+myCut);
+      RooDataHist *RDH = (RooDataHist*)w->data(myFitRDH);
+      RDH->Write();
+    }
+  }
+
   fileFittoRes.Close();
 }
 
@@ -358,7 +393,6 @@ void runfits() {
   cout << endl;    
   cout << "Now some control plots" << endl; 
   controlPlots();
-
 
   return;
 }
