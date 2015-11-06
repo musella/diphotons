@@ -14,12 +14,12 @@
     "sig" : [
 	      ["rsg_02_4000","G #rightarrow #gamma #gamma (k/M_{PL}=0.2 M_{G}=4TeV)",
 	      [["colors","kAzure"],["SetLineWidth",2],["Scale",2.38],["SetFillStyle",0],["legopt","f nostack"],["SetFillColor","kWhite"]],
-	      { "GGJets_M_200To13000_sherpa_13TeV:__infile__/%(sel)s" : [], "QCD_Pt_30toInf_13TeV:__infile__/%(sel)s" : [], "GJets_HT_100toInf_13TeV:__infile__/%(sel)s" : [], "RSGravToGG_kMpl_02_M_4000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)s" : [] }
+	      { "RSGravToGG_kMpl_02_M_4000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)s" : [] }
 	      ],
 	      
 	      ["rsg_01_2000","G #rightarrow #gamma #gamma (k/M_{PL}=0.1 M_{G}=2TeV)",
 	      [["colors","kOrange"],["SetLineWidth",2],["Scale",2.38],["SetFillStyle",0],["legopt","f nostack"],["SetFillColor","kWhite"]],
-	      { "GGJets_M_200To13000_sherpa_13TeV:__infile__/%(sel)s" : [], "QCD_Pt_30toInf_13TeV:__infile__/%(sel)s" : [], "GJets_HT_100toInf_13TeV:__infile__/%(sel)s" : [], "RSGravToGG_kMpl_01_M_2000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)s" : [] }
+	      {  "RSGravToGG_kMpl_01_M_2000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)s" : [] }
 	      ]
 
 	    ],
@@ -36,17 +36,17 @@
 
     "bkg" : [
       	      ["jetjet","j j",
-	      [["colors","myColorD1"],["SetLineWidth",2],["SetFillStyle",1001],["legopt","f"],["SetFillColor","myColorC3tr"]],
+	      [["colors","myColorD1"],["Scale",2.38],["SetLineWidth",2],["SetFillStyle",1001],["legopt","f"],["SetFillColor","myColorC3tr"]],
 	      { "QCD_Pt_30toInf_13TeV:__infile__/%(sel)s" : [] }
 	      ],
 	      
 	      ["gjet","#gamma j",
-	      [["colors","myColorA1"],["SetLineWidth",2],["SetFillStyle",1001],["legopt","f"],["SetFillColor","myColorA3tr"]],
+	      [["colors","myColorA1"],["SetLineWidth",2],["Scale",2.38],["SetFillStyle",1001],["legopt","f"],["SetFillColor","myColorA3tr"]],
 	      { "GJets_HT_100toInf_13TeV:__infile__/%(sel)s" : [] }
 	      ],
 
 	      ["ggjet_iso","#gamma #gamma",
-	      [["colors","myColorB1"],["SetLineWidth",2],["SetFillStyle",1001],["legopt","f"],["SetFillColor","myColorB3tr"]],
+	      [["colors","myColorB1"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",2.38],["legopt","f"],["SetFillColor","myColorB3tr"]],
 	      { "GGJets_M_200To13000_sherpa_13TeV:__infile__/%(sel)s" : [] }
 	      ]
 	      
@@ -162,7 +162,7 @@
 					],
     "plots": [
 	      ["mass"			,[["xtitle","m_{#gamma #gamma} (GeV)"],
-					  ["xrange",[100.0,5000.0]],["overflow",[null]],["rebin",10],
+					  ["xrange",[200.0,5000.0]],["overflow",[null]],["rebin",10],
 					  "density",["ytitle","Events / %(binw)s GeV"]
 					]
 					,null,null],
