@@ -166,11 +166,13 @@ void ConvolutionFromRDH(RooWorkspace* w, Int_t mass, TString coupling) {
     TString myConvName  = TString(Form(myConvNameA+"_kpl"+coupling));   
     RooFFTConvPdf *convol = new RooFFTConvPdf("convol","convol",*mgg,*myHistPdfInw,*myHistPdfRes);          
     if (inZero) convol = new RooFFTConvPdf("convol","convol",*zeroVar,*myHistPdfInw,*myHistPdfRes);          
-    // ad hoc corrections
-    if (mass==1000 && c==1) convol->setBufferFraction(0.11);
-    if (mass==1050 && c==1) convol->setBufferFraction(0.11);
-    if (mass==3200 && c==1) convol->setBufferFraction(0.12);
-    if (mass==4650 && c==1) convol->setBufferFraction(0.11);
+    // ad hoc corrections - start
+    if (coupling=="001" && mass==640 && c==1)  convol->setBufferFraction(0.11);
+    if (coupling=="001" && mass==1000 && c==1) convol->setBufferFraction(0.11);
+    if (coupling=="001" && mass==1050 && c==1) convol->setBufferFraction(0.11);
+    if (coupling=="001" && mass==3200 && c==1) convol->setBufferFraction(0.12);
+    if (coupling=="001" && mass==4650 && c==1) convol->setBufferFraction(0.11);
+    // ad hoc corrections - end
     convol->SetTitle(myConvName);
     convol->SetName(myConvName);
 
@@ -597,6 +599,7 @@ void runfits(string coupling="01") {
       masses.push_back(1750);
       masses.push_back(2000);
       masses.push_back(2250);
+      // masses.push_back(2500);
       masses.push_back(2750);
       masses.push_back(3000);
       masses.push_back(3500);
@@ -623,8 +626,13 @@ void runfits(string coupling="01") {
       masses.push_back(5000);
     }
   } else {   // fast sim samples
-    for (int iGenMass=0; iGenMass<91; iGenMass++) {
-      int thisMass = 500 + iGenMass*50;
+
+    for (int iGenMass=0; iGenMass<100; iGenMass++) {
+      int thisMass = 500 + iGenMass*10;
+      masses.push_back(thisMass); 
+    }
+    for (int iGenMass=0; iGenMass<71; iGenMass++) {
+      int thisMass = 1500 + iGenMass*50;
       masses.push_back(thisMass); 
     }
   }
