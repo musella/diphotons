@@ -4,7 +4,7 @@
 version=$1 && shift
 
 fitname=2D 
-www=~/www/exo/spring15_7412
+www=~/www/exo/spring15_7415
 if [[ $(whoami) == "mquittna" ]]; then
     www=/afs/cern.ch/user/m/mquittna/www/diphoton/Phys14/
 fi
@@ -27,6 +27,7 @@ while [[ -n $1 ]]; do
 	    ;;
 	--verbose)
 	    verbose="--verbose"
+	    opts="$opts --verbose"
 	    ;;
 	--redo-input)
 	    rerun="1"
@@ -51,6 +52,13 @@ while [[ -n $1 ]]; do
 	    default_model=$2
 	    opts="$opts $1 $2"
 	    shift
+	    ;;
+	--use-templates)
+	    templates="use_templates"
+	    opts="$opts $1"
+	    ;;
+	--mix-templates)
+	    mix="--mix-templates"
 	    ;;
 	--nuisance-fractions-covariance)
 	    covariance=$(echo $(basename $2 | sed 's%.json%%'))
@@ -101,6 +109,7 @@ label="$shapes"
 [[ -n $covariance ]] && label="${label}_${covariance}"
 [[ -n $templates ]] && label="${label}_${templates}"
 [[ -n $bias ]] && label="${label}_${bias}"
+[[ -n $templates ]] && label="${label}_${templates}"
 [[ -n $addlabel ]] && label="${label}_${addlabel}"
 
 input=${version}_${fitname}_final_ws.root
@@ -130,22 +139,23 @@ if [[ -n $rerun  ]] || [[ ! -f $input ]]; then
         subset="2D,singlePho"
         mix="--mix-templates"
     fi
-    ./templates_maker.py --load templates_maker.json,templates_maker_fits.json --only-subset $subset $mix --input-dir $treesdir/$input_folder -o $input $verbose $input_opts 2>&1 | tee $input_log
+    ./templates_maker.py --load templates_maker.json,templates_maker_prepare.json --only-subset $subset $mix --input-dir $treesdir/$input_folder -o $input $verbose $input_opts 2>&1 | tee $input_log
     echo "**************************************************************************************************************************"
 elif [[ -n $mix ]]; then
     echo "**************************************************************************************************************************"
     echo "running event mixing"
     echo "**************************************************************************************************************************"    
-    ./templates_maker.py --load templates_maker_fits.json --read-ws $input $mix $verbose 2>&1 | tee mix_$input_log
+    ./templates_maker.py --load templates_maker_prepare.json --read-ws $input $mix $verbose 2>&1 | tee mix_$input_log
     echo "**************************************************************************************************************************"
 fi
+	    
 
 echo "**************************************************************************************************************************"
 echo "running model creation"
 echo "**************************************************************************************************************************"
 
 ./combine_maker.py \
-    --fit-name $fitname  --luminosity $lumi  \
+    --fit-name $fitname  --luminosity $lumi  --lumi $lumi \
     --fit-background \
     --generate-signal \
     --generate-datacard \

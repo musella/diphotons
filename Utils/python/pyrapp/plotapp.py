@@ -150,13 +150,13 @@ class PlotApp(PyRApp):
     def __init__(self,option_list=[],option_groups=[],default_cats=[]):
         super(PlotApp,self).__init__(option_groups=[
                 ("PlotApp options", [
-                        make_option("-c","--categories",dest="categories",action="callback",callback=ScratchAppend(),type="string",
+                        make_option("--categories",dest="categories",action="callback",callback=ScratchAppend(),type="string",
                                     default=default_cats,help="default: %default"),
-                        make_option("-l","--labels",dest="labels",action="callback",callback=Load(),metavar="JSON",
+                        make_option("--labels",dest="labels",action="callback",callback=Load(),metavar="JSON",
                                     default={},help="default: %default"),
                         make_option("-p","--plots",dest="plots",action="callback",callback=Load(),metavar="JSON",
                                     default=[],help="default: %default"),
-                        make_option("-t","--template",dest="template",action="store",type="string",
+                        make_option("--template",dest="template",action="store",type="string",
                                     default="%(name)s_%(cat)s_%(sample)s",help="default: %default"),
                         make_option("--postproc",dest="postproc",action="callback",callback=Load(),metavar="JSON",
                                     default={},help="default: %default"),
@@ -174,6 +174,10 @@ class PlotApp(PyRApp):
                                     default=None,help="default: %default"),
                         make_option("--lumi",dest="lumi",action="store",type="float",
                                     default=None,help="default: %default"),
+                        make_option("--fudge",dest="fudge",action="store",type="float",
+                                    default=1.,help="default: %default"),
+                        make_option("--sqrts",dest="sqrts",action="store",type="string",
+                                    default="13TeV",help="default: %default"),
                         make_option("--sig-file",dest="sig_file",action="store",type="string",
                                     default=None,help="default: %default"),
                         make_option("--bkg-file",dest="bkg_file",action="store",type="string",
@@ -191,6 +195,13 @@ class PlotApp(PyRApp):
         self.sig_  = None
         self.bkg_  = None
         self.init_ = False
+
+        if not self.options.lumi:
+            self.options.lumi = self.options.fudge
+            self.lumistr = None
+        else:
+            self.lumistr = "%1.2g" % self.options.lumi
+            self.options.lumi *= self.options.fudge
 
         global ROOT, style_utils
         import ROOT
@@ -630,6 +641,9 @@ class PlotApp(PyRApp):
         ROOT.hggPaperStyle()
         ROOT.hggStyle.cd()
         
+        if self.lumistr:
+            ROOT.gROOT.ProcessLine( 'lumi_%s = "%s fb^{-1}";' % (  self.options.sqrts, self.lumistr ) )
+
         ## self.dev_null = ROOT.std.ofstream("/dev/null")
         ## ROOT.std.cout.rdbuf(self.dev_null.rdbuf())
         ## ROOT.std.cerr.rdbuf(self.dev_null.rdbuf())

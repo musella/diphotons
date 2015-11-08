@@ -3,14 +3,14 @@
     "#" :"General form is <fit-name> : { <fit-config> }",
         
     "fits" : {
-        "_cic" : {
+        "cic" : {
             "ndim"       : 2,                                                                "#" : "number of dimensions for the template  ",
             "bins"       : [ "mass", [500.0,1300.0] ],                                       "#" : "kinematic bins in which the fit is run ",
             "template_binning" : [ 0.0, 0.1, 5.0, 15.0 ],                                    "#" : "template varaible binning              ",
 		
             "selection"    : "cic",
             "components" : [ "pp", "pf", "ff" ],                                             "#" : "list of fit components                 ",
-            "dataset_variables" : ["mgg","mass","leadPt","subleadPt","leadEta","subleadEta", "leadMatchType", "subleadMatchType"],      "#" : "additional variables to be stored      ",
+            "dataset_variables" : ["mgg","mass","mggEBEB:=mgg","mggEBEE:=mgg","mggGen:=genMass","leadPt","subleadPt","leadEta","subleadEta", "leadMatchType", "subleadMatchType"],      "#" : "additional variables to be stored      ",
             "store_trees" : true,	
 
             "#" :"categories in which to split the fit       ",
@@ -94,14 +94,14 @@
                         }			
 		    }
 	},	
-        "_cic2" : {
+        "cic2" : {
             "ndim"       : 2,                                                                "#" : "number of dimensions for the template  ",
             "bins"       : [ "mass", [500.0,1300.0] ],                                       "#" : "kinematic bins in which the fit is run ",
             "template_binning" : [ 0.0, 0.1, 5.0, 15.0 ],                                    "#" : "template varaible binning              ",
 		
             "selection"    : "cic",
             "components" : [ "pp", "pf", "ff" ],                                             "#" : "list of fit components                 ",
-            "dataset_variables" : ["mgg","mass [-1.0,0.0,20.0,50.0,100.0,200.0,500.0,13000.0]","leadPt","subleadPt","leadEta","subleadEta", "leadMatchType", "subleadMatchType"],      "#" : "additional variables to be stored      ",
+            "dataset_variables" : ["mgg","mass","mggEBEB:=mgg","mggEBEE:=mgg","mggGen:=genMass","leadPt","subleadPt","leadEta","subleadEta", "leadMatchType", "subleadMatchType"],      "#" : "additional variables to be stored      ",
             "store_trees" : true,	
             "categories" : {
                 "EBEB" : { 
@@ -145,12 +145,13 @@
 	},	
         "2D" : {
             "ndim"       : 2,                                                                "#" : "number of dimensions for the template  ",
-	    "dataset_variables" : ["mgg","mass [-1.0,0.0,20.0,50.0,100.0,200.0,500.0,13000.0]","subleadPhoIsoEA","leadPhoIsoEA","subleadSigmaIeIe","leadSigmaIeIe","leadPt","subleadPt","leadEta","subleadEta", "leadScEta","subleadScEta","leadMatchType", "subleadMatchType","leadPhoIso","subleadPhoIso"],      "#" : "additional variables to be stored      ",
+	    "dataset_variables" : ["mgg","mass","mggEBEB:=mgg","mggEBEE:=mgg","subleadPhoIsoEA","leadPhoIsoEA","subleadSigmaIeIe","leadSigmaIeIe","leadPt","subleadPt","leadEta","subleadEta", "leadScEta","subleadScEta","leadMatchType", "subleadMatchType","leadPhoIso","subleadPhoIso"],      "#" : "additional variables to be stored      ",
              "store_trees" : true,
 			"bins"       : [ "mass", [500.0,1300.0] ],                                       "#" : "kinematic bins in which the fit is run ",
             "template_binning" : [ 0.0,0.1, 5.0, 15.0 ],                                   "#" : "template varaible binning              ",
 
-            "components" : [ "pp", "pf", "ff" ],         
+            "components" : [ "pp", "pf", "ff" ],                                             "#" : "list of fit components                 ",
+            "#" :"categories in which to split the fit       ",
             "#" :"format is <fit-category-name>: { <config> }",
             "categories" : {
                 "EBEB" : { 

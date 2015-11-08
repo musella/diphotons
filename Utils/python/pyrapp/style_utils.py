@@ -134,9 +134,9 @@ def mvStatBox(h,prev=None,vert=-1,horiz=0.):
 # -----------------------------------------------------------------------------------------------------------
 def addCmsLumi(canv,period,pos,extraText=None):
     if extraText:
-        ROOT.writeExtraText = True
+        ROOT.gROOT.ProcessLine("writeExtraText = true;")
         if type(extraText) == str and extraText != "":
-            ROOT.extraText = extraText
+            ROOT.gROOT.ProcessLine('extraText = "%s";' % extraText)
     ROOT.CMS_lumi(canv,period,pos)
 
 

@@ -1,6 +1,6 @@
 {
-    "drawopts" : ["Draw","e nostack","hist","hist nostack"],
-    "legpos"  : [0.580,0.70,0.930,0.91],
+    "drawopts" : ["Draw,DrawRatio[0.7]","e","hist","hist nostack"],
+    "legpos"  : [0.580,0.65,0.930,0.91],
 
     "sig" : null,
 
@@ -162,7 +162,7 @@
 					],
     "plots": [
 	      ["mass"			,[["xtitle","m_{#gamma #gamma} (GeV)"],
-					  ["xrange",[200.0,5000.0]],["overflow",[null]],["rebin",10],
+					  ["xrange",[100.0,750.0]],["overflow",[null]],["rebin",[[230,250,270,290,320,350,400,450,500,750]]],
 					  "density",["ytitle","Events / %(binw)s GeV"]
 					]
 					,null,null],
@@ -172,7 +172,7 @@
 	      				]
 					,null,null],
 
-	      ["nvtx"			,[["ytitle","Events / bin"],["xtitle","N_{vtx}"],["overflow",[null]]	      				
+	      ["nvtx"			,[["Rebin",2],["ytitle","Events / bin"],["xtitle","N_{vtx}"],["overflow",[null]]	      				
 	      				]
 					,null,null],
 
@@ -184,9 +184,9 @@
 	      ["rapidity"		,[["Rebin",5],["ytitle","Events / %(binw)s"],["xtitle","y_{#gamma #gamma} (GeV)"],["xrange",[-3,3]],["overflow",[null]]]
 					,null,null],
 					
-	      ["leadEta"		,[["Rebin",5],["ytitle","Events / %(binw)s"],["xtitle","#eta_(#gamma 1)"],["xrange",[-2.6,2.6]]]
+	      ["leadEta"		,[["Rebin",2],["ytitle","Events / %(binw)s"],["xtitle","#eta_(#gamma 1)"],["xrange",[-2.6,2.6]]]
 					,null,null],
-	      ["subleadEta"		,[["Rebin",5],["ytitle","Events / %(binw)s"],["xtitle","#eta_(#gamma 2)"],["xrange",[-2.6,2.6]]]
+	      ["subleadEta"		,[["Rebin",2],["ytitle","Events / %(binw)s"],["xtitle","#eta_(#gamma 2)"],["xrange",[-2.6,2.6]]]
 					,null,null],
 
 
@@ -222,10 +222,10 @@
 	    ["subleadHoE"		,[["ytitle","Events / %(binw)s GeV"],["xtitle","#gamma_{2} H/E"],["overflow",[null]]]
 					,null,null,["sig"]],
 
-	      ["leadSigmaIeIe"		,[["Rebin",6],["ytitle","Events / %(binw)s"],["xtitle","#gamma_{1} #sigma_{i#eta i#eta}"],["overflow",[null]]]
+	      ["leadSigmaIeIe"		,[["Rebin",3],["ytitle","Events / %(binw)s"],["xtitle","#gamma_{1} #sigma_{i#eta i#eta}"],["overflow",[null]]]
 					,null,null,["sig"]],
 
-	      ["subleadSigmaIeIe"	,[["Rebin",6],["ytitle","Events / %(binw)s"],["xtitle","#gamma_{2} #sigma_{i#eta i#eta}"],["overflow",[null]]]
+	      ["subleadSigmaIeIe"	,[["Rebin",3],["ytitle","Events / %(binw)s"],["xtitle","#gamma_{2} #sigma_{i#eta i#eta}"],["overflow",[null]]]
 					,null,null,["sig"]],
 	      			    
 	      ["leadPassEleVeto"	,[["ytitle","Events"],["xtitle","#gamma_{1} pass electron veto"]]
@@ -299,7 +299,12 @@
 
     "rootstyle_extra" : [
     		  "TGaxis::SetMaxDigits(3);",
-		  "TH1::SetDefaultSumw2(1);"
-    ]
+		  "TH1::SetDefaultSumw2(1);",
+		  "lumiTextSize = 0.5; lumiTextOffset = 0.4; cmsTextSize = 0.6; relExtraDY = 0.;"
+    ],
+
+    "postproc" : {
+    	       "*" : [["addCmsLumi",[4,1,"Preliminary"]]]
+	       }	
     
 }

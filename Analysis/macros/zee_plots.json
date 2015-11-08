@@ -41,6 +41,24 @@
 	}, 
 	
     "plots": [
+
+	      ["lowmass"		,[["Rebin",4],["xtitle","m_{#gamma #gamma} (GeV)"],
+					  ["xrange",[60.0,120.0]],["overflow",[null]],
+					  ["ytitle","Events / %(binw)s GeV"]
+					]
+					,null,null],
+
+	      ["nvtx"			,[["ytitle","Events / bin"],["xtitle","N_{vtx}"],["overflow",[null]]	      				
+	      				]
+					,null,null],
+
+	      ["rho"			,[["ytitle","Events / %(binw)s GeV"],["xtitle","#rho_{PU} (GeV)"],["overflow",[null]]	      				
+	      				]
+					,null,null]
+
+    ],
+    
+    "_plots": [
 	      ["lowmass"		,[["Rebin",4],["xtitle","m_{#gamma #gamma} (GeV)"],
 					  ["xrange",[60.0,120.0]],["overflow",[null]],
 					  ["ytitle","Events / %(binw)s GeV"]

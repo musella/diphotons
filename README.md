@@ -15,11 +15,17 @@ forked the flashgg and this repository.
 ## CMSSW_VERSION=CMSSW_7_4_0_pre9 
 ## FLASHGG_TAG=diphtons_phys14
 
+## # Spring15 settings
+## PROJECT_AREA=EXO_7_4_12
+## CMSSW_VERSION=CMSSW_7_4_12
+## ## FLASHGG_TAG=
+## FLASHGG_BRANCH=topic_diphotons_7412 # set empty if you want the master (safe as long as you are not producing MicroAOD)
+
 # Spring15 settings
-PROJECT_AREA=EXO_7_4_12
-CMSSW_VERSION=CMSSW_7_4_12
-## FLASHGG_TAG=
-FLASHGG_BRANCH=topic_diphotons_7412 # set empty if you want the master (safe as long as you are not producing MicroAOD)
+PROJECT_AREA=EXO_7_4_15
+CMSSW_VERSION=CMSSW_7_4_15
+FLASHGG_BRANCH=topic_diphotons_7415 # set empty if you want the master (safe as long as you are not producing MicroAOD)
+
 
 # read github name from git config
 MY_GITHUB_NAME=$(git config --get user.github)
@@ -41,9 +47,9 @@ cd flashgg
 git remote add musella git@github.com:musella/flashgg.git
 git fetch musella
 if [[ -n ${FLASHGG_BRANCH} ]]; then
-	git checkout musella/${FLASHGG_BRANCH}
-	git checkout -b ${FLASHGG_BRANCH}
-	git branch --set-upstream musella/${FLASHGG_BRANCH} ${FLASHGG_BRANCH}
+	git checkout -b ${FLASHGG_BRANCH} musella/${FLASHGG_BRANCH}
+	## git checkout -b ${FLASHGG_BRANCH}
+	## git branch --set-upstream musella/${FLASHGG_BRANCH} ${FLASHGG_BRANCH}
 elif [[ -n ${FLASHGG_TAG} ]]; then
 	git checkout -b topic_${FLASHGG_TAG} ${FLASHGG_TAG}
 fi

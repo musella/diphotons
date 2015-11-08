@@ -61,30 +61,7 @@ class TemplatesFitApp(TemplatesApp):
     ## ------------------------------------------------------------------------------------------------------------
     def __init__(self,option_list=[],option_groups=[]):
         super(TemplatesFitApp,self).__init__(option_groups=[
-                ( "Fit definition options. Usually specified through JSON configuration (see templates_maker.json for details)", [
-                        make_option("--fit-categories",dest="fit_categories",action="callback",type="string",callback=optpars_utils.ScratchAppend(),help="sets specific category for fit, e.g. EBEB or EBEE",default=["EBEB","EBEE"]),
-                        make_option("--fit-massbins",dest="fit_massbins",action="callback",type="string",callback=optpars_utils.ScratchAppend(),help="sets massbins for fit or templates comparison: first integer is total number of massbins, 2. how many bins we want to run over, 3. startbin",default=["1","1","0"]),
-                        make_option("--fit-templates",dest="fit_templates",action="callback",type="string",callback=optpars_utils.ScratchAppend(),help="get templates for fit: either unrolled_template,unrolled_template_mix or unrolled_mctruth",default=["unrolled_template"]),
-                        make_option("--plot-closure",dest="plot_closure",action="callback",callback=optpars_utils.ScratchAppend(),type="string",
-                                    default=["template"],
-                                    help="choose template or mctruth."),
-                        make_option("--plot-purityvalue",dest="plot_purityvalue",action="callback",callback=optpars_utils.ScratchAppend(),type="string",
-                                    default=["fraction"],
-                                    help="purity either as fraction or as number of events in signalregion.Choose 'fraction' or 'events'"),
-                        make_option("--plot-mctruth",dest="plotMCtruth",action="callback",callback=optpars_utils.ScratchAppend(),type="string",
-                                    default=["mctruth"]),
-                        make_option("--plot-purity",dest="plot_purity",action="store_true",default=False,
-                                    help="Plot purities, purity vs massbin and pull function",
-                                    ),
-                        make_option("--fits",dest="fits",action="callback",callback=optpars_utils.Load(),type="string",
-                                    default={},help="List of templates fits to be performed. Categories, componentd and templates can be specified."),
-                        make_option("--template-binning",dest="template_binning",action="callback",callback=optpars_utils.ScratchAppend(float),
-                                    type="string",
-                                    default=[],
-                                    help="Binning of the parametric observable to be used for templates",
-                                    ),                        
-                        ]
-                  ), ("General templates preparation options", [
+                ("General templates preparation options", [
                         make_option("--compare-templates",dest="compare_templates",action="store_true",default=False,
                                     help="Make templates comparison plots",
                                     ),

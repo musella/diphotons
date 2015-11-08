@@ -64,24 +64,19 @@
 	   "grav_01_3500" : [ "RSGravToGG_kMpl_01_M_3500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_3500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
 	   "grav_01_4000" : [ "RSGravToGG_kMpl_01_M_4000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_4000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
 	   "grav_01_4500" : [ "RSGravToGG_kMpl_01_M_4500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_4500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
-	   "grav_01_5000" : [ "RSGravToGG_kMpl_01_M_5000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_5000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
 	   "grav_01_500" : [ "RSGravToGG_kMpl_01_M_500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
 	   "grav_01_5500" : [ "RSGravToGG_kMpl_01_M_5500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_5500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
 	   "grav_01_6000" : [ "RSGravToGG_kMpl_01_M_6000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_6000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
-	   "grav_01_6500" : [ "RSGravToGG_kMpl_01_M_6500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_6500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
 	   "grav_01_7000" : [ "RSGravToGG_kMpl_01_M_7000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_7000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
 	   "grav_01_750" : [ "RSGravToGG_kMpl_01_M_750_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_750_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
 	   
 	   
 	   "grav_001_1000" : [ "RSGravToGG_kMpl_001_M_1000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_001_M_1000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
-	   "grav_001_1500" : [ "RSGravToGG_kMpl_001_M_1500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_001_M_1500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
 	    "grav_001_2000" : [ "RSGravToGG_kMpl_001_M_2000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_001_M_2000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
-	    "grav_001_3000" : [ "RSGravToGG_kMpl_001_M_3000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_001_M_3000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
 	    "grav_001_4000" : [ "RSGravToGG_kMpl_001_M_4000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_001_M_4000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
 	    "grav_001_5000" : [ "RSGravToGG_kMpl_001_M_5000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_001_M_5000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
 	    "grav_001_500" : [ "RSGravToGG_kMpl_001_M_500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_001_M_500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
 	    "grav_001_6000" : [ "RSGravToGG_kMpl_001_M_6000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_001_M_6000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
-	    "grav_001_7000" : [ "RSGravToGG_kMpl_001_M_7000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_001_M_7000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
 	    "grav_001_750" : [ "RSGravToGG_kMpl_001_M_750_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_001_M_750_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
 	    "grav_02_1000" : [ "RSGravToGG_kMpl_02_M_1000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_02_M_1000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
 	    "grav_02_1500" : [ "RSGravToGG_kMpl_02_M_1500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_02_M_1500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
@@ -95,6 +90,13 @@
       
       },
       "_signals" : { 
+
+	   "grav_01_6500" : [ "RSGravToGG_kMpl_01_M_6500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_6500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	   "grav_01_5000" : [ "RSGravToGG_kMpl_01_M_5000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_5000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	   "grav_001_1500" : [ "RSGravToGG_kMpl_001_M_1500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_001_M_1500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	    "grav_001_3000" : [ "RSGravToGG_kMpl_001_M_3000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_001_M_3000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	    "grav_001_7000" : [ "RSGravToGG_kMpl_001_M_7000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_001_M_7000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+
       "grav_001_2000": [ "RSGravToGG_kMpl_001_M_2000_13TeV:__infile__/%(sel)s"],
       "grav_001_3000": [ "RSGravToGG_kMpl_001_M_3000_13TeV:__infile__/%(sel)s"],
       "grav_001_500" : [ "RSGravToGG_kMpl_001_M_500_13TeV:__infile__/%(sel)s"	],
@@ -159,9 +161,9 @@
     "#" : " %(cat)s is replaced with the category name                 ", 
     "treeName": "trees/%(sample)s_%(cat)s",
 
-    "_preselection" : "(leadChIso < 15. && subleadChIso < 15. && ((mass > 200 && max(abs(leadScEta),abs(subleadScEta))<1.5) || mass > 300) ) && ( max(abs(leadScEta),abs(subleadScEta))<1.5 || (leadPt>100 && subleadPt>100 )  )",   
-    "preselection" : "(leadChIso < 15. && subleadChIso < 15. && leadPt> 75. && subleadPt > 75. && mass > 200. && (max(abs(leadScEta),abs(subleadScEta))<1.5 ||  mass > 300.) &&( max(abs(leadScEta),abs(subleadScEta))<1.5  || !(leadPixSeed||subleadPixSeed) ))",   
-	"#" : "preselection cut applied to all trees",
+    "preselection" : "(leadChIso < 15. && subleadChIso < 15. && ((mass > 200 && max(abs(leadScEta),abs(subleadScEta))<1.5) || mass > 320) )",   
+    "_preselection" : "(leadChIso < 15. && subleadChIso < 15. && ((mass > 200 && max(abs(leadScEta),abs(subleadScEta))<1.5) || mass > 300) ) && ( max(abs(leadScEta),abs(subleadScEta))<1.5 || (leadPt>100 && subleadPt>100 )  )",                                                                                                                      
+    "_preselection" : "(leadChIso < 15. && subleadChIso < 15. && leadPt> 75. && subleadPt > 75. && mass > 200. && (max(abs(leadScEta),abs(subleadScEta))<1.5 ||  mass > 300.)&&( max(abs(leadScEta),abs(subleadScEta))<1.5  || !(leadPixSeed||subleadPixSeed) ))",	"#" : "preselection cut applied to all trees",
     "selection"    : "cicNoChIso",                              "#" : "nominal selection",
     
     "#" : "---------------------------------------------------------------------------------------------------------------------",
@@ -192,8 +194,10 @@
 				"subleadPhoIsoEE    := ((subleadPhoIso - rho*subleadPhoIsoEA) -0.003*subleadPt < -0.5 ) && !subleadIsEB",
                "leadPhoIsoEB    := ((leadPhoIso - rho*leadPhoIsoEA) -0.0045*leadPt < 0.25 ) && leadIsEB ",
 				"leadPhoIsoEE    := ((leadPhoIso - rho*leadPhoIsoEA) -0.003*leadPt < -0.5 )&& !leadIsEB",
-	       "mgg := mass"
-    ],
+	       "mgg := mass",
+	       "mggEBEB := mass",
+               "mggEBEE := mass"    
+	       ],
 
     "rootstyle_extra" : [
                   "TGaxis::SetMaxDigits(3);",
