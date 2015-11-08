@@ -154,7 +154,8 @@ CMS_lumi( TPad* pad, int iPeriod, int iPosX )
       latex.SetTextFont(extraTextFont);
       latex.SetTextSize(extraTextSize*t);
       latex.SetTextAlign(align_);
-      latex.DrawLatex(posX_, posY_, extraText);      
+      latex.DrawLatex(posX_- relExtraDX*cmsTextSize*t, posY_- relExtraDY*cmsTextSize*t, extraText);
+      // latex.DrawLatex(posX_, posY_, extraText);      
     }
   return;
 }

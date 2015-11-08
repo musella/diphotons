@@ -155,7 +155,7 @@ echo "running model creation"
 echo "**************************************************************************************************************************"
 
 ./combine_maker.py \
-    --fit-name $fitname  --luminosity $lumi  \
+    --fit-name $fitname  --luminosity $lumi  --lumi $lumi \
     --fit-background \
     --generate-signal \
     --generate-datacard \

@@ -41,6 +41,8 @@ class LimitPlot(PlotApp):
         super(LimitPlot,self).__init__(option_list=[
                 make_option("--do-limits",action="store_true", dest="do_limits", 
                             default=False),
+                make_option("--do-pvalues",action="store_true", dest="do_pvalues", 
+                            default=False),
                 make_option("--asimov-expected",action="store_true", dest="asimov_expected", 
                             default=True),
                 make_option("--toys-expected",action="store_false", dest="asimov_expected", 
@@ -103,13 +105,24 @@ class LimitPlot(PlotApp):
         
             tflist[coup] = tfin
         
+        self.graphs = []
         for coup,tfile in tflist.iteritems():
 
             if options.do_limits:
                 print coup, tfile
                 self.plotLimit(options,coup,tfile)
-        
+            if options.do_pvalues:
+                self.plotPval(options,coup,tfile)
+                
         self.autosave()
+
+        if len(options.couplings) == 0:
+            graphs = self.open("%s/graphs_%s.root" % (options.input_dir,options.method),"recreate")
+        else:
+            graphs = self.open("%s/graphs_%s_%s.root" % (options.input_dir,"_".join(options.couplings),options.method),"recreate")
+        graphs.cd()
+        for gr in self.graphs: gr.Write()
+        graphs.Close()
         
     def plotLimit(self,options,coup,tfile):
         ## TGraphAsymmErrors *theBand(TFile *file, int doSyst, int whichChannel, BandType type, double width=0.68) {
@@ -124,20 +137,24 @@ class LimitPlot(PlotApp):
         basicStyle = [["SetMarkerSize",1],["SetLineWidth",3],
                        ["SetTitle",";M_{G} (GeV);95% C.L. limit #sigma(pp#rightarrow G#rightarrow#gamma#gamma) (pb)"]]
         commonStyle = [[self.scaleByXsec,coup],"Sort"]+basicStyle
-        expectedStyle = commonStyle+[["SetMarkerStyle",ROOT.kOpenCircle]]
+        ## expectedStyle = commonStyle+[["SetMarkerStyle",ROOT.kOpenCircle]]
+        expectedStyle = commonStyle+[["SetMarkerSize",0]]
         observedStyle = commonStyle+[["SetMarkerStyle",ROOT.kFullCircle]]
         
-        style_utils.apply( expected68, [["colors",ROOT.kYellow]]+expectedStyle )
-        style_utils.apply( expected95, [["colors",ROOT.kGreen]]+expectedStyle )
+        style_utils.apply( expected68, [["colors",ROOT.kYellow],["SetName","expected68_%s"%coup]]+expectedStyle )
+        style_utils.apply( expected95, [["colors",ROOT.kGreen],["SetName","expected95_%s"%coup]]+expectedStyle )
         
         expected = ROOT.TGraph(expected68)
-        style_utils.apply( expected, [["colors",ROOT.kBlack],["SetLineStyle",7]])
+        style_utils.apply( expected, [["colors",ROOT.kBlack],["SetLineStyle",7],["SetName","expected_%s"%coup]])
         
-        style_utils.apply(observed,observedStyle)
+        style_utils.apply(observed,[["SetName","observed_%s"%coup]]+observedStyle)
       
         canv  = ROOT.TCanvas("limits_k%s"%coup,"limits_k%s"%coup)
+        canv.SetLogx()
         legend = ROOT.TLegend(0.5,0.6,0.8,0.9)
-        expected95.Draw("APE3")
+        expected95.Draw("APE3")        
+        expected95.GetXaxis().SetRangeUser(450,5500)
+        expected95.GetXaxis().SetMoreLogLabels()
         expected68.Draw("E3PL")
         expected.Draw("PL")
         kappa = "0."+coup[1:]
@@ -147,7 +164,7 @@ class LimitPlot(PlotApp):
         legend.AddEntry(expected95," \pm 2 \sigma","f")
         if options.unblind:
             observed.Draw("PL")
-            legend.AddEntry(observed,"Observed limit","f")
+            legend.AddEntry(observed,"Observed limit","l")
         if coup in self.xsections_:
             grav = self.xsections_[coup]
             style_utils.apply( grav, basicStyle+[["SetLineStyle",9],["colors",ROOT.myColorB2]] )
@@ -157,7 +174,52 @@ class LimitPlot(PlotApp):
         self.keep(legend,True)
         legend.Draw()
         
+        self.graphs.extend([observed,expected,expected68,expected95])
+        
         self.keep( [canv,observed,expected,expected68,expected95] )
+
+    def plotPval(self,options,coup,tfile):
+        observed = ROOT.theBand( tfile, 1, 0, ROOT.Observed, 0.95 )
+        basicStyle = [["SetMarkerSize",1],["SetLineWidth",3],
+                       ["SetTitle",";M_{G} (GeV);p_{0}"]]
+        commonStyle = ["Sort"]+basicStyle
+        observedStyle = commonStyle+[["SetMarkerStyle",ROOT.kFullCircle],["colors",ROOT.kBlue]]
+        
+        style_utils.apply(observed,[["SetName","observed_%s"%coup]]+observedStyle)
+      
+        
+        canv  = ROOT.TCanvas("pvalues_k%s"%coup,"pvalues_k%s"%coup)
+        canv.SetLogy()
+        canv.SetLogx()
+        legend = ROOT.TLegend(0.5,0.6,0.8,0.75)
+        kappa = "0."+coup[1:]
+        observed.Draw("apl")
+        observed.GetYaxis().SetRangeUser(1e-3,0.55)
+        observed.GetXaxis().SetRangeUser(450,5500)
+        observed.GetXaxis().SetMoreLogLabels()
+        
+        ## xmin,xmax=observed.GetXaxis().GetXmin(),observed.GetXaxis().GetXmax()
+        xmin,xmax=450,5500
+        spots = map(lambda x: (x,ROOT.RooStats.SignificanceToPValue(x)), xrange(1,3) )
+        
+        lines = map( lambda y: ROOT.TLine(xmin,y[1],xmax,y[1]), spots )
+        map( lambda x: style_utils.apply(x,[["SetLineColor",ROOT.kGray+3],["SetLineStyle",7]]), lines )
+
+        labels = map( lambda y: ROOT.TLatex(xmax*1.01,y[1]*0.9,"#color[%d]{%d #sigma}" % (ROOT.kGray+2,y[0])), spots )
+        map( lambda x: style_utils.apply(x,[["SetTextSize",0.05]]), labels )
+
+        map( lambda x: x.Draw("same"), lines+labels )
+        self.keep(lines+labels)
+        
+        legend.AddEntry(None,"#tilde{#kappa} = %s" % kappa,"")
+        legend.AddEntry(observed,"Observed p_{0}","l")
+        
+        self.keep(legend,True)
+        legend.Draw()
+        
+        self.graphs.extend([observed])
+        
+        self.keep( [canv,observed] )
 
     def scaleByXsec(self,graph,coup):
         if self.options.fixed_x_section:

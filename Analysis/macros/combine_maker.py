@@ -17,6 +17,8 @@ import random
 
 from math import sqrt
 
+import glob
+
 ## ----------------------------------------------------------------------------------------------------------------------------------------
 class CombineApp(TemplatesApp):
     """
@@ -62,7 +64,8 @@ class CombineApp(TemplatesApp):
                                     help="Use this template for signal modeling",
                                     ),                        
                         make_option("--obs-template-binning",dest="obs_template_binning",action="callback",callback=optpars_utils.Load(scratch=True),
-                                    default={ "EBEB" : [270.,295.,325.,370.,450.,7000.],
+                                    default={
+                                              "EBEB" : [270.,295.,325.,370.,450.,7000.],
                                               "EBEE" : [270.,310.,355.,420.,535.,7000.]
                                               },
                                     help="Binning of the parametric observable to be used for templates",
@@ -81,15 +84,19 @@ class CombineApp(TemplatesApp):
                                     ## type="string",default=[114,300,6000],
                                     ## type="string",default=[134,300,7000],
                                     type="string",
-                                    default=[230,240,250,260,270,280,290,300,310,320,330,340,360,370,390,400,410,420,440,460,500,1050],
+                                    ## default=[230,240,250,260,270,280,290,300,310,320,330,340,360,370,390,400,410,420,440,460,500,1050],
+                                    default=[44,230,1550],
+                                    ## default=[770,230,13000],
                                     ## default=[230,250,275,300,325,350,400,450,500,1050],
                                     ## default=[230,250,275,300,325,350,400,450,500,600,700,800,900,1000,1500,2000,4000,5000,6000,7000],
                                     help="Binning to be used for plots",
-                                    ),
+                                    ),                      
                         make_option("--cat-plot-binning",dest="cat_plot_binning",action="callback",callback=optpars_utils.Load(scratch=True),
                                     ## type="string",default=[114,300,6000],
                                     ## type="string",default=[134,300,7000],
-                                    type="string",default={ "EBEE": [330,340,350,360,370,390,410,420,440,460,500,1050],
+                                    type="string",default={ "EBEE": [41,330,1560],
+                                                            ## "EBEE": [330,340,350,360,370,390,410,420,440,460,500,1050],
+                                                            ## "EBEE": [500,330,13000],
                                                             ## "EBEE": [330,360,390,420,450,500,1050],
                                                             ## "EBEE": [330,360,390,420,450,500,600,700,800,900,1000,1500,2000,4000,5000,6000,7000],
                                                             },
@@ -106,6 +113,9 @@ class CombineApp(TemplatesApp):
                                     ),                        
                         make_option("--fast-bands",dest="fast_bands",action="store_true",default=True,
                                     help="Use hesse bands computation",
+                                    ),                        
+                        make_option("--convert-to-binned",dest="convert_to_binned",action="store_true",default=False,
+                                    help="Convert pdf to binnned in plots",
                                     ),                        
                         make_option("--minos-bands",dest="fast_bands",action="store_false",
                                     help="Use minos for bands computation",
@@ -170,16 +180,26 @@ class CombineApp(TemplatesApp):
                                               ## "reparam" : {"mu" : "MH"},
                                               ## "obs" : "zeroVar",
                                               ## "shift" : True,
-                                              "masses" : [50,500,5000],
+                                              "masses" : [10,500,5000],
+                                              ## "masses" : [50,500,600],
                                               "pdfs"    : { #"001" : {"EBEB" : "MorphCatEBEB_kpl001", "EBEE" : "MorphCatEBEE_kpl001" },
                                                             #"01" : {"EBEB" : "MorphCatEBEB_kpl01", "EBEE" : "MorphCatEBEE_kpl01" },
-                                                            "01" : {"EBEB" : "ConvolutionRhPdf_catEBEB_mass%d_kpl01", 
-                                                                    "EBEE" : "ConvolutionRhPdf_catEBEE_mass%d_kpl01" },
                                                             "001" : {"EBEB" : "ConvolutionRhPdf_catEBEB_mass%d_kpl001", 
                                                                     "EBEE" : "ConvolutionRhPdf_catEBEE_mass%d_kpl001" },
+                                                            "005" : {"EBEB" : "ConvolutionRhPdf_catEBEB_mass%d_kpl005", 
+                                                                    "EBEE" : "ConvolutionRhPdf_catEBEE_mass%d_kpl005" },
+                                                            "007" : {"EBEB" : "ConvolutionRhPdf_catEBEB_mass%d_kpl007", 
+                                                                    "EBEE" : "ConvolutionRhPdf_catEBEE_mass%d_kpl007" },
+                                                            "01" : {"EBEB" : "ConvolutionRhPdf_catEBEB_mass%d_kpl01", 
+                                                                    "EBEE" : "ConvolutionRhPdf_catEBEE_mass%d_kpl01" },
+                                                            "015" : {"EBEB" : "ConvolutionRhPdf_catEBEB_mass%d_kpl015", 
+                                                                    "EBEE" : "ConvolutionRhPdf_catEBEE_mass%d_kpl015" },
                                                             "02" : {"EBEB" : "ConvolutionRhPdf_catEBEB_mass%d_kpl02", 
                                                                     "EBEE" : "ConvolutionRhPdf_catEBEE_mass%d_kpl02" },
-                                                            #"02" : {"EBEB" : "MorphCatEBEB_kpl02", "EBEE" : "MorphCatEBEE_kpl02" }
+                                                            "025" : {"EBEB" : "ConvolutionRhPdf_catEBEB_mass%d_kpl025", 
+                                                                    "EBEE" : "ConvolutionRhPdf_catEBEE_mass%d_kpl025" },
+                                                            "03" : {"EBEB" : "ConvolutionRhPdf_catEBEB_mass%d_kpl03", 
+                                                                    "EBEE" : "ConvolutionRhPdf_catEBEE_mass%d_kpl03" },
                                                             }
                                               },
                                     help="Details about parametric signal",
@@ -240,8 +260,8 @@ class CombineApp(TemplatesApp):
                                     ),
                         make_option("--bias-func",dest="bias_func",action="callback",callback=optpars_utils.Load(scratch=True),
                                     type="string",
-                                    default={ "EBEB_dijet_230_10000" : "(x>500.)*((0.06*((x/600.)^-4))+1e-6)/3.",
-                                              "EBEE_dijet_330_10000" : "(x>500.)*((0.1*((x/600.)^-5)))/3.",
+                                    default={ "EBEB_dijet_230_10000" : "((0.06*((x/600.)^-4))+1e-6)/3.",
+                                              "EBEE_dijet_330_10000" : "((0.1*((x/600.)^-5)))/3.",
                                               } ,
                                     help="Bias as a function of diphoton mass to compute the bias uncertainty values inside the datacard",
                                     ),
@@ -725,8 +745,10 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                             print signame, cat, options.fwhm_input_file[signame]
                             fwhm_val = float(options.fwhm_input_file[signame][cat])
                             nB = bias_func.Eval(grav_mass) * fwhm_val * float(options.luminosity) 
+                            if "%s_norm" % cat in options.fwhm_input_file[signame]:
+                                fit["sig_params"][signame].append( ("# %s_norm" % nBias.GetName(),  nB/options.fwhm_input_file[signame]["%s_norm" % cat], 0.) )
                             #print "%f" % nB
-                    fit["sig_params"][signame].append( (nBias.GetName(), nBias.getVal(), nB) )
+                    fit["sig_params"][signame].append( (nBias.GetName(), nBias.getVal(), nB) )                    
                     pdfSum_norm = ROOT.RooFormulaVar("model_%s_%s_norm" % (comp,cat),"model_%s_%s_norm" % (comp,cat),"@0",ROOT.RooArgList(rooNdata)) 
                 
                     fracsignuis = ROOT.RooFormulaVar("signal_%s_%s_nuisanced_frac" % (comp,cat),"signal_%s_%s_nuisanced_frac" % (comp,cat),"@0*1./@1",ROOT.RooArgList(nBias,pdfSum_norm) )
@@ -1245,6 +1267,56 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         self.saveWs(options)
        
     ## ------------------------------------------------------------------------------------------------------------
+    def computePdfFHWM(self,options,pdf,roobs,signame,plot=False):
+        if plot:
+            canv = ROOT.TCanvas("fwhm_%s" % (pdf.GetName()), pdf.GetName() )
+        nBins = 1000
+        ## mean = pdf.mean(roobs).getVal()
+        ## sigma  = pdf.sigma(roobs).getVal()
+        ## print mean, sigma
+        ## if mean == 0.: 
+        mean = self.getMassFromName(signame)
+        sigma  = mean*0.2
+        if (options.set_bins_fwhm != None):
+            if (signame in options.set_bins_fwhm.keys()):
+                nBins = int(options.set_bins_fwhm[signame])
+                
+        hist = pdf.createHistogram("sigHist",roobs, RooFit.Binning(nBins,mean-4.*sigma,mean+4.*sigma) )
+        halfMaxVal = 0.5*hist.GetMaximum()
+        maxBin = hist.GetMaximumBin()
+        
+        binLeft=binRight=xWidth=xLeft=xRight=0
+        
+        for ibin in range(1,maxBin):
+            binVal = hist.GetBinContent(ibin)
+            if (binVal >= halfMaxVal):
+                binLeft = ibin
+                break;
+        for ibin in range(maxBin+1,hist.GetXaxis().GetNbins()+1):
+            binVal = hist.GetBinContent(ibin)
+            if (binVal < halfMaxVal):
+                binRight = ibin-1
+                break;
+        xWidth = 0.
+        if (binLeft > 0 and binRight > 0 ):
+            xLeft = hist.GetXaxis().GetBinCenter(binLeft)
+            xRight = hist.GetXaxis().GetBinCenter(binRight)
+            xWidth = xRight-xLeft
+            print ("FWHM = %f" % (xWidth))
+            if plot:
+                hist.GetXaxis().SetRangeUser(hist.GetXaxis().GetBinCenter(maxBin)-5*xWidth,hist.GetXaxis().GetBinCenter(maxBin)+5*xWidth)
+                hist.Draw("HIST")
+                ## canv.SaveAs(nameFileOutput.replace(".root",("%s_hist.png" % cat)))
+                self.keep(canv)
+                self.autosave(True)
+        else:
+            print
+            print("Did not succeed to compute the FWHM")
+            print
+        del hist
+        return xWidth
+
+    ## ------------------------------------------------------------------------------------------------------------
     def computeFWHM(self, options, args):
         print "--------------------------------------------------------------------------------------------------------------------------"
         print " Computing FWHM for signals using ROODATAHIST in provided signal workspace"
@@ -1628,9 +1700,12 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         
         from templates_maker import WsList
         workspace = WsList()
-        ## fin = self.open(options.parametric_signal)
-        ## workspace = fin.Get(options.parametric_signal_source["ws"])
-        for fin in map(self.open, options.parametric_signal): workspace.append(fin.Get(options.parametric_signal_source["ws"]))
+        exp = map(lambda x: glob.glob("%s/*.root" % x) if x.endswith("/") else [x], options.parametric_signal)
+        ## print
+        ## print exp
+        ## print
+        for fin in map(self.open, reduce(lambda x,y: x+y, exp )): 
+            workspace.append(fin.Get(options.parametric_signal_source["ws"]))
         
         prefix_output = options.output_file.replace(".root","")
         options.signal_root_file = options.output_file ## copy this in case we want to run --generate-datacard at the same time
@@ -1677,14 +1752,29 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             reparamVars[key] = dst
         
         options.signals = {}
+        list_fwhm = {}
+        if options.compute_fwhm:
+            pass
+
 
         masses = options.parametric_signal_source.get("masses",[None])
         if len(masses) == 3:
             masses = xrange(masses[1],masses[2],masses[0])
-        for mass in masses:
-            print mass
-            for coup,pdfs in options.parametric_signal_source["pdfs"].iteritems():
+        for coup,pdfs in options.parametric_signal_source["pdfs"].iteritems():
+            for mass in masses:
+                ## print mass
+                missing = False
+                for cat,name in pdfs.iteritems():
+                    if mass: name = name % mass
+                    pdf = workspace.pdf(name)
+                    if not pdf: missing = True
+                    
+                if missing: 
+                    print "missing %s %s" % ( coup, str(mass) )
+                    continue
+                        
                 self.bookNewWs()
+                sublist_fwhm = {}
                 signame = options.parametric_signal_prefix
                 if coup != "": signame += "_%s" % coup
                 if mass: 
@@ -1727,17 +1817,35 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                         
                     norm = ROOT.RooProduct("model_signal_%s_%s_norm" % (signame,cat), "model_signal_%s_%s_norm" % (signame,cat), 
                                            ROOT.RooArgList(RooFit.RooConst(xsection),exAs[cat]) )
+                    sublist_fwhm["%s_norm" % cat] = norm.getVal()
                     pdf = custom.build(True)
                     pdf.SetName("model_signal_%s_%s" % (signame,cat))
+                    
+                    if options.compute_fwhm:
+                        xWidth = self.computePdfFHWM(options,pdf,obsCat,signame)
+                        if xWidth>0.:
+                            sublist_fwhm[cat] = "%f" % xWidth
+                            
                     self.workspace_.rooImport(pdf,RooFit.RecycleConflictNodes())
                     self.workspace_.rooImport(norm,RooFit.RecycleConflictNodes())
                     ## self.workspace_.Print()
                     ## self.workspace_.pdf("model_signal_%s_%s" % (signame,cat)).Print()
                     ## self.workspace_.pdf(pdf.GetName()).Print()
-                    
+
+                list_fwhm[signame] = sublist_fwhm
                 options.output_file = "%s_%s.root" % (prefix_output,signame)
                 self.saveWs(options)
-            
+        
+        if options.compute_fwhm:
+            fitname = options.fit_name
+            if len(options.fwhm_output_file) != 0:
+                file_fwhm = self.open(options.fwhm_output_file,"a",folder=options.ws_dir)
+            else:
+                file_fwhm = self.open("fwhm_%s.json" % fitname,"a",folder=options.ws_dir)
+            json_output = json.dumps(list_fwhm, indent=4)
+            file_fwhm.write("%s\n" % json_output)            
+            options.fwhm_input_file=list_fwhm # in case we run also generateWsBkgnbias                 
+
 
     ## ------------------------------------------------------------------------------------------------------------
     def getCoupAndMassFromName(self,name):
@@ -1789,6 +1897,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             plot_binning = options.plot_binning
 
         binning = None
+        bandBinning = None
+        nbins = 0
         if type(plot_binning) == list:
             if len(plot_binning) > 0:
                 if len(plot_binning) == 3:
@@ -1803,13 +1913,11 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             obs.setBinning(plot_binning,"plotBinning")
             dset.get()[obs.GetName()].setBinning(plot_binning,"plotBinning")
             binning = "plotBinning"
-    #    if options.verbose and binning:
-   #         print "Plot binning: ",
-  #          dset.get()[obs.GetName()].getBinning(binning).Print()
+            
         doBands = options.plot_fit_bands and not forceSkipBands
         if doBands:
             invisible.append(RooFit.Invisible())
-            
+
         if binning:
             dataopts.append(RooFit.Binning(binning))                        
             frame = obs.frame(RooFit.Range("plotBinning"))
@@ -1822,6 +1930,17 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         
         ## curveopts.append(RooFit.NormRange("plotBinning"))
         
+        if self.options.convert_to_binned:
+            ## print bins
+            ## abins = array.array('d',[bins[0][1]]+map(lambda x: x[2], bins))
+            ## obs.setBinning(ROOT.RooBinning(len(bins)-1,abins))
+            obs.setBinning(obs.getBinning(binning))
+            oset = ROOT.RooArgSet(obs)
+            binnedHisto = pdf.generateBinned(oset,1.,True)
+            pdf = ROOT.RooHistPdf("binned_%s"%pdf.GetName(),"binned_%s"%pdf.GetName(),oset,binnedHisto)
+            self.keep( [pdf,binnedHisto] )
+
+
         print "Plotting dataset"
         dset.plotOn(frame,*(dataopts+invisible))
         print "Plotting pdf....",
@@ -1886,7 +2005,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         canv.Divide(1,2)
         
         canv.cd(1)
-        ROOT.gPad.SetPad(0.,0.35,1.,1.)
+        ROOT.gPad.SetPad(0.,0.35,1.,0.95)
         ROOT.gPad.SetLogy(logy)
         ROOT.gPad.SetLogx(logx)
         ROOT.gPad.SetFillStyle(0)
@@ -1904,10 +2023,13 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             ymin = fitc.GetMinimum()
             ymax = fitc.GetMaximum()
         else:
-            ymax = fitc.interpolate(frame.GetXaxis().GetXmin())*2.
+            ymax = fitc.interpolate(frame.GetXaxis().GetXmin())*3.
             ymin = fitc.interpolate(frame.GetXaxis().GetXmax())*0.25
-        if not logx:
+        if not logy:
             ymin = min(0,ymin)
+            ymax = ymax * 0.5
+            
+            
         frame.GetYaxis().SetRangeUser(ymin,ymax)
         frame.GetXaxis().SetMoreLogLabels()
         frame.GetYaxis().SetLabelSize( frame.GetYaxis().GetLabelSize() * canv.GetWh() / ROOT.gPad.GetWh() )
@@ -1942,6 +2064,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         print 
         # this will actually save the plots
         self.keep(canv)
+        self.format(canv,self.options.postproc)
         self.autosave(True)
         print
         
@@ -2066,7 +2189,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         while var:
             params[var.GetName()].setVal(var.getVal())
             var = itr.Next()
-            
+        
         wd.cd()    
         
         return onesigma,twosigma
