@@ -8,6 +8,6 @@
 	    ]
 	},
 	
-	"cmdLine" : "campaign=EXOSpring15_7415_v2_38T lumiMask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Cert_246908-258750_13TeVPromptReco_Collisions15_25ns_JSON_Silver.txt selection=photon idversion=V2 ptLead=75 ptSublead=75 trigger=HLT_Photon50_v*,HLT_Photon75_v*,HLT_Photon90_v*,HLT_Photon120_v*,HLT_Photon165_HE*"
+	"cmdLine" : "campaign=EXOSpring15_7415_v2_38T lumiMask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Cert_246908-258750_13TeV_PromptReco_Collisions15_25ns_JSON_Silver.txt selection=photon idversion=V2 ptLead=75 ptSublead=75 trigger=HLT_Photon50_v*,HLT_Photon75_v*,HLT_Photon90_v*,HLT_Photon120_v*,HLT_Photon165_HE*"
 
 }
