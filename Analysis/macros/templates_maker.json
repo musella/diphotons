@@ -64,24 +64,19 @@
 	   "grav_01_3500" : [ "RSGravToGG_kMpl_01_M_3500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_3500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
 	   "grav_01_4000" : [ "RSGravToGG_kMpl_01_M_4000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_4000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
 	   "grav_01_4500" : [ "RSGravToGG_kMpl_01_M_4500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_4500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
-	   "grav_01_5000" : [ "RSGravToGG_kMpl_01_M_5000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_5000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
 	   "grav_01_500" : [ "RSGravToGG_kMpl_01_M_500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
 	   "grav_01_5500" : [ "RSGravToGG_kMpl_01_M_5500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_5500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
 	   "grav_01_6000" : [ "RSGravToGG_kMpl_01_M_6000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_6000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
-	   "grav_01_6500" : [ "RSGravToGG_kMpl_01_M_6500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_6500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
 	   "grav_01_7000" : [ "RSGravToGG_kMpl_01_M_7000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_7000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
 	   "grav_01_750" : [ "RSGravToGG_kMpl_01_M_750_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_750_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
 	   
 	   
 	   "grav_001_1000" : [ "RSGravToGG_kMpl_001_M_1000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_001_M_1000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
-	   "grav_001_1500" : [ "RSGravToGG_kMpl_001_M_1500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_001_M_1500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
 	    "grav_001_2000" : [ "RSGravToGG_kMpl_001_M_2000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_001_M_2000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
-	    "grav_001_3000" : [ "RSGravToGG_kMpl_001_M_3000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_001_M_3000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
 	    "grav_001_4000" : [ "RSGravToGG_kMpl_001_M_4000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_001_M_4000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
 	    "grav_001_5000" : [ "RSGravToGG_kMpl_001_M_5000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_001_M_5000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
 	    "grav_001_500" : [ "RSGravToGG_kMpl_001_M_500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_001_M_500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
 	    "grav_001_6000" : [ "RSGravToGG_kMpl_001_M_6000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_001_M_6000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
-	    "grav_001_7000" : [ "RSGravToGG_kMpl_001_M_7000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_001_M_7000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
 	    "grav_001_750" : [ "RSGravToGG_kMpl_001_M_750_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_001_M_750_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
 	    "grav_02_1000" : [ "RSGravToGG_kMpl_02_M_1000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_02_M_1000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
 	    "grav_02_1500" : [ "RSGravToGG_kMpl_02_M_1500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_02_M_1500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
@@ -95,6 +90,13 @@
       
       },
       "_signals" : { 
+
+	   "grav_01_6500" : [ "RSGravToGG_kMpl_01_M_6500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_6500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	   "grav_01_5000" : [ "RSGravToGG_kMpl_01_M_5000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_5000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	   "grav_001_1500" : [ "RSGravToGG_kMpl_001_M_1500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_001_M_1500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	    "grav_001_3000" : [ "RSGravToGG_kMpl_001_M_3000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_001_M_3000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	    "grav_001_7000" : [ "RSGravToGG_kMpl_001_M_7000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_001_M_7000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+
       "grav_001_2000": [ "RSGravToGG_kMpl_001_M_2000_13TeV:__infile__/%(sel)s"],
       "grav_001_3000": [ "RSGravToGG_kMpl_001_M_3000_13TeV:__infile__/%(sel)s"],
       "grav_001_500" : [ "RSGravToGG_kMpl_001_M_500_13TeV:__infile__/%(sel)s"	],

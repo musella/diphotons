@@ -62,6 +62,10 @@ class BiasApp(CombineApp):
                                     default=[300,500],
                                     help="Observable range for the fit region : [%default]",
                                     ),
+                        make_option("--test-categories",dest="test_categories",action="callback",type="string",callback=optpars_utils.ScratchAppend(str),
+                                    default=[],
+                                    help="Categories to test : [%default]",
+                                    ),
                         make_option("--test-range",dest="test_ranges",action="callback",type="string",callback=optpars_utils.ScratchAppend(float),
                                     default=[1000.,5000.],
                                     help="Observable range for the test region : [%default]",
@@ -84,6 +88,8 @@ class BiasApp(CombineApp):
                                     ),                    
                         make_option("--bias-param",dest="bias_param",action="callback",type="string",callback=optpars_utils.Load(scratch=True),
                                     default={
+                                "EBEB_dijet_230_7000" : "(x>500.)*((0.06*((x/600.)^-4))+1e-6)",
+                                "EBEE_dijet_320_7000" : "(x>500.)*((0.1*((x/600.)^-5)))",
                                 "EBEB_dijet_300_6000" : "(x>500.)*((0.22*((x/600.)^-5))+1e-6)",
                                 "EBEB_dijet_400_6000" : "(x>500.)*((0.2*((x/600.)^-5))+2e-6)",
                                 "EBEB_dijet_500_6000" : "(x>500.)*((0.18*((x/600.)^-5))+5e-6)",
@@ -120,6 +126,8 @@ class BiasApp(CombineApp):
 
         printLevel = ROOT.RooMsgService.instance().globalKillBelow()
         ROOT.RooMsgService.instance().setGlobalKillBelow(RooFit.FATAL)
+
+        self.use_custom_pdfs_ = options.use_custom_pdfs
 
         options.only_subset = [options.fit_name]
         if options.analyze_bias:        
@@ -178,7 +186,7 @@ class BiasApp(CombineApp):
                         var = itr.Next()
                     
                     frame = roobs.frame()
-                    binned.plotOn(frame)
+                    binned.plotOn(frame, ROOT.RooFit.DataError(ROOT.RooAbsData.Poisson))
                     extpdf.plotOn(frame)
                     
 
@@ -202,7 +210,7 @@ class BiasApp(CombineApp):
                     canv.cd(1)
                     frame.GetXaxis().SetMoreLogLabels()
                     frame.GetYaxis().SetLabelSize( frame.GetYaxis().GetLabelSize() * canv.GetWh() / ROOT.gPad.GetWh() )
-                    frame.GetYaxis().SetRangeUser( 1.e-6,50. )
+                    frame.GetYaxis().SetRangeUser( 1.e-6,500. )
                     frame.Draw()
 
                     canv.cd(2)
@@ -281,6 +289,7 @@ class BiasApp(CombineApp):
             maxx = max(maxx,options.test_ranges[2*itest+1])
             if options.test_ranges[2*itest] < minf:
                 continue
+            print rname, options.test_ranges[2*itest:2*itest+2]
             roobs.setRange( rname, *options.test_ranges[2*itest:2*itest+2] )
             testRanges.append( (rname,options.test_ranges[2*itest:2*itest+2]) )
         ## roobs.setRange("fullRange",roobs.getMin(),roobs.getMax())
@@ -301,7 +310,8 @@ class BiasApp(CombineApp):
             if comp != "":
                 comp = "%s_" % comp
             print comp,model
-            for cat in fit["categories"]:
+            categories = options.test_categories if len(options.test_categories)>0 else fit["categories"].keys()
+            for cat in categories:
                 pdf = self.buildPdf(model,"%s%s" % (comp,cat), roobs )
                 
                 biases = {}
@@ -530,8 +540,10 @@ class BiasApp(CombineApp):
             fin = self.open(fname)
             for key in ROOT.TIter(fin.GetListOfKeys()):
                 name = key.GetName()
-                if name.startswith("tree_bias"):
+                if name.startswith("tree_bias"):                    
                     toks = name.split("_",5)[2:]
+                    print toks
+                    ## ['pp', 'EBEB', 'dijet', 'testRange_2500_3500']
                     comp,cat,model,rng = toks
                     tree = key.ReadObj()
                     toks.append(label)
@@ -540,6 +552,8 @@ class BiasApp(CombineApp):
                     slabel = "_".join([cat,model,label])
                     
                     bias_func = None
+                    print slabel
+                    print options.bias_param.keys()
                     if slabel in options.bias_param:
                         bias_func = ROOT.TF1("err_correction",options.bias_param[slabel],0,2e+6)
                         ## bias_func.Print()
@@ -608,6 +622,7 @@ class BiasApp(CombineApp):
                                         med[0], qtl[0], gausd.GetParameter(1), gausd.GetParError(1), medd[0], medd[0]/med[0], tree.truth ]
                     if bias_func:
                         tree.SetAlias("berr","(fit-truth)/bias*%f" % max(1.,gaus.GetParameter(2)))
+                        ## tree.SetAlias("berr","%f+0." % max(1.,gaus.GetParameter(2)))
                         tree.SetAlias("corr_bias","(fit-truth)/sqrt(berr^2+%f^2)" % (bias_func.Integral(xmin,xmax)*options.scale_bias) )
                         tree.Draw("corr_bias>>h_corr_bias_%s(501,-5.005,5.005)" % nlabel )
                         hc = ROOT.gDirectory.Get("h_corr_bias_%s" % nlabel )
@@ -696,17 +711,19 @@ class BiasApp(CombineApp):
         bcanv.SetLogx()
         bcanv.SetGridy()
         bcanv.SetGridx()
-        bleg  = ROOT.TLegend(0.2,0.12,0.5,0.42)
+        bleg  = ROOT.TLegend(0.2,0.12,0.6,0.52)
         bleg.SetFillStyle(0)
         first = True
         cstyles = copy(styles)
-        frame = ROOT.TH2F("frame","frame",100,xfirst,xlast,100,-4,2);
+        frame = ROOT.TH2F("frame","frame",100,xfirst,xlast,100,-3,2);
         frame.SetStats(False)
         frame.Draw()
         frame.GetXaxis().SetTitle("mass")
+        frame.GetXaxis().SetMoreLogLabels()
         frame.GetYaxis().SetTitle("( n_{fit} - n_{true} )/ \sigma_{fit}")
         box = ROOT.TBox(xfirst,-0.5,xlast,0.5)
-        box.SetFillColorAlpha(ROOT.kGray,0.1)
+        ## box.SetFillColorAlpha(ROOT.kGray,0.1)
+        box.SetFillColor(ROOT.kGray)
         box.Draw("same")        
         self.keep([frame,box])
         for key in keys:
@@ -728,14 +745,15 @@ class BiasApp(CombineApp):
             ccanv.SetLogx()
             ccanv.SetGridy()
             ccanv.SetGridx()
-            cleg  = ROOT.TLegend(0.2,0.12,0.5,0.42)
+            cleg  = ROOT.TLegend(0.2,0.12,0.6,0.52)
             cleg.SetFillStyle(0)
             first = True
             cstyles = copy(styles)
-            cframe = ROOT.TH2F("cframe","cframe",100,xfirst,xlast,100,-4,2);
+            cframe = ROOT.TH2F("cframe","cframe",100,xfirst,xlast,100,-3,2);
             cframe.SetStats(False)
             cframe.Draw()
             cframe.GetXaxis().SetTitle("mass")
+            cframe.GetXaxis().SetMoreLogLabels()
             cframe.GetYaxis().SetTitle("( n_{fit} - n_{true} )/ ( \sigma_{fit} \oplus bias )")
             box.Draw("same")        
             self.keep([cframe])

@@ -1,5 +1,4 @@
 #!/bin/env python
-
 from diphotons.Utils.pyrapp import *
 from optparse import OptionParser, make_option
 from copy import deepcopy as copy
@@ -36,6 +35,7 @@ class LookUp:
         self.container_ = target.container_
 
     def __call__(self,*args):
+        ## print args
         for ws in self.container_:
             obj = getattr(ws,self.method_)(*args)
             if obj: return obj
@@ -156,10 +156,36 @@ class TemplatesApp(PlotApp):
                                     default=False,help="prepare templates only with data, no mc, signals, or templatesMC,mctruth)"),
                         make_option("--prepare-nosignal",dest="prep_nosig",action="store_true",
                                     default=False,help="prepare templates without signals"),
+                        make_option("--mix-mc",dest="mix_mc",action="store_true",
+                                    default=False,help="template mixing also with MC"),
                         make_option("--only-subset",dest="only_subset",action="callback",type="string", callback=optpars_utils.ScratchAppend(),
                     default=[],help="default: %default"),
                         ]
-                      )
+                      ),
+                ( "Fit definition options. Usually specified through JSON configuration (see templates_maker.json for details)", [
+                        make_option("--fit-categories",dest="fit_categories",action="callback",type="string",callback=optpars_utils.ScratchAppend(),help="sets specific category for fit, e.g. EBEB or EBEE",default=["EBEB","EBEE"]),
+                        make_option("--fit-massbins",dest="fit_massbins",action="callback",type="string",callback=optpars_utils.ScratchAppend(),help="sets massbins for fit or templates comparison: first integer is total number of massbins, 2. how many bins we want to run over, 3. startbin",default=["1","1","0"]),
+                        make_option("--fit-templates",dest="fit_templates",action="callback",type="string",callback=optpars_utils.ScratchAppend(),help="get templates for fit: either unrolled_template,unrolled_template_mix or unrolled_mctruth",default=["unrolled_template"]),
+                        make_option("--plot-closure",dest="plot_closure",action="callback",callback=optpars_utils.ScratchAppend(),type="string",
+                                    default=["template"],
+                                    help="choose template or mctruth."),
+                        make_option("--plot-purityvalue",dest="plot_purityvalue",action="callback",callback=optpars_utils.ScratchAppend(),type="string",
+                                    default=["fraction"],
+                                    help="purity either as fraction or as number of events in signalregion.Choose 'fraction' or 'events'"),
+                        make_option("--plot-mctruth",dest="plotMCtruth",action="callback",callback=optpars_utils.ScratchAppend(),type="string",
+                                    default=["mctruth"]),
+                        make_option("--plot-purity",dest="plot_purity",action="store_true",default=False,
+                                    help="Plot purities, purity vs massbin and pull function",
+                                    ),
+                        make_option("--fits",dest="fits",action="callback",callback=optpars_utils.Load(),type="string",
+                                    default={},help="List of templates fits to be performed. Categories, componentd and templates can be specified."),
+                        ### make_option("--template-binning",dest="template_binning",action="callback",callback=optpars_utils.ScratchAppend(float),
+                        ###             type="string",
+                        ###             default=[],
+                        ###             help="Binning of the parametric observable to be used for templates",
+                        ###             ),                        
+                        ]
+                  )
             ]+option_groups,option_list=option_list)
         
         ## initialize data members
@@ -355,7 +381,7 @@ class TemplatesApp(PlotApp):
         for name in self.save_params_:
             val = cfg.get(name,None)
             if val:
-                print "Reading back saved parameter ", name, val
+                print "Reading back saved parameter ", name # , val
                 setattr(options,name,val)
     
     ## ------------------------------------------------------------------------------------------------------------
@@ -561,13 +587,17 @@ class TemplatesApp(PlotApp):
             print 
             for component,cfg in fit["templates"].iteritems():
                 if component.startswith("_"): continue
-              #templates (data) is default one
-                for dat in cfg.get("dataset","templates"):
+                # templates (data) is default one
+                if options.prep_data:
+                    datasets=cfg.get("dataset",["templates"])
+                else: 
+                    datasets=cfg.get("datasetmc",["templates"])  
+                for dat in datasets:
                     print dat
                     trees = self.prepareTrees(dat,cfg["sel"],options.verbose,"Templates selection for %s %s" % (dat,component))
                     if dat=="data" or dat=="templates":
                         dat="_"
-                    elif dat=="templatesMC" or dat=="mc":
+                    if not options.prep_data and dat=="templatesMC" or dat=="mc":
                         dat="_mc_"
                     cats = {}
                     presel = cfg.get("presel",preselection)
@@ -584,12 +614,12 @@ class TemplatesApp(PlotApp):
                     for cat in categories.keys():
                         tree=self.treeData("template%s%s_%s_%s" % (dat,component,name,cat) )
                         jk=cfg.get("jk",0) 
-                        if jk !=0 and component=="pp":
+                        if jk !=0 and component=="pp" and options.prep_data:
                             n= int(tree.GetEntries())
                             d=n/jk
                             g=jk
-                            #if n % d != 0:
-                            #    g += 1
+                            if n % d != 0:
+                                g += 1
                             g=int(g)
                             print "computing partitions: n=%d d=%d g=%i" % (n,d,g)
                             all_events= range(n)
@@ -620,7 +650,7 @@ class TemplatesApp(PlotApp):
     ## ------------------------------------------------------------------------------------------------------------
     def mixTemplates(self,options,args):
         fout = self.openOut(options)
-        fout.Print()
+        ## fout.Print()
         fout.cd()
         self.doMixTemplates(options,args)
         self.saveWs(options,fout)
@@ -635,6 +665,7 @@ class TemplatesApp(PlotApp):
         
         for name, mix in options.mix.iteritems():
             if name.startswith("_"): continue
+            if not options.mix_mc and name.startswith("kDSinglePho2DMC"): continue
             print
             print "--------------------------------------------------------------------------------------------------------------------------"
             print "Mixing %s" % name
@@ -706,8 +737,8 @@ class TemplatesApp(PlotApp):
                         if jks !=0 and scomp!="p":
                             tree_all=self.treeData(legname)
                             n= int(tree_all.GetEntries())
-                            d=jks*n
-                            g=n/d
+                            d=n/jks
+                            g=jks
                             if n % d != 0:
                                 g += 1
                             g=int(g)
@@ -729,7 +760,7 @@ class TemplatesApp(PlotApp):
                     rndmatch     = fill.get("rndmatch",0.)
                     
                     print "legs  :", " ".join(legnams)
-                    print "type  :", mixType
+                    print "type   :", mixType
                     if jks==0: g=0
                     for j in range(g+1):
                         if j==0:
@@ -779,8 +810,8 @@ class TemplatesApp(PlotApp):
                             if j==0 and jkt!=0:
                                 target_all          = self.treeData(dataname)
                                 nt= int(target_all.GetEntries())
-                                dt=jkt*nt
-                                gt=nt/dt
+                                dt=nt/jkt
+                                gt=jkt
                                 if nt % dt != 0:
                                     gt += 1
                                 gt=int(gt)

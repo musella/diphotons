@@ -150,13 +150,13 @@ class PlotApp(PyRApp):
     def __init__(self,option_list=[],option_groups=[],default_cats=[]):
         super(PlotApp,self).__init__(option_groups=[
                 ("PlotApp options", [
-                        make_option("-c","--categories",dest="categories",action="callback",callback=ScratchAppend(),type="string",
+                        make_option("--categories",dest="categories",action="callback",callback=ScratchAppend(),type="string",
                                     default=default_cats,help="default: %default"),
-                        make_option("-l","--labels",dest="labels",action="callback",callback=Load(),metavar="JSON",
+                        make_option("--labels",dest="labels",action="callback",callback=Load(),metavar="JSON",
                                     default={},help="default: %default"),
                         make_option("-p","--plots",dest="plots",action="callback",callback=Load(),metavar="JSON",
                                     default=[],help="default: %default"),
-                        make_option("-t","--template",dest="template",action="store",type="string",
+                        make_option("--template",dest="template",action="store",type="string",
                                     default="%(name)s_%(cat)s_%(sample)s",help="default: %default"),
                         make_option("--postproc",dest="postproc",action="callback",callback=Load(),metavar="JSON",
                                     default={},help="default: %default"),
