@@ -10,9 +10,11 @@
 #if ROOT_VERSION_CODE < ROOT_VERSION(6,0,0)
 #include "diphotons/RooUtils/interface/RooPowLogPdf.h"
 #include "diphotons/RooUtils/interface/RooSlicePdf.h"
+#include "diphotons/RooUtils/interface/RooStarMomentMorph.h"
 
 #pragma link C++ defined_in "diphotons/RooUtils/interface/RooPowLogPdf.h";
 #pragma link C++ defined_in "diphotons/RooUtils/interface/RooSlicePdf.h";
+#pragma link C++ defined_in "diphotons/RooUtils/interface/RooStarMomentMorph.h";
 #endif
 
 #pragma link C++ defined_in "diphotons/Utils/interface/DataSetFiller.h";

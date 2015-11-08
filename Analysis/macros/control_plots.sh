@@ -8,6 +8,7 @@ bkg_file=""
 lumi=""
 target=""
 while [[ $1 == -* ]]; do
+    echo $1
     case $1 in 
 	--data-file) 
 	    data_file="$1 $2"
@@ -47,7 +48,7 @@ while [[ $1 == -* ]]; do
 done
 [[ $1 == --* ]] && shift
 
-
+## echo $opts
 
 src=$1 && shift
 www=~/www/exo/spring15_7412
@@ -61,9 +62,10 @@ if [[ $target != "/*" ]]; then
     mkdir  $www/$target/
 fi
 
-./basic_plots.py --load basic_plots.json  -O $www/$target/selection  --input-dir $src $lumi $data_file
-./basic_plots.py --load purity_plots.json -O $www/$target/purity     --input-dir $src 
-./eff_plots.py --load eff_plots.json      -O $www/$target/efficiency --input-dir $src 
+./basic_plots.py --load basic_plots.json  -O $www/$target/selection  --input-dir $src $lumi $data_file $opts
+## ./basic_plots.py --load purity_plots.json -O $www/$target/purity     --input-dir $src 
+## ./eff_plots.py --load eff_plots.json      -O $www/$target/efficiency --input-dir $src 
+
 ## ./eff_plots.py --load eff_plots_grav.json    -O $www/$target/efficiency_grav --input-dir $src 
 
 ## ./eff_plots.py --load singlepho_eff_plots.json      -O $www/$target/signlepho_efficiency --input-dir $src

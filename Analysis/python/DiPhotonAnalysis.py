@@ -511,7 +511,8 @@ class DiPhotonAnalysis(object):
                                         )
         
         if self.computeMVA:
-            sys.exit("MVA computation not supported for single photon selection. Please do something about it.",-1)
+            ## sys.exit("MVA computation not supported for single photon selection. Please do something about it.",-1)
+            print "WARNING: MVA computation not supported for single photon selection."
             
         self.photonSelections += self.addPhoSelection(process,"kin",template,dumperTemplate,
                                                       dumpTrees=dumpTrees,dumpWorkspace=dumpWorkspace,dumpHistos=dumpHistos,splitByIso=splitByIso,selectN=False)
