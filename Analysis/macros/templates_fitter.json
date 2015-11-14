@@ -1,14 +1,13 @@
 {
     "comparisons" : {
 	"fit2DTruth" : { "fit" : "2D",
-		"_templates" : { "mix:kDSinglePho2DMC" : {},"template_mc:2D":{}, "mix:kDSinglePho2D" : {},"2D":{} },
-		"_templates" : { "mix:kDSinglePho2DMC" : {}, "mix:kDSinglePho2D" : {}},
-		"templates" : { "mix:kDSinglePho2D" : {} },
+		"templates" : { "mix:kDSinglePho2DMC" : {}, "mix:kDSinglePho2D" : {}},
+		"_templates" : { "mix:kDSinglePho2D" : {} },
 		"_templates" : { "2D":{} },
                 "categories" : ["EBEB","EBEE"],
-                "_components": ["pf","ff",  ["pp",{ "2D" : {},"template_mc:2D":{}}] 
+                "components": ["pf","ff",  ["pp",{ "2D" : {},"template_mc:2D":{}}] 
                 ],
-                "components": ["pf","ff",  ["pp",{ "2D" : {}}] 
+                "_components": ["pf","ff",  ["pp",{ "2D" : {}}] 
                 ],
                 "prepfit": true,
                 "weight_cut": "weight < 5.",
@@ -17,20 +16,18 @@
                 "_plot_variables":{"subleadScEta": [-2.5,-2.0,-1.5,-1.0,-0.5,0.0,0.5,1.0,1.5,2.0,2.5],"leadScEta":[-2.5,-2.0,-1.5,-1.0,-0.5,0.0,0.5,1.0,1.5,2.0,2.5],"subleadPt":[75,100,200,500,7000],"leadPt":[75,100,200,500,7000]},
                 "lowerLimitSigRegion2D": "0.", 
                 "template_binning" : [ 0.0,0.1,5.0,15.0],
-                "upperLimitSigRegion1D": "15.", 
-                "upperLimitSigRegion2D": "9.", 
                 "_template_binning" : [ 0.0,5.0,15.0],
-                "_upperLimitSigRegion2D": "4.", 
-                "_upperLimitSigRegion1D": "5.", 
+                "upperLimitSigRegion2D": "4.", 
+                "upperLimitSigRegion1D": "5.", 
 		"mass_binning" :"mass[13000,200.0,13000.0]"
 		}
 	},
 "jackknife":{ 
         "jk_pp": 10.0 ,
-        "jk_source": 10.0 ,
-        "jk_target": 10.0 ,
+        "jk_source": 0.0 ,
+        "jk_target": 0.0 ,
             "categories":["EBEB","EBEE"],
-            "components": ["pf","pp"],
+            "components": ["pp"],
             "template_binning" : [ 0.0,0.1,5.0,15.0],
 			
 	    "mass_binning" :"mass[13000,200.0,13000.0]"
@@ -40,31 +37,29 @@
     },
    "nominalFit":{
         "_3_components":{
-				"data":false,
         		"dimensions" :"2D", 
         		"observable": "templateNdim2d_unroll",
                 "components": ["pp","pf","ff"],
                 "lowerLimitSigRegion": "0.", 
-                "_upperLimitSigRegion": "9.", 
-                "_upperLimitSigRegion": "4.", 
+                "upperLimitSigRegion": "4.", 
+				"jackknife_pf":false,
+				"jackknife_pp":false,
 		"mass_binning" :"mass[13000,0.0,13000.0]",
                 "extended_fit":false
          },
         "2_components":{
-				"data":true,
         		"dimensions" :"2D", 
         		"observable": "templateNdim2d_unroll",
                 "components": ["pp","pf"],
                 "lowerLimitSigRegion": "0.", 
-                "_upperLimitSigRegion": "4.", 
+                "upperLimitSigRegion": "4.", 
                 "extended_fit":false,
 				"jackknife_pf":false,
-				"jackknife_pp":true,
+				"jackknife_pp":false,
 		"mass_binning" :"mass[13000,0.0,13000.0]"
         }
     },
    "plotPurity":{
-                "data":true,
                 "treetruth":"truth_purity_all",
                 "_treetruth":"truth_purity_signalregion",
                 "dimensions" :"2D", 
