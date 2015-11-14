@@ -72,6 +72,11 @@ while [[ -n $1 ]]; do
 	    fwhm="$2"
 	    opts="$opts $1"
 	    ;;
+	--only-coup*)
+	    log_label="${log_label}$(echo $2 | tr ',' '_')"
+	    opts="$opts $1 $2"
+	    shift
+	    ;;
 	--lumi*)
 	    lumi=$2
 	    shift
@@ -83,6 +88,10 @@ while [[ -n $1 ]]; do
 	    ;;
 	--*-file)
 	    input_opts="$input_opts $1 $2"
+	    shift
+	    ;;
+	--fit-background)
+	    just_fit_bkg="1"
 	    shift
 	    ;;
 	*)
@@ -154,16 +163,28 @@ echo "**************************************************************************
 echo "running model creation"
 echo "**************************************************************************************************************************"
 
-./combine_maker.py \
-    --fit-name $fitname  --luminosity $lumi  --lumi $lumi \
-    --fit-background \
-    --generate-signal \
-    --generate-datacard \
-    --binned-data-in-datacard \
-    --read-ws $input \
-    --ws-dir $workdir \
-    -O $www/$version/$workdir \
-    -o $workdir.root  \
-    --cardname datacard_${workdir}.txt $opts 2>&1 | tee $workdir/combine_maker.log
+if [[ -z $just_fit_bkg ]]; then
+    ./combine_maker.py \
+	--fit-name $fitname  --luminosity $lumi  --lumi $lumi \
+	--fit-background \
+	--generate-signal \
+	--generate-datacard \
+	--binned-data-in-datacard \
+	--read-ws $input \
+	--ws-dir $workdir \
+	-O $www/$version/$workdir \
+	-o $workdir.root  \
+	--cardname datacard_${workdir}.txt $opts 2>&1 | tee $workdir/combine_maker${log_label}.log
+else
+    ./combine_maker.py \
+	--fit-name $fitname  --luminosity $lumi  --lumi $lumi \
+	--fit-background \
+	--read-ws $input \
+	--ws-dir $workdir \
+	-O $www/$version/$workdir \
+	-o $workdir.root  \
+	$opts 2>&1 | tee $workdir/combine_maker_bkg_only${log_label}.log
+    
+fi
 
 echo "**************************************************************************************************************************"

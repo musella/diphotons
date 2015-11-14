@@ -15,9 +15,11 @@ from templates_maker import TemplatesApp
 
 import random
 
-from math import sqrt
+from math import sqrt, fabs
+import bisect
 
 import glob
+import numpy as np
 
 ## ----------------------------------------------------------------------------------------------------------------------------------------
 class CombineApp(TemplatesApp):
@@ -50,7 +52,10 @@ class CombineApp(TemplatesApp):
                                     ),
                         make_option("--fit-background",dest="fit_background",action="store_true",default=False,
                                     help="Fit background",
-                                    ),                        
+                                    ),                       
+                        make_option("--run-ks-test",dest="run_ks_test",action="store_true",default=False,
+                                    help="Run KS test on  background fit",
+                                    ),                       
                         make_option("--use-custom-pdfs",dest="use_custom_pdfs",action="store_true",default=True,
                                     help="Use custom pdfs from diphotons/Utils",
                                     ),                        
@@ -174,32 +179,39 @@ class CombineApp(TemplatesApp):
                         make_option("--parametric-signal-prefix",dest="parametric_signal_prefix",action="store",type="string",default="grav",
                                     help="Read parametric signal from root file.",
                                     ),
+                        make_option("--only-coups",dest="only_coups",action="callback",callback=optpars_utils.ScratchAppend(str),type="string",
+                                    default=[]
+                                    ),
                         make_option("--parametric-signal-source",dest="parametric_signal_source",action="callback",callback=optpars_utils.Load(scratch=True),
                                     type="string",
                                     default={ "ws" : "w", 
                                               ## "reparam" : {"mu" : "MH"},
                                               ## "obs" : "zeroVar",
                                               ## "shift" : True,
-                                              "masses" : [10,500,5000],
+                                              ## "masses" : [10,500,5000],
+                                              "masses" : ## [500,505,506,510],
+                                              np.concatenate((np.arange(500,750,2),np.arange(750,1000,2.5),np.arange(1000,1500,4),np.arange(1500,4500,50))),
+                                              ## np.concatenate((np.arange(500,750,2),np.arange(750,1000,2.5),np.arange(1000,1500,4),np.arange(1500,5000,50))),
+                                              "interpolate_below" : 1500,
                                               ## "masses" : [50,500,600],
                                               "pdfs"    : { #"001" : {"EBEB" : "MorphCatEBEB_kpl001", "EBEE" : "MorphCatEBEE_kpl001" },
                                                             #"01" : {"EBEB" : "MorphCatEBEB_kpl01", "EBEE" : "MorphCatEBEE_kpl01" },
-                                                            "001" : {"EBEB" : "ConvolutionRhPdf_catEBEB_mass%d_kpl001", 
-                                                                    "EBEE" : "ConvolutionRhPdf_catEBEE_mass%d_kpl001" },
-                                                            "005" : {"EBEB" : "ConvolutionRhPdf_catEBEB_mass%d_kpl005", 
-                                                                    "EBEE" : "ConvolutionRhPdf_catEBEE_mass%d_kpl005" },
-                                                            "007" : {"EBEB" : "ConvolutionRhPdf_catEBEB_mass%d_kpl007", 
-                                                                    "EBEE" : "ConvolutionRhPdf_catEBEE_mass%d_kpl007" },
-                                                            "01" : {"EBEB" : "ConvolutionRhPdf_catEBEB_mass%d_kpl01", 
-                                                                    "EBEE" : "ConvolutionRhPdf_catEBEE_mass%d_kpl01" },
-                                                            "015" : {"EBEB" : "ConvolutionRhPdf_catEBEB_mass%d_kpl015", 
-                                                                    "EBEE" : "ConvolutionRhPdf_catEBEE_mass%d_kpl015" },
-                                                            "02" : {"EBEB" : "ConvolutionRhPdf_catEBEB_mass%d_kpl02", 
-                                                                    "EBEE" : "ConvolutionRhPdf_catEBEE_mass%d_kpl02" },
-                                                            "025" : {"EBEB" : "ConvolutionRhPdf_catEBEB_mass%d_kpl025", 
-                                                                    "EBEE" : "ConvolutionRhPdf_catEBEE_mass%d_kpl025" },
-                                                            "03" : {"EBEB" : "ConvolutionRhPdf_catEBEB_mass%d_kpl03", 
-                                                                    "EBEE" : "ConvolutionRhPdf_catEBEE_mass%d_kpl03" },
+                                                            "001" : {"EBEB" : "ConvolutionRhPdf_catEBEB_mass%1.5g_kpl001", 
+                                                                    "EBEE" : "ConvolutionRhPdf_catEBEE_mass%1.5g_kpl001" },
+                                                            "005" : {"EBEB" : "ConvolutionRhPdf_catEBEB_mass%1.5g_kpl005", 
+                                                                    "EBEE" : "ConvolutionRhPdf_catEBEE_mass%1.5g_kpl005" },
+                                                            "007" : {"EBEB" : "ConvolutionRhPdf_catEBEB_mass%1.5g_kpl007", 
+                                                                    "EBEE" : "ConvolutionRhPdf_catEBEE_mass%1.5g_kpl007" },
+                                                            "01" : {"EBEB" : "ConvolutionRhPdf_catEBEB_mass%1.5g_kpl01", 
+                                                                    "EBEE" : "ConvolutionRhPdf_catEBEE_mass%1.5g_kpl01" },
+                                                            "015" : {"EBEB" : "ConvolutionRhPdf_catEBEB_mass%1.5g_kpl015", 
+                                                                    "EBEE" : "ConvolutionRhPdf_catEBEE_mass%1.5g_kpl015" },
+                                                            "02" : {"EBEB" : "ConvolutionRhPdf_catEBEB_mass%1.5g_kpl02", 
+                                                                    "EBEE" : "ConvolutionRhPdf_catEBEE_mass%1.5g_kpl02" },
+                                                            ### "025" : {"EBEB" : "ConvolutionRhPdf_catEBEB_mass%1.5g_kpl025", 
+                                                            ###         "EBEE" : "ConvolutionRhPdf_catEBEE_mass%1.5g_kpl025" },
+                                                            ### "03" : {"EBEB" : "ConvolutionRhPdf_catEBEB_mass%1.5g_kpl03", 
+                                                            ###         "EBEE" : "ConvolutionRhPdf_catEBEE_mass%1.5g_kpl03" },
                                                             }
                                               },
                                     help="Details about parametric signal",
@@ -324,7 +336,10 @@ class CombineApp(TemplatesApp):
         
         self.pdfPars_ = ROOT.RooArgSet()
         self.observables_ = {}
-                
+        self.morph_ = {}
+        self.interpolated_ = {}
+        
+        
     def __call__(self,options,args):
         
 
@@ -371,6 +386,8 @@ class CombineApp(TemplatesApp):
         self.save_params_.append("luminosity")
         if options.fit_background:
             self.fitBackground(options,args)
+            if options.run_ks_test:
+                self.runKSTest(options,args)
             
         if options.generate_signal_dataset:
             if len(options.parametric_signal) > 0:
@@ -582,7 +599,12 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             # normalization nuisances
             datacard.write("lumi  lnN".ljust(20))
             for cat in categories:
-                datacard.write(" 1.04".ljust(15) )
+                datacard.write(" 1.10".ljust(15) )
+                for comp in options.components:
+                    datacard.write(" -".ljust(15) )
+            datacard.write("eff  lnN".ljust(20))
+            for cat in categories:
+                datacard.write(" 1.10".ljust(15) )
                 for comp in options.components:
                     datacard.write(" -".ljust(15) )
             for cat in sidebands:                
@@ -779,6 +801,103 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 options.output_file = "%s%s.root" % (options.background_root_file,signame)
             self.saveWs(options)
             self.bookNewWs(False)
+
+    ## ------------------------------------------------------------------------------------------------------------  
+    def runKSTest(self,options,args):
+        
+        print "--------------------------------------------------------------------------------------------------------------------------"
+        print "runnning KS g.o.f. test for background fit"
+        print 
+        
+        fitname = options.fit_name
+        fit = options.fits[fitname]
+        for comp,opts in options.bkg_shapes.iteritems():      # FIXME: sensible only for one component         
+            if comp != "":
+                comp = "%s_" % comp
+
+            for cat in fit["categories"]:
+            
+                modelpdf = self.workspace_.pdf("model_%s%s" % (comp,cat))
+                print modelpdf
+                self.workspace_.saveSnapshot("nominalFit",self.workspace_.allVars())
+                data      = self.workspace_.data("binned_data_%s"% (cat))                 
+                obs = self.getObservable(cat)
+                obs.setMax(2500)
+
+                datapdf = ROOT.RooHistPdf("pdf_%s" % data.GetName(),"pdf_%s" % data.GetName(),ROOT.RooArgSet(obs),data)
+
+                datacdf = datapdf.createCdf(ROOT.RooArgSet(obs))
+                modelcdf = modelpdf.createCdf(ROOT.RooArgSet(obs))
+                
+                frame = obs.frame()
+                modelcdf.plotOn(frame,RooFit.LineColor(ROOT.kBlue))
+                datacdf.plotOn(frame,RooFit.LineColor(ROOT.kBlack))
+
+                ksD,ksProb,ksStat = self.computeKSstat(data,modelpdf,obs,500,"nominalFit")
+                
+                canv = ROOT.TCanvas("%s%s_kstest" % (comp,cat),"%s%s_kstest" % (comp,cat))
+                canv.SetLogx()
+                frame.Draw()
+                print "saving"
+                self.keep(canv)
+                self.autosave(True)
+
+    ## ------------------------------------------------------------------------------------------------------------  
+    def computeKSstat(self,data,model,obs,runToys,nominalSnapshot):
+        
+        datapdf = ROOT.RooHistPdf("tmp_ks_pdf_%s" % data.GetName(),"pdf_%s" % data.GetName(),ROOT.RooArgSet(obs),data)
+        
+        datacdf = datapdf.createCdf(ROOT.RooArgSet(obs))
+        modelcdf = model.createCdf(ROOT.RooArgSet(obs))
+        
+        observed = self.computeKSD(datacdf,modelcdf,obs)
+        
+        tmp = self.open("/tmp/musella/pippo.root","recreate")
+        
+        ksdistrib = []
+        ndata = data.sumEntries()
+        print "computeKSstat: running toys",
+        toys = []
+        for itoy in xrange(runToys):
+            print ".",
+            self.workspace_.loadSnapshot(nominalSnapshot)
+            
+            nev = ROOT.gRandom.Poisson(ndata)
+            toy = model.generate(ROOT.RooArgSet(obs),nev)
+            toy.SetName("toy_%s_%d"%(model.GetName(),itoy))
+            ### self.workspace_.rooImport(toy)
+            ### ## toy.Print("V")
+            ### self.keep(toy)
+            toys.append(toy)
+        
+        model.Print()
+        
+        for toy in toys:
+            model.fitTo(toy, RooFit.PrintLevel(-1),RooFit.Warnings(False),RooFit.Minimizer("Minuit2"),RooFit.Offset(True) )
+            ## nll = model.createNLL(toy)
+
+            toypdf = ROOT.RooHistPdf("%s_toy_%d" % (model.GetName(), itoy),"%s_toy_%d" % (model.GetName(), itoy),ROOT.RooArgSet(obs),toy)
+            toycdf = toypdf.createCdf(ROOT.RooArgSet(obs))
+            
+            self.workspace_.loadSnapshot(nominalSnapshot)
+            
+            ksdistrib.append(self.computeKSD(toycdf,modelcdf,obs))
+        print
+        
+        sortedist = sorted(ksdistrib)
+        pval = float(bisect.bisect(sortedist,observed))/float(len(sortedist))
+        print "Observed KSD ", observed, pval
+
+        return observed,pval,sortedist
+
+    ## ------------------------------------------------------------------------------------------------------------  
+    def computeKSD(self,cdf1,cdf2,obs):
+        
+        binning = obs.getBinning()
+        
+        return max( map( lambda x: x[1], map( lambda x: (obs.setVal(binning.binHigh(x)), fabs(cdf1.getVal()-cdf2.getVal())), xrange(binning.numBins())) ) )
+        
+        
 
     ## ------------------------------------------------------------------------------------------------------------  
     def fitBackground(self,options,args):
@@ -1303,16 +1422,17 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             xRight = hist.GetXaxis().GetBinCenter(binRight)
             xWidth = xRight-xLeft
             print ("FWHM = %f" % (xWidth))
-            if plot:
-                hist.GetXaxis().SetRangeUser(hist.GetXaxis().GetBinCenter(maxBin)-5*xWidth,hist.GetXaxis().GetBinCenter(maxBin)+5*xWidth)
-                hist.Draw("HIST")
-                ## canv.SaveAs(nameFileOutput.replace(".root",("%s_hist.png" % cat)))
-                self.keep(canv)
-                self.autosave(True)
         else:
             print
             print("Did not succeed to compute the FWHM")
             print
+        if plot:
+            ## hist.Print("all")
+            hist.GetXaxis().SetRangeUser(hist.GetXaxis().GetBinCenter(maxBin)-5*xWidth,hist.GetXaxis().GetBinCenter(maxBin)+5*xWidth)
+            hist.Draw("HIST")
+            ## canv.SaveAs(nameFileOutput.replace(".root",("%s_hist.png" % cat)))
+            self.keep(canv)
+            self.autosave(True)
         del hist
         return xWidth
 
@@ -1695,18 +1815,108 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             print
         return pdf
 
+
+    ## ------------------------------------------------------------------------------------------------------------
+    def tryInterpolate(self,coup,mass,masses,pdfs,workspace,MH,obs):
+
+        if not coup in self.interpolated_: self.interpolated_[coup] = []
+        
+        higerMasses = filter(lambda x: x>mass and not x in self.interpolated_[coup], masses)
+        lowerMasses = filter(lambda x: x<mass and not x in self.interpolated_[coup], masses)
+
+        ## print "tryInterpolate", higerMasses, lowerMasses
+
+        winLeft  = -500
+        winRight = 300
+        winbins  = int( (winRight-winLeft) / (obs.getMax() - obs.getMin()) * obs.getBins() )
+        ## print winbins
+
+        ## obs = obs.Clone()
+        one = ROOT.RooFit.RooConst(1.)
+        minusone = ROOT.RooFit.RooConst(-1.)
+        deltaMassVar = ROOT.RooRealVar("deltaMass","deltaMass",0.,winLeft,winRight)
+        offset = ROOT.RooProduct("minusMH","minusMH",ROOT.RooArgList(minusone,MH))
+        deltaMass = ROOT.RooLinearVar("deltaMass","deltaMass",obs,one,offset)
+                
+        self.keep( [deltaMassVar,offset,deltaMass] )
+                
+        for cat,name in pdfs.iteritems():
+            pdfHigh,pdfLow = None,None
+            for himass in higerMasses:
+                hiname = name % himass
+                pdfHigh = workspace.pdf(hiname)
+                if pdfHigh: break
+                
+            for lomass in reversed(lowerMasses):
+                loname = name % lomass
+                pdfLow = workspace.pdf(loname)
+                if pdfLow: break
+
+            
+            if not pdfLow or not pdfHigh:
+                print "Could not interpolate %s %f %s" % ( cat, mass, name )
+                return False
+            
+            self.interpolated_[coup].append(mass)
+            
+            print "interpolating %f from %s and %s" % (mass, pdfHigh.GetName(), pdfLow.GetName())
+            
+            morphName = "morph_%s_%s" % (hiname,loname)
+            ## print morphName, self.morph_
+            if morphName in self.morph_:
+                morph = self.morph_[ morphName ]                
+            else:
+                ipdfs = ROOT.RooArgList()
+                
+                paramVec = ROOT.TVectorD(2)	
+                for imass,ipdf in [ (lomass,pdfLow), (himass,pdfHigh) ]:
+                    print imass, ipdf
+                    MH.setVal(imass)
+                    deltaHist = ipdf.createHistogram("deltaHist_%s" % ipdf.GetName(),obs,RooFit.Binning(winbins,imass+winLeft,imass+winRight))
+                    deltaHist.Scale(100.)
+                    cloneHist = ROOT.TH1D("clone_%s" % deltaHist.GetName(),"clone_%s" % deltaHist.GetName(),
+                                          deltaHist.GetNbinsX(),
+                                          deltaHist.GetXaxis().GetXmin()-imass,deltaHist.GetXaxis().GetXmax()-imass)
+                    map( lambda x: cloneHist.SetBinContent(x,deltaHist.GetBinContent(x)), range(1,deltaHist.GetNbinsX()+1) )
+                    deltaRooHist = ROOT.RooDataHist("dataHist_%s" % ipdf.GetName(),"dataHist_%s" % ipdf.GetName(),ROOT.RooArgList(deltaMassVar),cloneHist)
+                    
+                    deltaPdf = ROOT.RooHistPdf("deltaPdf_%s" % ipdf.GetName(),"deltaPdf_%s" % ipdf.GetName(),ROOT.RooArgList(deltaMass),ROOT.RooArgList(deltaMassVar),
+                                               deltaRooHist)
+                    self.keep( [deltaHist,deltaRooHist,deltaPdf] )
+                    ipdfs.add(deltaPdf)
+                    
+                paramVec[0]=lomass
+                paramVec[1]=himass
+                morph = ROOT.RooMomentMorph(morphName,morphName,MH,ROOT.RooArgList(obs),ipdfs,paramVec)
+                morph.useHorizontalMorphing(False)
+                self.morph_[morphName] = morph
+            MH.setVal(mass)
+            myname = name % mass
+            
+            rooDataHist = morph.generateBinned(ROOT.RooArgSet(obs),100.,True)
+            rooDataHist.SetName("%s_hist" % myname)
+            rooHistPdf = ROOT.RooHistPdf(myname,myname,ROOT.RooArgSet(obs),rooDataHist)
+
+            getattr(workspace,"import")(rooDataHist)
+            getattr(workspace,"import")(morph,ROOT.RooFit.RecycleConflictNodes())
+            getattr(workspace,"import")(rooHistPdf,ROOT.RooFit.RecycleConflictNodes())
+        return True    
+        
     ## ------------------------------------------------------------------------------------------------------------
     def generateParametricSignal(self,options,args):
         
         from templates_maker import WsList
-        workspace = WsList()
+        tmp = self.open("/tmp/musella/cache.root","recreate")
+        ws = ROOT.RooWorkspace("w","w")
+        workspace = WsList(ws)
         exp = map(lambda x: glob.glob("%s/*.root" % x) if x.endswith("/") else [x], options.parametric_signal)
         ## print
         ## print exp
         ## print
         for fin in map(self.open, reduce(lambda x,y: x+y, exp )): 
             workspace.append(fin.Get(options.parametric_signal_source["ws"]))
-        
+            
+            
         prefix_output = options.output_file.replace(".root","")
         options.signal_root_file = options.output_file ## copy this in case we want to run --generate-datacard at the same time
         if not options.cardname:
@@ -1761,6 +1971,9 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         if len(masses) == 3:
             masses = xrange(masses[1],masses[2],masses[0])
         for coup,pdfs in options.parametric_signal_source["pdfs"].iteritems():
+            print coup, options.only_coups
+            if len(options.only_coups) > 0 and not coup in options.only_coups: continue
+            self.morph_ = {}
             for mass in masses:
                 ## print mass
                 missing = False
@@ -1770,9 +1983,13 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     if not pdf: missing = True
                     
                 if missing: 
-                    print "missing %s %s" % ( coup, str(mass) )
-                    continue
-                        
+                    if mass < options.parametric_signal_source.get("interpolate_below",1e+6):
+                        if not self.tryInterpolate(coup,mass,masses,pdfs,workspace,MH,
+                                                   workspace.var(options.parametric_signal_source.get("obs","mgg"))):
+                            print "missing %s %s" % ( coup, str(mass) )
+                            continue
+                
+                
                 self.bookNewWs()
                 sublist_fwhm = {}
                 signame = options.parametric_signal_prefix
