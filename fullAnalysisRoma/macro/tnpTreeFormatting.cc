@@ -160,19 +160,23 @@ void tnpTreeFormat(const char* filename, float lumiForW) {
     for (unsigned int ii=0; ii<invMass->size(); ii++) {
       
       mass = (float)(invMass->at(ii));
-      if (mass<60 || mass>120) continue;
+      if (mass<70 || mass>110) continue;
       // if (mass<60 || mass>4000) continue;
       
       // further selection on tag 
       if (electron_pt->at(eleIndex->at(ii))<30)     continue;
       if (!isTagTightEle->at(eleIndex->at(ii)))     continue;
       if (!electron_matchHLT->at(eleIndex->at(ii))) continue;   
-      //if (!electron_matchMC->at(eleIndex->at(ii)))  continue;   
       
       // further selection on probe
       if (!gamma_presel->at(gammaIndex->at(ii)))  continue;
-      //if (!gamma_matchMC->at(gammaIndex->at(ii))) continue;
-      
+
+      // match with mc-truth
+      if (run==1){ 
+	if (!electron_matchMC->at(eleIndex->at(ii))) continue;   
+	if (!gamma_matchMC->at(gammaIndex->at(ii)))  continue;
+      }
+
       // now making flat tree
       massRaw = (float)(invMassRaw->at(ii));
       tag_absEta = fabs(electron_eta->at(eleIndex->at(ii)));
@@ -193,8 +197,10 @@ void tnpTreeFormat(const char* filename, float lumiForW) {
 	weight     = 1.;
       }
 
+      // remove negative weights to follow egamma prescriptions
+      // if (run==1 && weight<0) continue;
+
       treeNew->Fill();
-      // treeNew->GetEntries();
     }
   }
 

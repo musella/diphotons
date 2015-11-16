@@ -1,8 +1,10 @@
 import FWCore.ParameterSet.Config as cms
 import FWCore.Utilities.FileUtils as FileUtils
+import FWCore.PythonUtilities.LumiList as LumiList  
+import FWCore.ParameterSet.Types as CfgTypes   
 
-isMC = True;
-is25ns = True;   
+isMC    = True;
+is25ns  = True;   
 is2015B = False;    
 is2015C = False;  
 is2015D = False;   
@@ -44,7 +46,10 @@ process.source = cms.Source("PoolSource",
 # to apply the json file offline
 if (isMC==False and is2015D):
     print "applying 2015D json"                                
-    process.source.lumisToProcess = cms.untracked.VLuminosityBlockRange("256630:5-256630:26","256673:55-256673:56","256674:1-256674:2","256675:1-256675:106","256675:111-256675:164","256677:1-256677:291","256677:293-256677:390","256677:392-256677:397","256677:400-256677:455","256677:457-256677:482","256729:11-256729:207","256729:209-256729:209","256729:213-256729:213","256729:220-256729:336","256729:346-256729:598","256729:600-256729:755","256729:758-256729:760","256729:765-256729:1165","256729:1167-256729:1292","256729:1295-256729:1327","256729:1329-256729:1732","256734:1-256734:57","256734:60-256734:178","256801:73-256801:263","256842:131-256842:132","256843:1-256843:204","256843:207-256843:284","256843:286-256843:378","256843:380-256843:430")
+    process.source.lumisToProcess = CfgTypes.untracked(CfgTypes.VLuminosityBlockRange())  
+    JSONfile = '/afs/cern.ch/user/c/crovelli/public/json2015/singleEle/processedAndSilver_2015D_nov2.json'
+    myLumis = LumiList.LumiList(filename = JSONfile).getCMSSWString().split(',')  
+    process.source.lumisToProcess.extend(myLumis)                              
 
 if (isMC==False and is2015C and is25ns):
     print "applying 2015C json for 25ns"                                
@@ -69,7 +74,7 @@ process.tnpAna = cms.EDAnalyzer('TaPAnalyzer',
                                 ElectronTag=cms.InputTag('flashggElectrons'),
                                 genPhotonExtraTag = cms.InputTag("flashggGenPhotonsExtra"),   
                                 DiPhotonTag = cms.untracked.InputTag('flashggDiPhotons'),
-                                PileupTag = cms.untracked.InputTag('addPileupInfo'),
+                                PileUpTag = cms.untracked.InputTag('slimmedAddPileupInfo'),
                                 bits = cms.InputTag("TriggerResults","","HLT"),
                                 objects = cms.InputTag("selectedPatTrigger"),
                                 MetTag=cms.InputTag('slimmedMETs'),

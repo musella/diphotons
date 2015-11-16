@@ -34,7 +34,7 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32( -1 ) )
 process.source = cms.Source("PoolSource",
                             fileNames=cms.untracked.vstring(
         # DY
-        "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_7412_v2_mc_25ns/diphotons_7412_v1/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/EXOSpring15_7412_v2_mc_25ns-diphotons_7412_v1-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3/150928_214844/0000/diphotonsMicroAOD_1.root",
+        "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_7415_v2/diphotons_7415_v2/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/EXOSpring15_7415_v2-diphotons_7415_v2-v0-RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/151019_005506/0000/diphotonsMicroAOD_10.root"
         # singleEle
         #"/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_7412_v2/diphotons_7412_v1/SingleElectron/EXOSpring15_7412_v2-diphotons_7412_v1-v0-Run2015C-PromptReco-v1/150927_235231/0000/diphotonsMicroAOD_11.root"
         )
@@ -52,7 +52,7 @@ process.tnpAna = cms.EDAnalyzer('TaPAnalyzer',
                                 ElectronTag=cms.InputTag('flashggElectrons'),
                                 genPhotonExtraTag = cms.InputTag("flashggGenPhotonsExtra"),    
                                 DiPhotonTag = cms.untracked.InputTag('flashggDiPhotons'),
-                                PileupTag = cms.untracked.InputTag('addPileupInfo'),
+                                PileUpTag = cms.untracked.InputTag('slimmedAddPileupInfo'),
 
                                 bits = cms.InputTag("TriggerResults","","HLT"),
                                 objects = cms.InputTag("selectedPatTrigger"),
@@ -63,9 +63,9 @@ process.tnpAna = cms.EDAnalyzer('TaPAnalyzer',
                                 reducedEndcapRecHitCollection = cms.InputTag('reducedEgamma','reducedEERecHits'),
 
                                 generatorInfo = cms.InputTag("generator"),
-                                dopureweight = cms.untracked.int32(0),
+                                dopureweight = cms.untracked.int32(1),
                                 sampleIndex  = cms.untracked.int32(1), 
-                                puWFileName  = cms.string('xxx'),   # chiara  
+                                puWFileName  = cms.string('pileupWeights_69mb.root'),   # chiara  
                                 xsec         = cms.untracked.double(6025),
                                 kfac         = cms.untracked.double(1.),
                                 sumDataset   = cms.untracked.double(1.)

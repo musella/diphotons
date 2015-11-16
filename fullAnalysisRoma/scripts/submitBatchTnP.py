@@ -48,10 +48,10 @@ def main():
     #inputlist="lists_Spring15v8/25ns/data/"+dataset+".list"
     #inputweights="lists_Spring15v8/25ns/data/"+dataset+".weight"
 
-    #inputlist="lists_Spring15_7412v2/25ns/data/"+dataset+".list"
-    #inputweights="lists_Spring15_7412v2/25ns/data/"+dataset+".weight"
-    inputlist="lists_Spring15_7412v2/25ns/MC/"+dataset+".list"
-    inputweights="lists_Spring15_7412v2/25ns/MC/"+dataset+".weight"
+    #inputlist="lists_Spring15_7415v2/25ns/data/"+dataset+".list"
+    #inputweights="lists_Spring15_7415v2/25ns/data/"+dataset+".weight"
+    inputlist="lists_Spring15_7415v2/25ns/MC/"+dataset+".list"
+    inputweights="lists_Spring15_7415v2/25ns/MC/"+dataset+".weight"
 
     output = dataset
 
@@ -119,7 +119,7 @@ def main():
             else: maxEventsString = 'process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32('+str(opt.neventsjob)+') )#'
             puRewString = 'dopureweight = cms.untracked.int32('+str(doPUreweighting)+')'
             sampleIndexString = 'sampleIndex  = cms.untracked.int32('+str(sampleIndex)+')'
-            puWfileString = 'puWFileName  = cms.string("'+PUweights+'")'
+            puWfileString = 'puWFileName  = cms.string("/afs/cern.ch/user/c/crovelli/public/json2015/singleEle/'+PUweights+'")'
             xsecString = 'xsec = cms.untracked.double('+str(xsection)+')'
             kfacString = 'kfac = cms.untracked.double('+str(kfactor)+')'
             sdsString = 'sumDataset = cms.untracked.double('+stringtoreplaceW+')'
