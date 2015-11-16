@@ -233,7 +233,7 @@ void DiPhoAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
     for( unsigned int PVI = 0; PVI < PileupInfos->size(); ++PVI ) {
       Int_t pu_bunchcrossing = PileupInfos->ptrAt( PVI )->getBunchCrossing();
       if( pu_bunchcrossing == 0 ) {
-	pu_n = PileupInfos->ptrAt( PVI )->getPU_NumInteractions();
+	pu_n = PileupInfos->ptrAt( PVI )->getTrueNumInteractions();
       }
     }
     if (dopureweight_) 
