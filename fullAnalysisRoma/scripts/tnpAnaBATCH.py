@@ -3,11 +3,11 @@ import FWCore.Utilities.FileUtils as FileUtils
 import FWCore.PythonUtilities.LumiList as LumiList  
 import FWCore.ParameterSet.Types as CfgTypes   
 
-isMC = False;
-is25ns = True;   
+isMC    = True;
+is25ns  = True;   
 is2015B = False;    
 is2015C = False;  
-is2015D = True;   
+is2015D = False;   
 
 process = cms.Process("tnpAna")
 
@@ -47,7 +47,7 @@ process.source = cms.Source("PoolSource",
 if (isMC==False and is2015D):
     print "applying 2015D json"                                
     process.source.lumisToProcess = CfgTypes.untracked(CfgTypes.VLuminosityBlockRange())  
-    JSONfile = '/afs/cern.ch/user/c/crovelli/public/json2015/processedAndGolden_2015D_oct19.json'
+    JSONfile = '/afs/cern.ch/user/c/crovelli/public/json2015/singleEle/processedAndSilver_2015D_nov2.json'
     myLumis = LumiList.LumiList(filename = JSONfile).getCMSSWString().split(',')  
     process.source.lumisToProcess.extend(myLumis)                              
 
@@ -74,7 +74,7 @@ process.tnpAna = cms.EDAnalyzer('TaPAnalyzer',
                                 ElectronTag=cms.InputTag('flashggElectrons'),
                                 genPhotonExtraTag = cms.InputTag("flashggGenPhotonsExtra"),   
                                 DiPhotonTag = cms.untracked.InputTag('flashggDiPhotons'),
-                                PileupTag = cms.untracked.InputTag('addPileupInfo'),
+                                PileUpTag = cms.untracked.InputTag('slimmedAddPileupInfo'),
                                 bits = cms.InputTag("TriggerResults","","HLT"),
                                 objects = cms.InputTag("selectedPatTrigger"),
                                 MetTag=cms.InputTag('slimmedMETs'),
