@@ -167,7 +167,14 @@ void ConvolutionFromRDH(RooWorkspace* w, Int_t mass, TString coupling) {
     RooFFTConvPdf *convol = new RooFFTConvPdf("convol","convol",*mgg,*myHistPdfInw,*myHistPdfRes);          
     if (inZero) convol = new RooFFTConvPdf("convol","convol",*zeroVar,*myHistPdfInw,*myHistPdfRes);          
     // ad hoc corrections - start
+    if (coupling=="001" && mass==528 && c==1)  convol->setBufferFraction(0.11);    
     if (coupling=="001" && mass==640 && c==1)  convol->setBufferFraction(0.11);
+    if (coupling=="001" && mass==678 && c==1)  convol->setBufferFraction(0.11);
+    if (coupling=="001" && mass==732 && c==1)  convol->setBufferFraction(0.11);
+    if (coupling=="001" && mass==852 && c==1)  convol->setBufferFraction(0.11);
+    if (coupling=="001" && mass==896 && c==1)  convol->setBufferFraction(0.11);
+    if (coupling=="001" && mass==1054 && c==1) convol->setBufferFraction(0.11);
+    if (coupling=="001" && mass==1112 && c==1) convol->setBufferFraction(0.11);
     if (coupling=="001" && mass==1000 && c==1) convol->setBufferFraction(0.11);
     if (coupling=="001" && mass==1050 && c==1) convol->setBufferFraction(0.11);
     if (coupling=="001" && mass==3200 && c==1) convol->setBufferFraction(0.12);
@@ -255,17 +262,22 @@ void ConvolutionFromRDH(RooWorkspace* w, Int_t mass, TString coupling) {
     w->import(*convRhPdf);
     cout << endl;
     
+    delete convol;
+    delete convRhPdf;
     delete myHistPdfRes;    
     delete myHistPdfInw;     
   }
 
   // deleting
+  delete c1;
   delete fileInw;   
   delete fileRes;      
+  delete deltaM_formula;
+  delete deltaMgen_formula;
 
   // Saving the WS
   cout<< endl; 
-  TString filename("myWSwithMorphing.root"); 
+  TString filename("/tmp/crovelli/myWSwithMorphing.root"); 
   TFile fileWs(filename,"RECREATE");
   fileWs.cd(); 
   w->writeToFile(filename);       
@@ -539,7 +551,7 @@ void Interpolation(RooWorkspace* w, vector<int> masses, string coupling) {
 
   // Saving the WS
   cout<< endl; 
-  TString filename("myWSwithMorphing.root"); 
+  TString filename("/tmp/crovelli/myWSwithMorphing.root"); 
   TFile fileWs(filename,"RECREATE");
   fileWs.cd(); 
   w->writeToFile(filename);       
@@ -633,8 +645,15 @@ void runfits(string coupling="01") {
     }
     for (int iGenMass=0; iGenMass<71; iGenMass++) {
       int thisMass = 1500 + iGenMass*50;
+      //// if (thisMass>=4900) continue;     // chiaraaaaaaaaaaaa
       masses.push_back(thisMass); 
     }
+
+    /*
+    masses.push_back(4900);   
+    masses.push_back(4950);   
+    masses.push_back(5000);   
+    */
   }
 
   // loading data for the wanted coupling for control plots and make the roodatasets with minimal selection - full sim samples only
