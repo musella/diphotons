@@ -2,7 +2,7 @@
 
 from diphotons.Utils.pyrapp import *
 from optparse import OptionParser, make_option
-from copy import deepcopy as copy
+# from copy import deepcopy as copy
 import os, sys, glob, json
 
 import itertools
@@ -44,7 +44,7 @@ def divideMap(num,den):
             num[key] = 0.
     return None
 
-def makeMap(sels,coups,masses,cats=None):
+def makeMap(sels,coups,masses,cats=None,init=0.):
     ret = {}
     for sel in sels:
         ret[sel] = {}
@@ -52,9 +52,32 @@ def makeMap(sels,coups,masses,cats=None):
             ret[sel][coup] = {}
             if cats:
                 for cat in cats:
-                    ret[sel][coup][cat] = dict.fromkeys(masses,0.)
+                    ret[sel][coup][cat] = {} #dict.fromkeys(masses,deepcopy(init))
+                    for mass in masses: ret[sel][coup][cat][mass] = deepcopy(init)
             else:
-                ret[sel][coup] = dict.fromkeys(masses,0.)
+                ret[sel][coup] = {} # dict.fromkeys(masses,deepcopy(init))
+                for mass in masses: ret[sel][coup][mass] = deepcopy(init)
+        
+    return ret
+
+def averageMap(inp,cats=False):
+    ret = {}
+    for sel,vsel in inp.iteritems():
+        ret[sel] = {}
+        for coup,vcoup in vsel.iteritems():
+            ret[sel][coup] = {}
+            if cats:
+                for cat,vcat in vcoup.iteritems():
+                    ret[sel][coup][cat] = {} #dict.fromkeys(masses,deepcopy(init))
+                    for mass,val in vcat.iteritems(): 
+                        if val[1] == 0.: continue
+                        ret[sel][coup][cat][mass] = val[0]/val[1]
+            else:
+                ret[sel][coup] = {} # dict.fromkeys(masses,deepcopy(init))
+                for mass,val in vcoup.iteritems(): 
+                    if val[1] == 0.: continue
+                    ret[sel][coup][mass] = val[0]/val[1]
+        
     return ret
 
 def fitFunc(graph,func):
@@ -62,15 +85,22 @@ def fitFunc(graph,func):
     graph.Fit(func)
     return func.Clone()
 
-def addTo(dest,src,doCat=False):
+def addFloat(dest,key,val):
+    dest[key] += val
 
+def addWeighted(dest,key,val):
+    dest[key][0] += val[0]*val[1]
+    dest[key][1] += val[1]
+
+def addTo(dest,src,doCat=False,fnc=addFloat):
 
     dest =dest[src[0][1]]
     if doCat: 
         dest=dest[src[1]]
 
     key = src[0][0]
-    dest[key] += src[2]
+    ## dest[key] += src[2]
+    fnc(dest,key,src[2])
     
 
 
@@ -84,6 +114,8 @@ class SignalNorm(PlotApp):
                 make_option("--plot-xsections",action="store_true", dest="plot_xsections", 
                             default=False),
                 make_option("--plot-acceptance",action="store_true", dest="plot_acceptance", 
+                            default=False),
+                make_option("--plot-pdfs",action="store_true", dest="plot_pdfs", 
                             default=False),
                 make_option("--reco-file",action="store", dest="reco_file", type="string",
                             default=None),
@@ -120,6 +152,9 @@ class SignalNorm(PlotApp):
         if options.plot_acceptance:
             self.plotAcceptance()
 
+        if options.plot_pdfs:
+            self.plotPDFs()
+
         self.autosave()
         
     def loadXsections(self,inmap):
@@ -134,19 +169,27 @@ class SignalNorm(PlotApp):
         for name,val in self.xsections_.iteritems():
             val.Sort()
 
-    def getIntegrals(self,fin,sels):
+    def getIntegrals(self,fin,sels,hname="genmass",mean=False):
         folders = getObjects( getObjects( [fin], sels ), ["histograms"] )
         histograms = map(lambda x: (os.path.basename(os.path.dirname(x.GetPath())), 
-                                    filter(lambda y: "genmass" in y.GetName() and "Grav" in y.GetName(),  getObjects([x]))),
+                                    filter(lambda y: hname in y.GetName() and "Grav" in y.GetName(),  getObjects([x]))),
                          folders )
         
-        return map(lambda x: (x[0].replace("GenIso",""),map(lambda y: (self.getMassAndCoup(y.GetName()),self.getCategory(y.GetName()),y.Integral()), x[1])), histograms )
+        if mean: 
+            fnc = lambda x: ( x.GetMean(), x.Integral())
+        else:
+            fnc = lambda x: x.Integral()
+        return map(lambda x: (x[0].replace("GenIso",""),map(lambda y: (self.getMassAndCoup(y.GetName()),self.getCategory(y.GetName()),fnc(y)), x[1])), histograms )
 
 
     def getCategory(self,name):
         
-        cat = name.replace("genmass","").rsplit("_")[-1]
+        toks = name.replace("genmass","").rsplit("_")[-1].split("pdfWeight")
+        cat = toks[0]
         cat = self.remap_.get(cat,cat)
+        
+        if len(toks)>1:
+            cat = cat,toks[1]
         self.cats_.add(cat)
         
         return cat
@@ -238,6 +281,28 @@ class SignalNorm(PlotApp):
         return graphs
 
 
+    def plotPDFs(self):
+
+        reco_fin = self.open(self.options.reco_file)
+        reco_integrals=self.getIntegrals(reco_fin,["cic"],hname="pdfWeight",mean=True)
+
+        reco_sels   = set(map(lambda x: x[0], reco_integrals))
+
+        cat_reco = makeMap(reco_sels,self.coups_,self.masses_,self.cats_,init=[0.,0.])
+        reco = makeMap(reco_sels,self.coups_,self.masses_,init=[0.,0.])
+
+        map( lambda x: map(lambda y: (addTo(reco[x[0]],y,fnc=addWeighted), addTo(cat_reco[x[0]],y,True,fnc=addWeighted)), x[1]), reco_integrals  )
+
+        cat_reco = averageMap(cat_reco,True)
+        reco = averageMap(reco)
+        
+        pprint( cat_reco )
+        pprint( reco )
+        
+        ## pprint(reco_integrals)
+        ## print reco_sels
+        
+
     def plotAcceptance(self):
         gen_fin = self.open(self.options.gen_file)
         gen_integrals=self.getIntegrals(gen_fin,["genGenIso"])
@@ -254,18 +319,6 @@ class SignalNorm(PlotApp):
         cat_reco = makeMap(reco_sels,self.coups_,self.masses_,self.cats_)
         reco = makeMap(reco_sels,self.coups_,self.masses_)
         
-        ## cat_gen,gen = {},{}
-        ## for sel in gen_sels:
-        ##     cat_gen[sel] = {}
-        ##     gen[sel] = {}
-        ##     for coup in self.coups_:
-        ##         cat_gen[sel][coup] = {}
-        ##         gen[sel][coup] = {}
-        ##         for cat in self.cats_:
-        ##             cat_gen[sel][coup][cat] = dict.fromkeys(self.masses_,0.)
-        ##         gen[sel][coup] = dict.fromkeys(self.masses_,0.)
-        
-            
         map( lambda x: map(lambda y: (addTo(gen[x[0]],y), addTo(cat_gen[x[0]],y,True)), x[1]), gen_integrals  )
         map( lambda x: map(lambda y: (addTo(reco[x[0]],y), addTo(cat_reco[x[0]],y,True)), x[1]), reco_integrals  )
 

@@ -47,6 +47,8 @@ class LimitPlot(PlotApp):
                             default=True),
                 make_option("--toys-expected",action="store_false", dest="asimov_expected", 
                             ),
+                make_option("-n","--label",action="store", dest="label", 
+                            default=""),                
                 make_option("-M","--method",action="store", dest="method", 
                             default="Asymptotic"),                
                 make_option("-U","--unblind",action="store_true", dest="unblind", 
@@ -79,9 +81,9 @@ class LimitPlot(PlotApp):
 
         print options.couplings
         if len(options.couplings) == 0:
-            flist = glob.glob("%s/higgsCombine_k*.%s.root" % (options.input_dir, options.method) )
+            flist = glob.glob("%s/higgsCombine%s_k*.%s.root" % (options.input_dir, options.label, options.method) )
         else:
-            flist = [ "%s/higgsCombine_k%s.%s.root" % (options.input_dir, coup, options.method) for coup in options.couplings ]
+            flist = [ "%s/higgsCombine%s_k%s.%s.root" % (options.input_dir, options.label, coup, options.method) for coup in options.couplings ]
         print options.input_dir, flist
             
         tflist = {}
@@ -194,13 +196,13 @@ class LimitPlot(PlotApp):
         legend = ROOT.TLegend(0.5,0.6,0.8,0.75)
         kappa = "0."+coup[1:]
         observed.Draw("apl")
-        observed.GetYaxis().SetRangeUser(1e-3,0.55)
+        observed.GetYaxis().SetRangeUser(1e-5,0.55)
         observed.GetXaxis().SetRangeUser(450,5500)
         observed.GetXaxis().SetMoreLogLabels()
         
         ## xmin,xmax=observed.GetXaxis().GetXmin(),observed.GetXaxis().GetXmax()
         xmin,xmax=450,5500
-        spots = map(lambda x: (x,ROOT.RooStats.SignificanceToPValue(x)), xrange(1,3) )
+        spots = map(lambda x: (x,ROOT.RooStats.SignificanceToPValue(x)), xrange(1,5) )
         
         lines = map( lambda y: ROOT.TLine(xmin,y[1],xmax,y[1]), spots )
         map( lambda x: style_utils.apply(x,[["SetLineColor",ROOT.kGray+3],["SetLineStyle",7]]), lines )
