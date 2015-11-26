@@ -26,7 +26,7 @@
 #include "TVector.h"
 
 ClassImp(RooStarMomentMorph) 
-
+using namespace std;
 
 //_____________________________________________________________________________
 RooStarMomentMorph::RooStarMomentMorph() : 
