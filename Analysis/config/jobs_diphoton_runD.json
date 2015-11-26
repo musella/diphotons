@@ -5,11 +5,13 @@
 "/DoubleEG/musella-EXOSpring15_7415_v2-diphotons_7415_v2-v0-Run2015D-05Oct2015-v1-ba0c1079a609980e234efe191a650da5/USER",
 "/DoubleEG/musella-EXOSpring15_7415_v2-diphotons_7415_v2-v0-Run2015D-PromptReco-v4-727669f0d6ed6e3218a72cf291374285/USER",
 "/DoubleEG/musella-EXOSpring15_7415_v2-diphotons_7415_v2-v1-Run2015D-PromptReco-v4-727669f0d6ed6e3218a72cf291374285/USER",
-"/DoubleEG/musella-EXOSpring15_7415_v2-diphotons_7415_v2-v2-Run2015D-PromptReco-v4-727669f0d6ed6e3218a72cf291374285/USER"
+"/DoubleEG/musella-EXOSpring15_7415_v2-diphotons_7415_v2-v2-Run2015D-PromptReco-v4-727669f0d6ed6e3218a72cf291374285/USER",
+"/DoubleEG/musella-EXOSpring15_7415_v2-diphotons_7415_v2-v3-Run2015D-PromptReco-v4-65749015ae8003cc01dbb9ebd9c17125/USER",
+"/DoubleEG/musella-EXOSpring15_7415_v2-diphotons_7415_v2-v5-Run2015D-PromptReco-v4-65749015ae8003cc01dbb9ebd9c17125/USER"
 	    ]
 	},
 	
-	"cmdLine" : "campaign=EXOSpring15_7415_v2_38T selection=diphoton idversion=V2 lumiMask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Cert_246908-258750_13TeV_PromptReco_Collisions15_25ns_JSON_Silver.txt trigger=HLT_DoublePhoton60_v* ptLead=75 ptSublead=75 massCut=180"
+	"cmdLine" : "campaign=EXOSpring15_7415_v2_38T selection=diphoton idversion=V2 lumiMask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_Silver.txt trigger=HLT_DoublePhoton60_v* ptLead=75 ptSublead=75 massCut=230:320"
 
 
 }

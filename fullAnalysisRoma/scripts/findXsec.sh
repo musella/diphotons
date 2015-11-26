@@ -35,14 +35,14 @@ fi
 for dataset in $(cat datasets.txt); do
     echo "=====> $dataset"
     datatier=`echo $dataset | awk -F '/' '{print $4}'`
-    friendly_name=`echo $dataset | sed -e 's%/%_%g'`
+    friendly_name=$(whoami)/`echo $dataset | sed -e 's%/%_%g'`
 
-    if [ "${datatier}" != "AODSIM" ]; then
+    if [ "${datatier}" != "AODSIM" ] && [ "${datatier}" != "USER" ]; then
 	echo "You should run this on AODSIM"
 	continue;
     fi
 
-    aodfile=`das_client.py --limit=1 --query='file dataset='$dataset'' | sed '1,3d'`
+    aodfile=`das_client.py --limit=1 --query='file dataset='$dataset' instance=prod/phys03' | sed '1,3d'`
 
     [ -e /tmp/${friendly_name}_xsec.log ] && rm -rf /tmp/${friendly_name}_xsec.log
 
