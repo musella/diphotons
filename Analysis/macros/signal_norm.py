@@ -85,6 +85,8 @@ class SignalNorm(PlotApp):
                             default=False),
                 make_option("--plot-acceptance",action="store_true", dest="plot_acceptance", 
                             default=False),
+                make_option("--plot-param-acceptance",action="store", dest="plot_param_acceptance", type="string",
+                            default=None),
                 make_option("--reco-file",action="store", dest="reco_file", type="string",
                             default=None),
                 make_option("--gen-file",action="store", dest="gen_file", type="string",
@@ -120,6 +122,9 @@ class SignalNorm(PlotApp):
         if options.plot_acceptance:
             self.plotAcceptance()
 
+        if options.plot_param_acceptance:
+            self.plotParamAcceptance(options)
+            
         self.autosave()
         
     def loadXsections(self,inmap):
@@ -237,6 +242,45 @@ class SignalNorm(PlotApp):
                         graphs.append(graph)
         return graphs
 
+    def plotParamAcceptance(self,options):
+        
+        fin = self.open(options.plot_param_acceptance)
+        
+        ws = fin.Get("wtemplates")
+        
+        mG = ws.var("MH")
+        mG.SetTitle("m_{G}")
+        mG.setUnit("GeV")
+
+        kmpl = ws.var("kmpl")
+        
+        frame = mG.frame(500,4500,800)
+        coups = [0.01,0.1,0.2]
+        styles = [ [[RooFit.LineColor(ROOT.kBlue)],[RooFit.LineColor(ROOT.kBlue+2)],[RooFit.LineColor(ROOT.kBlue+4)]], 
+                   [[RooFit.LineColor(ROOT.kRed)],[RooFit.LineColor(ROOT.kRed+2)],[RooFit.LineColor(ROOT.kRed+4)]]
+                   ]
+        
+        cats = ["EBEB","EBEE"]
+        canv = ROOT.TCanvas("param_eff_acc","param_eff_acc")
+        leg = ROOT.TLegend(0.54,0.28,0.84,0.66)
+
+        for cat,cstyles in zip(cats,styles):
+            exA = ws.function("eff_acc_%s" % cat)
+            for coup,style in zip(coups,cstyles):
+                kmpl.setVal(coup)
+                print style
+                exA.plotOn(frame,*style)
+                obj = frame.getObject(int(frame.numItems()-1))
+                leg.AddEntry(obj,"%s #tilde{ #kappa }= %1.3g" % (cat,coup),"l")
+        
+        frame.GetYaxis().SetTitle("#varepsilon #times A")
+        frame.GetXaxis().SetNdivisions(505)
+        frame.Draw()
+        leg.Draw("same")
+        self.keep(leg,True)
+        self.format(canv,options.postproc)
+        self.keep([canv,frame])
+        self.autosave()
 
     def plotAcceptance(self):
         gen_fin = self.open(self.options.gen_file)

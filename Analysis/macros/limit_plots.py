@@ -5,6 +5,14 @@ from optparse import OptionParser, make_option
 from copy import deepcopy as copy
 import os, sys, glob, json
 
+from auto_plotter import getObjects
+
+def guessLabel(name):
+    if "EBEB" in name: return "EBEB"
+    elif "EBEE" in name: return "EBEE"
+    else: return "Combined"
+    
+
 def scaleGraph(graph,scale):
     graph = graph.Clone()
     graph.GetListOfFunctions().Clear()
@@ -43,6 +51,12 @@ class LimitPlot(PlotApp):
                             default=False),
                 make_option("--do-pvalues",action="store_true", dest="do_pvalues", 
                             default=False),
+                make_option("--do-comparison",action="store_true", dest="do_comparison", 
+                            default=False),
+                make_option("--compare-file","--compare-files",dest="compare_files",action="callback",type="string", callback=optpars_utils.ScratchAppend(str),
+                            default=[]),
+                make_option("--compare-label","--compare-labels",dest="compare_labels",action="callback",type="string", callback=optpars_utils.ScratchAppend(str),
+                            default=[]),
                 make_option("--asimov-expected",action="store_true", dest="asimov_expected", 
                             default=True),
                 make_option("--toys-expected",action="store_false", dest="asimov_expected", 
@@ -61,6 +75,8 @@ class LimitPlot(PlotApp):
                             default={}),                
                 make_option("--fixed-x-section",action="store", dest="fixed_x_section", type="float", 
                             default=None), 
+                make_option("--use-fb",dest="use_fb", action="store_true", 
+                            default=False), 
                 
             ])
         
@@ -78,6 +94,13 @@ class LimitPlot(PlotApp):
         ROOT.gROOT.LoadMacro( "$CMSSW_BASE/src/HiggsAnalysis/CombinedLimit/test/plotting/bandUtils.cxx+" )
         
         self.loadXsections(options.x_sections)
+
+        if options.do_comparison:
+            if len(options.compare_labels) > 0: assert( len(options.compare_labels) == len(options.compare_files) )
+            else: options.compare_labels = map(guessLabel, options.compare_files)
+            self.compare = map(lambda x: (getObjects([self.open(x[0])]),x[1]), zip(options.compare_files,options.compare_labels) )
+            self.plotComparisons(options)
+            return
 
         print options.couplings
         if len(options.couplings) == 0:
@@ -136,8 +159,9 @@ class LimitPlot(PlotApp):
         expected68 = ROOT.theBand( tfile, 1, 0, bandType, 0.68 )
         expected95 = ROOT.theBand( tfile, 1, 0, bandType, 0.95 )
         observed = ROOT.theBand( tfile, 1, 0, ROOT.Observed, 0.95 )
-        basicStyle = [["SetMarkerSize",1],["SetLineWidth",3],
-                       ["SetTitle",";M_{G} (GeV);95% C.L. limit #sigma(pp#rightarrow G#rightarrow#gamma#gamma) (pb)"]]
+        unit = "fb" if options.use_fb else "pb"
+        basicStyle = [["SetMarkerSize",0.6],["SetLineWidth",3],
+                       ["SetTitle",";M_{G} (GeV);95%% C.L. limit #sigma(pp#rightarrow G#rightarrow#gamma#gamma) (%s)" % unit]]
         commonStyle = [[self.scaleByXsec,coup],"Sort"]+basicStyle
         ## expectedStyle = commonStyle+[["SetMarkerStyle",ROOT.kOpenCircle]]
         expectedStyle = commonStyle+[["SetMarkerSize",0]]
@@ -166,12 +190,13 @@ class LimitPlot(PlotApp):
         legend.AddEntry(expected95," \pm 2 \sigma","f")
         if options.unblind:
             observed.Draw("PL")
+            ## observed.Draw("L")
             legend.AddEntry(observed,"Observed limit","l")
         if coup in self.xsections_:
             grav = self.xsections_[coup]
             style_utils.apply( grav, basicStyle+[["SetLineStyle",9],["colors",ROOT.myColorB2]] )
             grav.Draw("L")
-            legend.AddEntry(grav,"G_{RS}#rightarrow#gamma#gamma","l").SetLineStyle(0)
+            legend.AddEntry(grav,"G_{RS}#rightarrow#gamma#gamma (LO)","l").SetLineStyle(0)
             
         self.keep(legend,True)
         legend.Draw()
@@ -179,10 +204,66 @@ class LimitPlot(PlotApp):
         self.graphs.extend([observed,expected,expected68,expected95])
         
         self.keep( [canv,observed,expected,expected68,expected95] )
+        self.format(canv,options.postproc)
 
+    def plotComparisons(self,options):
+        ## if options.compare_expected:
+        ## observed = map(lambda x: (filter(lambda y: "observed" in y.GetName(), x[0]),x[1]), self.compare)
+        ## coups = set(map(lambda x: x.GetName().replace("observed_",""), reduce(lambda x,y: x+y, map(lambda z: z[0], observed), [])))
+        observed = map(lambda x: (filter(lambda y: "expected" in y.GetName(), x[0]),x[1]), self.compare)
+        ## coups = set(map(lambda x: x.GetName().replace("expected_",""), reduce(lambda x,y: x+y, map(lambda z: z[0], observed), [])))
+        coups = ["001","01","02"]
+        map(lambda x: self.plotComparison(options,x,observed), coups)
+
+    def plotComparison(self,options,coup,observed):
+        
+        cobserved = map(lambda x: (filter(lambda y: y.GetName().endswith("_%s" % coup), x[0])[0],x[1]), observed)
+        print cobserved
+        
+        styles = [ [["colors",ROOT.kBlue]], [["colors",ROOT.kOrange]], [["colors",ROOT.kGreen+1]] ]
+        map(lambda x: style_utils.apply(x[0],[["SetMarkerSize",0.5],["SetLineWidth",1]]+styles.pop(0)), cobserved)
+    
+        canv = ROOT.TCanvas("comparison_%s" % coup,"comparison_%s" % coup)
+        legend = ROOT.TLegend(0.55,0.51,0.85,0.76)
+        legend.SetFillStyle(0)
+        kappa = "0."+coup[1:]
+        legend.AddEntry(None,"#tilde{#kappa} = %s" % kappa,"")
+        
+        g0 = cobserved[0][0]
+        g0.Draw("apl")
+        for gr,nam in cobserved:
+            legend.AddEntry(gr,nam,"l")
+        for gr,nam in reversed(cobserved):
+            gr.Draw("pl")
+        legend.Draw("same")
+        
+        g0.GetXaxis().SetRangeUser(450,5000)
+        g0.GetXaxis().SetMoreLogLabels()
+        canv.SetLogx()
+        if options.do_pvalues:
+            canv.SetLogy()
+            g0.GetYaxis().SetRangeUser(1e-3,0.55)
+            self.drawLines(g0)
+        
+        self.keep([canv,legend])
+        self.format(canv,options.postproc)
+        
+    def drawLines(self,ref,xmin=450,xmax=5000):
+        
+        spots = filter(lambda x: x>ref.GetYaxis().GetXmin(),  map(lambda x: (x,ROOT.RooStats.SignificanceToPValue(x)), xrange(1,5) ) )
+        
+        lines = map( lambda y: ROOT.TLine(xmin,y[1],xmax,y[1]), spots )
+        map( lambda x: style_utils.apply(x,[["SetLineColor",ROOT.kGray+3],["SetLineStyle",7]]), lines )
+        
+        labels = map( lambda y: ROOT.TLatex(xmax*1.01,y[1]*0.9,"#color[%d]{%d #sigma}" % (ROOT.kGray+2,y[0])), spots )
+        map( lambda x: style_utils.apply(x,[["SetTextSize",0.05]]), labels )
+
+        map( lambda x: x.Draw("same"), lines+labels )
+        self.keep(lines+labels)
+        
     def plotPval(self,options,coup,tfile):
         observed = ROOT.theBand( tfile, 1, 0, ROOT.Observed, 0.95 )
-        basicStyle = [["SetMarkerSize",1],["SetLineWidth",3],
+        basicStyle = [["SetMarkerSize",0.6],["SetLineWidth",3],
                        ["SetTitle",";M_{G} (GeV);p_{0}"]]
         commonStyle = ["Sort"]+basicStyle
         observedStyle = commonStyle+[["SetMarkerStyle",ROOT.kFullCircle],["colors",ROOT.kBlue]]
@@ -194,15 +275,18 @@ class LimitPlot(PlotApp):
         canv.SetLogy()
         canv.SetLogx()
         legend = ROOT.TLegend(0.5,0.6,0.8,0.75)
+        legend.SetFillStyle(0)
         kappa = "0."+coup[1:]
         observed.Draw("apl")
-        observed.GetYaxis().SetRangeUser(1e-5,0.55)
-        observed.GetXaxis().SetRangeUser(450,5500)
+        ## observed.Draw("al")
+        ## observed.GetYaxis().SetRangeUser(1e-5,0.55)
+        observed.GetYaxis().SetRangeUser(1e-3,0.55)
+        observed.GetXaxis().SetRangeUser(450,5000)
         observed.GetXaxis().SetMoreLogLabels()
         
         ## xmin,xmax=observed.GetXaxis().GetXmin(),observed.GetXaxis().GetXmax()
-        xmin,xmax=450,5500
-        spots = map(lambda x: (x,ROOT.RooStats.SignificanceToPValue(x)), xrange(1,5) )
+        xmin,xmax=450,5000
+        spots = filter(lambda x: x>observed.GetYaxis().GetXmin(),  map(lambda x: (x,ROOT.RooStats.SignificanceToPValue(x)), xrange(1,5) ) )
         
         lines = map( lambda y: ROOT.TLine(xmin,y[1],xmax,y[1]), spots )
         map( lambda x: style_utils.apply(x,[["SetLineColor",ROOT.kGray+3],["SetLineStyle",7]]), lines )
@@ -222,10 +306,12 @@ class LimitPlot(PlotApp):
         self.graphs.extend([observed])
         
         self.keep( [canv,observed] )
+        self.format(canv,options.postproc)
 
     def scaleByXsec(self,graph,coup):
         if self.options.fixed_x_section:
             scale = self.options.fixed_x_section
+            if self.options.use_fb: scale *= 1e+3
         xvals = graph.GetX()
         yvals = graph.GetY()
         yerrl = graph.GetEYlow()
@@ -245,13 +331,14 @@ class LimitPlot(PlotApp):
         
     def loadXsections(self,inmap):
         self.xsections_ = {}
+        scl = 1e+3 if self.options.use_fb else 1.
         for name,val in inmap.iteritems():
             if name.startswith("RSGravToGG") or name.startswith("RSGravitonToGG"):
                 coup,mass = name.split("kMpl")[1].split("_Tune")[0].replace("_","").replace("-","").split("M")
                 mass = float(mass)
                 if not coup in self.xsections_:
                     self.xsections_[coup] = ROOT.TGraph()
-                self.xsections_[coup].SetPoint(self.xsections_[coup].GetN(),mass,val["xs"])
+                self.xsections_[coup].SetPoint(self.xsections_[coup].GetN(),mass,val["xs"]*scl)
         for name,val in self.xsections_.iteritems():
             val.Sort()
 

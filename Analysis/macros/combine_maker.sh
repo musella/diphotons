@@ -92,7 +92,6 @@ while [[ -n $1 ]]; do
 	    ;;
 	--fit-background)
 	    just_fit_bkg="1"
-	    shift
 	    ;;
 	*)
 	    opts="$opts $1"
@@ -164,12 +163,12 @@ echo "running model creation"
 echo "**************************************************************************************************************************"
 
 if [[ -z $just_fit_bkg ]]; then
+    ##--binned-data-in-datacard \
     ./combine_maker.py \
 	--fit-name $fitname  --luminosity $lumi  --lumi $lumi \
 	--fit-background \
 	--generate-signal \
 	--generate-datacard \
-	--binned-data-in-datacard \
 	--read-ws $input \
 	--ws-dir $workdir \
 	-O $www/$version/$workdir \

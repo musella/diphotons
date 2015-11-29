@@ -170,7 +170,7 @@
     "#" : "Fit definition                                                                                                       ",
     "#" : "---------------------------------------------------------------------------------------------------------------------",
 
-    "dataset_variables" : ["rho","nvtx","run","event"],     "#" :"list of variables to be put in the dataset (other than the template ones)",
+    "dataset_variables" : ["rho","nvtx","run","lumi","event"],     "#" :"list of variables to be put in the dataset (other than the template ones)",
     "weight_expression" : "weight",           "#" :"event weight expression  ",
 
     "#" : "List of aliases. Used to define variables/simplify expressions selection.",

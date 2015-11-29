@@ -479,7 +479,6 @@ if len(dumpBits) > 0:
             )
             
 
-
 from flashgg.Taggers.genDiphotonDumper_cfi import genDiphotonDumper
 cfgTools.addCategories(genDiphotonDumper,
                        [("EB","max(abs(leadingPhoton.eta),abs(subLeadingPhoton.eta))<1.4442",0),
