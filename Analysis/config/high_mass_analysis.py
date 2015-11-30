@@ -83,6 +83,11 @@ customize.options.register ('idversion',
                             VarParsing.VarParsing.multiplicity.singleton, # singleton or list
                             VarParsing.VarParsing.varType.string,          # string, int, or float
                             "idversion")
+customize.options.register ('applyEnergyCorrections',
+                            False, # default value
+                            VarParsing.VarParsing.multiplicity.singleton, # singleton or list
+                            VarParsing.VarParsing.varType.bool,          # string, int, or float
+                            "applyEnergyCorrections")
 customize.parse()
 
 applyEnergyCorrections=False
@@ -91,10 +96,10 @@ applySmearingCorrections=False
 from Configuration.AlCa.autoCond import autoCond
 if customize.options.processType == "data":
     process.GlobalTag = GlobalTag(process.GlobalTag, autoCond['run2_data'].replace("::All","") )
-    applyEnergyCorrections=True
+    applyEnergyCorrections=customize.applyEnergyCorrections
 else:
     process.GlobalTag = GlobalTag(process.GlobalTag, autoCond['run2_mc'].replace("::All",""))
-    applySmearingCorrections=True
+    applySmearingCorrections=customize.applyEnergyCorrections
 
 #
 # define minitrees and histograms
@@ -136,6 +141,17 @@ process.selectedJsets30 = cms.EDFilter("FlashggJetSelector",
                                      src=cms.InputTag("flashggUnpackedJets","0"),
                                      cut=cms.string("pt>30 && abs(eta)<2.5"),
                                 )
+
+process.genGravitons = cms.EDProducer("GenParticlePruner",
+                                    src = cms.InputTag("flashggPrunedGenParticles"),
+                                    select = cms.vstring("drop  *  ", # this is the default
+                                                         "keep pdgId = 5100039",
+                                                         )
+                                    )
+if "Grav" in customize.datasetName():
+    bookCandViewNtProducer(process,"genGr","genGravitons")
+    addGloabalFloat(diphotonDumper.globalVariables,process,"genGr","genVtxZ","vertex.z")
+
 
 ### process.selectedJsets = cms.EDFilter("CandPtrSelector",
 ###                                      src=cms.InputTag("flashggUnpackedJets"),
@@ -775,11 +791,11 @@ if not customize.lastAttempt:
         )
 
 
-### process.p = cms.Path(process.flashggUnpackedJets)
-### 
+process.p = cms.Path(process.genGr)
+
 ### process.out = cms.OutputModule("PoolOutputModule", 
 ###                                fileName = cms.untracked.string('diphotonsMicroAOD.root'),
-###                                outputCommands = cms.untracked.vstring("drop *","keep *_flashggUnpackedJets_*_*"),
+###                                outputCommands = cms.untracked.vstring("drop *","keep *_genGr_*_*", "keep *_genGravitons_*_*"),
 ###                                SelectEvents = cms.untracked.PSet(SelectEvents = cms.vstring('p')),
 ###                                )
 ### process.e = cms.EndPath(process.out)
