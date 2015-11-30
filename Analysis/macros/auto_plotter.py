@@ -206,13 +206,16 @@ class AutoPlot(PyRApp):
                             default="weight"),
                 make_option("--output",action="store", dest="output", type="string",
                             default="output.root"),
-                
+                make_option("--aliases",dest="aliases",action="callback",type="string",callback=optpars_utils.ScratchAppend(),
+                            default=[],
+                            help="List of aliases to be defined for each tree. They can be used for selection or variable definition"),
             ])
     
         global ROOT, style_utils, RooFit
         import ROOT
     
         self.histos = []
+        self.aliases = {}
 
     # -------------------------------------------------------------------------------------------------------
     def mkTreeHistos(self,folder,tree):
@@ -270,10 +273,20 @@ class AutoPlot(PyRApp):
         ret = self.destinations.get(origin,origin)
         return ret
     
+    def setAliases(self,tree):
+        for var,vdef in self.aliases.iteritems():
+            tree.SetAlias(var,vdef)
+
+        
     # -------------------------------------------------------------------------------------------------------
     def __call__(self,options,args):
         
         from flashgg.Taggers.dumperConfigTools import parseHistoDef
+
+        for alias in options.aliases:
+            name,vdef = [ t.lstrip(" ").rstrip(" ").lstrip("\t").rstrip("\t") for t in alias.split(":=",1) ]
+            self.aliases[name] = vdef
+
         self.histos = map( parseHistoDef, options.histograms )
         self.selection = options.cut
         self.weight = options.weight
@@ -296,6 +309,7 @@ class AutoPlot(PyRApp):
         trees = map(lambda x:  (x,getObjects([x],types=["TTree"])), inputs )
         if len(options.processes) > 0: 
             trees = map(lambda x: (x[0],filter(lambda y: matchAny(options.processes,y.GetName()),x[1])), trees )
+        map(lambda x: map(self.setAliases, x[1]), trees)
         # book output folders
         outputs = map( lambda x: (mktdir(output,os.path.join(self.getDestination(os.path.basename(os.path.dirname(x[0].GetPath()))),"histograms")), x[1]), trees  )
         # and histogras
