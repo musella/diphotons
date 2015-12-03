@@ -1,0 +1,13 @@
+{
+    "rootstyle_extra" : [
+    		  "TGaxis::SetMaxDigits(3);",
+		  "TH1::SetDefaultSumw2(1);",
+		  "lumiTextSize = 0.5; lumiTextOffset = 0.1; cmsTextSize = 0.6; relExtraDY = -0.4;",
+		  "lumi_13TeV.Clear();"
+    ],
+
+    "postproc" : {
+    	       "*" : [["addCmsLumi",[4,1,"Simulation"]]]
+	       }	
+    
+}

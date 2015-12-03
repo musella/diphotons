@@ -522,7 +522,7 @@ elif len(dumpBits) > 0:
         photonDumper.globalVariables.addTriggerBits = cms.PSet(
             tag=cms.InputTag("TriggerResults","","HLT"),bits=cms.vstring(dumpBits)
             )
-    
+            
 
 from flashgg.Taggers.genDiphotonDumper_cfi import genDiphotonDumper
 from flashgg.Taggers.globalVariables_cff import globalVariables

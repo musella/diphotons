@@ -92,7 +92,6 @@ while [[ -n $1 ]]; do
 	    ;;
 	--fit-background)
 	    just_fit_bkg="1"
-	    shift
 	    ;;
 	*)
 	    opts="$opts $1"
@@ -124,8 +123,9 @@ label="$shapes"
 input=${version}_${fitname}_final_ws.root
 input_log=${version}_${fitname}_final_ws.log
 treesdir=~musella/public/workspace/exo/
-ls $treesdir/$version
-[[ ! -d $treesdir/$version ]] && treesdir=$PWD
+## ls $treesdir/$version
+ls $treesdir/$input_folder
+[[ ! -d $treesdir/$input_folder ]] && treesdir=$PWD
 workdir=${version}_${fitname}_${label}_lumi_${lumi}
 
 if [[ -n $bias ]]; then
@@ -164,12 +164,12 @@ echo "running model creation"
 echo "**************************************************************************************************************************"
 
 if [[ -z $just_fit_bkg ]]; then
+    ##--binned-data-in-datacard \
     ./combine_maker.py \
 	--fit-name $fitname  --luminosity $lumi  --lumi $lumi \
 	--fit-background \
 	--generate-signal \
 	--generate-datacard \
-	--binned-data-in-datacard \
 	--read-ws $input \
 	--ws-dir $workdir \
 	-O $www/$version/$workdir \

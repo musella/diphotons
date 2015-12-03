@@ -170,7 +170,7 @@
     "#" : "Fit definition                                                                                                       ",
     "#" : "---------------------------------------------------------------------------------------------------------------------",
 
-    "dataset_variables" : ["rho","nvtx","run","event"],     "#" :"list of variables to be put in the dataset (other than the template ones)",
+    "dataset_variables" : ["rho","nvtx","run","lumi","event"],     "#" :"list of variables to be put in the dataset (other than the template ones)",
     "weight_expression" : "weight",           "#" :"event weight expression  ",
 
     "#" : "List of aliases. Used to define variables/simplify expressions selection.",
@@ -194,9 +194,14 @@
 				"subleadPhoIsoEE    := ((subleadPhoIso - rho*subleadPhoIsoEA) -0.003*subleadPt < -0.5 ) && !subleadIsEB",
                "leadPhoIsoEB    := ((leadPhoIso - rho*leadPhoIsoEA) -0.0045*leadPt < 0.25 ) && leadIsEB ",
 				"leadPhoIsoEE    := ((leadPhoIso - rho*leadPhoIsoEA) -0.003*leadPt < -0.5 )&& !leadIsEB",
-	       "mgg := mass",
-	       "mggEBEB := mass",
-               "mggEBEE := mass"    
+
+		"leadEcorr := (abs(leadScEta)<1 && leadR9>0.94)*(1./0.9988) + (abs(leadScEta)<1 && leadR9<=0.94)*(1./0.9954) + (abs(leadScEta)>=1 && abs(leadScEta)<1.5 && leadR9>0.94)*(1./1.0065) + (abs(leadScEta)>=1  && abs(leadScEta)<1.5 && leadR9<=0.94)*(1./0.9966) + (abs(leadScEta)>=1.5 && abs(leadScEta)<2 && leadR9>0.94)*(1./0.9953) + (abs(leadScEta)>=1.5  && abs(leadScEta)<2 && leadR9<=0.94)*(1./0.9863) + (abs(leadScEta)>=2 && abs(leadScEta)<3 && leadR9>0.94)*(1./0.9857) + (abs(leadScEta)>=2  && abs(leadScEta)<3 && leadR9<=0.94)*(1./0.9786)",
+               "subleadEcorr := (abs(subleadScEta)<1 && subleadR9>0.94)*(1./0.9988) + (abs(subleadScEta)<1 && subleadR9<=0.94)*(1./0.9954) + (abs(subleadScEta)>=1 && abs(subleadScEta)<1.5 && subleadR9>0.94)*(1./1.0065) + (abs(subleadScEta)>=1  && abs(subleadScEta)<1.5 && subleadR9<=0.94)*(1./0.9966) + (abs(subleadScEta)>=1.5 && abs(subleadScEta)<2 && subleadR9>0.94)*(1./0.9953) + (abs(subleadScEta)>=1.5  && abs(subleadScEta)<2 && subleadR9<=0.94)*(1./0.9863) + (abs(subleadScEta)>=2 && abs(subleadScEta)<3 && subleadR9>0.94)*(1./0.9857) + (abs(subleadScEta)>=2  && abs(subleadScEta)<3 && subleadR9<=0.94)*(1./0.9786)",
+               "massCorr := sqrt(leadEcorr*subleadEcorr)",
+
+	       "mgg := mass*massCorr",
+	       "mggEBEB := mass*massCorr",
+               "mggEBEE := mass*massCorr"    
 	       ],
 
     "rootstyle_extra" : [
