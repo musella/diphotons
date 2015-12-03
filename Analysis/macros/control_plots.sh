@@ -51,7 +51,7 @@ done
 ## echo $opts
 
 src=$1 && shift
-www=~/www/exo/spring15_7412
+www=~/www/exo/spring15_7415
 echo $1
 [ -n "$1" ] && www=$1 && shift
 

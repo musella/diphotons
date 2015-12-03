@@ -38,6 +38,6 @@
 
 	    },
 
-    "cmdLine" : "campaign=EXOSpring15_7412_v2_38T selection=photon idversion=V2 ptLead=75 ptSublead=75 trigger=HLT_Photon50_v*,HLT_Photon75_v*,HLT_Photon90_v*,HLT_Photon120_v*,HLT_Photon165_HE*"
+    "cmdLine" : "campaign=EXOSpring15_7415_v2_38T selection=photon idversion=V2 ptLead=75 ptSublead=75 trigger=HLT_Photon50_v*,HLT_Photon75_v*,HLT_Photon90_v*,HLT_Photon120_v*,HLT_Photon165_HE*"
 
 }
