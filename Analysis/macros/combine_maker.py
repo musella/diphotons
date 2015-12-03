@@ -91,6 +91,7 @@ class CombineApp(TemplatesApp):
                                     type="string",
                                     ## default=[230,240,250,260,270,280,290,300,310,320,330,340,360,370,390,400,410,420,440,460,500,1050],
                                     ## default=[132,230,1550],
+                                    ##default=[110,230,1605],
                                     default=[69,230,1610],
                                     ## default=[120,230,1610],
                                     ## default=[770,230,13000],
@@ -102,7 +103,8 @@ class CombineApp(TemplatesApp):
                                     ## type="string",default=[114,300,6000],
                                     ## type="string",default=[134,300,7000],
                                     type="string",default={ ##"EBEE": [100,330,1605], 
-                                                            "EBEE": [51,330,1605], 
+                                                            ## "EBEE": [36,330,1590], 
+                                                            "EBEE": [64,330,1610], 
                                                             ## [123,330,1560],
                                                             ## "EBEE": [330,340,350,360,370,390,410,420,440,460,500,1050],
                                                             ## "EBEE": [500,330,13000],
@@ -199,6 +201,7 @@ class CombineApp(TemplatesApp):
                                               "masses" : ## [500,505,506,510],
                                               list(np.concatenate((np.arange(500,750,2),np.arange(750,1000,2),np.arange(1000,1600,4),np.arange(1600,4500,100)))),
                                               ## [754, 756, 758, 760, 762],
+                                              ## [500, 750, 1000, 2000, 4000],
                                               #[756, 758, 760],
                                               ## np.concatenate((np.arange(500,750,2),np.arange(750,1000,2.5),np.arange(1000,1500,4),np.arange(1500,5000,50))),
                                               "interpolate_below" : 0,
@@ -410,7 +413,7 @@ class CombineApp(TemplatesApp):
             self.fitBackground(options,args)
             if options.run_ks_test:
                 self.runKSTest(options,args)
-            
+
         if options.generate_signal_dataset:
             if len(options.parametric_signal) > 0:
                 self.generateParametricSignal(options,args)

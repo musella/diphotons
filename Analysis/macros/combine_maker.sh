@@ -123,8 +123,9 @@ label="$shapes"
 input=${version}_${fitname}_final_ws.root
 input_log=${version}_${fitname}_final_ws.log
 treesdir=~musella/public/workspace/exo/
-ls $treesdir/$version
-[[ ! -d $treesdir/$version ]] && treesdir=$PWD
+## ls $treesdir/$version
+ls $treesdir/$input_folder
+[[ ! -d $treesdir/$input_folder ]] && treesdir=$PWD
 workdir=${version}_${fitname}_${label}_lumi_${lumi}
 
 if [[ -n $bias ]]; then
