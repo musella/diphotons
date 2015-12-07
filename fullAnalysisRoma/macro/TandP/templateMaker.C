@@ -7,8 +7,8 @@
 
 using namespace std;
 
-#define ptBinsEB 9
-#define ptBinsEE 7
+#define ptBinsEB 11
+#define ptBinsEE 9
 #define etaBinsEB 1
 #define etaBinsEE 1
 
@@ -17,10 +17,10 @@ void templateMaker::Loop()
 {
   if (fChain == 0) return;
 
-  float ptInfEB[ptBinsEB] = {20.,30.,40.,50.,60.,80.,110.,150.,250.};
-  float ptSupEB[ptBinsEB] = {30.,40.,50.,60.,80.,110.,150.,250.,500.};
-  float ptInfEE[ptBinsEE] = {20.,30.,40.,50.,60.,80.,110.};
-  float ptSupEE[ptBinsEE] = {30.,40.,50.,60.,80.,110.,500.};
+  float ptInfEB[ptBinsEB] = {20.,30.,40.,50.,60., 80.,110.,150.,200.,270.,350.};
+  float ptSupEB[ptBinsEB] = {30.,40.,50.,60.,80.,110.,150.,200.,270.,350.,500.};
+  float ptInfEE[ptBinsEE] = {20.,30.,40.,50.,60.,80., 110.,150.,200.};
+  float ptSupEE[ptBinsEE] = {30.,40.,50.,60.,80.,110.,150.,200.,500.};
 
   float etaInfEB[1] = {0.0};
   float etaSupEB[1] = {1.5};
@@ -60,17 +60,18 @@ void templateMaker::Loop()
     if (ientry < 0) break;
     nb = fChain->GetEntry(jentry);   nbytes += nb;
     if(jentry%10000==0) cout << jentry << endl;
-    
+
     // passed or not 
     bool passed = false;
     if (probe_fullsel) passed = true;
+    //if (probe_eleveto) passed = true;
 
     for (int ii=0; ii<ptBinsEB; ii++) {
       for (int jj=0; jj<etaBinsEB; jj++) {
 	if (probe_absEta>=etaInfEB[jj] && probe_absEta<=etaSupEB[jj]){ 
 	  if (probe_pt>=ptInfEB[ii] && probe_pt<=ptSupEB[ii]) { 
-	    if (passed) hMassEBpass[ii][jj]->Fill(mass);
-	    else hMassEBfail[ii][jj]->Fill(mass); 
+	    if (passed) hMassEBpass[ii][jj]->Fill(mass,pu_weight);            // chiara: signal samples have 1 weight only - use pu not to deal with too small numbers
+	    else hMassEBfail[ii][jj]->Fill(mass,pu_weight); 
 	  }
 	}
       }
@@ -80,15 +81,14 @@ void templateMaker::Loop()
       for (int jj=0; jj<etaBinsEE; jj++) {
 	if (probe_absEta>=etaInfEE[jj] && probe_absEta<=etaSupEE[jj]){ 
 	  if (probe_pt>=ptInfEE[ii] && probe_pt<=ptSupEE[ii]) { 
-	    if (passed) hMassEEpass[ii][jj]->Fill(mass);
-	    else hMassEEfail[ii][jj]->Fill(mass); 
+	    if (passed) hMassEEpass[ii][jj]->Fill(mass,pu_weight);
+	    else hMassEEfail[ii][jj]->Fill(mass,pu_weight); 
 	  }
 	}
       }
     }
 
   }  // Loop over entries
-    
 
 
   // saving histos

@@ -35,6 +35,7 @@ public :
    Int_t           probe_fullsel;
    Int_t           probe_matchMC;
    Int_t           probe_kSaturated;
+   Int_t           probe_eleveto;
    Float_t         mass;
    Float_t         massRaw;
    Float_t         xsecWeight;
@@ -54,6 +55,7 @@ public :
    TBranch        *b_probe_fullsel;   //!
    TBranch        *b_probe_matchMC;   //!
    TBranch        *b_probe_kSaturated;   //!
+   TBranch        *b_probe_eleveto;   //!
    TBranch        *b_mass;   //!
    TBranch        *b_massRaw;   //!
    TBranch        *b_xsecWeight;   //!
@@ -75,18 +77,21 @@ public :
 #ifdef templateMaker_cxx
 templateMaker::templateMaker(TTree *tree) : fChain(0) 
 {
-// if parameter tree is not specified (or zero), connect the file
-// used to generate this class and read the Tree.
-   if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/afs/cern.ch/work/c/crovelli/public/TaP_spring15_7412v2/formattedZ/Formatted_DYLL_all__161pb.root");
-      if (!f || !f->IsOpen()) {
-         f = new TFile("/afs/cern.ch/work/c/crovelli/public/TaP_spring15_7412v2/formattedZ/Formatted_DYLL_all__161pb.root");
-      }
-      TDirectory * dir = (TDirectory*)f->Get("/afs/cern.ch/work/c/crovelli/public/TaP_spring15_7412v2/formattedZ/Formatted_DYLL_all__161pb.root:/tnpAna");
-      dir->GetObject("TaPTree",tree);
-
-   }
-   Init(tree);
+  // if parameter tree is not specified (or zero), connect the file
+  // used to generate this class and read the Tree.
+  if (tree == 0) {
+    TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/afs/cern.ch/user/c/crovelli/myWorkspace/public/TaP_spring15_7415v2/topup/formattedZ/Formatted_DYLL_all__1pb.root");
+    //TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/afs/cern.ch/user/c/crovelli/myWorkspace/public/TaP_spring15_7415v2/topup/formattedZfake/Formatted_DYLL_all__1pb__forFakeRate.root"); 
+    if (!f || !f->IsOpen()) {
+      f = new TFile("/afs/cern.ch/user/c/crovelli/myWorkspace/public/TaP_spring15_7415v2/topup/formattedZ/Formatted_DYLL_all__1pb.root");
+      //f = new TFile("/afs/cern.ch/user/c/crovelli/myWorkspace/public/TaP_spring15_7415v2/topup/formattedZfake/Formatted_DYLL_all__1pb__forFakeRate.root");
+    }
+    TDirectory * dir = (TDirectory*)f->Get("/afs/cern.ch/user/c/crovelli/myWorkspace/public/TaP_spring15_7415v2/topup/formattedZ/Formatted_DYLL_all__1pb.root:/tnpAna");
+    //TDirectory * dir = (TDirectory*)f->Get("/afs/cern.ch/user/c/crovelli/myWorkspace/public/TaP_spring15_7415v2/topup/formattedZfake/Formatted_DYLL_all__1pb__forFakeRate.root:/tnpAna");
+    dir->GetObject("TaPTree",tree);
+    
+  }
+  Init(tree);
 }
 
 templateMaker::~templateMaker()
@@ -143,6 +148,7 @@ void templateMaker::Init(TTree *tree)
    fChain->SetBranchAddress("probe_fullsel", &probe_fullsel, &b_probe_fullsel);
    fChain->SetBranchAddress("probe_matchMC", &probe_matchMC, &b_probe_matchMC);
    fChain->SetBranchAddress("probe_kSaturated", &probe_kSaturated, &b_probe_kSaturated);
+   fChain->SetBranchAddress("probe_eleveto", &probe_eleveto, &b_probe_eleveto);
    fChain->SetBranchAddress("mass", &mass, &b_mass);
    fChain->SetBranchAddress("massRaw", &massRaw, &b_massRaw);
    fChain->SetBranchAddress("xsecWeight", &xsecWeight, &b_xsecWeight);
