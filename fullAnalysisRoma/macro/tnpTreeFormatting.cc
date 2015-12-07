@@ -3,6 +3,7 @@
 #include <TBranch.h>
 #include <TH1.h>
 #include <iostream>
+#include <vector>
 #include <TRandom.h>
 
 using namespace std;
@@ -135,6 +136,7 @@ void tnpTreeFormat(const char* filename, float lumiForW) {
   float probe_pt, probe_absEta;
   int probe_matchMC, probe_kSaturated;
   int probe_fullsel;
+  int probe_eleveto;
   float mass;
   float massRaw;
   float xsecWeight, weight;
@@ -156,6 +158,7 @@ void tnpTreeFormat(const char* filename, float lumiForW) {
     theTreeNew->Branch("probe_fullsel", &probe_fullsel, "probe_fullsel/I");
     theTreeNew->Branch("probe_matchMC",&probe_matchMC,"probe_matchMC/I");
     theTreeNew->Branch("probe_kSaturated",&probe_kSaturated,"probe_kSaturated/I");
+    theTreeNew->Branch("probe_eleveto",&probe_eleveto,"probe_eleveto/I");
     theTreeNew->Branch("mass", &mass, "mass/F");
     theTreeNew->Branch("massRaw", &massRaw, "massRaw/F");
     theTreeNew->Branch("xsecWeight", &xsecWeight, "xsecWeight/F");
@@ -178,8 +181,8 @@ void tnpTreeFormat(const char* filename, float lumiForW) {
       if (!electron_matchHLT->at(eleIndex->at(ii))) continue;   
       
       // further selection on probe
-      if (gamma_eleveto->at(gammaIndex->at(ii)))  continue;
-      //// if (!gamma_presel->at(gammaIndex->at(ii)))  continue;
+      if (gamma_eleveto->at(gammaIndex->at(ii)))  continue;       // nominal T&P
+      // if (!gamma_fullsel->at(gammaIndex->at(ii)))  continue;         // fake rate check  
 
       // match with mc-truth
       if (run==1){ 
@@ -243,6 +246,7 @@ void tnpTreeFormat(const char* filename, float lumiForW) {
       probe_fullsel = gamma_fullsel->at(gammaIndex->at(ii));  
       probe_matchMC = gamma_matchMC->at(gammaIndex->at(ii));
       probe_kSaturated = gamma_kSaturated->at(gammaIndex->at(ii));
+      probe_eleveto = gamma_eleveto->at(gammaIndex->at(ii));
 
       // weights
       if (run==1) {   // MC                                                                                                                   
