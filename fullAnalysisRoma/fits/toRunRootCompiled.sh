@@ -4,8 +4,8 @@ writeScript() {
 
     root -b<<EOF
 
-.L HighMassGGFitterCompiled.cc++ 
-runfits(1500,"01")
+.L HighMorphCompiled.cc++
+runfits("001")    
 
 .q
 EOF
