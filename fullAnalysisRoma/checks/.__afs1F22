@@ -1,0 +1,20 @@
+#! /bin/sh    
+
+root -l -b <<EOF
+.L checksFormatting.cc++
+
+signalModelFormat("dataCommon/output.root","kinGenIso","001","750","EBHighR9")
+signalModelFormat("dataCommon/output.root","kinGenIso","001","750","EBLowR9")
+signalModelFormat("dataCommon/output.root","kinGenIso","001","750","EEHighR9")
+signalModelFormat("dataCommon/output.root","kinGenIso","001","750","EELowR9")
+
+signalModelFormat("dataCommon/output.root","kinNonGenIso","001","750","EBHighR9")
+signalModelFormat("dataCommon/output.root","kinNonGenIso","001","750","EBLowR9")
+signalModelFormat("dataCommon/output.root","kinNonGenIso","001","750","EEHighR9")
+signalModelFormat("dataCommon/output.root","kinNonGenIso","001","750","EELowR9")
+
+.q
+
+EOF 
+
+echo "done"
