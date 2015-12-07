@@ -42,7 +42,8 @@ void MakeResolutionHisto(TString filename, bool newFile, int mass, TString coupl
   else theResoFile = new TFile(filename,"UPDATE");
   
   // Input file and tree
-  TString inDir = "../macro/allFiles/";
+  TString inDir = "../macro/allFilesWithResolAtZ/";
+  //TString inDir = "../macro/allFilesWithNoSmearing/";
   TChain* sigTree = new TChain();
   cout << "reading file " 
        << inDir+TString(Form("FormSigMod_kpl"))+coupling+TString(Form("_M%d.root/DiPhotonTree", mass)) << endl;
@@ -197,10 +198,11 @@ void ResolInterpolation(RooWorkspace* w, vector<int> masses) {
   cout << "now evaluating the morphing every 50GeV, from 500GeV to 5000GeV: doing mass " << endl;
 
 
-  // This is to have 10GeV steps between 500 and 1500 GeV
-  for (int iGenMass=0; iGenMass<100; iGenMass++) {    
-    int thisMass = 500 + iGenMass*10;
-    cout << "Fine scan: " << thisMass << endl;    
+  // This is to have 2GeV steps between 500 and 1000 GeV
+  for (int iGenMass=0; iGenMass<250; iGenMass++) {    
+    int thisMass = 500 + iGenMass*2;
+    cout << "Fine (2GeV) scan: " << thisMass << endl;    
+
     muRes->setVal(thisMass);
     for (int c=0; c<NCAT; ++c) {   
       TString myCut = "EBEB"; 
@@ -216,10 +218,11 @@ void ResolInterpolation(RooWorkspace* w, vector<int> masses) {
       w->import(*fittResolRDH);
     }   
   }
-  // Then 50GeV steps between 1500 and 5000 GeV
-  for (int iGenMass=0; iGenMass<71; iGenMass++) {    
-    int thisMass = 1500 + iGenMass*50;
-    cout << "Coarser scan: " << thisMass << endl;
+
+  // Then 4GeV steps between 1000 and 1600 GeV
+  for (int iGenMass=0; iGenMass<150; iGenMass++) {    
+    int thisMass = 1000 + iGenMass*4.;
+    cout << "Medium (4GeV) scan: " << thisMass << endl;
     muRes->setVal(thisMass);
     for (int c=0; c<NCAT; ++c) {   
       TString myCut = "EBEB"; 
@@ -235,6 +238,26 @@ void ResolInterpolation(RooWorkspace* w, vector<int> masses) {
       w->import(*fittResolRDH);
     }   
   }
+  // Then 100GeV steps between 1600 and 5000 GeV
+  for (int iGenMass=0; iGenMass<34; iGenMass++) {    
+    int thisMass = 1600 + iGenMass*100.;
+    cout << "Coarse (100GeV) scan: " << thisMass << endl;
+    muRes->setVal(thisMass);
+    for (int c=0; c<NCAT; ++c) {   
+      TString myCut = "EBEB"; 
+      if (c==1) myCut = "EBEE";  
+      RooDataHist *fittResolRDH; 
+      deltaM->setBins(600);       // chiara
+      if(c==0) fittResolRDH = morphResCat0->generateBinned(*deltaM,10000,kTRUE);
+      if(c==1) fittResolRDH = morphResCat1->generateBinned(*deltaM,10000,kTRUE);
+      fittResolRDH->Print();
+      TString myFitRDH = TString(Form("resolRDH_mass%d_cat",thisMass)+myCut);
+      fittResolRDH->SetTitle(myFitRDH);
+      fittResolRDH->SetName(myFitRDH);
+      w->import(*fittResolRDH);
+    }   
+  }
+  
 
 
   // Finally saving in a second rootfile
@@ -245,9 +268,9 @@ void ResolInterpolation(RooWorkspace* w, vector<int> masses) {
   cout << "Now salving the histos in a root file" << endl;
   TFile fileFittoRes("ResHistosGenOnlyScan.root","RECREATE");
   fileFittoRes.cd();
-
-  for (int iGenMass=0; iGenMass<100; iGenMass++) {    
-    int thisMass = 500 + iGenMass*10;
+  
+  for (int iGenMass=0; iGenMass<250; iGenMass++) {    
+    int thisMass = 500 + iGenMass*2;
     for (int c=0; c<NCAT; ++c) {
       TString myCut = "EBEB";
       if (c==1) myCut = "EBEE";
@@ -256,8 +279,18 @@ void ResolInterpolation(RooWorkspace* w, vector<int> masses) {
       RDH->Write();
     }
   }
-  for (int iGenMass=0; iGenMass<71; iGenMass++) {    
-    int thisMass = 1500 + iGenMass*50;
+  for (int iGenMass=0; iGenMass<150; iGenMass++) {    
+    int thisMass = 1000 + iGenMass*4.;
+    for (int c=0; c<NCAT; ++c) {
+      TString myCut = "EBEB";
+      if (c==1) myCut = "EBEE";
+      TString myFitRDH = TString(Form("resolRDH_mass%d_cat",thisMass)+myCut);
+      RooDataHist *RDH = (RooDataHist*)w->data(myFitRDH);
+      RDH->Write();
+    }
+  }
+  for (int iGenMass=0; iGenMass<34; iGenMass++) {    
+    int thisMass = 1600 + iGenMass*100.;
     for (int c=0; c<NCAT; ++c) {
       TString myCut = "EBEB";
       if (c==1) myCut = "EBEE";
@@ -392,7 +425,7 @@ void runfits() {
   cout << "--------------------------------------------------------------------------" << endl; 
   cout << endl;    
   cout << "Now some control plots" << endl; 
-  controlPlots();
+  //controlPlots();
 
   return;
 }

@@ -121,6 +121,7 @@ void ConvolutionFromRDH(RooWorkspace* w, Int_t mass, TString coupling) {
     TString myRDHA = TString(Form("resolRDH_mass%d_cat",mass)+myCut);     
     RooDataHist *resRDH = (RooDataHist*)fileRes->Get(myRDHA);    
     resRDH->Print(); 
+    //TString myRDHBa = TString(Form("intWidthRDH_mass%d_cat",mass)+myCut);   
     TString myRDHBa = TString(Form("widthRDH_mass%d_cat",mass)+myCut);   
     TString myRDHB = TString(Form(myRDHBa))+TString(Form("_kpl"))+TString(Form(coupling));
     RooDataHist *inwRDH = (RooDataHist*)fileInw->Get(myRDHB);   
@@ -179,6 +180,9 @@ void ConvolutionFromRDH(RooWorkspace* w, Int_t mass, TString coupling) {
     if (coupling=="001" && mass==1050 && c==1) convol->setBufferFraction(0.11);
     if (coupling=="001" && mass==3200 && c==1) convol->setBufferFraction(0.12);
     if (coupling=="001" && mass==4650 && c==1) convol->setBufferFraction(0.11);
+    if (coupling=="001" && mass==1540 && c==1) convol->setBufferFraction(0.11);
+    if (coupling=="001" && mass==1580 && c==1) convol->setBufferFraction(0.11);
+    if (coupling=="001" && mass==1592 && c==1) convol->setBufferFraction(0.11);
     // ad hoc corrections - end
     convol->SetTitle(myConvName);
     convol->SetName(myConvName);
@@ -301,7 +305,7 @@ void AddSigData(RooWorkspace* w, int mass, TString coupling) {
   RooArgSet* ntplVars = defineVariables();
 
   // Files
-  TString inDir = "../macro/allFiles/";  
+  TString inDir = "../macro/allFilesWithResolAtZ/";  
   TChain* sigTree = new TChain();
   cout << "reading file " 
        << inDir+TString(Form("FormSigMod_kpl"))+coupling+TString(Form("_M%d.root/DiPhotonTree", mass)) << endl;
@@ -639,21 +643,23 @@ void runfits(string coupling="01") {
     }
   } else {   // fast sim samples
 
-    for (int iGenMass=0; iGenMass<100; iGenMass++) {
-      int thisMass = 500 + iGenMass*10;
-      masses.push_back(thisMass); 
-    }
-    for (int iGenMass=0; iGenMass<71; iGenMass++) {
-      int thisMass = 1500 + iGenMass*50;
-      //// if (thisMass>=4900) continue;     // chiaraaaaaaaaaaaa
-      masses.push_back(thisMass); 
-    }
-
     /*
-    masses.push_back(4900);   
-    masses.push_back(4950);   
-    masses.push_back(5000);   
+    for (int iGenMass=0; iGenMass<250; iGenMass++) {
+      int thisMass = 500 + iGenMass*2;
+      masses.push_back(thisMass); 
+    }
     */
+    for (int iGenMass=0; iGenMass<150; iGenMass++) {
+      int thisMass = 1000 + iGenMass*4;
+      masses.push_back(thisMass); 
+    }
+    for (int iGenMass=0; iGenMass<34; iGenMass++) {
+      int thisMass = 1600 + iGenMass*100;
+
+      if (thisMass==4900 && coupling=="005") continue;
+      if (thisMass==4900 && coupling=="007") continue;
+      masses.push_back(thisMass); 
+    }
   }
 
   // loading data for the wanted coupling for control plots and make the roodatasets with minimal selection - full sim samples only

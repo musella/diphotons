@@ -263,10 +263,10 @@ void WidthInterpolation(RooWorkspace* w, vector<int> masses, string coupling, bo
   cout << endl;
   cout << "now evaluating the morphing every 50GeV, from 500GeV to 5000GeV: doing mass " << endl; 
 
-  // This is to have 10GeV steps between 500 and 1500 GeV 
-  for (int iGenMass=0; iGenMass<100; iGenMass++) {   
-    int thisMass = 500 + iGenMass*10;  
-    cout << "Fine scan: " << thisMass << endl;  
+  // This is to have 2GeV steps between 500 and 1000 GeV 
+  for (int iGenMass=0; iGenMass<250; iGenMass++) {  
+    int thisMass = 500 + iGenMass*2; 
+    cout << "Fine scan (2GeV): " << thisMass << endl;  
     muWidth->setVal(thisMass);
     for (int c=0; c<NCAT; ++c) {  
       TString myCut = "EBEB";  
@@ -292,10 +292,39 @@ void WidthInterpolation(RooWorkspace* w, vector<int> masses, string coupling, bo
       w->import(*fittWidthRDH);
     }
   }
-  // Then 50GeV steps between 1500 and 5000 GeV 
-  for (int iGenMass=0; iGenMass<71; iGenMass++) {   
-    int thisMass = 1500 + iGenMass*50;  
-    cout << "Coarse scan: " << thisMass << endl;  
+  // Then 4GeV steps between 1000 and 1600 GeV    
+  for (int iGenMass=0; iGenMass<150; iGenMass++) { 
+    int thisMass = 1000 + iGenMass*4.;  
+    cout << "Medium (4GeV) scan: " << thisMass << endl;  
+    muWidth->setVal(thisMass);
+    for (int c=0; c<NCAT; ++c) {  
+      TString myCut = "EBEB";  
+      if (c==1) myCut = "EBEE";  
+      RooDataHist *fittWidthRDH; 
+      if (coupling=="001") deltaMgen->setBins(70);
+      if (coupling=="005") deltaMgen->setBins(500);
+      if (coupling=="007") deltaMgen->setBins(700);
+      if (coupling=="01")  deltaMgen->setBins(1000);
+      if (coupling=="015") deltaMgen->setBins(2000);
+      if (coupling=="02")  deltaMgen->setBins(2500);
+      if (coupling=="025") deltaMgen->setBins(3000);
+      if (coupling=="03")  deltaMgen->setBins(4000);
+      if (coupling=="035") deltaMgen->setBins(5000);
+      if (coupling=="04")  deltaMgen->setBins(6000);
+      if(c==0) fittWidthRDH = morphWidthCat0->generateBinned(*deltaMgen,10000,kTRUE);   
+      if(c==1) fittWidthRDH = morphWidthCat1->generateBinned(*deltaMgen,10000,kTRUE);   
+      fittWidthRDH->Print();
+      TString myFitRDHa = TString::Format("widthRDH_mass%d_cat",thisMass)+myCut;    
+      TString myFitRDH  = myFitRDHa+"_kpl"+coupling;
+      fittWidthRDH->SetTitle(myFitRDH);  
+      fittWidthRDH->SetName(myFitRDH);  
+      w->import(*fittWidthRDH);
+    }
+  }
+  // Finally 10GeV steps between 1600 and 5000 GeV    
+  for (int iGenMass=0; iGenMass<34; iGenMass++) {  
+    int thisMass = 1600 + iGenMass*100.;   
+    cout << "Coarse (100GeV) scan: " << thisMass << endl; 
     muWidth->setVal(thisMass);
     for (int c=0; c<NCAT; ++c) {  
       TString myCut = "EBEB";  
@@ -333,9 +362,9 @@ void WidthInterpolation(RooWorkspace* w, vector<int> masses, string coupling, bo
   if (newfile) fileFittoWidth = new TFile("WidthHistosGenOnlyScan.root","RECREATE");  
   else fileFittoWidth = new TFile("WidthHistosGenOnlyScan.root","UPDATE");  
   fileFittoWidth->cd();
-
-  for (int iGenMass=0; iGenMass<100; iGenMass++) {   
-    int thisMass = 500 + iGenMass*10;  
+  
+  for (int iGenMass=0; iGenMass<250; iGenMass++) {   
+    int thisMass = 500 + iGenMass*2;  
     for (int c=0; c<NCAT; ++c) {    
       TString myCut = "EBEB";  
       if (c==1) myCut = "EBEE";  
@@ -345,8 +374,19 @@ void WidthInterpolation(RooWorkspace* w, vector<int> masses, string coupling, bo
       RDH->Write();     
     }
   }
-  for (int iGenMass=0; iGenMass<71; iGenMass++) {   
-    int thisMass = 1500 + iGenMass*50;  
+  for (int iGenMass=0; iGenMass<150; iGenMass++) {   
+    int thisMass = 1000 + iGenMass*4;  
+    for (int c=0; c<NCAT; ++c) {    
+      TString myCut = "EBEB";  
+      if (c==1) myCut = "EBEE";  
+      TString myFitRDHa = TString::Format("widthRDH_mass%d_cat",thisMass)+myCut;    
+      TString myFitRDH  = myFitRDHa+TString::Format("_kpl")+coupling;
+      RooDataHist *RDH = (RooDataHist*)w->data(myFitRDH);   
+      RDH->Write();     
+    }
+  }
+  for (int iGenMass=0; iGenMass<34; iGenMass++) {   
+    int thisMass = 1600 + iGenMass*100;  
     for (int c=0; c<NCAT; ++c) {    
       TString myCut = "EBEB";  
       if (c==1) myCut = "EBEE";  

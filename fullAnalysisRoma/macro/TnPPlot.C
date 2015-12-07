@@ -13,10 +13,13 @@
 #include <iostream>
 #endif
 
-enum samp { iWJets, iWW, iWZ, iZZ, iGJ, iGG, iQCD, iTT, iDY, nSamples };
+//enum samp { iWJets, iWW, iWZ, iZZ, iGJ, iGG, iQCD, iTT, iDY, nSamples };
+enum samp { iDY, nSamples };
 
-float xPos[nSamples+1] = {0.70,0.70,0.70,0.70,0.70,0.70,0.70,0.70,0.70,0.70};
-float yOff[nSamples+1] = {0,1,2,3,4,5,6,7,8,9};
+//float xPos[nSamples+1] = {0.70,0.70,0.70,0.70,0.70,0.70,0.70,0.70,0.70,0.70};
+//float yOff[nSamples+1] = {0,1,2,3,4,5,6,7,8,9};
+float xPos[nSamples+1] = {0.70,0.70};
+float yOff[nSamples+1] = {0,1};
 
 const Float_t _tsize   = 0.03;
 const Float_t _xoffset = 0.20;
@@ -136,26 +139,27 @@ public:
   void Draw(const int &rebin=1) {
     
     Color_t _sampleColor[nSamples];
-    _sampleColor[iDY  ]   = kBlue+1;
-    _sampleColor[iWJets ] = kViolet-9;
-    _sampleColor[iWW    ] = kGreen-9;
-    _sampleColor[iWZ   ]  = kAzure-9;
-    _sampleColor[iZZ   ]  = kOrange-9;
-    _sampleColor[iGJ   ]  = kPink-9;
-    _sampleColor[iGG   ]  = kGreen-5;
-    _sampleColor[iQCD  ]  = kYellow-9;
-    _sampleColor[iTT   ]  = kRed-9;
+    _sampleColor[iDY  ]   = kAzure-9;
+    //_sampleColor[iDY  ]   = kBlue+1;
+    //_sampleColor[iWJets ] = kViolet-9;
+    //_sampleColor[iWW    ] = kGreen-9;
+    //_sampleColor[iWZ   ]  = kAzure-9;
+    //_sampleColor[iZZ   ]  = kOrange-9;
+    //_sampleColor[iGJ   ]  = kPink-9;
+    //_sampleColor[iGG   ]  = kGreen-5;
+    //_sampleColor[iQCD  ]  = kYellow-9;
+    //_sampleColor[iTT   ]  = kRed-9;
 
     Color_t _lineColor[nSamples];
     _lineColor[iDY  ]  = kBlue+1;
-    _lineColor[iWJets] = kViolet;   
-    _lineColor[iWW   ] = kGreen;
-    _lineColor[iWZ  ]  = kAzure;
-    _lineColor[iZZ  ]  = kOrange;
-    _lineColor[iGJ  ]  = kPink;
-    _lineColor[iGG  ]  = kGreen+4;
-    _lineColor[iQCD ]  = kYellow;
-    _lineColor[iTT  ]  = kRed;
+    //_lineColor[iWJets] = kViolet;   
+    //_lineColor[iWW   ] = kGreen;
+    //_lineColor[iWZ  ]  = kAzure;
+    //_lineColor[iZZ  ]  = kOrange;
+    //_lineColor[iGJ  ]  = kPink;
+    //_lineColor[iGG  ]  = kGreen+4;
+    //_lineColor[iQCD ]  = kYellow;
+    //_lineColor[iTT  ]  = kRed;
     
     if(!gPad) new TCanvas();
     
@@ -208,7 +212,8 @@ public:
 	THStackAxisFonts(hstack, "y", "entries");
       } else {
 	THStackAxisFonts(hstack, "x", TString::Format("%s [%s]",_xLabel.Data(),_units.Data()));
-	THStackAxisFonts(hstack, "y", TString::Format("entries / %.0f %s", _hist[iWJets]->GetBinWidth(0),_units.Data()));
+	// THStackAxisFonts(hstack, "y", TString::Format("entries / %.0f %s", _hist[iWJets]->GetBinWidth(0),_units.Data()));
+	THStackAxisFonts(hstack, "y", TString::Format("entries / %.0f %s", _hist[iDY]->GetBinWidth(0),_units.Data()));
       }
     }
 
@@ -216,16 +221,17 @@ public:
     size_t j=0;
     if(_data        ) { DrawLegend(xPos[j], 0.75 - yOff[j]*_yoffset, _data,         " data",    "lp"); j++; }
     if(_hist[iDY   ]) { DrawLegend(xPos[j], 0.75 - yOff[j]*_yoffset, _hist[iDY  ],   "DY", "f" ); j++; }
-    if(_hist[iWJets]) { DrawLegend(xPos[j], 0.75 - yOff[j]*_yoffset, _hist[iWJets   ], " W+jets",      "f" ); j++; }
-    if(_hist[iWW])    { DrawLegend(xPos[j], 0.75 - yOff[j]*_yoffset, _hist[iWW],   " WW",  "f" ); j++; }
-    if(_hist[iWZ])    { DrawLegend(xPos[j], 0.75 - yOff[j]*_yoffset, _hist[iWZ],   " WZ",  "f" ); j++; }
-    if(_hist[iZZ])    { DrawLegend(xPos[j], 0.75 - yOff[j]*_yoffset, _hist[iZZ],   " ZZ",  "f" ); j++; }
-    if(_hist[iGJ])    { DrawLegend(xPos[j], 0.75 - yOff[j]*_yoffset, _hist[iGJ],   " g+jets",  "f" ); j++; }
-    if(_hist[iGG])    { DrawLegend(xPos[j], 0.75 - yOff[j]*_yoffset, _hist[iGG],   " gg+jets",  "f" ); j++; }
-    if(_hist[iQCD])   { DrawLegend(xPos[j], 0.75 - yOff[j]*_yoffset, _hist[iQCD],  " qcd",  "f" ); j++; }
-    if(_hist[iTT])    { DrawLegend(xPos[j], 0.75 - yOff[j]*_yoffset, _hist[iTT],   " ttjets",  "f" ); j++; }
+    //if(_hist[iWJets]) { DrawLegend(xPos[j], 0.75 - yOff[j]*_yoffset, _hist[iWJets   ], " W+jets",      "f" ); j++; }
+    //if(_hist[iWW])    { DrawLegend(xPos[j], 0.75 - yOff[j]*_yoffset, _hist[iWW],   " WW",  "f" ); j++; }
+    //if(_hist[iWZ])    { DrawLegend(xPos[j], 0.75 - yOff[j]*_yoffset, _hist[iWZ],   " WZ",  "f" ); j++; }
+    //if(_hist[iZZ])    { DrawLegend(xPos[j], 0.75 - yOff[j]*_yoffset, _hist[iZZ],   " ZZ",  "f" ); j++; }
+    //if(_hist[iGJ])    { DrawLegend(xPos[j], 0.75 - yOff[j]*_yoffset, _hist[iGJ],   " g+jets",  "f" ); j++; }
+    //if(_hist[iGG])    { DrawLegend(xPos[j], 0.75 - yOff[j]*_yoffset, _hist[iGG],   " gg+jets",  "f" ); j++; }
+    //if(_hist[iQCD])   { DrawLegend(xPos[j], 0.75 - yOff[j]*_yoffset, _hist[iQCD],  " qcd",  "f" ); j++; }
+    //if(_hist[iTT])    { DrawLegend(xPos[j], 0.75 - yOff[j]*_yoffset, _hist[iTT],   " ttjets",  "f" ); j++; }
 
-    TLatex* luminosity = new TLatex(0.86, 0.495, TString::Format("L = %.1f pb^{-1}",_lumi));
+    TLatex* luminosity = new TLatex(0.86, 0.620, TString::Format("L = %.1f pb^{-1}",_lumi));
+    //TLatex* luminosity = new TLatex(0.86, 0.620, TString::Format("L = 2.4 fb^{-1}"));
     luminosity->SetNDC();
     luminosity->SetTextAlign(32);
     luminosity->SetTextFont(42);

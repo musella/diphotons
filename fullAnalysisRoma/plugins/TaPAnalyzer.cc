@@ -123,6 +123,7 @@ private:
   float  pu_n;
   float sumDataset;
   float perEveW;
+  int numGenLevel;
 
   float t1pfmet;
   
@@ -241,6 +242,9 @@ void TaPAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
   // # Vertices
   nvtx = primaryVertices->size(); 
   
+  // number of generated electrons
+  numGenLevel = 0;
+
   // Energy density
   rho    = *(objs_rho.product());
   // float rhoEle = *(objs_rhoEle.product());    // EA correction for electrons - chiara: non nelle ntuple
@@ -376,6 +380,8 @@ void TaPAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 
 
       // Gen level match
+      bool genEleFound = false;
+      bool genPosFound = false;
       TLorentzVector myGenEle(0,0,0,0);  
       TLorentzVector myGenPos(0,0,0,0);  
       if (sampleID>0 && sampleID<10000) {   
@@ -388,11 +394,17 @@ void TaPAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 		float ptgen  = genParticles->ptrAt( genLoop )->pt();
 		float etagen = genParticles->ptrAt( genLoop )->eta();
 		float phigen = genParticles->ptrAt( genLoop )->phi();
-		if (pdgid==11)  myGenPos.SetPtEtaPhiM(ptgen, etagen, phigen, 0.);
-		if (pdgid==-11) myGenEle.SetPtEtaPhiM(ptgen, etagen, phigen, 0.);
+		if (pdgid==11)  {
+		  myGenPos.SetPtEtaPhiM(ptgen, etagen, phigen, 0.);
+		  genPosFound = true;
+		}
+		if (pdgid==-11) {
+		  myGenEle.SetPtEtaPhiM(ptgen, etagen, phigen, 0.);
+		  genEleFound = true;
+		}
+		numGenLevel++;
 	      }}}}
       }
-
       
       // ----------------------------------------------------  
       // 3) at least one tag candidate
@@ -446,8 +458,8 @@ void TaPAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 	  // Match with MC truth
 	  bool matchMC = false; 
 	  if (sampleID>0 && sampleID<10000) {  
-	    if(thisRecoEle.DeltaR(myGenEle)<0.3) matchMC = true;  
-	    if(thisRecoEle.DeltaR(myGenPos)<0.3) matchMC = true;  
+	    if(genEleFound && thisRecoEle.DeltaR(myGenEle)<0.3) matchMC = true;  
+	    if(genPosFound && thisRecoEle.DeltaR(myGenPos)<0.3) matchMC = true;  
 	  }
 
 	  // ID
@@ -539,8 +551,8 @@ void TaPAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 	  TLorentzVector thisRecoGamma(0,0,0,0);
 	  thisRecoGamma.SetPtEtaPhiM(pt,eta,phi,0);
 	  if (sampleID>0 && sampleID<10000) {  
-	    if(thisRecoGamma.DeltaR(myGenEle)<0.3) matchMC = true;  
-	    if(thisRecoGamma.DeltaR(myGenPos)<0.3) matchMC = true;  
+	    if(genEleFound && thisRecoGamma.DeltaR(myGenEle)<0.3) matchMC = true;  
+	    if(genPosFound && thisRecoGamma.DeltaR(myGenPos)<0.3) matchMC = true;  
 	  }
 
 	  // preselection
@@ -708,6 +720,7 @@ void TaPAnalyzer::bookOutputTree()
     outTree_->Branch("pu_n", &pu_n, "pu_n/F");
     outTree_->Branch("sumDataset", &sumDataset, "sumDataset/F");
     outTree_->Branch("perEveW", &perEveW, "perEveW/F");
+    outTree_->Branch("numGenLevel", &numGenLevel, "numGenLevel/I");
 
     outTree_->Branch("t1pfmet", &t1pfmet, "t1pfmet/F");
 

@@ -19,10 +19,10 @@ const double ptBinHalfWidthEB[nPtBinsEB] = { 5.,  5.,  5.,  5., 10., 15.,  20., 
 const TString etaLimitsStringArrayEB[nEtaBins] = { "0. < |#eta| < 1.4442" };
 
 // EE
-const int nPtBinsEE = 9;
-const double ptBinLimitsEE[nPtBinsEE+1]  = {20., 30., 40., 50., 60., 80., 110., 150., 200., 500.};
-const double ptBinCentersEE[nPtBinsEE]   = {25., 35., 45., 55., 70., 95., 130., 175., 350.};
-const double ptBinHalfWidthEE[nPtBinsEE] = { 5.,  5.,  5.,  5., 10., 15.,  20.,  25., 150.};
+const int nPtBinsEE = 10;
+const double ptBinLimitsEE[nPtBinsEE+1]  = {20., 30., 40., 50., 60., 80.,  105.,  140., 180., 250., 500.};
+const double ptBinCentersEE[nPtBinsEE]   = {25., 35., 45., 55., 70., 92.5, 122.5, 160., 215., 375.};
+const double ptBinHalfWidthEE[nPtBinsEE] = { 5.,  5.,  5.,  5., 10., 12.5, 17.5,   20.,  35., 125.};
 const TString etaLimitsStringArrayEE[nEtaBins] = { "1.566 < |#eta| < 2.5" };
 
 
@@ -30,135 +30,79 @@ const TString etaLimitsStringArrayEE[nEtaBins] = { "1.566 < |#eta| < 2.5" };
 // Data efficiencies and statistical errors
 double dataEB[nEtaBins][nPtBinsEB] = {
   { 
-    8.14784e-01, 8.63670e-01 , 8.92883e-01, 8.93278e-01, 8.88792e-01, 8.99810e-01, 8.93464e-01, 8.93338e-01, 9.22840e-01, 9.24046e-01, 9.26053e-01
+    9.64248e-02, 8.46439e-02, 7.86777e-02, 7.97509e-02, 7.74308e-02, 7.62234e-02, 7.29922e-02, 7.68911e-02, 5.79410e-02, 7.59770e-02 , 4.64477e-02
   }
 };
 
 double dataEE[nEtaBins][nPtBinsEE] = {
   { 
-    6.91538e-01, 7.57889e-01, 7.98537e-01, 8.09125e-01, 8.29769e-01, 8.50851e-01, 8.68422e-01, 8.79020e-01, 9.19384e-01
+    1.89705e-01, 1.79365e-01, 1.73145e-01, 1.64579e-01, 1.70300e-01, 1.50223e-01, 1.68517e-01, 1.86414e-01, 1.34606e-01, 1.32030e-01
   }
 };
 
 // statistical only errors 
 double dataErrStatEB[nEtaBins][nPtBinsEB] = {
   { 
-    2.03773e-03, 7.25389e-04, 5.28764e-04, 1.28216e-03, 2.42247e-03, 4.93865e-03, 7.87431e-03, 1.13276e-02, 1.59638e-02, 2.77824e-02, 5.31681e-02
+    1.27854e-03, 5.97950e-04, 4.37001e-04, 1.06132e-03, 1.45938e-03, 3.51554e-03, 5.41978e-03, 8.13871e-03, 1.08557e-02, 2.30611e-02, 4.30591e-02
   }
 };
 
 double dataErrStatEE[nEtaBins][nPtBinsEE] = {
   { 
-    2.74125e-03, 1.40759e-03, 1.28101e-03, 3.08376e-03, 5.69046e-03, 1.01103e-02, 1.70185e-02, 2.63264e-02, 2.66311e-02
+    2.21425e-03, 1.06163e-03, 1.10949e-03, 2.86260e-03, 5.04743e-03, 9.95471e-03, 1.44762e-02, 2.40547e-02, 3.36653e-02, 5.05220e-02
   }
 };
 
-
-// ----------------------------------------
-// alternative fit changing the signal model and keeping nominal background
-double dataSystSigEB[nEtaBins][nPtBinsEB] = {
-  { 
-    8.15170e-01, 8.60076e-01, 8.93184e-01, 8.96896e-01, 8.96205e-01, 9.11385e-01, 8.92919e-01, 9.04949e-01, 9.32198e-01, 9.30125e-01, 8.47152e-01 
-  }
-};
-
-double dataSystSigEE[nEtaBins][nPtBinsEE] = {
-  { 
-    7.05637e-01, 7.57202e-01, 7.96266e-01, 8.06905e-01, 8.37237e-01, 8.60022e-01, 8.50684e-01, 8.91316e-01, 9.03238e-01 
-  }
-};
-
-
-// ----------------------------------------
-// alternative fit changing the background model and keeping nominal signal
-double dataSystBackEB[nEtaBins][nPtBinsEB] = {
-  { 
-    8.23609e-01, 8.64064e-01, 8.90442e-01, 8.90713e-01, 8.94145e-01, 8.96122e-01, 9.05821e-01, 8.92899e-01, 9.22727e-01, 9.24031e-01, 8.68644e-01 
-  }
-};
-
-double dataSystBackEE[nEtaBins][nPtBinsEE] = {
-  { 
-    6.91353e-01, 7.66270e-01, 7.98943e-01, 8.05622e-01, 8.21131e-01, 8.26827e-01, 8.97592e-01, 9.24601e-01, 9.17364e-01
-  }
-};
-  
 
 // ----------------------------------------
 // MC efficiencies and errors - C&C
 double mcEB[nEtaBins][nPtBinsEB] = {
   { 
-    0.82562, 0.874696, 0.90277, 0.903433, 0.902497, 0.904019, 0.9104, 0.908949, 0.913793, 0.904762, 0.885932
+    0.0584838, 0.050945, 0.0487157, 0.0501778, 0.0475708, 0.0466449, 0.0533911, 0.0446743, 0.0434292, 0.0645161, 0.0127119
   }
 };
 
 double mcEE[nEtaBins][nPtBinsEE] = {
   { 
-    0.695045, 0.761412, 0.797101, 0.819717, 0.832361, 0.851242, 0.860569, 0.867294, 0.958333
+    0.176548, 0.166628, 0.159936, 0.156196, 0.151863, 0.145293, 0.144914, 0.14578, 0.131849, 0.146226
   }
 };
 
 // statistical only errors 
 double mcErrEB[nEtaBins][nPtBinsEB] = {
   { 
-    0.00065036, 0.000376655, 0.000327907, 0.000620222, 0.000906508, 0.00168081,  0.00271831, 0.00443906, 0.00682152, 0.012784, 0.0216047
+    0.000430203, 0.000260834, 0.000244765, 0.000470677, 0.000669679, 0.00124076, 0.00219222, 0.00330397, 0.00515281, 0.0110362, 0.00960293
   }
 };
 
 double mcErrEE[nEtaBins][nPtBinsEE] = {
   { 
-    0.00112741, 0.000851825, 0.000830018, 0.00152089, 0.0021914, 0.0039127, 0.0066184, 0.0115489, 0.0130177
+    0.0011496, 0.000779501, 0.000776887, 0.00145779, 0.0021261, 0.00409174, 0.00628131, 0.0107858, 0.0149308, 0.0267305 
   }
 };
 
 
-void drawResults(){
+void drawResultsFakeRate(){
 
-  // Syst error: take the max difference
-  double dataSystErrEB[nEtaBins][nPtBinsEB];
-  for (int ii=0; ii<nPtBinsEB; ii++ ) {
-    if ( fabs(dataEB[0][ii]-dataSystSigEB[0][ii]) > fabs(dataEB[0][ii]-dataSystBackEB[0][ii]) ) dataSystErrEB[0][ii] = fabs(dataEB[0][ii]-dataSystSigEB[0][ii]);
-    else dataSystErrEB[0][ii] = fabs(dataEB[0][ii]-dataSystBackEB[0][ii]);
-  }
-
-  double dataSystErrEE[nEtaBins][nPtBinsEE];
-  for (int ii=0; ii<nPtBinsEE; ii++ ) {
-    if ( fabs(dataEE[0][ii]-dataSystSigEE[0][ii]) > fabs(dataEE[0][ii]-dataSystBackEE[0][ii]) ) dataSystErrEE[0][ii] = fabs(dataEE[0][ii]-dataSystSigEE[0][ii]);
-    else dataSystErrEE[0][ii] = fabs(dataEE[0][ii]-dataSystBackEE[0][ii]);
-  }
-
-  // Tot error: stat + syst
+  cout << "only statistical error" << endl;
   double dataErrEB[nEtaBins][nPtBinsEB];
   double dataErrEE[nEtaBins][nPtBinsEE];
-
-  if (wantSyst) {
-    cout << "systematics added" << endl;
-    for (int ii=0; ii<nPtBinsEB; ii++ ) {
-      dataErrEB[0][ii] = sqrt( dataSystErrEB[0][ii]*dataSystErrEB[0][ii] + dataErrStatEB[0][ii]*dataErrStatEB[0][ii] );
-    }
-    for (int ii=0; ii<nPtBinsEE; ii++ ) {
-      dataErrEE[0][ii] = sqrt( dataSystErrEE[0][ii]*dataSystErrEE[0][ii] + dataErrStatEE[0][ii]*dataErrStatEE[0][ii] );
-    }
-  } else {
-    cout << "only statistical error" << endl;
-    for (int ii=0; ii<nPtBinsEB; ii++ ) {
-      dataErrEB[0][ii] = dataErrStatEB[0][ii];
-    }
-    for (int ii=0; ii<nPtBinsEE; ii++ ) {
-      dataErrEE[0][ii] = dataErrStatEE[0][ii];
-    }
+  for (int ii=0; ii<nPtBinsEB; ii++ ) {
+    dataErrEB[0][ii] = dataErrStatEB[0][ii];
   }
+  for (int ii=0; ii<nPtBinsEE; ii++ ) {
+    dataErrEE[0][ii] = dataErrStatEE[0][ii];
+  }
+
 
   cout << "================================" << endl;
   cout << "EB" << endl;
   for (int ii=0; ii<nPtBinsEB; ii++ ) 
-    cout << ii << ", nominal = " << dataEB[0][ii] << ", forSigSyst = " << dataSystSigEB[0][ii] << ", forBkgSyst = " << dataSystBackEB[0][ii] 
-	 << ", statErr = " << dataErrStatEB[0][ii] << ", systErr = " <<dataSystErrEB[0][ii] << endl; 
+    cout << ii << ", nominal = " << dataEB[0][ii] << ", statErr = " << dataErrStatEB[0][ii] << endl;
   cout << "================================" << endl;
   cout << "EE" << endl;
   for (int ii=0; ii<nPtBinsEE; ii++ ) 
-    cout << ii << ", nominal = " << dataEE[0][ii] << ", forSigSyst = " << dataSystSigEE[0][ii] << ", forBkgSyst = " << dataSystBackEE[0][ii] 
-	 << ", statErr = " << dataErrStatEE[0][ii] << ", systErr = " <<dataSystErrEE[0][ii] << endl; 
+    cout << ii << ", nominal = " << dataEE[0][ii] << ", statErr = " << dataErrStatEE[0][ii] << endl;
   cout << "================================" << endl;
   
 
@@ -198,7 +142,7 @@ void drawResults(){
   // Draw all canvases
   for(int ieta = 0; ieta<nEtaBins; ieta++){
 
-    TString cname = "sfEff_";
+    TString cname = "sfFakeRate_";
     TCanvas *c1 = new TCanvas(cname, cname, 10,10,700,700);
     c1->SetFillColor(kWhite);
     c1->Draw();
@@ -264,47 +208,47 @@ void drawResults(){
     grDataEE->SetMarkerSize(1.);
 
     int ci = TColor::GetColor("#99ccff");
-    grMcEB->SetFillColor(kGreen-8);
+    grMcEB->SetFillColor(kPink-8);
     ci = TColor::GetColor("#3399ff");
-    grMcEB->SetLineColor(kGreen+4);
+    grMcEB->SetLineColor(kPink+4);
     grMcEB->SetMarkerStyle(22);
-    grMcEB->SetMarkerColor(kGreen+4);
+    grMcEB->SetMarkerColor(kPink+4);
     grMcEB->SetMarkerSize(1.);
 
     ci = TColor::GetColor("#99ccff");
-    grMcEE->SetFillColor(kGreen-8);
+    grMcEE->SetFillColor(kPink-8);
     ci = TColor::GetColor("#3399ff");
-    grMcEE->SetLineColor(kGreen+4);
+    grMcEE->SetLineColor(kPink+4);
     grMcEE->SetMarkerStyle(22);
-    grMcEE->SetMarkerColor(kGreen+4);
+    grMcEE->SetMarkerColor(kPink+4);
     grMcEE->SetMarkerSize(1.);
 
     ci = TColor::GetColor("#99ccff");
-    grSfEB->SetFillColor(kGreen-8);
+    grSfEB->SetFillColor(kPink-8);
     ci = TColor::GetColor("#3399ff");
-    grSfEB->SetLineColor(kGreen+4);
+    grSfEB->SetLineColor(kPink+4);
     grSfEB->SetMarkerStyle(20);
-    grSfEB->SetMarkerColor(kGreen+4);
+    grSfEB->SetMarkerColor(kPink+4);
     grSfEB->SetMarkerSize(1.);
 
     ci = TColor::GetColor("#99ccff");
-    grSfEE->SetFillColor(kGreen-8);
+    grSfEE->SetFillColor(kPink-8);
     ci = TColor::GetColor("#3399ff");
-    grSfEE->SetLineColor(kGreen+4);
+    grSfEE->SetLineColor(kPink+4);
     grSfEE->SetMarkerStyle(20);
-    grSfEE->SetMarkerColor(kGreen+4);
+    grSfEE->SetMarkerColor(kPink+4);
     grSfEE->SetMarkerSize(1.);
 
     // Create and configure the dummy histograms on which to draw the graphs
-    TH2F *h1 = new TH2F("dummy1","", 100, 0, 500, 100, 0.6, 1.1);
-    h1->GetYaxis()->SetTitle("Efficiency");
+    TH2F *h1 = new TH2F("dummy1","", 100, 0, 500, 100, 0., 0.3);
+    h1->GetYaxis()->SetTitle("Fake rate");
     h1->SetStats(0);
     h1->GetXaxis()->SetLabelSize(0);
     h1->GetXaxis()->SetNdivisions(505);
     h1->GetXaxis()->SetDecimals();
     h1->GetYaxis()->SetTitleOffset(0.8);
     h1->GetYaxis()->SetTitleSize(0.05);
-    TH2F *h2 = new TH2F("dummy2","", 100, 0, 500, 100, 0.8, 1.2);
+    TH2F *h2 = new TH2F("dummy2","", 100, 0, 500, 100, 0.2, 2.2);
     h2->GetXaxis()->SetTitle("p_{T} [GeV]");
     h2->GetYaxis()->SetTitle("Scale Factor");
     h2->GetXaxis()->SetTitleOffset(1.0);
@@ -317,7 +261,7 @@ void drawResults(){
     h2->GetYaxis()->SetDecimals();
     h2->SetStats(0);
 
-    TLegend *leg = new TLegend(0.65,0.1,0.9,0.25);
+    TLegend *leg = new TLegend(0.65,0.5,0.9,0.75);
     leg->SetFillColor(kWhite);
     leg->SetFillStyle(0);
     leg->SetBorderSize(0);
@@ -349,6 +293,7 @@ void drawResults(){
     // Save into a file
     TString fname = cname;
     fname += "_EB.pdf";
+    //fname += "_EB.png";
     c1->Print(fname);
 
     // --------------------------------------
@@ -370,6 +315,7 @@ void drawResults(){
     // Save into a file
     fname = cname;
     fname += "_EE.pdf";
+    //fname += "_EE.png";
     c1->Print(fname);
   }
 
