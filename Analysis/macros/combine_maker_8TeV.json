@@ -1,0 +1,15 @@
+{
+	"observables" : { "EBEB_8TeV" : "mgg8TeV[3400,300,10000]" },
+	"plot_binning" : [130,300,1600],
+	"rootstyle_extra" : [
+    		  "TGaxis::SetMaxDigits(3);",
+		  "TH1::SetDefaultSumw2(1);",
+		  "lumiTextSize = 0.5; lumiTextOffset = 0.55; cmsTextSize = 0.6; relExtraDY = -0.6;"
+		 ],
+		  
+	"sqrt" : "8TeV",
+	 "postproc" : {
+               "*" : [["addCmsLumi",[2,1,"Preliminary"]]]
+               }
+
+}
