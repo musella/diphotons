@@ -1,0 +1,18 @@
+{
+    "acc_EBEB_8TeV_p0": [
+        0.20617, 
+	0,0
+    ], 
+    "acc_EBEB_8TeV_p1": [
+        0.000313583,
+	0,0
+    ], 
+    "acc_EBEB_8TeV_p2": [
+        -5.40727e-08,
+	0, 0
+    ], 
+    "egm_avg_reco_eff_EBEB_8TeV": [
+        1, 
+        0, 0
+    ]
+}

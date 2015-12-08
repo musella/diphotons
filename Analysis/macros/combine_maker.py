@@ -209,6 +209,7 @@ class CombineApp(TemplatesApp):
                                               "pdfs"    : { #"001" : {"EBEB" : "MorphCatEBEB_kpl001", "EBEE" : "MorphCatEBEE_kpl001" },
                                                             #"01" : {"EBEB" : "MorphCatEBEB_kpl01", "EBEE" : "MorphCatEBEE_kpl01" },
                                                             "001" : {"EBEB" : "ConvolutionRhPdf_catEBEB_mass%1.5g_kpl001", 
+                                                                     "EBEB_8TeV" : "ConvolutionRhPdf_catEBEB_mass%1.5g_kpl001",
                                                                     "EBEE" : "ConvolutionRhPdf_catEBEE_mass%1.5g_kpl001" },
                                                             "005" : {"EBEB" : "ConvolutionRhPdf_catEBEB_mass%1.5g_kpl005", 
                                                                     "EBEE" : "ConvolutionRhPdf_catEBEE_mass%1.5g_kpl005" },
@@ -298,8 +299,9 @@ class CombineApp(TemplatesApp):
                         make_option("--bias-func",dest="bias_func",action="callback",callback=optpars_utils.Load(scratch=True),
                                     type="string",
                                     default={ "EBEB_dijet_230_10000" : "((0.06*((x/600.)^-4))+1e-6)/3.",
+                                              "EBEB_8TeV_dijet_300_10000" : "((0.06*((x/600.)^-4))+1e-6)/6.",
                                               "EBEE_dijet_330_10000" : "((0.1*((x/600.)^-5)))/3.",
-                                              } ,
+                                              },
                                     help="Bias as a function of diphoton mass to compute the bias uncertainty values inside the datacard",
                                     ),
                         make_option("--fwhm-input-file",dest="fwhm_input_file",action="callback",callback=optpars_utils.Load(scratch=True),
@@ -2007,7 +2009,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             
         selection = fit["selection"]
         exAs = {}
-        for cat in options.fits[options.fit_name]["categories"]:
+        categories = options.fits[options.fit_name]["categories"]
+        for cat in categories:
             accparams = map(lambda x: options.parametric_signal_acceptance["acc_%s_p%d" % (cat,x)], xrange(0,3) )
             effparams = options.parametric_signal_acceptance["%s_avg_reco_eff_%s" % (selection,cat) ]
             acc_coeffs = ROOT.RooArgList()
@@ -2057,6 +2060,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 ## print mass
                 missing = False
                 for cat,name in pdfs.iteritems():
+                    if not cat in categories: continue
                     if mass: name = name % mass
                     pdf = workspace.pdf(name)
                     if not pdf: missing = True
@@ -2085,7 +2089,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 if not signame in fit["shape_unc"]:
                     fit["shape_unc"][signame] = {}
                     
-                for cat,name in pdfs.iteritems():
+                for cat,name in pdfs.iteritems():                    
+                    if not cat in categories: continue
                     if mass: name = name % mass
                     pdf = workspace.pdf(name)
                     obsIn = workspace.var(options.parametric_signal_source.get("obs","mgg"))

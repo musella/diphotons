@@ -508,7 +508,7 @@ class PlotApp(PyRApp):
             else:
                 nam = self.template_ % { "name" : name, "cat" : cat, "sample" : s }
                 h = sfin.Get(nam)
-                if not hgr:
+                if not h:
                     raise IOError("Could not read %s from %s" % (nam, str(sfin)) )
                 if h.IsA().InheritsFrom("TH1"):
                     h.GetXaxis().SetTitle(  h.GetXaxis().GetTitle().replace("@"," ") )

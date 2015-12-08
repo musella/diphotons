@@ -539,13 +539,15 @@ class TemplatesApp(PlotApp):
             
             ## prepare data
             dataTrees = self.prepareTrees("data",selection,options.verbose,"Data trees")
-            self.buildRooDataSet(dataTrees,"data",name,fit,categories,fulllist,weight,preselection,storeTrees)
+            weightexpr = self.aliases_.get(weight,None)
+            self.buildRooDataSet(dataTrees,"data",name,fit,categories,fulllist,weight if weightexpr != "1" else "1",preselection,storeTrees)
             for cat in categories.keys():
                 print "dataset - %s" % (cat), self.rooData("data_%s_%s" % (name,cat) ).sumEntries()
                 print "number of entries data - %s" % (cat), self.rooData("data_%s_%s" % (name,cat) ).numEntries()
           ## prepare mc
             if not options.prep_data:
                 mcTrees =  self.prepareTrees("mc",selection,options.verbose,"MC trees")
+                
                 self.buildRooDataSet(mcTrees,"mc",name,fit,categories,fulllist,weight,preselection,storeTrees)
           
           ## prepare signal
@@ -1124,6 +1126,7 @@ class TemplatesApp(PlotApp):
                         twei = wei.GetTitle() % {"leg" : leg}
                         ## this will actually discard all events with weight 0 
                         ##   or outside of the range of any variable in fulllist
+                        print twei
                         filler.fillFromTree(tree,twei)
             
             # restore variables definition
@@ -1151,6 +1154,7 @@ class TemplatesApp(PlotApp):
         
         ## read trees for given selection
         allTrees = self.getTreesForSelection(name,selection)
+        if not allTrees: return None
         for cat,trees in allTrees.iteritems():
             treePaths = []
             ## set aliases
@@ -1170,6 +1174,8 @@ class TemplatesApp(PlotApp):
         """ Load trees used for datasets definition.
         """ 
         ret = {}
+        
+        if not dataset in self.datasets_ or not self.datasets_[dataset]: return None
         
         ## keep track of already loaded datasets
         key = "%s:%s" % ( dataset, selection ) 
