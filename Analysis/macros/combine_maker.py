@@ -199,7 +199,8 @@ class CombineApp(TemplatesApp):
                                               ## "shift" : True,
                                               ## "masses" : [10,500,5000],
                                               "masses" : ## [500,505,506,510],
-                                              list(np.concatenate((np.arange(500,750,2),np.arange(750,1000,2),np.arange(1000,1600,4),np.arange(1600,4500,100)))),
+                                              ## list(np.concatenate((np.arange(500,750,2),np.arange(750,1000,2),np.arange(1000,1600,4),np.arange(1600,4500,100)))),
+                                              list(np.concatenate((np.arange(750,1000,2),np.arange(1000,1600,4),np.arange(1600,4500,100)))),
                                               ## [754, 756, 758, 760, 762],
                                               ## [500, 750, 1000, 2000, 4000],
                                               #[756, 758, 760],
@@ -209,7 +210,7 @@ class CombineApp(TemplatesApp):
                                               "pdfs"    : { #"001" : {"EBEB" : "MorphCatEBEB_kpl001", "EBEE" : "MorphCatEBEE_kpl001" },
                                                             #"01" : {"EBEB" : "MorphCatEBEB_kpl01", "EBEE" : "MorphCatEBEE_kpl01" },
                                                             "001" : {"EBEB" : "ConvolutionRhPdf_catEBEB_mass%1.5g_kpl001", 
-                                                                     "EBEB_8TeV" : "ConvolutionRhPdf_catEBEB_mass%1.5g_kpl001",
+                                                                     "EBEB_8TeV" : "ConvolutionRhPdf_mass%1.5g_kpl001",
                                                                     "EBEE" : "ConvolutionRhPdf_catEBEE_mass%1.5g_kpl001" },
                                                             "005" : {"EBEB" : "ConvolutionRhPdf_catEBEB_mass%1.5g_kpl005", 
                                                                     "EBEE" : "ConvolutionRhPdf_catEBEE_mass%1.5g_kpl005" },
@@ -631,14 +632,24 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             # normalization nuisances
             datacard.write("lumi  lnN".ljust(20))
             for cat in categories:
-                datacard.write(" 1.10".ljust(15) )
+                datacard.write(" 1.06".ljust(15) )
                 for comp in options.components:
                     datacard.write(" -".ljust(15) )
+            for cat in sidebands:                
+                for comp in  fit["sidebands"][cat]:                    
+                    datacard.write(" -".ljust(15) )
+            datacard.write("\n")
+
             datacard.write("eff  lnN".ljust(20))
             for cat in categories:
                 datacard.write(" 1.10".ljust(15) )
                 for comp in options.components:
                     datacard.write(" -".ljust(15) )
+            for cat in sidebands:                
+                for comp in  fit["sidebands"][cat]:                    
+                    datacard.write(" -".ljust(15) )
+            datacard.write("\n")
+
             datacard.write("PDFs  lnN".ljust(20))
             for cat in categories:
                 datacard.write(" 1.06".ljust(15) )
