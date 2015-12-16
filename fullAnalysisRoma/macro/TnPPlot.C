@@ -18,12 +18,13 @@ enum samp { iDY, nSamples };
 
 //float xPos[nSamples+1] = {0.70,0.70,0.70,0.70,0.70,0.70,0.70,0.70,0.70,0.70};
 //float yOff[nSamples+1] = {0,1,2,3,4,5,6,7,8,9};
-float xPos[nSamples+1] = {0.70,0.70};
+float xPos[nSamples+1] = {0.65,0.65};
 float yOff[nSamples+1] = {0,1};
 
-const Float_t _tsize   = 0.03;
+//const Float_t _tsize   = 0.03;
+const Float_t _tsize   = 0.04;
 const Float_t _xoffset = 0.20;
-const Float_t _yoffset = 0.05;
+const Float_t _yoffset = 0.08;
 
 
 //------------------------------------------------------------------------------
@@ -87,24 +88,25 @@ void DrawLegend(Float_t x1,
 		Float_t y1,
 		TH1F*   hist,
 		TString label,
-		TString option)
+		TString option,
+		TString title="")
 {
   TLegend* legend = new TLegend(x1,
 				y1,
 				x1 + _xoffset,
-				y1 + _yoffset);
+				y1 + _yoffset,
+				title);
   
   legend->SetBorderSize(     0);
   legend->SetFillColor (     0);
   legend->SetTextAlign (    12);
   legend->SetTextFont  (    42);
   legend->SetTextSize  (_tsize);
-  
+ 
   legend->AddEntry(hist, label.Data(), option.Data());
   
   legend->Draw();
 }
-
 
 class TnPPlot {
   
@@ -162,7 +164,7 @@ public:
     //_lineColor[iTT  ]  = kRed;
     
     if(!gPad) new TCanvas();
-    
+
     THStack* hstack = new THStack();
     for (int i=0; i<nSamples; i++) {
 
@@ -184,7 +186,7 @@ public:
     hstack->Draw("hist");
     if(_data) _data->Draw("ep,same");
     
-    hstack->SetTitle("CMS preliminary");  
+    //hstack->SetTitle("CMS preliminary");  
     
     Float_t theMax = hstack->GetMaximum();
     Float_t theMin = hstack->GetMinimum();
@@ -203,24 +205,26 @@ public:
     }
     
     if(_breakdown) {
-      THStackAxisFonts(hstack, "y", "entries");
+      THStackAxisFonts(hstack, "y", "Events");
       hstack->GetHistogram()->LabelsOption("v");
     } else {
-      THStackAxisFonts(hstack, "x", TString::Format("%s [%s]",_xLabel.Data(),_units.Data()));
+      THStackAxisFonts(hstack, "x", TString::Format("%s (%s)",_xLabel.Data(),_units.Data()));
       if(_units.Sizeof() == 1) {
 	THStackAxisFonts(hstack, "x", _xLabel.Data());
-	THStackAxisFonts(hstack, "y", "entries");
+	THStackAxisFonts(hstack, "y", "Events");
       } else {
-	THStackAxisFonts(hstack, "x", TString::Format("%s [%s]",_xLabel.Data(),_units.Data()));
+	THStackAxisFonts(hstack, "x", TString::Format("%s (%s)",_xLabel.Data(),_units.Data()));
 	// THStackAxisFonts(hstack, "y", TString::Format("entries / %.0f %s", _hist[iWJets]->GetBinWidth(0),_units.Data()));
-	THStackAxisFonts(hstack, "y", TString::Format("entries / %.0f %s", _hist[iDY]->GetBinWidth(0),_units.Data()));
+	//THStackAxisFonts(hstack, "y", TString::Format("Events / %.0f %s", _hist[iDY]->GetBinWidth(0),_units.Data()));
+	THStackAxisFonts(hstack, "y", TString::Format("Events / (%.0f %s)", _hist[iDY]->GetBinWidth(0),_units.Data()));
       }
     }
 
     // total mess to get it nice, should be redone
     size_t j=0;
-    if(_data        ) { DrawLegend(xPos[j], 0.75 - yOff[j]*_yoffset, _data,         " data",    "lp"); j++; }
-    if(_hist[iDY   ]) { DrawLegend(xPos[j], 0.75 - yOff[j]*_yoffset, _hist[iDY  ],   "DY", "f" ); j++; }
+    if(_data        ) { DrawLegend(xPos[j], 0.75 - yOff[j]*_yoffset, _data,         " data",    "lp", "Z #rightarrow ee"); j++; }
+    if(_hist[iDY   ]) { DrawLegend(xPos[j], 0.75 - yOff[j]*_yoffset, _hist[iDY  ],   "simulation", "f" ); j++; }
+    //if(_hist[iDY   ]) { DrawLegend(xPos[j], 0.75 - yOff[j]*_yoffset, _hist[iDY  ],   "DY", "f" ); j++; }
     //if(_hist[iWJets]) { DrawLegend(xPos[j], 0.75 - yOff[j]*_yoffset, _hist[iWJets   ], " W+jets",      "f" ); j++; }
     //if(_hist[iWW])    { DrawLegend(xPos[j], 0.75 - yOff[j]*_yoffset, _hist[iWW],   " WW",  "f" ); j++; }
     //if(_hist[iWZ])    { DrawLegend(xPos[j], 0.75 - yOff[j]*_yoffset, _hist[iWZ],   " WZ",  "f" ); j++; }
@@ -230,6 +234,7 @@ public:
     //if(_hist[iQCD])   { DrawLegend(xPos[j], 0.75 - yOff[j]*_yoffset, _hist[iQCD],  " qcd",  "f" ); j++; }
     //if(_hist[iTT])    { DrawLegend(xPos[j], 0.75 - yOff[j]*_yoffset, _hist[iTT],   " ttjets",  "f" ); j++; }
 
+    /*
     TLatex* luminosity = new TLatex(0.86, 0.620, TString::Format("L = %.1f pb^{-1}",_lumi));
     //TLatex* luminosity = new TLatex(0.86, 0.620, TString::Format("L = 2.4 fb^{-1}"));
     luminosity->SetNDC();
@@ -237,6 +242,7 @@ public:
     luminosity->SetTextFont(42);
     luminosity->SetTextSize(_tsize);
     luminosity->Draw("same");
+    */
   }
 
   void setLumi(const float &l) { _lumi = l; }
