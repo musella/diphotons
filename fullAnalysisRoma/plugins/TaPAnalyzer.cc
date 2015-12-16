@@ -575,8 +575,8 @@ void TaPAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 	  // full selection
 	  bool passFullSelel = isGammaSelected( rho, pt, scEta, R9noZS, chIso, neuIso, phoIso, HoE, sieienoZS, eleVeto, isKsaturated); 
 	  
-	  if(passPresel)
-	    atLeastOneProbe = true;
+	  if(1) atLeastOneProbe = true;      
+	  //if(passPresel)  atLeastOneProbe = true;      // chiaraaaaaaaaaaaa
 	  
 	  gamma_pt.push_back(pt);
 	  gamma_eta.push_back(scEta);
