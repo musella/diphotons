@@ -136,6 +136,7 @@ void tnpTreeFormat(const char* filename, float lumiForW) {
   float probe_pt, probe_absEta;
   int probe_matchMC, probe_kSaturated;
   int probe_fullsel;
+  int probe_totsel;
   int probe_eleveto;
   float mass;
   float massRaw;
@@ -156,6 +157,7 @@ void tnpTreeFormat(const char* filename, float lumiForW) {
     theTreeNew->Branch("probe_pt",&probe_pt,"probe_pt/F");
     theTreeNew->Branch("probe_absEta",&probe_absEta,"probe_absEta/F");
     theTreeNew->Branch("probe_fullsel", &probe_fullsel, "probe_fullsel/I");
+    theTreeNew->Branch("probe_totsel", &probe_totsel, "probe_totsel/I");
     theTreeNew->Branch("probe_matchMC",&probe_matchMC,"probe_matchMC/I");
     theTreeNew->Branch("probe_kSaturated",&probe_kSaturated,"probe_kSaturated/I");
     theTreeNew->Branch("probe_eleveto",&probe_eleveto,"probe_eleveto/I");
@@ -197,10 +199,6 @@ void tnpTreeFormat(const char* filename, float lumiForW) {
       float smearEBhighEta    = 0.0189895;
       float smearEElowEta     = 0.027686;
       float smearEEhighEta    = 0.031312;
-      float smearEBlowEtaErr  = 0.000153567;
-      float smearEBhighEtaErr = 0.000518756;
-      float smearEElowEtaErr  = 0.000445363;
-      float smearEEhighEtaErr = 0.000372622;
       float theGaussMean      = 1.;
       float theFirstSmear = 0.;
       if (fabs(electron_eta->at(eleIndex->at(ii)))<1) theFirstSmear = smearEBlowEta;
@@ -215,9 +213,7 @@ void tnpTreeFormat(const char* filename, float lumiForW) {
       float theGaussSigma = 0.5 * sqrt (theFirstSmear*theFirstSmear + theSecondSmear*theSecondSmear);
       float fromGauss = myRandom.Gaus(theGaussMean,theGaussSigma);
       mass = mass*fromGauss;
-      */
 
-      /*
       // Just for check: scale correction for data
       float scaleEBlowEta  = 2./(0.99544 + 0.99882);
       float scaleEBhighEta = 2./(0.99662 + 1.0065);
@@ -236,6 +232,7 @@ void tnpTreeFormat(const char* filename, float lumiForW) {
       mass = sqrt(theFirstScale*theSecondScale)*mass;
       */
 
+
       // now making flat tree
       massRaw = (float)(invMassRaw->at(ii));
       tag_absEta = fabs(electron_eta->at(eleIndex->at(ii)));
@@ -244,6 +241,7 @@ void tnpTreeFormat(const char* filename, float lumiForW) {
       probe_pt = gamma_pt->at(gammaIndex->at(ii));
       probe_absEta  = fabs(gamma_eta->at(gammaIndex->at(ii)));
       probe_fullsel = gamma_fullsel->at(gammaIndex->at(ii));  
+      probe_totsel = gamma_fullsel->at(gammaIndex->at(ii)) && gamma_presel->at(gammaIndex->at(ii)); 
       probe_matchMC = gamma_matchMC->at(gammaIndex->at(ii));
       probe_kSaturated = gamma_kSaturated->at(gammaIndex->at(ii));
       probe_eleveto = gamma_eleveto->at(gammaIndex->at(ii));
