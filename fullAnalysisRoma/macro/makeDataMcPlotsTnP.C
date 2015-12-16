@@ -8,7 +8,8 @@
 #include "TCanvas.h"
 #include "TLegend.h"
 #include "TPaveText.h"
-#include "./TnPPlot.C"
+#include "TnPPlot.C"
+#include "CMS_lumi.C"
 
 #include <iostream>
 
@@ -24,6 +25,8 @@ void makeDataMcPlotsTnP(float lumi, bool blindData=false)
   gStyle->SetOptStat(0); 
   gStyle->SetOptFit(111110); 
   gStyle->SetOptFile(1); 
+  TGaxis::SetExponentOffset(-0.1,-0.008);
+  TGaxis::SetMaxDigits(4);
   
   gStyle->SetMarkerStyle(20);
   gStyle->SetMarkerSize(1.0);
@@ -48,8 +51,10 @@ void makeDataMcPlotsTnP(float lumi, bool blindData=false)
 
   // chiara
   TString files[NSPECIES];
-  files[0]="/afs/cern.ch/user/c/crovelli/myWorkspace/public/TaP_spring15_7415v2/topup/formattedZ/Formatted_singleEle2015D_all.root";     
-  files[1]="/afs/cern.ch/user/c/crovelli/myWorkspace/public/TaP_spring15_7415v2/topup/formattedZ/Formatted_DYLL_all__1pb.root";
+  //files[0]="/afs/cern.ch/user/c/crovelli/myWorkspace/public/TaP_spring15_7415v2/topup/formattedZ/Formatted_singleEle2015D_all.root";     
+  //files[1]="/afs/cern.ch/user/c/crovelli/myWorkspace/public/TaP_spring15_7415v2/topup/formattedZ/Formatted_DYLL_all__1pb.root";
+  files[0]="Formatted_singleEle2015D_all1pb_topupWithScale.root";
+  files[1]="Formatted_DYLL_all1pb_topupWithSmearings.root";
   /*
   files[9]="/afs/cern.ch/work/c/crovelli/public/TaP_spring15_7412v2/formatted/Formatted_DYLL_all.root";
   files[1]="/afs/cern.ch/work/c/crovelli/public/TaP_spring15_7412v2/formatted/Formatted_WJetsToLNu_HT-600ToInf_all.root";
@@ -77,8 +82,8 @@ void makeDataMcPlotsTnP(float lumi, bool blindData=false)
 
   // chiara
   TString units[NVARIABLES];
-  units[0]="GeV/c^{2}";
-  units[1]="GeV/c";
+  units[0]="GeV";
+  units[1]="GeV";
   
   // chiara
   int nbins[NVARIABLES];
@@ -95,7 +100,7 @@ void makeDataMcPlotsTnP(float lumi, bool blindData=false)
 
   // chiara
   TString xaxisLabel[NVARIABLES];
-  xaxisLabel[0]="mee";
+  xaxisLabel[0]="m_{ee}";
   xaxisLabel[1]="p_{T} probe";
 
   TString binSize[NVARIABLES];
@@ -115,6 +120,8 @@ void makeDataMcPlotsTnP(float lumi, bool blindData=false)
 
   // chiara
   TString cut[NCUTS];
+  //cut[0]="(mass>70 && mass<110 && abs(tag_absEta)<1.5 && abs(probe_absEta)<1.5)*";
+  //cut[1]="(mass>70 && mass<110 && (abs(tag_absEta)<1.5 && abs(probe_absEta)>1.5) || (abs(tag_absEta)>1.5 && abs(probe_absEta)<1.5) )*";
   cut[0]="(probe_fullsel && mass>70 && mass<110 && abs(tag_absEta)<1.5 && abs(probe_absEta)<1.5)*";
   cut[1]="(probe_fullsel && mass>70 && mass<110 && (abs(tag_absEta)<1.5 && abs(probe_absEta)>1.5) || (abs(tag_absEta)>1.5 && abs(probe_absEta)<1.5) )*";
 
@@ -156,6 +163,15 @@ void makeDataMcPlotsTnP(float lumi, bool blindData=false)
 	}
 	std::cout << "Done " << histoName << std::endl;
       }
+
+      // chiara: ad hoc to have correctly normalized
+      for (int z=0;z<NVARIABLES;++z) {
+	for (int j=0;j<NCUTS;++j) {
+	  for (int i=1;i<NSPECIES;++i) 
+	    histos[i][j][z]->Scale(histos[0][j][z]->Integral()/histos[i][j][z]->Integral());
+	}
+      }	    
+	    
           
       TnPPlot myPlot;
       myPlot.setLumi(lumi);
@@ -183,8 +199,10 @@ void makeDataMcPlotsTnP(float lumi, bool blindData=false)
       
       c1->SetLogy(0);
       myPlot.Draw();
+      CMS_lumi(c1,4,1);
       c1->GetFrame()->DrawClone();
       c1->SaveAs(plotsDir+variables[z]+"DataMc_"+TString(icut[j])+"_"+suffix+".png");
+      c1->SaveAs(plotsDir+variables[z]+"DataMc_"+TString(icut[j])+"_"+suffix+".pdf");
       c1->SaveAs(plotsDir+variables[z]+"DataMc_"+TString(icut[j])+"_"+suffix+".root");
 
       TCanvas* c2 = new TCanvas(Form("test_%d_%d_log", z, j),
