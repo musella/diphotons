@@ -117,8 +117,9 @@ class SignalNorm(PlotApp):
                             default=False),
                 make_option("--plot-pdfs",action="store_true", dest="plot_pdfs", 
                             default=False),
-make_option("--plot-param-acceptance",action="store", dest="plot_param_acceptance", type="string",
-                            default=None),                make_option("--reco-file",action="store", dest="reco_file", type="string",
+                make_option("--plot-param-acceptance",action="store", dest="plot_param_acceptance", type="string",
+                            default=None),
+                make_option("--reco-file",action="store", dest="reco_file", type="string",
                             default=None),
                 make_option("--gen-file",action="store", dest="gen_file", type="string",
                             default=None),
@@ -291,7 +292,9 @@ make_option("--plot-param-acceptance",action="store", dest="plot_param_acceptanc
         
         mG = ws.var("MH")
         mG.SetTitle("m_{G}")
-        mG.setUnit("GeV")
+        mG.setUnit("TeV")
+
+        ROOT.TGaxis.SetExponentOffset(100.,-100,"x")
 
         kmpl = ws.var("kmpl")
         
@@ -514,64 +517,74 @@ make_option("--plot-param-acceptance",action="store", dest="plot_param_acceptanc
 
     def plotXsections(self):
         coups = sorted( map( lambda x: (float("0."+x[0][1:]),x[1]), self.xsections_.iteritems() ), key=lambda x: x[0] )
-        refc = coups[-4]
-        print refc, coups
-        scaled = map( lambda x: (x[0],scaleGraph(x[1], lambda y: refc[0]*refc[0]/((x[0]*x[0])*refc[1].Eval(y)))), coups )
-        
-        mypol = ROOT.TF1("mypol","[0]+[1]*(x-[2])**2")
-        fit = map( lambda x: (x[0],x[1],fitFunc(x[1],mypol)),  scaled )
-        
-        rescaled = map( lambda x: (x[0],scaleGraph(x[1], lambda y: 1./(x[2].Eval(y)) )), fit )
+        ## refc = coups[-4]
+        if len(coups)>1:
+            refc = coups[-min(4,len(coups)-1)]
+            print refc, coups
+            scaled = map( lambda x: (x[0],scaleGraph(x[1], lambda y: refc[0]*refc[0]/((x[0]*x[0])*refc[1].Eval(y)))), coups )
+            
+            mypol = ROOT.TF1("mypol","[0]+[1]*(x-[2])**2")
+            if len(coups) < 2:
+                mypol.FixParameter(0,1.)
+                mypol.FixParameter(1,0.)
+                mypol.FixParameter(2,0.)
+            fit = map( lambda x: (x[0],x[1],fitFunc(x[1],mypol)),  scaled )
+                
+            rescaled = map( lambda x: (x[0],scaleGraph(x[1], lambda y: 1./(x[2].Eval(y)) )), fit )
 
-        canv = ROOT.TCanvas("xsections","xsections")
-        scaled[0][1].Draw("apl")
-        for g in scaled[1:]: g[1].Draw("pl")
-        print scaled
-        self.keep( list(scaled) )
-        self.keep(canv)
-
-        recanv = ROOT.TCanvas("xsections_rescaled","xsections_rescaled")
-        rescaled[0][1].Draw("apl")
-        for g in rescaled[1:]: g[1].Draw("pl")
-        print rescaled
-        self.keep( list(rescaled) )
-        self.keep(recanv)
-
-        params = map( lambda x: (x[0], x[2].GetParameter(0), x[2].GetParameter(1), x[2].GetParameter(2)), fit  )
-        
-        param_graphs = ROOT.TGraph(), ROOT.TGraph(), ROOT.TGraph()
-        map( lambda x: (param_graphs[0].SetPoint(param_graphs[0].GetN(),x[0],x[1]),
-                        param_graphs[1].SetPoint(param_graphs[1].GetN(),x[0],x[2]),
-                        (param_graphs[2].SetPoint(param_graphs[2].GetN(),x[0],x[3])) if x[0] != refc[0] else None), 
-             params )
-        for ip, gr in enumerate(param_graphs):
-            gr.Sort()
-            pcanv = ROOT.TCanvas("p%d"%ip,"p%d"%ip)
-            gr.Draw()
-            gr.Fit("pol2")
-            self.keep( [gr,pcanv] )
-
-        ### p0 = ROOT.TF1("p0","pol2")
-        ### p0.SetParameters(1.09141,-0.0977154,-0.670345)
-        ### 
-        ### p1 = ROOT.TF1("p1","pol2")
-        ### p1.SetParameters(-3.44266e-08,5.194e-08,2.02169e-07)
-        ### 
-        ### p2 = ROOT.TF1("p2","pol2")
-        ### p2.SetParameters(2718.59,69.1401,-772.539)
-        
-        p0,p1,p2 = map( lambda x: x.GetListOfFunctions().At(0), param_graphs )
-
+            canv = ROOT.TCanvas("xsections","xsections")
+            scaled[0][1].Draw("apl")
+            for g in scaled[1:]: g[1].Draw("pl")
+            print scaled
+            self.keep( list(scaled) )
+            self.keep(canv)
+            
+            recanv = ROOT.TCanvas("xsections_rescaled","xsections_rescaled")
+            rescaled[0][1].Draw("apl")
+            for g in rescaled[1:]: g[1].Draw("pl")
+            print rescaled
+            self.keep( list(rescaled) )
+            self.keep(recanv)
+            
+            params = map( lambda x: (x[0], x[2].GetParameter(0), x[2].GetParameter(1), x[2].GetParameter(2)), fit  )
+            
+            param_graphs = ROOT.TGraph(), ROOT.TGraph(), ROOT.TGraph()
+            map( lambda x: (param_graphs[0].SetPoint(param_graphs[0].GetN(),x[0],x[1]),
+                            param_graphs[1].SetPoint(param_graphs[1].GetN(),x[0],x[2]),
+                            (param_graphs[2].SetPoint(param_graphs[2].GetN(),x[0],x[3])) if x[0] != refc[0] else None), 
+                 params )
+            for ip, gr in enumerate(param_graphs):
+                gr.Sort()
+                pcanv = ROOT.TCanvas("p%d"%ip,"p%d"%ip)
+                gr.Draw()
+                gr.Fit("pol2")
+                self.keep( [gr,pcanv] )
+                
+           ### p0 = ROOT.TF1("p0","pol2")
+           ### p0.SetParameters(1.09141,-0.0977154,-0.670345)
+           ### 
+           ### p1 = ROOT.TF1("p1","pol2")
+           ### p1.SetParameters(-3.44266e-08,5.194e-08,2.02169e-07)
+           ### 
+           ### p2 = ROOT.TF1("p2","pol2")
+           ### p2.SetParameters(2718.59,69.1401,-772.539)
+                
+            p0,p1,p2 = map( lambda x: x.GetListOfFunctions().At(0), param_graphs )
+                
         ## refc[0] = 3
-        equalized = map( lambda x: (x[0],scaleGraph(x[1], lambda y: refc[0]*refc[0]/((x[0]*x[0])*(p0.Eval(x[0]) + p1.Eval(x[0])*(y-p2.Eval(x[0]))**2)) )), coups )        
+            equalized = map( lambda x: (x[0],scaleGraph(x[1], lambda y: refc[0]*refc[0]/((x[0]*x[0])*(p0.Eval(x[0]) + p1.Eval(x[0])*(y-p2.Eval(x[0]))**2)) )), coups )        
+            
+            eqcanv = ROOT.TCanvas("xsections_equalized","xsections_equalized")
+            eqcanv.SetLogy()
+            equalized[0][1].Draw("apl")
+            for g in equalized[1:]: g[1].Draw("pl")
+            self.keep( list(equalized) )
+            self.keep(eqcanv)
 
-        eqcanv = ROOT.TCanvas("xsections_equalized","xsections_equalized")
-        eqcanv.SetLogy()
-        equalized[0][1].Draw("apl")
-        for g in equalized[1:]: g[1].Draw("pl")
-        self.keep( list(equalized) )
-        self.keep(eqcanv)
-
+        else:
+            refc = coups[0]
+            equalized = coups
+        
         sumg = {}
         for gr in equalized:
             gr = gr[1]
@@ -583,7 +596,6 @@ make_option("--plot-param-acceptance",action="store", dest="plot_param_acceptanc
                 sumg[x][0] += y
                 sumg[x][1] += 1
                 
-
         avcanv = ROOT.TCanvas("xsections_averaged","xsections_averaged")
         avcanv.SetLogy()
         averaged = ROOT.TGraph()
@@ -594,14 +606,19 @@ make_option("--plot-param-acceptance",action="store", dest="plot_param_acceptanc
         self.keep(averaged)
         self.keep(avcanv)
         
-        xsec = {
-            "ref" : refc[0],
-            "xsec_p0"  : [ p0.GetParameter(0), p0.GetParameter(1), p0.GetParameter(2) ],
-            "xsec_p1"  : [ p1.GetParameter(0), p1.GetParameter(1), p1.GetParameter(2) ],
-            "xsec_p2"  : [ p2.GetParameter(0), p2.GetParameter(1), p2.GetParameter(2) ],
-            "xsec" : [ (averaged.GetX()[i],averaged.GetY()[i]) for i in xrange(averaged.GetN()) ]
-            }
-        
+        if len(coups)>1:
+            xsec = {
+                "ref" : refc[0],
+                "xsec_p0"  : [ p0.GetParameter(0), p0.GetParameter(1), p0.GetParameter(2) ],
+                "xsec_p1"  : [ p1.GetParameter(0), p1.GetParameter(1), p1.GetParameter(2) ],
+                "xsec_p2"  : [ p2.GetParameter(0), p2.GetParameter(1), p2.GetParameter(2) ],
+                "xsec" : [ (averaged.GetX()[i],averaged.GetY()[i]) for i in xrange(averaged.GetN()) ]
+                }
+        else:
+            xsec = {
+                "xsec" : [ (averaged.GetX()[i],averaged.GetY()[i]) for i in xrange(averaged.GetN()) ]
+                }
+
         with open("xsections.json","w+") as xsec_file:
             xsec_file.write(json.dumps(xsec,indent=4,sort_keys=True))
             xsec_file.close()

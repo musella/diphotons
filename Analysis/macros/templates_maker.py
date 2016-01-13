@@ -1126,7 +1126,7 @@ class TemplatesApp(PlotApp):
                         twei = wei.GetTitle() % {"leg" : leg}
                         ## this will actually discard all events with weight 0 
                         ##   or outside of the range of any variable in fulllist
-                        print twei
+                        ##print twei
                         filler.fillFromTree(tree,twei)
             
             # restore variables definition
