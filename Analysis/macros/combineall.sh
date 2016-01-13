@@ -56,11 +56,12 @@ for coup in $(echo $coupl | tr ',' ' '); do
 	mass=$2
 	log=combine_log_${method}_${label}_${kmpl}_${mass}.log
 	set -x
-	if [[ -z $dry ]] && ( [[ -z $cont ]] ||  [[ ! -f higgsCombine${label}_k${kmpl}.${method}.mH$mass.root ]] ); then 
+	if [[ -z $dry ]] && ( [[ -z $cont ]] || [[ ! -f higgsCombine${label}_k${kmpl}.${method}.mH$mass.root ]] ); then 
 	    if [[ -f $binary ]] && [[ $binary -nt $card ]]; then
 		card=$binary
 	    fi
-	    combine $libs $args -n "${label}_k${kmpl}" -m $mass $card 2>&1 | tee $log
+	    echo combine $libs $args -n "${label}_k${kmpl}" -m $mass $card > $log
+	    combine $libs $args -n "${label}_k${kmpl}" -m $mass $card 2>&1 | tee -a $log
 	    ## sleep 1
 	fi
 	set +x

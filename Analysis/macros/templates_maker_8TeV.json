@@ -1,0 +1,110 @@
+{
+   "#" : "---------------------------------------------------------------------------------------------------------------------",
+   "#" : "Configuration file for templates_maker.py script.",
+   "#" : "Run as ./templates_maker.py --load templates_maker.json --input-dir <input_dir> -o <outfile>",
+
+   "#" : "Note: comments are not supported in JSON.",
+   "#" : "The trick here is to encapsulate them as well formatted input with key #",
+   "#" : "Configuration items are commented prepending an _ to the name (any other character would work)",
+
+    "#" : "---------------------------------------------------------------------------------------------------------------------",
+    "#" : "Dataset definition                                                                                                   ",
+    "#" : "---------------------------------------------------------------------------------------------------------------------",
+    "#" : "  %(sel)s is replaced with the appropriate string                                                                    ",
+    "#" : "  fromat is <sample-name>:[[input-file][/file-folder]] order irrelevant                                                               ",
+	
+    "#" : "data to be fit                                                                                                       ",
+    "data" : [
+               "Data_8TeV:__infile__/diphotonAnalyzer"
+             ],
+
+    "#" : "data used for template making",
+    "templates" : null,
+    "templatesMC" : null,
+             
+     "#" : "mc dataset",
+     "mc" :null,
+
+     "#" : "mc dataset",
+      "signals" : { 
+
+      },
+
+    "#" : "file names for different datasets. Files folder can be specified by --input-dir on the command line",
+    "data_file"   : "ExoDiPhotonAnalyzer_NEWLoose_DataABCD.root",
+    "mc_file"     : null,
+    "sig_file"    : null,  "#" : "implies to use same as mc",
+    "templates_file" : null, "#" : "implies to use same as data",
+
+    "#" : "categories for the input datasets",
+    "categories" : [ "" ],
+    "#" :  "groups of categories can be defined to resum some of the categories",
+    "groups": {
+        }, 
+
+    "#" : "how to compose the tree name starting from sub-pieces       ",
+    "#" : " %(sample)s is replaced with the items in dataset definition",
+    "#" : " %(cat)s is replaced with the category name                 ", 
+    "treeName": "fTree",
+
+    "preselection" : "((TrigHLT.HLT_DoublePhoton70_v3 == 1) || (TrigHLT.HLT_DoublePhoton70_v4 == 1) || (TrigHLT.HLT_DoublePhoton70_v5 == 1) || (TrigHLT.HLT_DoublePhoton70_v6 == 1)) && (Photon1.pt > 80. && Photon2.pt > 80.) && (Diphoton.Minv > 300.)",   
+                                                                                         
+    "selection"    : "egm",                              "#" : "nominal selection",
+    
+    "#" : "---------------------------------------------------------------------------------------------------------------------",
+    "#" : "Fit definition                                                                                                       ",
+    "#" : "---------------------------------------------------------------------------------------------------------------------",
+
+    "dataset_variables" : ["rho","nvtx","run","lumi","event"],     "#" :"list of variables to be put in the dataset (other than the template ones)",
+    "weight_expression" : "weight := 1",           "#" :"event weight expression  ",
+
+    "#" : "List of aliases. Used to define variables/simplify expressions selection.",
+    "aliases"  : [ 
+               "mass := Diphoton.Minv",
+               "mgg := Diphoton.Minv",
+	       "run := Event.run",
+	       "lumi := Event.LS",
+	       "event := Event.evnum",
+	       "rho := rho25",
+	       "nvtx := Vtx.Nvtx",
+	       "leadPt := Photon1.pt",
+	       "subleadPt := Photon2.pt",
+	       "leadEta := Photon1.eta",
+	       "subleadEta := Photon2.eta",
+    	       "leadR9 := Photon1.r9",
+    	       "subleadR9 := Photon2.r9",
+	       "leadChIso := Photon1.PFIsoCharged03",
+	       "subleadChIso := Photon2.PFIsoCharged03"
+	       ],
+
+    "fits" : {
+        "cic1" : {
+            "ndim"       : 2,                                                                "#" : "number of dimensions for the template  ",
+            "bins"       : [ "mass", [500.0,1300.0] ],                                       "#" : "kinematic bins in which the fit is run ",
+            "template_binning" : [ 0.0, 0.1, 5.0, 15.0 ],                                    "#" : "template varaible binning              ",
+		
+            "selection"    : "egm",
+            "components" : [  ],                                             "#" : "list of fit components                 ",
+            "dataset_variables" : ["mgg","mass","mgg8TeV:=mgg","leadPt","subleadPt","leadEta","subleadEta","leadR9","subleadR9"],      "#" : "additional variables to be stored      ",
+            "store_trees" : true,	
+            "categories" : {
+                "EBEB_8TeV" : { 
+                    "src"  : "",
+                     "fill" : { 
+                         "TMath::Even(event)" :[ "leadChIso", "subleadChIso" ],
+                         "! TMath::Even(event)" :[ "subleadChIso", "leadChIso" ]
+                      }
+                }
+            },
+	    "signals" : "__all__", 
+	    "truth_selection" : {},
+            "templates" : {}
+	}
+    },	
+
+    "rootstyle_extra" : [
+                  "TGaxis::SetMaxDigits(3);",
+                  "TH1::SetDefaultSumw2(1);"
+    ]
+    
+}
