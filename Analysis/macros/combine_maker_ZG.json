@@ -1,0 +1,19 @@
+{
+	"observables" : { "all" : "mass[3400,200,10000]" },
+	"plot_binning" : [140,200,1600],
+	"rootstyle_extra" : [
+    		  "TGaxis::SetMaxDigits(3);",
+		  "TH1::SetDefaultSumw2(1);",
+		  "lumiTextSize = 0.5; lumiTextOffset = 0.55; cmsTextSize = 0.6; relExtraDY = -0.6;"
+		 ],
+
+	    "energy_scale_eigenvec" : {
+		"EBEBeig1" : { "EBEB_8TeV" :  0.3006 },
+                "EBEBeig2" : { "EBEB_8TeV" :  0.3996 }
+	    },
+	"sqrt" : "13TeV",
+	 "postproc" : {
+               "*" : [["addCmsLumi",[2,1,"Preliminary"]]]
+               },
+          "default_model" : "pow"
+}
