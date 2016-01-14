@@ -1,0 +1,96 @@
+{
+   "#" : "---------------------------------------------------------------------------------------------------------------------",
+   "#" : "Configuration file for templates_maker.py script.",
+   "#" : "Run as ./templates_maker.py --load templates_maker.json --input-dir <input_dir> -o <outfile>",
+
+   "#" : "Note: comments are not supported in JSON.",
+   "#" : "The trick here is to encapsulate them as well formatted input with key #",
+   "#" : "Configuration items are commented prepending an _ to the name (any other character would work)",
+
+    "#" : "---------------------------------------------------------------------------------------------------------------------",
+    "#" : "Dataset definition                                                                                                   ",
+    "#" : "---------------------------------------------------------------------------------------------------------------------",
+    "#" : "  %(sel)s is replaced with the appropriate string                                                                    ",
+    "#" : "  fromat is <sample-name>:[[input-file][/file-folder]] order irrelevant                                              ",
+	
+    "#" : "data to be fit",
+    "data" : [
+               "data:__infile__/"
+             ],
+
+    "#" : "data used for template making",
+    "templates" : null,
+    "templatesMC" : null,
+             
+     "#" : "mc dataset",
+     "mc" : [
+              "zg:__infile__/"
+            ],
+
+     "#" : "mc dataset",
+      "signals" : { 
+
+      },
+
+    "#" : "file names for different datasets. Files folder can be specified by --input-dir on the command line",
+    "data_file"   : "trees.root",
+    "mc_file"     : null,
+    "sig_file"    : null,  "#" : "implies to use same as mc",
+    "templates_file" : null, "#" : "implies to use same as data",
+
+    "#" : "categories for the input datasets",
+    "categories" : [ "" ],
+    "#" :  "groups of categories can be defined to resum some of the categories",
+    "groups": {
+        }, 
+
+    "#" : "how to compose the tree name starting from sub-pieces       ",
+    "#" : " %(sample)s is replaced with the items in dataset definition",
+    "#" : " %(cat)s is replaced with the category name                 ", 
+    "treeName": "%(sample)s",
+
+    "preselection" : "",   
+                                                                                         
+    "selection"    : "sel_v0",                              "#" : "nominal selection",
+    
+    "#" : "---------------------------------------------------------------------------------------------------------------------",
+    "#" : "Fit definition                                                                                                       ",
+    "#" : "---------------------------------------------------------------------------------------------------------------------",
+
+    "dataset_variables" : ["run","lumi","event"],     "#" :"list of variables to be put in the dataset (other than the template ones)",
+    "weight_expression" : "weight",           "#" :"event weight expression  ",
+
+    "#" : "List of aliases. Used to define variables/simplify expressions selection.",
+    "aliases"  : [ 
+             "mass := boss_mass"
+	       ],
+
+    "fits" : {
+        "fit_v0" : {
+            "ndim"       : 2,                                     "#" : "number of dimensions for the template  ",
+            "bins"       : [ "mass", [500.0,1300.0] ],            "#" : "kinematic bins in which the fit is run ",
+            "template_binning" : [ 0.0, 0.1, 5.0, 100000.0 ],     "#" : "template varaible binning              ",
+            "selection"    : "sel_v0", 
+            "components" : [  ],                                  "#" : "list of fit components                 ",
+            "dataset_variables" : ["mass","lept0_pt","lept1_pt"], "#" : "additional variables to be stored      ",
+            "store_trees" : true,
+            "categories" : {
+                "all" : { 
+                    "src"  : "", 
+                     "fill" : { 
+                         "" :[ "lept0_pt", "lept1_pt" ] 
+                      }
+                }
+            },
+	    "signals" : "__all__", 
+	    "truth_selection" : {},
+          "templates" : {}
+	}
+    },	
+
+    "rootstyle_extra" : [
+                  "TGaxis::SetMaxDigits(3);",
+                  "TH1::SetDefaultSumw2(1);"
+    ]
+    
+}
