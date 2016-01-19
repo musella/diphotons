@@ -53,6 +53,9 @@ class CombineApp(TemplatesApp):
                         make_option("--make-pr-plot",dest="make_pr_plot",action="store_true",default=False,
                                     help="Fit background",
                                     ),                       
+                        make_option("--x-axis-name",dest="x_axis_name",action="store",default="m_{#gamma #gamma}",
+                                    help="Name of the variable to be put on the X axis in plots",
+                                    ),                       
                         make_option("--fit-background",dest="fit_background",action="store_true",default=False,
                                     help="Fit background",
                                     ),                       
@@ -68,7 +71,7 @@ class CombineApp(TemplatesApp):
                         make_option("--use-templates",dest="use_templates",action="store_true",default=False,
                                     help="Use hybrid fit",
                                     ),                        
-                        make_option("--template-comp-sig",dest="template_comp_sig",action="store_true",default="pp",
+                        make_option("--template-comp-sig",dest="template_comp_sig",action="store",default="pp",
                                     help="Use this template for signal modeling",
                                     ),                        
                         make_option("--obs-template-binning",dest="obs_template_binning",action="callback",callback=optpars_utils.Load(scratch=True),
@@ -185,6 +188,9 @@ class CombineApp(TemplatesApp):
                                     ),
                         make_option("--generate-signal-dataset",dest="generate_signal_dataset",action="store_true",default=False,
                                     help="Generate signal dataset",
+                                    ),
+                        make_option("--gaussian-signal",dest="gaussian_signal",action="store_true",default=False,
+                                    help="Use gaussian PDF  for signal",
                                     ),
                         make_option("--parametric-signal",dest="parametric_signal",type="string",action="callback",callback=optpars_utils.ScratchAppend(str),
                                     default=[],
@@ -425,6 +431,8 @@ class CombineApp(TemplatesApp):
         if options.generate_signal_dataset:
             if len(options.parametric_signal) > 0:
                 self.generateParametricSignal(options,args)
+            elif options.gaussian_signal :
+                self.generateGaussianSignalDataset(options,args)
             else:
                 self.generateSignalDataset(options,args)
 
@@ -475,6 +483,9 @@ class CombineApp(TemplatesApp):
         if (options.signal_name != None):
             signals = [options.signal_name]
             fname_prefix = None
+        elif len(options.signals_gauss)>0:
+            signals = options.signals_gauss.keys()
+            fname_prefix = options.signal_root_file.replace(".root","_") if options.signal_root_file else ""
         else:
             signals = options.signals.keys()
             fname_prefix = options.signal_root_file.replace(".root","_") if options.signal_root_file else ""
@@ -1662,6 +1673,126 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     
 
     ## ------------------------------------------------------------------------------------------------------------
+    def generateGaussianSignalDataset(self,options,args):
+        
+        print "--------------------------------------------------------------------------------------------------------------------------"
+        print "generating gaussian signal dataset"
+        print 
+        
+        fitname = options.fit_name
+        fit = options.fits[fitname] 
+        isNameProvided = False
+        list_fwhm = {}
+        isPrefix = False
+        if (options.signal_name != None):
+                isNameProvided = True
+        
+        if (not isNameProvided and options.output_file != None):
+            isPrefix = True
+            prefix_output = options.output_file.replace(".root","")
+            options.signal_root_file = options.output_file ## copy this in case we want to run --generate-datacard at the same time
+            if not options.cardname:
+                options.cardname = "datacard_%s.txt" % prefix_output
+        
+        ## book roo observable
+        ### roobs = self.buildRooVar(*(self.getVar(options.observable)), recycle=False, importToWs=True)
+        ### roobs.setRange("fullRange",roobs.getMin(),roobs.getMax())
+        roowe = self.buildRooVar("weight",[])        
+        weightMod = ROOT.RooFormulaVar("weightMod" ,"weightMod","@0*100", ROOT.RooArgList(roowe) )
+                
+
+        #if(isNameProvided):
+        #    signals = [options.signal_name]
+        #elif len(options.signals_gauss)>0 :
+        #    signals = options.signals_gauss.keys()
+        #else:
+        #    signals = options.signals.keys()
+
+        signals = options.signals_gauss.keys()
+
+        for signame in signals:
+            self.bookNewWs()
+
+            # In case nothing specified about the output file, set: output_file = signame.root
+            if ( options.output_file == None ):
+                options.output_file = "%s.root" % (signame)
+
+            MH = self.buildRooVar("MH",options.signals_gauss[signame][0], importToWs=False)
+            sigmaH = self.buildRooVar("sigmaH",options.signals_gauss[signame][1], importToWs=False)
+            MH.setConstant(True)
+            sigmaH.setConstant(True)
+
+            # In case we loop over all signals, we can give inside options.output_file the prefix
+            # ... for all generated signal files (e.g. a common directory)
+            if (isPrefix):
+                options.output_file = "%s_%s.root" % (prefix_output,signame)
+            nameFileOutput = options.output_file
+           
+            sublist_fwhm = {}
+            ## build and import signal dataset
+            for cat in fit["categories"]:
+                roobs = self.getObservable(cat)
+                ## print treename
+                ## dset = self.rooData(treename)
+
+                
+                ## build RooHistPdf in roobs
+                ##pdfDataHist = binned if not options.use_templates else binned.reduce(ROOT.RooArgSet(roobs))
+                #pdf=ROOT.RooHistPdf("model_signal_%s_%s"% (signame, cat),"model_signal_%s_%s"% (signame, cat),ROOT.RooArgSet(roobs),pdfDataHist)
+                pdf=ROOT.RooGaussian("model_signal_%s_%s"% (signame, cat),"model_signal_%s_%s"% (signame, cat),roobs,MH,sigmaH)
+
+                if options.verbose:
+                    print "Integral signal pdf    :", pdf.createIntegral(ROOT.RooArgSet(roobs),"templateBinning%s"%cat).getVal()
+                print "Integral signal pdf    :", pdf.createIntegral(ROOT.RooArgSet(roobs),"templateBinning%s"%cat).getVal()
+                    
+             #   ## prepare binnning: doing it here as it is faster than on the 2D pdf
+             #   plot_signal_binning = None
+             #   if options.plot_signal_binning:
+             #       nbins, width = options.plot_signal_binning
+             #       obsmean = pdf.mean(roobs).getVal()
+             #       if obsmean == 0.:
+             #           omin,omax = 300.,8000.
+             #       else:
+             #           width = max(width*obsmean,pdf.sigma(roobs).getVal()*4.)
+             #           omin, omax = obsmean-0.5*width, obsmean+0.5*width
+             #       if options.verbose:  print obsmean, omin, omax
+             #       omin = max(roobs.getMin(),omin)
+             #       omax = min(roobs.getMax(),omax)
+             #       if options.verbose: print omin, omax
+             #       step = (omax-omin)/nbins
+             #       plot_signal_binnning = []
+             #       while omin<omax:
+             #           plot_signal_binnning.append(omin)
+             #           omin += step                    
+                    
+                
+             #   self.plotBkgFit(options,reduced,pdf,roobs,"signal_%s_%s_%s" % (signame,roobs.GetName(),cat),poissonErrs=False,sig=True,logx=False,logy=False,
+             #                   plot_binning=plot_signal_binnning, forceSkipBands=True)
+
+                ## normalization has to be called <pdfname>_norm or combine won't find it
+                norm = self.buildRooVar("%s_norm" %  (pdf.GetName()), [], importToWs=False ) 
+                norm.setConstant(True)
+                
+                norm.setVal(1.) # qui ci vorrebbe accettanza * eff * lumi
+                #if options.rescale_signal_to:
+                #    norm.setVal(reduced.sumEntries()*self.getSignalScaleFactor(signame))
+                #else:
+                #    norm.setVal(reduced.sumEntries()) 
+                
+                ## import pdf and normalization
+                self.workspace_.rooImport(pdf,RooFit.RecycleConflictNodes())
+                self.workspace_.rooImport(norm)
+            
+            list_fwhm[signame] = sublist_fwhm
+            self.saveWs(options)
+                        
+            # if signame provided then stop
+            if isNameProvided :
+                break
+
+  
+
+    ## ------------------------------------------------------------------------------------------------------------
     def generateSignalDataset(self,options,args):
         
         print "--------------------------------------------------------------------------------------------------------------------------"
@@ -2295,7 +2426,13 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         ROOT.TH1D.SetDefaultSumw2(True)
         obsname = obs.GetName()
         if obsname.startswith("mass") or obsname.startswith("mgg"):
-            obs.SetTitle("m_{#gamma #gamma}")
+            obs.SetTitle("%s" %options.x_axis_name)
+            #obs.SetTitle(options.x_axis_name)
+            #if len(options.x_axis_name)>0:
+            #  obs.SetTitle(options.x_axis_name)
+            #  #obs.SetTitle("m_{Z #gamma}")
+            #else :
+            #  obs.SetTitle("m_{#gamma #gamma}")
             obs.setUnit("GeV")
         elif "templateNdim" in obsname:
             subname = obsname.replace("templateNdim","")
@@ -2347,10 +2484,10 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
 
         if binning:
             dataopts.append(RooFit.Binning(binning))         
-            frame = obs.frame(230,2110)
-            resid = obs.frame(230,2110)
-            ### frame = obs.frame(RooFit.Range("plotBinning"))
-            ### resid  = obs.frame(RooFit.Range("plotBinning"))
+            #frame = obs.frame(230,2110)
+            #resid = obs.frame(230,2110)
+            frame = obs.frame(RooFit.Range("plotBinning"))
+            resid  = obs.frame(RooFit.Range("plotBinning"))
             curveopts.append(RooFit.Range("plotBinning"))
             dataopts.append(RooFit.Range("plotBinning"))
         else:
@@ -2518,6 +2655,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         frame.GetXaxis().SetTitleOffset( 1.15 )
         frame.GetYaxis().SetRangeUser(ymin,ymax)
         frame.GetXaxis().SetMoreLogLabels()
+        frame.GetXaxis().SetNoExponent()
         frame.GetYaxis().SetLabelSize( frame.GetXaxis().GetLabelSize() * canv.GetWh() / ROOT.gPad.GetWh() * 1.1 )
         frame.GetYaxis().SetTitleSize( frame.GetXaxis().GetTitleSize() * canv.GetWh() / ROOT.gPad.GetWh() * 1.1 )
         frame.GetYaxis().SetTitleOffset( 0.6 )
@@ -2545,7 +2683,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         pt.SetFillStyle(0)
         pt.SetLineColor(ROOT.kWhite)
         pt.AddText("%s category" % label.split("_")[1])
-        pt.Draw("same")
+        if label.split("_")[1] != "allZG":
+          pt.Draw("same")
         self.keep(pt)
         
         if not logy:
@@ -2559,6 +2698,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         ROOT.gPad.SetGridy()
         ROOT.gPad.SetLogx(logx)
         resid.GetXaxis().SetMoreLogLabels()
+        resid.GetXaxis().SetNoExponent()
         resid.GetXaxis().SetNdivisions(515)
         resid.GetYaxis().SetNdivisions(505)
         resid.GetYaxis().CenterTitle()
