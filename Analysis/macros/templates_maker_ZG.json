@@ -15,7 +15,7 @@
 	
     "#" : "data to be fit",
     "data" : [
-               "data:__infile__/"
+               "zg:__infile__/"
              ],
 
     "#" : "data used for template making",
@@ -49,7 +49,8 @@
     "#" : " %(cat)s is replaced with the category name                 ", 
     "treeName": "%(sample)s",
 
-    "preselection" : "",   
+    "__preselection" : "( id==5  && myTree.HLT_DoubleMu ) || ( id==4 && myTree.HLT_DoubleEl ) || ( id==7 && !myTree.HLT_DoubleEl && !myTree.HLT_DoubleMu && myTree.HLT_Photon165_HE10 )",   
+    "preselection" : "",
                                                                                          
     "selection"    : "sel_v0",                              "#" : "nominal selection",
     
