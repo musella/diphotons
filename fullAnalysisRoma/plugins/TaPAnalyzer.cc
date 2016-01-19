@@ -49,8 +49,8 @@ class TaPAnalyzer : public edm::EDAnalyzer {
   
 public:
   
-  explicit TaPAnalyzer(const edm::ParameterSet&);
-  ~TaPAnalyzer();
+    explicit TaPAnalyzer(const edm::ParameterSet&);
+    ~TaPAnalyzer();
   
 private:
   
@@ -349,7 +349,15 @@ void TaPAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 	hltTagPhi.push_back(obj.phi());
       }	  
     }
-  }
+    cout << totXsec << " " << sumDataset << " " << perEveW << endl;
+
+    // ----------------------------------------------------
+    // save events only if:
+    // 1) pass TnP HLT paths
+    // 1) good vertex
+    // 2) at least one tag
+    // 3) at least one probe
+    // ----------------------------------------------------
 
   if (hltTagPt.size()!=hltTagEta.size() || hltTagPt.size()!=hltTagPhi.size()) cout << "problem!" << endl;
   if (hltTagPt.size()>0) {
@@ -357,10 +365,101 @@ void TaPAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
     h_selection->Fill(2.,perEveW);
     
     // ----------------------------------------------------
-    // 2) at least one good vertex found
-    bool foundOne = false;
-    for( unsigned int ivtx = 0 ; ivtx < primaryVertices->size() ; ivtx++ ) {
-      if (foundOne) continue;
+    // 1) analysis cuts: trigger 
+
+    // selected HLT object
+    vector<int >hltTagPt, hltTagEta, hltTagPhi;
+    vector<int >hltProbePt, hltProbeEta, hltProbePhi;
+
+    const edm::TriggerNames &names = iEvent.triggerNames(*triggerBits);
+
+    // HLT paths for TnP
+    string theTnPPath1 = "HLT_Ele25WP60_Ele8_Mass55_v";
+    string theTnPPath2 = "HLT_Ele25WP60_SC4_Mass55_v";
+    string theTnPPath3 = "HLT_Ele27_eta2p1_WP75_Gsf_v";
+    // this is for MC. In data: HLT_Ele27_eta2p1_WPLoose_Gsf_v*
+
+    // HLT filters for TnP
+    string theTagFilter1   = "hltEle25WP60Ele8TrackIsoFilter";
+    string theTagFilter2   = "hltEle25WP60SC4TrackIsoFilter";
+    string theProbeFilter1 = "hltEle25WP60Ele8PixelMatchUnseededFilter";
+    string theProbeFilter2 = "hltEle25WP60SC4EtUnseededFilter";
+
+    bool fired[3]={false};
+    //for (int ii=0; ii<3; ii++) fired[ii] = false;
+
+    // check if the event fired one of the TnP paths
+    for (unsigned int i = 0, n = triggerBits->size(); i < n; ++i) {
+        string thisPath = names.triggerName(i);
+        if (thisPath.find(theTnPPath1)==string::npos &&
+            thisPath.find(theTnPPath2)==string::npos &&
+            thisPath.find(theTnPPath3)==string::npos)
+            continue;
+        if (!triggerBits->accept(i))
+            continue;
+        // cout << "firing TnP path " << thisPath << endl;
+        if (thisPath.find(theTnPPath1)!=string::npos)
+            fired[0] = true;
+        if (thisPath.find(theTnPPath2)!=string::npos)
+            fired[1] = true;
+        if (thisPath.find(theTnPPath3)!=string::npos)
+            fired[2] = true;
+    }
+
+    if (fired[0] || fired[1]) {
+        // if (fired[0] || fired[1] || fired[2]) {  // ancora da verificare il terzo
+
+        for (pat::TriggerObjectStandAlone obj : *triggerObjects) {
+            obj.unpackPathNames(names);
+      
+            vector<string> pathNamesAll  = obj.pathNames(false);
+            for (unsigned h = 0, n = pathNamesAll.size(); h < n; ++h) {
+                string thisPath = pathNamesAll[h];
+                // if ( (thisPath.find(theTnPPath1)!=string::npos && fired[0]) || (thisPath.ind(theTnPPath2)!=string::npos && fired[1]) || (thisPath.find(theTnPPath3)!=string::npos && fired[2]) ){    
+                if ( (thisPath.find(theTnPPath1)!=string::npos && fired[0]) ||
+                     (thisPath.find(theTnPPath2)!=string::npos && fired[1]) )
+                {    
+                    // check if one of the accepted filters was in
+                    bool isFilterTag   = false;
+                    bool isFilterProbe = false;
+                    // std::cout << "ALL Filters for " << pathNamesAll[h] << endl;
+                    for (unsigned h1 = 0; h1 < obj.filterLabels().size(); ++h1) {
+                        string thisFilter = obj.filterLabels()[h1];
+                        if (thisFilter.find(theTagFilter1)!=string::npos || thisFilter.find(theTagFilter2)!=string::npos) {
+                            // std::cout << h1 << " " << thisFilter << " is ok for tag for " << thisPath << endl;
+                            isFilterTag = true;
+                        }
+                        if (thisFilter.find(theProbeFilter1)!=string::npos || thisFilter.find(theProbeFilter2)!=string::npos) {
+                            //std::cout << h1 << " " << thisFilter << " is ok for tag for " << thisPath << endl;
+                            isFilterProbe = true;
+                        }
+                    }
+
+                    // save the HLT objects which are ok fot T or P
+                    if (isFilterTag) {
+                        hltTagPt.push_back(obj.pt());
+                        hltTagEta.push_back(obj.eta());
+                        hltTagPhi.push_back(obj.phi());
+                    }
+                    if (isFilterProbe) {
+                        hltProbePt.push_back(obj.pt());
+                        hltProbeEta.push_back(obj.eta());
+                        hltProbePhi.push_back(obj.phi());
+                    }
+                }
+            }
+        }
+    }
+
+    if (hltTagPt.size()!=hltTagEta.size() || hltTagPt.size()!=hltTagPhi.size()) cout << "problem!" << endl;
+    if (hltProbePt.size()!=hltProbeEta.size() || hltProbePt.size()!=hltProbePhi.size()) cout << "problem!" << endl;
+    if (hltTagPt.size()>0 && hltProbePt.size()>0)
+    {
+        // ----------------------------------------------------
+        // 2) at least one good vertex found
+        bool foundOne = false;
+        for( unsigned int ivtx = 0 ; ivtx < primaryVertices->size() ; ivtx++ ) {
+            if (foundOne) continue;
       
       bool goodVtx = true;
       float vtxX = primaryVertices->ptrAt(ivtx)->position().x();
@@ -417,16 +516,16 @@ void TaPAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
       // electrons in the acceptance
       for( unsigned int ElectronIndex = 0; ElectronIndex < ElectronPointers.size(); ElectronIndex++ ) {
 	
-	Ptr<flashgg::Electron> Electron = ElectronPointers[ElectronIndex];
+                Ptr<flashgg::Electron> Electron = ElectronPointers[ElectronIndex];
 	
-	// acceptance
-	float scEta = fabs( Electron->superCluster()->eta() );
-	float elePt = Electron->pt();
-	if( (fabs(scEta)>1.442 && fabs(scEta)<1.566) || fabs(scEta)>2.5 ) continue;
-	if( elePt<20 ) continue;
+                // acceptance
+                float scEta = fabs( Electron->superCluster()->eta() );
+                float elePt = Electron->pt();
+                if( (fabs(scEta)>1.442 && fabs(scEta)<1.566) || fabs(scEta)>2.5 ) continue;
+                if( elePt<20 ) continue;
 	
-	acceptEle.push_back(ElectronIndex);
-      }
+                acceptEle.push_back(ElectronIndex);
+            }
       
       // full cut based selection
       for (unsigned int iEle=0; iEle<acceptEle.size(); iEle++)
@@ -522,17 +621,17 @@ void TaPAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
       std::vector<int> acceptGamma;
       for(int phloop = 0; phloop < (int)objs_pho->size(); phloop++ ) {  
 	
-	Ptr<flashgg::Photon> g1 = objs_pho->ptrAt( phloop );
+                Ptr<flashgg::Photon> g1 = objs_pho->ptrAt( phloop );
 	
-	// acceptance
-	float gammaPt    = g1->et();
-	float gammaScEta = (g1->superCluster())->eta();
-	if (gammaPt<20) continue;
-	if (fabs(gammaScEta)>2.5) continue;
-	if (fabs(gammaScEta)>1.4442 && fabs(gammaScEta)<1.566) continue;
+                // acceptance
+                float gammaPt    = g1->et();
+                float gammaScEta = (g1->superCluster())->eta();
+                if (gammaPt<20) continue;
+                if (fabs(gammaScEta)>2.5) continue;
+                if (fabs(gammaScEta)>1.4442 && fabs(gammaScEta)<1.566) continue;
 	
-	acceptGamma.push_back(phloop);
-      }
+                acceptGamma.push_back(phloop);
+            }
       
       // Photon candidates in the acceptance
       for(unsigned int iGamma=0; iGamma<acceptGamma.size(); iGamma++)
@@ -734,8 +833,7 @@ void TaPAnalyzer::bookOutputTree()
     outTree_->Branch("isTagMediumEle", "std::vector<bool>", &isTagMediumEle );
     outTree_->Branch("electron_matchHLT", "std::vector<bool>", &electron_matchHLT );
     outTree_->Branch("electron_matchMC", "std::vector<bool>", &electron_matchMC );
- 
-    outTree_->Branch("accGammaSize",  &accGammaSize,  "accGammaSize/I");   
+     outTree_->Branch("accGammaSize",  &accGammaSize,  "accGammaSize/I");   
     outTree_->Branch("gamma_pt", "std::vector<float>", &gamma_pt);
     outTree_->Branch("gamma_eta", "std::vector<float>", &gamma_eta);
     outTree_->Branch("gamma_phi", "std::vector<float>", &gamma_phi);
@@ -773,7 +871,6 @@ float TaPAnalyzer::effectiveAreaEle03(float theEta) {
     else if(fabs(theEta) < 2.3) theEA = 0.1903;
     else if(fabs(theEta) < 2.4) theEA = 0.2243;
     else if(fabs(theEta) < 2.5) theEA = 0.2687; 
-
     return theEA;
 }
 
@@ -867,7 +964,6 @@ bool TaPAnalyzer::isTightEle(float scEta, float hoe, float dphi, float deta, flo
     bool okFullSel = okDeta && okDphi && okSieIe && okHoE && okEp && okD0 && okDz && okIso && okMH && okConv;
     return okFullSel;
 }
-
 
 
 void TaPAnalyzer::SetPuWeights(std::string puWeightFile) {

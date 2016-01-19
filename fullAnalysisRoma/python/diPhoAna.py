@@ -19,7 +19,7 @@ process.source = cms.Source("PoolSource",
         #"/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v1/Spring15BetaV2/RSGravToGG_kMpl-01_M-1000_TuneCUEP8M1_13TeV-pythia8/EXOSpring15_v1-Spring15BetaV2-v0-RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/150716_211524/0000/diphotonsMicroAOD_1.root"
         "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_7412_v2_mc_25ns/diphotons_7412_v1/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/EXOSpring15_7412_v2_mc_25ns-diphotons_7412_v1-v0-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3/150928_214844/0000/diphotonsMicroAOD_1.root",
         )
-                            )
+)
 
 process.load("flashgg/MicroAOD/flashggPhotons_cfi")
 process.load("flashgg/MicroAOD/flashggDiPhotons_cfi")
