@@ -76,7 +76,7 @@
             "dataset_variables" : ["mass","lept0_pt","lept1_pt"], "#" : "additional variables to be stored      ",
             "store_trees" : true,
             "categories" : {
-                "all" : { 
+                "allZG" : { 
                     "src"  : "", 
                      "fill" : { 
                          "" :[ "lept0_pt", "lept1_pt" ] 
