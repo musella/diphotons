@@ -1,5 +1,5 @@
 {
-	"observables" : { "all" : "mass[980,200,10000]" },
+	"observables" : { "allZG" : "mass[980,200,10000]" },
 	"plot_binning" : [100,200,1200],
 	"rootstyle_extra" : [
     		  "TGaxis::SetMaxDigits(3);",
@@ -17,6 +17,8 @@
                },
 
        "signals_gauss" : { "test400" : [ [400.0], [4.0] ] },
+
+       "x_axis_name" : "m_{Z #gamma}",
 
           "__default_model" : "pow",
           "default_model" : "dijet"
