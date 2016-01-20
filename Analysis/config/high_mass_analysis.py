@@ -17,6 +17,10 @@ from Configuration.AlCa.GlobalTag import GlobalTag
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32( 1000 )
 
+process.RandomNumberGeneratorService = cms.Service("RandomNumberGeneratorService",
+                                                   highMassCorrectedDiphotonsMC = cms.PSet(initialSeed = cms.untracked.uint32(664)),
+                                                  )
+
 
 #
 # load job options
@@ -79,13 +83,23 @@ customize.options.register ('idversion',
                             VarParsing.VarParsing.multiplicity.singleton, # singleton or list
                             VarParsing.VarParsing.varType.string,          # string, int, or float
                             "idversion")
+customize.options.register ('applyEnergyCorrections',
+                            False, # default value
+                            VarParsing.VarParsing.multiplicity.singleton, # singleton or list
+                            VarParsing.VarParsing.varType.bool,          # string, int, or float
+                            "applyEnergyCorrections")
 customize.parse()
+
+applyEnergyCorrections=False
+applySmearingCorrections=False
 
 from Configuration.AlCa.autoCond import autoCond
 if customize.options.processType == "data":
     process.GlobalTag = GlobalTag(process.GlobalTag, autoCond['run2_data'].replace("::All","") )
+    applyEnergyCorrections=customize.applyEnergyCorrections
 else:
     process.GlobalTag = GlobalTag(process.GlobalTag, autoCond['run2_mc'].replace("::All",""))
+    applySmearingCorrections=customize.applyEnergyCorrections
 
 #
 # define minitrees and histograms
@@ -102,6 +116,87 @@ diphotonDumper.quietRooFit = True
 diphotonDumper.maxCandPerEvent=1
 diphotonDumper.nameTemplate = "$PROCESS_$SQRTS_$LABEL_$SUBCAT"
 diphotonDumper.throwOnUnclassified = cms.bool(False)
+
+def addGloabalFloat(globalVariables,process,producer,name,expr):    
+    getattr(process,producer).variables.append( cms.PSet(tag=cms.untracked.string(name),quantity=cms.untracked.string(expr)) )
+    setattr(globalVariables.extraFloats,name,cms.InputTag(producer,name))
+
+def bookCandViewNtProducer(process,name,collection):    
+    setattr(process,name,cms.EDProducer(
+            "CandViewNtpProducer", 
+            src = cms.InputTag(collection), lazyParser = cms.untracked.bool(True),
+            variables = cms.VPSet()
+            )
+            )
+process.flashggUnpackedJets = cms.EDProducer("FlashggVectorVectorJetUnpacker",
+                                             JetsTag = cms.InputTag("flashggFinalJets"),
+                                             NCollections = cms.uint32(8)
+                                             )
+process.selectedJsets60 = cms.EDFilter("FlashggJetSelector",
+                                     src=cms.InputTag("flashggUnpackedJets","0"),
+                                     cut=cms.string("pt>60 && abs(eta)<2.5"),
+                                )
+
+process.selectedJsets30 = cms.EDFilter("FlashggJetSelector",
+                                     src=cms.InputTag("flashggUnpackedJets","0"),
+                                     cut=cms.string("pt>30 && abs(eta)<2.5"),
+                                )
+
+process.genGravitons = cms.EDProducer("GenParticlePruner",
+                                    src = cms.InputTag("flashggPrunedGenParticles"),
+                                    select = cms.vstring("drop  *  ", # this is the default
+                                                         "keep pdgId = 5100039",
+                                                         )
+                                    )
+if "Grav" in customize.datasetName():
+    bookCandViewNtProducer(process,"genGr","genGravitons")
+    addGloabalFloat(diphotonDumper.globalVariables,process,"genGr","genVtxZ","vertex.z")
+
+
+### process.selectedJsets = cms.EDFilter("CandPtrSelector",
+###                                      src=cms.InputTag("flashggUnpackedJets"),
+###                                      cut=cms.string("pt>60 && abs(eta)<2.5"),
+###                                 )
+process.MHT60 = cms.EDProducer("MyMHTProducer",src=cms.InputTag("selectedJsets60"))
+process.MHT30 = cms.EDProducer("MyMHTProducer",src=cms.InputTag("selectedJsets30"))
+
+
+bookCandViewNtProducer(process,"mht60","MHT60")
+bookCandViewNtProducer(process,"mht30","MHT30")
+addGloabalFloat(diphotonDumper.globalVariables,process,"mht60","mht60Mass","mass")
+addGloabalFloat(diphotonDumper.globalVariables,process,"mht60","mht60Pt","pt")
+addGloabalFloat(diphotonDumper.globalVariables,process,"mht60","mht60Rapidity","rapidity")
+addGloabalFloat(diphotonDumper.globalVariables,process,"mht60","mht60Phi","phi")
+addGloabalFloat(diphotonDumper.globalVariables,process,"mht60","nJets60","numberOfDaughters")
+
+addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","mht30Mass","mass")
+addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","mht30Pt","pt")
+addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","mht30Rapidity","rapidity")
+addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","mht30Phi","phi")
+addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","nJets30","numberOfDaughters")
+
+addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","jet1Pt","?numberOfDaughters>0?daughter(0).pt:0")
+addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","jet1Eta","?numberOfDaughters>0?daughter(0).eta:0")
+addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","jet1Phi","?numberOfDaughters>0?daughter(0).phi:0")
+
+addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","jet2Pt","?numberOfDaughters>1?daughter(1).pt:0")
+addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","jet2Eta","?numberOfDaughters>1?daughter(1).eta:0")
+addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","jet2Phi","?numberOfDaughters>1?daughter(1).phi:0")
+
+addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","jet3Pt","?numberOfDaughters>2?daughter(2).pt:0")
+addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","jet3Eta","?numberOfDaughters>2?daughter(2).eta:0")
+addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","jet3Phi","?numberOfDaughters>2?daughter(2).phi:0")
+
+addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","jet4Pt","?numberOfDaughters>3?daughter(3).pt:0")
+addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","jet4Eta","?numberOfDaughters>3?daughter(3).eta:0")
+addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","jet4Phi","?numberOfDaughters>3?daughter(3).phi:0")
+
+bookCandViewNtProducer(process,"met","slimmedMETs")
+addGloabalFloat(diphotonDumper.globalVariables,process,"met","metPt","pt")
+addGloabalFloat(diphotonDumper.globalVariables,process,"met","metPhi","phi")
+addGloabalFloat(diphotonDumper.globalVariables,process,"met","sumEt","sumEt")
+
+
 
 variables=["mass","pt","rapidity",
            "satRegressedMass := sqrt( (leadingPhoton.energyAtStep('satRegressedEnergy','initial')*subLeadingPhoton.energyAtStep('satRegressedEnergy','initial')) / (leadingPhoton.energy*subLeadingPhoton.energy) ) * genP4.mass",
@@ -179,6 +274,11 @@ histograms=["mass>>mass(1500,0,15000)",
             "global.rho>>rho(20,0,50)",
             "global.nvtx>>nvtx(51,0.5,50.5)",
             
+            ### "global.mht60>>mht60(1500,0,15000)",
+            ### "global.mht30>>mht30(1500,0,15000)",
+            ### "global.metPt>>met(200,0,200)",
+            ### "global.sumEt>>sumEt(1500,0,15000)",
+              
             "leadPt>>phoPt(150,0,3000)",
             "subleadPt>>phoPt(150,0,3000)",
             
@@ -576,6 +676,8 @@ analysis = DiPhotonAnalysis(diphotonDumper,
                             mcTriggers=mcTriggers,
                             askTriggerOnMc=askTriggerOnMc, ## if mcTriggers is not empty will still compute efficiencies
                             singlePhoDumperTemplate=photonDumper,
+                            applySmearingCorrections=applySmearingCorrections,
+                            applyEnergyCorrections=applyEnergyCorrections,
                             )
 
 dumpKinTree=False
@@ -688,6 +790,15 @@ if not customize.lastAttempt:
         process.watchDog
         )
 
+
+process.p = cms.Path(process.genGr)
+
+### process.out = cms.OutputModule("PoolOutputModule", 
+###                                fileName = cms.untracked.string('diphotonsMicroAOD.root'),
+###                                outputCommands = cms.untracked.vstring("drop *","keep *_genGr_*_*", "keep *_genGravitons_*_*"),
+###                                SelectEvents = cms.untracked.PSet(SelectEvents = cms.vstring('p')),
+###                                )
+### process.e = cms.EndPath(process.out)
 
 # this will call customize(process), configure the analysis paths and make the process unscheduled
 analysis.customize(process,customize)
