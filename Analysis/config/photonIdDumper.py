@@ -17,14 +17,42 @@ process = cms.Process("Analysis")
 
 process.load("FWCore.MessageService.MessageLogger_cfi")
 
-process.source = cms.Source ("PoolSource",
-                             fileNames = cms.untracked.vstring(options.inputFiles))
+# process.source = cms.Source ("PoolSource",
+#                              fileNames = cms.untracked.vstring(options.inputFiles))
+
+readFiles = cms.untracked.vstring()
+process.source = cms.Source ("PoolSource",fileNames = readFiles)
+readFiles.extend( [
+           '/store/user/spigazzi/flashgg/diphotonsIsoStudies0T/1_2_0-31-g16f7065/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotonsIsoStudies0T-1_2_0-31-g16f7065-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160119_091710/0000/myMicroAODOutputFile_1.root',
+           '/store/user/spigazzi/flashgg/diphotonsIsoStudies0T/1_2_0-31-g16f7065/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotonsIsoStudies0T-1_2_0-31-g16f7065-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160119_091710/0000/myMicroAODOutputFile_105.root',
+           '/store/user/spigazzi/flashgg/diphotonsIsoStudies0T/1_2_0-31-g16f7065/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotonsIsoStudies0T-1_2_0-31-g16f7065-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160119_091710/0000/myMicroAODOutputFile_106.root',
+           '/store/user/spigazzi/flashgg/diphotonsIsoStudies0T/1_2_0-31-g16f7065/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotonsIsoStudies0T-1_2_0-31-g16f7065-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160119_091710/0000/myMicroAODOutputFile_107.root',
+           '/store/user/spigazzi/flashgg/diphotonsIsoStudies0T/1_2_0-31-g16f7065/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotonsIsoStudies0T-1_2_0-31-g16f7065-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160119_091710/0000/myMicroAODOutputFile_109.root',
+           '/store/user/spigazzi/flashgg/diphotonsIsoStudies0T/1_2_0-31-g16f7065/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotonsIsoStudies0T-1_2_0-31-g16f7065-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160119_091710/0000/myMicroAODOutputFile_11.root',
+           '/store/user/spigazzi/flashgg/diphotonsIsoStudies0T/1_2_0-31-g16f7065/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotonsIsoStudies0T-1_2_0-31-g16f7065-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160119_091710/0000/myMicroAODOutputFile_14.root',
+           '/store/user/spigazzi/flashgg/diphotonsIsoStudies0T/1_2_0-31-g16f7065/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotonsIsoStudies0T-1_2_0-31-g16f7065-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160119_091710/0000/myMicroAODOutputFile_26.root',
+           '/store/user/spigazzi/flashgg/diphotonsIsoStudies0T/1_2_0-31-g16f7065/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotonsIsoStudies0T-1_2_0-31-g16f7065-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160119_091710/0000/myMicroAODOutputFile_30.root',
+           '/store/user/spigazzi/flashgg/diphotonsIsoStudies0T/1_2_0-31-g16f7065/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotonsIsoStudies0T-1_2_0-31-g16f7065-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160119_091710/0000/myMicroAODOutputFile_31.root',
+           '/store/user/spigazzi/flashgg/diphotonsIsoStudies0T/1_2_0-31-g16f7065/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotonsIsoStudies0T-1_2_0-31-g16f7065-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160119_091710/0000/myMicroAODOutputFile_44.root',
+           '/store/user/spigazzi/flashgg/diphotonsIsoStudies0T/1_2_0-31-g16f7065/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotonsIsoStudies0T-1_2_0-31-g16f7065-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160119_091710/0000/myMicroAODOutputFile_45.root',
+           '/store/user/spigazzi/flashgg/diphotonsIsoStudies0T/1_2_0-31-g16f7065/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotonsIsoStudies0T-1_2_0-31-g16f7065-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160119_091710/0000/myMicroAODOutputFile_47.root',
+           '/store/user/spigazzi/flashgg/diphotonsIsoStudies0T/1_2_0-31-g16f7065/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotonsIsoStudies0T-1_2_0-31-g16f7065-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160119_091710/0000/myMicroAODOutputFile_53.root',
+           '/store/user/spigazzi/flashgg/diphotonsIsoStudies0T/1_2_0-31-g16f7065/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotonsIsoStudies0T-1_2_0-31-g16f7065-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160119_091710/0000/myMicroAODOutputFile_54.root',
+           '/store/user/spigazzi/flashgg/diphotonsIsoStudies0T/1_2_0-31-g16f7065/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotonsIsoStudies0T-1_2_0-31-g16f7065-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160119_091710/0000/myMicroAODOutputFile_58.root',
+           '/store/user/spigazzi/flashgg/diphotonsIsoStudies0T/1_2_0-31-g16f7065/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotonsIsoStudies0T-1_2_0-31-g16f7065-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160119_091710/0000/myMicroAODOutputFile_63.root',
+           '/store/user/spigazzi/flashgg/diphotonsIsoStudies0T/1_2_0-31-g16f7065/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotonsIsoStudies0T-1_2_0-31-g16f7065-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160119_091710/0000/myMicroAODOutputFile_64.root',
+           '/store/user/spigazzi/flashgg/diphotonsIsoStudies0T/1_2_0-31-g16f7065/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotonsIsoStudies0T-1_2_0-31-g16f7065-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160119_091710/0000/myMicroAODOutputFile_66.root',
+           '/store/user/spigazzi/flashgg/diphotonsIsoStudies0T/1_2_0-31-g16f7065/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotonsIsoStudies0T-1_2_0-31-g16f7065-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160119_091710/0000/myMicroAODOutputFile_7.root',
+           '/store/user/spigazzi/flashgg/diphotonsIsoStudies0T/1_2_0-31-g16f7065/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotonsIsoStudies0T-1_2_0-31-g16f7065-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160119_091710/0000/myMicroAODOutputFile_71.root',
+           '/store/user/spigazzi/flashgg/diphotonsIsoStudies0T/1_2_0-31-g16f7065/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotonsIsoStudies0T-1_2_0-31-g16f7065-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160119_091710/0000/myMicroAODOutputFile_8.root' ] )
+
+
 
 process.TFileService = cms.Service("TFileService",
                                    fileName = cms.string(options.outputFile))
 
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
-process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32( 1000 )
+process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32( 10000 )
 
 ## from flashgg.MicroAOD.flashggPreselectedDiPhotons_cfi import flashggPreselectedDiPhotons
 ## process.kinPreselDiPhotons = flashggPreselectedDiPhotons.clone(
@@ -46,7 +74,7 @@ process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32( 1000 )
 ##                                           )
 
 ## process.load("flashgg.Taggers.photonViewDumper_cfi") ##  import diphotonDumper 
-process.load("flashgg.Taggers.photonDumper_cfi") ##  import diphotonDumper 
+process.load("flashgg.Taggers.photonDumper_cfi") 
 import flashgg.Taggers.dumperConfigTools as cfgTools
 
 process.photonDumper.src = "flashggRandomizedPhotons"
@@ -75,7 +103,7 @@ variables=["pt := pt",
            "hadTowOverEm := hadTowOverEm",
            
            ## "idMVA := phoIdMvaWrtChosenVtx",
-           # "genIso := userFloat('genIso')", 
+           "genIso := ? hasMatchedGenPhoton ? userFloat('genIso') : -1", 
            ## "etrue := ? hasMatchedGenPhoton ? matchedGenPhoton.energy : 0",
            "sieie := sigmaIetaIeta",
            "r9 := r9",
