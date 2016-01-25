@@ -42,7 +42,8 @@ void MakeResolutionHisto(TString filename, bool newFile, int mass, TString coupl
   else theResoFile = new TFile(filename,"UPDATE");
   
   // Input file and tree
-  TString inDir = "../macro/allFilesWithResolAtZ/";
+  //TString inDir = "../macro/allFilesWithResolAtZ_promptFix/";
+  TString inDir = "../macro/allFilesWithResolAtZ_rereco74_Fix/";
   //TString inDir = "../macro/allFilesWithNoSmearing/";
   TChain* sigTree = new TChain();
   cout << "reading file " 
@@ -219,6 +220,7 @@ void ResolInterpolation(RooWorkspace* w, vector<int> masses) {
     }   
   }
 
+  /*
   // Then 4GeV steps between 1000 and 1600 GeV
   for (int iGenMass=0; iGenMass<150; iGenMass++) {    
     int thisMass = 1000 + iGenMass*4.;
@@ -257,7 +259,7 @@ void ResolInterpolation(RooWorkspace* w, vector<int> masses) {
       w->import(*fittResolRDH);
     }   
   }
-  
+  */
 
 
   // Finally saving in a second rootfile
@@ -279,6 +281,8 @@ void ResolInterpolation(RooWorkspace* w, vector<int> masses) {
       RDH->Write();
     }
   }
+
+  /*
   for (int iGenMass=0; iGenMass<150; iGenMass++) {    
     int thisMass = 1000 + iGenMass*4.;
     for (int c=0; c<NCAT; ++c) {
@@ -299,74 +303,10 @@ void ResolInterpolation(RooWorkspace* w, vector<int> masses) {
       RDH->Write();
     }
   }
+  */
 
   fileFittoRes.Close();
 }
-
-// -----------------------------------------------------------------------------
-
-void controlPlots() {
-
-  // the roorealvar 
-  RooRealVar* deltaM = new RooRealVar("deltaM", "", -1000, 200, "GeV");   
-  
-  // Files with the roodatahists 
-  TFile *fileFull  = new TFile("ResolutionHistos.root");  
-  TFile *fileMorph = new TFile("ResHistosGenOnlyScan.root");  
-
-  // Some example mass - full
-  RooDataHist *full2000_catEBEB = (RooDataHist*)fileFull->Get("resolRDH_mass2000_catEBEB");
-  RooDataHist *full2000_catEBEE = (RooDataHist*)fileFull->Get("resolRDH_mass2000_catEBEE");
-  RooHistPdf *full2000_catEBEB_pdf = new RooHistPdf("full2000_catEBEB_pdf", "full2000_catEBEB_pdf", *deltaM,*full2000_catEBEB,0);
-  RooHistPdf *full2000_catEBEE_pdf = new RooHistPdf("full2000_catEBEE_pdf", "full2000_catEBEE_pdf", *deltaM,*full2000_catEBEE,0);
-
-  // Some example mass - morphing
-  RooDataHist *morph2000_catEBEB = (RooDataHist*)fileMorph->Get("resolRDH_mass2000_catEBEB");
-  RooDataHist *morph2000_catEBEE = (RooDataHist*)fileMorph->Get("resolRDH_mass2000_catEBEE");
-  RooHistPdf *morph2000_catEBEB_pdf = new RooHistPdf("morph2000_catEBEB_pdf","morph2000_catEBEB_pdf",*deltaM,*morph2000_catEBEB,0) ;  
-  RooHistPdf *morph2000_catEBEE_pdf = new RooHistPdf("morph2000_catEBEE_pdf","morph2000_catEBEE_pdf",*deltaM,*morph2000_catEBEE,0) ;  
-  
-  // check EBEB
-  TCanvas *c1 = new TCanvas("c1","c1",1);
-  RooPlot* myPlot = deltaM->frame(Range(-1000,200),Bins(600));    
-  RooPlot* myPlotZoom = deltaM->frame(Range(-100,100),Bins(100));   
-  myPlot->SetTitle("mG=2000");  
-  myPlotZoom->SetTitle("mG=2000");  
-  morph2000_catEBEB_pdf->plotOn(myPlot, LineColor(kRed), LineStyle(kDashed));    
-  full2000_catEBEB_pdf->plotOn(myPlot, LineColor(kBlue), LineStyle(kSolid));
-  myPlot->Draw();
-  TString canvasName = TString(Form("CheckMorphing_CatEBEB_mass2000.png"));
-  c1->SaveAs(canvasName);       
-  c1->SetLogy();
-  canvasName = TString(Form("CheckMorphing_CatEBEB_mass2000_Log.png"));
-  c1->SaveAs(canvasName);
-  morph2000_catEBEB_pdf->plotOn(myPlotZoom, LineColor(kRed), LineStyle(kDashed));    
-  full2000_catEBEB_pdf->plotOn(myPlotZoom, LineColor(kBlue), LineStyle(kSolid));
-  myPlotZoom->Draw();
-  canvasName = TString(Form("CheckMorphing_CatEBEB_mass2000_Zoom.png"));
-  c1->SaveAs(canvasName);       
-
-  // check EBEE
-  TCanvas *c11 = new TCanvas("c11","c11",1);
-  RooPlot* myPlot11 = deltaM->frame(Range(-1000,200),Bins(600));    
-  RooPlot* myPlotZoom11 = deltaM->frame(Range(-100,100),Bins(100));   
-  myPlot11->SetTitle("mG=2000");  
-  myPlotZoom11->SetTitle("mG=2000");  
-  morph2000_catEBEE_pdf->plotOn(myPlot11, LineColor(kRed), LineStyle(kDashed));    
-  full2000_catEBEE_pdf->plotOn(myPlot11, LineColor(kBlue), LineStyle(kSolid));
-  myPlot11->Draw();
-  canvasName = TString(Form("CheckMorphing_CatEBEE_mass2000.png"));
-  c11->SaveAs(canvasName);       
-  c11->SetLogy();
-  canvasName = TString(Form("CheckMorphing_CatEBEE_mass2000_Log.png"));
-  c11->SaveAs(canvasName);
-  morph2000_catEBEE_pdf->plotOn(myPlotZoom11, LineColor(kRed), LineStyle(kDashed));    
-  full2000_catEBEE_pdf->plotOn(myPlotZoom11, LineColor(kBlue), LineStyle(kSolid));
-  myPlotZoom11->Draw();
-  canvasName = TString(Form("CheckMorphing_CatEBEE_mass2000_Zoom.png"));
-  c11->SaveAs(canvasName);       
-}
-
 
 // To run the analysis
 void runfits() {
@@ -418,14 +358,6 @@ void runfits() {
   cout << endl;    
   cout << "Now make the interpolation" << endl; 
   ResolInterpolation(w, masses);
-
-  // control plots
-  cout << endl; 
-  cout << endl; 
-  cout << "--------------------------------------------------------------------------" << endl; 
-  cout << endl;    
-  cout << "Now some control plots" << endl; 
-  //controlPlots();
 
   return;
 }
