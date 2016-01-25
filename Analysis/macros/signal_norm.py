@@ -123,6 +123,8 @@ class SignalNorm(PlotApp):
                             default=None),
                 make_option("--gen-file",action="store", dest="gen_file", type="string",
                             default=None),
+                make_option("--split-by-r9",action="store_true", dest="split_by_r9", 
+                            default=False),
             ])
         
         global ROOT, style_utils, RooFit
@@ -131,14 +133,17 @@ class SignalNorm(PlotApp):
         from ROOT import RooAbsData
         import diphotons.Utils.pyrapp.style_utils as style_utils
 
-        self.remap_ = { "EB"       : "EBEB",
-                        "EBHighR9" : "EBEB",
-                        "EBLowR9"  : "EBEB",
-                        "EE"       : "EBEE",
-                        "EEHighR9" : "EBEE",
-                        "EELowR9"  : "EBEE",
-                        }
-
+        if self.options.split_by_r9:
+            self.remap_ = {}
+        else:
+            self.remap_ = { "EB"       : "EBEB",
+                            "EBHighR9" : "EBEB",
+                            "EBLowR9"  : "EBEB",
+                            "EE"       : "EBEE",
+                            "EEHighR9" : "EBEE",
+                            "EELowR9"  : "EBEE",
+                            }
+            
         self.masses_ = set()
         self.coups_  = set()
         self.cats_   = set()
@@ -173,20 +178,26 @@ class SignalNorm(PlotApp):
         for name,val in self.xsections_.iteritems():
             val.Sort()
 
-    def getIntegrals(self,fin,sels,hname="genmass",mean=False):
+    def computeIntegrals(self,histograms,mean,postFix=""):
+        if mean: 
+            fnc = lambda x: ( x.GetMean(), x.Integral())
+        else:
+            fnc = lambda x: x.Integral()
+        return map(lambda x: (x[0].replace("GenIso",""),map(lambda y: (self.getMassAndCoup(y.GetName()),self.getCategory(y.GetName(),postFix),fnc(y)), x[1])), histograms )
+
+    def getIntegrals(self,fin,sels,hname="genmass",mean=False,isGen=False):
         folders = getObjects( getObjects( [fin], sels ), ["histograms"] )
         histograms = map(lambda x: (os.path.basename(os.path.dirname(x.GetPath())), 
                                     filter(lambda y: hname in y.GetName() and "Grav" in y.GetName(),  getObjects([x]))),
                          folders )
         
-        if mean: 
-            fnc = lambda x: ( x.GetMean(), x.Integral())
+        if isGen and self.options.split_by_r9:
+            return self.computeIntegrals(histograms,mean,"HighR9")+self.computeIntegrals(histograms,mean,"LowR9")
         else:
-            fnc = lambda x: x.Integral()
-        return map(lambda x: (x[0].replace("GenIso",""),map(lambda y: (self.getMassAndCoup(y.GetName()),self.getCategory(y.GetName()),fnc(y)), x[1])), histograms )
+            return self.computeIntegrals(histograms,mean)
+        
 
-
-    def getCategory(self,name):
+    def getCategory(self,name,postFix=""):
         
         toks = name.replace("genmass","").rsplit("_")[-1].split("pdfWeight")
         cat = toks[0]
@@ -194,6 +205,7 @@ class SignalNorm(PlotApp):
         
         if len(toks)>1:
             cat = cat,toks[1]
+        cat += postFix
         self.cats_.add(cat)
         
         return cat
@@ -350,10 +362,11 @@ class SignalNorm(PlotApp):
 
     def plotAcceptance(self):
         gen_fin = self.open(self.options.gen_file)
-        gen_integrals=self.getIntegrals(gen_fin,["genGenIso"])
-
+        gen_integrals=self.getIntegrals(gen_fin,["genGenIso"],isGen=True)
+        
         reco_fin = self.open(self.options.reco_file)
-        reco_integrals=self.getIntegrals(reco_fin,["cic","cicNoChIso"])
+        ## reco_integrals=self.getIntegrals(reco_fin,["cic","cicNoChIso"])
+        reco_integrals=self.getIntegrals(reco_fin,["cic"])
         
         gen_sels   = set(map(lambda x: x[0], gen_integrals))
         reco_sels   = set(map(lambda x: x[0], reco_integrals))
@@ -396,6 +409,10 @@ class SignalNorm(PlotApp):
         ### self.setStyle("*eff_acc*",[["SetTitle",";m_{G}(GeV);#varepsilon #otimes A"]])
         self.setStyle("*EBEB",[["colors",ROOT.kRed]])
         self.setStyle("*EBEE",[["colors",ROOT.kBlue]])
+        self.setStyle("*EBHighR9",[["colors",ROOT.kRed]])
+        self.setStyle("*EBLowR9",[["colors",ROOT.kRed]])
+        self.setStyle("*EEHighR9",[["colors",ROOT.kBlue]])
+        self.setStyle("*EELowR9",[["colors",ROOT.kBlue]])
         coustyles = [("001",20),("005",21),("007",22),("01",23),("015",24),("02",25),("03",26),("035",27),("04",28),("06",29)]
         map( lambda x: self.setStyle("*gen*_%s" %x[0], [["SetMarkerStyle",x[1]]]), coustyles )
         map( lambda x: self.setStyle("*gen*_%s*" %x[0], [["SetMarkerStyle",x[1]]]), coustyles )
@@ -426,7 +443,14 @@ class SignalNorm(PlotApp):
         gen_acc = self.getGraphs(gen_acc,"gen_acc",True)
         gen_acc_tot = self.getGraphs(gen_acc_tot,"gen_acc_tot",False)
 
-        sumg = { "cic" : { "EBEB" : {}, "EBEE" : {} }, "cicNoChIso" : {  "EBEB" : {}, "EBEE" : {} }  }
+        ## sumg = { "cic" : { "EBEB" : {}, "EBEE" : {} }, "cicNoChIso" : {  "EBEB" : {}, "EBEE" : {} }  }
+        ## sumg = { "cic" : { "EBHighR9" : {}, "EEHighR9" : {}, "EBLowR9" : {}, "EELowR9" : {} } }
+        sumg = {}
+        for sel in reco_sels:
+            sumg[sel] = {}
+            for cat in self.cats_:
+                sumg[sel][cat] = {}
+
         for gr in eff_reco:
             toks = gr.GetName().split("_")
             sel = toks[0]
@@ -453,42 +477,19 @@ class SignalNorm(PlotApp):
                 graph.Fit(fit)
                 avg_eff_reco.append(graph)
 
-        self.plotGraphs(avg_eff_reco,"avg_eff_reco",rng=[0.5,0.9])
-        self.plotGraphs(eff_reco,"eff_reco",rng=[0.5,0.9])
+        self.plotGraphs(avg_eff_reco,"avg_eff_reco",rng=[0.,0.9])
+        self.plotGraphs(eff_reco,"eff_reco",rng=[0.,0.9])
         self.plotGraphs(eff_acc_reco,"eff_acc_reco")
         self.plotGraphs(eff_acc_tot_reco,"eff_acc_tot_reco")
         self.plotGraphs(gen_acc,"gen_acc",rng=[0.,0.9])
-        self.plotGraphs(gen_acc_tot,"gen_acc_tot",rng=[0.2,0.9])
+        self.plotGraphs(gen_acc_tot,"gen_acc_tot",rng=[0.,0.9])
         
-        ## self.keep( eff_reco, True )
-        ## eff_reco_canv = ROOT.TCanvas("eff_reco","eff_reco")
-        ## eff_reco[0].Draw("ap")
-        ## eff_reco[0].GetYaxis().SetRangeUser(0.,1.)
-        ## for g in eff_reco[1:]: g.Draw("p")
-        ## self.keep(eff_reco_canv)
-        ## 
-        ## self.keep( eff_acc_reco, True )
-        ## eff_acc_reco_canv = ROOT.TCanvas("eff_acc_reco","eff_acc_reco")
-        ## eff_acc_reco[0].Draw("ap")
-        ## eff_acc_reco[0].GetYaxis().SetRangeUser(0.,1.)
-        ## for g in eff_acc_reco[1:]: g.Draw("p")
-        ## self.keep(eff_acc_reco_canv)
-        ## 
-        ## self.keep( eff_acc_tot_reco, True )
-        ## eff_acc_tot_reco_canv = ROOT.TCanvas("eff_acc_tot_reco","eff_acc_tot_reco")
-        ## eff_acc_tot_reco[0].Draw("ap")
-        ## eff_acc_tot_reco[0].GetYaxis().SetRangeUser(0.,1.)
-        ## for g in eff_acc_tot_reco[1:]: g.Draw("p")
-        ## self.keep(eff_acc_tot_reco_canv)
-        ## 
-        ## self.keep( gen_acc, True )
-        ## gen_acc_canv = ROOT.TCanvas("gen_acc","gen_acc")
-        ## gen_acc[0].Draw("ap")
-        ## gen_acc[0].GetYaxis().SetRangeUser(0.,1.)
-        ## for g in gen_acc[1:]: g.Draw("p")
-        ## self.keep(gen_acc_canv)
-        
-        param_graphs = { "EBEB" : [ROOT.TGraph(), ROOT.TGraph(), ROOT.TGraph()], "EBEE" : [ROOT.TGraph(), ROOT.TGraph(), ROOT.TGraph()], }
+        ## param_graphs = { "EBEB" : [ROOT.TGraph(), ROOT.TGraph(), ROOT.TGraph()], "EBEE" : [ROOT.TGraph(), ROOT.TGraph(), ROOT.TGraph()], }
+        # param_graphs = { "EBHighR9" : [ROOT.TGraph(), ROOT.TGraph(), ROOT.TGraph()], "EEHighR9" : [ROOT.TGraph(), ROOT.TGraph(), ROOT.TGraph()], }
+        param_graphs = {}
+        for cat in self.cats_: 
+            param_graphs[cat] = [ROOT.TGraph(), ROOT.TGraph(), ROOT.TGraph()]
+            
         map( lambda x: (param_graphs[x[0]][0].SetPoint(param_graphs[x[0]][0].GetN(),x[1],x[2].GetParameter(0)),
                         param_graphs[x[0]][1].SetPoint(param_graphs[x[0]][1].GetN(),x[1],x[2].GetParameter(1)),
                         param_graphs[x[0]][2].SetPoint(param_graphs[x[0]][2].GetN(),x[1],x[2].GetParameter(2))), 
@@ -504,9 +505,10 @@ class SignalNorm(PlotApp):
                 self.keep( [gr,pcanv] )
              
         ## rescaled = map( lambda x: (x[0],scaleGraph(x[1], lambda y: 1./(x[2].Eval(y)) )), fit )
-        save = {
-            }
-        for gr in avg_eff_reco+param_graphs["EBEB"]+param_graphs["EBEE"]:
+        save = {}
+        ## for gr in avg_eff_reco+param_graphs["EBEB"]+param_graphs["EBEE"]:
+        ## for gr in avg_eff_reco+param_graphs["EBHighR9"]+param_graphs["EEHighR9"]:
+        for gr in avg_eff_reco+reduce(lambda x,y: x+y, param_graphs.values()):
             save[gr.GetName()] = [ gr.GetListOfFunctions().At(0).GetParameter(0), gr.GetListOfFunctions().At(0).GetParameter(1), gr.GetListOfFunctions().At(0).GetParameter(2) ]
         with open("acceptance.json","w+") as accept_file:
             accept_file.write(json.dumps(save,indent=4,sort_keys=True))
