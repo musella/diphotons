@@ -1,0 +1,10 @@
+{
+	"processes" : {
+	"Data" : [ 
+            "/DoubleEG_0T/spigazzi-diphotons0T_v1-1_2_0-95-g1f8972a-v0-Run2015C-PromptReco-v2-8cbdcd661640872d67a2bc4f7b94b873/USER",
+            "/DoubleEG_0T/spigazzi-diphotons0T_v1-1_2_0-95-g1f8972a-v0-Run2015C-PromptReco-v3-8cbdcd661640872d67a2bc4f7b94b873/USER",
+            "/DoubleEG_0T/spigazzi-diphotons0T_v1-1_2_0-95-g1f8972a-v0-Run2015D-PromptReco-v4-8cbdcd661640872d67a2bc4f7b94b873/USER"
+	]
+	},
+	"cmdLine" : "campaign=diphotons0T_v1 processType='data' useAAA=True lumiMask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Cert_246908-260627_13TeV_PromptReco_Collisions15_ZeroTesla_25ns_JSON.txt"
+}
