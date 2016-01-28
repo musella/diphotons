@@ -147,7 +147,23 @@ cfgTools.addCategories(process.dumper,
                        ## histograms
                        histograms=[]
 )
-                       
+
+# HLT PATH
+dumpBits=["HLT_DoublePhoton40*", "HLT_DoublePhoton50*", "HLT_DoublePhoton85*","HLT_Photon300_NoHE*","HLT_Photon165_HE*"]
+    
+from HLTrigger.HLTfilters.hltHighLevel_cfi import hltHighLevel
+dumpBits=set(dumpBits)
+if customize.processType == "data":
+    if "Prompt" in customize.datasetName(): filterProc = "RECO"
+    else: filterProc = "PAT"
+    diphotonDumper.globalVariables.addTriggerBits = cms.PSet(
+        tag=cms.InputTag("TriggerResults","",filterProc),bits=cms.vstring("eeBadScFilter","goodVertices")
+        )
+elif len(dumpBits) > 0:
+    diphotonDumper.globalVariables.addTriggerBits = cms.PSet(
+        tag=cms.InputTag("TriggerResults","","HLT"),bits=cms.vstring(dumpBits)
+    )
+
 process.p1 = cms.Path(process.dumper)
 
 customize(process)

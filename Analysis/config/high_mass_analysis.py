@@ -104,13 +104,7 @@ diphotonDumper.nameTemplate = "$PROCESS_$SQRTS_$LABEL_$SUBCAT"
 diphotonDumper.throwOnUnclassified = cms.bool(False)
 
 variables=["mass","pt","rapidity",
-           "satRegressedMass := sqrt( (leadingPhoton.energyAtStep('satRegressedEnergy','initial')*subLeadingPhoton.energyAtStep('satRegressedEnergy','initial')) / (leadingPhoton.energy*subLeadingPhoton.energy) ) * genP4.mass",
-           "regressedMass := sqrt( (leadingPhoton.energyAtStep('regressedEnergy')*subLeadingPhoton.energyAtStep('regressedEnergy')) / (leadingPhoton.energy*subLeadingPhoton.energy) ) * genP4.mass",
            "genMass := genP4.mass",
-           "leadSatRegressedEnergy := leadingPhoton.userFloat('satRegressedEnergy')",
-           "subLeadSatRegressedEnergy := subLeadingPhoton.userFloat('satRegressedEnergy')",
-           "leadRegressedEnergy := leadingPhoton.userFloat('regressedEnergy')",
-           "subLeadRegressedEnergy := subLeadingPhoton.userFloat('regressedEnergy')",
            "leadEnergy := leadingPhoton.energy",
            "subLeadEnergy := subLeadingPhoton.energy",
            "leadIsSat := leadingPhoton.checkStatusFlag('kSaturated')",
@@ -168,6 +162,30 @@ variables=["mass","pt","rapidity",
            "subleadPixSeed := subLeadingPhoton.hasPixelSeed",
            "subleadPassEleVeto := subLeadingPhoton.passElectronVeto",
            ]
+
+if "0T" in customize.idversion:
+    variables.extend(
+        [
+            "leadTrkIso            := leadingPhoton.nTrkSolidConeDR03",
+            "leadTrkHollowIso      := leadingPhoton.nTrkHollowConeDR03",
+            "leadTrkMissingHits    := leadingPhoton.matchedGsfTrackInnerMissingHits",
+            "subleadTrkIso         := subLeadingPhoton.nTrkSolidConeDR03",
+            "subleadTrkHollowIso   := subLeadingPhoton.nTrkHollowConeDR03",
+            "subleadTrkMissingHits := subLeadingPhoton.matchedGsfTrackInnerMissingHits"
+    ]
+        )
+else:
+    variables.extend(
+        [
+            "satRegressedMass := sqrt( (leadingPhoton.energyAtStep('satRegressedEnergy','initial')*subLeadingPhoton.energyAtStep('satRegressedEnergy','initial')) / (leadingPhoton.energy*subLeadingPhoton.energy) ) * genP4.mass",
+            "regressedMass := sqrt( (leadingPhoton.energyAtStep('regressedEnergy')*subLeadingPhoton.energyAtStep('regressedEnergy')) / (leadingPhoton.energy*subLeadingPhoton.energy) ) * genP4.mass",
+            "leadSatRegressedEnergy := leadingPhoton.userFloat('satRegressedEnergy')",
+            "subLeadSatRegressedEnergy := subLeadingPhoton.userFloat('satRegressedEnergy')",
+            "leadRegressedEnergy := leadingPhoton.userFloat('regressedEnergy')",
+            "subLeadRegressedEnergy := subLeadingPhoton.userFloat('regressedEnergy')"
+        ]
+    )
+
 
 histograms=["mass>>mass(1500,0,15000)",
             "mass>>lowmass(560,60,200)",
@@ -252,6 +270,8 @@ variablesSinglePho=[
     "eMax","e2nd","eTop","eBottom","eLeft","eRight",
     "phoPixSeed  := hasPixelSeed",
     "phoPassEleVeto := passElectronVeto",
+    "phoTrkIso := nTrkSolidConeDR03",
+    "phoTrkMissingHits := matchedGsfTrackInnerMissingHits"
     ]
 
 
@@ -451,7 +471,8 @@ cfgTools.addCategories(photonDumper,
 #
 process.source = cms.Source("PoolSource",
                             fileNames=cms.untracked.vstring(
-        "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v5/Spring15BetaV2-2-gfceadad/SinglePhoton/EXOSpring15_v5-Spring15BetaV2-2-gfceadad-v0-Run2015B-PromptReco-v1/150813_095357/0000/diphotonsMicroAOD_99.root"
+                                "/store/user/spigazzi/flashgg/diphotons0T_v1/1_2_0-64-gbd0a265/DoubleEG_0T/diphotons0T_v1-1_2_0-64-gbd0a265-v0-Run2015D-PromptReco-v4/160127_133942/0000/myMicroAODOutputFile_1.root"
+                                # "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v5/Spring15BetaV2-2-gfceadad/SinglePhoton/EXOSpring15_v5-Spring15BetaV2-2-gfceadad-v0-Run2015B-PromptReco-v1/150813_095357/0000/diphotonsMicroAOD_99.root"
         # "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14ANv1/diphotonsPhys14AnV1/GGJets_M-1000To2000_Pt-50_13TeV-sherpa/ExoPhys14ANv1-diphotonsPhys14AnV1-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150330_192709/0000/diphotonsMicroAOD_1.root")
         )
 )
@@ -464,15 +485,20 @@ process.TFileService = cms.Service("TFileService",
 # analysis configuration
 #
 
-
 dataTriggers=[]
 mcTriggers=[]
 doSinglePho=False
 doDoublePho=True
+doDoublePho0T=False
 invertEleVeto=False
-dumpBits=["HLT_DoublePhoton60","HLT_DoublePhoton85","HLT_Photon250_NoHE","HLT_Photon165_HE"]
+dumpBits=["HLT_DoublePhoton50", "HLT_DoublePhoton60", "HLT_DoublePhoton85", "HLT_Photon250_NoHE", "HLT_Photon165_HE"]
 askTriggerOnMc=False
 
+if customize.selection == "diphoton0T":
+    mcTriggers=["HLT_DoublePhoton50*"]
+    dataTriggers=mcTriggers
+    doDoublePho0T = True
+    doDoublePho = False
 if customize.selection == "diphoton":
     mcTriggers=["HLT_DoublePhoton85*","HLT_Photon250_NoHE*"] ## "HLT_DoublePhoton60*",
     dataTriggers=mcTriggers
@@ -595,20 +621,21 @@ if customize.datasetName():
 
 
 ## kinematic selection
-analysis.addKinematicSelection(process,dumpTrees=dumpKinTree,splitByIso=True
-                               )
+analysis.addKinematicSelection(process,dumpTrees=dumpKinTree,splitByIso=True)
 
 if not dumpKinTree: minimalDumper=diphotonDumper
 
 ## analysis selections
 # CiC
 if customize.idversion != "":
+    if customize.idversion not in ["V2", "0T_V1"]:
+        print "Unknown ID version %s " % customize.idversion
+        sys.exit(-1)
     if customize.idversion == "V2":
         from diphotons.Analysis.highMassCiCDiPhotons_cfi import highMassCiCDiPhotonsV2   as highMassCiCDiPhotons
         from diphotons.Analysis.highMassCiCDiPhotons_cfi import highMassCiCDiPhotonsSBV2 as highMassCiCDiPhotonsSB
-    else:
-        print "Unknown ID version %s " % customize.idversion
-        sys.exit(-1)
+    if customize.idversion == "0T_V1":
+        from diphotons.Analysis.highMassCiCDiPhotons_cfi import highMassCiCDiPhotons0TV1 as highMassCiCDiPhotons0T
 else:
     from diphotons.Analysis.highMassCiCDiPhotons_cfi import highMassCiCDiPhotons, highMassCiCDiPhotonsSB
 
@@ -617,6 +644,25 @@ if invertEleVeto:
     ## highMassCiCDiPhotonsSB.variables[-1] = "-(passElectronVeto-1)"
     highMassCiCDiPhotons.variables[-1] = "hasPixelSeed"
     highMassCiCDiPhotonsSB.variables[-1] = "hasPixelSeed"
+
+## Diphotons 0T
+if doDoublePho0T:
+    if( customize.processType!="data" ):
+        analysis.computeMVA=False
+        analysis.addGenOnlySelection(process,genDiphotonDumper)
+        
+    analysis.addAnalysisSelection(process, "cic",
+                                  highMassCiCDiPhotons0T,
+                                  dumpTrees=True, dumpWorkspace=False, dumpHistos=True, splitByIso=True,
+                                  dumperTemplate=diphotonDumper,
+                                  nMinusOne=[(0,"NoSieie",        True, False, True), ## removeIndex(es), label, dumpTree, dumpWorkspace, dumpHistos
+                                             (1,"NoSipip",        True, False, False),
+                                             (2,"NoTrkIso",       True, False, False),
+                                             (3,"NoPhoIso",       True, False, False),
+                                             (4,"NoEleVeto",      True, False, False)
+                                         ]
+                              )    
+    
 if doDoublePho:
     if( customize.processType!="data" ):
         analysis.addGenOnlySelection(process,genDiphotonDumper)
@@ -643,12 +689,12 @@ if doDoublePho:
 
 # single photon selection
 if customize.idversion != "":
+    if customize.idversion not in ["V2", "0T_V1"]:
+        print "Unknown ID version %s " % customize.idversion
+        sys.exit(-1)
     if customize.idversion == "V2":
         from diphotons.Analysis.highMassCiCPhotons_cfi import highMassCiCPhotonsV2 as highMassCiCPhotons
         from diphotons.Analysis.highMassCiCPhotons_cfi import highMassCiCPhotonsSBV2 as highMassCiCPhotonsSB
-    else:
-        print "Unknown ID version %s " % customize.idversion
-        sys.exit(-1)
 else:
     from diphotons.Analysis.highMassCiCPhotons_cfi import highMassCiCPhotons, highMassCiCPhotonsSB
 if invertEleVeto:
