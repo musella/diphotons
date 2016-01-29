@@ -2891,8 +2891,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             label = model
         if model == "dijet":                
             pname = "dijet_%s" % name
-            linc = self.buildRooVar("%s_lin" % pname,[-100.0,100.0], importToWs=False)
-            logc = self.buildRooVar("%s_log" % pname,[-100.0,100.0], importToWs=False)
+            linc = self.buildRooVar("%s_lin" % pname,[-200.0,200.0], importToWs=False)
+            logc = self.buildRooVar("%s_log" % pname,[-200.0,200.0], importToWs=False)
             linc.setVal(5.)
             logc.setVal(-1.)
             
