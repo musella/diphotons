@@ -15,7 +15,8 @@
 	
     "#" : "data to be fit",
     "data" : [
-               "zg:__infile__/"
+               "zg:__infile__/",
+               "dy:__infile__/"
              ],
 
     "#" : "data used for template making",
@@ -24,7 +25,8 @@
              
      "#" : "mc dataset",
      "mc" : [
-              "zg:__infile__/"
+              "zg:__infile__/",
+              "dy:__infile__/"
             ],
 
      "#" : "mc dataset",
