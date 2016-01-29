@@ -367,7 +367,7 @@ highMassCiCDiPhotonsSBV2 = highMassCiCDiPhotons.clone( categories=highMassCiCCut
 highMassCiCDiPhotons0TV1 = cms.EDFilter(
     "GenericDiPhotonCandidateSelector",
     src = cms.InputTag("kinDiPhotons"),
-    rho = cms.InputTag("fixedGridRhoAllCalo"),
+    rho = cms.InputTag("fixedGridRhoFastjetAllCalo"),
     cut = cms.string(
         "    (leadingPhoton.r9>0.8||leadingPhoton.egChargedHadronIso<20||leadingPhoton.egChargedHadronIso/leadingPhoton.pt<0.3)"
         " && (subLeadingPhoton.r9>0.8||subLeadingPhoton.egChargedHadronIso<20||subLeadingPhoton.egChargedHadronIso/subLeadingPhoton.pt<0.3)" 

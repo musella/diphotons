@@ -1,10 +1,16 @@
 {
 	"processes" : {
 	"Data" : [ 
-            "/DoubleEG_0T/spigazzi-diphotons0T_v1-1_2_0-64-gbd0a265-v0-Run2015C-PromptReco-v2-6d5ef1f49a55061d65937752a97ec87f/USER",
-            "/DoubleEG_0T/spigazzi-diphotons0T_v1-1_2_0-64-gbd0a265-v0-Run2015C-PromptReco-v3-6d5ef1f49a55061d65937752a97ec87f/USER",
-            "/DoubleEG_0T/spigazzi-diphotons0T_v1-1_2_0-64-gbd0a265-v0-Run2015D-PromptReco-v4-6d5ef1f49a55061d65937752a97ec87f/USER"
+            ["/DoubleEG_0T/spigazzi-diphotons0T_v1-1_2_0-64-gbd0a265-v0-Run2015C-PromptReco-v2-6d5ef1f49a55061d65937752a97ec87f/USER",
+             {"args": ["trigger=HLT_DoublePhoton85_v*"]}
+            ],              
+            ["/DoubleEG_0T/spigazzi-diphotons0T_v1-1_2_0-64-gbd0a265-v0-Run2015C-PromptReco-v3-6d5ef1f49a55061d65937752a97ec87f/USER",
+             {"args" : ["trigger=HLT_DoublePhoton50_v*"]}
+            ],
+            ["/DoubleEG_0T/spigazzi-diphotons0T_v1-1_2_0-64-gbd0a265-v0-Run2015D-PromptReco-v4-6d5ef1f49a55061d65937752a97ec87f/USER",
+             {"args" : ["trigger=HLT_DoublePhoton50_v*"]}
+            ]
 	]
 	},
-    "cmdLine" : "campaign=diphotons0T_v1 processType=data useAAA=True selection=diphoton0T idversion=0T_V1 lumiMask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Cert_246908-260627_13TeV_PromptReco_Collisions15_ZeroTesla_25ns_JSON.txt trigger=HLT_DoublePhoton50_v* ptLead=75 ptSublead=75 massCut=230:320"
+    "cmdLine" : "campaign=diphotons0T_v1 processType=data useAAA=True selection=diphoton0T idversion=0T_V1 lumiMask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Cert_246908-260627_13TeV_PromptReco_Collisions15_ZeroTesla_25ns_JSON.txt ptLead=75 ptSublead=75 massCut=200:300"
 }

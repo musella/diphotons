@@ -125,8 +125,6 @@ variables=["mass","pt","rapidity",
            "subleadScEta             :=subLeadingPhoton.superCluster.eta",
            "leadPhi                  :=leadingPhoton.phi",
            "subleadPhi               :=subLeadingPhoton.phi",
-           "leadCShapeMVA            :=leadingPhoton.userFloat('cShapeMVA')",
-           "subleadCShapeMVA         :=subLeadingPhoton.userFloat('cShapeMVA')",
            "minR9                    :=min(leadingPhoton.r9,subLeadingPhoton.r9)",
            "maxEta                   :=max(abs(leadingPhoton.superCluster.eta),abs(subLeadingPhoton.superCluster.eta))",
            
@@ -137,9 +135,9 @@ variables=["mass","pt","rapidity",
            "subleadPhoIsoEA :=  map( abs(subLeadingPhoton.superCluster.eta) :: 0.,0.9,1.5,2.0,2.2,3. :: 0.21,0.2,0.14,0.22,0.31 )",
            
            "leadMatchType            :=leadingPhoton.genMatchType",
-           "leadGenIso               :=leadingPhoton.userFloat('genIso')",
+           "leadGenIso               :=?leadingPhoton.genMatchType? leadingPhoton.userFloat('genIso') : -1",
            "subleadMatchType         :=subLeadingPhoton.genMatchType",
-           "subleadGenIso            :=subLeadingPhoton.userFloat('genIso')",
+           "subleadGenIso            :=?subLeadingPhoton.genMatchType? suLeadingPhoton.userFloat('genIso') : -1",
            
            "leadChIso   := leadingPhoton.egChargedHadronIso", 
            "leadPhoIso  := leadingPhoton.egPhotonIso", 
@@ -166,9 +164,11 @@ variables=["mass","pt","rapidity",
 if "0T" in customize.idversion:
     variables.extend(
         [
+            "leadSigmaIpIp         := sqrt(leadingPhoton.sipip)",
             "leadTrkIso            := leadingPhoton.nTrkSolidConeDR03",
             "leadTrkHollowIso      := leadingPhoton.nTrkHollowConeDR03",
             "leadTrkMissingHits    := leadingPhoton.matchedGsfTrackInnerMissingHits",
+            "subleadSigmaIpIp      := sqrt(subLeadingPhoton.sipip)",
             "subleadTrkIso         := subLeadingPhoton.nTrkSolidConeDR03",
             "subleadTrkHollowIso   := subLeadingPhoton.nTrkHollowConeDR03",
             "subleadTrkMissingHits := subLeadingPhoton.matchedGsfTrackInnerMissingHits"
@@ -182,7 +182,9 @@ else:
             "leadSatRegressedEnergy := leadingPhoton.userFloat('satRegressedEnergy')",
             "subLeadSatRegressedEnergy := subLeadingPhoton.userFloat('satRegressedEnergy')",
             "leadRegressedEnergy := leadingPhoton.userFloat('regressedEnergy')",
-            "subLeadRegressedEnergy := subLeadingPhoton.userFloat('regressedEnergy')"
+            "subLeadRegressedEnergy := subLeadingPhoton.userFloat('regressedEnergy')",
+            "leadCShapeMVA            :=leadingPhoton.userFloat('cShapeMVA')",
+            "subleadCShapeMVA         :=subLeadingPhoton.userFloat('cShapeMVA')"
         ]
     )
 
@@ -434,18 +436,29 @@ if massCutEB or massCutEE:
                          "   (max(abs(leadingPhoton.superCluster.eta),abs(subLeadingPhoton.superCluster.eta))<1.4442 && mass <= %f)"
                          "|| (max(abs(leadingPhoton.superCluster.eta),abs(subLeadingPhoton.superCluster.eta))>1.566  && mass <= %f)" %
                                             (massCutEB,massCutEE),-1)
+# cfgTools.addCategories(diphotonDumper,
+#                        [## cuts are applied in cascade
+#                         ## ("all","1"),
+#                         ("EBHighR9","max(abs(leadingPhoton.superCluster.eta),abs(subLeadingPhoton.superCluster.eta))<1.4442"
+#                          "&& min(leadingPhoton.r9,subLeadingPhoton.r9)>0.94",0),
+#                         ("EBLowR9","max(abs(leadingPhoton.superCluster.eta),abs(subLeadingPhoton.superCluster.eta))<1.4442",0),
+#                         ("EEHighR9","min(leadingPhoton.r9,subLeadingPhoton.r9)>0.94",0),
+#                         ("EELowR9","1",0),
+#                         ],
+#                        variables=variables,
+#                        histograms=histograms
+#                        )
+
 cfgTools.addCategories(diphotonDumper,
                        [## cuts are applied in cascade
                         ## ("all","1"),
-                        ("EBHighR9","max(abs(leadingPhoton.superCluster.eta),abs(subLeadingPhoton.superCluster.eta))<1.4442"
-                         "&& min(leadingPhoton.r9,subLeadingPhoton.r9)>0.94",0),
-                        ("EBLowR9","max(abs(leadingPhoton.superCluster.eta),abs(subLeadingPhoton.superCluster.eta))<1.4442",0),
-                        ("EEHighR9","min(leadingPhoton.r9,subLeadingPhoton.r9)>0.94",0),
-                        ("EELowR9","1",0),
+                        ("EB", "max(abs(leadingPhoton.superCluster.eta),abs(subLeadingPhoton.superCluster.eta))<1.4442", 0),
+                        ("EE", "1", 0)
                         ],
                        variables=variables,
                        histograms=histograms
                        )
+
 
 # single photon dumpoer
 photonDumper.processId = "test"
@@ -470,6 +483,10 @@ cfgTools.addCategories(photonDumper,
 # input and output
 #
 process.source = cms.Source("PoolSource",
+                            inputCommands = cms.untracked.vstring(
+                                 "keep *",
+                                 "drop *_slimmedMETsNoHF_*_*"
+                                 ),
                             fileNames=cms.untracked.vstring(
                                 "/store/user/spigazzi/flashgg/diphotons0T_v1/1_2_0-64-gbd0a265/DoubleEG_0T/diphotons0T_v1-1_2_0-64-gbd0a265-v0-Run2015D-PromptReco-v4/160127_133942/0000/myMicroAODOutputFile_1.root"
                                 # "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v5/Spring15BetaV2-2-gfceadad/SinglePhoton/EXOSpring15_v5-Spring15BetaV2-2-gfceadad-v0-Run2015B-PromptReco-v1/150813_095357/0000/diphotonsMicroAOD_99.root"
@@ -621,6 +638,7 @@ if customize.datasetName():
 
 
 ## kinematic selection
+analysis.computeMVA=False
 analysis.addKinematicSelection(process,dumpTrees=dumpKinTree,splitByIso=True)
 
 if not dumpKinTree: minimalDumper=diphotonDumper
@@ -648,9 +666,8 @@ if invertEleVeto:
 ## Diphotons 0T
 if doDoublePho0T:
     if( customize.processType!="data" ):
-        analysis.computeMVA=False
         analysis.addGenOnlySelection(process,genDiphotonDumper)
-        
+
     analysis.addAnalysisSelection(process, "cic",
                                   highMassCiCDiPhotons0T,
                                   dumpTrees=True, dumpWorkspace=False, dumpHistos=True, splitByIso=True,
@@ -727,7 +744,7 @@ if not customize.lastAttempt:
     # make sure process doesn't get stuck due to slow I/O
     process.watchDog = cms.EDAnalyzer("IdleWatchdog",
                                       minIdleFraction=cms.untracked.double(0.1),
-                                      tolerance=cms.untracked.int32(10),
+                                      tolerance=cms.untracked.int32(100),
                                       checkEvery=cms.untracked.int32(100),
                                       )
     process.watch = cms.Path(
