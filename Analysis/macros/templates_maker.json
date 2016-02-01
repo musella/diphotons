@@ -195,6 +195,7 @@
                "leadPhoIsoEB    := ((leadPhoIso - rho*leadPhoIsoEA) -0.0045*leadPt < 0.25 ) && leadIsEB ",
 				"leadPhoIsoEE    := ((leadPhoIso - rho*leadPhoIsoEA) -0.003*leadPt < -0.5 )&& !leadIsEB",
 
+
 		"leadEcorr := (abs(leadScEta)<1 && leadR9>0.94)*(1./0.9988) + (abs(leadScEta)<1 && leadR9<=0.94)*(1./0.9954) + (abs(leadScEta)>=1 && abs(leadScEta)<1.5 && leadR9>0.94)*(1./1.0065) + (abs(leadScEta)>=1  && abs(leadScEta)<1.5 && leadR9<=0.94)*(1./0.9966) + (abs(leadScEta)>=1.5 && abs(leadScEta)<2 && leadR9>0.94)*(1./0.9953) + (abs(leadScEta)>=1.5  && abs(leadScEta)<2 && leadR9<=0.94)*(1./0.9863) + (abs(leadScEta)>=2 && abs(leadScEta)<3 && leadR9>0.94)*(1./0.9857) + (abs(leadScEta)>=2  && abs(leadScEta)<3 && leadR9<=0.94)*(1./0.9786)",
                "subleadEcorr := (abs(subleadScEta)<1 && subleadR9>0.94)*(1./0.9988) + (abs(subleadScEta)<1 && subleadR9<=0.94)*(1./0.9954) + (abs(subleadScEta)>=1 && abs(subleadScEta)<1.5 && subleadR9>0.94)*(1./1.0065) + (abs(subleadScEta)>=1  && abs(subleadScEta)<1.5 && subleadR9<=0.94)*(1./0.9966) + (abs(subleadScEta)>=1.5 && abs(subleadScEta)<2 && subleadR9>0.94)*(1./0.9953) + (abs(subleadScEta)>=1.5  && abs(subleadScEta)<2 && subleadR9<=0.94)*(1./0.9863) + (abs(subleadScEta)>=2 && abs(subleadScEta)<3 && subleadR9>0.94)*(1./0.9857) + (abs(subleadScEta)>=2  && abs(subleadScEta)<3 && subleadR9<=0.94)*(1./0.9786)",
                "massCorr := sqrt(leadEcorr*subleadEcorr)",
@@ -204,6 +205,12 @@
                "mggEBEE := mass*massCorr"    
 	       ],
 
+    "_aliases" : [
+		"leadEcorr := (abs(leadScEta)<1 && leadR9>0.94)*(1./0.99661) + (abs(leadScEta)<1 && leadR9<=0.94)*(1./1.00079) + (abs(leadScEta)>=1 && abs(leadScEta)<1.5 && leadR9>0.94)*(1./0.99582) + (abs(leadScEta)>=1  && abs(leadScEta)<1.5 && leadR9<=0.94)*(1./1.00756) + (abs(leadScEta)>=1.5 && abs(leadScEta)<2 && leadR9>0.94)*(1./1.00068) + (abs(leadScEta)>=1.5  && abs(leadScEta)<2 && leadR9<=0.94)*(1./1.00917) + (abs(leadScEta)>=2 && abs(leadScEta)<3 && leadR9>0.94)*(1./0.99910) + (abs(leadScEta)>=2  && abs(leadScEta)<3 && leadR9<=0.94)*(1./1.00748)",
+		"subleadEcorr := (abs(subleadScEta)<1 && subleadR9>0.94)*(1./0.99661) + (abs(subleadScEta)<1 && subleadR9<=0.94)*(1./1.00079) + (abs(subleadScEta)>=1 && abs(subleadScEta)<1.5 && subleadR9>0.94)*(1./0.99582) + (abs(subleadScEta)>=1  && abs(subleadScEta)<1.5 && subleadR9<=0.94)*(1./1.00756) + (abs(subleadScEta)>=1.5 && abs(subleadScEta)<2 && subleadR9>0.94)*(1./1.00068) + (abs(subleadScEta)>=1.5  && abs(subleadScEta)<2 && subleadR9<=0.94)*(1./1.00917) + (abs(subleadScEta)>=2 && abs(subleadScEta)<3 && subleadR9>0.94)*(1./0.99910) + (abs(subleadScEta)>=2  && abs(subleadScEta)<3 && subleadR9<=0.94)*(1./1.00748)",
+               "massCorr := sqrt(leadEcorr*subleadEcorr)"
+
+    ],
     "rootstyle_extra" : [
                   "TGaxis::SetMaxDigits(3);",
                   "TH1::SetDefaultSumw2(1);"

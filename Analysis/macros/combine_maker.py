@@ -45,8 +45,13 @@ class CombineApp(TemplatesApp):
                                     help="Observable used in the fit default : [%default]",
                                     ),
                         make_option("--observables",dest="observables",action="callback",callback=optpars_utils.Load(scratch=True),type="string",
-                                    default={ "EBEE" : "mggEBEE[3400,330,10000]",
-                                              "EBEB" : "mggEBEB[4000,230,10000]"
+                                    default={ 
+                                "EBEE"     : "mggEBEE[3400,330,10000]",
+                                "EEHighR9" : "mggEBEE[3400,330,10000]",
+                                "EEHighR9" : "mggEBEE[3400,330,10000]",
+                                "EBEB"     : "mggEBEB[4000,230,10000]",
+                                "EBHighR9" : "mggEBEB[4000,230,10000]",
+                                "EBHighR9" : "mggEBEB[4000,230,10000]",
                                               },
                                     help="Per category observable ranges : [%default]",
                                     ),
@@ -89,37 +94,22 @@ class CombineApp(TemplatesApp):
                                     metavar="FIT_RANGE"
                                     ),                        
                         make_option("--plot-binning",dest="plot_binning",action="callback",callback=optpars_utils.ScratchAppend(float),
-                                    ## type="string",default=[114,300,6000],
-                                    ## type="string",default=[134,300,7000],
                                     type="string",
-                                    ## default=[230,240,250,260,270,280,290,300,310,320,330,340,360,370,390,400,410,420,440,460,500,1050],
-                                    ## default=[132,230,1550],
-                                    ##default=[110,230,1605],
-                                    # default=[69,230,1610],
                                     default=[94,230,2110],
-                                    ## default=[120,230,1610],
-                                    ## default=[770,230,13000],
-                                    ## default=[230,250,275,300,325,350,400,450,500,1050],
-                                    ## default=[230,250,275,300,325,350,400,450,500,600,700,800,900,1000,1500,2000,4000,5000,6000,7000],
                                     help="Binning to be used for plots",
                                     ),                      
                         make_option("--cat-plot-binning",dest="cat_plot_binning",action="callback",callback=optpars_utils.Load(scratch=True),
-                                    ## type="string",default=[114,300,6000],
-                                    ## type="string",default=[134,300,7000],
-                                    type="string",default={ ##"EBEE": [100,330,1605], 
-                                                            ## "EBEE": [36,330,1590], 
-                                                            ## "EBEE": [64,330,1610], 
+                                    type="string",default={ 
                                                             "EBEE": [89,330,2110], 
-                                                            ## [123,330,1560],
-                                                            ## "EBEE": [330,340,350,360,370,390,410,420,440,460,500,1050],
-                                                            ## "EBEE": [500,330,13000],
-                                                            ## "EBEE": [330,360,390,420,450,500,1050],
-                                                            ## "EBEE": [330,360,390,420,450,500,600,700,800,900,1000,1500,2000,4000,5000,6000,7000],
+                                                            "EEHighR9": [89,330,2110], 
+                                                            "EELowR9": [89,330,2110], 
                                                             },
-                                    ## type="string",default=[320,350,375,400,450,500,1050],
                                     help="Binning to be used for plots",
                                     ),
-                        
+                        make_option("--plot-blind",dest="plot_blind",action="callback",callback=optpars_utils.ScratchAppend(float),
+                                    type="string",default=[],
+                                    help="Blinding region for background plot",
+                                    ),
                         make_option("--plot-signal-binning",dest="plot_signal_binning",action="callback",callback=optpars_utils.ScratchAppend(float),
                                     type="string",default=[50,0.2],
                                     help="Number of bins and width of observable for signal model plots",
@@ -205,10 +195,16 @@ class CombineApp(TemplatesApp):
                                               ## "masses" : [10,500,5000],
                                               "masses" : ## [500,505,506,510],
                                               ## list(np.concatenate((np.arange(500,750,2),np.arange(750,1000,2),np.arange(1000,1600,4),np.arange(1600,4500,100)))),
-                                              [600.],
+                                              ## [600.],
+                                              list(np.arange(700,800,2)),
                                               "interpolate_below" : 0,
                                               "pdfs"    : { "001" : {"EBEB" : "ConvolutionRhPdf_catEBEB_mass%1.5g_kpl001", 
-                                                                     "EBEE" : "ConvolutionRhPdf_catEBEE_mass%1.5g_kpl001" },
+                                                                     "EBEE" : "ConvolutionRhPdf_catEBEE_mass%1.5g_kpl001",
+                                                                     "EBHighR9" : "ConvolutionRhPdf_catEBHighR9_mass%1.5g_kpl001", 
+                                                                     "EBLowR9" : "ConvolutionRhPdf_catEBLowR9_mass%1.5g_kpl001", 
+                                                                     "EEHighR9" : "ConvolutionRhPdf_catEEHighR9_mass%1.5g_kpl001", 
+                                                                     "EELowR9" : "ConvolutionRhPdf_catEELowR9_mass%1.5g_kpl001", 
+                                                                     },
                                                             "005" : {"EBEB" : "ConvolutionRhPdf_catEBEB_mass%1.5g_kpl005", 
                                                                      "EBEE" : "ConvolutionRhPdf_catEBEE_mass%1.5g_kpl005" },
                                                             "007" : {"EBEB" : "ConvolutionRhPdf_catEBEB_mass%1.5g_kpl007", 
@@ -219,7 +215,8 @@ class CombineApp(TemplatesApp):
                                                                      "EBEE" : "ConvolutionRhPdf_catEBEE_mass%1.5g_kpl015" },
                                                             "02" : {"EBEB" : "ConvolutionRhPdf_catEBEB_mass%1.5g_kpl02", 
                                                                     "EBEE" : "ConvolutionRhPdf_catEBEE_mass%1.5g_kpl02" },
-                                                            }
+                                                            },
+
                                               },
                                     help="Details about parametric signal",
                                     ),
@@ -242,10 +239,10 @@ class CombineApp(TemplatesApp):
                                     ),
                         make_option("--energy-scale-eigenvec",dest="energy_scale_eigenvec",action="callback",callback=optpars_utils.Load(scratch=True),
                                     type="string",
-                                    default={ "EBEBeig1" : { "EBEB" :  0.9923 },
-                                              "EBEBeig2" : { "EBEB" : -0.1201 },
-                                              "EBEEeig1" : { "EBEE" :  0.9674 },
-                                              "EBEEeig2" : { "EBEE" : -0.2532 }
+                                    default={ "EBEBeig1" : { "EBEB" :  0.9923, "EBHighR9" :  0.9923, "EBLowR9" :  0.9923 },
+                                              "EBEBeig2" : { "EBEB" : -0.1201, "EBHighR9" : -0.1201, "EBLowR9" : -0.1201 },
+                                              "EBEEeig1" : { "EBEE" :  0.9674, "EEHighR9" :  0.9674, "EELowR9" :  0.9674 },
+                                              "EBEEeig2" : { "EBEE" : -0.2532, "EEHighR9" : -0.2532, "EELowR9" : -0.2532 }
                                               }
                                     ),
                         make_option("--energy-scale-uncertainties",dest="energy_scale_uncertainties",action="callback",callback=optpars_utils.Load(scratch=True),
@@ -301,8 +298,15 @@ class CombineApp(TemplatesApp):
                         make_option("--bias-func",dest="bias_func",action="callback",callback=optpars_utils.Load(scratch=True),
                                     type="string",
                                     default={ "EBEB_dijet_230_10000" : "((0.06*((x/600.)^-4))+1e-6)/3.",
-                                              "EBEB_8TeV_dijet_300_10000" : "((0.06*((x/600.)^-4))+1e-6)/6.",
+                                              "EBHighR9_dijet_230_10000" : "((0.06*((x/600.)^-4))+1e-6)/6.",
+                                              "EBLowR9_dijet_230_10000" : "((0.06*((x/600.)^-4))+1e-6)/6.",
+                                              
                                               "EBEE_dijet_330_10000" : "((0.1*((x/600.)^-5)))/3.",
+                                              "EEHighR9_dijet_330_10000" : "((0.1*((x/600.)^-5)))/6.",
+                                              "EELowR9_dijet_330_10000" : "((0.1*((x/600.)^-5)))/6.",
+                                              
+                                              "EBEB_8TeV_dijet_300_10000" : "((0.06*((x/600.)^-4))+1e-6)/6.",
+
                                               },
                                     help="Bias as a function of diphoton mass to compute the bias uncertainty values inside the datacard",
                                     ),
@@ -749,8 +753,11 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 else:
                     bias_name = None
 
+                if len(options.plot_blind) == 0:
+                    options.plot_blind = None
+
                 self.plotBkgFit(options,data,model,roobs,"%s%s" % (comp,cat),poissonErrs=True, plot_binning=options.cat_plot_binning.get(cat,options.plot_binning),
-                                blabel=bias_name, signalmodel=signal, signalmodel_norm=signal_norm)
+                                blabel=bias_name, signalmodel=signal, signalmodel_norm=signal_norm, blind=options.plot_blind)
 
 
     ## ------------------------------------------------------------------------------------------------------------        
@@ -1446,10 +1453,12 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     signal = self.rooPdf("model_signal_%s_%s" % (signame,cat))
                     signal_norm = self.rooFunc("model_signal_%s_%s_norm" % (signame,cat))
                     print signal_norm, signal 
+                if len(options.plot_blind) == 0:
+                    options.plot_blind = None
                     
                 self.plotBkgFit(options,plreduced,pdf,roobs,"%s%s" % (comp,cat),poissonErrs=True, plot_binning=options.cat_plot_binning.get(cat,options.plot_binning),
-                                blabel=bias_name,signalmodel=signal,signalmodel_norm=signal_norm)
-                self.plotBkgFit(options,plreduced,pdf,roobs,"%s%s_lin" % (comp,cat),poissonErrs=True, plot_binning=options.cat_plot_binning.get(cat,options.plot_binning),logy=False,blabel=bias_name,signalmodel=signal,signalmodel_norm=signal_norm)
+                                blabel=bias_name,signalmodel=signal,signalmodel_norm=signal_norm,blind=options.plot_blind)
+                self.plotBkgFit(options,plreduced,pdf,roobs,"%s%s_lin" % (comp,cat),poissonErrs=True, plot_binning=options.cat_plot_binning.get(cat,options.plot_binning),logy=False,blabel=bias_name,signalmodel=signal,signalmodel_norm=signal_norm,blind=options.plot_blind)
                 
                 ## normalization has to be called <pdfname>_norm or combine won't find it
                 if options.norm_as_fractions:
@@ -1895,19 +1904,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 ## prepare semi-parametric model if neded
                 if options.use_templates:
                     pdf = self.addTemplateToSignal(pdf,signame,cat,roobs,rootempl)
-                    ## pdf.SetName("model_signal_%s_%s_%s"% (roobs.GetName(),signame, cat))
-                    ## ppPdf=self.rooPdf( "model_%s_%s_%s" %(rootempl.GetName(),options.template_comp_sig,cat))
-                    ## self.keep([pdf,ppPdf])
-                    ## pdf = ROOT.RooProdPdf("model_signal_%s_%s"% (signame, cat), "model_signal_%s_%s"% (signame, cat),pdf, ppPdf )
-                    ## if options.verbose:
-                    ##     print
-                    ##     ppPdf.Print()
-                    ##     pdf.Print()
-                    ##     print "Integral templpdf     :", ppPdf.createIntegral(ROOT.RooArgSet(rootempl,roobs),"templateBinning%s"%cat).getVal()
-                    ##     print "Integral templpdf only mgg    :", ppPdf.createIntegral(ROOT.RooArgSet(roobs),"templateBinning%s"%cat).getVal()
-                    ##     print "Integral templpdf only templateNdim2_unroll    :", ppPdf.createIntegral(ROOT.RooArgSet(rootempl),"templateBinning%s"%cat).getVal()
-                    ##     print "Integral combined pdf    :", pdf.createIntegral(ROOT.RooArgSet(rootempl,roobs),"templateBinning%s"%cat).getVal()
-                    ##     print
+
                     self.plotBkgFit(options,binned,pdf,rootempl,"signal_%s_%s_%s" % (signame,rootempl.GetName(),cat),poissonErrs=False,logy=False,logx=False,plot_binning=rootempl_binning,opts=[RooFit.ProjWData(ROOT.RooArgSet(roobs),binned)], bias_funcs={},sig=True, forceSkipBands=True)
                 
                 self.plotBkgFit(options,reduced,pdf,roobs,"signal_%s_%s_%s" % (signame,roobs.GetName(),cat),poissonErrs=False,sig=True,logx=False,logy=False,
@@ -2076,6 +2073,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         selection = fit["selection"]
         exAs = {}
         categories = options.fits[options.fit_name]["categories"]
+        print options.parametric_signal_acceptance
         for cat in categories:
             accparams = map(lambda x: options.parametric_signal_acceptance["acc_%s_p%d" % (cat,x)], xrange(0,3) )
             effparams = options.parametric_signal_acceptance["%s_avg_reco_eff_%s" % (selection,cat) ]
@@ -2289,7 +2287,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
 
     ## ------------------------------------------------------------------------------------------------------------
     def plotBkgFit(self,options,dset,pdf,obs,label,blabel=None,extra=None,bias_funcs=None,poissonErrs=True,plot_binning=None,logx=True,logy=True,
-                       opts=[],forceSkipBands=False,sig=False,signalmodel=None,signalmodel_norm=None):
+                       opts=[],forceSkipBands=False,sig=False,signalmodel=None,signalmodel_norm=None, blind=None):
         ## plot the fit result
         print "Plotting  model ", label, obs.GetName(), blabel
         ROOT.TH1D.SetDefaultSumw2(True)
@@ -2311,7 +2309,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         dataopts = [RooFit.MarkerSize(1)]+opts
         if poissonErrs:
             dataopts.append(RooFit.DataError(ROOT.RooAbsData.Poisson))
-        curveopts = [RooFit.LineColor(ROOT.kBlue)]
+        curveopts = [RooFit.LineColor(ROOT.kBlue),RooFit.Normalization(dset.sumEntries(),ROOT.RooAbsReal.NumEvent)]
         
         if not plot_binning:
             plot_binning = options.plot_binning
@@ -2362,34 +2360,44 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             rngmin, rngmax = frame.GetXaxis().GetXmin(), frame.GetXaxis().GetXmax()
         
         if self.options.convert_to_binned:
-            ## print bins
-            ## abins = array.array('d',[bins[0][1]]+map(lambda x: x[2], bins))
-            ## obs.setBinning(ROOT.RooBinning(len(bins)-1,abins))
             obs.setBinning(obs.getBinning(binning))
             oset = ROOT.RooArgSet(obs)
             binnedHisto = pdf.generateBinned(oset,1.,True)
             pdf = ROOT.RooHistPdf("binned_%s"%pdf.GetName(),"binned_%s"%pdf.GetName(),oset,binnedHisto)
             self.keep( [pdf,binnedHisto] )
 
+        if blind:
+            plotDset = dset.reduce(RooFit.Cut("%s < %f || %s > %f" % (obs.GetName(),blind[0],obs.GetName(),blind[1]) ))
+        else:
+            plotDset = dset
 
         print "Plotting dataset"
-        dset.plotOn(frame,*(dataopts+invisible))
+        dset.plotOn(frame,*(dataopts+invisible+[RooFit.Invisible()]))
+        if not doBands:
+             plotDset.plotOn(frame,*(dataopts+invisible))
         print "Plotting pdf....",
         pdf.plotOn(frame,*(curveopts+invisible))
         print "done"        
         ## pdf.Print()
         ## dset.Print()
+        fitc   = frame.getObject(int(frame.numItems()-1))
         hist   = frame.getObject(int(frame.numItems()-2))
         if poissonErrs:
             alpha = (1. - 0.6827)*0.5
             for ip in range(hist.GetN()):
-                nev = hist.GetY()[ip]
+                if blind and hist.GetX()[ip]-hist.GetErrorXlow(ip)>=blind[0] and hist.GetX()[ip]+hist.GetErrorXhigh(ip)<=blind[1]:
+                    hist.SetPoint(ip,hist.GetX()[ip],0.)
+                    ## hist.SetPointEYlow(ip,0.)
+                    ## hist.SetPointEYhigh(ip,0.)
+                    ## continue
+                    nev = fitc.Eval(hist.GetX()[ip])
+                else:
+                    nev = hist.GetY()[ip]
                 el = (nev - ROOT.Math.gamma_quantile(alpha,nev,1.)) if nev > 0. else 0.
                 eu = ROOT.Math.gamma_quantile_c(alpha,nev+1.,1.) - nev
                 hist.SetPointEYlow(ip,el)
                 hist.SetPointEYhigh(ip,eu)
 
-        fitc   = frame.getObject(int(frame.numItems()-1))
         fitcLeg,histLeg = fitc,hist
         ## print hist, fitc
         if extra:
@@ -2399,13 +2407,21 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             print "Making fit error bands...",
             onesigma,twosigma = self.plotFitBands(options,frame,dset,pdf,obs,fitc,binning,blabel,bias_funcs)
             pdf.plotOn(frame,*curveopts)
-            dset.plotOn(frame,*dataopts)
+            plotDset.plotOn(frame,*(dataopts))
+            ## dset.plotOn(frame,*(dataopts))
             
             hist2   = frame.getObject(int(frame.numItems()-1))
             if poissonErrs:
                 alpha = (1. - 0.6827)*0.5
                 for ip in range(hist2.GetN()):
-                    nev = hist.GetY()[ip]
+                    if blind and hist2.GetX()[ip]-hist2.GetErrorXlow(ip)>blind[0] and hist2.GetX()[ip]+hist2.GetErrorXhigh(ip)<blind[1]:
+                        hist2.SetPoint(ip,hist2.GetX()[ip],0.)
+                        ## hist2.SetPointEYlow(ip,0.)
+                        ## hist2.SetPointEYhigh(ip,0.)
+                        nev = fitc.Eval(hist2.GetX()[ip])
+                        ## continue
+                    else:
+                        nev = hist2.GetY()[ip]
                     el = (nev - ROOT.Math.gamma_quantile(alpha,nev,1.)) if nev > 0. else 0.
                     eu = ROOT.Math.gamma_quantile_c(alpha,nev+1.,1.) - nev
                     hist2.SetPointEYlow(ip,el)
@@ -2429,12 +2445,17 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 terrp, terrm = rtwosigma.GetErrorYhigh(ip), rtwosigma.GetErrorYhigh(ip)
                 herrp, herrm = hist.GetErrorYhigh(ip), hist.GetErrorYhigh(ip)
                 ## print oerrp, oerrm, herrp, herrm
+                if blind and ronesigma.GetX()[ip]-ronesigma.GetErrorXlow(ip)>blind[0] and ronesigma.GetX()[ip]+ronesigma.GetErrorXhigh(ip)<blind[1]:
+                    ronesigma.SetPoint(ip,ronesigma.GetX()[ip],0.)
+                    rtwosigma.SetPoint(ip,rtwosigma.GetX()[ip],0.)
                 if py > hy:
+                    if herrm == 0.: continue
                     oerrp /= herrm
                     terrp /= herrm
                     oerrm /= herrm
                     terrm /= herrm
                 else:
+                    if herrp == 0.: continue
                     oerrp /= herrp
                     terrp /= herrp
                     oerrm /= herrp
@@ -2453,6 +2474,10 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         resid.addObject(one)
         self.keep(one)
         hresid = frame.residHist(hist.GetName(),fitc.GetName(),True)
+        for ip in range(hresid.GetN()):
+            if blind and hresid.GetX()[ip]-hresid.GetErrorXlow(ip)>blind[0] and hresid.GetX()[ip]+hresid.GetErrorXhigh(ip)<blind[1]:
+                hresid.SetPoint(ip,hresid.GetX()[ip],0.)
+        
         resid.addPlotable(hresid,"PE")
         
         if signalmodel:
@@ -2472,6 +2497,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             else:
                 legend = ROOT.TLegend(0.4,0.5,0.9,0.9)
                 ## legend = ROOT.TLegend(0.4,0.35,0.9,0.9)
+
+        ## dset.plotOn(frame,*(dataopts+invisible+[RooFit.Invisible(),RooFit.RefreshNorm()]))
                 
         canv.SetLeftMargin(0.2)
         canv.Divide(1,2)
