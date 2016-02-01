@@ -365,7 +365,7 @@ class CombineApp(TemplatesApp):
         ROOT.gSystem.Load("libdiphotonsUtils")
         if ROOT.gROOT.GetVersionInt() >= 60000:
             ROOT.gSystem.Load("libdiphotonsRooUtils")
-        ROOT.gSystem.Load("libHiggsAnalysisCombinedLimit")
+#        ROOT.gSystem.Load("libHiggsAnalysisCombinedLimit")
         
         self.pdfPars_ = ROOT.RooArgSet()
         self.observables_ = {}
