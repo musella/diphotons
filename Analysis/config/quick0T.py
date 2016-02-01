@@ -45,7 +45,7 @@ process.source = cms.Source ("PoolSource",
                                  ),
                              fileNames = cms.untracked.vstring(
                                  
-                                     "/store/user/spigazzi/flashgg/diphotons0T/1_2_0-59-gf9783cd/DoubleEG_0T/diphotons0T-1_2_0-59-gf9783cd-v0-Run2015C-PromptReco-v2/160125_220008/0000/myMicroAODOutputFile_100.root"
+                                     ""
                                  
                              )
 )
@@ -69,13 +69,6 @@ process.dumper.nameTemplate = "gg_$LABEL"
 dipho_variables=["dipho_sumpt      := sumPt",
                  "dipho_cosphi     := abs(cos(leadingPhoton.phi - subLeadingPhoton.phi))",
                  "mass             := mass",
-                 # "satRegressedMass := sqrt( (leadingPhoton.energyAtStep('satRegressedEnergy','initial')*subLeadingPhoton.energyAtStep('satRegressedEnergy','initial')) / (leadingPhoton.energy*subLeadingPhoton.energy) ) * genP4.mass",
-                 # "regressedMass := sqrt( (leadingPhoton.energyAtStep('regressedEnergy')*subLeadingPhoton.energyAtStep('regressedEnergy')) / (leadingPhoton.energy*subLeadingPhoton.energy) ) * genP4.mass",
-                 # "genMass := genP4.mass",
-                 # "leadSatRegressedEnergy := leadingPhoton.userFloat('satRegressedEnergy')",
-                 # "subLeadSatRegressedEnergy := subLeadingPhoton.userFloat('satRegressedEnergy')",
-                 # "leadRegressedEnergy := leadingPhoton.userFloat('regressedEnergy')",
-                 # "subLeadRegressedEnergy := subLeadingPhoton.userFloat('regressedEnergy')",
 
                  # leading
                  "lPt            := leadingPhoton.pt",
@@ -147,22 +140,6 @@ cfgTools.addCategories(process.dumper,
                        ## histograms
                        histograms=[]
 )
-
-# HLT PATH
-dumpBits=["HLT_DoublePhoton40*", "HLT_DoublePhoton50*", "HLT_DoublePhoton85*","HLT_Photon300_NoHE*","HLT_Photon165_HE*"]
-    
-from HLTrigger.HLTfilters.hltHighLevel_cfi import hltHighLevel
-dumpBits=set(dumpBits)
-if customize.processType == "data":
-    if "Prompt" in customize.datasetName(): filterProc = "RECO"
-    else: filterProc = "PAT"
-    diphotonDumper.globalVariables.addTriggerBits = cms.PSet(
-        tag=cms.InputTag("TriggerResults","",filterProc),bits=cms.vstring("eeBadScFilter","goodVertices")
-        )
-elif len(dumpBits) > 0:
-    diphotonDumper.globalVariables.addTriggerBits = cms.PSet(
-        tag=cms.InputTag("TriggerResults","","HLT"),bits=cms.vstring(dumpBits)
-    )
 
 process.p1 = cms.Path(process.dumper)
 
