@@ -10,8 +10,6 @@ from HLTrigger.HLTfilters.hltHighLevel_cfi import hltHighLevel
 
 import sys
 
-
-
 # -------------------------------------------------------------------------------------------------------------------------
 class DiPhotonAnalysis(object):
     
@@ -21,7 +19,8 @@ class DiPhotonAnalysis(object):
                  genIsoDefinition=("genIso",10.),
                  dataTriggers=["HLT_DoublePhoton60*","HLT_DoublePhoton85*","HLT_Photon250_NoHE*"],
                  mcTriggers=["HLT_DoublePhoton60*","HLT_DoublePhoton85*","HLT_Photon250_NoHE*"],
-                 askTriggerOnMc=False,sortTemplate=False,singlePhoDumperTemplate=False,computeRechitFlags=False,removeEEEE=True):
+                 askTriggerOnMc=False,sortTemplate=False,singlePhoDumperTemplate=False,computeRechitFlags=False,removeEEEE=True,
+                 applySmearingCorrections=False,applyEnergyCorrections=False):
         
         super(DiPhotonAnalysis,self).__init__()
         
@@ -36,6 +35,8 @@ class DiPhotonAnalysis(object):
         self.mcTriggers = mcTriggers
         self.dataTriggers = dataTriggers
         self.askTriggerOnMc = askTriggerOnMc
+        self.applyEnergyCorrections = applyEnergyCorrections
+        self.applySmearingCorrections = applySmearingCorrections
         
         self.computeRechitFlags = computeRechitFlags
         
@@ -197,13 +198,22 @@ class DiPhotonAnalysis(object):
         src = "flashggDiPhotons"
         if self.computeRechitFlags:
             process.flashggDiPhotonsWithFlags = cms.EDProducer("DiphotonsDiPhotonsRechiFlagProducer",
-                                                               src=cms.InputTag("flashggDiPhotons"),
+                                                               src=cms.InputTag(src),
                                                                reducedBarrelRecHitCollection = cms.InputTag('reducedEgamma','reducedEBRecHits'),
                                                                reducedEndcapRecHitCollection = cms.InputTag('reducedEgamma','reducedEERecHits'),
                                                                reducedPreshowerRecHitCollection = cms.InputTag('reducedEgamma','reducedESRecHits')                
                                                                )
             src = "flashggDiPhotonsWithFlags"
+        if self.applyEnergyCorrections:
+            process.load("diphotons.Analysis.highMassCorrectedDiphotons_cfi")
+            process.highMassCorrectedDiphotonsData.src=src
+            src = "highMassCorrectedDiphotonsData"
+        elif self.applySmearingCorrections:
+            process.load("diphotons.Analysis.highMassCorrectedDiphotons_cfi")
+            process.highMassCorrectedDiphotonsMC.src=src
+            src = "highMassCorrectedDiphotonsMC"
             
+
         template = simpleTemplate.clone(src=cms.InputTag(src),
                                         cut = cms.string(
                 "mass > %(massCut)f"

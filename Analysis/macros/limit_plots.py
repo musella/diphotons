@@ -87,7 +87,10 @@ class LimitPlot(PlotApp):
                             default=None), 
                 make_option("--use-fb",dest="use_fb", action="store_true", 
                             default=False), 
-                
+                make_option("--spin2",action="store_true", dest="spin2", 
+                            default=True),
+                make_option("--spin0",action="store_false", dest="spin2", 
+                            ),
             ])
         
         global ROOT, style_utils, RooFit
@@ -175,6 +178,8 @@ class LimitPlot(PlotApp):
         unit = "fb" if options.use_fb else "pb"
         basicStyle = [["SetMarkerSize",0.6],["SetLineWidth",3],
                        ["SetTitle",";m_{G} (GeV);95%% C.L. limit #sigma(pp#rightarrow G#rightarrow#gamma#gamma) (%s)" % unit]]
+        if not options.spin2:
+            basicStyle.append(["SetTitle",";m_{S} (GeV);95%% C.L. limit #sigma(pp#rightarrow S#rightarrow#gamma#gamma) (%s)" % unit])
         commonStyle = [[self.scaleByXsec,coup],"Sort"]+basicStyle
         ## expectedStyle = commonStyle+[["SetMarkerStyle",ROOT.kOpenCircle]]
         expectedStyle = commonStyle+[["SetMarkerSize",0]]
@@ -197,7 +202,11 @@ class LimitPlot(PlotApp):
         expected68.Draw("E3L")
         expected.Draw("L")
         kappa = "0."+coup[1:]
-        legend.AddEntry(None,"#tilde{#kappa} = %s" % kappa,"")
+        if options.spin2:
+            legend.AddEntry(None,"#tilde{#kappa} = %s" % kappa,"")
+        else:
+            kappa = float(kappa)
+            legend.AddEntry(None,"#frac{#Gamma}{m} = %g #times 10^{-2}" % (1.4*kappa*kappa*100.),"")
         legend.AddEntry(expected,"Expected limit","l")
         legend.AddEntry(expected68," \pm 1 \sigma","f")
         legend.AddEntry(expected95," \pm 2 \sigma","f")
@@ -250,10 +259,15 @@ class LimitPlot(PlotApp):
         ## legend = ROOT.TLegend(0.45,0.2,0.75,0.42)
         legend.SetFillStyle(0)
         kappa = "0."+coup[1:]
-        legend.AddEntry(None,"#tilde{#kappa} = %s" % kappa,"")
         
         g0 = cobserved[0][0]
-        g0.GetXaxis().SetTitle("m_{G} (GeV)")
+        if options.spin2:
+            legend.AddEntry(None,"#tilde{#kappa} = %s" % kappa,"")
+            g0.GetXaxis().SetTitle("m_{G} (GeV)")
+        else:
+            kappa = float(kappa)
+            legend.AddEntry(None,"#frac{#Gamma}{m} = %g #times 10^{-2}" % (1.4*kappa*kappa*100.),"")
+            g0.GetXaxis().SetTitle("m_{S} (GeV)")
         g0.Draw("apl")
         for gr,nam in cobserved:
             legend.AddEntry(gr,nam,"l")
@@ -298,6 +312,8 @@ class LimitPlot(PlotApp):
         observed = ROOT.theBand( tfile, 1, 0, ROOT.Observed, 0.95 )
         basicStyle = [["SetMarkerSize",0.6],["SetLineWidth",3],
                        ["SetTitle",";m_{G} (GeV);p_{0}"]]
+        if not options.spin2:
+            basicStyle.append(["SetTitle",";m_{S} (GeV);p_{0}"])
         commonStyle = ["Sort"]+basicStyle
         observedStyle = commonStyle+[["SetMarkerStyle",ROOT.kFullCircle],["colors",ROOT.kBlue]]
         
@@ -336,7 +352,11 @@ class LimitPlot(PlotApp):
         map( lambda x: x.Draw("same"), lines+labels )
         self.keep(lines+labels)
         
-        legend.AddEntry(None,"#tilde{#kappa} = %s" % kappa,"")
+        if options.spin2:
+            legend.AddEntry(None,"#tilde{#kappa} = %s" % kappa,"")
+        else:
+            kappa = float(kappa)
+            legend.AddEntry(None,"#frac{#Gamma}{m} = %g #times 10^{-2}" % (1.4*kappa*kappa*100.),"")
         legend.AddEntry(observed,"Observed p_{0}","l")
         
         self.keep(legend,True)

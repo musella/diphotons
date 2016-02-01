@@ -1,5 +1,14 @@
 # Wild notes to keep track of command line options needed for the different analysis tasks
 
+
+## Parametric acceptance
+
+`./signal_norm.py --gen-file ~/public/workspace/exo/full_analysis_gen_only_v2/output.root --reco-file ~/public/workspace/exo/full_analysis_spring15_7415v2_sync_v6/output.root  --plot-acceptance --x-sections ../../MetaData/data/cross_sections_gen_grid.json`
+
+
+
+
+
 ## Control plots
 
 ### Event selection monitoring
