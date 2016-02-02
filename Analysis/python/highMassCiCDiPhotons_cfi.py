@@ -22,7 +22,7 @@ highMassCiCVariables = cms.vstring(
 highMassVariables0Tid = cms.vstring(
     "full5x5_sigmaIetaIeta",
     "sqrt(sipip)",
-    "sqrt(nTrkSolidConeDR03)",
+    "nTrkSolidConeDR03",
     "egPhotonIso", 
     "? matchedGsfTrackInnerMissingHits>=0 ? matchedGsfTrackInnerMissingHits : 10"
         ) # set missingHits to 10 if value in Photon is -1
@@ -368,11 +368,7 @@ highMassCiCDiPhotons0TV1 = cms.EDFilter(
     "GenericDiPhotonCandidateSelector",
     src = cms.InputTag("kinDiPhotons"),
     rho = cms.InputTag("fixedGridRhoFastjetAllCalo"),
-    cut = cms.string(
-        "    (leadingPhoton.r9>0.8||leadingPhoton.egChargedHadronIso<20||leadingPhoton.egChargedHadronIso/leadingPhoton.pt<0.3)"
-        " && (subLeadingPhoton.r9>0.8||subLeadingPhoton.egChargedHadronIso<20||subLeadingPhoton.egChargedHadronIso/subLeadingPhoton.pt<0.3)" 
-        " && leadingPhoton.egChargedHadronIso < 15  && subLeadingPhoton.egChargedHadronIso < 15" ## preselect in chargedIso
-    ),
+    cut = cms.string(""),
     variables = highMassVariables0Tid,
     categories = highMassCuts0Tid
 )
