@@ -1,0 +1,8 @@
+{
+    "processes" : {
+        "Grav" : [
+            "/RSGravToGG_kMpl-001_M-750_TuneCUEP8M1_13TeV-pythia8_magnetOffBS0T_MiniAODSIM_v3/spigazzi-diphotons0T_v2-1_2_0-64-gbd0a265-2cb2238e0b59208b35e5edd2bba18d5a/USER"
+        ]
+	},
+	"cmdLine" : "campaign=diphotons0T_v2 processType=signal useAAA=True"
+}
