@@ -1,0 +1,630 @@
+{
+    "/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/spigazzi-diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1-c8bcad099efdb2d96eea457c81201956/USER": {
+        "files": [
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_1.root", 
+                "nevents": 10536
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_10.root", 
+                "nevents": 47181
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_100.root", 
+                "nevents": 35730
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_101.root", 
+                "nevents": 46381
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_102.root", 
+                "nevents": 44964
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_103.root", 
+                "nevents": 45595
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_104.root", 
+                "nevents": 35713
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_105.root", 
+                "nevents": 36018
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_106.root", 
+                "nevents": 35774
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_107.root", 
+                "nevents": 34513
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_108.root", 
+                "nevents": 45242
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_109.root", 
+                "nevents": 34957
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_11.root", 
+                "nevents": 35540
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_110.root", 
+                "nevents": 46191
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_111.root", 
+                "nevents": 35113
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_112.root", 
+                "nevents": 34984
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_113.root", 
+                "nevents": 35964
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_114.root", 
+                "nevents": 47690
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_115.root", 
+                "nevents": 49144
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_116.root", 
+                "nevents": 35601
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_117.root", 
+                "nevents": 35079
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_118.root", 
+                "nevents": 44381
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_119.root", 
+                "nevents": 45893
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_12.root", 
+                "nevents": 44808
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_120.root", 
+                "nevents": 34984
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_121.root", 
+                "nevents": 49544
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_122.root", 
+                "nevents": 35479
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_123.root", 
+                "nevents": 32937
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_124.root", 
+                "nevents": 48720
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_125.root", 
+                "nevents": 35601
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_13.root", 
+                "nevents": 47049
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_14.root", 
+                "nevents": 35418
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_15.root", 
+                "nevents": 45764
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_16.root", 
+                "nevents": 35523
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_17.root", 
+                "nevents": 46622
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_18.root", 
+                "nevents": 47883
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_19.root", 
+                "nevents": 46981
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_2.root", 
+                "nevents": 47720
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_20.root", 
+                "nevents": 35662
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_21.root", 
+                "nevents": 44869
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_22.root", 
+                "nevents": 46312
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_23.root", 
+                "nevents": 48249
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_24.root", 
+                "nevents": 45293
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_25.root", 
+                "nevents": 47798
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_26.root", 
+                "nevents": 35235
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_27.root", 
+                "nevents": 35974
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_28.root", 
+                "nevents": 35669
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_29.root", 
+                "nevents": 49093
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_3.root", 
+                "nevents": 44276
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_30.root", 
+                "nevents": 35679
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_31.root", 
+                "nevents": 35696
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_32.root", 
+                "nevents": 49154
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_33.root", 
+                "nevents": 47310
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_34.root", 
+                "nevents": 36157
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_35.root", 
+                "nevents": 35357
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_36.root", 
+                "nevents": 45920
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_37.root", 
+                "nevents": 35669
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_38.root", 
+                "nevents": 44466
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_39.root", 
+                "nevents": 35479
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_4.root", 
+                "nevents": 34930
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_40.root", 
+                "nevents": 35730
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_41.root", 
+                "nevents": 35618
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_42.root", 
+                "nevents": 35357
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_43.root", 
+                "nevents": 49690
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_44.root", 
+                "nevents": 35357
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_45.root", 
+                "nevents": 44764
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_46.root", 
+                "nevents": 46042
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_47.root", 
+                "nevents": 34818
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_48.root", 
+                "nevents": 34835
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_49.root", 
+                "nevents": 34940
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_5.root", 
+                "nevents": 45032
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_50.root", 
+                "nevents": 35791
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_51.root", 
+                "nevents": 36008
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_52.root", 
+                "nevents": 41147
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_53.root", 
+                "nevents": 32513
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_54.root", 
+                "nevents": 34964
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_55.root", 
+                "nevents": 44995
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_56.root", 
+                "nevents": 34313
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_57.root", 
+                "nevents": 35408
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_58.root", 
+                "nevents": 35096
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_59.root", 
+                "nevents": 45215
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_6.root", 
+                "nevents": 35601
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_60.root", 
+                "nevents": 49764
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_61.root", 
+                "nevents": 47443
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_62.root", 
+                "nevents": 45764
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_63.root", 
+                "nevents": 32740
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_64.root", 
+                "nevents": 36035
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_65.root", 
+                "nevents": 35513
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_66.root", 
+                "nevents": 35045
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_67.root", 
+                "nevents": 36069
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_68.root", 
+                "nevents": 36096
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_69.root", 
+                "nevents": 35137
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_7.root", 
+                "nevents": 35208
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_70.root", 
+                "nevents": 35635
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_71.root", 
+                "nevents": 35662
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_72.root", 
+                "nevents": 45391
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_73.root", 
+                "nevents": 48710
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_74.root", 
+                "nevents": 47476
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_75.root", 
+                "nevents": 44910
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_76.root", 
+                "nevents": 35042
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_77.root", 
+                "nevents": 35696
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_78.root", 
+                "nevents": 35269
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_79.root", 
+                "nevents": 44954
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_8.root", 
+                "nevents": 36035
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_80.root", 
+                "nevents": 47649
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_81.root", 
+                "nevents": 35357
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_82.root", 
+                "nevents": 35601
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_83.root", 
+                "nevents": 35503
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_84.root", 
+                "nevents": 35113
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_85.root", 
+                "nevents": 36157
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_86.root", 
+                "nevents": 34984
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_87.root", 
+                "nevents": 46564
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_88.root", 
+                "nevents": 47212
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_89.root", 
+                "nevents": 35452
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_9.root", 
+                "nevents": 45042
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_90.root", 
+                "nevents": 35218
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_91.root", 
+                "nevents": 35296
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_92.root", 
+                "nevents": 46022
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_93.root", 
+                "nevents": 35418
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_94.root", 
+                "nevents": 35852
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_95.root", 
+                "nevents": 35652
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_96.root", 
+                "nevents": 49639
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_97.root", 
+                "nevents": 35323
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_98.root", 
+                "nevents": 35296
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-67-gd073a7a/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotons0T_v2-1_2_0-67-gd073a7a-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160204_113120/0000/myMicroAODOutputFile_99.root", 
+                "nevents": 49998
+            }
+        ]
+    }, 
+    "/RSGravToGG_kMpl-001_M-750_TuneCUEP8M1_13TeV-pythia8_magnetOffBS0T_MiniAODSIM_v3/spigazzi-diphotons0T_v2-1_2_0-64-gbd0a265-2cb2238e0b59208b35e5edd2bba18d5a/USER": {
+        "files": [
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-64-gbd0a265/RSGravToGG_kMpl-001_M-750_TuneCUEP8M1_13TeV-pythia8_magnetOffBS0T_MiniAODSIM_v3/diphotons0T_v2-1_2_0-64-gbd0a265/160204_101139/0000/myMicroAODOutputFile_1.root", 
+                "nevents": 916
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-64-gbd0a265/RSGravToGG_kMpl-001_M-750_TuneCUEP8M1_13TeV-pythia8_magnetOffBS0T_MiniAODSIM_v3/diphotons0T_v2-1_2_0-64-gbd0a265/160204_101139/0000/myMicroAODOutputFile_10.root", 
+                "nevents": 916
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-64-gbd0a265/RSGravToGG_kMpl-001_M-750_TuneCUEP8M1_13TeV-pythia8_magnetOffBS0T_MiniAODSIM_v3/diphotons0T_v2-1_2_0-64-gbd0a265/160204_101139/0000/myMicroAODOutputFile_11.root", 
+                "nevents": 832
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-64-gbd0a265/RSGravToGG_kMpl-001_M-750_TuneCUEP8M1_13TeV-pythia8_magnetOffBS0T_MiniAODSIM_v3/diphotons0T_v2-1_2_0-64-gbd0a265/160204_101139/0000/myMicroAODOutputFile_12.root", 
+                "nevents": 916
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-64-gbd0a265/RSGravToGG_kMpl-001_M-750_TuneCUEP8M1_13TeV-pythia8_magnetOffBS0T_MiniAODSIM_v3/diphotons0T_v2-1_2_0-64-gbd0a265/160204_101139/0000/myMicroAODOutputFile_13.root", 
+                "nevents": 916
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-64-gbd0a265/RSGravToGG_kMpl-001_M-750_TuneCUEP8M1_13TeV-pythia8_magnetOffBS0T_MiniAODSIM_v3/diphotons0T_v2-1_2_0-64-gbd0a265/160204_101139/0000/myMicroAODOutputFile_14.root", 
+                "nevents": 916
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-64-gbd0a265/RSGravToGG_kMpl-001_M-750_TuneCUEP8M1_13TeV-pythia8_magnetOffBS0T_MiniAODSIM_v3/diphotons0T_v2-1_2_0-64-gbd0a265/160204_101139/0000/myMicroAODOutputFile_15.root", 
+                "nevents": 832
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-64-gbd0a265/RSGravToGG_kMpl-001_M-750_TuneCUEP8M1_13TeV-pythia8_magnetOffBS0T_MiniAODSIM_v3/diphotons0T_v2-1_2_0-64-gbd0a265/160204_101139/0000/myMicroAODOutputFile_16.root", 
+                "nevents": 832
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-64-gbd0a265/RSGravToGG_kMpl-001_M-750_TuneCUEP8M1_13TeV-pythia8_magnetOffBS0T_MiniAODSIM_v3/diphotons0T_v2-1_2_0-64-gbd0a265/160204_101139/0000/myMicroAODOutputFile_17.root", 
+                "nevents": 316
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-64-gbd0a265/RSGravToGG_kMpl-001_M-750_TuneCUEP8M1_13TeV-pythia8_magnetOffBS0T_MiniAODSIM_v3/diphotons0T_v2-1_2_0-64-gbd0a265/160204_101139/0000/myMicroAODOutputFile_18.root", 
+                "nevents": 832
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-64-gbd0a265/RSGravToGG_kMpl-001_M-750_TuneCUEP8M1_13TeV-pythia8_magnetOffBS0T_MiniAODSIM_v3/diphotons0T_v2-1_2_0-64-gbd0a265/160204_101139/0000/myMicroAODOutputFile_19.root", 
+                "nevents": 916
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-64-gbd0a265/RSGravToGG_kMpl-001_M-750_TuneCUEP8M1_13TeV-pythia8_magnetOffBS0T_MiniAODSIM_v3/diphotons0T_v2-1_2_0-64-gbd0a265/160204_101139/0000/myMicroAODOutputFile_2.root", 
+                "nevents": 916
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-64-gbd0a265/RSGravToGG_kMpl-001_M-750_TuneCUEP8M1_13TeV-pythia8_magnetOffBS0T_MiniAODSIM_v3/diphotons0T_v2-1_2_0-64-gbd0a265/160204_101139/0000/myMicroAODOutputFile_20.root", 
+                "nevents": 916
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-64-gbd0a265/RSGravToGG_kMpl-001_M-750_TuneCUEP8M1_13TeV-pythia8_magnetOffBS0T_MiniAODSIM_v3/diphotons0T_v2-1_2_0-64-gbd0a265/160204_101139/0000/myMicroAODOutputFile_21.root", 
+                "nevents": 832
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-64-gbd0a265/RSGravToGG_kMpl-001_M-750_TuneCUEP8M1_13TeV-pythia8_magnetOffBS0T_MiniAODSIM_v3/diphotons0T_v2-1_2_0-64-gbd0a265/160204_101139/0000/myMicroAODOutputFile_22.root", 
+                "nevents": 916
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-64-gbd0a265/RSGravToGG_kMpl-001_M-750_TuneCUEP8M1_13TeV-pythia8_magnetOffBS0T_MiniAODSIM_v3/diphotons0T_v2-1_2_0-64-gbd0a265/160204_101139/0000/myMicroAODOutputFile_23.root", 
+                "nevents": 832
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-64-gbd0a265/RSGravToGG_kMpl-001_M-750_TuneCUEP8M1_13TeV-pythia8_magnetOffBS0T_MiniAODSIM_v3/diphotons0T_v2-1_2_0-64-gbd0a265/160204_101139/0000/myMicroAODOutputFile_24.root", 
+                "nevents": 916
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-64-gbd0a265/RSGravToGG_kMpl-001_M-750_TuneCUEP8M1_13TeV-pythia8_magnetOffBS0T_MiniAODSIM_v3/diphotons0T_v2-1_2_0-64-gbd0a265/160204_101139/0000/myMicroAODOutputFile_25.root", 
+                "nevents": 832
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-64-gbd0a265/RSGravToGG_kMpl-001_M-750_TuneCUEP8M1_13TeV-pythia8_magnetOffBS0T_MiniAODSIM_v3/diphotons0T_v2-1_2_0-64-gbd0a265/160204_101139/0000/myMicroAODOutputFile_26.root", 
+                "nevents": 916
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-64-gbd0a265/RSGravToGG_kMpl-001_M-750_TuneCUEP8M1_13TeV-pythia8_magnetOffBS0T_MiniAODSIM_v3/diphotons0T_v2-1_2_0-64-gbd0a265/160204_101139/0000/myMicroAODOutputFile_27.root", 
+                "nevents": 832
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-64-gbd0a265/RSGravToGG_kMpl-001_M-750_TuneCUEP8M1_13TeV-pythia8_magnetOffBS0T_MiniAODSIM_v3/diphotons0T_v2-1_2_0-64-gbd0a265/160204_101139/0000/myMicroAODOutputFile_28.root", 
+                "nevents": 916
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-64-gbd0a265/RSGravToGG_kMpl-001_M-750_TuneCUEP8M1_13TeV-pythia8_magnetOffBS0T_MiniAODSIM_v3/diphotons0T_v2-1_2_0-64-gbd0a265/160204_101139/0000/myMicroAODOutputFile_29.root", 
+                "nevents": 916
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-64-gbd0a265/RSGravToGG_kMpl-001_M-750_TuneCUEP8M1_13TeV-pythia8_magnetOffBS0T_MiniAODSIM_v3/diphotons0T_v2-1_2_0-64-gbd0a265/160204_101139/0000/myMicroAODOutputFile_3.root", 
+                "nevents": 832
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-64-gbd0a265/RSGravToGG_kMpl-001_M-750_TuneCUEP8M1_13TeV-pythia8_magnetOffBS0T_MiniAODSIM_v3/diphotons0T_v2-1_2_0-64-gbd0a265/160204_101139/0000/myMicroAODOutputFile_30.root", 
+                "nevents": 832
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-64-gbd0a265/RSGravToGG_kMpl-001_M-750_TuneCUEP8M1_13TeV-pythia8_magnetOffBS0T_MiniAODSIM_v3/diphotons0T_v2-1_2_0-64-gbd0a265/160204_101139/0000/myMicroAODOutputFile_4.root", 
+                "nevents": 916
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-64-gbd0a265/RSGravToGG_kMpl-001_M-750_TuneCUEP8M1_13TeV-pythia8_magnetOffBS0T_MiniAODSIM_v3/diphotons0T_v2-1_2_0-64-gbd0a265/160204_101139/0000/myMicroAODOutputFile_5.root", 
+                "nevents": 916
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-64-gbd0a265/RSGravToGG_kMpl-001_M-750_TuneCUEP8M1_13TeV-pythia8_magnetOffBS0T_MiniAODSIM_v3/diphotons0T_v2-1_2_0-64-gbd0a265/160204_101139/0000/myMicroAODOutputFile_6.root", 
+                "nevents": 916
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-64-gbd0a265/RSGravToGG_kMpl-001_M-750_TuneCUEP8M1_13TeV-pythia8_magnetOffBS0T_MiniAODSIM_v3/diphotons0T_v2-1_2_0-64-gbd0a265/160204_101139/0000/myMicroAODOutputFile_7.root", 
+                "nevents": 832
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-64-gbd0a265/RSGravToGG_kMpl-001_M-750_TuneCUEP8M1_13TeV-pythia8_magnetOffBS0T_MiniAODSIM_v3/diphotons0T_v2-1_2_0-64-gbd0a265/160204_101139/0000/myMicroAODOutputFile_8.root", 
+                "nevents": 916
+            }, 
+            {
+                "name": "/store/user/spigazzi/flashgg/diphotons0T_v2/1_2_0-64-gbd0a265/RSGravToGG_kMpl-001_M-750_TuneCUEP8M1_13TeV-pythia8_magnetOffBS0T_MiniAODSIM_v3/diphotons0T_v2-1_2_0-64-gbd0a265/160204_101139/0000/myMicroAODOutputFile_9.root", 
+                "nevents": 832
+            }
+        ]
+    }
+}
