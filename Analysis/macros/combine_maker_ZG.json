@@ -13,7 +13,7 @@
 	    },
 	"sqrt" : "13TeV",
 	 "postproc" : {
-               "*" : [["addCmsLumi",[2,1,"Preliminary"]]]
+               "*" : [["addCmsLumi",[4,1,"Preliminary"]]]
                },
 
        "__signals_gauss" : { 
