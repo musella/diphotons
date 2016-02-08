@@ -117,86 +117,6 @@ diphotonDumper.maxCandPerEvent=1
 diphotonDumper.nameTemplate = "$PROCESS_$SQRTS_$LABEL_$SUBCAT"
 diphotonDumper.throwOnUnclassified = cms.bool(False)
 
-def addGloabalFloat(globalVariables,process,producer,name,expr):    
-    getattr(process,producer).variables.append( cms.PSet(tag=cms.untracked.string(name),quantity=cms.untracked.string(expr)) )
-    setattr(globalVariables.extraFloats,name,cms.InputTag(producer,name))
-
-def bookCandViewNtProducer(process,name,collection):    
-    setattr(process,name,cms.EDProducer(
-            "CandViewNtpProducer", 
-            src = cms.InputTag(collection), lazyParser = cms.untracked.bool(True),
-            variables = cms.VPSet()
-            )
-            )
-process.flashggUnpackedJets = cms.EDProducer("FlashggVectorVectorJetUnpacker",
-                                             JetsTag = cms.InputTag("flashggFinalJets"),
-                                             NCollections = cms.uint32(8)
-                                             )
-process.selectedJsets60 = cms.EDFilter("FlashggJetSelector",
-                                     src=cms.InputTag("flashggUnpackedJets","0"),
-                                     cut=cms.string("pt>60 && abs(eta)<2.5"),
-                                )
-
-process.selectedJsets30 = cms.EDFilter("FlashggJetSelector",
-                                     src=cms.InputTag("flashggUnpackedJets","0"),
-                                     cut=cms.string("pt>30 && abs(eta)<2.5"),
-                                )
-
-process.genGravitons = cms.EDProducer("GenParticlePruner",
-                                    src = cms.InputTag("flashggPrunedGenParticles"),
-                                    select = cms.vstring("drop  *  ", # this is the default
-                                                         "keep pdgId = 5100039",
-                                                         )
-                                    )
-if "Grav" in customize.datasetName():
-    bookCandViewNtProducer(process,"genGr","genGravitons")
-    addGloabalFloat(diphotonDumper.globalVariables,process,"genGr","genVtxZ","vertex.z")
-
-
-### process.selectedJsets = cms.EDFilter("CandPtrSelector",
-###                                      src=cms.InputTag("flashggUnpackedJets"),
-###                                      cut=cms.string("pt>60 && abs(eta)<2.5"),
-###                                 )
-process.MHT60 = cms.EDProducer("MyMHTProducer",src=cms.InputTag("selectedJsets60"))
-process.MHT30 = cms.EDProducer("MyMHTProducer",src=cms.InputTag("selectedJsets30"))
-
-
-bookCandViewNtProducer(process,"mht60","MHT60")
-bookCandViewNtProducer(process,"mht30","MHT30")
-addGloabalFloat(diphotonDumper.globalVariables,process,"mht60","mht60Mass","mass")
-addGloabalFloat(diphotonDumper.globalVariables,process,"mht60","mht60Pt","pt")
-addGloabalFloat(diphotonDumper.globalVariables,process,"mht60","mht60Rapidity","rapidity")
-addGloabalFloat(diphotonDumper.globalVariables,process,"mht60","mht60Phi","phi")
-addGloabalFloat(diphotonDumper.globalVariables,process,"mht60","nJets60","numberOfDaughters")
-
-addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","mht30Mass","mass")
-addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","mht30Pt","pt")
-addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","mht30Rapidity","rapidity")
-addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","mht30Phi","phi")
-addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","nJets30","numberOfDaughters")
-
-addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","jet1Pt","?numberOfDaughters>0?daughter(0).pt:0")
-addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","jet1Eta","?numberOfDaughters>0?daughter(0).eta:0")
-addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","jet1Phi","?numberOfDaughters>0?daughter(0).phi:0")
-
-addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","jet2Pt","?numberOfDaughters>1?daughter(1).pt:0")
-addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","jet2Eta","?numberOfDaughters>1?daughter(1).eta:0")
-addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","jet2Phi","?numberOfDaughters>1?daughter(1).phi:0")
-
-addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","jet3Pt","?numberOfDaughters>2?daughter(2).pt:0")
-addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","jet3Eta","?numberOfDaughters>2?daughter(2).eta:0")
-addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","jet3Phi","?numberOfDaughters>2?daughter(2).phi:0")
-
-addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","jet4Pt","?numberOfDaughters>3?daughter(3).pt:0")
-addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","jet4Eta","?numberOfDaughters>3?daughter(3).eta:0")
-addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","jet4Phi","?numberOfDaughters>3?daughter(3).phi:0")
-
-bookCandViewNtProducer(process,"met","slimmedMETs")
-addGloabalFloat(diphotonDumper.globalVariables,process,"met","metPt","pt")
-addGloabalFloat(diphotonDumper.globalVariables,process,"met","metPhi","phi")
-addGloabalFloat(diphotonDumper.globalVariables,process,"met","sumEt","sumEt")
-
-
 
 variables=["mass","pt","rapidity",
            "genMass := genP4.mass",
@@ -268,21 +188,7 @@ if "0T" in customize.idversion:
             "subleadTrkHollowIso   := subLeadingPhoton.nTrkHollowConeDR03",
             "subleadTrkMissingHits := subLeadingPhoton.matchedGsfTrackInnerMissingHits"
     ]
-        )
-else:
-    variables.extend(
-        [
-            "satRegressedMass := sqrt( (leadingPhoton.energyAtStep('satRegressedEnergy','initial')*subLeadingPhoton.energyAtStep('satRegressedEnergy','initial')) / (leadingPhoton.energy*subLeadingPhoton.energy) ) * genP4.mass",
-            "regressedMass := sqrt( (leadingPhoton.energyAtStep('regressedEnergy')*subLeadingPhoton.energyAtStep('regressedEnergy')) / (leadingPhoton.energy*subLeadingPhoton.energy) ) * genP4.mass",
-            "leadSatRegressedEnergy := leadingPhoton.userFloat('satRegressedEnergy')",
-            "subLeadSatRegressedEnergy := subLeadingPhoton.userFloat('satRegressedEnergy')",
-            "leadRegressedEnergy := leadingPhoton.userFloat('regressedEnergy')",
-            "subLeadRegressedEnergy := subLeadingPhoton.userFloat('regressedEnergy')",
-            "leadCShapeMVA            :=leadingPhoton.userFloat('cShapeMVA')",
-            "subleadCShapeMVA         :=subLeadingPhoton.userFloat('cShapeMVA')"
-        ]
     )
-
 
 histograms=["mass>>mass(1500,0,15000)",
             "mass>>lowmass(560,60,200)",
@@ -854,7 +760,7 @@ if not customize.lastAttempt:
         )
 
 
-process.p = cms.Path(process.genGr)
+#process.p = cms.Path(process.genGr)
 
 ### process.out = cms.OutputModule("PoolOutputModule", 
 ###                                fileName = cms.untracked.string('diphotonsMicroAOD.root'),
