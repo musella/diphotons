@@ -2997,11 +2997,14 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             self.pdfPars_.add(lam1)
             
             bla = ROOT.RooArgList(lam0,lam1)
-            hmax = ROOT.RooFormulaVar("%s_hmax" %pname,"( @1 != 0. ? (-@0/(4.*@1)>300. && -@0/(4.*@1)<3500. ? @0*@0/(4.*@1+@1) : TMath::Max(@0*3500+2*@1*3500.*3500,@0*3500+2*@1*300.*300)) : @0*3500.)", bla )
-            roolist = ROOT.RooArgList( xvar, lam0, lam1, alp, hmax )
-            pdf = ROOT.RooGenericPdf( pname, pname, "exp( @1*@0+@2*@0*@0   )*pow(@0, -@3*@3 + @4  )", roolist )
+            ## hmax = ROOT.RooFormulaVar("%s_hmax" %pname,"( @1 != 0. ? (-@0/(4.*@1)>300. && -@0/(4.*@1)<3500. ? @0*@0/(4.*@1+@1) : TMath::Max(@0*3500+2*@1*3500.*3500,@0*3500+2*@1*300.*300)) : @0*3500.)", bla )
+            ## roolist = ROOT.RooArgList( xvar, lam0, lam1, alp, hmax )
+            ## pdf = ROOT.RooGenericPdf( pname, pname, "exp( @1*@0+@2*@0*@0   )*pow(@0, -@3*@3 + @4  )", roolist )
+
+            roolist = ROOT.RooArgList( xvar, lam0, lam1, alp )
+            pdf = ROOT.RooGenericPdf( pname, pname, "exp( @1*@0+@2*@0*@0   )*pow(@0, -@3*@3)", roolist )
             
-            self.keep( [pdf,lam0,lam1,alp,hmax] )
+            self.keep( [pdf,lam0,lam1,alp] )
 
         elif model == "invpow":
             
