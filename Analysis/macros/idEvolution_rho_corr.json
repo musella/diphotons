@@ -7,12 +7,8 @@
 		   "outerEE  := abs(scEta)>=2.2 && abs(scEta)<2.5"
     ], 
     "variables": [
-	"egPhotonIso[1000,-10,50]",
-	"egChargedHadronIso[1000,-10,50]",
-
-	"chgIsoWrtVtx0[1000,-10,50]",
-        "chgIsoWrtWorstVtx[1000,-10,50]",
-	"phoIso03[1000,-10,50]"
+        "sieie[500, 0, 0.05]",
+        "sipip[500, 0, 0.05]"
     ],
 
     "xvar" : "rho[1000,5,15]",

@@ -29,17 +29,6 @@ elif ((isMC==False and is2012D)):
     process.GlobalTag = GlobalTag(process.GlobalTag, '74X_dataRun2_Prompt_v2', '')
 print process.GlobalTag
 
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32( -1 ) )
-
-process.source = cms.Source("PoolSource",
-                            fileNames=cms.untracked.vstring(
-        # DY
-        "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_7415_v2/diphotons_7415_v2/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/EXOSpring15_7415_v2-diphotons_7415_v2-v0-RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/151019_005506/0000/diphotonsMicroAOD_10.root"
-        # singleEle
-        #"/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_7412_v2/diphotons_7412_v1/SingleElectron/EXOSpring15_7412_v2-diphotons_7412_v1-v0-Run2015C-PromptReco-v1/150927_235231/0000/diphotonsMicroAOD_11.root"
-        )
-                            )
-
 process.load("flashgg/MicroAOD/flashggPhotons_cfi")
 process.load("flashgg/MicroAOD/flashggElectrons_cfi")
 process.load("flashgg/MicroAOD/flashggDiPhotons_cfi")
