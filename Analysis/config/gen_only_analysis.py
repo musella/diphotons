@@ -51,6 +51,11 @@ customize.options.register ('scaling',
                             VarParsing.VarParsing.multiplicity.singleton, # singleton or list
                             VarParsing.VarParsing.varType.bool,          # string, int, or float
                             "scaling")
+customize.options.register ('removeEEEE',
+                            True, # default value
+                            VarParsing.VarParsing.multiplicity.singleton, # singleton or list
+                            VarParsing.VarParsing.varType.bool,          # string, int, or float
+                            "removeEEEE")
 
 customize.parse()
 
@@ -58,7 +63,9 @@ customize.parse()
 # input and output
 #
 process.source = cms.Source("PoolSource",
-                            fileNames=cms.untracked.vstring("/store/user/musella/RSGravitonToGG_kMpl001_M_1000_TuneCUEP8M1_13TeV_pythia8/CMSSW_7_4_15-Private-GEN/151020_211512/0000/RSGravitonToGammaGamma_kMpl001_M_1000_TuneCUEP8M1_13TeV_pythia8_GEN_1.root"
+                            fileNames=cms.untracked.vstring(
+        ## "/store/user/musella/GluGluSpin0ToGG_W_014_M_750_TuneCUEP8M1_13TeV_pythia8/CMSSW_7_4_15-Private-GEN/160119_233429/0000/GluGluSpin0ToGammaGamma_W_014_M_750_TuneCUEP8M1_13TeV_pythia8_GEN_1.root"
+        "/store/user/musella/GluGluSpin0ToGG_W_0p014_M_750_TuneCUEP8M1_8TeV_pythia8/CMSSW_7_4_15-Private-GEN/160119_234019/0000/GluGluSpin0ToGammaGamma_W_0p014_M_750_TuneCUEP8M1_8TeV_pythia8_GEN_1.root"
         )
 )
 process.TFileService = cms.Service("TFileService",
@@ -91,6 +98,7 @@ analysis = DiPhotonAnalysis(None,
                             genIsoDefinition=("genIso",10.),
                             dataTriggers=[],
                             mcTriggers=[],
+                            removeEEEE=customize.removeEEEE
                             )
 
 analysis.addGenOnlySelection(process,genDiphotonDumper)

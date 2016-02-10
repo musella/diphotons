@@ -599,9 +599,14 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             # normalization nuisances
             datacard.write("lumi  lnN".ljust(20))
             for cat in categories:
-                datacard.write(" 1.10".ljust(15) )
+                datacard.write(" 1.06".ljust(15) )
                 for comp in options.components:
                     datacard.write(" -".ljust(15) )
+            for cat in sidebands:                
+                for comp in  fit["sidebands"][cat]:                    
+                    datacard.write(" -".ljust(15) )
+            datacard.write("\n")
+            
             datacard.write("eff  lnN".ljust(20))
             for cat in categories:
                 datacard.write(" 1.10".ljust(15) )
