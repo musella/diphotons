@@ -88,6 +88,11 @@ customize.options.register ('applyEnergyCorrections',
                             VarParsing.VarParsing.multiplicity.singleton, # singleton or list
                             VarParsing.VarParsing.varType.bool,          # string, int, or float
                             "applyEnergyCorrections")
+customize.options.register ('addRegressionInput',
+                            False, # default value
+                            VarParsing.VarParsing.multiplicity.singleton, # singleton or list
+                            VarParsing.VarParsing.varType.bool,          # string, int, or float
+                            "addRegressionInput")
 customize.parse()
 
 applyEnergyCorrections=False
@@ -142,6 +147,11 @@ process.selectedJsets30 = cms.EDFilter("FlashggJetSelector",
                                      cut=cms.string("pt>30 && abs(eta)<2.5"),
                                 )
 
+process.selectedJsets60Fwd = cms.EDFilter("FlashggJetSelector",
+                                     src=cms.InputTag("flashggUnpackedJets","0"),
+                                     cut=cms.string("pt>30 && abs(eta)<4.7"),
+                                )
+
 process.genGravitons = cms.EDProducer("GenParticlePruner",
                                     src = cms.InputTag("flashggPrunedGenParticles"),
                                     select = cms.vstring("drop  *  ", # this is the default
@@ -152,22 +162,40 @@ if "Grav" in customize.datasetName():
     bookCandViewNtProducer(process,"genGr","genGravitons")
     addGloabalFloat(diphotonDumper.globalVariables,process,"genGr","genVtxZ","vertex.z")
 
-
-### process.selectedJsets = cms.EDFilter("CandPtrSelector",
-###                                      src=cms.InputTag("flashggUnpackedJets"),
-###                                      cut=cms.string("pt>60 && abs(eta)<2.5"),
-###                                 )
 process.MHT60 = cms.EDProducer("MyMHTProducer",src=cms.InputTag("selectedJsets60"))
 process.MHT30 = cms.EDProducer("MyMHTProducer",src=cms.InputTag("selectedJsets30"))
-
+process.MHT60Clean = cms.EDProducer("MyMHTProducer",src=cms.InputTag("selectedJsets60"),veto=cms.InputTag("cicDiPhotons"))
+process.MHT30Clean = cms.EDProducer("MyMHTProducer",src=cms.InputTag("selectedJsets30"),veto=cms.InputTag("cicDiPhotons"))
+process.dijet60Clean = cms.EDProducer("MyMHTProducer",src=cms.InputTag("selectedJsets60"),maxCand=cms.int32(2),veto=cms.InputTag("cicDiPhotons"))
+process.dijet30Clean = cms.EDProducer("MyMHTProducer",src=cms.InputTag("selectedJsets30"),maxCand=cms.int32(2),veto=cms.InputTag("cicDiPhotons"))
 
 bookCandViewNtProducer(process,"mht60","MHT60")
 bookCandViewNtProducer(process,"mht30","MHT30")
+bookCandViewNtProducer(process,"mht60clean","MHT60Clean")
+bookCandViewNtProducer(process,"mht30clean","MHT30Clean")
+bookCandViewNtProducer(process,"dijet60clean","dijet60Clean")
+bookCandViewNtProducer(process,"dijet30clean","dijet30Clean")
+
 addGloabalFloat(diphotonDumper.globalVariables,process,"mht60","mht60Mass","mass")
 addGloabalFloat(diphotonDumper.globalVariables,process,"mht60","mht60Pt","pt")
 addGloabalFloat(diphotonDumper.globalVariables,process,"mht60","mht60Rapidity","rapidity")
 addGloabalFloat(diphotonDumper.globalVariables,process,"mht60","mht60Phi","phi")
-addGloabalFloat(diphotonDumper.globalVariables,process,"mht60","nJets60","numberOfDaughters")
+
+addGloabalFloat(diphotonDumper.globalVariables,process,"mht60clean","mht60CleanMass","mass")
+addGloabalFloat(diphotonDumper.globalVariables,process,"mht60clean","mht60CleanPt","pt")
+addGloabalFloat(diphotonDumper.globalVariables,process,"mht60clean","mht60CleanRapidity","rapidity")
+addGloabalFloat(diphotonDumper.globalVariables,process,"mht60clean","mht60CleanPhi","phi")
+addGloabalFloat(diphotonDumper.globalVariables,process,"mht60clean","nJets60","numberOfDaughters")
+
+addGloabalFloat(diphotonDumper.globalVariables,process,"dijet60clean","dijet60CleanMass","mass")
+addGloabalFloat(diphotonDumper.globalVariables,process,"dijet60clean","dijet60CleanPt","pt")
+addGloabalFloat(diphotonDumper.globalVariables,process,"dijet60clean","dijet60CleanRapidity","rapidity")
+addGloabalFloat(diphotonDumper.globalVariables,process,"dijet60clean","dijet60CleanPhi","phi")
+
+addGloabalFloat(diphotonDumper.globalVariables,process,"dijet30clean","dijet30CleanMass","mass")
+addGloabalFloat(diphotonDumper.globalVariables,process,"dijet30clean","dijet30CleanPt","pt")
+addGloabalFloat(diphotonDumper.globalVariables,process,"dijet30clean","dijet30CleanRapidity","rapidity")
+addGloabalFloat(diphotonDumper.globalVariables,process,"dijet30clean","dijet30CleanPhi","phi")
 
 addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","mht30Mass","mass")
 addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","mht30Pt","pt")
@@ -175,21 +203,31 @@ addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","mht30Rapidity","
 addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","mht30Phi","phi")
 addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","nJets30","numberOfDaughters")
 
-addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","jet1Pt","?numberOfDaughters>0?daughter(0).pt:0")
-addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","jet1Eta","?numberOfDaughters>0?daughter(0).eta:0")
-addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","jet1Phi","?numberOfDaughters>0?daughter(0).phi:0")
+addGloabalFloat(diphotonDumper.globalVariables,process,"mht30clean","mht30CleanMass","mass")
+addGloabalFloat(diphotonDumper.globalVariables,process,"mht30clean","mht30CleanPt","pt")
+addGloabalFloat(diphotonDumper.globalVariables,process,"mht30clean","mht30CleanRapidity","rapidity")
+addGloabalFloat(diphotonDumper.globalVariables,process,"mht30clean","mht30CleanPhi","phi")
+addGloabalFloat(diphotonDumper.globalVariables,process,"mht30clean","nJets30","numberOfDaughters")
 
-addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","jet2Pt","?numberOfDaughters>1?daughter(1).pt:0")
-addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","jet2Eta","?numberOfDaughters>1?daughter(1).eta:0")
-addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","jet2Phi","?numberOfDaughters>1?daughter(1).phi:0")
+addGloabalFloat(diphotonDumper.globalVariables,process,"mht30clean","jet1Btag","?numberOfDaughters>0?daughter(0).bDiscriminator('combinedInclusiveSecondaryVertexV2BJetTags'):0")
+addGloabalFloat(diphotonDumper.globalVariables,process,"mht30clean","jet1Pt","?numberOfDaughters>0?daughter(0).pt:0")
+addGloabalFloat(diphotonDumper.globalVariables,process,"mht30clean","jet1Eta","?numberOfDaughters>0?daughter(0).eta:0")
+addGloabalFloat(diphotonDumper.globalVariables,process,"mht30clean","jet1Phi","?numberOfDaughters>0?daughter(0).phi:0")
 
-addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","jet3Pt","?numberOfDaughters>2?daughter(2).pt:0")
-addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","jet3Eta","?numberOfDaughters>2?daughter(2).eta:0")
-addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","jet3Phi","?numberOfDaughters>2?daughter(2).phi:0")
+addGloabalFloat(diphotonDumper.globalVariables,process,"mht30clean","jet2Btag","?numberOfDaughters>1?daughter(1).bDiscriminator('combinedInclusiveSecondaryVertexV2BJetTags'):0")
+addGloabalFloat(diphotonDumper.globalVariables,process,"mht30clean","jet2Pt","?numberOfDaughters>1?daughter(1).pt:0")
+addGloabalFloat(diphotonDumper.globalVariables,process,"mht30clean","jet2Eta","?numberOfDaughters>1?daughter(1).eta:0")
+addGloabalFloat(diphotonDumper.globalVariables,process,"mht30clean","jet2Phi","?numberOfDaughters>1?daughter(1).phi:0")
 
-addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","jet4Pt","?numberOfDaughters>3?daughter(3).pt:0")
-addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","jet4Eta","?numberOfDaughters>3?daughter(3).eta:0")
-addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","jet4Phi","?numberOfDaughters>3?daughter(3).phi:0")
+addGloabalFloat(diphotonDumper.globalVariables,process,"mht30clean","jet3Btag","?numberOfDaughters>2?daughter(2).bDiscriminator('combinedInclusiveSecondaryVertexV2BJetTags'):0")
+addGloabalFloat(diphotonDumper.globalVariables,process,"mht30clean","jet3Pt","?numberOfDaughters>2?daughter(2).pt:0")
+addGloabalFloat(diphotonDumper.globalVariables,process,"mht30clean","jet3Eta","?numberOfDaughters>2?daughter(2).eta:0")
+addGloabalFloat(diphotonDumper.globalVariables,process,"mht30clean","jet3Phi","?numberOfDaughters>2?daughter(2).phi:0")
+
+addGloabalFloat(diphotonDumper.globalVariables,process,"mht30clean","jet4Btag","?numberOfDaughters>3?daughter(3).bDiscriminator('combinedInclusiveSecondaryVertexV2BJetTags'):0")
+addGloabalFloat(diphotonDumper.globalVariables,process,"mht30clean","jet4Pt","?numberOfDaughters>3?daughter(3).pt:0")
+addGloabalFloat(diphotonDumper.globalVariables,process,"mht30clean","jet4Eta","?numberOfDaughters>3?daughter(3).eta:0")
+addGloabalFloat(diphotonDumper.globalVariables,process,"mht30clean","jet4Phi","?numberOfDaughters>3?daughter(3).phi:0")
 
 bookCandViewNtProducer(process,"met","slimmedMETs")
 addGloabalFloat(diphotonDumper.globalVariables,process,"met","metPt","pt")
@@ -198,7 +236,9 @@ addGloabalFloat(diphotonDumper.globalVariables,process,"met","sumEt","sumEt")
 
 
 
-variables=["mass","pt","rapidity",
+variables=["mass","pt","rapidity","eta",
+           "vertexZ  := vtx.z", 
+           "vertexId := vtx.key",
            "satRegressedMass := sqrt( (leadingPhoton.energyAtStep('satRegressedEnergy','initial')*subLeadingPhoton.energyAtStep('satRegressedEnergy','initial')) / (leadingPhoton.energy*subLeadingPhoton.energy) ) * genP4.mass",
            "regressedMass := sqrt( (leadingPhoton.energyAtStep('regressedEnergy')*subLeadingPhoton.energyAtStep('regressedEnergy')) / (leadingPhoton.energy*subLeadingPhoton.energy) ) * genP4.mass",
            "genMass := genP4.mass",
@@ -264,6 +304,75 @@ variables=["mass","pt","rapidity",
            "subleadPassEleVeto := subLeadingPhoton.passElectronVeto",
            ]
 
+def makeOneLegInputs(label,obj,inputs):
+    out = []
+    for inp in inputs:
+        if type(inp) == str: 
+            name, expr = inp, inp
+        else:
+            expr, name = inp
+        if not name.startswith("_"): name = name[0].capitalize()+name[1:]
+        name = "%s%s"  % ( label, name )        
+        expr = "%s.%s" % ( obj,   expr )
+        ## print expr[14]
+        out.append( "%s := %s" % (name,expr) )
+        print out[-1]
+    return out
+
+
+variables.extend( makeOneLegInputs("lead","leadingPhoton",[("superCluster.preshowerEnergy","scPreshowerEnergy"),
+                                                           ("superCluster.rawEnergy","scRawEnergy"),
+                                                           ("superCluster.preshowerEnergyPlane1","scPreshowerEnergyPlane1"),
+                                                           ("superCluster.preshowerEnergyPlane2","scPreshowerEnergyPlane2")]) ),
+variables.extend( makeOneLegInputs("sublead","subLeadingPhoton",[("superCluster.preshowerEnergy","scPreshowerEnergy"),
+                                                                 ("superCluster.rawEnergy","scRawEnergy"),
+                                                                 ("superCluster.preshowerEnergyPlane1","preshowerEnergyPlane1"),
+                                                                 ("superCluster.preshowerEnergyPlane2","preshowerEnergyPlane2")]) ),
+
+
+if customize.addRegressionInput:
+    regInputs = [
+        ("superCluster.clustersSize","scClustersSize"),
+        ("superCluster.seed.energy","scSeedEnergy"),
+        ("superCluster.energy","scEnergy"),
+        
+        # ("? hasMatchedGenPhoton ? matchedGenPhoton.energy : 0","etrue"),
+        
+        ("userInt('seedRecoFlag')","seedRecoFlag"),
+        
+        ## cluster shapes
+        "e1x5",           "full5x5_e1x5",           
+        "e2x5",           "full5x5_e2x5",           
+        "e3x3",           "full5x5_e3x3",           
+        "e5x5",           "full5x5_e5x5",           
+        "maxEnergyXtal",  "full5x5_maxEnergyXtal",  
+        "sigmaIetaIeta",  "full5x5_sigmaIetaIeta",  
+        "r1x5",           "full5x5_r1x5",           
+        "r2x5",           "full5x5_r2x5",           
+        "r9",             "full5x5_r9",             
+        "eMax","e2nd","eTop","eBottom","eLeft","eRight",
+        "iEta","iPhi","cryEta","cryPhi",
+        
+        ## more cluster shapes
+        ("e2x5right" ,"e2x5Right"  ),
+        ("e2x5left"  ,"e2x5Left"   ),
+        ("e2x5top"   ,"e2x5Top"    ),
+        ("e2x5bottom","e2x5Bottom" ),
+        ("e2x5max"   ,"e2x5Max"    ),
+        ("e1x3"      ,"e1x3"       ),
+        ("s4"        ,"s4"         ),
+        
+        ("esEffSigmaRR","sigmaRR"),
+        ("spp","covarianceIphiIphi"),
+        ("sep","covarianceIetaIphi"),
+        ("superCluster.etaWidth","etaWidth"),("superCluster.phiWidth","phiWidth"),
+        
+        ("checkStatusFlag('kSaturated')","kSaturated"),("checkStatusFlag('kWeird')","kWeird"),
+        ]
+    
+    variables.extend( makeOneLegInputs("lead","leadingPhoton",regInputs))
+    variables.extend( makeOneLegInputs("sublead","subLeadingPhoton",regInputs))
+    
 histograms=["mass>>mass(1500,0,15000)",
             "mass>>lowmass(560,60,200)",
             "genMass>>genmass(1500,0,15000)",            
@@ -551,7 +660,8 @@ cfgTools.addCategories(photonDumper,
 #
 process.source = cms.Source("PoolSource",
                             fileNames=cms.untracked.vstring(
-        "/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v5/Spring15BetaV2-2-gfceadad/SinglePhoton/EXOSpring15_v5-Spring15BetaV2-2-gfceadad-v0-Run2015B-PromptReco-v1/150813_095357/0000/diphotonsMicroAOD_99.root"
+        "file:diphotonsMicroAOD.root"
+        #"/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v5/Spring15BetaV2-2-gfceadad/SinglePhoton/EXOSpring15_v5-Spring15BetaV2-2-gfceadad-v0-Run2015B-PromptReco-v1/150813_095357/0000/diphotonsMicroAOD_99.root"
         # "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14ANv1/diphotonsPhys14AnV1/GGJets_M-1000To2000_Pt-50_13TeV-sherpa/ExoPhys14ANv1-diphotonsPhys14AnV1-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150330_192709/0000/diphotonsMicroAOD_1.root")
         )
 )
@@ -608,7 +718,7 @@ if customize.options.mctrigger != "":
 from HLTrigger.HLTfilters.hltHighLevel_cfi import hltHighLevel
 dumpBits=set(dumpBits)
 if customize.processType == "data" and not "electron" in customize.selection:
-    if "Prompt" in customize.datasetName(): filterProc = "RECO"
+    if "Prompt" in customize.datasetName() or "04Dec" in customize.datasetName(): filterProc = "RECO"
     else: filterProc = "PAT"
     diphotonDumper.globalVariables.addTriggerBits = cms.PSet(
         tag=cms.InputTag("TriggerResults","",filterProc),bits=cms.vstring("eeBadScFilter","goodVertices")
@@ -791,9 +901,9 @@ if not customize.lastAttempt:
         )
 
 
-process.p = cms.Path(process.genGr)
-
-### process.out = cms.OutputModule("PoolOutputModule", 
+### process.p = cms.Path(process.genGr)
+### 
+### ### process.out = cms.OutputModule("PoolOutputModule", 
 ###                                fileName = cms.untracked.string('diphotonsMicroAOD.root'),
 ###                                outputCommands = cms.untracked.vstring("drop *","keep *_genGr_*_*", "keep *_genGravitons_*_*"),
 ###                                SelectEvents = cms.untracked.PSet(SelectEvents = cms.vstring('p')),

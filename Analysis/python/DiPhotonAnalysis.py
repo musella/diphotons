@@ -92,7 +92,7 @@ class DiPhotonAnalysis(object):
             trg.HLTPaths=self.dataTriggers            
         
         else:
-            if "GGJet" in jobConfig.processId or "DiPhoton" in jobConfig.processId or "RSGravToGG" in jobConfig.processId or "RSGravitonToGG" in jobConfig.processId  or jobConfig.processType == "signal":
+            if "GGJet" in jobConfig.processId or "DiPhoton" in jobConfig.processId or "RSGravToGG" in jobConfig.processId or "RSGravitonToGG" in jobConfig.processId  or jobConfig.processType == "signal" or "Spin0ToGG" in jobConfig.processId:
                 splitByIso = True
 
             if self.mcTriggers and len(self.mcTriggers)>0:

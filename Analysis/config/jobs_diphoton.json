@@ -4,7 +4,7 @@
 	    				"/GGJets_M-1000To2000_Pt-50_13TeV-sherpa"
     					]
     },
-    "processes" : {
+    "_processes" : {
     
 	    "RSGravToGG_kMpl-01_M-1000_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-01_M-1000_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 } ] ],
 	    "RSGravToGG_kMpl-01_M-1250_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-01_M-1250_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 } ] ],
@@ -52,8 +52,15 @@
 								   [ "/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8", {"args": ["maxEvents=3000000"]} ]
 								   ],
 	    "GGJets_M-200To13000-sherpa" : [
-	    				["/DiPhotonJetsBox_MGG-80toInf_13TeV-Sherpa", {"njobs" : 30 } ],
-					["/GGJets_M-200To500_Pt-50_13TeV-sherpa", {"njobs" : 20 } ],
+	    				["/DiPhotonJetsBox_MGG-80toInf_13TeV-Sherpa", {"njobs" : 30 } ] ]
+	    },
+
+    "processes" : {
+
+	    "RSGravToGG_kMpl-001_M-750_TuneCUEP8M1_13TeV-pythia8" :  [ [ "/RSGravToGG_kMpl-001_M-750_TuneCUEP8M1_13TeV-pythia8"  , { "njobs" : 2 } ] ],
+	    
+	    "GGJets_M-200To13000-sherpa" : [
+					["/GGJets_M-200To500_Pt-50_13TeV-sherpa", {"njobs" : 40 } ],
 	    				"/GGJets_M-1000To2000_Pt-50_13TeV-sherpa",
 	    				"/GGJets_M-2000To4000_Pt-50_13TeV-sherpa",
 					"/GGJets_M-4000To6000_Pt-50_13TeV-sherpa",
