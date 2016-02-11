@@ -97,6 +97,7 @@ namespace diphotons
         ptAsym.clear();
         pullConv.clear();
         nConv.clear();
+        mva.clear();
         
         Handle<View<flashgg::DiPhotonCandidate> > diphoHandle;
         event.getByToken(diphoToken_, diphoHandle);
