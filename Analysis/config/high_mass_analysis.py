@@ -186,7 +186,12 @@ if "0T" in customize.idversion:
             "subleadSigmaIpIp      := sqrt(subLeadingPhoton.sipip)",
             "subleadTrkIso         := subLeadingPhoton.nTrkSolidConeDR03",
             "subleadTrkHollowIso   := subLeadingPhoton.nTrkHollowConeDR03",
-            "subleadTrkMissingHits := subLeadingPhoton.matchedGsfTrackInnerMissingHits"
+            "subleadTrkMissingHits := subLeadingPhoton.matchedGsfTrackInnerMissingHits",
+            # vtx
+            "genVtxZ               := genPV.z",
+            "bdtVtxZ               := vtx.z",
+            "eeVtxZ                := ? abs(leadingPhoton.getMatchedEleVtx.z-subLeadingPhoton.getMatchedEleVtx.z)<1 ?"
+            "(leadingPhoton.getMatchedEleVtx.z+subLeadingPhoton.getMatchedEleVtx.z)/2 : -999",
     ]
     )
 

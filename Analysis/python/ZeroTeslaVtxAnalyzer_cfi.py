@@ -1,5 +1,5 @@
 import FWCore.ParameterSet.Config as cms
 
 diphotonsZeroTeslaVtx = cms.EDAnalyzer("diphotonsZeroTeslaVtxAnalyzer",
-                                       src = cms.InputTag('flashggDiPhotonsTrkCount')
+                                       src = cms.InputTag('flashggDiPhotons')
                                    )

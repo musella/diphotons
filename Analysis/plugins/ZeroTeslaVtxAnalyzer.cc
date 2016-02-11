@@ -37,17 +37,27 @@ namespace diphotons
 
     private:
         TTree* tree_;
-        float gen_z=0;
+        int   nvtx=0;
         float m=0;
         float m_sm=0;
-        int best_trk=0;
-        int best_trk_away=0;
-        vector<int> original_id;
-        vector<float> reco_z;
-        vector<float> sum_et2;
-        vector<int>   cone_dipho;
-        vector<int>   cone_middle;
-        vector<int>   cone_back;
+        float pt=0;
+        float l_pt=0;
+        float l_eta=0;
+        float sl_pt=0;
+        float sl_eta=0;
+        float genZ=0;
+        int   mvaVtx=0;
+        float eeVtxZ=0;
+        vector<int> original_idx;
+        vector<float> recoZ;
+        vector<int>   nTracks;
+        vector<float> logsumpt2;
+        vector<float> ptBal;
+        vector<float> ptAsym;
+        vector<float> pullConv;
+        vector<float> nConv;
+        vector<float> mva;
+
         Service<TFileService> fs_;
         EDGetTokenT<View<flashgg::DiPhotonCandidate> > diphoToken_;
     };
@@ -56,32 +66,37 @@ namespace diphotons
         diphoToken_(consumes<View<flashgg::DiPhotonCandidate> >(config.getParameter<InputTag>("src")))
     {
         tree_ = fs_->make<TTree>("vtxs_tree", "vtxs");
-        tree_->Branch("gen_z", &gen_z, "gen_z/F");
-        tree_->Branch("m", &m, "m/F");
+        tree_->Branch("nvtx", &nvtx, "nvtx/I");
         tree_->Branch("m_sm", &m_sm, "m_sm/F");
-        tree_->Branch("best_trk", &best_trk, "best_trk/I");
-        tree_->Branch("best_trk_away", &best_trk_away, "best_trk_away/I");
-        tree_->Branch("original_id", "std::vector<int>", &original_id);
-        tree_->Branch("reco_z", "std::vector<float>", &reco_z);
-        tree_->Branch("sum_et2", "std::vector<float>", &sum_et2);
-        tree_->Branch("cone_dipho", "std::vector<int>", &cone_dipho);
-        tree_->Branch("cone_middle", "std::vector<int>", &cone_middle);
-        tree_->Branch("cone_back", "std::vector<int>", &cone_back);
+        tree_->Branch("pt", &pt, "pt/F");
+        tree_->Branch("l_pt", &l_pt, "l_pt/F");
+        tree_->Branch("l_eta", &l_eta, "l_eta/F");
+        tree_->Branch("sl_pt", &sl_pt, "sl_pt/F");
+        tree_->Branch("sl_eta", &sl_eta, "sl_eta/F");
+        tree_->Branch("genZ", &genZ, "genZ/F");
+        tree_->Branch("mvaVtx", &mvaVtx, "mvaVtx/I");
+        tree_->Branch("eeVtxZ", &eeVtxZ, "eeVtxZ/F");
+        tree_->Branch("original_idx", "std::vector<int>", &original_idx);
+        tree_->Branch("recoZ", "std::vector<float>", &recoZ);
+        tree_->Branch("nTracks", "std::vector<int>", &nTracks);
+        tree_->Branch("logsumpt2", "std::vector<float>", &logsumpt2);
+        tree_->Branch("ptBal", "std::vector<float>", &ptBal);
+        tree_->Branch("ptAsym", "std::vector<float>", &ptAsym);
+        tree_->Branch("pullConv", "std::vector<float>", &pullConv);
+        tree_->Branch("nConv", "std::vector<float>", &nConv);
+        tree_->Branch("mva", "std::vector<float>", &mva);
     }
 
     void ZeroTeslaVtxAnalyzer::analyze(const Event& event, const EventSetup& setup)
     {
-        int most_trk=0;
-        int most_trk_away=0;
-        best_trk=0;
-        best_trk_away=0;
-        original_id.clear();
-        reco_z.clear();
-        sum_et2.clear();
-        cone_dipho.clear();
-        cone_middle.clear();
-        cone_back.clear();
-        
+        original_idx.clear();
+        recoZ.clear();        
+        nTracks.clear();
+        logsumpt2.clear();
+        ptBal.clear();
+        ptAsym.clear();
+        pullConv.clear();
+        nConv.clear();
         
         Handle<View<flashgg::DiPhotonCandidate> > diphoHandle;
         event.getByToken(diphoToken_, diphoHandle);
@@ -90,8 +105,16 @@ namespace diphotons
         {
             flashgg::DiPhotonCandidate cand0 = diphoHandle->at(0);
             m = cand0.mass();
-            gen_z = cand0.genPV().z();
-            int current_vtx=-1;
+            pt = cand0.pt();
+            genZ = cand0.genPV().z();
+            mvaVtx = cand0.vertexIndex();
+            l_pt = cand0.leadingPhoton()->pt();
+            l_eta = cand0.leadingPhoton()->eta();
+            sl_pt = cand0.subLeadingPhoton()->pt();
+            sl_eta = cand0.subLeadingPhoton()->eta();
+            float lZ = cand0.leadingPhoton()->getMatchedEleVtx().z();
+            float slZ = cand0.subLeadingPhoton()->getMatchedEleVtx().z();
+            eeVtxZ = fabs(lZ-slZ)<0.1 ? (lZ+slZ)/2 : -999;
 
             if(fabs(cand0.leadingPhoton()->eta()) < 1)
                 m_sm = m * sqrt(gRandom->Gaus(1, 0.008));
@@ -110,50 +133,20 @@ namespace diphotons
                 m_sm = m * sqrt(gRandom->Gaus(1, 0.0201));
             else
                 m_sm = m * sqrt(gRandom->Gaus(1, 0.023));
-            
-            for(auto& vtx : cand0.getVtxs())
+
+            auto vtxs = cand0.getVtxs();
+            nvtx = cand0.nVtxInfoSize();
+            for(int iVtx=0; iVtx<nvtx; ++iVtx)
             {
-                ++current_vtx;
-                float vtx_z = vtx->z();
-                float vtx_sum_et2 = cand0.getVtxSumEt2(vtx);
-                vector<int> cones = cand0.getVtxCones(vtx);
-                int tmp_trk_away = cones[1] + cones[2];
-                int tmp_trk = cones[0] + tmp_trk_away;
-                int insert_pos=-1;
-                for(unsigned int iVtx=0; iVtx<sum_et2.size(); ++iVtx)
-                {
-                    if(vtx_sum_et2 > sum_et2[iVtx])
-                    {
-                        original_id.emplace(original_id.begin()+iVtx, current_vtx);
-                        sum_et2.emplace(sum_et2.begin()+iVtx, vtx_sum_et2);
-                        reco_z.emplace(reco_z.begin()+iVtx, vtx_z);
-                        cone_dipho.emplace(cone_dipho.begin()+iVtx, cones[0]);
-                        cone_middle.emplace(cone_middle.begin()+iVtx, cones[1]);
-                        cone_back.emplace(cone_back.begin()+iVtx, cones[2]);
-                        insert_pos=iVtx;
-                        break;
-                    }
-                }
-                if(insert_pos == -1)
-                {
-                    original_id.push_back(current_vtx);
-                    sum_et2.push_back(vtx_sum_et2);
-                    reco_z.push_back(vtx_z);
-                    cone_dipho.push_back(cones[0]);
-                    cone_middle.push_back(cones[1]);
-                    cone_back.push_back(cones[2]);
-                    insert_pos = sum_et2.size()-1;
-                }
-                if(tmp_trk > most_trk)
-                {
-                    most_trk = tmp_trk;
-                    best_trk = insert_pos;
-                }
-                if(tmp_trk_away > most_trk_away)
-                {
-                    most_trk_away = tmp_trk_away;
-                    best_trk_away = insert_pos;
-                }
+                original_idx.push_back(cand0.mvaSortedIndex(iVtx));
+                recoZ.push_back(vtxs[iVtx]->z());
+                nTracks.push_back(cand0.nTracks(iVtx));
+                logsumpt2.push_back(cand0.logSumPt2(iVtx));
+                ptBal.push_back(cand0.ptBal(iVtx));
+                ptAsym.push_back(cand0.ptAsym(iVtx));
+                pullConv.push_back(cand0.pullConv(iVtx));
+                nConv.push_back(cand0.nConv(iVtx));
+                mva.push_back(cand0.mva(iVtx));
             }
             tree_->Fill();
         }
