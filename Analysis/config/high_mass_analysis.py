@@ -143,16 +143,16 @@ variables=["mass","pt","rapidity",
            "minR9                    :=min(leadingPhoton.r9,subLeadingPhoton.r9)",
            "maxEta                   :=max(abs(leadingPhoton.superCluster.eta),abs(subLeadingPhoton.superCluster.eta))",
            
-           "leadBlockChIso   := leadingView.pfChIso03WrtChosenVtx", 
+           #"leadBlockChIso   := leadingView.pfChIso03WrtChosenVtx", 
            "leadBlockPhoIso  := leadingPhoton.pfPhoIso03", 
            
            "leadPhoIsoEA :=  map( abs(leadingPhoton.superCluster.eta) :: 0.,0.9,1.5,2.0,2.2,3. :: 0.21,0.2,0.14,0.22,0.31 )",
            "subleadPhoIsoEA :=  map( abs(subLeadingPhoton.superCluster.eta) :: 0.,0.9,1.5,2.0,2.2,3. :: 0.21,0.2,0.14,0.22,0.31 )",
            
            "leadMatchType            :=leadingPhoton.genMatchType",
-           "leadGenIso               :=?leadingPhoton.genMatchType? leadingPhoton.userFloat('genIso') : -1",
+           #"leadGenIso               :=?leadingPhoton.genMatchType==1? leadingPhoton.userFloat('genIso') : -1",
            "subleadMatchType         :=subLeadingPhoton.genMatchType",
-           "subleadGenIso            :=?subLeadingPhoton.genMatchType? suLeadingPhoton.userFloat('genIso') : -1",
+           #"subleadGenIso            :=?subLeadingPhoton.genMatchType==1? subLeadingPhoton.userFloat('genIso') : -1",
            
            "leadChIso   := leadingPhoton.egChargedHadronIso", 
            "leadPhoIso  := leadingPhoton.egPhotonIso", 
@@ -264,7 +264,7 @@ variablesSinglePho=[
     "phoScEta                :=superCluster.eta",
     "phoPhi                  :=phi",
     
-    "phoBlockChIso   := pfChgIso03WrtVtx0", 
+    #"phoBlockChIso   := pfChgIso03WrtVtx0", 
     
     "phoBlockPhoIso  := pfPhoIso03", 
     ## "phoRndConePhoIso:= extraPhoIso('rnd03')",
@@ -272,7 +272,7 @@ variablesSinglePho=[
     "phoPhoIsoEA :=  map( abs(superCluster.eta) :: 0.,0.9,1.5,2.0,2.2,3. :: 0.21,0.2,0.14,0.22,0.31 )",
     
     "phoMatchType            :=genMatchType",
-    "phoGenIso               :=userFloat('genIso')",
+    #"phoGenIso               :=userFloat('genIso')",
     
     "phoChIso   := egChargedHadronIso", 
     "phoPhoIso  := egPhotonIso", 
@@ -304,135 +304,6 @@ histogramsSinglePho = [
     "phoPixSeed>>phoPixSeed(2,-0.5,1.5)",
     "phoScEta:phoPhi>>phoEtaVsPhi(65,-3.25,3.25:55,-2.75,2.75)"
     ]
-
-if customize.datasetName() and (not "EXOSpring15_v3" in customize.datasetName() or "EXOSpring15_v3v8" in customize.datasetName()):
-    variables.extend( [
-            "leadRndConeChIso := leadingView.extraChIsoWrtChoosenVtx('rnd03')",
-            "leadRndConeChIso0 := leadingView.extraChIsoWrtChoosenVtx('rnd03_0')",
-            "leadRndConeChIso1 := leadingView.extraChIsoWrtChoosenVtx('rnd03_1')",
-            "leadRndConeChIso2 := leadingView.extraChIsoWrtChoosenVtx('rnd03_2')",
-            "leadRndConeChIso3 := leadingView.extraChIsoWrtChoosenVtx('rnd03_3')",
-            "leadRndConeChIso4 := leadingView.extraChIsoWrtChoosenVtx('rnd03_4')",
-            "leadRndConeChIso5 := leadingView.extraChIsoWrtChoosenVtx('rnd03_5')",
-            "leadRndConeChIso6 := leadingView.extraChIsoWrtChoosenVtx('rnd03_6')",
-            "leadRndConeChIso7 := leadingView.extraChIsoWrtChoosenVtx('rnd03_7')",
-            "leadRndConeChIso8 := leadingView.extraChIsoWrtChoosenVtx('rnd03_8')",
-            
-            "subleadRndConeChIso := subLeadingView.extraChIsoWrtChoosenVtx('rnd03')",
-            "subleadRndConeChIso0 := subLeadingView.extraChIsoWrtChoosenVtx('rnd03_0')",
-            "subleadRndConeChIso1 := subLeadingView.extraChIsoWrtChoosenVtx('rnd03_1')",
-            "subleadRndConeChIso2 := subLeadingView.extraChIsoWrtChoosenVtx('rnd03_2')",
-            "subleadRndConeChIso3 := subLeadingView.extraChIsoWrtChoosenVtx('rnd03_3')",
-            "subleadRndConeChIso4 := subLeadingView.extraChIsoWrtChoosenVtx('rnd03_4')",
-            "subleadRndConeChIso5 := subLeadingView.extraChIsoWrtChoosenVtx('rnd03_5')",
-            "subleadRndConeChIso6 := subLeadingView.extraChIsoWrtChoosenVtx('rnd03_6')",
-            "subleadRndConeChIso7 := subLeadingView.extraChIsoWrtChoosenVtx('rnd03_7')",
-            "subleadRndConeChIso8 := subLeadingView.extraChIsoWrtChoosenVtx('rnd03_8')",
-            ])
-    
-    histograms.extend([
-            "leadRndConeChIso0>>leadRndConeChIso(120,-10,50)",
-            "leadRndConeChIso1>>leadRndConeChIso(120,-10,50)",
-            "leadRndConeChIso2>>leadRndConeChIso(120,-10,50)",
-            "leadRndConeChIso3>>leadRndConeChIso(120,-10,50)",
-            "leadRndConeChIso4>>leadRndConeChIso(120,-10,50)",
-            "leadRndConeChIso5>>leadRndConeChIso(120,-10,50)",
-            "leadRndConeChIso6>>leadRndConeChIso(120,-10,50)",
-            "leadRndConeChIso7>>leadRndConeChIso(120,-10,50)",
-            "leadRndConeChIso8>>leadRndConeChIso(120,-10,50)",
-            
-            "subleadRndConeChIso0>>subleadRndConeChIso(120,-10,50)",
-            "subleadRndConeChIso1>>subleadRndConeChIso(120,-10,50)",
-            "subleadRndConeChIso2>>subleadRndConeChIso(120,-10,50)",
-            "subleadRndConeChIso3>>subleadRndConeChIso(120,-10,50)",
-            "subleadRndConeChIso4>>subleadRndConeChIso(120,-10,50)",
-            "subleadRndConeChIso5>>subleadRndConeChIso(120,-10,50)",
-            "subleadRndConeChIso6>>subleadRndConeChIso(120,-10,50)",
-            "subleadRndConeChIso7>>subleadRndConeChIso(120,-10,50)",
-            "subleadRndConeChIso8>>subleadRndConeChIso(120,-10,50)",
-            
-            "leadRndConeChIso0>>phoRndConeChIso(120,-10,50)",
-            "leadRndConeChIso1>>phoRndConeChIso(120,-10,50)",
-            "leadRndConeChIso2>>phoRndConeChIso(120,-10,50)",
-            "leadRndConeChIso3>>phoRndConeChIso(120,-10,50)",
-            "leadRndConeChIso4>>phoRndConeChIso(120,-10,50)",
-            "leadRndConeChIso5>>phoRndConeChIso(120,-10,50)",
-            "leadRndConeChIso6>>phoRndConeChIso(120,-10,50)",
-            "leadRndConeChIso7>>phoRndConeChIso(120,-10,50)",
-            "leadRndConeChIso8>>phoRndConeChIso(120,-10,50)",
-            
-            "subleadRndConeChIso0>>phoRndConeChIso(120,-10,50)",
-            "subleadRndConeChIso1>>phoRndConeChIso(120,-10,50)",
-            "subleadRndConeChIso2>>phoRndConeChIso(120,-10,50)",
-            "subleadRndConeChIso3>>phoRndConeChIso(120,-10,50)",
-            "subleadRndConeChIso4>>phoRndConeChIso(120,-10,50)",
-            "subleadRndConeChIso5>>phoRndConeChIso(120,-10,50)",
-            "subleadRndConeChIso6>>phoRndConeChIso(120,-10,50)",
-            "subleadRndConeChIso7>>phoRndConeChIso(120,-10,50)",
-            "subleadRndConeChIso8>>phoRndConeChIso(120,-10,50)",
-            ])
-    
-    variablesSinglePho.extend([    
-            "phoRndConeChIso := extraChgIsoWrtVtx0('rnd03')",
-            "phoRndConeChIso0 := extraChgIsoWrtVtx0('rnd03_0')",
-            "phoRndConeChIso1 := extraChgIsoWrtVtx0('rnd03_1')",
-            "phoRndConeChIso2 := extraChgIsoWrtVtx0('rnd03_2')",
-            "phoRndConeChIso3 := extraChgIsoWrtVtx0('rnd03_3')",
-            "phoRndConeChIso4 := extraChgIsoWrtVtx0('rnd03_4')",
-            "phoRndConeChIso5 := extraChgIsoWrtVtx0('rnd03_5')",
-            "phoRndConeChIso6 := extraChgIsoWrtVtx0('rnd03_6')",
-            "phoRndConeChIso7 := extraChgIsoWrtVtx0('rnd03_7')",
-            "phoRndConeChIso8 := extraChgIsoWrtVtx0('rnd03_8')",
-            ])
-    
-    histogramsSinglePho.extend([
-            "phoRndConeChIso0>>phoRndConeChIso(120,-10,50)",
-            "phoRndConeChIso1>>phoRndConeChIso(120,-10,50)",
-            "phoRndConeChIso2>>phoRndConeChIso(120,-10,50)",
-            "phoRndConeChIso3>>phoRndConeChIso(120,-10,50)",
-            "phoRndConeChIso4>>phoRndConeChIso(120,-10,50)",
-            "phoRndConeChIso5>>phoRndConeChIso(120,-10,50)",
-            "phoRndConeChIso6>>phoRndConeChIso(120,-10,50)",
-            "phoRndConeChIso7>>phoRndConeChIso(120,-10,50)",
-            "phoRndConeChIso8>>phoRndConeChIso(120,-10,50)"
-            ])
-else:
-    variables.extend( [
-            "leadRndConeChIso  := 999",
-            "leadRndConeChIso0 := 999",
-            "leadRndConeChIso1 := 999",
-            "leadRndConeChIso2 := 999",
-            "leadRndConeChIso3 := 999",
-            "leadRndConeChIso4 := 999",
-            "leadRndConeChIso5 := 999",
-            "leadRndConeChIso6 := 999",
-            "leadRndConeChIso7 := 999",
-            "leadRndConeChIso8 := 999",
-            
-            "subleadRndConeChIso  := 999",
-            "subleadRndConeChIso0 := 999",
-            "subleadRndConeChIso1 := 999",
-            "subleadRndConeChIso2 := 999",
-            "subleadRndConeChIso3 := 999",
-            "subleadRndConeChIso4 := 999",
-            "subleadRndConeChIso5 := 999",
-            "subleadRndConeChIso6 := 999",
-            "subleadRndConeChIso7 := 999",
-            "subleadRndConeChIso8 := 999",
-            ])
-
-    variablesSinglePho.extend([    
-            "phoRndConeChIso  := 999",
-            "phoRndConeChIso0 := 999",
-            "phoRndConeChIso1 := 999",
-            "phoRndConeChIso2 := 999",
-            "phoRndConeChIso3 := 999",
-            "phoRndConeChIso4 := 999",
-            "phoRndConeChIso5 := 999",
-            "phoRndConeChIso6 := 999",
-            "phoRndConeChIso7 := 999",
-            "phoRndConeChIso8 := 999",
-            ])
 
 if ":" in customize.massCut:
     massCutEB,massCutEE = map(float,customize.massCut.split(":"))

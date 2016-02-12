@@ -15,12 +15,12 @@
 	
     "#" : "data to be fit                                                                                                       ",
     "data" : [
-               "Data_13TeV:__infile__/%(sel)s"
+               "DoubleEG_13TeV:__infile__/%(sel)s"
              ],
 
     "#" : "data used for template making",
     "templates" : [
-               "Data_13TeV:__infile__/%(sel)s"
+               "DoubleEG_13TeV:__infile__/%(sel)s"
              ],
     "templatesMC" : null ,
              

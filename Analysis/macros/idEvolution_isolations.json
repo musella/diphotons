@@ -7,20 +7,13 @@
         "absScEta := scEta*((scEta>=0.)-(scEta<0.))[100,0.,2.5]", 
         "pt[500,70,1000]",
 	
-	"egPhotonIso[1000,-10,50]",
-	"egChargedHadronIso[1000,-10,50]",
-
-	"chgIsoWrtVtx0[1000,-10,50]",
-        "chgIsoWrtWorstVtx[1000,-10,50]",
-	"phoIso03[1000,-10,50]",
-
-	"relEgPhotonIso := egPhotonIso/pt[1000,0,1.2]",
-	"relEgChargedHadronIso := egChargedHadronIso/pt[1000,0,1.2]",
-
-	"relChgIsoWrtVtx0 := chgIsoWrtVtx0/pt[1000,0,1.2]",
-        "relChgIsoWrtWorstVtx := chgIsoWrtWorstVtx/pt[1000,0,1.2]",
-	"relPhoIso03 := phoIso03/pt[1000,0,1.2]"
-
+        "sieie[500, 0, 0.05]",
+        "sipip[500, 0, 0.05]"
+        "hadTowOverEm[500, 0, 10]",
+        "r9[500,0,1]",
+        "egChargedHadronIso[500, 0, 30]",
+        "egChargedPhoIso[500, 0, 30]",
+        "nTrkSolid[31, 0, 30]"
     ],
     "rhoCorr" : true,
     "ptCorr" : true,

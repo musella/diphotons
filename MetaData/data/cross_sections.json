@@ -132,5 +132,6 @@
     "RSGravToGG_kMpl-02_M-7000_TuneCUEP8M1_13TeV-pythia8" : { "xs" :   1.08e-06 },
 
     "RSGravToGG_kMpl-001_M-750_TuneCUEP8M1_13TeV-pythia8_magnetOffBS0T_MiniAODSIM_v3" : { "xs" :   5.07e-02 }, 
-    "GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8" : { "xs" :   1 } 
+    "GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8" : { "xs" :   1 },
+    "DYToEE_NNPDF30_13TeV-powheg-pythia8" : { "xs" : 1.943e+04 }
 } 

@@ -1,10 +1,12 @@
 {
     "processes" : {
         "DoubleEG" : [
+            ["/DoubleEG_0T/spigazzi-diphotons0T_v4-1_2_0-73-ga33ac69-v0-Run2015C_25ns-27Jan2016-v2-6d519b34bce0c6758fd3d842c55ee0b5/USER",
+             {"args" : ["trigger=HLT_DoublePhoton85_v*"]}
             ["/DoubleEG_0T/spigazzi-diphotons0T_v4-1_2_0-73-ga33ac69-v0-Run2015D-27Jan2016-v2-6d519b34bce0c6758fd3d842c55ee0b5/USER",
              {"args" : ["trigger=HLT_DoublePhoton50_v*"]}
             ]
         ]
 	},
-    "cmdLine" : "campaign=diphotons0T_v4 processType=data useAAA=True selection=diphoton0T idversion=0T_V1 lumiMask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Cert_246908-260627_13TeV_PromptReco_Collisions15_ZeroTesla_25ns_JSON.txt ptLead=75 ptSublead=75 massCut=50:50"
+    "cmdLine" : "campaign=diphotons0T_v4 processType=data useAAA=True selection=diphoton0T idversion=0T_V1 lumiMask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Cert_246908-260627_13TeV_PromptReco_Collisions15_ZeroTesla_25ns_JSON.txt ptLead=75 ptSublead=75 massCut=200:300"
 }
