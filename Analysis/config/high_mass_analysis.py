@@ -108,6 +108,9 @@ from flashgg.Taggers.diphotonDumper_cfi import diphotonDumper
 from flashgg.Taggers.photonDumper_cfi import photonDumper 
 import flashgg.Taggers.dumperConfigTools as cfgTools
 
+# Track count vertex
+if "0T" in customize.idversion:
+    diphotonDumper.src = "flashggDiPhotonsTrkCount"
 
 diphotonDumper.processId = "test"
 diphotonDumper.dumpTrees = False
