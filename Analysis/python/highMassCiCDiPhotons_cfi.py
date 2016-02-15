@@ -18,6 +18,38 @@ highMassCiCVariables = cms.vstring(
         "passElectronVeto"
         )
 
+# 0T analysis photon ID variables
+highMassVariables0Tid = cms.vstring(
+    "full5x5_sigmaIetaIeta",
+    "sqrt(sipip)",
+    "nTrkSolidConeDR03",
+    "egPhotonIso", 
+    "? matchedGsfTrackInnerMissingHits>=0 ? matchedGsfTrackInnerMissingHits : 10"
+        ) # set missingHits to 10 if value in Photon is -1
+
+highMassCuts0Tid = cms.VPSet(
+    cms.PSet(
+        cut = cms.string("abs(superCluster.eta)<1.5"),
+        selection = cms.VPSet(
+            cms.PSet(max=cms.string("1.05e-2")),
+            cms.PSet(max=cms.string("1.05e-2")),
+            cms.PSet(max=cms.string("4")),
+            cms.PSet(max=cms.string("3")),
+            cms.PSet(min=cms.string("1"))
+        )
+    ),
+    cms.PSet(
+        cut = cms.string("abs(superCluster.eta)>1.5"),
+        selection = cms.VPSet(
+            cms.PSet(max=cms.string("2.8e-2")),
+            cms.PSet(max=cms.string("2.6e-2")),
+            cms.PSet(max=cms.string("4")),
+            cms.PSet(max=cms.string("3")),
+            cms.PSet(min=cms.string("1"))
+        )
+    )
+)
+
 highMassCiCVariablesV2=highMassCiCVariables
 
 highMassCiCCutsV0 = cms.VPSet(
@@ -330,3 +362,14 @@ highMassCiCDiPhotonsV2 = cms.EDFilter(
     )
 
 highMassCiCDiPhotonsSBV2 = highMassCiCDiPhotons.clone( categories=highMassCiCCutsV2SB )
+
+## 0T analysis
+highMassCiCDiPhotons0TV1 = cms.EDFilter(
+    "GenericDiPhotonCandidateSelector",
+    src = cms.InputTag("kinDiPhotons"),
+    rho = cms.InputTag("fixedGridRhoFastjetAllCalo"),
+    cut = cms.string(""),
+    variables = highMassVariables0Tid,
+    categories = highMassCuts0Tid
+)
+

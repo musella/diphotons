@@ -9,8 +9,13 @@
     "variables": [
         "sieie[500, 0, 0.05]",
         "sipip[500, 0, 0.05]"
+        "hadTowOverEm[500, 0, 10]",
+        "r9[500,0,1]",
+        "egChargedHadronIso[500, 0, 30]",
+        "egChargedPhoIso[500, 0, 30]",
+        "nTrkSolid[31, 0, 30]"
     ],
 
     "xvar" : "rho[1000,5,15]",
-    "fitMedian" : true
+    "fitMedian" : true,
 }

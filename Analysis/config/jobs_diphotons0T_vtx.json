@@ -1,0 +1,9 @@
+{
+    "processes" : {
+        "RSGrav" :
+        [
+            "/RSGravToGG_kMpl-001_M-750_TuneCUEP8M1_13TeV-pythia8/spigazzi-diphotons0T_v4-1_2_0-73-ga33ac69-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_0T_magnetOffBS0T_76X_mcRun2_0T_v1-v1-04158c52b1700b25f469a4957a4a876b/USER"
+        ]
+    },
+    "cmdLine" : "campaign=diphotons0T_v4 processType=signal useAAA=True"
+}

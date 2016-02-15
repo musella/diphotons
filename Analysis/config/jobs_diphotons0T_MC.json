@@ -1,0 +1,9 @@
+{
+    "processes" : {
+        "GJet" : [
+            "/GJets_DR-0p4_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/spigazzi-diphotons0T_v4-1_2_0-73-ga33ac69-v0-RunIIFall15MiniAODv2-magnetOffBS0T_PU25nsData2015v1_0T_76X_mcRun2_0T_v1-v1-04158c52b1700b25f469a4957a4a876b/USER",
+            "/GJets_DR-0p4_HT-40To100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/spigazzi-diphotons0T_v4-1_2_0-73-ga33ac69-v0-RunIIFall15MiniAODv2-magnetOffBS0T_PU25nsData2015v1_0T_76X_mcRun2_0T_v1-v1-04158c52b1700b25f469a4957a4a876b/USER"
+        ]
+	},
+	"cmdLine" : "campaign=diphotons0T_v4 processType=data useAAA=True"
+}
