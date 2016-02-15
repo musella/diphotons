@@ -142,14 +142,25 @@ def addCmsLumi(canv,period,pos,extraText=None):
 
 # -----------------------------------------------------------------------------------------------------------
 def printIntegral(h,xmin=None,xmax=None):
-    bmin=-1
-    bmax=-1
-    if xmin:
-        bmin = h.FindBin(xmin)
-    if xmax:
-        bmax = h.FindBin(xmax)
+    try:
+        bmin=-1
+        bmax=-1
+        if xmin:
+            bmin = h.FindBin(xmin)
+        if xmax:
+            bmax = h.FindBin(xmax)
+                
+        print("Integral %s(%s,%s): %2.4g" % (h.GetName(), str(xmin), str(xmax), h.Integral(bmin,bmax) ))
+    except:
+        pass
 
-    print("Integral %s(%s,%s): %1.3g" % (h.GetName(), str(xmin), str(xmax), h.Integral(bmin,bmax) ))
+# -----------------------------------------------------------------------------------------------------------
+def printMean(h):
+    try:
+                
+        print("Mean %s: %2.4g" % (h.GetName(), h.GetMean() ))
+    except:
+        pass
         
 # -----------------------------------------------------------------------------------------------------------
 def apply(h,modifs):

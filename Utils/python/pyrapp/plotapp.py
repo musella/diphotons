@@ -174,6 +174,8 @@ class PlotApp(PyRApp):
                                     default=None,help="default: %default"),
                         make_option("--lumi",dest="lumi",action="store",type="float",
                                     default=None,help="default: %default"),
+                        make_option("--lumistr",dest="lumistr",action="store",type="string",
+                                    default=None,help="default: %default"),
                         make_option("--fudge",dest="fudge",action="store",type="float",
                                     default=1.,help="default: %default"),
                         make_option("--sqrts",dest="sqrts",action="store",type="string",
@@ -202,7 +204,9 @@ class PlotApp(PyRApp):
         else:
             self.lumistr = "%1.2g" % self.options.lumi
             self.options.lumi *= self.options.fudge
-
+        if self.options.lumistr:
+            self.lumistr=self.options.lumistr
+            
         global ROOT, style_utils
         import ROOT
         import style_utils
