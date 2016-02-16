@@ -192,6 +192,9 @@ class CombineApp(TemplatesApp):
                         make_option("--gaussian-signal",dest="gaussian_signal",action="store_true",default=False,
                                     help="Use gaussian PDF  for signal",
                                     ),
+                        make_option("--doubleCB-signal",dest="doubleCB_signal",action="store_true",default=False,
+                                    help="Use doubleCB PDF  for signal",
+                                    ),
                         make_option("--parametric-signal",dest="parametric_signal",type="string",action="callback",callback=optpars_utils.ScratchAppend(str),
                                     default=[],
                                     help="Read parametric signal from root file.",
@@ -433,6 +436,8 @@ class CombineApp(TemplatesApp):
                 self.generateParametricSignal(options,args)
             elif options.gaussian_signal :
                 self.generateGaussianSignalDataset(options,args)
+            elif options.doubleCB_signal :
+                self.generateDoubleCBSignalDataset(options,args)
             else:
                 self.generateSignalDataset(options,args)
 
@@ -659,9 +664,29 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     datacard.write(" -".ljust(15) )
             datacard.write("\n")
 
-            datacard.write("eff  lnN".ljust(20))
+            datacard.write("lepeff  lnN".ljust(20))
             for cat in categories:
-                datacard.write(" 1.10".ljust(15) )
+                datacard.write(" 1.05".ljust(15) )
+                for comp in options.components:
+                    datacard.write(" -".ljust(15) )
+            for cat in sidebands:                
+                for comp in  fit["sidebands"][cat]:                    
+                    datacard.write(" -".ljust(15) )
+            datacard.write("\n")
+
+            datacard.write("photeff  lnN".ljust(20))
+            for cat in categories:
+                datacard.write(" 1.05".ljust(15) )
+                for comp in options.components:
+                    datacard.write(" -".ljust(15) )
+            for cat in sidebands:                
+                for comp in  fit["sidebands"][cat]:                    
+                    datacard.write(" -".ljust(15) )
+            datacard.write("\n")
+
+            datacard.write("scale  lnN".ljust(20))
+            for cat in categories:
+                datacard.write(" 1.06".ljust(15) )
                 for comp in options.components:
                     datacard.write(" -".ljust(15) )
             for cat in sidebands:                
@@ -671,13 +696,43 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
 
             datacard.write("PDFs  lnN".ljust(20))
             for cat in categories:
-                datacard.write(" 1.06".ljust(15) )
+                datacard.write(" 1.04".ljust(15) )
                 for comp in options.components:
                     datacard.write(" -".ljust(15) )
             for cat in sidebands:                
                 for comp in  fit["sidebands"][cat]:                    
                     datacard.write(" -".ljust(15) )
             datacard.write("\n")
+
+            datacard.write("hlt  lnN".ljust(20))
+            for cat in categories:
+                datacard.write(" 1.03".ljust(15) )
+                for comp in options.components:
+                    datacard.write(" -".ljust(15) )
+            for cat in sidebands:                
+                for comp in  fit["sidebands"][cat]:                    
+                    datacard.write(" -".ljust(15) )
+            datacard.write("\n")
+
+            #datacard.write("eff  lnN".ljust(20))
+            #for cat in categories:
+            #    datacard.write(" 1.10".ljust(15) )
+            #    for comp in options.components:
+            #        datacard.write(" -".ljust(15) )
+            #for cat in sidebands:                
+            #    for comp in  fit["sidebands"][cat]:                    
+            #        datacard.write(" -".ljust(15) )
+            #datacard.write("\n")
+
+            #datacard.write("PDFs  lnN".ljust(20))
+            #for cat in categories:
+            #    datacard.write(" 1.06".ljust(15) )
+            #    for comp in options.components:
+            #        datacard.write(" -".ljust(15) )
+            #for cat in sidebands:                
+            #    for comp in  fit["sidebands"][cat]:                    
+            #        datacard.write(" -".ljust(15) )
+            #datacard.write("\n")
             
             # shape nuiances 
             shapeNuis = fit.get("shape_unc",{}).get(signame,{})
@@ -1673,6 +1728,195 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     
 
     ## ------------------------------------------------------------------------------------------------------------
+    def generateDoubleCBSignalDataset(self,options,args):
+        
+        print "--------------------------------------------------------------------------------------------------------------------------"
+        print "generating double CB signal dataset"
+        print 
+
+        
+        fitname = options.fit_name
+        fit = options.fits[fitname] 
+        isNameProvided = False
+        list_fwhm = {}
+        isPrefix = False
+        if (options.signal_name != None):
+                isNameProvided = True
+        
+        if (not isNameProvided and options.output_file != None):
+            isPrefix = True
+            prefix_output = options.output_file.replace(".root","")
+            options.signal_root_file = options.output_file ## copy this in case we want to run --generate-datacard at the same time
+            if not options.cardname:
+                options.cardname = "datacard_%s.txt" % prefix_output
+        
+        ## book roo observable
+        ### roobs = self.buildRooVar(*(self.getVar(options.observable)), recycle=False, importToWs=True)
+        ### roobs.setRange("fullRange",roobs.getMin(),roobs.getMax())
+        roowe = self.buildRooVar("weight",[])        
+        weightMod = ROOT.RooFormulaVar("weightMod" ,"weightMod","@0*100", ROOT.RooArgList(roowe) )
+                
+
+        #if(isNameProvided):
+        #    signals = [options.signal_name]
+        #elif len(options.signals_gauss)>0 :
+        #    signals = options.signals_gauss.keys()
+        #else:
+        #    signals = options.signals.keys()
+
+        signals = options.signals_gauss.keys()
+
+        fileShapes = ROOT.TFile.Open("signalShapeParameters.root")
+        f_mean_all   = fileShapes.Get("f1_mean_all")
+        f_sigma_all  = fileShapes.Get("f1_sigma_all")
+        f_alpha1_all = fileShapes.Get("f1_alpha1_all")
+        f_n1_all     = fileShapes.Get("f1_n1_all")
+        f_alpha2_all = fileShapes.Get("f1_alpha2_all")
+        f_n2_all     = fileShapes.Get("f1_n2_all")
+
+        f_mean_ee   = fileShapes.Get("f1_mean_ee")
+        f_sigma_ee  = fileShapes.Get("f1_sigma_ee")
+        f_alpha1_ee = fileShapes.Get("f1_alpha1_ee")
+        f_n1_ee     = fileShapes.Get("f1_n1_ee")
+        f_alpha2_ee = fileShapes.Get("f1_alpha2_ee")
+        f_n2_ee     = fileShapes.Get("f1_n2_ee")
+
+        f_mean_mm   = fileShapes.Get("f1_mean_mm")
+        f_sigma_mm  = fileShapes.Get("f1_sigma_mm")
+        f_alpha1_mm = fileShapes.Get("f1_alpha1_mm")
+        f_n1_mm     = fileShapes.Get("f1_n1_mm")
+        f_alpha2_mm = fileShapes.Get("f1_alpha2_mm")
+        f_n2_mm     = fileShapes.Get("f1_n2_mm")
+
+        for signame in signals:
+            self.bookNewWs()
+
+            # In case nothing specified about the output file, set: output_file = signame.root
+            if ( options.output_file == None ):
+                options.output_file = "%s.root" % (signame)
+
+            mass_eval = float(options.signals_gauss[signame][0][0])
+            # In case we loop over all signals, we can give inside options.output_file the prefix
+            # ... for all generated signal files (e.g. a common directory)
+            if (isPrefix):
+                options.output_file = "%s_%s.root" % (prefix_output,signame)
+            nameFileOutput = options.output_file
+           
+            sublist_fwhm = {}
+            ## build and import signal dataset
+            for cat in fit["categories"]:
+                roobs = self.getObservable(cat)
+                ## print treename
+                ## dset = self.rooData(treename)
+                val_mean   = 0.
+                val_sigma  = 0.
+                val_alpha1 = 0.
+                val_n1     = 0.
+                val_alpha2 = 0.
+                val_n2     = 0.
+                if cat=="allZG" :
+                  val_mean   = f_mean_all  .Eval(mass_eval)
+                  val_sigma  = f_sigma_all .Eval(mass_eval)
+                  val_alpha1 = f_alpha1_all.Eval(mass_eval)
+                  val_n1     = f_n1_all    .Eval(mass_eval)
+                  val_alpha2 = f_alpha2_all.Eval(mass_eval)
+                  val_n2     = f_n2_all    .Eval(mass_eval)
+                elif cat=="ee" :
+                  val_mean   = f_mean_ee  .Eval(mass_eval)
+                  val_sigma  = f_sigma_ee .Eval(mass_eval)
+                  val_alpha1 = f_alpha1_ee.Eval(mass_eval)
+                  val_n1     = f_n1_ee    .Eval(mass_eval)
+                  val_alpha2 = f_alpha2_ee.Eval(mass_eval)
+                  val_n2     = f_n2_ee    .Eval(mass_eval)
+                elif cat=="mm" :
+                  val_mean   = f_mean_mm  .Eval(mass_eval)
+                  val_sigma  = f_sigma_mm .Eval(mass_eval)
+                  val_alpha1 = f_alpha1_mm.Eval(mass_eval)
+                  val_n1     = f_n1_mm    .Eval(mass_eval)
+                  val_alpha2 = f_alpha2_mm.Eval(mass_eval)
+                  val_n2     = f_n2_mm    .Eval(mass_eval)
+
+
+                MH     = self.buildRooVar( "MH"             , [val_mean]  , importToWs=False)
+                sigmaH = self.buildRooVar(("sigmaH_%s"% cat), [val_sigma] , importToWs=False)
+                alpha1 = self.buildRooVar(("alpha1_%s"% cat), [val_alpha1], importToWs=False)
+                n1     = self.buildRooVar(("n1_%s"    % cat), [val_n1]    , importToWs=False)
+                alpha2 = self.buildRooVar(("alpha2_%s"% cat), [val_alpha2], importToWs=False)
+                n2     = self.buildRooVar(("n2_%s"    % cat), [val_n2]    , importToWs=False)
+
+                MH    .setConstant(True)
+                sigmaH.setConstant(True)
+                alpha1.setConstant(True)
+                n1    .setConstant(True)
+                alpha2.setConstant(True)
+                n2    .setConstant(True)
+
+
+                
+                ## build RooHistPdf in roobs
+                ##pdfDataHist = binned if not options.use_templates else binned.reduce(ROOT.RooArgSet(roobs))
+                #pdf=ROOT.RooHistPdf("model_signal_%s_%s"% (signame, cat),"model_signal_%s_%s"% (signame, cat),ROOT.RooArgSet(roobs),pdfDataHist)
+                print "++++++++++ Setting up DoubleCB for cat %s with values: %f, %f, %f, %f, %f, %f" % (cat,MH.getVal(),sigmaH.getVal(),alpha1.getVal(),n1.getVal(),alpha2.getVal(),n2.getVal())
+                pdf=ROOT.RooDoubleCBShape("model_signal_%s_%s"% (signame, cat),"model_signal_%s_%s"% (signame, cat),roobs,MH,sigmaH,alpha1,n1,alpha2,n2)
+                #pdf=ROOT.RooDoubleCB("model_signal_%s_%s"% (signame, cat),"model_signal_%s_%s"% (signame, cat),roobs,MH,sigmaH,alpha1,n1,alpha2,n2)
+
+                if options.verbose:
+                    print "Integral signal pdf    :", pdf.createIntegral(ROOT.RooArgSet(roobs),"templateBinning%s"%cat).getVal()
+                print "Integral signal pdf    :", pdf.createIntegral(ROOT.RooArgSet(roobs),"templateBinning%s"%cat).getVal()
+                    
+             #   ## prepare binnning: doing it here as it is faster than on the 2D pdf
+             #   plot_signal_binning = None
+             #   if options.plot_signal_binning:
+             #       nbins, width = options.plot_signal_binning
+             #       obsmean = pdf.mean(roobs).getVal()
+             #       if obsmean == 0.:
+             #           omin,omax = 300.,8000.
+             #       else:
+             #           width = max(width*obsmean,pdf.sigma(roobs).getVal()*4.)
+             #           omin, omax = obsmean-0.5*width, obsmean+0.5*width
+             #       if options.verbose:  print obsmean, omin, omax
+             #       omin = max(roobs.getMin(),omin)
+             #       omax = min(roobs.getMax(),omax)
+             #       if options.verbose: print omin, omax
+             #       step = (omax-omin)/nbins
+             #       plot_signal_binnning = []
+             #       while omin<omax:
+             #           plot_signal_binnning.append(omin)
+             #           omin += step                    
+                    
+                
+             #   self.plotBkgFit(options,reduced,pdf,roobs,"signal_%s_%s_%s" % (signame,roobs.GetName(),cat),poissonErrs=False,sig=True,logx=False,logy=False,
+             #                   plot_binning=plot_signal_binnning, forceSkipBands=True)
+
+                ## normalization has to be called <pdfname>_norm or combine won't find it
+                norm = self.buildRooVar("%s_norm" %  (pdf.GetName()), [], importToWs=False ) 
+                norm.setConstant(True)
+                
+                if cat == "allZG" : 
+                  norm.setVal(1.) # qui ci vorrebbe accettanza * eff * lumi
+                elif cat=="ee":
+                  norm.setVal(0.44) # qui ci vorrebbe accettanza * eff * lumi
+                elif cat=="mm":
+                  norm.setVal(0.56) # qui ci vorrebbe accettanza * eff * lumi
+                #if options.rescale_signal_to:
+                #    norm.setVal(reduced.sumEntries()*self.getSignalScaleFactor(signame))
+                #else:
+                #    norm.setVal(reduced.sumEntries()) 
+                
+                ## import pdf and normalization
+                self.workspace_.rooImport(pdf,RooFit.RecycleConflictNodes())
+                self.workspace_.rooImport(norm)
+            
+            list_fwhm[signame] = sublist_fwhm
+            self.saveWs(options)
+                        
+            # if signame provided then stop
+            if isNameProvided :
+                break
+
+  
+
+    ## ------------------------------------------------------------------------------------------------------------
     def generateGaussianSignalDataset(self,options,args):
         
         print "--------------------------------------------------------------------------------------------------------------------------"
@@ -1773,7 +2017,12 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 norm = self.buildRooVar("%s_norm" %  (pdf.GetName()), [], importToWs=False ) 
                 norm.setConstant(True)
                 
-                norm.setVal(1.) # qui ci vorrebbe accettanza * eff * lumi
+                if cat == "allZG" : 
+                  norm.setVal(1.) # qui ci vorrebbe accettanza * eff * lumi
+                elif cat=="ee":
+                  norm.setVal(0.448) # qui ci vorrebbe accettanza * eff * lumi
+                elif cat=="mm":
+                  norm.setVal(0.552) # qui ci vorrebbe accettanza * eff * lumi
                 #if options.rescale_signal_to:
                 #    norm.setVal(reduced.sumEntries()*self.getSignalScaleFactor(signame))
                 #else:
