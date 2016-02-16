@@ -1893,11 +1893,11 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 norm.setConstant(True)
                 
                 if cat == "allZG" : 
-                  norm.setVal(1.) # qui ci vorrebbe accettanza * eff * lumi
+                  norm.setVal(1.) 
                 elif cat=="ee":
-                  norm.setVal(0.44) # qui ci vorrebbe accettanza * eff * lumi
+                  norm.setVal(0.44) 
                 elif cat=="mm":
-                  norm.setVal(0.56) # qui ci vorrebbe accettanza * eff * lumi
+                  norm.setVal(0.56) 
                 #if options.rescale_signal_to:
                 #    norm.setVal(reduced.sumEntries()*self.getSignalScaleFactor(signame))
                 #else:
