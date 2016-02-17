@@ -15,7 +15,7 @@
     "50ns" :  ["Scale",42.5e-3],
     "25ns" :  ["Scale",15.9e-3],
 
-    "bkg" : [
+    "_bkg" : [
     	      ["dy","DY #rightarrow ee",
 	      [["colors","myColorD1"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",1],["legopt","f"],["SetFillColor","myColorD3tr"]],
 	      { "DYJetsToLL_M_50_TuneCUETP8M1_amcatnloFXFX_pythia8_13TeV:__infile__/%(sel)s" : [] }
@@ -24,6 +24,14 @@
 	      
 	     ],
 
+     "bkg" : [
+    	      ["dy","DY #rightarrow ee",
+	      [["colors","myColorD1"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",1],["legopt","f"],["SetFillColor","myColorD3tr"]],
+	      { "DYJetsToLL_M_50_TuneCUETP8M1_13TeV_madgraphMLM_pythia8_13TeV:__infile__/%(sel)s" : [] }
+	      ]
+	      
+	      
+	     ],
     "bkg_file" : "output.root", 
     "data_file"  : "output.root",
     "sig_file"  : "output.root",
@@ -43,7 +51,7 @@
     "plots": [
 
 	      ["lowmass"		,[["Rebin",4],["xtitle","m_{#gamma #gamma} (GeV)"],
-					  ["xrange",[60.0,120.0]],["overflow",[null]],
+					  ["xrange",[70.0,110.0]],["overflow",[null]],
 					  ["ytitle","Events / %(binw)s GeV"]
 					]
 					,null,null],
@@ -171,14 +179,20 @@
     ],
 	      
     "styles": { 
-	"mass_*" : [["logy",5e-2]],
+	"lowmass_*" : [["printIntegral",[87,93]],"printMean"],
+	"lowmass_dy_EEHighR9" : [["Scale",1.033]],
+	"lowmass_dy_EELowR9"  : [["Scale",1.037]],
+	"lowmass_dy_EE"       : [["Scale",1.035]],
+	"lowmass_dy_EBHighR9" : [["Scale",1.099]],
+	"lowmass_dy_EBLowR9"  : [["Scale",1.021]],
+	"lowmass_dy_EB"       : [["Scale",1.035]],
 	"*Iso*"  : [["logy",1e-3]],
 	"*Pt*"  : [["logy",1e-1]],
 	"*pt*"  : [["logy",1e-2]],
 	    "*HoE*"  : [["logy",1e-3]],
 	"*rat"   : ["SetGridy"],
         "*ratio" : [["ytitle","Data / MC"],["applyTo",["GetYaxis",[["SetNdivisions",505],["SetRangeUser",[0.5,1.5]]]]]],
-        "lowmass*ratio" : [["ytitle","Data / MC"],["applyTo",["GetYaxis",[["SetNdivisions",505],["SetRangeUser",[0,2]]]]]],
+        "lowmass*ratio" : [["ytitle","Data / MC"],["applyTo",["GetYaxis",[["SetNdivisions",505],["SetRangeUser",[0.5,1.5]]]]]],
      	"*SigmaIeIe_EB*_frame" : [ ["xrange",[3e-3,1.5e-2]] ],	 
      	"*SigmaIeIe_EE*_frame" : [ ["xrange",[1.8e-2,3e-2]],["yrezoom",0.25] ],
      	"*SigmaIeIe_EB*_ratio" : [ ["xrange",[3e-3,1.5e-2]] ],	 

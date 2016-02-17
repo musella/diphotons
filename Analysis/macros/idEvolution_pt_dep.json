@@ -4,14 +4,11 @@
         "isEE := abs(scEta)>1.5"
     ], 
     "variables": [
-	"egPhotonIso[1000,-10,200]",
-	"egChargedHadronIso[1000,-10,200]",
-
-	"chgIsoWrtVtx0[1000,-10,200]",
-        "chgIsoWrtWorstVtx[1000,-10,200]",
-	"phoIso03[1000,-10,200]"
+        "sieie[500, 0, 0.05]",
+        "sipip[500, 0, 0.05]"
     ],
 
     "fitMedian" : true,
     "rhoCorr" : true
 }
+

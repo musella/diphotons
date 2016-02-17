@@ -2,15 +2,13 @@ import FWCore.ParameterSet.Config as cms
 import FWCore.ParameterSet.VarParsing as VarParsing
 
 simpleTemplate = cms.EDFilter( "DiPhotonCandidateSelector", src = cms.InputTag("flashggDiPhotons") )
-singlePhoSimpleTemplate = cms.EDFilter("PhotonSelector",src = cms.InputTag("flashggPhotons"),)
+singlePhoSimpleTemplate = cms.EDFilter("FlashggPhotonSelector",src = cms.InputTag("flashggPhotons"),)
 
 from diphotons.Analysis.diphotonsWithMVA_cfi import diphotonsWithMVA
 
 from HLTrigger.HLTfilters.hltHighLevel_cfi import hltHighLevel
 
 import sys
-
-
 
 # -------------------------------------------------------------------------------------------------------------------------
 class DiPhotonAnalysis(object):
@@ -21,7 +19,8 @@ class DiPhotonAnalysis(object):
                  genIsoDefinition=("genIso",10.),
                  dataTriggers=["HLT_DoublePhoton60*","HLT_DoublePhoton85*","HLT_Photon250_NoHE*"],
                  mcTriggers=["HLT_DoublePhoton60*","HLT_DoublePhoton85*","HLT_Photon250_NoHE*"],
-                 askTriggerOnMc=False,sortTemplate=False,singlePhoDumperTemplate=False,computeRechitFlags=False,removeEEEE=True):
+                 askTriggerOnMc=False,sortTemplate=False,singlePhoDumperTemplate=False,computeRechitFlags=False,removeEEEE=True,
+                 applyDiphotonCorrections=False):
         
         super(DiPhotonAnalysis,self).__init__()
         
@@ -36,7 +35,7 @@ class DiPhotonAnalysis(object):
         self.mcTriggers = mcTriggers
         self.dataTriggers = dataTriggers
         self.askTriggerOnMc = askTriggerOnMc
-        
+        self.applyDiphotonCorrections = applyDiphotonCorrections
         self.computeRechitFlags = computeRechitFlags
         
         self.analysisSelections = []
@@ -71,9 +70,21 @@ class DiPhotonAnalysis(object):
             process.hltHighLevel = hltHighLevel.clone()
         return process.hltHighLevel
 
+
+    def customizeDiphotonCorrections(self,process,processType):
+        
+        if processType == "data":
+            from flashgg.Systematics.SystematicsCustomize import customizePhotonSystematicsForData
+            customizePhotonSystematicsForData(process)
+        else:
+            for vpset in process.flashggDiPhotonSystematics.SystMethods,process.flashggDiPhotonSystematics.SystMethods2D:
+                for pset in vpset:
+                    if (processType != "signal") or (not pset.Label.value().startswith("MCSmear")):
+                        pset.NSigmas = cms.vint32()
+
     # ----------------------------------------------------------------------------------------------------------------------
     def customize(self,process,jobConfig):
-        
+
         jobConfig.register('dumpConfig',
                            False, # default value
                            VarParsing.VarParsing.multiplicity.singleton, # singleton or list
@@ -85,13 +96,17 @@ class DiPhotonAnalysis(object):
         splitByIso = False
         print jobConfig.processId
         print jobConfig.processType
+        
+        if self.applyDiphotonCorrections:
+            self.customizeDiphotonCorrections(process,jobConfig.processType)
+
         if jobConfig.processType == "data":
             ## data and MC menus may not be identical
             trg = self.getHltFilter(process)
             trg.HLTPaths=self.dataTriggers            
         
         else:
-            if "GGJet" in jobConfig.processId or "DiPhoton" in jobConfig.processId or "RSGravToGG" in jobConfig.processId or "RSGravitonToGG" in jobConfig.processId  or jobConfig.processType == "signal":
+            if "GGJet" in jobConfig.processId or "DiPhoton" in jobConfig.processId or "RSGravToGG" in jobConfig.processId or "RSGravitonToGG" in jobConfig.processId  or jobConfig.processType == "signal" or "Spin0ToGG" in jobConfig.processId:
                 splitByIso = True
 
             if self.mcTriggers and len(self.mcTriggers)>0:
@@ -197,13 +212,18 @@ class DiPhotonAnalysis(object):
         src = "flashggDiPhotons"
         if self.computeRechitFlags:
             process.flashggDiPhotonsWithFlags = cms.EDProducer("DiphotonsDiPhotonsRechiFlagProducer",
-                                                               src=cms.InputTag("flashggDiPhotons"),
+                                                               src=cms.InputTag(src),
                                                                reducedBarrelRecHitCollection = cms.InputTag('reducedEgamma','reducedEBRecHits'),
                                                                reducedEndcapRecHitCollection = cms.InputTag('reducedEgamma','reducedEERecHits'),
                                                                reducedPreshowerRecHitCollection = cms.InputTag('reducedEgamma','reducedESRecHits')                
                                                                )
             src = "flashggDiPhotonsWithFlags"
+        if self.applyDiphotonCorrections:
+            process.load("flashgg.Systematics.flashggDiPhotonSystematics_cfi")
+            process.flashggDiPhotonSystematics.src=src
+            src = "flashggDiPhotonSystematics"
             
+
         template = simpleTemplate.clone(src=cms.InputTag(src),
                                         cut = cms.string(
                 "mass > %(massCut)f"
@@ -274,7 +294,7 @@ class DiPhotonAnalysis(object):
         if not hasattr(process,"kinDiPhotons"):
             self.addKinematicSelection(process,dumpTrees=False,dumperTemplate=dumperTemplate)
             
-        template = selectorTemplate.clone(src=cms.InputTag("kinDiPhotons"))
+        template = selectorTemplate.clone(src=cms.InputTag("allkinDiPhotons" if hasattr(process,"allkinDiPhotons")else "kinDiPhotons"))
         self.analysisSelections += self.addDiphoSelection(process,label,template,dumperTemplate=dumperTemplate,splitByIso=splitByIso,
                                                           dumpTrees=dumpTrees,dumpHistos=dumpHistos)
         if nMinusOne:

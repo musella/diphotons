@@ -1,6 +1,7 @@
+#include "FWCore/FWLite/interface/AutoLibraryLoader.h"
+#include "PhysicsTools/UtilAlgos/interface/FWLiteAnalyzerWrapper.h"
 
 #include "../interface/PhotonIdAnalyzer.h"
-#include "PhysicsTools/UtilAlgos/interface/FWLiteAnalyzerWrapper.h"
 
 using namespace diphotons;
 

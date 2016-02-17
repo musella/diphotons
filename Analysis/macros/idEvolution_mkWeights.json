@@ -6,6 +6,6 @@
     "infile": "output.root", 
     "variables": [
         "absScEta := scEta*((scEta>=0.)-(scEta<0.))[100,0.,2.5]", 
-        "pt[500,70,1000]"
+        "pt[500,70,6000]"
     ]
 }
