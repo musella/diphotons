@@ -383,15 +383,17 @@ if "0T" in customize.idversion:
         [
             "leadSigmaIpIp         := sqrt(leadingPhoton.sipip)",
             "leadTrkIso            := leadingPhoton.nTrkSolidConeDR03",
+            "leadChgNum            := leadingView.pfChNum03WrtChosenVtx",
             "leadTrkHollowIso      := leadingPhoton.nTrkHollowConeDR03",
             "leadTrkMissingHits    := leadingPhoton.matchedGsfTrackInnerMissingHits",
             "subleadSigmaIpIp      := sqrt(subLeadingPhoton.sipip)",
             "subleadTrkIso         := subLeadingPhoton.nTrkSolidConeDR03",
+            "subleadChgNum         := subLeadingView.pfChNum03WrtChosenVtx",
             "subleadTrkHollowIso   := subLeadingPhoton.nTrkHollowConeDR03",
             "subleadTrkMissingHits := subLeadingPhoton.matchedGsfTrackInnerMissingHits",
             # vtx
             "genVtxZ               := genPV.z",
-            "bdtVtxZ               := vtx.z",
+            "chosenVtxZ            := vtx.z",
             "eeVtxZ                := ? abs(leadingPhoton.getMatchedEleVtx.z-subLeadingPhoton.getMatchedEleVtx.z)<1 ?"
             "(leadingPhoton.getMatchedEleVtx.z+subLeadingPhoton.getMatchedEleVtx.z)/2 : -999",
     ]
@@ -757,7 +759,7 @@ if customize.options.mctrigger != "":
 from HLTrigger.HLTfilters.hltHighLevel_cfi import hltHighLevel
 dumpBits=set(dumpBits)
 if customize.processType == "data" and not "electron" in customize.selection:
-    if "Prompt" in customize.datasetName() or "04Dec2015" in customize.datasetName() or "16Dec2015" in customize.datasetName(): 
+    if "Prompt" in customize.datasetName() or "04Dec2015" in customize.datasetName() or "16Dec2015" in customize.datasetName() or "27Jan2016" in customize.datasetName(): 
         filterProc = "RECO"
     else: 
         filterProc = "PAT"
@@ -886,11 +888,11 @@ if doDoublePho0T:
                                   highMassCiCDiPhotons0T,
                                   dumpTrees=True, dumpWorkspace=False, dumpHistos=True, splitByIso=True,
                                   dumperTemplate=diphotonDumper,
-                                  nMinusOne=[(0,"NoSieie",        True, False, True), ## removeIndex(es), label, dumpTree, dumpWorkspace, dumpHistos
+                                  nMinusOne=[(0,"NoSieie",        True, False, False), ## removeIndex(es), label, dumpTree, dumpWorkspace, dumpHistos
                                              (1,"NoSipip",        True, False, False),
-                                             (2,"NoTrkIso",       True, False, False),
-                                             (3,"NoPhoIso",       True, False, False),
-                                             (4,"NoEleVeto",      True, False, False)
+                                             #(2,"NoTrkIso",       True, False, False),
+                                             (2,"NoPhoIso",       True, False, False),
+                                             (3,"NoEleVeto",      True, False, False)
                                          ]
                               )    
     
