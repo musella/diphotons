@@ -111,6 +111,7 @@ import flashgg.Taggers.dumperConfigTools as cfgTools
 # Track count vertex
 if "0T" in customize.idversion:
     diphotonDumper.src = "flashggDiPhotonsTrkCount"
+    diphotonDumper.globalVariables.rho = "fixedGridRhoFastjetAllCalo"
 
 diphotonDumper.processId = "test"
 diphotonDumper.dumpTrees = False

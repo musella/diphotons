@@ -1,9 +1,8 @@
 {
     "processes" : {
-        "GJet" : [
-            "/GJets_DR-0p4_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/spigazzi-diphotons0T_v4-1_2_0-73-ga33ac69-v0-RunIIFall15MiniAODv2-magnetOffBS0T_PU25nsData2015v1_0T_76X_mcRun2_0T_v1-v1-04158c52b1700b25f469a4957a4a876b/USER",
-            "/GJets_DR-0p4_HT-40To100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/spigazzi-diphotons0T_v4-1_2_0-73-ga33ac69-v0-RunIIFall15MiniAODv2-magnetOffBS0T_PU25nsData2015v1_0T_76X_mcRun2_0T_v1-v1-04158c52b1700b25f469a4957a4a876b/USER"
-        ]
-	},
-	"cmdLine" : "campaign=diphotons0T_v4 processType=data useAAA=True"
+        "RSGrav750" : [
+            "/RSGravToGG_kMpl-001_M-750_TuneCUEP8M1_13TeV-pythia8/spigazzi-diphotons0T_v5-1_2_0-77-g0056370-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_0T_magnetOffBS0T_76X_mcRun2_0T_v1-v1-a51e936e170c2a6af8df3765e437f37e/USER"            
+        ]            
+    },
+    "cmdLine" : "campaign=diphotons0T_v5 useAAA=True selection=diphoton0T idversion=0T_V1 ptLead=55 ptSublead=55 massCut=200:300 processType=data trigger=*"
 }

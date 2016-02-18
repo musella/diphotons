@@ -59,11 +59,12 @@ process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32( 10000 )
 process.load("flashgg.Taggers.photonDumper_cfi") 
 import flashgg.Taggers.dumperConfigTools as cfgTools
 
-process.photonDumper.src = "flashggRandomizedPhotons"
-## process.photonDumper.src = "flashggSinglePhotonViews"
-process.photonDumper.dumpTrees = True
-process.photonDumper.dumpWorkspace = False
-process.photonDumper.quietRooFit = True
+process.photonViewDumper.src = "flashggRandomizedPhotons"
+process.photonViewDumper.globalVariables.rho = "fixedGridRhoFastjetAllCalo"
+## process.photonViewDumper.src = "flashggSinglePhotonViews"
+process.photonViewDumper.dumpTrees = True
+process.photonViewDumper.dumpWorkspace = False
+process.photonViewDumper.quietRooFit = True
 
 ## list of variables to be dumped in trees/datasets. Same variables for all categories
 variables=["pt := pt",
@@ -132,7 +133,7 @@ histograms=["r9>>r9(110,0,1.1)",
             ]
 
 ## define categories and associated objects to dump
-cfgTools.addCategory(process.photonDumper,
+cfgTools.addCategory(process.photonViewDumper,
                      "Reject",
                      "   abs(superCluster.eta)>=1.4442&&abs(superCluster.eta)<=1.566 "
                      "|| abs(superCluster.eta)>=2.5 "
@@ -141,7 +142,7 @@ cfgTools.addCategory(process.photonDumper,
                      )
 
 # interestng categories 
-cfgTools.addCategories(process.photonDumper,
+cfgTools.addCategories(process.photonViewDumper,
                        ## categories definition
                        ## cuts are applied in cascade. Events getting to these categories have already failed the "Reject" selection
                        [
@@ -167,7 +168,7 @@ process.idleWatchdog=cms.EDAnalyzer("IdleWatchdog",
 process.p1 = cms.Path(
 ## process.idleWatchdog*process.kinPreselDiPhotons*process.flashggSinglePhotonViews*process.photonViewDumper
     #process.idleWatchdog*
-    process.photonDumper
+    process.photonViewDumper
     )
 
 ## process.e = cms.EndPath(process.out)
