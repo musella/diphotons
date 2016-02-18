@@ -648,31 +648,20 @@ if massCutEB or massCutEE:
     cfgTools.addCategory(diphotonDumper,"RejectLowMass",
                          "   (max(abs(leadingPhoton.superCluster.eta),abs(subLeadingPhoton.superCluster.eta))<1.4442 && mass <= %f)"
                          "|| (max(abs(leadingPhoton.superCluster.eta),abs(subLeadingPhoton.superCluster.eta))>1.566  && mass <= %f)" %
-                                            (massCutEB,massCutEE),-1)
-
-if doDoublePho0T:
-    cfgTools.addCategories(diphotonDumper,
-                           [## cuts are applied in cascade
-            ## ("all","1"),
-            ("EB", "max(abs(leadingPhoton.superCluster.eta),abs(subLeadingPhoton.superCluster.eta))<1.4442", 0),
-            ("EE", "1", 0)
-            ],
-                           variables=variables,
-                           histograms=histograms
-                           )
-else:
-    cfgTools.addCategories(diphotonDumper,
-                           [## cuts are applied in cascade
-            ## ("all","1"),
-            ("EBHighR9","max(abs(leadingPhoton.superCluster.eta),abs(subLeadingPhoton.superCluster.eta))<1.4442"
-             "&& min(leadingPhoton.r9,subLeadingPhoton.r9)>0.94",0),
-            ("EBLowR9","max(abs(leadingPhoton.superCluster.eta),abs(subLeadingPhoton.superCluster.eta))<1.4442",0),
-            ("EEHighR9","min(leadingPhoton.r9,subLeadingPhoton.r9)>0.94",0),
-            ("EELowR9","1",0),
-            ],
-                           variables=variables,
-                           histograms=histograms
-                           )
+                         (massCutEB,massCutEE),-1)
+    
+cfgTools.addCategories(diphotonDumper,
+                       [## cuts are applied in cascade
+        ## ("all","1"),
+        ("EBHighR9","max(abs(leadingPhoton.superCluster.eta),abs(subLeadingPhoton.superCluster.eta))<1.4442"
+         "&& min(leadingPhoton.r9,subLeadingPhoton.r9)>0.94",0),
+        ("EBLowR9","max(abs(leadingPhoton.superCluster.eta),abs(subLeadingPhoton.superCluster.eta))<1.4442",0),
+        ("EEHighR9","min(leadingPhoton.r9,subLeadingPhoton.r9)>0.94",0),
+        ("EELowR9","1",0),
+        ],
+                       variables=variables,
+                       histograms=histograms
+                       )
 
 
 # single photon dumpoer
@@ -767,7 +756,7 @@ if customize.options.mctrigger != "":
 from HLTrigger.HLTfilters.hltHighLevel_cfi import hltHighLevel
 dumpBits=set(dumpBits)
 if customize.processType == "data" and not "electron" in customize.selection:
-    if "Prompt" in customize.datasetName() or "04Dec" in customize.datasetName() or "16Dec2015" in customize.datasetName(): 
+    if "Prompt" in customize.datasetName() or "04Dec2015" in customize.datasetName() or "16Dec2015" in customize.datasetName(): 
         filterProc = "RECO"
     else: 
         filterProc = "PAT"

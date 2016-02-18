@@ -42,9 +42,9 @@
     "categories" : [],
     "#" :  "groups of categories can be defined to resum some of the categories",
     "groups": {
-        "EB"   : ["EB"],
-        "EE"   : ["EE"],
-        "eta_inclusive"    : ["EB","EE"]
+        "EB"   : ["EBHighR9","EBLowR9"],
+        "EE"   : ["EEHighR9","EELowR9"],
+        "eta_inclusive"    : ["EBHighR9","EBLowR9","EEHighR9","EELowR9"]
         }, 
 
     "#" : "how to compose the tree name starting from sub-pieces       ",
