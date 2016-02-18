@@ -54,7 +54,7 @@ void MakeIntrinsicWidthHisto(TString filename, bool newFile, int mass, TString c
   
   // Input file and tree
   TString inDir = "../macro/allFiles/";
-  if (genOnly==1) inDir = "../macro/allFilesGenOnlyFix/";
+  if (genOnly==1) inDir = "../macro/allFilesGenOnly/";
   TChain* sigTree = new TChain();
   cout << "reading file " 
        << inDir+TString(Form("FormSigMod_kpl"))+coupling+TString(Form("_M%d.root/DiPhotonTree", mass)) << endl;
@@ -292,6 +292,7 @@ void WidthInterpolation(RooWorkspace* w, vector<int> masses, string coupling, bo
       w->import(*fittWidthRDH);
     }
   }
+
   /*
   // Then 4GeV steps between 1000 and 1600 GeV    
   for (int iGenMass=0; iGenMass<150; iGenMass++) { 
@@ -353,7 +354,6 @@ void WidthInterpolation(RooWorkspace* w, vector<int> masses, string coupling, bo
   }
   */
 
-
   // Finally saving in a second rootfile 
   cout << endl;
   cout << endl;
@@ -364,7 +364,7 @@ void WidthInterpolation(RooWorkspace* w, vector<int> masses, string coupling, bo
   if (newfile) fileFittoWidth = new TFile("/tmp/crovelli/WidthHistosGenOnlyScan.root","RECREATE");  
   else fileFittoWidth = new TFile("/tmp/crovelli/WidthHistosGenOnlyScan.root","UPDATE");  
   fileFittoWidth->cd();
-  
+
   for (int iGenMass=0; iGenMass<250; iGenMass++) {   
     int thisMass = 500 + iGenMass*2;  
     for (int c=0; c<NCAT; ++c) {    
@@ -376,6 +376,7 @@ void WidthInterpolation(RooWorkspace* w, vector<int> masses, string coupling, bo
       RDH->Write();     
     }
   }
+
   /*
   for (int iGenMass=0; iGenMass<150; iGenMass++) {   
     int thisMass = 1000 + iGenMass*4;  
