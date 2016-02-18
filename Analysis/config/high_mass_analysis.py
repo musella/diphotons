@@ -846,6 +846,8 @@ analysis = DiPhotonAnalysis(diphotonDumper,
                             sourceDiphotons=sourceDiphotons
                             )
 
+print "---------------------------->",  customize.diphotonCorrectionsVersion
+
 dumpKinTree=False
 if customize.datasetName():
     # drop samples overlap
@@ -902,11 +904,11 @@ if doDoublePho0T:
                                   highMassCiCDiPhotons0T,
                                   dumpTrees=True, dumpWorkspace=False, dumpHistos=True, splitByIso=True,
                                   dumperTemplate=diphotonDumper,
-                                  nMinusOne=[(0,"NoSieie",        True, False, False), ## removeIndex(es), label, dumpTree, dumpWorkspace, dumpHistos
-                                             (1,"NoSipip",        True, False, False),
-                                             #(2,"NoTrkIso",       True, False, False),
-                                             (2,"NoPhoIso",       True, False, False),
-                                             (3,"NoEleVeto",      True, False, False)
+                                  nMinusOne=[(0,"NoSieie",        False, False, True), ## removeIndex(es), label, dumpTree, dumpWorkspace, dumpHistos
+                                             (1,"NoSipip",        False, False, True),
+                                             #(2,"NoTrkIso",       False, False, True),
+                                             (2,"NoPhoIso",       False, False, True),
+                                             (3,"NoEleVeto",      False, False, True)
                                          ]
                               )    
     

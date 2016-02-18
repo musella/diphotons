@@ -222,10 +222,13 @@ class DiPhotonAnalysis(object):
                                                                )
             src = "flashggDiPhotonsWithFlags"
         if self.applyDiphotonCorrections:
-            if self.diphotonCorrectionsVersion == "OT":
+            print "AAAAAAAAAAAAAAAAAAAAAAAa", self.diphotonCorrectionsVersion
+            if self.diphotonCorrectionsVersion == "0T":
+                print "0T"
                 process.load("flashgg.Systematics.flashggDiPhotonSystematics0T_cfi")
             else:
                 process.load("flashgg.Systematics.flashggDiPhotonSystematics_cfi")
+                print "38T"
             process.flashggDiPhotonSystematics.src=src
             src = "flashggDiPhotonSystematics"
             
