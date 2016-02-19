@@ -1,0 +1,55 @@
+{
+	"processes" : {
+	"Data" : [ 
+
+		"/DoubleEG/musella-EXOMoriond16-1_2_0-136-ge8a0efc-v1-Run2015D-16Dec2015-v2-0e9662de1aab60c5025198286b2fffa1/USER",
+		"/DoubleEG/sethzenz-RunIIFall15DR76-1_3_0-25ns-1_3_0-v0-Run2015D-16Dec2015-v2-b7e5c192bb12d549953ce69d2b654ac8/USER"
+	    ],
+
+
+	    "RSGravToGG_kMpl-01_M-1000_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-01_M-1000_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-01_M-1250_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-01_M-1250_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-01_M-1500_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-01_M-1500_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-01_M-1750_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-01_M-1750_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-01_M-2000_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-01_M-2000_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-01_M-2250_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-01_M-2250_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-01_M-2500_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-01_M-2500_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-01_M-2750_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-01_M-2750_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-01_M-3000_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-01_M-3000_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-01_M-3500_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-01_M-3500_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-01_M-4000_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-01_M-4000_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-01_M-4500_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-01_M-4500_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-01_M-5000_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-01_M-5000_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-01_M-500_TuneCUEP8M1_13TeV-pythia8"  : [ [ "/RSGravToGG_kMpl-01_M-500_TuneCUEP8M1_13TeV-pythia8",  { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-01_M-5500_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-01_M-5500_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-01_M-6000_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-01_M-6000_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-01_M-6500_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-01_M-6500_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-01_M-7000_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-01_M-7000_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-01_M-750_TuneCUEP8M1_13TeV-pythia8"  : [ [ "/RSGravToGG_kMpl-01_M-750_TuneCUEP8M1_13TeV-pythia8",  { "njobs" : 2 } ] ],
+	    
+	    "RSGravToGG_kMpl-001_M-1000_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-001_M-1000_TuneCUEP8M1_13TeV-pythia8" , { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-001_M-1500_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-001_M-1500_TuneCUEP8M1_13TeV-pythia8" , { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-001_M-2000_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-001_M-2000_TuneCUEP8M1_13TeV-pythia8" , { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-001_M-3000_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-001_M-3000_TuneCUEP8M1_13TeV-pythia8" , { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-001_M-4000_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-001_M-4000_TuneCUEP8M1_13TeV-pythia8" , { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-001_M-5000_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-001_M-5000_TuneCUEP8M1_13TeV-pythia8" , { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-001_M-500_TuneCUEP8M1_13TeV-pythia8" :  [ [ "/RSGravToGG_kMpl-001_M-500_TuneCUEP8M1_13TeV-pythia8"  , { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-001_M-6000_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-001_M-6000_TuneCUEP8M1_13TeV-pythia8" , { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-001_M-7000_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-001_M-7000_TuneCUEP8M1_13TeV-pythia8" , { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-001_M-750_TuneCUEP8M1_13TeV-pythia8" :  [ [ "/RSGravToGG_kMpl-001_M-750_TuneCUEP8M1_13TeV-pythia8"  , { "njobs" : 2 } ] ],
+
+	    "RSGravToGG_kMpl-02_M-1000_TuneCUEP8M1_13TeV-pythia8" :  [ [ "/RSGravToGG_kMpl-02_M-1000_TuneCUEP8M1_13TeV-pythia8"  , { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-02_M-1500_TuneCUEP8M1_13TeV-pythia8" :  [ [ "/RSGravToGG_kMpl-02_M-1500_TuneCUEP8M1_13TeV-pythia8"  , { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-02_M-2000_TuneCUEP8M1_13TeV-pythia8" :  [ [ "/RSGravToGG_kMpl-02_M-2000_TuneCUEP8M1_13TeV-pythia8"  , { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-02_M-3000_TuneCUEP8M1_13TeV-pythia8" :  [ [ "/RSGravToGG_kMpl-02_M-3000_TuneCUEP8M1_13TeV-pythia8"  , { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-02_M-4000_TuneCUEP8M1_13TeV-pythia8" :  [ [ "/RSGravToGG_kMpl-02_M-4000_TuneCUEP8M1_13TeV-pythia8"  , { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-02_M-5000_TuneCUEP8M1_13TeV-pythia8" :  [ [ "/RSGravToGG_kMpl-02_M-5000_TuneCUEP8M1_13TeV-pythia8"  , { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-02_M-500_TuneCUEP8M1_13TeV-pythia8" :   [ [ "/RSGravToGG_kMpl-02_M-500_TuneCUEP8M1_13TeV-pythia8"   , { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-02_M-6000_TuneCUEP8M1_13TeV-pythia8" :  [ [ "/RSGravToGG_kMpl-02_M-6000_TuneCUEP8M1_13TeV-pythia8"  , { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-02_M-7000_TuneCUEP8M1_13TeV-pythia8" :  [ [ "/RSGravToGG_kMpl-02_M-7000_TuneCUEP8M1_13TeV-pythia8"  , { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-02_M-750_TuneCUEP8M1_13TeV-pythia8" :   [ [ "/RSGravToGG_kMpl-02_M-750_TuneCUEP8M1_13TeV-pythia8"   , { "njobs" : 2 } ] ]
+
+	},
+	
+	"cmdLine" : "campaign=EXOMoriond16_v1_38T selection=diphoton idversion=V2 lumiMask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_Silver_v2.txt trigger=HLT_DoublePhoton60_v* ptLead=75 ptSublead=75 massCut=230:320"
+}
