@@ -120,9 +120,13 @@ import flashgg.Taggers.dumperConfigTools as cfgTools
 sourceDiphotons = "flashggDiPhotons"
 
 # Track count vertex
-if "0T" in customize.idversion:
-    # diphotonDumper.src = "flashggDiPhotonsTrkCount"
+if customize.selection == "diphotons0T":
     sourceDiphotons = "flashggDiPhotonsTrkCount"
+elif customize.selection == "dielectron0T":
+    from flashgg.MicroAOD.flashggDiPhotons_cfi import flashggDiPhotonsLite
+    process.flashggDiPhotonsEleVtx = flashggDiPhotonsLite.clone()
+    process.flashggDiPhotonsEleVtx.VertexSelectorName = "FlashggElectronVertexSelector"
+    sourceDiphotons = "flashggDiPhotonsEleVtx"
 
 diphotonDumper.processId = "test"
 diphotonDumper.dumpTrees = False
