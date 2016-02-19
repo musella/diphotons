@@ -15,11 +15,13 @@ void tnpTreeFormat(const char* filename, float lumiForW) {
 
   cout << "Formatting " << filename << endl;  
 
+  int increm=0;
+
   TFile *fileOrig = 0;
   TTree *treeOrig = 0;
   TH1F  *h_sumW = 0;
-  
-  fileOrig = TFile::Open(filename);
+
+  fileOrig = TFile::Open(TString("/cmsrm/pc28_2/crovelli/data/Exo/TaP_EXOdata25ns_7_6_3_rereco76x/")+TString(filename));
   if( fileOrig ) {
     fileOrig->cd();
     treeOrig = (TTree*)fileOrig->Get("tnpAna/TaPtree");
@@ -36,12 +38,20 @@ void tnpTreeFormat(const char* filename, float lumiForW) {
   }
 
   treeOrig->SetMakeClass(0);
-  
+  cout << "TreeOrig->Size = "<< treeOrig->GetEntries() << endl;
+
   // number of entries saved in the first tree
   int nentriesOrig = treeOrig->GetEntries();   
-  
+
+  // Tree for the final format
   TFile *fileNew = TFile::Open(TString("Formatted_")+TString(filename),"recreate");
+  fileNew->ls();
+  fileNew->cd();
+  TDirectory *myDir = (TDirectory*)fileNew->mkdir("tnpAna");
+  myDir->cd();
   TTree *treeNew = new TTree("TaPTree","reduced tree for T&P");
+  treeNew->SetAutoSave(-99999999999);
+  treeNew->SetAutoFlush(-99999999999);
   
   std::vector<TTree*> trees; 
   trees.push_back(treeNew);
@@ -256,15 +266,14 @@ void tnpTreeFormat(const char* filename, float lumiForW) {
       }
 
       treeNew->Fill();
+      increm++;
     }
   }
 
 
-  // new info
-  fileNew->ls();
-  fileNew->cd();
-  TDirectory *myDir = (TDirectory*)fileNew->mkdir("tnpAna");
-  myDir->cd();
+  // new format
+  cout << "treeNew = " << treeNew->GetEntries() << endl;
+  cout << "increm = " << increm << endl;
   treeNew->Write();
   fileNew->Close();
   fileNew->ls();

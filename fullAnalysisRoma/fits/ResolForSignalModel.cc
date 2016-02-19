@@ -42,8 +42,7 @@ void MakeResolutionHisto(TString filename, bool newFile, int mass, TString coupl
   else theResoFile = new TFile(filename,"UPDATE");
   
   // Input file and tree
-  TString inDir = "../macro/allFilesWithResolAtZ/";
-  //TString inDir = "../macro/allFilesWithNoSmearing/";
+  TString inDir = "../macro/allFilesWithResolAtZ_rereco76x_2classes/";   // chiara
   TChain* sigTree = new TChain();
   cout << "reading file " 
        << inDir+TString(Form("FormSigMod_kpl"))+coupling+TString(Form("_M%d.root/DiPhotonTree", mass)) << endl;
@@ -62,8 +61,19 @@ void MakeResolutionHisto(TString filename, bool newFile, int mass, TString coupl
     resolH->Sumw2();
   
     // Projecting the tree into the histo
-    if (c==0) sigTree->Project("resolH","mgg-mggGen",mainCut+TString::Format("&& eventClass==0)*puweight"));
-    if (c==1) sigTree->Project("resolH","mgg-mggGen",mainCut+TString::Format("&& eventClass==1)*puweight"));
+    if (ncat==2) {
+      if (c==0) sigTree->Project("resolH","mgg-mggGen",mainCut+TString::Format("&& eventClass==0)*puweight"));
+      if (c==1) sigTree->Project("resolH","mgg-mggGen",mainCut+TString::Format("&& eventClass==1)*puweight"));
+    } else if (ncat==3) {
+      if (c==0) sigTree->Project("resolH","mgg-mggGen",mainCut+TString::Format("&& eventClass==0)*puweight"));
+      if (c==1) sigTree->Project("resolH","mgg-mggGen",mainCut+TString::Format("&& eventClass==1)*puweight"));
+      if (c==2) sigTree->Project("resolH","mgg-mggGen",mainCut+TString::Format("&& eventClass==2)*puweight"));
+    } else if (ncat==4) {
+      if (c==0) sigTree->Project("resolH","mgg-mggGen",mainCut+TString::Format("&& eventClass==0)*puweight"));
+      if (c==1) sigTree->Project("resolH","mgg-mggGen",mainCut+TString::Format("&& eventClass==1)*puweight"));
+      if (c==2) sigTree->Project("resolH","mgg-mggGen",mainCut+TString::Format("&& eventClass==2)*puweight"));
+      if (c==3) sigTree->Project("resolH","mgg-mggGen",mainCut+TString::Format("&& eventClass==3)*puweight"));
+    }
 
     // Now make the roodatahist
     RooDataHist resolRDH("resolRDH","resolRDH",*deltaM,Import(*resolH));        
@@ -74,8 +84,19 @@ void MakeResolutionHisto(TString filename, bool newFile, int mass, TString coupl
     // Saving in the root file
     theResoFile->cd();
     TString myCut;
-    if (c==0)      myCut = "EBEB";  
-    else if (c==1) myCut = "EBEE";
+    if (ncat==2) {
+      if (c==0)      myCut = "EBEB";  
+      else if (c==1) myCut = "EBEE";
+    } else if (ncat==3) {
+      if (c==0)      myCut = "EBHighR9";  
+      else if (c==1) myCut = "EBLowR9";
+      else if (c==2) myCut = "EBEE";  
+    } else if (ncat==4) {
+      if (c==0)      myCut = "EBHighR9";  
+      else if (c==1) myCut = "EBLowR9";
+      else if (c==2) myCut = "EEHighR9";  
+      else if (c==3) myCut = "EELowR9";
+    }
     TString nameRDH = TString::Format("resolRDH_mass%d",mass)+TString::Format("_cat")+myCut;
     resolRDH.Write(nameRDH);
 
@@ -118,6 +139,7 @@ void ResolInterpolation(RooWorkspace* w, vector<int> masses) {
 
   // PDFs
   RooArgList pdfsCat0, pdfsCat1;
+  RooArgList pdfsCat2, pdfsCat3;
 
   // Reference points
   int numMass = (int)masses.size();
@@ -126,6 +148,8 @@ void ResolInterpolation(RooWorkspace* w, vector<int> masses) {
   // To plot
   RooPlot *frameCat0 = deltaM->frame();
   RooPlot *frameCat1 = deltaM->frame();
+  RooPlot *frameCat2 = deltaM->frame();
+  RooPlot *frameCat3 = deltaM->frame();
 
   // Files with the roodatahists 
   TFile *fileRes = new TFile("ResolutionHistos.root");
@@ -144,6 +168,19 @@ void ResolInterpolation(RooWorkspace* w, vector<int> masses) {
       TString myCut = "EBEB"; 
       if (c==1) myCut = "EBEE";  
 
+      if (NCAT==3) {
+	if (c==0) myCut = "EBHighR9";  
+	if (c==1) myCut = "EBLowR9";  
+	if (c==2) myCut = "EBEE";
+      }
+
+      if (NCAT==4) {
+	if (c==0) myCut = "EBHighR9";  
+	if (c==1) myCut = "EBLowR9";  
+	if (c==2) myCut = "EEHighR9";  
+	if (c==3) myCut = "EELowR9";  
+      }
+
       // reading the roodatahist from the file
       TString myRDH = TString(Form("resolRDH_mass%d_cat",theMass)+myCut);
       RooDataHist *resRDH = (RooDataHist*)fileRes->Get(myRDH);
@@ -161,14 +198,28 @@ void ResolInterpolation(RooWorkspace* w, vector<int> masses) {
       cout << endl;
 
       // adding to the list of pdfs
-      if (c==0) pdfsCat0.add(*myHistPdfRes);         
-      if (c==1) pdfsCat1.add(*myHistPdfRes);
+      if (c==0) pdfsCat0.add(*myHistPdfRes);        
+      if (c==1) pdfsCat1.add(*myHistPdfRes); 
+      if (NCAT==3) {
+	if (c==2) pdfsCat2.add(*myHistPdfRes);
+      }
+      if (NCAT==4) {
+	if (c==2) pdfsCat2.add(*myHistPdfRes);
+	if (c==3) pdfsCat3.add(*myHistPdfRes);
+      }
       cout << "RooHistPdfs added to the pdf list" << endl;
       cout << endl;
 
       // plot to check
       if (c==0) myHistPdfRes->plotOn(frameCat0,LineColor(kBlue), LineStyle(kSolid));
       if (c==1) myHistPdfRes->plotOn(frameCat1,LineColor(kBlue), LineStyle(kSolid));
+      if (NCAT==3) {
+	if (c==2) myHistPdfRes->plotOn(frameCat2,LineColor(kBlue), LineStyle(kSolid));
+      }
+      if (NCAT==4) {
+	if (c==2) myHistPdfRes->plotOn(frameCat2,LineColor(kBlue), LineStyle(kSolid));
+	if (c==3) myHistPdfRes->plotOn(frameCat3,LineColor(kBlue), LineStyle(kSolid));
+      }
 
     } // loop over cat
   }   // loop over masses
@@ -179,10 +230,31 @@ void ResolInterpolation(RooWorkspace* w, vector<int> masses) {
   cout << "morphing for the resolution functions" << endl;
   pdfsCat0.Print();
   pdfsCat1.Print();
+  if (NCAT==3) {
+    pdfsCat2.Print();
+  }
+  if (NCAT==4) {
+    pdfsCat2.Print();
+    pdfsCat3.Print();
+  }
   RooMomentMorph *morphResCat0 = new RooMomentMorph("morphResCat0","morphResCat0",*muRes,varlist,pdfsCat0,paramVec,RooMomentMorph::Linear);
   morphResCat0->Print();
   RooMomentMorph *morphResCat1 = new RooMomentMorph("morphResCat1","morphResCat1",*muRes,varlist,pdfsCat1,paramVec,RooMomentMorph::Linear);
   morphResCat1->Print();
+
+  RooMomentMorph *morphResCat2;
+  if (NCAT==3) {
+    morphResCat2 = new RooMomentMorph("morphResCat2","morphResCat2",*muRes,varlist,pdfsCat2,paramVec,RooMomentMorph::Linear);
+    morphResCat2->Print();
+  }
+
+  RooMomentMorph *morphResCat3;
+  if (NCAT==4) {
+    morphResCat2 = new RooMomentMorph("morphResCat2","morphResCat2",*muRes,varlist,pdfsCat2,paramVec,RooMomentMorph::Linear);
+    morphResCat2->Print();
+    morphResCat3 = new RooMomentMorph("morphResCat3","morphResCat3",*muRes,varlist,pdfsCat3,paramVec,RooMomentMorph::Linear);
+    morphResCat3->Print();
+  }
   cout << endl;
   cout << endl;
 
@@ -207,10 +279,28 @@ void ResolInterpolation(RooWorkspace* w, vector<int> masses) {
     for (int c=0; c<NCAT; ++c) {   
       TString myCut = "EBEB"; 
       if (c==1) myCut = "EBEE";  
+      if (NCAT==3) {
+	if (c==0) myCut = "EBHighR9";
+	if (c==1) myCut = "EBLowR9";
+	if (c==2) myCut = "EBEE";
+      }
+      if (NCAT==4) {
+	if (c==0) myCut = "EBHighR9";
+	if (c==1) myCut = "EBLowR9";
+	if (c==2) myCut = "EEHighR9";
+	if (c==3) myCut = "EELowR9";
+      }
       RooDataHist *fittResolRDH; 
       deltaM->setBins(600);       // chiara
       if(c==0) fittResolRDH = morphResCat0->generateBinned(*deltaM,10000,kTRUE);
       if(c==1) fittResolRDH = morphResCat1->generateBinned(*deltaM,10000,kTRUE);
+      if (NCAT==3) {
+	if(c==2) fittResolRDH = morphResCat2->generateBinned(*deltaM,10000,kTRUE);
+      }
+      if (NCAT==4) {
+	if(c==2) fittResolRDH = morphResCat2->generateBinned(*deltaM,10000,kTRUE);
+	if(c==3) fittResolRDH = morphResCat3->generateBinned(*deltaM,10000,kTRUE);
+      }
       fittResolRDH->Print();
       TString myFitRDH = TString(Form("resolRDH_mass%d_cat",thisMass)+myCut);
       fittResolRDH->SetTitle(myFitRDH);
@@ -220,17 +310,36 @@ void ResolInterpolation(RooWorkspace* w, vector<int> masses) {
   }
 
   // Then 4GeV steps between 1000 and 1600 GeV
+  /*
   for (int iGenMass=0; iGenMass<150; iGenMass++) {    
     int thisMass = 1000 + iGenMass*4.;
     cout << "Medium (4GeV) scan: " << thisMass << endl;
     muRes->setVal(thisMass);
     for (int c=0; c<NCAT; ++c) {   
       TString myCut = "EBEB"; 
-      if (c==1) myCut = "EBEE";  
+      if (c==1) myCut = "EBEE";
+      if (NCAT==3) {
+	if (c==0) myCut = "EBHighR9";
+	if (c==1) myCut = "EBLowR9";
+	if (c==2) myCut = "EBEE";
+      }      
+      if (NCAT==4) {
+	if (c==0) myCut = "EBHighR9";
+	if (c==1) myCut = "EBLowR9";
+	if (c==2) myCut = "EEHighR9";
+	if (c==3) myCut = "EELowR9";
+      }      
       RooDataHist *fittResolRDH; 
       deltaM->setBins(600);       // chiara
       if(c==0) fittResolRDH = morphResCat0->generateBinned(*deltaM,10000,kTRUE);
       if(c==1) fittResolRDH = morphResCat1->generateBinned(*deltaM,10000,kTRUE);
+      if (NCAT==3) {
+	if(c==2) fittResolRDH = morphResCat2->generateBinned(*deltaM,10000,kTRUE);
+      }
+      if (NCAT==4) {
+	if(c==2) fittResolRDH = morphResCat2->generateBinned(*deltaM,10000,kTRUE);
+	if(c==3) fittResolRDH = morphResCat3->generateBinned(*deltaM,10000,kTRUE);
+      }
       fittResolRDH->Print();
       TString myFitRDH = TString(Form("resolRDH_mass%d_cat",thisMass)+myCut);
       fittResolRDH->SetTitle(myFitRDH);
@@ -238,6 +347,7 @@ void ResolInterpolation(RooWorkspace* w, vector<int> masses) {
       w->import(*fittResolRDH);
     }   
   }
+
   // Then 100GeV steps between 1600 and 5000 GeV
   for (int iGenMass=0; iGenMass<34; iGenMass++) {    
     int thisMass = 1600 + iGenMass*100.;
@@ -246,10 +356,28 @@ void ResolInterpolation(RooWorkspace* w, vector<int> masses) {
     for (int c=0; c<NCAT; ++c) {   
       TString myCut = "EBEB"; 
       if (c==1) myCut = "EBEE";  
+      if (NCAT==3) {
+	if (c==0) myCut = "EBHighR9";
+	if (c==1) myCut = "EBLowR9";
+	if (c==2) myCut = "EBEE";
+      }      
+      if (NCAT==4) {
+	if (c==0) myCut = "EBHighR9";
+	if (c==1) myCut = "EBLowR9";
+	if (c==2) myCut = "EEHighR9";
+	if (c==3) myCut = "EELowR9";
+      }      
       RooDataHist *fittResolRDH; 
       deltaM->setBins(600);       // chiara
       if(c==0) fittResolRDH = morphResCat0->generateBinned(*deltaM,10000,kTRUE);
       if(c==1) fittResolRDH = morphResCat1->generateBinned(*deltaM,10000,kTRUE);
+      if (NCAT==3) {
+	if(c==2) fittResolRDH = morphResCat2->generateBinned(*deltaM,10000,kTRUE);
+      }
+      if (NCAT==4) {
+	if(c==2) fittResolRDH = morphResCat2->generateBinned(*deltaM,10000,kTRUE);
+	if(c==3) fittResolRDH = morphResCat3->generateBinned(*deltaM,10000,kTRUE);
+      }
       fittResolRDH->Print();
       TString myFitRDH = TString(Form("resolRDH_mass%d_cat",thisMass)+myCut);
       fittResolRDH->SetTitle(myFitRDH);
@@ -257,8 +385,7 @@ void ResolInterpolation(RooWorkspace* w, vector<int> masses) {
       w->import(*fittResolRDH);
     }   
   }
-  
-
+  */
 
   // Finally saving in a second rootfile
   cout << endl;
@@ -274,16 +401,40 @@ void ResolInterpolation(RooWorkspace* w, vector<int> masses) {
     for (int c=0; c<NCAT; ++c) {
       TString myCut = "EBEB";
       if (c==1) myCut = "EBEE";
+      if (NCAT==3) {
+	if (c==0) myCut = "EBHighR9";
+	if (c==1) myCut = "EBLowR9";
+	if (c==2) myCut = "EBEE";
+      }      
+      if (NCAT==4) {
+	if (c==0) myCut = "EBHighR9";
+	if (c==1) myCut = "EBLowR9";
+	if (c==2) myCut = "EEHighR9";
+	if (c==3) myCut = "EELowR9";
+      }      
       TString myFitRDH = TString(Form("resolRDH_mass%d_cat",thisMass)+myCut);
       RooDataHist *RDH = (RooDataHist*)w->data(myFitRDH);
       RDH->Write();
     }
   }
+
+  /*
   for (int iGenMass=0; iGenMass<150; iGenMass++) {    
     int thisMass = 1000 + iGenMass*4.;
     for (int c=0; c<NCAT; ++c) {
       TString myCut = "EBEB";
       if (c==1) myCut = "EBEE";
+      if (NCAT==4) {
+	if (c==0) myCut = "EBHighR9";
+	if (c==1) myCut = "EBLowR9";
+	if (c==2) myCut = "EEHighR9";
+	if (c==3) myCut = "EELowR9";
+      }      
+      if (NCAT==3) {
+	if (c==0) myCut = "EBHighR9";
+	if (c==1) myCut = "EBLowR9";
+	if (c==2) myCut = "EBEE";
+      }      
       TString myFitRDH = TString(Form("resolRDH_mass%d_cat",thisMass)+myCut);
       RooDataHist *RDH = (RooDataHist*)w->data(myFitRDH);
       RDH->Write();
@@ -294,79 +445,26 @@ void ResolInterpolation(RooWorkspace* w, vector<int> masses) {
     for (int c=0; c<NCAT; ++c) {
       TString myCut = "EBEB";
       if (c==1) myCut = "EBEE";
+      if (NCAT==4) {
+	if (c==0) myCut = "EBHighR9";
+	if (c==1) myCut = "EBLowR9";
+	if (c==2) myCut = "EEHighR9";
+	if (c==3) myCut = "EELowR9";
+      }      
+      if (NCAT==3) {
+	if (c==0) myCut = "EBHighR9";
+	if (c==1) myCut = "EBLowR9";
+	if (c==2) myCut = "EBEE";
+      }      
       TString myFitRDH = TString(Form("resolRDH_mass%d_cat",thisMass)+myCut);
       RooDataHist *RDH = (RooDataHist*)w->data(myFitRDH);
       RDH->Write();
     }
   }
+  */
 
   fileFittoRes.Close();
 }
-
-// -----------------------------------------------------------------------------
-
-void controlPlots() {
-
-  // the roorealvar 
-  RooRealVar* deltaM = new RooRealVar("deltaM", "", -1000, 200, "GeV");   
-  
-  // Files with the roodatahists 
-  TFile *fileFull  = new TFile("ResolutionHistos.root");  
-  TFile *fileMorph = new TFile("ResHistosGenOnlyScan.root");  
-
-  // Some example mass - full
-  RooDataHist *full2000_catEBEB = (RooDataHist*)fileFull->Get("resolRDH_mass2000_catEBEB");
-  RooDataHist *full2000_catEBEE = (RooDataHist*)fileFull->Get("resolRDH_mass2000_catEBEE");
-  RooHistPdf *full2000_catEBEB_pdf = new RooHistPdf("full2000_catEBEB_pdf", "full2000_catEBEB_pdf", *deltaM,*full2000_catEBEB,0);
-  RooHistPdf *full2000_catEBEE_pdf = new RooHistPdf("full2000_catEBEE_pdf", "full2000_catEBEE_pdf", *deltaM,*full2000_catEBEE,0);
-
-  // Some example mass - morphing
-  RooDataHist *morph2000_catEBEB = (RooDataHist*)fileMorph->Get("resolRDH_mass2000_catEBEB");
-  RooDataHist *morph2000_catEBEE = (RooDataHist*)fileMorph->Get("resolRDH_mass2000_catEBEE");
-  RooHistPdf *morph2000_catEBEB_pdf = new RooHistPdf("morph2000_catEBEB_pdf","morph2000_catEBEB_pdf",*deltaM,*morph2000_catEBEB,0) ;  
-  RooHistPdf *morph2000_catEBEE_pdf = new RooHistPdf("morph2000_catEBEE_pdf","morph2000_catEBEE_pdf",*deltaM,*morph2000_catEBEE,0) ;  
-  
-  // check EBEB
-  TCanvas *c1 = new TCanvas("c1","c1",1);
-  RooPlot* myPlot = deltaM->frame(Range(-1000,200),Bins(600));    
-  RooPlot* myPlotZoom = deltaM->frame(Range(-100,100),Bins(100));   
-  myPlot->SetTitle("mG=2000");  
-  myPlotZoom->SetTitle("mG=2000");  
-  morph2000_catEBEB_pdf->plotOn(myPlot, LineColor(kRed), LineStyle(kDashed));    
-  full2000_catEBEB_pdf->plotOn(myPlot, LineColor(kBlue), LineStyle(kSolid));
-  myPlot->Draw();
-  TString canvasName = TString(Form("CheckMorphing_CatEBEB_mass2000.png"));
-  c1->SaveAs(canvasName);       
-  c1->SetLogy();
-  canvasName = TString(Form("CheckMorphing_CatEBEB_mass2000_Log.png"));
-  c1->SaveAs(canvasName);
-  morph2000_catEBEB_pdf->plotOn(myPlotZoom, LineColor(kRed), LineStyle(kDashed));    
-  full2000_catEBEB_pdf->plotOn(myPlotZoom, LineColor(kBlue), LineStyle(kSolid));
-  myPlotZoom->Draw();
-  canvasName = TString(Form("CheckMorphing_CatEBEB_mass2000_Zoom.png"));
-  c1->SaveAs(canvasName);       
-
-  // check EBEE
-  TCanvas *c11 = new TCanvas("c11","c11",1);
-  RooPlot* myPlot11 = deltaM->frame(Range(-1000,200),Bins(600));    
-  RooPlot* myPlotZoom11 = deltaM->frame(Range(-100,100),Bins(100));   
-  myPlot11->SetTitle("mG=2000");  
-  myPlotZoom11->SetTitle("mG=2000");  
-  morph2000_catEBEE_pdf->plotOn(myPlot11, LineColor(kRed), LineStyle(kDashed));    
-  full2000_catEBEE_pdf->plotOn(myPlot11, LineColor(kBlue), LineStyle(kSolid));
-  myPlot11->Draw();
-  canvasName = TString(Form("CheckMorphing_CatEBEE_mass2000.png"));
-  c11->SaveAs(canvasName);       
-  c11->SetLogy();
-  canvasName = TString(Form("CheckMorphing_CatEBEE_mass2000_Log.png"));
-  c11->SaveAs(canvasName);
-  morph2000_catEBEE_pdf->plotOn(myPlotZoom11, LineColor(kRed), LineStyle(kDashed));    
-  full2000_catEBEE_pdf->plotOn(myPlotZoom11, LineColor(kBlue), LineStyle(kSolid));
-  myPlotZoom11->Draw();
-  canvasName = TString(Form("CheckMorphing_CatEBEE_mass2000_Zoom.png"));
-  c11->SaveAs(canvasName);       
-}
-
 
 // To run the analysis
 void runfits() {
@@ -383,15 +481,13 @@ void runfits() {
   masses.push_back(1750);
   masses.push_back(2000);
   masses.push_back(2250);
-  //masses.push_back(2500);
+  masses.push_back(2500);
   masses.push_back(2750);
   masses.push_back(3000);
-  masses.push_back(3500);
+  //masses.push_back(3500);
   masses.push_back(4000);
   masses.push_back(4500);
   masses.push_back(5000);
-  //masses.push_back(6000);
-  //masses.push_back(7000);
 
   // make resolution histograms and roodatahists using k=0.1 or k=0.01 according to the mass
   cout << endl; 
@@ -403,8 +499,8 @@ void runfits() {
   for (int ii=0; ii<(int)masses.size(); ii++) {
     int theMass = masses[ii];
     string myResKpl = "01";
-    if (theMass>4000)  myResKpl = "001";        
-    if (theMass==4500) myResKpl = "01";  // chiara: this is to make the scan denser
+    if (theMass==1500 || theMass==3000 || theMass==500 || theMass==750) myResKpl = "001";  
+    if (theMass==2000 || theMass==4000 || theMass==5000) myResKpl = "001"; 
 
     cout << "resolution at mass " << theMass << " with coupling " << myResKpl << endl;
     if (ii==0) MakeResolutionHisto(fileResol, 1, theMass, myResKpl);    
@@ -418,14 +514,6 @@ void runfits() {
   cout << endl;    
   cout << "Now make the interpolation" << endl; 
   ResolInterpolation(w, masses);
-
-  // control plots
-  cout << endl; 
-  cout << endl; 
-  cout << "--------------------------------------------------------------------------" << endl; 
-  cout << endl;    
-  cout << "Now some control plots" << endl; 
-  //controlPlots();
 
   return;
 }
