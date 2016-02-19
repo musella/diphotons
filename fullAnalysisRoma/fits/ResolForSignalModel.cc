@@ -25,7 +25,7 @@ using namespace RooFit;
 using namespace std;
 
 // to be modified:
-static const Int_t NCAT = 3;  
+static const Int_t NCAT = 2;  
 
 // Preparing the resolution histograms
 void MakeResolutionHisto(TString filename, bool newFile, int mass, TString coupling) {
