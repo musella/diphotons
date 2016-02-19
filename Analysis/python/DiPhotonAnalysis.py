@@ -2,7 +2,7 @@ import FWCore.ParameterSet.Config as cms
 import FWCore.ParameterSet.VarParsing as VarParsing
 
 simpleTemplate = cms.EDFilter( "DiPhotonCandidateSelector", src = cms.InputTag("flashggDiPhotons") )
-singlePhoSimpleTemplate = cms.EDFilter("FlashggPhotonSelector",src = cms.InputTag("flashggPhotons"),)
+singlePhoSimpleTemplate = cms.EDFilter("FlashggPhotonSelector",src = cms.InputTag("flashggRandomizedPhotons"),)
 
 from diphotons.Analysis.diphotonsWithMVA_cfi import diphotonsWithMVA
 
@@ -524,7 +524,7 @@ class DiPhotonAnalysis(object):
         if not dumperTemplate:
             dumperTemplate = self.dumperTemplate
         
-        template = singlePhoSimpleTemplate.clone(src=cms.InputTag("flashggPhotons"),
+        template = singlePhoSimpleTemplate.clone(src=cms.InputTag("flashggRandomizedPhotons"),
                                         cut = cms.string(
                 " pt > %(ptSublead)f"
                 " && abs(superCluster.eta)<2.5 && ( abs(superCluster.eta)<1.4442 || abs(superCluster.eta)>1.566)"
