@@ -65,8 +65,8 @@
 	
     "plots": [
 
-	      ["lowmass"		,[["Rebin",4],["xtitle","m_{#gamma #gamma} (GeV)"],
-					  ["xrange",[70.0,110.0]],["overflow",[null]],
+	      ["lowmass"		,[["Rebin",2],["xtitle","m_{#gamma #gamma} (GeV)"],
+					  ["xrange",[70.0,110.0]],
 					  ["ytitle","Events / %(binw)s GeV"]
 					]
 					,null,null],
