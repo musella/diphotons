@@ -1,0 +1,14 @@
+{
+    "processes" : {
+        "Data" : [
+            ["/DoubleEG_0T/spigazzi-diphotons0T_v5-1_2_0-77-g0056370-v0-Run2015C_25ns-27Jan2016-v2-55fe481985bc6e24af43ba0caf9acb03/USER",
+             {"args" : ["trigger=HLT_DiSC30_18_EIso_AND_HE_Mass70_v*"]}
+            ],
+            ["/DoubleEG_0T/spigazzi-diphotons0T_v5-1_2_0-77-g0056370-v0-Run2015D-27Jan2016-v2-55fe481985bc6e24af43ba0caf9acb03/USER",
+             {"args" : ["trigger=HLT_DiSC30_18_EIso_AND_HE_Mass70_v*"]}
+            ]
+        ],
+	"DYToEE_NNPDF30_13TeV-powheg-pythia8" : ["/DYToEE_NNPDF30_13TeV-powheg-pythia8"]
+	},
+    "cmdLine" : "campaign=diphotons0T_v5 useAAA=True selection=dielectron0T idversion=0T_V1 lumiMask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Cert_246908-260627_13TeV_PromptReco_Collisions15_ZeroTesla_25ns_JSON.txt ptLead=35 ptSublead=25 massCut=75"
+}

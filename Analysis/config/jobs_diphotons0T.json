@@ -1,0 +1,52 @@
+{
+    "processes" : {
+        "DoubleEG" : [
+            "/DoubleEG_0T/spigazzi-diphotons0T_v5-1_2_0-77-g0056370-v0-Run2015C_25ns-27Jan2016-v2-55fe481985bc6e24af43ba0caf9acb03/USER",
+            "/DoubleEG_0T/spigazzi-diphotons0T_v5-1_2_0-77-g0056370-v0-Run2015D-27Jan2016-v2-55fe481985bc6e24af43ba0caf9acb03/USER"
+        ],
+
+	    "RSGravToGG_kMpl-01_M-1000_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-01_M-1000_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-01_M-1250_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-01_M-1250_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-01_M-1500_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-01_M-1500_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-01_M-1750_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-01_M-1750_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-01_M-2000_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-01_M-2000_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-01_M-2250_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-01_M-2250_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-01_M-2500_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-01_M-2500_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-01_M-2750_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-01_M-2750_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-01_M-3000_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-01_M-3000_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-01_M-3500_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-01_M-3500_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-01_M-4000_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-01_M-4000_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-01_M-4500_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-01_M-4500_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-01_M-5000_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-01_M-5000_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-01_M-500_TuneCUEP8M1_13TeV-pythia8"  : [ [ "/RSGravToGG_kMpl-01_M-500_TuneCUEP8M1_13TeV-pythia8",  { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-01_M-5500_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-01_M-5500_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-01_M-6000_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-01_M-6000_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-01_M-6500_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-01_M-6500_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-01_M-7000_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-01_M-7000_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-01_M-750_TuneCUEP8M1_13TeV-pythia8"  : [ [ "/RSGravToGG_kMpl-01_M-750_TuneCUEP8M1_13TeV-pythia8",  { "njobs" : 2 } ] ],
+	    
+	    "RSGravToGG_kMpl-001_M-1000_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-001_M-1000_TuneCUEP8M1_13TeV-pythia8" , { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-001_M-1500_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-001_M-1500_TuneCUEP8M1_13TeV-pythia8" , { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-001_M-2000_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-001_M-2000_TuneCUEP8M1_13TeV-pythia8" , { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-001_M-3000_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-001_M-3000_TuneCUEP8M1_13TeV-pythia8" , { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-001_M-4000_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-001_M-4000_TuneCUEP8M1_13TeV-pythia8" , { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-001_M-5000_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-001_M-5000_TuneCUEP8M1_13TeV-pythia8" , { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-001_M-500_TuneCUEP8M1_13TeV-pythia8" :  [ [ "/RSGravToGG_kMpl-001_M-500_TuneCUEP8M1_13TeV-pythia8"  , { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-001_M-6000_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-001_M-6000_TuneCUEP8M1_13TeV-pythia8" , { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-001_M-7000_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-001_M-7000_TuneCUEP8M1_13TeV-pythia8" , { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-001_M-750_TuneCUEP8M1_13TeV-pythia8" :  [ [ "/RSGravToGG_kMpl-001_M-750_TuneCUEP8M1_13TeV-pythia8"  , { "njobs" : 2 } ] ],
+
+	    "RSGravToGG_kMpl-02_M-1000_TuneCUEP8M1_13TeV-pythia8" :  [ [ "/RSGravToGG_kMpl-02_M-1000_TuneCUEP8M1_13TeV-pythia8"  , { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-02_M-1500_TuneCUEP8M1_13TeV-pythia8" :  [ [ "/RSGravToGG_kMpl-02_M-1500_TuneCUEP8M1_13TeV-pythia8"  , { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-02_M-2000_TuneCUEP8M1_13TeV-pythia8" :  [ [ "/RSGravToGG_kMpl-02_M-2000_TuneCUEP8M1_13TeV-pythia8"  , { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-02_M-3000_TuneCUEP8M1_13TeV-pythia8" :  [ [ "/RSGravToGG_kMpl-02_M-3000_TuneCUEP8M1_13TeV-pythia8"  , { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-02_M-4000_TuneCUEP8M1_13TeV-pythia8" :  [ [ "/RSGravToGG_kMpl-02_M-4000_TuneCUEP8M1_13TeV-pythia8"  , { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-02_M-5000_TuneCUEP8M1_13TeV-pythia8" :  [ [ "/RSGravToGG_kMpl-02_M-5000_TuneCUEP8M1_13TeV-pythia8"  , { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-02_M-500_TuneCUEP8M1_13TeV-pythia8" :   [ [ "/RSGravToGG_kMpl-02_M-500_TuneCUEP8M1_13TeV-pythia8"   , { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-02_M-6000_TuneCUEP8M1_13TeV-pythia8" :  [ [ "/RSGravToGG_kMpl-02_M-6000_TuneCUEP8M1_13TeV-pythia8"  , { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-02_M-7000_TuneCUEP8M1_13TeV-pythia8" :  [ [ "/RSGravToGG_kMpl-02_M-7000_TuneCUEP8M1_13TeV-pythia8"  , { "njobs" : 2 } ] ],
+	    "RSGravToGG_kMpl-02_M-750_TuneCUEP8M1_13TeV-pythia8" :   [ [ "/RSGravToGG_kMpl-02_M-750_TuneCUEP8M1_13TeV-pythia8"   , { "njobs" : 2 } ] ]
+
+	},
+    "cmdLine" : "campaign=diphotons0T_v5 useAAA=True selection=diphoton0T idversion=0T_V1 lumiMask=/afs/cern.ch/work/s/spigazzi/public/Xgg/CertSilver_diphotons0T_custom.json ptLead=75 ptSublead=75 massCut=230:320 trigger=HLT_DoublePhoton40_v*"
+}
