@@ -42,7 +42,7 @@ void MakeResolutionHisto(TString filename, bool newFile, int mass, TString coupl
   else theResoFile = new TFile(filename,"UPDATE");
   
   // Input file and tree
-  TString inDir = "../macro/allFilesWithResolAtZ_rereco76x_3classes/";   // chiara
+  TString inDir = "../macro/allFilesWithResolAtZ_rereco76x_2classes/";   // chiara
   TChain* sigTree = new TChain();
   cout << "reading file " 
        << inDir+TString(Form("FormSigMod_kpl"))+coupling+TString(Form("_M%d.root/DiPhotonTree", mass)) << endl;
