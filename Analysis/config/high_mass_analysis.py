@@ -451,8 +451,7 @@ variablesSinglePho=[
     "phoPhoIsoEA :=  map( abs(superCluster.eta) :: 0.,0.9,1.5,2.0,2.2,3. :: 0.21,0.2,0.14,0.22,0.31 )",
     
     "phoMatchType            :=genMatchType",
-    "phoGenIso               :=userFloat('genIso')",
-    
+    "phoGenIso               :=?hasUserFloat('genIso')?userFloat('genIso'):0",
     "phoChIso   := egChargedHadronIso", 
     "phoPhoIso  := egPhotonIso", 
     "phoNeutIso := egNeutralHadronIso",
