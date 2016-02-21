@@ -890,7 +890,7 @@ else:
 
 if invertEleVeto:
     if doDoublePho0T:
-        highMassCiCDiPhotons0T.variables[-1] = "? matchedGsfTrackInnerMissingHits==0 ? 2 : 0"
+        highMassCiCDiPhotons0T.variables[-1] = "? matchedGsfTrackInnerMissingHits==0 || matchedGsfTrackInnerMissingHits==1 ? 2 : 0"
     else:
         highMassCiCDiPhotons.variables[-1] = "hasPixelSeed"
         highMassCiCDiPhotonsSB.variables[-1] = "hasPixelSeed"

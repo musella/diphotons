@@ -9,7 +9,7 @@
             ]
         ]
     },
-    "_processes" : {
+    "processes" : {
 	"DYToEE_NNPDF30_13TeV-powheg-pythia8" : ["/DYToEE_NNPDF30_13TeV-powheg-pythia8"]
     },
     "cmdLine" : "campaign=diphotons0T_v5 useAAA=True selection=dielectron0T idversion=0T_V1 lumiMask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Cert_246908-260627_13TeV_PromptReco_Collisions15_ZeroTesla_25ns_JSON.txt ptLead=35 ptSublead=25 massCut=75 applyDiphotonCorrections=1 diphotonCorrectionsVersion=0T"
