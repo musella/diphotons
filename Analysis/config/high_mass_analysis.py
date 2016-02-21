@@ -722,7 +722,7 @@ doSinglePho=False
 doDoublePho=True
 doDoublePho0T=False
 invertEleVeto=False
-dumpBits=["HLT_DoublePhoton50", "HLT_DoublePhoton60", "HLT_DoublePhoton85", "HLT_Photon250_NoHE", "HLT_Photon165_HE"]
+dumpBits=["HLT_DoublePhoton50", "HLT_DoublePhoton60", "HLT_DoublePhoton85", "HLT_Photon250_NoHE", "HLT_Photon165_HE","HLT_DiSC30_18_EIso_AND_HE_Mass70"]
 askTriggerOnMc=False
 
 if customize.selection == "diphoton0T":
@@ -905,7 +905,7 @@ if doDoublePho0T:
                                   dumpTrees=True, dumpWorkspace=False, dumpHistos=True, splitByIso=True,
                                   dumperTemplate=diphotonDumper,
                                   nMinusOne=[(0,"NoSieie",        False, False, True), ## removeIndex(es), label, dumpTree, dumpWorkspace, dumpHistos
-                                             (1,"NoSipip",        False, False, True),
+                                             (1, "NoSipip",        False, False, True),
                                              #(2,"NoTrkIso",       False, False, True),
                                              (2,"NoPhoIso",       False, False, True),
                                              (3,"NoEleVeto",      False, False, True)

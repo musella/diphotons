@@ -135,5 +135,5 @@
     "GJets_DR-0p4_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8" : { "xs" : 1},
     "GJets_DR-0p4_HT-40To100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8" : { "xs" : 1},
     "GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8" : { "xs" :   1 },
-    "DYToEE_NNPDF30_13TeV-powheg-pythia8" : { "xs" : 1.943e+04 }
+    "_DYToEE_NNPDF30_13TeV-powheg-pythia8" : { "xs" : 1.943e+04 }
 } 

@@ -11,7 +11,8 @@
 	      ]
 	      
     ],
-	      
+
+
     "50ns" :  ["Scale",42.5e-3],
     "25ns" :  ["Scale",15.9e-3],
 
@@ -42,6 +43,25 @@
 	      
 	     ],
 
+
+
+     "_bkg" : [
+    	      ["dy","Smeared",
+	      [["colors","myColorD1"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",1],["legopt","f"],["SetFillColor","myColorD3tr"]],
+	      { "DYToEE_NNPDF30_13TeV_powheg_pythia8_13TeV:__infile__/%(sel)s" : [] }
+	      ]
+	      
+	      
+	     ],
+    "_data" : [
+    	      ["dy_nosm","Unsmeared",
+	      [["SetBinErrorOption",1],["colors","kBlack"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","pe"],["SetMarkerStyle","kFullCircle"],["SetFillColor","kWhite"]],
+	      { "DYToEE_NNPDF30_13TeV_powheg_pythia8_13TeV:__infile__/%(sel)s" : [] }
+	      ]	      
+    ],
+	      
+
+
     "bkg_file" : "output.root", 
     "data_file"  : "output.root",
     "sig_file"  : "output.root",
@@ -65,8 +85,8 @@
 	
     "plots": [
 
-	      ["lowmass"		,[["Rebin",4],["xtitle","m_{#gamma #gamma} (GeV)"],
-					  ["xrange",[70.0,110.0]],["overflow",[null]],
+	      ["lowmass"		,[["Rebin",2],["xtitle","m_{#gamma #gamma} (GeV)"],
+					  ["xrange",[70.0,110.0]],
 					  ["ytitle","Events / %(binw)s GeV"]
 					]
 					,null,null],
@@ -194,7 +214,8 @@
     ],
 
     "selections" : [
-        ["cic",""]
+        ["cic",""],
+        ["kin","kinOnly"]
     ],
 
     "styles": { 
