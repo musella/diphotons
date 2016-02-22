@@ -122,7 +122,10 @@ class CombineApp(TemplatesApp):
                                     ## type="string",default=[320,350,375,400,450,500,1050],
                                     help="Binning to be used for plots",
                                     ),
-                        
+                        make_option("--plot-blind",dest="plot_blind",action="callback",callback=optpars_utils.ScratchAppend(float),
+                                    type="string",default=[],
+                                    help="Blinding region for background plot",
+                                    ),
                         make_option("--plot-signal-binning",dest="plot_signal_binning",action="callback",callback=optpars_utils.ScratchAppend(float),
                                     type="string",default=[50,0.2],
                                     help="Number of bins and width of observable for signal model plots",
@@ -654,9 +657,9 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             datacard.write("----------------------------------------------------------------------------------------------------------------------------------\n")
             
             # normalization nuisances
-            datacard.write("lumi  lnN".ljust(20))
+            datacard.write("cms_lumi_13TeV  lnN".ljust(20))
             for cat in categories:
-                datacard.write(" 1.06".ljust(15) )
+                datacard.write(" 1.046".ljust(15) )
                 for comp in options.components:
                     datacard.write(" -".ljust(15) )
             for cat in sidebands:                
@@ -664,17 +667,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     datacard.write(" -".ljust(15) )
             datacard.write("\n")
 
-            datacard.write("lepeff  lnN".ljust(20))
-            for cat in categories:
-                datacard.write(" 1.05".ljust(15) )
-                for comp in options.components:
-                    datacard.write(" -".ljust(15) )
-            for cat in sidebands:                
-                for comp in  fit["sidebands"][cat]:                    
-                    datacard.write(" -".ljust(15) )
-            datacard.write("\n")
-
-            datacard.write("photeff  lnN".ljust(20))
+            datacard.write(("cms_lep_sf_13TeV_%s  lnN" % cat).ljust(20))
             for cat in categories:
                 datacard.write(" 1.05".ljust(15) )
                 for comp in options.components:
@@ -684,7 +677,17 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     datacard.write(" -".ljust(15) )
             datacard.write("\n")
 
-            datacard.write("scale  lnN".ljust(20))
+            datacard.write("cms_pho_sf_13TeV  lnN".ljust(20))
+            for cat in categories:
+                datacard.write(" 1.05".ljust(15) )
+                for comp in options.components:
+                    datacard.write(" -".ljust(15) )
+            for cat in sidebands:                
+                for comp in  fit["sidebands"][cat]:                    
+                    datacard.write(" -".ljust(15) )
+            datacard.write("\n")
+
+            datacard.write("cms_xzg_scale_13TeV  lnN".ljust(20))
             for cat in categories:
                 datacard.write(" 1.06".ljust(15) )
                 for comp in options.components:
@@ -694,7 +697,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     datacard.write(" -".ljust(15) )
             datacard.write("\n")
 
-            datacard.write("PDFs  lnN".ljust(20))
+            datacard.write("cms_xzg_pdf_13TeV  lnN".ljust(20))
             for cat in categories:
                 datacard.write(" 1.04".ljust(15) )
                 for comp in options.components:
@@ -704,7 +707,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     datacard.write(" -".ljust(15) )
             datacard.write("\n")
 
-            datacard.write("hlt  lnN".ljust(20))
+            datacard.write(("cms_hlt_13TeV_%s  lnN" % cat).ljust(20))
             for cat in categories:
                 datacard.write(" 1.03".ljust(15) )
                 for comp in options.components:
@@ -815,8 +818,11 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 else:
                     bias_name = None
 
+                if len(options.plot_blind) == 0:
+                    options.plot_blind = None
+
                 self.plotBkgFit(options,data,model,roobs,"%s%s" % (comp,cat),poissonErrs=True, plot_binning=options.cat_plot_binning.get(cat,options.plot_binning),
-                                blabel=bias_name, signalmodel=signal, signalmodel_norm=signal_norm)
+                                blabel=bias_name, signalmodel=signal, signalmodel_norm=signal_norm, blind=options.plot_blind)
 
 
     ## ------------------------------------------------------------------------------------------------------------        
@@ -1512,10 +1518,12 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     signal = self.rooPdf("model_signal_%s_%s" % (signame,cat))
                     signal_norm = self.rooFunc("model_signal_%s_%s_norm" % (signame,cat))
                     print signal_norm, signal 
+                #if len(options.plot_blind) == 0:
+                #    options.plot_blind = None
                     
                 self.plotBkgFit(options,plreduced,pdf,roobs,"%s%s" % (comp,cat),poissonErrs=True, plot_binning=options.cat_plot_binning.get(cat,options.plot_binning),
-                                blabel=bias_name,signalmodel=signal,signalmodel_norm=signal_norm)
-                self.plotBkgFit(options,plreduced,pdf,roobs,"%s%s_lin" % (comp,cat),poissonErrs=True, plot_binning=options.cat_plot_binning.get(cat,options.plot_binning),logy=False,blabel=bias_name,signalmodel=signal,signalmodel_norm=signal_norm)
+                                blabel=bias_name,signalmodel=signal,signalmodel_norm=signal_norm,blind=options.plot_blind)
+                self.plotBkgFit(options,plreduced,pdf,roobs,"%s%s_lin" % (comp,cat),poissonErrs=True, plot_binning=options.cat_plot_binning.get(cat,options.plot_binning),logy=False,blabel=bias_name,signalmodel=signal,signalmodel_norm=signal_norm,blind=options.plot_blind)
                 
                 ## normalization has to be called <pdfname>_norm or combine won't find it
                 if options.norm_as_fractions:
@@ -1837,12 +1845,12 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                   val_n2     = f_n2_mm    .Eval(mass_eval)
 
 
-                MH     = self.buildRooVar( "MH"             , [val_mean]  , importToWs=False)
-                sigmaH = self.buildRooVar(("sigmaH_%s"% cat), [val_sigma] , importToWs=False)
-                alpha1 = self.buildRooVar(("alpha1_%s"% cat), [val_alpha1], importToWs=False)
-                n1     = self.buildRooVar(("n1_%s"    % cat), [val_n1]    , importToWs=False)
-                alpha2 = self.buildRooVar(("alpha2_%s"% cat), [val_alpha2], importToWs=False)
-                n2     = self.buildRooVar(("n2_%s"    % cat), [val_n2]    , importToWs=False)
+                MH     = self.buildRooVar( "MH_%.0f"       % (mass_eval)     , [val_mean]  , importToWs=False)
+                sigmaH = self.buildRooVar(("sigmaH_%.0f_%s"% (mass_eval,cat)), [val_sigma] , importToWs=False)
+                alpha1 = self.buildRooVar(("alpha1_%.0f_%s"% (mass_eval,cat)), [val_alpha1], importToWs=False)
+                n1     = self.buildRooVar(("n1_%.0f_%s"    % (mass_eval,cat)), [val_n1]    , importToWs=False)
+                alpha2 = self.buildRooVar(("alpha2_%.0f_%s"% (mass_eval,cat)), [val_alpha2], importToWs=False)
+                n2     = self.buildRooVar(("n2_%.0f_%s"    % (mass_eval,cat)), [val_n2]    , importToWs=False)
 
                 MH    .setConstant(True)
                 sigmaH.setConstant(True)
@@ -2669,7 +2677,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
 
     ## ------------------------------------------------------------------------------------------------------------
     def plotBkgFit(self,options,dset,pdf,obs,label,blabel=None,extra=None,bias_funcs=None,poissonErrs=True,plot_binning=None,logx=True,logy=True,
-                       opts=[],forceSkipBands=False,sig=False,signalmodel=None,signalmodel_norm=None):
+                       opts=[],forceSkipBands=False,sig=False,signalmodel=None,signalmodel_norm=None, blind=None):
         ## plot the fit result
         print "Plotting  model ", label, obs.GetName(), blabel
         ROOT.TH1D.SetDefaultSumw2(True)
@@ -2757,6 +2765,10 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             pdf = ROOT.RooHistPdf("binned_%s"%pdf.GetName(),"binned_%s"%pdf.GetName(),oset,binnedHisto)
             self.keep( [pdf,binnedHisto] )
 
+        if blind:
+            plotDset = dset.reduce(RooFit.Cut("%s < %f || %s > %f" % (obs.GetName(),blind[0],obs.GetName(),blind[1]) ))
+        else:
+            plotDset = dset
 
         print "Plotting dataset"
         dset.plotOn(frame,*(dataopts+invisible))
@@ -2766,16 +2778,23 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         ## pdf.Print()
         ## dset.Print()
         hist   = frame.getObject(int(frame.numItems()-2))
+        fitc   = frame.getObject(int(frame.numItems()-1))
         if poissonErrs:
             alpha = (1. - 0.6827)*0.5
             for ip in range(hist.GetN()):
-                nev = hist.GetY()[ip]
+                if blind and hist.GetX()[ip]-hist.GetErrorXlow(ip)>=blind[0] and hist.GetX()[ip]+hist.GetErrorXhigh(ip)<=blind[1]:
+                    hist.SetPoint(ip,hist.GetX()[ip],0.)
+                    ## hist.SetPointEYlow(ip,0.)
+                    ## hist.SetPointEYhigh(ip,0.)
+                    ## continue
+                    nev = fitc.Eval(hist.GetX()[ip])
+                else:
+                    nev = hist.GetY()[ip]
                 el = (nev - ROOT.Math.gamma_quantile(alpha,nev,1.)) if nev > 0. else 0.
                 eu = ROOT.Math.gamma_quantile_c(alpha,nev+1.,1.) - nev
                 hist.SetPointEYlow(ip,el)
                 hist.SetPointEYhigh(ip,eu)
 
-        fitc   = frame.getObject(int(frame.numItems()-1))
         fitcLeg,histLeg = fitc,hist
         ## print hist, fitc
         if extra:
@@ -2791,7 +2810,15 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             if poissonErrs:
                 alpha = (1. - 0.6827)*0.5
                 for ip in range(hist2.GetN()):
-                    nev = hist.GetY()[ip]
+                    #nev = hist.GetY()[ip]
+                    if blind and hist2.GetX()[ip]-hist2.GetErrorXlow(ip)>blind[0] and hist2.GetX()[ip]+hist2.GetErrorXhigh(ip)<blind[1]:
+                        hist2.SetPoint(ip,hist2.GetX()[ip],0.)
+                        ## hist2.SetPointEYlow(ip,0.)
+                        ## hist2.SetPointEYhigh(ip,0.)
+                        nev = fitc.Eval(hist2.GetX()[ip])
+                        ## continue
+                    else:
+                        nev = hist2.GetY()[ip]
                     el = (nev - ROOT.Math.gamma_quantile(alpha,nev,1.)) if nev > 0. else 0.
                     eu = ROOT.Math.gamma_quantile_c(alpha,nev+1.,1.) - nev
                     hist2.SetPointEYlow(ip,el)
@@ -2815,12 +2842,17 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 terrp, terrm = rtwosigma.GetErrorYhigh(ip), rtwosigma.GetErrorYhigh(ip)
                 herrp, herrm = hist.GetErrorYhigh(ip), hist.GetErrorYhigh(ip)
                 ## print oerrp, oerrm, herrp, herrm
+                if blind and ronesigma.GetX()[ip]-ronesigma.GetErrorXlow(ip)>blind[0] and ronesigma.GetX()[ip]+ronesigma.GetErrorXhigh(ip)<blind[1]:
+                    ronesigma.SetPoint(ip,ronesigma.GetX()[ip],0.)
+                    rtwosigma.SetPoint(ip,rtwosigma.GetX()[ip],0.)
                 if py > hy:
+                    if herrm == 0.: continue
                     oerrp /= herrm
                     terrp /= herrm
                     oerrm /= herrm
                     terrm /= herrm
                 else:
+                    if herrp == 0.: continue
                     oerrp /= herrp
                     terrp /= herrp
                     oerrm /= herrp
@@ -2839,6 +2871,10 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         resid.addObject(one)
         self.keep(one)
         hresid = frame.residHist(hist.GetName(),fitc.GetName(),True)
+        for ip in range(hresid.GetN()):
+            if blind and hresid.GetX()[ip]-hresid.GetErrorXlow(ip)>blind[0] and hresid.GetX()[ip]+hresid.GetErrorXhigh(ip)<blind[1]:
+                hresid.SetPoint(ip,hresid.GetX()[ip],0.)
+        
         resid.addPlotable(hresid,"PE")
         
         if signalmodel:
@@ -2928,11 +2964,16 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 
             legend.Draw("same")
             self.keep(legend)
-        pt=ROOT.TPaveText(0.78,0.85,0.95,0.995,"nbNDC")
+        pt=ROOT.TPaveText(0.78,0.8,0.95,0.95,"nbNDC")
         pt.SetFillStyle(0)
         pt.SetLineColor(ROOT.kWhite)
-        pt.AddText("%s category" % label.split("_")[1])
-        if label.split("_")[1] != "allZG":
+        pt.SetTextSize(0.08)
+        catname = label.split("_")[1]
+        nicename = ""
+        if catname=="ee": nicename = "e^{+}e^{-}#gamma"
+        if catname=="mm": nicename = "#mu^{+}#mu^{-}#gamma"
+        pt.AddText("%s" % nicename)
+        if catname != "allZG":
           pt.Draw("same")
         self.keep(pt)
         
