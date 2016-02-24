@@ -312,9 +312,13 @@ class CombineApp(TemplatesApp):
                                     ),
                         make_option("--bias-func",dest="bias_func",action="callback",callback=optpars_utils.Load(scratch=True),
                                     type="string",
-                                    default={ "EBEB_dijet_230_10000" : "((0.06*((x/600.)^-4))+1e-6)/3.",
-                                              "EBEB_8TeV_dijet_300_10000" : "((0.06*((x/600.)^-4))+1e-6)/6.",
-                                              "EBEE_dijet_330_10000" : "((0.1*((x/600.)^-5)))/3.",
+                                    default={ 
+                                       "ee_dijet_200_10000"     : "(x>1000.)*(+1e-4)",
+                                       "mm_dijet_200_10000"     : "(x>1000.)*(+1e-4)",
+                                       "allZG_dijet_200_10000"  : "(x>1000.)*(+1e-4)",
+                                       "EBEB_dijet_230_10000" : "((0.06*((x/600.)^-4))+1e-6)/3.",
+                                       "EBEB_8TeV_dijet_300_10000" : "((0.06*((x/600.)^-4))+1e-6)/6.",
+                                       "EBEE_dijet_330_10000" : "((0.1*((x/600.)^-5)))/3.",
                                               },
                                     help="Bias as a function of diphoton mass to compute the bias uncertainty values inside the datacard",
                                     ),
@@ -491,6 +495,9 @@ class CombineApp(TemplatesApp):
         if (options.signal_name != None):
             signals = [options.signal_name]
             fname_prefix = None
+        elif len(options.signals_cb)>0:
+            signals = options.signals_cb.keys()
+            fname_prefix = options.signal_root_file.replace(".root","_") if options.signal_root_file else ""
         elif len(options.signals_gauss)>0:
             signals = options.signals_gauss.keys()
             fname_prefix = options.signal_root_file.replace(".root","_") if options.signal_root_file else ""
@@ -1772,9 +1779,9 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         #else:
         #    signals = options.signals.keys()
 
-        signals = options.signals_gauss.keys()
+        signals = options.signals_cb.keys()
 
-        fileShapes = ROOT.TFile.Open("signalShapeParameters.root")
+        fileShapes = ROOT.TFile.Open("signalShapeParameters_w0p014.root")
         f_mean_all   = fileShapes.Get("f1_mean_all")
         f_sigma_all  = fileShapes.Get("f1_sigma_all")
         f_alpha1_all = fileShapes.Get("f1_alpha1_all")
@@ -1803,7 +1810,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             if ( options.output_file == None ):
                 options.output_file = "%s.root" % (signame)
 
-            mass_eval = float(options.signals_gauss[signame][0][0])
+            mass_eval = float(options.signals_cb[signame][0])
             # In case we loop over all signals, we can give inside options.output_file the prefix
             # ... for all generated signal files (e.g. a common directory)
             if (isPrefix):
@@ -1845,15 +1852,15 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                   val_n2     = f_n2_mm    .Eval(mass_eval)
 
 
-                MH     = self.buildRooVar( "MH_%.0f"       % (mass_eval)     , [val_mean]  , importToWs=False)
-                sigmaH = self.buildRooVar(("sigmaH_%.0f_%s"% (mass_eval,cat)), [val_sigma] , importToWs=False)
+                mu     = self.buildRooVar( "mu_%.0f"       % (mass_eval)     , [val_mean]  , importToWs=False)
+                sigma  = self.buildRooVar(("sigma_%.0f_%s" % (mass_eval,cat)), [val_sigma] , importToWs=False)
                 alpha1 = self.buildRooVar(("alpha1_%.0f_%s"% (mass_eval,cat)), [val_alpha1], importToWs=False)
                 n1     = self.buildRooVar(("n1_%.0f_%s"    % (mass_eval,cat)), [val_n1]    , importToWs=False)
                 alpha2 = self.buildRooVar(("alpha2_%.0f_%s"% (mass_eval,cat)), [val_alpha2], importToWs=False)
                 n2     = self.buildRooVar(("n2_%.0f_%s"    % (mass_eval,cat)), [val_n2]    , importToWs=False)
 
-                MH    .setConstant(True)
-                sigmaH.setConstant(True)
+                mu    .setConstant(True)
+                sigma .setConstant(True)
                 alpha1.setConstant(True)
                 n1    .setConstant(True)
                 alpha2.setConstant(True)
@@ -1864,8 +1871,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 ## build RooHistPdf in roobs
                 ##pdfDataHist = binned if not options.use_templates else binned.reduce(ROOT.RooArgSet(roobs))
                 #pdf=ROOT.RooHistPdf("model_signal_%s_%s"% (signame, cat),"model_signal_%s_%s"% (signame, cat),ROOT.RooArgSet(roobs),pdfDataHist)
-                print "++++++++++ Setting up DoubleCB for cat %s with values: %f, %f, %f, %f, %f, %f" % (cat,MH.getVal(),sigmaH.getVal(),alpha1.getVal(),n1.getVal(),alpha2.getVal(),n2.getVal())
-                pdf=ROOT.RooDoubleCBShape("model_signal_%s_%s"% (signame, cat),"model_signal_%s_%s"% (signame, cat),roobs,MH,sigmaH,alpha1,n1,alpha2,n2)
+                print "++++++++++ Setting up DoubleCB for cat %s with values: %f, %f, %f, %f, %f, %f" % (cat,mu.getVal(),sigma.getVal(),alpha1.getVal(),n1.getVal(),alpha2.getVal(),n2.getVal())
+                pdf=ROOT.RooDoubleCBShape("model_signal_%s_%s"% (signame, cat),"model_signal_%s_%s"% (signame, cat),roobs,mu,sigma,alpha1,n1,alpha2,n2)
                 #pdf=ROOT.RooDoubleCB("model_signal_%s_%s"% (signame, cat),"model_signal_%s_%s"% (signame, cat),roobs,MH,sigmaH,alpha1,n1,alpha2,n2)
 
                 if options.verbose:
@@ -2678,6 +2685,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
     ## ------------------------------------------------------------------------------------------------------------
     def plotBkgFit(self,options,dset,pdf,obs,label,blabel=None,extra=None,bias_funcs=None,poissonErrs=True,plot_binning=None,logx=True,logy=True,
                        opts=[],forceSkipBands=False,sig=False,signalmodel=None,signalmodel_norm=None, blind=None):
+
+
         ## plot the fit result
         print "Plotting  model ", label, obs.GetName(), blabel
         ROOT.TH1D.SetDefaultSumw2(True)
@@ -2702,10 +2711,10 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
 
         invisible = []
         ## dataopts = [,RooFit.MarkerSize(1)]
-        dataopts = [RooFit.MarkerSize(1)]+opts
+        dataopts = [RooFit.MarkerSize(1.1)]+opts
         if poissonErrs:
             dataopts.append(RooFit.DataError(ROOT.RooAbsData.Poisson))
-        curveopts = [RooFit.LineColor(ROOT.kBlue)]
+        curveopts = [RooFit.LineColor(46)]
         
         if not plot_binning:
             plot_binning = options.plot_binning
@@ -2744,11 +2753,13 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             #frame = obs.frame(230,2110)
             #resid = obs.frame(230,2110)
             frame = obs.frame(RooFit.Range("plotBinning"))
+            frame_tmp = obs.frame(RooFit.Range("plotBinning"))
             resid  = obs.frame(RooFit.Range("plotBinning"))
             curveopts.append(RooFit.Range("plotBinning"))
             dataopts.append(RooFit.Range("plotBinning"))
         else:
             frame = obs.frame()
+            frame_tmp = obs.frame()
             resid  = obs.frame()
         
         ## curveopts.append(RooFit.NormRange("plotBinning"))
@@ -2784,17 +2795,23 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             for ip in range(hist.GetN()):
                 if blind and hist.GetX()[ip]-hist.GetErrorXlow(ip)>=blind[0] and hist.GetX()[ip]+hist.GetErrorXhigh(ip)<=blind[1]:
                     hist.SetPoint(ip,hist.GetX()[ip],0.)
-                    ## hist.SetPointEYlow(ip,0.)
-                    ## hist.SetPointEYhigh(ip,0.)
+                    hist.SetPointEYlow(ip,0.)
+                    hist.SetPointEYhigh(ip,0.)
                     ## continue
                     nev = fitc.Eval(hist.GetX()[ip])
                 else:
                     nev = hist.GetY()[ip]
-                el = (nev - ROOT.Math.gamma_quantile(alpha,nev,1.)) if nev > 0. else 0.
-                eu = ROOT.Math.gamma_quantile_c(alpha,nev+1.,1.) - nev
-                hist.SetPointEYlow(ip,el)
-                hist.SetPointEYhigh(ip,eu)
+                    if nev == 0. :
+                      hist.SetPoint(ip,hist.GetX()[ip],0.)
+                      hist.SetPointEYlow(ip,0.)
+                      hist.SetPointEYhigh(ip,0.)
+                    else :
+                      el = (nev - ROOT.Math.gamma_quantile(alpha,nev,1.)) if nev > 0. else 0.
+                      eu = ROOT.Math.gamma_quantile_c(alpha,nev+1.,1.) - nev 
+                      hist.SetPointEYlow(ip,el)
+                      hist.SetPointEYhigh(ip,eu)
 
+        
         fitcLeg,histLeg = fitc,hist
         ## print hist, fitc
         if extra:
@@ -2804,8 +2821,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             print "Making fit error bands...",
             onesigma,twosigma = self.plotFitBands(options,frame,dset,pdf,obs,fitc,binning,blabel,bias_funcs)
             pdf.plotOn(frame,*curveopts)
-            dset.plotOn(frame,*dataopts)
-            
+            dset.plotOn(frame,*dataopts+invisible)
+ 
             hist2   = frame.getObject(int(frame.numItems()-1))
             if poissonErrs:
                 alpha = (1. - 0.6827)*0.5
@@ -2861,13 +2878,13 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 ronesigma.SetPointEYhigh(ip,oerrp),ronesigma.SetPointEYlow(ip,oerrm)
                 rtwosigma.SetPointEYhigh(ip,terrp),rtwosigma.SetPointEYlow(ip,terrm)
                 
-            resid.addObject(rtwosigma,"E2")
+            #resid.addObject(rtwosigma,"E2")
             resid.addObject(ronesigma,"E2")
             print "done"
         # one = ROOT.TLine(resid.GetXaxis().GetXmin(),0,resid.GetXaxis().GetXmax(),0)
         one = ROOT.TLine(rngmin,0,rngmax,0)
         ## one.Print()
-        one.SetLineColor(ROOT.kBlue), one.SetLineWidth(2)
+        one.SetLineColor(46), one.SetLineWidth(2)
         resid.addObject(one)
         self.keep(one)
         hresid = frame.residHist(hist.GetName(),fitc.GetName(),True)
@@ -2885,25 +2902,23 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             canv = ROOT.TCanvas("sig_fit_%s" % label, "sig_fit_%s" % label)
             legend = None
         else:
-            canv = ROOT.TCanvas("bkg_fit_%s" % label, "bkg_fit_%s" % label,1400,1000)
+            canv = ROOT.TCanvas("bkg_fit_%s" % label, "bkg_fit_%s" % label,550,600)
             if logy:
-                ## legend = ROOT.TLegend(0.15,0.1,0.65,0.5)
-                legend = ROOT.TLegend(0.15,0.14,0.4,0.54)
-                ## legend = ROOT.TLegend(0.15,0.1,0.65,0.75)
-                ## legend = ROOT.TLegend(0.15,0.1,0.8,0.5)
+                legend = ROOT.TLegend(0.65,0.55,0.9,0.9)
+                #legend = ROOT.TLegend(0.17,0.11,0.5,0.5)
             else:
                 legend = ROOT.TLegend(0.4,0.5,0.9,0.9)
                 ## legend = ROOT.TLegend(0.4,0.35,0.9,0.9)
                 
-        canv.SetLeftMargin(0.2)
+        #canv.SetLeftMargin(0.2)
         canv.Divide(1,2)
                 
-        canv.SetLeftMargin(0.12),canv.SetRightMargin(0.025),canv.SetTopMargin(0.085),canv.SetBottomMargin(0.12)
+        #canv.SetLeftMargin(0.12),canv.SetRightMargin(0.025),canv.SetTopMargin(0.085),canv.SetBottomMargin(0.12)
         canv.cd(1)
         ROOT.gPad.SetPad(0.,0.38,1.,0.95)
         ROOT.gPad.SetLeftMargin(0.12),ROOT.gPad.SetRightMargin(0.025),ROOT.gPad.SetTopMargin(0.0015),ROOT.gPad.SetBottomMargin(0.02)
         ROOT.gPad.SetLogy(logy)
-        ROOT.gPad.SetLogx(logx)
+        #ROOT.gPad.SetLogx(logx)
         ROOT.gPad.SetFillStyle(0)
         ROOT.gPad.SetTickx()
         # ROOT.gPad.SetTicky()
@@ -2921,7 +2936,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             ymin = fitc.GetMinimum()
             ymax = fitc.GetMaximum()
         else:
-            ymax = fitc.interpolate(frame.GetXaxis().GetXmin())*3.
+            ymax = fitc.interpolate(frame.GetXaxis().GetXmin())*2.
             ymin = fitc.interpolate(frame.GetXaxis().GetXmax())*0.3
             ## ymax = fitc.GetMaximum()*3.
             ## ymin = fitc.GetMinimum()*0.3
@@ -2929,7 +2944,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             ymax = ymax * 0.5
             ymin = min(-0.02*ymax,ymin)
         else:
-            ymin = max(1.1e-2,ymin)
+            ymin = max(1.1e-1,ymin)
         
         ### frame.GetXaxis().SetLimits(200,20000)
         ### frame.GetXaxis().SetRangeUser(200,2000)
@@ -2941,22 +2956,28 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         frame.GetYaxis().SetRangeUser(ymin,ymax)
         frame.GetXaxis().SetMoreLogLabels()
         frame.GetXaxis().SetNoExponent()
-        frame.GetYaxis().SetLabelSize( frame.GetXaxis().GetLabelSize() * canv.GetWh() / ROOT.gPad.GetWh() * 1.1 )
-        frame.GetYaxis().SetTitleSize( frame.GetXaxis().GetTitleSize() * canv.GetWh() / ROOT.gPad.GetWh() * 1.1 )
-        frame.GetYaxis().SetTitleOffset( 0.6 )
+        frame.GetYaxis().SetLabelSize( frame.GetXaxis().GetLabelSize() * canv.GetWh() / ROOT.gPad.GetWh() * 1.3 )
+        frame.GetYaxis().SetTitleSize( frame.GetXaxis().GetTitleSize() * canv.GetWh() / ROOT.gPad.GetWh() * 1.3 )
+        frame.GetYaxis().SetTitleOffset( 0.75 )
         if not logy:
             frame.GetYaxis().SetNdivisions(505)
         frame.Draw()
+        hist.SetMarkerStyle(20)
+        hist.SetMarkerSize(1.)
+        hist.Draw("psame")
         if legend:
             legend.SetFillColor(ROOT.kWhite)
             legend.SetFillStyle(0)
+            legend.SetTextSize(0.07)
+            legend.SetTextFont(42)
             legend.SetShadowColor(ROOT.kWhite)
             ## legend.AddEntry(None,"%s category" % label.split("_")[-1],"")
             legend.AddEntry(hist,"Data","pe")
             legend.AddEntry(fitc,"Fit model","l")
             if doBands:
-                legend.AddEntry(onesigma,"#pm 1 #sigma","f")
-                legend.AddEntry(twosigma,"#pm 2 #sigma","f")
+                legend.AddEntry(onesigma,"Uncertainty","f")
+                #legend.AddEntry(onesigma,"#pm 1 #sigma","f")
+                #legend.AddEntry(twosigma,"#pm 2 #sigma","f")
             if signalmodel:
                 legend.AddEntry(signalmodel,"#scale[0.9]{G(#scale[0.7]{#tilde{#kappa}=0.01})#rightarrow#gamma#gamma #times 2#upoint10^{-2}}","l")
                 ## legend.AddEntry(None,"   (#tilde{#kappa}=0.01)","")
@@ -2968,13 +2989,13 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         pt.SetFillStyle(0)
         pt.SetLineColor(ROOT.kWhite)
         pt.SetTextSize(0.08)
-        catname = label.split("_")[1]
         nicename = ""
-        if catname=="ee": nicename = "e^{+}e^{-}#gamma"
-        if catname=="mm": nicename = "#mu^{+}#mu^{-}#gamma"
+        #if catname=="ee": nicename = "e^{+}e^{-}#gamma"
+        #if catname=="mm": nicename = "#mu^{+}#mu^{-}#gamma"
         pt.AddText("%s" % nicename)
-        if catname != "allZG":
-          pt.Draw("same")
+        catname = label.split("_")[1]
+        #if catname != "allZG":
+        #  pt.Draw("same")
         self.keep(pt)
         
         if not logy:
@@ -2986,22 +3007,25 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
 
         canv.cd(2)
         ROOT.gPad.SetGridy()
-        ROOT.gPad.SetLogx(logx)
+        #ROOT.gPad.SetLogx(logx)
+        ROOT.gPad.RedrawAxis()
         resid.GetXaxis().SetMoreLogLabels()
         resid.GetXaxis().SetNoExponent()
         resid.GetXaxis().SetNdivisions(515)
         resid.GetYaxis().SetNdivisions(505)
         resid.GetYaxis().CenterTitle()
-        resid.GetYaxis().SetTitleSize( frame.GetYaxis().GetTitleSize() * 6.5/3.5 )
-        resid.GetYaxis().SetTitleOffset( frame.GetYaxis().GetTitleOffset() * 3.5/6.5 ) # not clear why the ratio should be upside down, but it does
-        resid.GetYaxis().SetLabelSize( frame.GetYaxis().GetLabelSize() * 6.5/3.5 )
-        resid.GetXaxis().SetTitleSize( frame.GetXaxis().GetTitleSize() * 6.5/3.5 )
+        resid.GetYaxis().SetTitleSize  ( frame.GetYaxis().GetTitleSize() * 1.4 )
+        resid.GetYaxis().SetTitleOffset( frame.GetYaxis().GetTitleOffset() * 0.6  ) # not clear why the ratio should be upside down, but it does
+        resid.GetYaxis().SetLabelSize( frame.GetYaxis().GetLabelSize() * 1.3 )
+        resid.GetXaxis().SetTitleSize( frame.GetXaxis().GetTitleSize() * 2. )
         resid.GetXaxis().SetTitleOffset( frame.GetXaxis().GetTitleOffset() )
         resid.GetXaxis().SetLabelSize( frame.GetXaxis().GetLabelSize() * 6.5/3.5 )
+        if catname=="ee": resid.SetXTitle("M(e^{+}e^{-}#gamma) [GeV]")
+        if catname=="mm": resid.SetXTitle("M(#mu^{+}#mu^{-}#gamma) [GeV]")
         ## resid.GetYaxis().SetTitle("(data - model) / #sigma_{data}")
         ## resid.GetYaxis().SetTitle("(data-fit)/#sigma_{data}")
         resid.GetYaxis().SetTitle("(data-fit)/#sigma_{stat}")
-        resid.GetYaxis().SetRangeUser( -5., 5. )
+        resid.GetYaxis().SetRangeUser( -2.5, 2.5 )
         resid.Draw()
 
         canv.cd(1)
@@ -3017,10 +3041,32 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         frame.GetXaxis().SetTitle("")
         frame.GetXaxis().SetLabelSize(0.)
                 
+        canv.cd()
+        label_lumi = ROOT.TPaveText(0.4,0.953,0.99,0.975, "brNDC")
+        label_lumi.SetBorderSize(0)
+        label_lumi.SetFillColor(ROOT.kWhite)
+        label_lumi.SetTextSize(0.038)
+        label_lumi.SetTextAlign(31)
+        label_lumi.SetTextFont(62)
+        label_lumi.AddText( "%s fb^{-1} (13 TeV)" % self.options.luminosity )
+        label_lumi.Draw("same")
+
+        label_cms = ROOT.TPaveText(0.12,0.96,0.27,0.965, "brNDC")
+        label_cms.SetBorderSize(0)
+        label_cms.SetFillColor(ROOT.kWhite)
+        label_cms.SetTextSize(0.042)
+        label_cms.SetTextAlign(11)
+        label_cms.SetTextFont(61)
+        label_cms.AddText( "CMS Preliminary" )
+        label_cms.Draw("same")
+
+
         print 
         # this will actually save the plots
         self.keep(canv)
-        self.format(canv,self.options.postproc)
+
+        #self.format(canv,self.options.postproc)
+
         self.autosave(True)
         print
         
@@ -3037,7 +3083,10 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         bias     = ROOT.TGraphAsymmErrors()
 
         bands  =  [onesigma,twosigma,bias]
-        styles = [ [(style_utils.colors,ROOT.kYellow)],  [(style_utils.colors,ROOT.kGreen+1)], 
+        #styles = [ [(style_utils.colors,ROOT.kYellow)],  [(style_utils.colors,ROOT.kGreen+1)], 
+        #           [(style_utils.colors,ROOT.kOrange)]
+        #           ]
+        styles = [ [(style_utils.colors,18)],  [(style_utils.colors,ROOT.kWhite)], 
                    [(style_utils.colors,ROOT.kOrange)]
                    ]
         for band in bands:
@@ -3056,6 +3105,9 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 upedge  = frame.GetXaxis().GetBinUpEdge(ibin)
                 center  = frame.GetXaxis().GetBinCenter(ibin)
                 bins.append(  (center,lowedge,upedge) )
+
+
+
 
         if not bias_funcs: bias_funcs = options.bias_func
         bias_func=None
@@ -3105,7 +3157,9 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             minim.setPrintLevel( -1 if not options.verbose else 2)
             minim.migrad()
 
-            if not options.fast_bands:
+            doFastBands = options.fast_bands or ( 250 < center < 350 )
+
+            if not doFastBands:
                 minim.setStrategy(0)
                 minim.minos(ROOT.RooArgSet(nlim))
                 errm, errp = -nlim.getErrorLo(),nlim.getErrorHi()
@@ -3138,8 +3192,10 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         ### smoothErrors(onesigma)
         ### smoothErrors(twosigma)
         
-        frame.addObject(twosigma,"E2")
-        frame.addObject(onesigma,"E2")
+        #frame.addObject(twosigma,"E2")
+        #frame.addObject(onesigma,"E2")
+        frame.addObject(twosigma,"E3")
+        frame.addObject(onesigma,"E3")
 
         itr = snap.createIterator()
         var = itr.Next()
