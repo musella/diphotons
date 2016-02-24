@@ -77,6 +77,8 @@ class DiPhotonAnalysis(object):
             from flashgg.Systematics.SystematicsCustomize import customizePhotonSystematicsForData
             customizePhotonSystematicsForData(process)
         else:
+            from flashgg.Systematics.SystematicsCustomize import customizePhotonSystematicsForMC
+            customizePhotonSystematicsForMC(process)
             for vpset in process.flashggDiPhotonSystematics.SystMethods,process.flashggDiPhotonSystematics.SystMethods2D:
                 for pset in vpset:
                     if (processType != "signal") or (not pset.Label.value().startswith("MCSmear")):
