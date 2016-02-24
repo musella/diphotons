@@ -24,7 +24,7 @@
 	      
 	     ],
 
-     "bkg" : [
+     "_bkg" : [
     	      ["dy","DY #rightarrow ee",
 	      [["colors","myColorD1"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",1],["legopt","f"],["SetFillColor","myColorD3tr"]],
 	      { "DYJetsToLL_M_50_TuneCUETP8M1_13TeV_madgraphMLM_pythia8_13TeV:__infile__/%(sel)s" : [] }
@@ -32,6 +32,16 @@
 	      
 	      
 	     ],
+
+     "bkg" : [
+    	      ["dy","DY #rightarrow ee",
+	      [["colors","myColorD1"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",1],["legopt","f"],["SetFillColor","myColorD3tr"]],
+	      { "DYToEE_NNPDF30_13TeV_powheg_pythia8_13TeV:__infile__/%(sel)s" : [] }
+	      ]
+	      
+	      
+	     ],
+
     "bkg_file" : "output.root", 
     "data_file"  : "output.root",
     "sig_file"  : "output.root",
@@ -46,6 +56,11 @@
 	"EBEBLowR9"  : ["EBLowR9"],
 	"EBEEHighR9" : ["EEHighR9"],
 	"EBEELowR9"  : ["EELowR9"]
+	}, 
+
+    "groups": {
+        "EB"       : ["EBHighR9","EBLowR9"],
+        "EE"       : ["EEHighR9","EELowR9"]
 	}, 
 	
     "plots": [
@@ -179,7 +194,11 @@
         ["cicNoPhoIsoSingleSB","phoIsoSingleSB"],
         ["cicNoPhoIsoDoubleSB","phoIsoDoubleSB"]
     ],
-	      
+
+    "selections" : [
+        ["cic",""]
+    ],
+
     "styles": { 
 	"lowmass_*" : [["printIntegral",[87,93]],"printMean"],
 	"lowmass_dy_EBEEHighR9" : [["Scale",1.033]],

@@ -59,5 +59,5 @@ if [[ $target != "/*" ]]; then
     mkdir  $www/$target/
 fi
 
-./basic_plots.py --load zee_plots.json  -O $www/$target/selection  --input-dir $src  $lumi $data_file $opts # 2>/dev/null
+./basic_plots.py --load zee_plots.json  -O $www/$target/selection  --input-dir $src  $lumi $data_file $opts #2>/dev/null
 
