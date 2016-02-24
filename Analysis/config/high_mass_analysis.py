@@ -914,6 +914,11 @@ if not customize.lastAttempt:
 ###                                )
 ### process.e = cms.EndPath(process.out)
 
+
+# load appropriate scale and smearing bins here
+# systematics customization scripts will take care of adjusting flashggDiPhotonSystematics
+process.load('flashgg.Systematics.escales.escale76X_16DecRereco_2015')
+
 # this will call customize(process), configure the analysis paths and make the process unscheduled
 analysis.customize(process,customize)
 
