@@ -16,6 +16,7 @@
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
 #include "DataFormats/Common/interface/View.h"
 #include "DataFormats/Common/interface/Handle.h"
+#include "DataFormats/VertexReco/interface/Vertex.h"
 
 #include "flashgg/DataFormats/interface/DiPhotonCandidate.h"
 
@@ -37,7 +38,7 @@ namespace diphotons
 
     private:
         TTree* tree_;
-        int   nvtx=0;
+        int   nvtx=0;        
         float m=0;
         float m_sm=0;
         float pt=0;
@@ -60,13 +61,16 @@ namespace diphotons
 
         Service<TFileService> fs_;
         EDGetTokenT<View<flashgg::DiPhotonCandidate> > diphoToken_;
+        EDGetTokenT<View<reco::Vertex> > vertexToken_;
     };
 
     ZeroTeslaVtxAnalyzer::ZeroTeslaVtxAnalyzer(const ParameterSet& config):
-        diphoToken_(consumes<View<flashgg::DiPhotonCandidate> >(config.getParameter<InputTag>("src")))
+        diphoToken_(consumes<View<flashgg::DiPhotonCandidate> >(config.getParameter<InputTag>("src"))),
+        vertexToken_(consumes<View<reco::Vertex> >(config.getParameter<InputTag>("vtxs")))
     {
         tree_ = fs_->make<TTree>("vtxs_tree", "vtxs");
         tree_->Branch("nvtx", &nvtx, "nvtx/I");
+        tree_->Branch("m", &m, "m/F");
         tree_->Branch("m_sm", &m_sm, "m_sm/F");
         tree_->Branch("pt", &pt, "pt/F");
         tree_->Branch("l_pt", &l_pt, "l_pt/F");
@@ -101,6 +105,8 @@ namespace diphotons
         
         Handle<View<flashgg::DiPhotonCandidate> > diphoHandle;
         event.getByToken(diphoToken_, diphoHandle);
+        Handle<View<reco::Vertex> > vertexHandle;
+        event.getByToken(vertexToken_, vertexHandle);
 
         if(diphoHandle->size() != 0)
         {
@@ -117,23 +123,37 @@ namespace diphotons
             float slZ = cand0.subLeadingPhoton()->getMatchedEleVtx().z();
             eeVtxZ = fabs(lZ-slZ)<0.1 ? (lZ+slZ)/2 : -999;
 
-            if(fabs(cand0.leadingPhoton()->eta()) < 1)
-                m_sm = m * sqrt(gRandom->Gaus(1, 0.008));
-            else if(fabs(cand0.leadingPhoton()->eta()) < 1.5)
-                m_sm = m * sqrt(gRandom->Gaus(1, 0.0115));
-            else if(fabs(cand0.leadingPhoton()->eta()) < 2)
-                m_sm = m * sqrt(gRandom->Gaus(1, 0.0201));
-            else
-                m_sm = m * sqrt(gRandom->Gaus(1, 0.023));
+            float minDz=1e6;
+            edm::Ptr<reco::Vertex> genVtx;
+            for(auto& vtx : vertexHandle->ptrs())
+            {
+                float thisDz = fabs(vtx->z() - genZ);
+                if(thisDz < minDz)
+                {
+                    minDz = thisDz;
+                    genVtx = vtx;
+                }
+            }
+            m_sm = flashgg::DiPhotonCandidate(cand0.leadingView()->originalPhoton(),
+                                              cand0.subLeadingView()->originalPhoton(),
+                                              genVtx).mass();
+            // if(fabs(cand0.leadingPhoton()->eta()) < 1)
+            //     m_sm = m * sqrt(gRandom->Gaus(1, 0.008));
+            // else if(fabs(cand0.leadingPhoton()->eta()) < 1.5)
+            //     m_sm = m * sqrt(gRandom->Gaus(1, 0.0115));
+            // else if(fabs(cand0.leadingPhoton()->eta()) < 2)
+            //     m_sm = m * sqrt(gRandom->Gaus(1, 0.0201));
+            // else
+            //     m_sm = m * sqrt(gRandom->Gaus(1, 0.023));
 
-            if(fabs(cand0.subLeadingPhoton()->eta()) < 1)
-                m_sm = m * sqrt(gRandom->Gaus(1, 0.008));
-            else if(fabs(cand0.subLeadingPhoton()->eta()) < 1.5)
-                m_sm = m * sqrt(gRandom->Gaus(1, 0.0115));
-            else if(fabs(cand0.subLeadingPhoton()->eta()) < 2)
-                m_sm = m * sqrt(gRandom->Gaus(1, 0.0201));
-            else
-                m_sm = m * sqrt(gRandom->Gaus(1, 0.023));
+            // if(fabs(cand0.subLeadingPhoton()->eta()) < 1)
+            //     m_sm = m * sqrt(gRandom->Gaus(1, 0.008));
+            // else if(fabs(cand0.subLeadingPhoton()->eta()) < 1.5)
+            //     m_sm = m * sqrt(gRandom->Gaus(1, 0.0115));
+            // else if(fabs(cand0.subLeadingPhoton()->eta()) < 2)
+            //     m_sm = m * sqrt(gRandom->Gaus(1, 0.0201));
+            // else
+            //     m_sm = m * sqrt(gRandom->Gaus(1, 0.023));
 
             auto vtxs = cand0.getVtxs();
             nvtx = cand0.nVtxInfoSize();
