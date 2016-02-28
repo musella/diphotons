@@ -102,6 +102,16 @@ customize.options.register ('addRegressionInput',
                             VarParsing.VarParsing.multiplicity.singleton, # singleton or list
                             VarParsing.VarParsing.varType.bool,          # string, int, or float
                             "addRegressionInput")
+customize.options.register ('useEleTrkVertex',
+                            False, # default value
+                            VarParsing.VarParsing.multiplicity.singleton, # singleton or list
+                            VarParsing.VarParsing.varType.bool,          # string, int, or float
+                            "useEleTrkVertex")
+customize.options.register ('useDummyVtx',
+                            False, # default value
+                            VarParsing.VarParsing.multiplicity.singleton, # singleton or list
+                            VarParsing.VarParsing.varType.bool,          # string, int, or float
+                            "useDummyVtx")
 customize.parse()
 
 from Configuration.AlCa.autoCond import autoCond
@@ -122,14 +132,22 @@ sourceDiphotons = "flashggDiPhotons"
 # Track count vertex
 if customize.selection == "diphotons0T":
     sourceDiphotons = "flashggDiPhotonsTrkCount"
-elif customize.selection == "dielectron0T":
+elif customize.selection == "dielectron0T" and customize.useEleTrkVertex:
     from flashgg.MicroAOD.flashggDiPhotons_cfi import flashggDiPhotonsLite
     process.flashggDiPhotonsEleVtx = flashggDiPhotonsLite.clone()
     process.flashggDiPhotonsEleVtx.VertexSelectorName = "FlashggElectronVertexSelector"
     sourceDiphotons = "flashggDiPhotonsEleVtx"
 
+if customize.useDummyVtx:
+    from flashgg.MicroAOD.flashggDiPhotons_cfi import flashggDiPhotonsLite
+    process.dummyVtx = cms.EDProducer("DummyVertexProducer")
+    process.flashggDiPhotonsDummyVtx = flashggDiPhotonsLite.clone()
+    process.flashggDiPhotonsDummyVtx.VertexTag = "dummyVtx"
+    process.flashggDiPhotonsDummyVtx.VertexSelectorName = "FlashggZerothVertexSelector"
+    sourceDiphotons = "flashggDiPhotonsDummyVtx"    
+    
 diphotonDumper.processId = "test"
-diphotonDumper.dumpTrees = False
+diphotonDumper.dumpTrees = True
 diphotonDumper.dumpWorkspace = False
 diphotonDumper.quietRooFit = True
 diphotonDumper.maxCandPerEvent=1
@@ -890,7 +908,7 @@ else:
 
 if invertEleVeto:
     if doDoublePho0T:
-        highMassCiCDiPhotons0T.variables[-1] = "? matchedGsfTrackInnerMissingHits==0 ? 2 : 0"
+        highMassCiCDiPhotons0T.variables[-1] = "? matchedGsfTrackInnerMissingHits==0 || matchedGsfTrackInnerMissingHits==1 ? 2 : 0"
     else:
         highMassCiCDiPhotons.variables[-1] = "hasPixelSeed"
         highMassCiCDiPhotonsSB.variables[-1] = "hasPixelSeed"
