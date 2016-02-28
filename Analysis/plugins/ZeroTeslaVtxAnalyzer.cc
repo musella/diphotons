@@ -40,7 +40,8 @@ namespace diphotons
         TTree* tree_;
         int   nvtx=0;        
         float m=0;
-        float m_sm=0;
+        float m_beamspot=0;
+        float m_genvtx=0;
         float pt=0;
         float l_pt=0;
         float l_eta=0;
@@ -62,16 +63,19 @@ namespace diphotons
         Service<TFileService> fs_;
         EDGetTokenT<View<flashgg::DiPhotonCandidate> > diphoToken_;
         EDGetTokenT<View<reco::Vertex> > vertexToken_;
+        EDGetTokenT<View<reco::Vertex> > dummyVertexToken_;
     };
 
     ZeroTeslaVtxAnalyzer::ZeroTeslaVtxAnalyzer(const ParameterSet& config):
         diphoToken_(consumes<View<flashgg::DiPhotonCandidate> >(config.getParameter<InputTag>("src"))),
-        vertexToken_(consumes<View<reco::Vertex> >(config.getParameter<InputTag>("vtxs")))
+        vertexToken_(consumes<View<reco::Vertex> >(config.getParameter<InputTag>("vtxs"))),
+        dummyVertexToken_(consumes<View<reco::Vertex> >(config.getParameter<InputTag>("dummyVtx")))
     {
         tree_ = fs_->make<TTree>("vtxs_tree", "vtxs");
         tree_->Branch("nvtx", &nvtx, "nvtx/I");
         tree_->Branch("m", &m, "m/F");
-        tree_->Branch("m_sm", &m_sm, "m_sm/F");
+        tree_->Branch("m_genvtx", &m_genvtx, "m_genvtx/F");
+        tree_->Branch("m_beamspot", &m_beamspot, "m_beamspot/F");
         tree_->Branch("pt", &pt, "pt/F");
         tree_->Branch("l_pt", &l_pt, "l_pt/F");
         tree_->Branch("l_eta", &l_eta, "l_eta/F");
@@ -107,6 +111,8 @@ namespace diphotons
         event.getByToken(diphoToken_, diphoHandle);
         Handle<View<reco::Vertex> > vertexHandle;
         event.getByToken(vertexToken_, vertexHandle);
+        Handle<View<reco::Vertex> > dummyVertexHandle;
+        event.getByToken(dummyVertexToken_, dummyVertexHandle);
 
         if(diphoHandle->size() != 0)
         {
@@ -134,9 +140,12 @@ namespace diphotons
                     genVtx = vtx;
                 }
             }
-            m_sm = flashgg::DiPhotonCandidate(cand0.leadingView()->originalPhoton(),
-                                              cand0.subLeadingView()->originalPhoton(),
-                                              genVtx).mass();
+            m_genvtx = flashgg::DiPhotonCandidate(cand0.leadingView()->originalPhoton(),
+                                                  cand0.subLeadingView()->originalPhoton(),
+                                                  genVtx).mass();
+            m_beamspot = flashgg::DiPhotonCandidate(cand0.leadingView()->originalPhoton(),
+                                                    cand0.subLeadingView()->originalPhoton(),
+                                                    dummyVertexHandle->ptrs()[0]).mass();
             // if(fabs(cand0.leadingPhoton()->eta()) < 1)
             //     m_sm = m * sqrt(gRandom->Gaus(1, 0.008));
             // else if(fabs(cand0.leadingPhoton()->eta()) < 1.5)

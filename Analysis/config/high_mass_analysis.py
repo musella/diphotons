@@ -895,7 +895,7 @@ if not dumpKinTree: minimalDumper=diphotonDumper
 ## analysis selections
 # CiC
 if customize.idversion != "":
-    if customize.idversion not in ["V2", "0T_V1"]:
+    if customize.idversion not in ["V2", "0T_V1", "0T_V2"]:
         print "Unknown ID version %s " % customize.idversion
         sys.exit(-1)
     if customize.idversion == "V2":
@@ -903,6 +903,8 @@ if customize.idversion != "":
         from diphotons.Analysis.highMassCiCDiPhotons_cfi import highMassCiCDiPhotonsSBV2 as highMassCiCDiPhotonsSB
     if customize.idversion == "0T_V1":
         from diphotons.Analysis.highMassCiCDiPhotons_cfi import highMassCiCDiPhotons0TV1 as highMassCiCDiPhotons0T
+    if customize.idversion == "0T_V2":
+        from diphotons.Analysis.highMassCiCDiPhotons_cfi import highMassCiCDiPhotons0TV2 as highMassCiCDiPhotons0T
 else:
     from diphotons.Analysis.highMassCiCDiPhotons_cfi import highMassCiCDiPhotons, highMassCiCDiPhotonsSB
 
@@ -957,7 +959,7 @@ elif doDoublePho:
 
 # single photon selection
 if customize.idversion != "":
-    if customize.idversion not in ["V2", "0T_V1"]:
+    if customize.idversion not in ["V2", "0T_V1", "0T_V2"]:
         print "Unknown ID version %s " % customize.idversion
         sys.exit(-1)
     if customize.idversion == "V2":

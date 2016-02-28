@@ -50,6 +50,30 @@ highMassCuts0Tid = cms.VPSet(
     )
 )
 
+highMassCuts0TidLoose = cms.VPSet(
+    cms.PSet(
+        cut = cms.string("abs(superCluster.eta)<1.5"),
+        selection = cms.VPSet(
+            cms.PSet(max=cms.string("1.06e-2")),
+            cms.PSet(max=cms.string("1.06e-2")),
+            #cms.PSet(max=cms.string("4")),
+            cms.PSet(max=cms.string("3.6")),
+            cms.PSet(min=cms.string("1"))
+        )
+    ),
+    cms.PSet(
+        cut = cms.string("abs(superCluster.eta)>1.5"),
+        selection = cms.VPSet(
+            cms.PSet(max=cms.string("2.8e-2")),
+            cms.PSet(max=cms.string("2.8e-2")),
+            #cms.PSet(max=cms.string("4")),
+            cms.PSet(max=cms.string("3")),
+            cms.PSet(min=cms.string("1"))
+        )
+    )
+)
+
+
 highMassCiCVariablesV2=highMassCiCVariables
 
 highMassCiCCutsV0 = cms.VPSet(
@@ -371,6 +395,16 @@ highMassCiCDiPhotons0TV1 = cms.EDFilter(
     cut = cms.string("    leadingView.pfChNum03WrtChosenVtx<4 && subLeadingView.pfChNum03WrtChosenVtx<4"
                      " && leadingPhoton.r9>0.8 && subLeadingPhoton.r9>0.8"),
     variables = highMassVariables0Tid,
+    categories = highMassCuts0Tid
+)
+
+highMassCiCDiPhotons0TV2 = cms.EDFilter(
+    "GenericDiPhotonCandidateSelector",
+    src = cms.InputTag("kinDiPhotons"),
+    rho = cms.InputTag("fixedGridRhoFastjetAllCalo"),
+    cut = cms.string("    leadingView.pfChNum03WrtChosenVtx<4 && subLeadingView.pfChNum03WrtChosenVtx<4"
+                     " && leadingPhoton.r9>0.8 && subLeadingPhoton.r9>0.8"),
+    variables = highMassVariables0TidLoose,
     categories = highMassCuts0Tid
 )
 
