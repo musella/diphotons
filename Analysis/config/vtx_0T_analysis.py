@@ -23,7 +23,9 @@ process.source = cms.Source ("PoolSource",
 process.TFileService = cms.Service("TFileService",
                                    fileName = cms.string(customize.options.outputFile))
 
-## PROCESS
+## PROCES
+process.dummyVtx = cms.EDProducer("DummyVertexProducer")
+
 process.load("diphotons.Analysis.ZeroTeslaVtxAnalyzer_cfi") 
 
 process.idleWatchdog=cms.EDAnalyzer("IdleWatchdog",
@@ -32,7 +34,7 @@ process.idleWatchdog=cms.EDAnalyzer("IdleWatchdog",
                                     tolerance = cms.untracked.int32(5)
                                     )
 
-process.p1 = cms.Path(process.diphotonsZeroTeslaVtx)
+process.p1 = cms.Path(process.dummyVtx+process.diphotonsZeroTeslaVtx)
 
 ## process.e = cms.EndPath(process.out)
 
