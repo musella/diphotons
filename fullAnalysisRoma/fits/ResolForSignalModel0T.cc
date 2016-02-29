@@ -419,7 +419,7 @@ void ResolInterpolation(RooWorkspace* w, vector<int> masses) {
     }
   }
   */
-
+  
   for (int iGenMass=0; iGenMass<150; iGenMass++) {    
     int thisMass = 1000 + iGenMass*4.;
     for (int c=0; c<NCAT; ++c) {
