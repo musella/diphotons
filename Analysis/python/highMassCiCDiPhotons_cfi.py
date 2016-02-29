@@ -404,7 +404,7 @@ highMassCiCDiPhotons0TV2 = cms.EDFilter(
     rho = cms.InputTag("fixedGridRhoFastjetAllCalo"),
     cut = cms.string("    leadingView.pfChNum03WrtChosenVtx<4 && subLeadingView.pfChNum03WrtChosenVtx<4"
                      " && leadingPhoton.r9>0.8 && subLeadingPhoton.r9>0.8"),
-    variables = highMassVariables0TidLoose,
-    categories = highMassCuts0Tid
+    variables = highMassVariables0Tid,
+    categories = highMassCuts0TidLoose
 )
 

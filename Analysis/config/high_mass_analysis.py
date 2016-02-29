@@ -406,28 +406,7 @@ if customize.addRegressionInput:
     
     variables.extend( makeOneLegInputs("lead","leadingPhoton",regInputs))
     variables.extend( makeOneLegInputs("sublead","subLeadingPhoton",regInputs))
-    
-if "0T" in customize.idversion:
-    variables.extend(
-        [
-            "leadSigmaIpIp         := sqrt(leadingPhoton.sipip)",
-            "leadTrkIso            := leadingPhoton.nTrkSolidConeDR03",
-            "leadChgNum            := leadingView.pfChNum03WrtChosenVtx",
-            "leadTrkHollowIso      := leadingPhoton.nTrkHollowConeDR03",
-            "leadTrkMissingHits    := leadingPhoton.matchedGsfTrackInnerMissingHits",
-            "subleadSigmaIpIp      := sqrt(subLeadingPhoton.sipip)",
-            "subleadTrkIso         := subLeadingPhoton.nTrkSolidConeDR03",
-            "subleadChgNum         := subLeadingView.pfChNum03WrtChosenVtx",
-            "subleadTrkHollowIso   := subLeadingPhoton.nTrkHollowConeDR03",
-            "subleadTrkMissingHits := subLeadingPhoton.matchedGsfTrackInnerMissingHits",
-            # vtx
-            "genVtxZ               := genPV.z",
-            "chosenVtxZ            := vtx.z",
-            "eeVtxZ                := ? abs(leadingPhoton.getMatchedEleVtx.z-subLeadingPhoton.getMatchedEleVtx.z)<1 ?"
-            "(leadingPhoton.getMatchedEleVtx.z+subLeadingPhoton.getMatchedEleVtx.z)/2 : -999",
-    ]
-    )
-    
+        
 histograms=["mass>>mass(1500,0,15000)",
             "mass>>lowmass(560,60,200)",
             "genMass>>genmass(1500,0,15000)",            
@@ -487,6 +466,41 @@ histograms=["mass>>mass(1500,0,15000)",
             "minR9>>minR9(110,0,1.1)",
             "maxEta>>maxEta(250,0,2.5)"
             ]
+
+
+if "0T" in customize.idversion:
+    variables.extend(
+        [
+            "leadSigmaIpIp         := sqrt(leadingPhoton.sipip)",
+            "leadTrkIso            := leadingPhoton.nTrkSolidConeDR03",
+            "leadChgNum            := leadingView.pfChNum03WrtChosenVtx",
+            "leadTrkHollowIso      := leadingPhoton.nTrkHollowConeDR03",
+            "leadTrkMissingHits    := leadingPhoton.matchedGsfTrackInnerMissingHits",
+            "subleadSigmaIpIp      := sqrt(subLeadingPhoton.sipip)",
+            "subleadTrkIso         := subLeadingPhoton.nTrkSolidConeDR03",
+            "subleadChgNum         := subLeadingView.pfChNum03WrtChosenVtx",
+            "subleadTrkHollowIso   := subLeadingPhoton.nTrkHollowConeDR03",
+            "subleadTrkMissingHits := subLeadingPhoton.matchedGsfTrackInnerMissingHits",
+            # vtx
+            "genVtxZ               := genPV.z",
+            "chosenVtxZ            := vtx.z",
+            "eeVtxZ                := ? abs(leadingPhoton.getMatchedEleVtx.z-subLeadingPhoton.getMatchedEleVtx.z)<1 ?"
+            "(leadingPhoton.getMatchedEleVtx.z+subLeadingPhoton.getMatchedEleVtx.z)/2 : -999",
+    ]
+    )
+    
+    histograms.extend([
+            "leadSigmaIpIp>>leadSigmaIpIp(320,0,3.2e-2)",
+            "subleadSigmaIpIp>>subleadSigmaIpIp(320,0,3.2e-2)",
+            
+            "leadChgNum>>leadChgNum(10,0,10)",				     
+            "subleadChgNum>>subleadChgNum(10,0,10)",				     
+            
+            "leadTrkMissingHits>>leadTrkMissingHits(10,-1,9)",				     
+            "subleadTrkMissingHits>>subleadTrkMissingHits(10,-1,9)"
+            ]
+
+        )
 
 
 variablesSinglePho=[
@@ -929,8 +943,8 @@ if doDoublePho0T:
                                   dumpTrees=True, dumpWorkspace=False, dumpHistos=True, splitByIso=True,
                                   dumperTemplate=diphotonDumper,
                                   nMinusOne=[(0,"NoSieie",        False, False, True), ## removeIndex(es), label, dumpTree, dumpWorkspace, dumpHistos
-                                             (1, "NoSipip",        False, False, True),
-                                             #(2,"NoTrkIso",       False, False, True),
+                                             (1, "NoSipip",       False, False, True),
+                                             (2,"NoTrkIso",       False, False, True),
                                              (2,"NoPhoIso",       False, False, True),
                                              (3,"NoEleVeto",      False, False, True)
                                          ]

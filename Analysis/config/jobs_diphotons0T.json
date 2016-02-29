@@ -5,6 +5,26 @@
             "/DoubleEG_0T/spigazzi-diphotons0T_v5-1_2_0-77-g0056370-v0-Run2015D-27Jan2016-v2-55fe481985bc6e24af43ba0caf9acb03/USER"
         ],
 
+	
+	"GJets_HT-40ToInf" : [
+		"/GJets_DR-0p4_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8",
+		"/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8",
+		"/GJets_DR-0p4_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8",
+		"/GJets_DR-0p4_HT-40To100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8",
+		"/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"
+		],
+	
+	"GGJets_M-60To13000" : [
+		"/GGJets_M-1000To2000_Pt-50_13TeV-sherpa",
+		"/GGJets_M-2000To4000_Pt-50_13TeV-sherpa",
+		"/GGJets_M-200To500_Pt-50_13TeV-sherpa",
+		"/GGJets_M-4000To6000_Pt-50_13TeV-sherpa",
+		"/GGJets_M-500To1000_Pt-50_13TeV-sherpa",
+		"/GGJets_M-6000To8000_Pt-50_13TeV-sherpa",
+		"/GGJets_M-60To200_Pt-50_13TeV-sherpa"
+	],
+
+
 	    "RSGravToGG_kMpl-01_M-1000_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-01_M-1000_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 } ] ],
 	    "RSGravToGG_kMpl-01_M-1250_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-01_M-1250_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 } ] ],
 	    "RSGravToGG_kMpl-01_M-1500_TuneCUEP8M1_13TeV-pythia8" : [ [ "/RSGravToGG_kMpl-01_M-1500_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 } ] ],
@@ -48,5 +68,5 @@
 	    "RSGravToGG_kMpl-02_M-750_TuneCUEP8M1_13TeV-pythia8" :   [ [ "/RSGravToGG_kMpl-02_M-750_TuneCUEP8M1_13TeV-pythia8"   , { "njobs" : 2 } ] ]
 
 	},
-    "cmdLine" : "campaign=diphotons0T_v5 useAAA=True selection=diphoton0T idversion=0T_V1 lumiMask=/afs/cern.ch/work/s/spigazzi/public/Xgg/CertSilver_diphotons0T_custom.json ptLead=75 ptSublead=75 massCut=230:320 trigger=HLT_DoublePhoton40_v*"
+    "cmdLine" : "campaign=diphotons0T_v5 useAAA=True selection=diphoton0T idversion=0T_V2 lumiMask=/afs/cern.ch/work/s/spigazzi/public/Xgg/CertSilver_diphotons0T_custom.json ptLead=75 ptSublead=75 massCut=230:320 trigger=HLT_DoublePhoton40_v*"
 }

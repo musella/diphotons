@@ -34,6 +34,7 @@
     "QCD_HT1500to2000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8" : { "xs" : 1.174e+02 },
     "QCD_HT2000toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"  : { "xs" : 2.520e+01 },
     
+    "GGJets_M-60To200_Pt-50_13TeV-sherpa"     : { "xs" : 5.735e+00  },
     "GGJets_M-200To500_Pt-50_13TeV-sherpa"    : { "xs" : 2.047e+00  },
     "GGJets_M-500To1000_Pt-50_13TeV-sherpa"   : { "xs" : 1.510e-01  },
     "GGJets_M-1000To2000_Pt-50_13TeV-sherpa"  : { "xs" : 1.084e-02  },
@@ -132,8 +133,13 @@
     "RSGravToGG_kMpl-02_M-7000_TuneCUEP8M1_13TeV-pythia8" : { "xs" :   1.08e-06 },
 
     "RSGravToGG_kMpl-001_M-750_TuneCUEP8M1_13TeV-pythia8_magnetOffBS0T_MiniAODSIM_v3" : { "xs" :   5.07e-02 },
-    "GJets_DR-0p4_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8" : { "xs" : 1},
-    "GJets_DR-0p4_HT-40To100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8" : { "xs" : 1},
+
+    "GJets_DR-0p4_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8" : { "xs" : 4.821e+03 },
+    "GJets_DR-0p4_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8": { "xs" : 1.282e+02 },
+    "GJets_DR-0p4_HT-40To100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8": { "xs" : 1.850e+04 },
+    "GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8": { "xs" : 4.381e+01  },
+
+
     "GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8" : { "xs" :   1 },
     "_DYToEE_NNPDF30_13TeV-powheg-pythia8" : { "xs" : 1.943e+04 }
 } 
