@@ -42,7 +42,7 @@ void MakeResolutionHisto(TString filename, bool newFile, int mass, TString coupl
   else theResoFile = new TFile(filename,"UPDATE");
   
   // Input file and tree
-  TString inDir = "../macro/allFilesWithResolAtZ_rereco76x_2classes/";   // chiara
+  TString inDir = "../macro/allFilesWithResolAtZ_rereco76x_2classes_v4/";   // chiara
   TChain* sigTree = new TChain();
   cout << "reading file " 
        << inDir+TString(Form("FormSigMod_kpl"))+coupling+TString(Form("_M%d.root/DiPhotonTree", mass)) << endl;
@@ -309,8 +309,8 @@ void ResolInterpolation(RooWorkspace* w, vector<int> masses) {
     }   
   }
 
-  // Then 4GeV steps between 1000 and 1600 GeV
   /*
+  // Then 4GeV steps between 1000 and 1600 GeV
   for (int iGenMass=0; iGenMass<150; iGenMass++) {    
     int thisMass = 1000 + iGenMass*4.;
     cout << "Medium (4GeV) scan: " << thisMass << endl;
@@ -395,7 +395,7 @@ void ResolInterpolation(RooWorkspace* w, vector<int> masses) {
   cout << "Now salving the histos in a root file" << endl;
   TFile fileFittoRes("ResHistosGenOnlyScan.root","RECREATE");
   fileFittoRes.cd();
-  
+
   for (int iGenMass=0; iGenMass<250; iGenMass++) {    
     int thisMass = 500 + iGenMass*2;
     for (int c=0; c<NCAT; ++c) {
