@@ -38,7 +38,7 @@ void MakeResolutionHisto8TeV(TString filename, bool newFile, int mass, TString c
   else theResoFile = new TFile(filename,"UPDATE");
   
   // Input file and tree
-  TString inDir = "../macro/allFiles8TeV_resol1perc/";
+  TString inDir = "../macro/allFiles8TeV_smearing1perc/";
   TChain* sigTree = new TChain();
   cout << "reading file " 
        << inDir+TString(Form("FormSigMod_kpl"))+coupling+TString(Form("_M%d.root/DiPhotonTree", mass)) << endl;
