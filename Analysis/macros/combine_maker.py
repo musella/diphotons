@@ -313,9 +313,9 @@ class CombineApp(TemplatesApp):
                         make_option("--bias-func",dest="bias_func",action="callback",callback=optpars_utils.Load(scratch=True),
                                     type="string",
                                     default={ 
-                                       "ee_dijet_200_10000"     : "(x>1000.)*(+1e-4)",
-                                       "mm_dijet_200_10000"     : "(x>1000.)*(+1e-4)",
-                                       "allZG_dijet_200_10000"  : "(x>1000.)*(+1e-4)",
+                                       "ee_dijet_200_10000"     : "(x>1000.)*(0.001) + (x>600.)*(x<=1000.)*(0.01)",
+                                       "mm_dijet_200_10000"     : "(x>1000.)*(0.001) + (x>600.)*(x<=1000.)*(0.01)",
+                                       "allZG_dijet_200_10000"  : "(x>1000.)*(0.001) + (x>600.)*(x<=1000.)*(0.01)",
                                        "EBEB_dijet_230_10000" : "((0.06*((x/600.)^-4))+1e-6)/3.",
                                        "EBEB_8TeV_dijet_300_10000" : "((0.06*((x/600.)^-4))+1e-6)/6.",
                                        "EBEE_dijet_330_10000" : "((0.1*((x/600.)^-5)))/3.",
@@ -666,7 +666,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             # normalization nuisances
             datacard.write("cms_lumi_13TeV  lnN".ljust(20))
             for cat in categories:
-                datacard.write(" 1.046".ljust(15) )
+                datacard.write(" 1.027".ljust(15) )
                 for comp in options.components:
                     datacard.write(" -".ljust(15) )
             for cat in sidebands:                
@@ -860,6 +860,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         
         if options.signal_name:
             signals = [options.signal_name]
+        elif options.signals_cb:
+            signals = options.signals_cb.keys()
         else:
             signals = options.signals.keys()
             
@@ -903,6 +905,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 self.workspace_.rooImport(data)
                 self.workspace_.rooImport(dataBinned)
                 
+
                 for comp in options.components :
                 
                     ## # import source datasets too
@@ -945,12 +948,16 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                             print
                         else:
                             bias_func = ROOT.TF1(bias_name, options.bias_func[bias_name],roobs.getMin(),roobs.getMax())
-                            # get value of grav mass
-                            substr = signame[signame.index("_")+1:]
-                            grav_mass = float(substr[substr.index("_")+1:])
+                            if options.signals_cb:
+                              mass = float(signame.split("mass")[1])
+                            else:  
+                              # get value of grav mass
+                              substr = signame[signame.index("_")+1:]
+                              substr = signame[signame.index("_")+1:]
+                              mass = float(substr[substr.index("_")+1:])
                             print signame, cat, options.fwhm_input_file[signame]
                             fwhm_val = float(options.fwhm_input_file[signame][cat])
-                            nB = bias_func.Eval(grav_mass) * fwhm_val * float(options.luminosity) 
+                            nB = bias_func.Eval(mass) * fwhm_val * float(options.luminosity) 
                             if "%s_norm" % cat in options.fwhm_input_file[signame]:
                                 fit["sig_params"][signame].append( ("# %s_norm" % nBias.GetName(),  nB/options.fwhm_input_file[signame]["%s_norm" % cat], 0.) )
                             #print "%f" % nB
@@ -1615,7 +1622,10 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         ## sigma  = pdf.sigma(roobs).getVal()
         ## print mean, sigma
         ## if mean == 0.: 
-        mean = self.getMassFromName(signame)
+        if options.signals_cb:
+          mean = float(signame.split("mass")[1])
+        else:
+          mean = self.getMassFromName(signame)
         sigma  = mean*0.2
         if (options.set_bins_fwhm != None):
             if (signame in options.set_bins_fwhm.keys()):
@@ -1906,6 +1916,11 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 ## normalization has to be called <pdfname>_norm or combine won't find it
                 norm = self.buildRooVar("%s_norm" %  (pdf.GetName()), [], importToWs=False ) 
                 norm.setConstant(True)
+
+                if options.compute_fwhm:
+                    xWidth = self.computePdfFHWM(options,pdf,roobs,signame)
+                    if xWidth>0.:
+                        sublist_fwhm[cat] = "%f" % xWidth
                 
                 if cat == "allZG" : 
                   norm.setVal(1.) 
@@ -1928,6 +1943,17 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             # if signame provided then stop
             if isNameProvided :
                 break
+
+
+        if options.compute_fwhm:
+            fitname = options.fit_name
+            if len(options.fwhm_output_file) != 0:
+                file_fwhm = self.open(options.fwhm_output_file,"a",folder=options.ws_dir)
+            else:
+                file_fwhm = self.open("fwhm_%s.json" % fitname,"a",folder=options.ws_dir)
+            json_output = json.dumps(list_fwhm, indent=4)
+            file_fwhm.write("%s\n" % json_output)            
+            options.fwhm_input_file=list_fwhm # in case we run also generateWsBkgnbias                 
 
   
 
@@ -3274,6 +3300,25 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             
             self.keep( [pdf,linc] )
 
+        elif model == "pow3":                
+            pname = "pow3_%s" % name
+            quadc = self.buildRooVar("%s_quad" % pname,[-100.0,100.0], importToWs=False)
+            quadc.setVal(0.01)
+            cubc = self.buildRooVar("%s_cub" % pname,[-100.0,100.0], importToWs=False)
+            cubc.setVal(0.001)
+            alp = self.buildRooVar("%s_cub" % pname,[-100.0,0.], importToWs=False)
+            alp.setVal(-4.)
+            
+            self.pdfPars_.add(quadc)
+            self.pdfPars_.add(cubc)
+            self.pdfPars_.add(alp)
+            
+            roolist = ROOT.RooArgList( xvar, quadc, cubc, alp )
+            pdf = ROOT.RooGenericPdf( pname, pname, "TMath::Max(1e-50,pow(@0+@1*@0*@0+@2*@0*@0*@0,@3))", roolist )
+            
+            
+            self.keep( [pdf,quadc,cubc,alp] )
+
             
         if model == "maxdijet":
             pname = "maxdijet_%s" % name
@@ -3312,6 +3357,27 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             pdf = ROOT.RooGenericPdf( pname, pname, "TMath::Max(1e-50,pow(@0,@1+@2*log(@0))*pow(1.-@0*@4,@3))", roolist )
             
             self.keep( [pdf,lina,loga, linb, sqrb] )
+
+        elif model == "sumexp3":
+            
+            pname = "sumexp3_%s" % name
+            alpha1 = self.buildRooVar("%s_alpha1" % pname,[-0.005, -1.,   0.], importToWs=False)
+            c1     = self.buildRooVar("%s_c1"     % pname,[   30.,  0., 200.], importToWs=False)
+            alpha2 = self.buildRooVar("%s_alpha2" % pname,[-0.015, -1.,   0.], importToWs=False)
+            c2     = self.buildRooVar("%s_c2"     % pname,[   80.,  0., 200.], importToWs=False)
+            alpha3 = self.buildRooVar("%s_alpha3" % pname,[-0.022, -1.,   0.], importToWs=False)
+            
+            self.pdfPars_.add(alpha1)
+            self.pdfPars_.add(c1)
+            self.pdfPars_.add(alpha2)
+            self.pdfPars_.add(c2)
+            self.pdfPars_.add(alpha3)
+            
+            roolist = ROOT.RooArgList( xvar, alpha1, c1, alpha2, c2, alpha3 )
+            pdf = ROOT.RooGenericPdf( pname, pname, "exp(@0*@1)+@2*exp(@0*@3)+@4*exp(@0*@5)", roolist )
+            
+            self.keep( [pdf,alpha1, c1, alpha2, c2, alpha3] )
+
         elif model == "expow":
             
             pname = "expow_%s" % name
