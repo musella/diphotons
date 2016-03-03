@@ -15,6 +15,10 @@
 	
     "#" : "data to be fit",
     "data" : [
+               "data:__infile__/"
+             ],
+
+    "__data" : [
                "zg:__infile__/",
                "dy:__infile__/"
              ],
