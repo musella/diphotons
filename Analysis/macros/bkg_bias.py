@@ -88,6 +88,9 @@ class BiasApp(CombineApp):
                                     ),                    
                         make_option("--bias-param",dest="bias_param",action="callback",type="string",callback=optpars_utils.Load(scratch=True),
                                     default={
+                                "ee_dijet_200_2500"   : "(x>600.)*(31.7e9*x^(-4.5))/2.7",
+                                "mm_dijet_200_2500"   : "(x>600.)*(31.7e9*x^(-4.5))/2.7",
+                                "allZG_dijet_200_2500": "(x>600.)*(31.7e9*x^(-4.5))/2.7",
                                 "EBEB_dijet_230_7000" : "(x>500.)*((0.06*((x/600.)^-4))+1e-6)",
                                 "EBEE_dijet_320_7000" : "(x>500.)*((0.1*((x/600.)^-5)))",
                                 "EBEB_dijet_300_6000" : "(x>500.)*((0.22*((x/600.)^-5))+1e-6)",
@@ -158,7 +161,7 @@ class BiasApp(CombineApp):
                 comp = "%s_" % comp
             for cat in fit["categories"]:
                                 
-                treename = "mctruth_%s%s_%s" % (comp,fitname,cat)
+                treename = "%s%s_%s" % (comp,fitname,cat)
                 
                 print treename
                 dset = self.rooData(treename)
@@ -250,7 +253,8 @@ class BiasApp(CombineApp):
                 ntoys = options.n_toys
                 
                 if ntoys < 0:
-                    data = pdf.generate(ROOT.RooArgSet(roobs),ROOT.gRandom.Poisson(tnorm))
+                    data = pdf.generate(ROOT.RooArgSet(roobs),tnorm)
+                    #data = pdf.generate(ROOT.RooArgSet(roobs),ROOT.gRandom.Poisson(tnorm))
                     asimov = data.binnedClone()
                     asimov = ROOT.DataSetFiller.throwAsimov(tnorm,pdf,roobs,asimov)
                     asimov.SetName("toy_%s%s_asimov" % (comp,cat))
@@ -295,6 +299,7 @@ class BiasApp(CombineApp):
         ## roobs.setRange("fullRange",roobs.getMin(),roobs.getMax())
         roobs.setRange("origRange",roobs.getMin(),roobs.getMax())
         print "fullRange", minx, maxx
+        print "origRange", roobs.getMin(),roobs.getMax()
         roobs.setRange("fullRange",minx,maxx)
         roobs.setMin(minx)
         roobs.setMax(maxx)
@@ -321,8 +326,8 @@ class BiasApp(CombineApp):
                     biases[rname] = ntp
                     self.store_[ntp.GetName()] = ntp
                     
-                generator = self.rooPdf("pdf_mctruth_%s%s_%s" % (comp,fitname,cat))
-                gnorm     = self.buildRooVar("norm_mctruth_%s%s_%s" % (comp,fitname,cat), [], recycle=True)
+                generator = self.rooPdf("pdf_%s%s_%s" % (comp,fitname,cat))
+                gnorm     = self.buildRooVar("norm_%s%s_%s" % (comp,fitname,cat), [], recycle=True)
                 gnorm.Print() 
                 
                 trueNorms = {}
@@ -344,8 +349,11 @@ class BiasApp(CombineApp):
                 for toy,toyname in toyslist.iteritems():
                     dset = self.rooData(toyname).reduce("%s > %f && %s < %f" % (roobs.GetName(),minx,roobs.GetName(),maxx))
                     print dset,pdf
-                    
+                    dset.Print()
+                    pdf.Print()
+
                     gnll = pdf.createNLL(dset,ROOT.RooFit.Extended())
+                    #gnll = pdf.createNLL(dset,ROOT.RooFit.Extended())
                     gminim = ROOT.RooMinimizer(gnll)
                     gminim.setMinimizerType("Minuit2")                        
                     gminim.setEps(1000)
@@ -353,6 +361,8 @@ class BiasApp(CombineApp):
                     gminim.setStrategy(2)
                     gminim.setPrintLevel( -1 if not options.verbose else 2)
                     gminim.migrad()
+
+                 
 
                     if options.plot_toys_fits:
                         slabel = "%s_%s_%1.0f_%1.0f" % ( cat, model, options.fit_range[0], options.fit_range[1] )
@@ -516,6 +526,10 @@ class BiasApp(CombineApp):
                             bias = (nomnorm-truenorm)/abs(errh)
 
                         biases[testRange].Fill( toy, truenorm, nomnorm,  minos, hesseerr, fiterrh, fiterrl, bias, options.fit_range[0], options.fit_range[1] )
+
+                        #self.workspace_.rooImport(epdf , ROOT.RooFit.RecycleConflictNodes())
+                        #self.workspace_.rooImport(edset, ROOT.RooFit.RecycleConflictNodes())
+                        
                     
                     self.autosave(True)
                         
@@ -524,6 +538,7 @@ class BiasApp(CombineApp):
     ## ------------------------------------------------------------------------------------------------------------
     def analyzeBias(self,options,args):
         
+
         summary = {}
         
         ROOT.gStyle.SetOptStat(1111)
@@ -644,8 +659,8 @@ class BiasApp(CombineApp):
         ###            [ (style_utils.colors,ROOT.kOrange) ],  [ (style_utils.colors,ROOT.kMagenta+1) ] 
         ###            ]
                     
-        colors = [ ROOT.kRed, ROOT.kBlue, ROOT.kGreen+1, ROOT.kOrange, ROOT.kCyan, ROOT.kMagenta, ROOT.kYellow, ROOT.kGray ]
-        markers = [ROOT.kFullCircle,ROOT.kOpenCircle,ROOT.kCyan, ROOT.kMagenta, ROOT.kYellow, ROOT.kGray ]
+        colors = [ ROOT.kRed, ROOT.kBlue, ROOT.kGreen+1, ROOT.kOrange, ROOT.kCyan, ROOT.kMagenta, ROOT.kYellow+2, ROOT.kBlack ]
+        markers = [ROOT.kFullCircle,ROOT.kOpenCircle,ROOT.kCyan, ROOT.kMagenta, ROOT.kYellow, ROOT.kBlack ]
         styles = []
         keys = sorted(bprofiles.keys())
         nfuncs = len(options.bias_labels)
