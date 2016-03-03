@@ -198,6 +198,10 @@ class CombineApp(TemplatesApp):
                         make_option("--doubleCB-signal",dest="doubleCB_signal",action="store_true",default=False,
                                     help="Use doubleCB PDF  for signal",
                                     ),
+                        make_option("--signal-width",dest="signal_width",action="store",
+                                    default="0p014",
+                                    help="Intrinsic width of the signal Breit-Wigner",
+                                    ),
                         make_option("--parametric-signal",dest="parametric_signal",type="string",action="callback",callback=optpars_utils.ScratchAppend(str),
                                     default=[],
                                     help="Read parametric signal from root file.",
@@ -313,9 +317,12 @@ class CombineApp(TemplatesApp):
                         make_option("--bias-func",dest="bias_func",action="callback",callback=optpars_utils.Load(scratch=True),
                                     type="string",
                                     default={ 
-                                       "ee_dijet_200_10000"     : "(x>1000.)*(0.001) + (x>600.)*(x<=1000.)*(0.01)",
-                                       "mm_dijet_200_10000"     : "(x>1000.)*(0.001) + (x>600.)*(x<=1000.)*(0.01)",
-                                       "allZG_dijet_200_10000"  : "(x>1000.)*(0.001) + (x>600.)*(x<=1000.)*(0.01)",
+                                       "ee_dijet_200_2500"      : "(x>600.)*(31.7e9*x^(-4.5))/2.7",
+                                       "mm_dijet_200_2500"      : "(x>600.)*(31.7e9*x^(-4.5))/2.7",
+                                       "allZG_dijet_200_2500"   : "(x>600.)*(31.7e9*x^(-4.5))/2.7",
+                                       "ee_dijet_200_10000"     : "((x>1000.)*(0.001) + (x>600.)*(x<=1000.)*(0.01))/2.7",
+                                       "mm_dijet_200_10000"     : "((x>1000.)*(0.001) + (x>600.)*(x<=1000.)*(0.01))/2.7",
+                                       "allZG_dijet_200_10000"  : "((x>1000.)*(0.001) + (x>600.)*(x<=1000.)*(0.01))/2.7",
                                        "EBEB_dijet_230_10000" : "((0.06*((x/600.)^-4))+1e-6)/3.",
                                        "EBEB_8TeV_dijet_300_10000" : "((0.06*((x/600.)^-4))+1e-6)/6.",
                                        "EBEE_dijet_330_10000" : "((0.1*((x/600.)^-5)))/3.",
@@ -694,19 +701,19 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     datacard.write(" -".ljust(15) )
             datacard.write("\n")
 
-            datacard.write("cms_xzg_scale_13TeV  lnN".ljust(20))
-            for cat in categories:
-                datacard.write(" 1.06".ljust(15) )
-                for comp in options.components:
-                    datacard.write(" -".ljust(15) )
-            for cat in sidebands:                
-                for comp in  fit["sidebands"][cat]:                    
-                    datacard.write(" -".ljust(15) )
-            datacard.write("\n")
+            #datacard.write("cms_xzg_scale_13TeV  lnN".ljust(20))
+            #for cat in categories:
+            #    datacard.write(" 1.06".ljust(15) )
+            #    for comp in options.components:
+            #        datacard.write(" -".ljust(15) )
+            #for cat in sidebands:                
+            #    for comp in  fit["sidebands"][cat]:                    
+            #        datacard.write(" -".ljust(15) )
+            #datacard.write("\n")
 
             datacard.write("cms_xzg_pdf_13TeV  lnN".ljust(20))
             for cat in categories:
-                datacard.write(" 1.04".ljust(15) )
+                datacard.write(" 1.01".ljust(15) )
                 for comp in options.components:
                     datacard.write(" -".ljust(15) )
             for cat in sidebands:                
