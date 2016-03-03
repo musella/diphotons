@@ -3,8 +3,7 @@
 ./combine_maker_ZG.sh EventYields_v0_eth74X --luminosity 2.7 \
     --fit-name ${1:-fit_em} \
     --fit-background \
-    --minos-bands \
-    --plot-fit-bands  \
+    --mc-data \
     --label combination_pcorr \
     --load combine_maker_ZG.json \
     --redo-input \
@@ -17,8 +16,9 @@
     --saveas png,pdf,eps,root \
     --signal-scalefactor-forpdf 1
 
+    #--minos-bands \
+    #--plot-fit-bands  \
     #--plot-blind 500,3000 \
-    #--mc-data \
     #--fast-bands \
     #--gaussian-signal \
     #--no-use-custom-pdfs \

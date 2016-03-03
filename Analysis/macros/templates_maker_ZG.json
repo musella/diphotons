@@ -14,11 +14,11 @@
     "#" : "  fromat is <sample-name>:[[input-file][/file-folder]] order irrelevant                                              ",
 	
     "#" : "data to be fit",
-    "data" : [
+    "__data" : [
                "data:__infile__/"
              ],
 
-    "__data" : [
+    "data" : [
                "zg:__infile__/",
                "dy:__infile__/"
              ],
@@ -65,8 +65,8 @@
     "#" : "---------------------------------------------------------------------------------------------------------------------",
 
     "dataset_variables" : ["run","lumi","event"],     "#" :"list of variables to be put in the dataset (other than the template ones)",
-    "weight_expression" : "weight",           "#" :"event weight expression  ",
-    "__weight_expression" : "weight := 0.0265",           "#" :"event weight expression  ",
+    "__weight_expression" : "weight",           "#" :"event weight expression  ",
+    "weight_expression" : "weight := 0.0265",           "#" :"event weight expression  ",
 
     "#" : "List of aliases. Used to define variables/simplify expressions selection.",
     "aliases"  : [ 
