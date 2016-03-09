@@ -3,23 +3,21 @@
 ./combine_maker_ZG.sh EventYields_v0_eth74X --luminosity 2.7 \
     --fit-name ${1:-fit_em} \
     --fit-background \
-    --label       w0p014 \
-    --signal-width 0p014 \
+    --mc-data \
+    --label combination_pcorr \
     --load combine_maker_ZG.json \
-    --minos-bands \
-    --plot-fit-bands  \
     --redo-input \
     --generate-signal-dataset \
     --doubleCB-signal \
+    --signal-width 5p6 \
     --generate-datacard \
     --generate-ws-bkgnbias \
     --compute-fwhm \
     --saveas png,pdf,eps,root \
     --signal-scalefactor-forpdf 1
 
-    #--label       w5p6 \
-    #--signal-width 5p6 \
-    #--mc-data \
+    #--minos-bands \
+    #--plot-fit-bands  \
     #--plot-blind 500,3000 \
     #--fast-bands \
     #--gaussian-signal \

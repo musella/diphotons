@@ -56,7 +56,7 @@ DataSetFiller::DataSetFiller(const char * name, const char * title, const RooArg
 }
 
 
-DataSetFiller::DataSetFiller(RooDataSet * dset) :
+DataSetFiller::DataSetFiller(RooAbsData * dset) :
     vars_(*(dset->get())),
     dataset_(dset),
     tree_(0)

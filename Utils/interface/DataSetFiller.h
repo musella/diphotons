@@ -11,12 +11,12 @@ class DataSetFiller
 {
 public:
     DataSetFiller(const char * name, const char * title, const RooArgList & variables, const char *weightVarName=0, bool fillTree=false);
-    DataSetFiller(RooDataSet * dset);
+    DataSetFiller(RooAbsData * dset);
     
     void fillFromTree(TTree * tree, const char * weightExpr=0, bool ignoreExpr=false );
     RooArgList & vars() { return vars_; };
     
-    RooDataSet * get() { return dataset_; }
+    RooAbsData * get() { return dataset_; }
     TTree * getTree() { return tree_; }
 
     static RooDataHist * throwAsimov( double nexp, RooAbsPdf *pdf, RooRealVar *x, RooDataHist *asimov=0);
@@ -24,7 +24,7 @@ public:
     
 private:
     RooArgList vars_;
-    RooDataSet * dataset_;
+    RooAbsData * dataset_;
     TNtuple * tree_;
     std::vector<float> treeBuf_;
 

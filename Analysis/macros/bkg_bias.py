@@ -40,6 +40,9 @@ class BiasApp(CombineApp):
                         make_option("--throw-from-model",dest="throw_from_model",action="store_true",default=False,
                                     help="Throw toys from fit to full dataset",
                                     ),
+                        make_option("--neg-weights-workaround",dest="neg_weights_workaround",action="store_true",default=False,
+                                    help="Build binned datasets to avoid events with negative weights",
+                                    ),
                         make_option("--lumi-factor",dest="lumi_factor",action="store",default=1.,type="float",
                                     help="Luminosity normalization factor",
                                     ),
@@ -88,9 +91,15 @@ class BiasApp(CombineApp):
                                     ),                    
                         make_option("--bias-param",dest="bias_param",action="callback",type="string",callback=optpars_utils.Load(scratch=True),
                                     default={
-                                "ee_dijet_200_2500"      : "((x>550.)*(x<800.)*(0.01)+(x>=800.)*(x<900.)*(0.005)+(x>=900)*0.001)",
-                                "mm_dijet_200_2500"      : "((x>550.)*(x<800.)*(0.01)+(x>=800.)*(x<900.)*(0.005)+(x>=900)*0.001)",
-                                "allZG_dijet_200_2500"   : "((x>550.)*(x<800.)*(0.01)+(x>=800.)*(x<900.)*(0.005)+(x>=900)*0.001)",
+                                "ee_dijet_200_2500"      : "((x>550.)*(x<800.)*0.012 + (x>=800.)*42e9*x^(-4.32))",
+                                "mm_dijet_200_2500"      : "((x>550.)*(x<800.)*0.012 + (x>=800.)*42e9*x^(-4.32))",
+                                "allZG_dijet_200_2500"   : "((x>550.)*(x<800.)*0.012 + (x>=800.)*42e9*x^(-4.32))",
+                                "___ee_dijet_200_2500"      : "((x>550.)*(x<800.)*(0.01)+(x>=800.)*(2000.*x^(-1.85)))",
+                                "___mm_dijet_200_2500"      : "((x>550.)*(x<800.)*(0.01)+(x>=800.)*(2000.*x^(-1.85)))",
+                                "___allZG_dijet_200_2500"   : "((x>550.)*(x<800.)*(0.01)+(x>=800.)*(2000.*x^(-1.85)))",
+                                "_ee_dijet_200_2500"      : "((x>550.)*(x<800.)*(0.01)+(x>=800.)*(x<900.)*(0.005)+(x>=900.)*(x<1600.)*0.001+(x>=1600.)*0.0005)",
+                                "_mm_dijet_200_2500"      : "((x>550.)*(x<800.)*(0.01)+(x>=800.)*(x<900.)*(0.005)+(x>=900.)*(x<1600.)*0.001+(x>=1600.)*0.0005)",
+                                "_allZG_dijet_200_2500"   : "((x>550.)*(x<800.)*(0.01)+(x>=800.)*(x<900.)*(0.005)+(x>=900.)*(x<1600.)*0.001+(x>=1600.)*0.0005)",
                                 "EBEB_dijet_230_7000" : "(x>500.)*((0.06*((x/600.)^-4))+1e-6)",
                                 "EBEE_dijet_320_7000" : "(x>500.)*((0.1*((x/600.)^-5)))",
                                 "EBEB_dijet_300_6000" : "(x>500.)*((0.22*((x/600.)^-5))+1e-6)",
@@ -164,11 +173,13 @@ class BiasApp(CombineApp):
                 treename = "%s%s_%s" % (comp,fitname,cat)
                 
                 print treename
-                dset = self.rooData(treename)
-                dset.Print()
-
+                if options.neg_weights_workaround:
+                    dset=self.buildRooDataHist(treename,roovars=ROOT.RooArgSet(roobs))
+                else:
+                    dset = self.rooData(treename)
+                    dset.Print()
                 reduced = dset.reduce(ROOT.RooArgSet(roobs),"%s > %f && %s < %f" % (roobs.GetName(),roobs.getMin(),roobs.GetName(),roobs.getMax()))
-                binned = reduced.binnedClone()
+                binned = reduced.binnedClone() if not options.neg_weights_workaround else reduced
                 
                 if options.throw_from_model:
                     print "Throwing toys from fit to full dataset"

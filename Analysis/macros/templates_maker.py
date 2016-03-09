@@ -277,8 +277,6 @@ class TemplatesApp(PlotApp):
             if options.verbose:
                 print "calling mix templates"
             self.mixTemplates(options,args)
-            
-            
         
 
     ## ------------------------------------------------------------------------------------------------------------
@@ -290,6 +288,7 @@ class TemplatesApp(PlotApp):
             self.rename_  = (tmpname,name)
         else:
             fout = self.open(options.output_file,"recreate",folder=options.ws_dir)
+        fout.Print()
         return fout
 
     ## ------------------------------------------------------------------------------------------------------------
@@ -937,7 +936,20 @@ class TemplatesApp(PlotApp):
         return rooHistFunc
 
 
-
+    ## ------------------------------------------------------------------------------------------------------------
+    def buildRooDataHist(self,name,weight="weight",roovars=None):
+        dset = self.rooData(name,autofill=False)
+        tree = self.treeData(name)
+        
+        if roovars:
+            dset = dset.reduce(roovars)
+        binned = dset.binnedClone()
+        filler = ROOT.DataSetFiller(binned)
+        
+        filler.fillFromTree(tree,weight,True)
+        
+        return binned
+    
     ## ------------------------------------------------------------------------------------------------------------
     def rooData(self,name,autofill=True,rooset=None,weight="weight",sel=None,redo=False,quiet=False,cloneFrom=False):
             

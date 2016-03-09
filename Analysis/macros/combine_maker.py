@@ -317,9 +317,12 @@ class CombineApp(TemplatesApp):
                         make_option("--bias-func",dest="bias_func",action="callback",callback=optpars_utils.Load(scratch=True),
                                     type="string",
                                     default={ 
-                                       "ee_dijet_200_2500"      : "((x>550.)*(x<800.)*(0.01)+(x>=800.)*(x<900.)*(0.005)+(x>=900)*0.001)/2.7",
-                                       "mm_dijet_200_2500"      : "((x>550.)*(x<800.)*(0.01)+(x>=800.)*(x<900.)*(0.005)+(x>=900)*0.001)/2.7",
-                                       "allZG_dijet_200_2500"   : "((x>550.)*(x<800.)*(0.01)+(x>=800.)*(x<900.)*(0.005)+(x>=900)*0.001)/2.7",
+                                       "ee_dijet_200_2500"      : "((x>550.)*(x<800.)*0.012 + (x>=800.)*42e9*x^(-4.32))/2.7",
+                                       "mm_dijet_200_2500"      : "((x>550.)*(x<800.)*0.012 + (x>=800.)*42e9*x^(-4.32))/2.7",
+                                       "allZG_dijet_200_2500"   : "((x>550.)*(x<800.)*0.012 + (x>=800.)*42e9*x^(-4.32))/2.7",
+                                       "_ee_dijet_200_2500"      : "((x>550.)*(x<800.)*(0.01)+(x>=800.)*(x<900.)*(0.005)+(x>=900.)*(x<1600.)*0.001+(x>=1600.)*0.0005)/2.7",
+                                       "_mm_dijet_200_2500"      : "((x>550.)*(x<800.)*(0.01)+(x>=800.)*(x<900.)*(0.005)+(x>=900.)*(x<1600.)*0.001+(x>=1600.)*0.0005)/2.7",
+                                       "_allZG_dijet_200_2500"   : "((x>550.)*(x<800.)*(0.01)+(x>=800.)*(x<900.)*(0.005)+(x>=900.)*(x<1600.)*0.001+(x>=1600.)*0.0005)/2.7",
                                        "__ee_dijet_200_2500"      : "(x>550.)*(31.7e9*x^(-4.5))/2.7",
                                        "__mm_dijet_200_2500"      : "(x>550.)*(31.7e9*x^(-4.5))/2.7",
                                        "__allZG_dijet_200_2500"   : "(x>550.)*(31.7e9*x^(-4.5))/2.7",
@@ -1712,7 +1715,9 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 binned = self.rooData("signal_%s_%s" % (signame,cat)) #ROODATAHIST SIGNAL
                 #signalPdf = ROOT.RooHistPdf("signal_model_%s_%s"% (signame,cat),"signalPdf_%s_%s"% (signame,cat),ROOT.RooArgSet(roobs),signalDataHist)
                 
+                print "signame: " + signame
                 for comp in options.components :
+                    print "comp: " + comp
                     if len(options.fwhm_output_file) != 0:
                         file_fwhm = self.open(options.fwhm_output_file,"a",folder=options.ws_dir)
                     else:
