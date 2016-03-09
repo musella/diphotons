@@ -121,6 +121,8 @@ class SignalNorm(PlotApp):
                             default=False),
                 make_option("--plot-param-acceptance",action="store", dest="plot_param_acceptance", type="string",
                             default=None),
+                make_option("--cat-posfix",action="store", dest="cat_postfix", type="string",
+                            default=""),
                 make_option("--reco-file",action="store", dest="reco_file", type="string",
                             default=None),
                 make_option("--gen-file",action="store", dest="gen_file", type="string",
@@ -349,7 +351,7 @@ class SignalNorm(PlotApp):
         leg = ROOT.TLegend(0.40,0.55-len(coups)*0.12,0.84,0.55+len(coups)*0.12)
 
         for cat,cstyles in zip(cats,styles):
-            exA = ws.function("eff_acc_%s" % cat)
+            exA = ws.function("eff_acc_%s%s" % (cat,options.cat_postfix))
             for coup,style in zip(coups,cstyles):
                 kmpl.setVal(coup)
                 print style
