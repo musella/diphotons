@@ -1804,6 +1804,9 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         #else:
         #    signals = options.signals.keys()
 
+        if not "sig_params" in fit:
+            fit["sig_params"] = {}
+
         signals = options.signals_cb.keys()
 
         fileShapes = ROOT.TFile.Open("signalShapeParameters_w0p014.root")
@@ -1830,6 +1833,9 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
 
         for signame in signals:
             self.bookNewWs()
+            
+            if not signame in fit["sig_params"]:
+                fit["sig_params"][signame] = []
 
             # In case nothing specified about the output file, set: output_file = signame.root
             if ( options.output_file == None ):
@@ -1843,6 +1849,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             nameFileOutput = options.output_file
            
             sublist_fwhm = {}
+            allnuis = set()
+            
             ## build and import signal dataset
             for cat in fit["categories"]:
                 roobs = self.getObservable(cat)
@@ -1891,8 +1899,39 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 alpha2.setConstant(True)
                 n2    .setConstant(True)
 
+                if options.do_energy_scale_uncertainty:
+                    
+                    # break-down in terms of covariance matrix eigenvectors
+                    if len(options.energy_scale_eigenvec) > 0:
+                        variations = {}
+                        for eig,effects in options.energy_scale_eigenvec.iteritems():
+                            print eig, effects, cat
+                            if cat in effects:
+                                variations[eig] = effects[cat]
+                    else:
+                        variations = { cat : 1. }
 
-                
+                    nuis   = ROOT.RooArgList(ROOT.RooFit.RooConst(1.)) ## here we build 1 + Sum nuis*coeff
+                    coeffs = ROOT.RooArgList(ROOT.RooFit.RooConst(1.))
+                    for name,coeff in variations.iteritems():
+                        unc = options.energy_scale_uncertainties.get(name,options.energy_scale_uncertainty)
+                        rooNuis = ROOT.RooRealVar("energyScale%s" % name, "energyScale%s" % name, 0., -5.*unc, 5.*unc )
+                        allnuis.add( (rooNuis.GetName(),0.,unc) )
+                        rooNuis.setConstant(True)
+                        rooCoeff = ROOT.RooFit.RooConst(coeff)
+                        nuis.add(rooNuis)
+                        coeffs.add(rooCoeff)
+                        self.keep( [rooNuis,rooCoeff] )
+                        
+                    sumNuis = ROOT.RooAddition("energyNuis%s" % cat,"energyNuis%s" % cat,nuis,coeffs)
+                    ## nuis.Print()
+                    ## coeffs.Print()
+                    self.keep( [mu,sumNuis] )
+                    mu = ROOT.RooProduct("nuisanced%s" % mu.GetName(),"nuisanced%s" % mu.GetName(),ROOT.RooArgList(mu,sumNuis))
+                    
+                    ## mu.Print()
+                    ## sumNuis.Print()
+                    
                 ## build RooHistPdf in roobs
                 ##pdfDataHist = binned if not options.use_templates else binned.reduce(ROOT.RooArgSet(roobs))
                 #pdf=ROOT.RooHistPdf("model_signal_%s_%s"% (signame, cat),"model_signal_%s_%s"% (signame, cat),ROOT.RooArgSet(roobs),pdfDataHist)
@@ -1952,14 +1991,16 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 self.workspace_.rooImport(pdf,RooFit.RecycleConflictNodes())
                 self.workspace_.rooImport(norm)
             
+            fit["sig_params"][signame] = list(allnuis)
+
             list_fwhm[signame] = sublist_fwhm
             self.saveWs(options)
                         
             # if signame provided then stop
             if isNameProvided :
                 break
-
-
+        
+        
         if options.compute_fwhm:
             fitname = options.fit_name
             if len(options.fwhm_output_file) != 0:
@@ -2639,7 +2680,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                         # build shifted pdfs
                         ecustom = ROOT.RooCustomizer(pdf,"")
                         obsCat.setVal(MH.getVal())
-                            
+                        
                         scaleNuis = ROOT.RooRealVar("energyScale%s" % cat, "energyScale%s" % cat, 0., -5., 5. )
                         scaleNuis.setConstant(True)
                         scaleShift =  ROOT.RooProduct("energyScaleShift%s" %cat, "energyScaleShift%s" %cat, ROOT.RooArgList(MH, scaleNuis))

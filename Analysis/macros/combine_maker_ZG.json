@@ -8,9 +8,15 @@
 		 ],
 
 	    "energy_scale_eigenvec" : {
-		"EBEBeig1" : { "EBEB_8TeV" :  0.3006 },
-                "EBEBeig2" : { "EBEB_8TeV" :  0.3996 }
+               "egm ": { "ee"   : 1.0,  "mm" : 0.33333333 },
+                "mu" : { "mm"   : 0.6666666666 }
 	    },
+	    
+	    "energy_scale_uncertainties" : {
+	    	"egm" : 1e-2,
+	    	"mu"  : 1e-2
+	    },
+	    
 	"sqrt" : "13TeV",
 	 "postproc" : {
                "*" : [["addCmsLumi",[4,1,"Preliminary"]]]
