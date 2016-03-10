@@ -15,6 +15,7 @@ default_model=""
 opts=""
 input_opts=""
 data_version=""
+prepare=""
 while [[ -n $1 ]]; do
     case $1 in
 	--fit-name)
@@ -28,6 +29,9 @@ while [[ -n $1 ]]; do
 	--verbose)
 	    verbose="--verbose"
 	    opts="$opts --verbose"
+	    ;;
+	--prepare-*)
+	    prepare="$prepare $1"
 	    ;;
 	--redo-input)
 	    rerun="1"
@@ -148,7 +152,7 @@ if [[ -n $rerun  ]] || [[ ! -f $input ]]; then
         subset="2D,singlePho"
         mix="--mix-templates"
     fi
-    ./templates_maker.py --load templates_maker.json,templates_maker_prepare.json --only-subset $subset $mix --input-dir $treesdir/$input_folder -o $input $verbose $input_opts 2>&1 | tee $input_log
+    ./templates_maker.py --load templates_maker.json,templates_maker_prepare.json --only-subset $subset $mix --input-dir $treesdir/$input_folder $prepare -o $input $verbose $input_opts 2>&1 | tee $input_log
     echo "**************************************************************************************************************************"
 elif [[ -n $mix ]]; then
     echo "**************************************************************************************************************************"

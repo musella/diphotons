@@ -97,6 +97,11 @@ customize.options.register ('diphotonCorrectionsVersion',
                             VarParsing.VarParsing.multiplicity.singleton, # singleton or list
                             VarParsing.VarParsing.varType.string,          # string, int, or float
                             "diphotonCorrectionsVersion")
+customize.options.register ('useVtx0',
+                            False, # default value
+                            VarParsing.VarParsing.multiplicity.singleton, # singleton or list
+                            VarParsing.VarParsing.varType.bool,          # string, int, or float
+                            "useVtx0")
 customize.options.register ('addRegressionInput',
                             False, # default value
                             VarParsing.VarParsing.multiplicity.singleton, # singleton or list
@@ -123,6 +128,11 @@ sourceDiphotons = "flashggDiPhotons"
 if "0T" in customize.idversion:
     # diphotonDumper.src = "flashggDiPhotonsTrkCount"
     sourceDiphotons = "flashggDiPhotonsTrkCount"
+
+if customize.useVtx0:
+    from flashgg.MicroAOD.flashggDiPhotons_cfi import flashggDiPhotonsLite
+    process.flashggDiPhotonsVtx0 = flashggDiPhotonsLite.clone(VertexSelectorName="FlashggZerothVertexSelector",whichVertex=cms.uint32(0))
+    sourceDiphotons = "flashggDiPhotonsVtx0"
 
 diphotonDumper.processId = "test"
 diphotonDumper.dumpTrees = False
@@ -692,6 +702,7 @@ dataTriggers=[]
 mcTriggers=[]
 doSinglePho=False
 doDoublePho=True
+doDoublePho0T=False
 invertEleVeto=False
 dumpBits=["HLT_DoublePhoton60","HLT_DoublePhoton85","HLT_Photon250_NoHE","HLT_Photon165_HE"]
 askTriggerOnMc=False
