@@ -20,7 +20,8 @@ class DiPhotonAnalysis(object):
                  dataTriggers=["HLT_DoublePhoton60*","HLT_DoublePhoton85*","HLT_Photon250_NoHE*"],
                  mcTriggers=["HLT_DoublePhoton60*","HLT_DoublePhoton85*","HLT_Photon250_NoHE*"],
                  askTriggerOnMc=False,sortTemplate=False,singlePhoDumperTemplate=False,computeRechitFlags=False,removeEEEE=True,
-                 applyDiphotonCorrections=False):
+                 applyDiphotonCorrections=False,diphotonCorrectionsVersion="",
+                 sourceDiphotons="flashggDiPhotons"):
         
         super(DiPhotonAnalysis,self).__init__()
         
@@ -36,8 +37,10 @@ class DiPhotonAnalysis(object):
         self.dataTriggers = dataTriggers
         self.askTriggerOnMc = askTriggerOnMc
         self.applyDiphotonCorrections = applyDiphotonCorrections
+        self.diphotonCorrectionsVersion = diphotonCorrectionsVersion
         self.computeRechitFlags = computeRechitFlags
-        
+        self.sourceDiphotons = sourceDiphotons
+
         self.analysisSelections = []
         self.photonSelections = []
         self.splitByIso = []
@@ -77,6 +80,8 @@ class DiPhotonAnalysis(object):
             from flashgg.Systematics.SystematicsCustomize import customizePhotonSystematicsForData
             customizePhotonSystematicsForData(process)
         else:
+            from flashgg.Systematics.SystematicsCustomize import customizePhotonSystematicsForMC
+            customizePhotonSystematicsForMC(process)
             for vpset in process.flashggDiPhotonSystematics.SystMethods,process.flashggDiPhotonSystematics.SystMethods2D:
                 for pset in vpset:
                     if (processType != "signal") or (not pset.Label.value().startswith("MCSmear")):
@@ -209,7 +214,7 @@ class DiPhotonAnalysis(object):
         if not dumperTemplate:
             dumperTemplate = self.dumperTemplate
         
-        src = "flashggDiPhotons"
+        src = self.sourceDiphotons
         if self.computeRechitFlags:
             process.flashggDiPhotonsWithFlags = cms.EDProducer("DiphotonsDiPhotonsRechiFlagProducer",
                                                                src=cms.InputTag(src),
@@ -219,7 +224,10 @@ class DiPhotonAnalysis(object):
                                                                )
             src = "flashggDiPhotonsWithFlags"
         if self.applyDiphotonCorrections:
-            process.load("flashgg.Systematics.flashggDiPhotonSystematics_cfi")
+            if self.diphotonCorrectionsVersion == "OT":
+                process.load("flashgg.Systematics.flashggDiPhotonSystematics0T_cfi")
+            else:
+                process.load("flashgg.Systematics.flashggDiPhotonSystematics_cfi")
             process.flashggDiPhotonSystematics.src=src
             src = "flashggDiPhotonSystematics"
             

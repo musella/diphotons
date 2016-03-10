@@ -24,7 +24,7 @@
 	      
 	     ],
 
-     "bkg" : [
+     "_bkg" : [
     	      ["dy","DY #rightarrow ee",
 	      [["colors","myColorD1"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",1],["legopt","f"],["SetFillColor","myColorD3tr"]],
 	      { "DYJetsToLL_M_50_TuneCUETP8M1_13TeV_madgraphMLM_pythia8_13TeV:__infile__/%(sel)s" : [] }
@@ -32,6 +32,16 @@
 	      
 	      
 	     ],
+
+     "bkg" : [
+    	      ["dy","DY #rightarrow ee",
+	      [["colors","myColorD1"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",1],["legopt","f"],["SetFillColor","myColorD3tr"]],
+	      { "DYToEE_NNPDF30_13TeV_powheg_pythia8_13TeV:__infile__/%(sel)s" : [] }
+	      ]
+	      
+	      
+	     ],
+
     "bkg_file" : "output.root", 
     "data_file"  : "output.root",
     "sig_file"  : "output.root",
@@ -40,18 +50,23 @@
     "categories" : [],
 
     "groups": {
+        "EBEB"       : ["EBHighR9","EBLowR9"],
+        "EBEE"       : ["EEHighR9","EELowR9"],
+        "EBEBHighR9" : ["EBHighR9"],
+	"EBEBLowR9"  : ["EBLowR9"],
+	"EBEEHighR9" : ["EEHighR9"],
+	"EBEELowR9"  : ["EELowR9"]
+	}, 
+
+    "groups": {
         "EB"       : ["EBHighR9","EBLowR9"],
-        "EE"       : ["EEHighR9","EELowR9"],
-        "EBHighR9" : ["EBHighR9"],
-	"EBLowR9"  : ["EBLowR9"],
-	"EEHighR9" : ["EEHighR9"],
-	"EELowR9"  : ["EELowR9"]
+        "EE"       : ["EEHighR9","EELowR9"]
 	}, 
 	
     "plots": [
 
-	      ["lowmass"		,[["Rebin",4],["xtitle","m_{#gamma #gamma} (GeV)"],
-					  ["xrange",[70.0,110.0]],["overflow",[null]],
+	      ["lowmass"		,[["Rebin",2],["xtitle","m_{#gamma #gamma} (GeV)"],
+					  ["xrange",[70.0,110.0]],
 					  ["ytitle","Events / %(binw)s GeV"]
 					]
 					,null,null],
@@ -160,7 +175,9 @@
     ],
 
     "selections" : [
-        ["cic",""],
+        ["cic",""]
+    ],
+    "_selections" : [
         ["cicNoSigmaIetaIeta","noSiEiE",["lowmass","leadSigmaIeIe","subleadSigmaIeIe","phoSigmaIeIe"]],
         ["cicNoChIso","noChIso",["lowmass","leadChIso","subleadChIso","nvtx","rho","phoRndConeChIso"]],
         ["cicNoPhoIso","noPhoIso",["lowmass","leadPhoIso","subleadPhoIso","nvtx","rho"]],
@@ -177,15 +194,22 @@
         ["cicNoPhoIsoSingleSB","phoIsoSingleSB"],
         ["cicNoPhoIsoDoubleSB","phoIsoDoubleSB"]
     ],
-	      
+
+    "selections" : [
+        ["cic",""]
+    ],
+
     "styles": { 
 	"lowmass_*" : [["printIntegral",[87,93]],"printMean"],
-	"lowmass_dy_EEHighR9" : [["Scale",1.033]],
-	"lowmass_dy_EELowR9"  : [["Scale",1.037]],
-	"lowmass_dy_EE"       : [["Scale",1.035]],
-	"lowmass_dy_EBHighR9" : [["Scale",1.099]],
-	"lowmass_dy_EBLowR9"  : [["Scale",1.021]],
-	"lowmass_dy_EB"       : [["Scale",1.035]],
+	"lowmass_dy_EBEEHighR9" : [["Scale",1.033]],
+	"lowmass_dy_EBEELowR9"  : [["Scale",1.037]],
+	"lowmass_dy_EBEE"       : [["Scale",1.035]],
+	"lowmass_dy_EBEBHighR9" : [["Scale",1.099]],
+	"lowmass_dy_EBEBLowR9"  : [["Scale",1.021]],
+	"lowmass_dy_EBEB"       : [["Scale",1.035]],
+	"no_lowmass_dy_EBEBLowR9" : [["Scale",1.0021]],
+	"no_lowmass_dy_EBEBHighR9" : [["Scale",1.053]],
+	"no_lowmass_dy_EBEB"       : [["Scale",0.9917]],
 	"*Iso*"  : [["logy",1e-3]],
 	"*Pt*"  : [["logy",1e-1]],
 	"*pt*"  : [["logy",1e-2]],

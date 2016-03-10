@@ -92,6 +92,16 @@ customize.options.register ('applyDiphotonCorrections',
                             VarParsing.VarParsing.multiplicity.singleton, # singleton or list
                             VarParsing.VarParsing.varType.bool,          # string, int, or float
                             "applyDiphotonCorrections")
+customize.options.register ('diphotonCorrectionsVersion',
+                            "", # default value
+                            VarParsing.VarParsing.multiplicity.singleton, # singleton or list
+                            VarParsing.VarParsing.varType.string,          # string, int, or float
+                            "diphotonCorrectionsVersion")
+customize.options.register ('useVtx0',
+                            False, # default value
+                            VarParsing.VarParsing.multiplicity.singleton, # singleton or list
+                            VarParsing.VarParsing.varType.bool,          # string, int, or float
+                            "useVtx0")
 customize.options.register ('addRegressionInput',
                             False, # default value
                             VarParsing.VarParsing.multiplicity.singleton, # singleton or list
@@ -112,6 +122,17 @@ from flashgg.Taggers.diphotonDumper_cfi import diphotonDumper
 from flashgg.Taggers.photonDumper_cfi import photonDumper 
 import flashgg.Taggers.dumperConfigTools as cfgTools
 
+sourceDiphotons = "flashggDiPhotons"
+
+# Track count vertex
+if "0T" in customize.idversion:
+    # diphotonDumper.src = "flashggDiPhotonsTrkCount"
+    sourceDiphotons = "flashggDiPhotonsTrkCount"
+
+if customize.useVtx0:
+    from flashgg.MicroAOD.flashggDiPhotons_cfi import flashggDiPhotonsLite
+    process.flashggDiPhotonsVtx0 = flashggDiPhotonsLite.clone(VertexSelectorName="FlashggZerothVertexSelector",whichVertex=cms.uint32(0))
+    sourceDiphotons = "flashggDiPhotonsVtx0"
 
 diphotonDumper.processId = "test"
 diphotonDumper.dumpTrees = False
@@ -680,6 +701,7 @@ dataTriggers=[]
 mcTriggers=[]
 doSinglePho=False
 doDoublePho=True
+doDoublePho0T=False
 invertEleVeto=False
 dumpBits=["HLT_DoublePhoton60","HLT_DoublePhoton85","HLT_Photon250_NoHE","HLT_Photon165_HE"]
 askTriggerOnMc=False
@@ -707,7 +729,12 @@ elif customize.selection == "dielectron":
     if customize.options.trigger == "":
         sys.exit("please complete dielectron selection",-1)
         invertEleVeto=True
-        
+elif customize.selection == "dielectron0T":
+    invertEleVeto=True
+    doDoublePho0T=True
+    mcTriggers=[]
+    askTriggerOnMc=False
+
 if customize.options.trigger != "":
     dataTriggers = customize.options.trigger.split(",")
     mcTriggers = [] ## dataTriggers
@@ -791,6 +818,8 @@ analysis = DiPhotonAnalysis(diphotonDumper,
                             askTriggerOnMc=askTriggerOnMc, ## if mcTriggers is not empty will still compute efficiencies
                             singlePhoDumperTemplate=photonDumper,
                             applyDiphotonCorrections=customize.applyDiphotonCorrections,
+                            diphotonCorrectionsVersion=customize.diphotonCorrectionsVersion,
+                            sourceDiphotons=sourceDiphotons
                             )
 
 dumpKinTree=False
@@ -828,14 +857,34 @@ else:
     from diphotons.Analysis.highMassCiCDiPhotons_cfi import highMassCiCDiPhotons, highMassCiCDiPhotonsSB
 
 if invertEleVeto:
-    ## highMassCiCDiPhotons.variables[-1] = "-(passElectronVeto-1)"
-    ## highMassCiCDiPhotonsSB.variables[-1] = "-(passElectronVeto-1)"
-    highMassCiCDiPhotons.variables[-1] = "hasPixelSeed"
-    highMassCiCDiPhotonsSB.variables[-1] = "hasPixelSeed"
-if doDoublePho:
-    if( customize.processType!="data" ):
-        analysis.addGenOnlySelection(process,genDiphotonDumper)
+    if doDoublePho0T:
+        highMassCiCDiPhotons0T.variables[-1] = "? matchedGsfTrackInnerMissingHits==0 ? 2 : 0"
+    else:
+        highMassCiCDiPhotons.variables[-1] = "hasPixelSeed"
+        highMassCiCDiPhotonsSB.variables[-1] = "hasPixelSeed"
+        ## highMassCiCDiPhotons.variables[-1] = "-(passElectronVeto-1)"
+        ## highMassCiCDiPhotonsSB.variables[-1] = "-(passElectronVeto-1)"
+
+# gen-only analysis
+if( customize.processType!="data" ):
+    analysis.addGenOnlySelection(process,genDiphotonDumper)
+
+
+## Diphotons 0T
+if doDoublePho0T:
+    analysis.addAnalysisSelection(process, "cic",
+                                  highMassCiCDiPhotons0T,
+                                  dumpTrees=True, dumpWorkspace=False, dumpHistos=True, splitByIso=True,
+                                  dumperTemplate=diphotonDumper,
+                                  nMinusOne=[(0,"NoSieie",        True, False, True), ## removeIndex(es), label, dumpTree, dumpWorkspace, dumpHistos
+                                             (1,"NoSipip",        True, False, False),
+                                             (2,"NoTrkIso",       True, False, False),
+                                             (3,"NoPhoIso",       True, False, False),
+                                             (4,"NoEleVeto",      True, False, False)
+                                         ]
+                              )    
     
+elif doDoublePho:
     analysis.addAnalysisSelection(process,"cic",highMassCiCDiPhotons,dumpTrees=True,dumpWorkspace=False,dumpHistos=True,splitByIso=True,
                                   dumperTemplate=minimalDumper,
                                   nMinusOne=[(0,"NoChIso",        True, False,True), ## removeIndex(es), label, dumpTree, dumpWorkspace, dumpHistos
@@ -866,12 +915,15 @@ if customize.idversion != "":
         sys.exit(-1)
 else:
     from diphotons.Analysis.highMassCiCPhotons_cfi import highMassCiCPhotons, highMassCiCPhotonsSB
-if invertEleVeto:
-    ## highMassCiCPhotons.variables[-1] = "-(passElectronVeto-1)"
-    ## highMassCiCPhotonsSB.variables[-1] = "-(passElectronVeto-1)"
-    highMassCiCPhotons.variables[-1] = "hasPixelSeed"
-    highMassCiCPhotonsSB.variables[-1] = "hasPixelSeed"
+
 if doSinglePho:
+
+    if invertEleVeto:
+        highMassCiCPhotons.variables[-1] = "hasPixelSeed"
+        highMassCiCPhotonsSB.variables[-1] = "hasPixelSeed"
+        ## highMassCiCPhotons.variables[-1] = "-(passElectronVeto-1)"
+        ## highMassCiCPhotonsSB.variables[-1] = "-(passElectronVeto-1)"
+
     analysis.addPhotonAnalysisSelection(process,"cic",highMassCiCPhotons,dumpTrees=False,dumpWorkspace=False,dumpHistos=True,splitByIso=True,
                                         dumperTemplate=photonDumper,
                                         nMinusOne=[(0,"NoChIso",        True, False,True), ## removeIndex(es), label, dumpTree, dumpWorkspace, dumpHistos
@@ -912,6 +964,11 @@ if not customize.lastAttempt:
 ###                                SelectEvents = cms.untracked.PSet(SelectEvents = cms.vstring('p')),
 ###                                )
 ### process.e = cms.EndPath(process.out)
+
+
+# load appropriate scale and smearing bins here
+# systematics customization scripts will take care of adjusting flashggDiPhotonSystematics
+process.load('flashgg.Systematics.escales.escale76X_16DecRereco_2015')
 
 # this will call customize(process), configure the analysis paths and make the process unscheduled
 analysis.customize(process,customize)

@@ -43,6 +43,8 @@ for dataset in $(cat datasets.txt); do
     fi
 
     aodfile=`das_client.py --limit=1 --query='file dataset='$dataset' instance=prod/phys03' | sed '1,3d'`
+    
+    echo $aodfile
 
     [ -e /tmp/${friendly_name}_xsec.log ] && rm -rf /tmp/${friendly_name}_xsec.log
 
