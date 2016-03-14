@@ -16,7 +16,8 @@ TString extraText   = "Preliminary";
 float extraTextFont = 52;  // default is helvetica-italics
 
 bool writeExtraText2 = true;
-TString extraText2   = "EBEE";
+TString extraText2   = "EBEE";   // x Zplots
+//TString extraText2   = "EE";       // x T&P 
 float extraTextFont2 = 42;  
 
 // text sizes and text offsets with respect to the top frame
@@ -42,7 +43,8 @@ float relExtraDX = -2.;
 // ratio of "CMS" and extra text size
 float extraOverCmsTextSize   = 0.76;
 
-TString lumi_13TeV = "2.6 fb^{-1}";
+//TString lumi_13TeV = "2.7 fb^{-1}";
+TString lumi_13TeV = "0.6 fb^{-1}";
 TString lumi_8TeV  = "19.7 fb^{-1}";
 TString lumi_7TeV  = "5.1 fb^{-1}";
 
