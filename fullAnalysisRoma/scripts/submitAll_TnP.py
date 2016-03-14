@@ -6,7 +6,8 @@
 # Data:        sampleID>10000
 
 # MC DY signal
-#./submitBatchTnP.py --cfg tnpAnaBATCH.py DYLL 1 101 pileupWeights___processedAndSilver_2015D_final__69mb.root 5990  1 
+./submitBatchTnP.py --cfg tnpAnaBATCH.py DYLL 1 101 pileupWeights___processedAndSilver_2015D_final__69mb.root 5990  1 
+./submitBatchTnP.py --cfg tnpAnaBATCH.py DYLLextension 1 101 pileupWeights___processedAndSilver_2015D_final__69mb.root 5990  1
 
 # MC specific background
 #./submitBatchTnP.py --cfg tnpAnaBATCH.py WJetsToLNu_HT-600To800   1 1 pileupWeights___processedAndSilver_2015D_final__69mb.root 12.26  1 
@@ -45,6 +46,7 @@
 
 # Data
 #./submitBatchTnP.py --cfg tnpAnaBATCH.py singleEle2015C  0 10001 pippo 1  1 
-./submitBatchTnP.py --cfg tnpAnaBATCH.py singleEle2015Dv0 0 10001 pippo 1  1
-./submitBatchTnP.py --cfg tnpAnaBATCH.py singleEle2015Dv1 0 10001 pippo 1  1
-./submitBatchTnP.py --cfg tnpAnaBATCH.py singleEle2015Dv2v3v4 0 10001 pippo 1  1
+#./submitBatchTnP.py --cfg tnpAnaBATCH.py singleEle2015Dv0 0 10001 pippo 1  1
+#./submitBatchTnP.py --cfg tnpAnaBATCH.py singleEle2015Dv1 0 10001 pippo 1  1
+#./submitBatchTnP.py --cfg tnpAnaBATCH.py singleEle2015Dv2v3v4 0 10001 pippo 1  1
+#./submitBatchTnP.py --cfg tnpAnaBATCH.py singleEle2015Dv1 0 10001 pippo 1  1 
