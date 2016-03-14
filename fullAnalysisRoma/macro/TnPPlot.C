@@ -216,7 +216,7 @@ public:
 	THStackAxisFonts(hstack, "x", TString::Format("%s (%s)",_xLabel.Data(),_units.Data()));
 	// THStackAxisFonts(hstack, "y", TString::Format("entries / %.0f %s", _hist[iWJets]->GetBinWidth(0),_units.Data()));
 	//THStackAxisFonts(hstack, "y", TString::Format("Events / %.0f %s", _hist[iDY]->GetBinWidth(0),_units.Data()));
-	THStackAxisFonts(hstack, "y", TString::Format("Events / (%.0f %s)", _hist[iDY]->GetBinWidth(0),_units.Data()));
+	THStackAxisFonts(hstack, "y", TString::Format("Events / (%.1f %s)", _hist[iDY]->GetBinWidth(0),_units.Data()));
       }
     }
 
