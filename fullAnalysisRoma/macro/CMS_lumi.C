@@ -53,8 +53,9 @@ CMS_lumi( TPad* pad, int iPeriod, int iPosX )
     {
       lumiText += lumi_13TeV;
       //lumiText += " (13 TeV)";
+      lumiText += " 13 TeV";
       //lumiText += " (13 TeV, 3.8T)";
-      lumiText += " (13 TeV, 0T)";
+      //lumiText += " (13 TeV, 0T)";
     }
   else if ( iPeriod==7 )
     { 
