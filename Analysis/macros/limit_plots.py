@@ -7,6 +7,27 @@ import os, sys, glob, json
 
 from auto_plotter import getObjects
 
+def scan1D(tree,x,label,xtitle):
+  tree.Draw('2*deltaNLL:%s'%x,'','')
+  gr = ROOT.gROOT.FindObject('Graph').Clone('gr_%s'%(label))
+  gr.SetTitle("")
+  gr.GetXaxis().SetTitle(xtitle)
+  gr.GetYaxis().SetTitle("-2 #Delta log L")
+
+  gr.Sort()
+  last = None
+  for i in range(gr.GetN(),0,-1):
+    if gr.GetX()[i-1] == last:
+      gr.RemovePoint(i-1)
+    last = gr.GetX()[i-1]
+  return gr
+
+def read1D(fin,x,label,xtitle):
+  tree = fin.Get('limit')
+  return scan1D(tree,x,label,xtitle)
+
+
+
 def guessLabel(name):
     if "EBEB" in name: return "EBEB"
     elif "EBEE" in name: return "EBEE"
@@ -55,11 +76,15 @@ class LimitPlot(PlotApp):
                             default=False),
                 make_option("--do-comparison",action="store_true", dest="do_comparison", 
                             default=False),
+                make_option("--do-nll",action="store_true", dest="do_nll", 
+                            default=False),
                 make_option("--compare-expected",action="store_true", dest="compare_expected", 
                             default=False),
                 make_option("--compare-file","--compare-files",dest="compare_files",action="callback",type="string", callback=optpars_utils.ScratchAppend(str),
                             default=[]),
                 make_option("--compare-label","--compare-labels",dest="compare_labels",action="callback",type="string", callback=optpars_utils.ScratchAppend(str),
+                            default=[]),
+                make_option("--compare-obs",dest="compare_obs",action="callback",type="string", callback=optpars_utils.ScratchAppend(str),
                             default=[]),
                 make_option("--asimov-expected",action="store_true", dest="asimov_expected", 
                             default=True),
@@ -67,10 +92,14 @@ class LimitPlot(PlotApp):
                             ),
                 make_option("--x-range",dest="x_range",action="callback",type="string", callback=optpars_utils.ScratchAppend(float),
                             default=[450.,5000.]),
+                make_option("--y-range",dest="y_range",action="callback",type="string", callback=optpars_utils.ScratchAppend(float),
+                            default=[]),
                 make_option("--legend",dest="legend",action="callback",type="string", callback=optpars_utils.ScratchAppend(float),
                             default=[0.56,0.51,0.86,0.76]),
                 make_option("-n","--label",action="store", dest="label", 
                             default=""),                
+                make_option("-m","--mass",action="store", dest="mass", type=float, 
+                            default=750.),                
                 make_option("-M","--method",action="store", dest="method", 
                             default="Asymptotic"),                
                 make_option("-U","--unblind",action="store_true", dest="unblind", 
@@ -91,6 +120,18 @@ class LimitPlot(PlotApp):
                             default=True),
                 make_option("--spin0",action="store_false", dest="spin2", 
                             ),
+                make_option("--width-in-header",action="store_true", dest="width_in_header", 
+                            default=True),
+                make_option("--no-width-in-header",action="store_false", dest="width_in_header", 
+                            ),
+                make_option("--spin-in-header",action="store_true", dest="spin_in_header", 
+                            default=True),
+                make_option("--no-spin-in-header",action="store_false", dest="spin_in_header", 
+                            ),
+                make_option("--extra-lines-style", action="store", type="int", default=2, dest="extra_lines_style",
+                            ),
+                make_option("--xtitle",action="store", dest="xtitle", type="string", default=None,
+                            ),
             ])
         
         global ROOT, style_utils, RooFit
@@ -106,15 +147,25 @@ class LimitPlot(PlotApp):
         ROOT.gStyle.SetTitleYOffset(1.)
         ROOT.gStyle.SetTitleXOffset(1.15)
 
+        if options.do_comparison or options.do_nll:
+            if len(options.compare_labels) > 0: assert( len(options.compare_labels) == len(options.compare_files) )
+            else: options.compare_labels = map(guessLabel, options.compare_files)
+            if len(options.compare_obs) == 0:
+              options.compare_obs = ["r"]*len(options.compare_files)
+            assert( len(options.compare_obs) == len(options.compare_files)  )
+            
+            self.compare = map(lambda x: (getObjects([self.open(x[0])]),x[1],x[2]), zip(options.compare_files,options.compare_labels,options.compare_obs) )
+
+        if options.do_nll:
+            self.plotNLLScan(options)
+            return
+
         # ROOT.gSystem.AddIncludePath( "$ROOTSYS/include" )
         ROOT.gROOT.LoadMacro( "$CMSSW_BASE/src/HiggsAnalysis/CombinedLimit/test/plotting/bandUtils.cxx+" )
         
         self.loadXsections(options.x_sections)
 
         if options.do_comparison:
-            if len(options.compare_labels) > 0: assert( len(options.compare_labels) == len(options.compare_files) )
-            else: options.compare_labels = map(guessLabel, options.compare_files)
-            self.compare = map(lambda x: (getObjects([self.open(x[0])]),x[1]), zip(options.compare_files,options.compare_labels) )
             self.plotComparisons(options)
             return
 
@@ -165,6 +216,74 @@ class LimitPlot(PlotApp):
         for gr in self.graphs: gr.Write()
         graphs.Close()
         
+
+    def getLegendHeader(self,kappa,g0):
+      txt = ""
+      if self.options.width_in_header:
+        if kappa >= 0.1:
+          txt += "#frac{#Gamma}{m} = %g #times 10^{-2}  " % (1.4*kappa*kappa*100.)
+        else:
+          txt += "#frac{#Gamma}{m} = %g #times 10^{-4}  " % (1.4*kappa*kappa*10000.)
+        
+      if self.options.spin_in_header:
+        if self.options.spin2:
+          txt += "J=2"
+          if g0: g0.GetXaxis().SetTitle("m_{G} (GeV)")
+        else:
+          txt += "J=0"
+          if g0: g0.GetXaxis().SetTitle("m_{S} (GeV)")
+      else:
+        if g0: g0.GetXaxis().SetTitle("m_{X} (GeV)")
+        
+      return txt
+
+
+    def plotNLLScan(self,options):
+        graphs = map(lambda x: (map(lambda z: scan1D(z,x[2],x[1],"#sigma^{13TeV} #upoint B_{#gamma #gamma} (fb)"),##"\sigma^{13TeV} \cdot BR_{\gamma \gamma}    (fb)"),
+                                    filter(lambda y: y.GetName() == "limit", x[0]))[0],x[1]), self.compare)
+        
+        styles = [ [["colors",ROOT.kBlack]], [["colors",ROOT.kBlue]], [["colors",ROOT.kRed]] ]
+        map(lambda x: style_utils.apply(x[0],[["SetMarkerSize",0.3],["SetLineWidth",2]]+styles.pop(0)), graphs)
+
+        canv = ROOT.TCanvas("nll_scan_%s" % options.label,"nll_scan_%s" % options.label)
+        legend = ROOT.TLegend(*options.legend)
+
+        g0 = graphs[0][0]
+        txt = ""
+        if options.spin2:
+          txt += "J=2"
+        else:
+          txt += "J=0"
+        legend.AddEntry(None,"m=%1.0f GeV, %s" % (options.mass,txt),"")
+        if len(options.couplings) == 1:
+          kappa = float("0.%s" % options.couplings[0][1:])
+          legend.AddEntry(None,"#frac{#Gamma}{m} = %g #times 10^{-2}" % (1.4*kappa*kappa*100.),"")
+        legend.AddEntry(None," ","")
+        ## if options.spin2:
+        ###     legend.AddEntry(None,"#tilde{#kappa} = %s" % kappa,"")
+        ### else:
+        ###     kappa = float(kappa)
+        ###     legend.AddEntry(None,"#frac{#Gamma}{m} = %g #times 10^{-2}" % (1.4*kappa*kappa*100.),"")
+        if len(options.x_range) != 0:
+          g0.GetXaxis().SetRangeUser(*options.x_range)
+        if len(options.y_range) != 0:
+          g0.GetYaxis().SetRangeUser(*options.y_range)
+          g0.GetYaxis().SetLimits(*options.y_range)
+        g0.Draw("ac")
+        for gr,nam in graphs:
+            legend.AddEntry(gr,nam,"l")
+            self.keep(gr)
+        for gr,nam in reversed(graphs):
+            gr.Draw("c")
+        legend.Draw("same")
+        
+        ## xmin,xmax = options.x_range
+
+        self.keep([canv,legend])
+        self.format(canv,options.postproc)
+
+
+
     def plotLimit(self,options,coup,tfile):
         ## TGraphAsymmErrors *theBand(TFile *file, int doSyst, int whichChannel, BandType type, double width=0.68) {
         if options.asimov_expected:
@@ -195,25 +314,26 @@ class LimitPlot(PlotApp):
       
         canv  = ROOT.TCanvas("limits_k%s"%coup,"limits_k%s"%coup)
         canv.SetLogx()
-        legend = ROOT.TLegend(0.6,0.6,0.9,0.9)
+        legend = ROOT.TLegend(0.55,0.58,0.85,0.88)
         expected95.Draw("AE3")        
         expected95.GetXaxis().SetRangeUser(450,5500)
         expected95.GetXaxis().SetMoreLogLabels()
         expected68.Draw("E3L")
         expected.Draw("L")
         kappa = "0."+coup[1:]
-        if options.spin2:
-            legend.AddEntry(None,"#tilde{#kappa} = %s" % kappa,"")
-        else:
-            kappa = float(kappa)
-            legend.AddEntry(None,"#frac{#Gamma}{m} = %g #times 10^{-2}" % (1.4*kappa*kappa*100.),"")
+        ### if options.spin2:
+        ###     legend.AddEntry(None,"#tilde{#kappa} = %s" % kappa,"")
+        ### else:
+        ###     kappa = float(kappa)
+        ###     legend.AddEntry(None,"#frac{#Gamma}{m} = %g #times 10^{-2}" % (1.4*kappa*kappa*100.),"")
+        legend.AddEntry(None,self.getLegendHeader(float(kappa),None),"")
         legend.AddEntry(expected,"Expected limit","l")
-        legend.AddEntry(expected68," \pm 1 \sigma","f")
-        legend.AddEntry(expected95," \pm 2 \sigma","f")
+        legend.AddEntry(expected68," #pm 1 #sigma","f")
+        legend.AddEntry(expected95," #pm 2 #sigma","f")
         if options.unblind:
-            observed.Draw("PL")
-            ## observed.Draw("L")
-            legend.AddEntry(observed,"Observed limit","l")
+          # observed.Draw("PL")
+          observed.Draw("L")
+          legend.AddEntry(observed,"Observed limit","l")
         if coup in self.xsections_:
             grav = self.xsections_[coup]
             style_utils.apply( grav, basicStyle+[["SetLineStyle",9],["colors",ROOT.myColorB2]] )
@@ -247,11 +367,11 @@ class LimitPlot(PlotApp):
         cobserved = map(lambda x: (filter(lambda y: y.GetName().endswith("_%s" % coup), x[0])[0],x[1]), observed)
         print cobserved
         
-        ## styles = [ [["colors",ROOT.kBlue]], [["colors",ROOT.kRed+1]], [["colors",ROOT.kMagenta-2]] ]
-        styles = [ [["colors",ROOT.kBlack]], [["colors",ROOT.kBlue],["SetLineStyle",2]], [["colors",ROOT.kRed],["SetLineStyle",2]] ]
+        ## styles = [ [["colors",ROOT.kBlue]], [["colors",ROOT.kRed+1]], [["colors",ROOT.kMagenta-2]] ] 
+        styles = [ [["colors",ROOT.kBlack]], [["colors",ROOT.kBlue],["SetLineStyle",options.extra_lines_style]], [["colors",ROOT.kRed],["SetLineStyle",options.extra_lines_style]] ]
         map(lambda x: style_utils.apply(x[0],[["SetMarkerSize",0.3],["SetLineWidth",2]]+styles.pop(0)), cobserved)
     
-        canv = ROOT.TCanvas("comparison_%s" % coup,"comparison_%s" % coup)
+        canv = ROOT.TCanvas("comparison_%s%s" % (options.label,coup),"comparison_%s%s"  % (options.label,coup) )
         legend = ROOT.TLegend(*options.legend)
         ## legend = ROOT.TLegend(0.56,0.51,0.86,0.76)
         ## legend = ROOT.TLegend(0.6,0.51,0.9,0.76)
@@ -261,18 +381,30 @@ class LimitPlot(PlotApp):
         kappa = "0."+coup[1:]
         
         g0 = cobserved[0][0]
-        if options.spin2:
-            legend.AddEntry(None,"#tilde{#kappa} = %s" % kappa,"")
-            g0.GetXaxis().SetTitle("m_{G} (GeV)")
-        else:
-            kappa = float(kappa)
-            legend.AddEntry(None,"#frac{#Gamma}{m} = %g #times 10^{-2}" % (1.4*kappa*kappa*100.),"")
-            g0.GetXaxis().SetTitle("m_{S} (GeV)")
-        g0.Draw("apl")
+        
+        ### kappa = float(kappa)
+        ### if kappa >= 0.1:
+        ###   txt = "#frac{#Gamma}{m} = %g #times 10^{-2}" % (1.4*kappa*kappa*100.)
+        ### else:
+        ###   txt = "#frac{#Gamma}{m} = %g #times 10^{-4}" % (1.4*kappa*kappa*10000.)
+        ### 
+        ### if options.spin2:
+        ###   txt += "  J=2"
+        ###   g0.GetXaxis().SetTitle("m_{G} (GeV)")
+        ### else:
+        ###   txt += "  J=0"
+        ###   g0.GetXaxis().SetTitle("m_{S} (GeV)")
+        kappa = float(kappa)
+        txt = self.getLegendHeader(kappa,g0)
+        legend.AddEntry(None,txt,"")
+            
+        if options.xtitle:
+          g0.GetXaxis().SetTitle(options.xtitle)
+        g0.Draw("al")
         for gr,nam in cobserved:
             legend.AddEntry(gr,nam,"l")
         for gr,nam in reversed(cobserved):
-            gr.Draw("pl")
+            gr.Draw("l")
         legend.Draw("same")
         
         xmin,xmax = options.x_range
@@ -282,23 +414,28 @@ class LimitPlot(PlotApp):
         ## g0.GetXaxis().SetRangeUser(850,3000)
         g0.GetXaxis().SetRangeUser(xmin,xmax)
         g0.GetXaxis().SetMoreLogLabels()
+          
         canv.SetLogx()
         if options.do_pvalues:
             canv.SetLogy()
             g0.GetYaxis().SetRangeUser(1e-3,0.55)
-            self.drawLines(g0,xmin,xmax)
-            ## self.drawLines(g0,450,5000)
-            ## self.drawLines(g0,500,3000)
-            ## self.drawLines(g0,500,850)
-            ## self.drawLines(g0,850,3000)
+            ## g0.GetYaxis().SetRangeUser(1e-4,0.55)
+
+        if len(options.y_range) > 0:
+          ## print "AAAAAAAAAAAAAAAA"
+          g0.GetYaxis().SetRangeUser(*options.y_range)
+          g0.GetYaxis().SetLimits(*options.y_range)
+          
+        if options.do_pvalues:
+          self.drawLines(g0,xmin,xmax)
+          
         
         self.keep([canv,legend])
         self.format(canv,options.postproc)
         
     def drawLines(self,ref,xmin=450,xmax=5000):
         
-        spots = filter(lambda x: x>ref.GetYaxis().GetXmin(),  map(lambda x: (x,ROOT.RooStats.SignificanceToPValue(x)), xrange(1,5) ) )
-        
+        spots = filter(lambda y: y[1]>float(ref.GetYaxis().GetXmin()),  map(lambda x: (x,ROOT.RooStats.SignificanceToPValue(x)), xrange(1,5) ) )
         lines = map( lambda y: ROOT.TLine(xmin,y[1],xmax,y[1]), spots )
         map( lambda x: style_utils.apply(x,[["SetLineColor",ROOT.kGray+3],["SetLineStyle",7]]), lines )
         
@@ -326,31 +463,38 @@ class LimitPlot(PlotApp):
         canv.SetLogx()
         ## legend = ROOT.TLegend(0.5,0.6,0.8,0.75)
         ## legend = ROOT.TLegend(0.6,0.6,0.9,0.75)
-        legend = ROOT.TLegend(0.56,0.6,0.86,0.75)
+        ## legend = ROOT.TLegend(0.56,0.6,0.86,0.75)
+        legend = ROOT.TLegend(*options.legend)
         legend.SetFillStyle(0)
         kappa = "0."+coup[1:]
         observed.Draw("apl")
         ## observed.Draw("al")
         ## observed.GetYaxis().SetRangeUser(1e-5,0.55)
         observed.GetYaxis().SetRangeUser(1e-3,0.55)
-        ## observed.GetXaxis().SetRangeUser(450,3000)
-        ## observed.GetXaxis().SetRangeUser(450,5000)
+        if len(options.y_range) > 0:
+          ## print "AAAAAAAAAAAAAAAA"
+          observed.GetYaxis().SetRangeUser(*options.y_range)
+          observed.GetYaxis().SetLimits(*options.y_range)
+
         observed.GetXaxis().SetRangeUser(xmin,xmax)
         observed.GetXaxis().SetMoreLogLabels()
         
         ## xmin,xmax=observed.GetXaxis().GetXmin(),observed.GetXaxis().GetXmax()
         ## xmin,xmax=450,3000
         # xmin,xmax=450,5000
-        spots = filter(lambda x: x>observed.GetYaxis().GetXmin(),  map(lambda x: (x,ROOT.RooStats.SignificanceToPValue(x)), xrange(1,5) ) )
-        
-        lines = map( lambda y: ROOT.TLine(xmin,y[1],xmax,y[1]), spots )
-        map( lambda x: style_utils.apply(x,[["SetLineColor",ROOT.kGray+3],["SetLineStyle",7]]), lines )
+        ### spots = filter(lambda x: x>observed.GetYaxis().GetXmin(),  map(lambda x: (x,ROOT.RooStats.SignificanceToPValue(x)), xrange(1,5) ) )
+        ### 
+        ### lines = map( lambda y: ROOT.TLine(xmin,y[1],xmax,y[1]), spots )
+        ### map( lambda x: style_utils.apply(x,[["SetLineColor",ROOT.kGray+3],["SetLineStyle",7]]), lines )
+        ### 
+        ### labels = map( lambda y: ROOT.TLatex(xmax*1.01,y[1]*0.9,"#color[%d]{%d #sigma}" % (ROOT.kGray+2,y[0])), spots )
+        ### map( lambda x: style_utils.apply(x,[["SetTextSize",0.05]]), labels )
+        ### 
+        ### map( lambda x: x.Draw("same"), lines+labels )
 
-        labels = map( lambda y: ROOT.TLatex(xmax*1.01,y[1]*0.9,"#color[%d]{%d #sigma}" % (ROOT.kGray+2,y[0])), spots )
-        map( lambda x: style_utils.apply(x,[["SetTextSize",0.05]]), labels )
+        self.drawLines(observed,xmin,xmax)
 
-        map( lambda x: x.Draw("same"), lines+labels )
-        self.keep(lines+labels)
+        ## self.keep(lines+labels)
         
         if options.spin2:
             legend.AddEntry(None,"#tilde{#kappa} = %s" % kappa,"")

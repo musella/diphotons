@@ -121,7 +121,10 @@ class SignalNorm(PlotApp):
                             default=False),
                 make_option("--plot-param-acceptance",action="store", dest="plot_param_acceptance", type="string",
                             default=None),
-                make_option("--cat-posfix",action="store", dest="cat_postfix", type="string",
+                make_option("--compare-param-acceptance",dest="compare_param_acceptance", action="callback",type="string", 
+                            callback=optpars_utils.ScratchAppend(str),
+                            default=[]),
+                make_option("--cat-postfix",action="store", dest="cat_postfix", type="string",
                             default=""),
                 make_option("--reco-file",action="store", dest="reco_file", type="string",
                             default=None),
@@ -157,7 +160,8 @@ class SignalNorm(PlotApp):
         self.masses_ = set()
         self.coups_  = set()
         self.cats_   = set()
-
+        
+        
     def __call__(self,options,args):
         self.loadRootStyle()
         
@@ -171,6 +175,8 @@ class SignalNorm(PlotApp):
 
         if options.plot_param_acceptance:
             self.plotParamAcceptance(options)
+        if len(options.compare_param_acceptance):
+            self.compareParamEffAcc(options,*options.compare_param_acceptance)
         if options.plot_pdfs:
             self.plotPDFs()
 
@@ -348,25 +354,127 @@ class SignalNorm(PlotApp):
         cats = ["EBEB","EBEE"]
         canv = ROOT.TCanvas("param_eff_acc","param_eff_acc")
         # leg = ROOT.TLegend(0.54,0.28,0.84,0.66)
-        leg = ROOT.TLegend(0.40,0.55-len(coups)*0.12,0.84,0.55+len(coups)*0.12)
+        leg = ROOT.TLegend(0.45,0.48-len(coups)*0.12,0.85,0.50+len(coups)*0.12)
+        txt = ""
+        if len(coups) == 1:
+            kappa = coups[0]
+            if kappa >= 0.1:
+                txt += "#frac{#Gamma}{m} = %g #times 10^{-2}  " % (1.4*kappa*kappa*100.)
+            else:
+                txt += "#frac{#Gamma}{m} = %g #times 10^{-4}  " % (1.4*kappa*kappa*10000.)
+        if self.options.spin2:
+            txt += ", J=2"
+        else:
+            txt += ", J=0"
+        leg.AddEntry(None,txt,"")
+            
 
+        terms = ROOT.RooArgList()
         for cat,cstyles in zip(cats,styles):
             exA = ws.function("eff_acc_%s%s" % (cat,options.cat_postfix))
+            terms.add(exA)
             for coup,style in zip(coups,cstyles):
                 kmpl.setVal(coup)
                 print style
                 exA.plotOn(frame,*style)
                 obj = frame.getObject(int(frame.numItems()-1))
-                if options.spin2 and not options.use_kappas:
-                    leg.AddEntry(obj,"%s #tilde{ #kappa }= %1.3g" % (cat,coup),"l")
+                ### if options.spin2 and not options.use_kappas:
+                ###     leg.AddEntry(obj,"%s #tilde{ #kappa }= %1.3g" % (cat,coup),"l")
+                ### else:
+                ###     leg.AddEntry(obj,"%s #frac{#Gamma}{m} = %g #times 10^{-2}" % (cat,1.4*coup*coup*100.),"l")
+                if len(coups) == 1:
+                    leg.AddEntry(obj,cat,"l")
                 else:
-                    leg.AddEntry(obj,"%s #frac{#Gamma}{m} = %g #times 10^{-2}" % (cat,1.4*coup*coup*100.),"l")
+                    if coup >= 0.1:
+                        txt = "#frac{#Gamma}{m} = %g #times 10^{-2}  " % (1.4*coup*coup*100.)
+                    else:
+                        txt = "#frac{#Gamma}{m} = %g #times 10^{-4}  " % (1.4*coup*coup*10000.)
+                    leg.AddEntry(obj,"%s %s" % (cat,txt) ,"l")
+
+        total = ROOT.RooAddition("all","all",terms)
+        total.plotOn(frame,ROOT.RooFit.LineColor(ROOT.kBlack))
+        obj = frame.getObject(int(frame.numItems()-1))
+        leg.AddEntry(obj,"Total"  ,"l")
         
         frame.GetYaxis().SetTitle("#varepsilon #times A")
         frame.GetXaxis().SetNdivisions(505)
+        frame.GetYaxis().SetRangeUser(0,0.75)
         frame.Draw()
         leg.Draw("same")
         self.keep(leg,True)
+        self.format(canv,options.postproc)
+        self.keep([canv,frame])
+        self.autosave()
+
+
+    def compareParamEffAcc(self,options,fspin0,fspin2):
+        
+        fin0 = self.open(fspin0)
+        fin2 = self.open(fspin2)
+        
+        ws0 = fin0.Get("wtemplates")
+        ws2 = fin2.Get("wtemplates")
+        ws = ws0
+        
+        mG = ws.var("MH")
+        mG.SetTitle("m_{X}")
+        mG.setUnit("TeV")
+
+        ROOT.TGaxis.SetExponentOffset(100.,-100,"x")
+
+        kmpl0 = ws0.var("kmpl")
+        kmpl0.setVal(0.01)
+        kmpl2 = ws2.var("kmpl")
+        kmpl2.setVal(0.01)
+        
+        frame = mG.frame(500,4500,800)
+        styles = [ [[RooFit.LineColor(ROOT.kBlue)],[RooFit.LineColor(ROOT.kBlue+2)],[RooFit.LineColor(ROOT.kBlue+4)]], 
+                   [[RooFit.LineColor(ROOT.kRed)],[RooFit.LineColor(ROOT.kRed+2)],[RooFit.LineColor(ROOT.kRed+4)]]
+                   ]
+        spinStyles = [[RooFit.LineStyle(0)],[RooFit.LineStyle(7)]]
+        
+        cats = ["EBEB","EBEE"]
+        canv = ROOT.TCanvas("param_eff_acc","param_eff_acc")
+        # leg = ROOT.TLegend(0.54,0.28,0.84,0.66)
+        # legh = ROOT.TLegend(0.48,0.57,0.88,0.62)
+        legh = ROOT.TLegend(0.15,0.82,0.38,0.87)
+        legh.SetFillStyle(0)
+        txt = ""
+        txt += "#frac{#Gamma}{m} = 1.4 #times 10^{-4}  "
+        legh.AddEntry(None,txt,"")
+        
+        legs = [legh]
+        for ii,ival  in enumerate([(ws0,0),(ws2,2)]):
+            iws,ispin = ival
+            if "0T" in options.cat_postfix:
+                ileg = ROOT.TLegend(0.44+ispin*0.115,0.68,0.67+ispin*0.115,0.88)
+            else:
+                ileg = ROOT.TLegend(0.44+ispin*0.115,0.34,0.67+ispin*0.115,0.54)
+                
+            ileg.SetFillStyle(0)
+            ## ileg = ROOT.TLegend(0.35+ispin*0.1,0.30,0.58+ispin*0.1,0.57)
+            terms = ROOT.RooArgList()
+            for cat,cstyles in zip(cats,styles):
+                exA = iws.function("eff_acc_%s%s" % (cat,options.cat_postfix))
+                terms.add(exA)
+                for coup,style in zip([0.01],cstyles):
+                    exA.plotOn(frame,*(style+spinStyles[ii]))
+                    obj = frame.getObject(int(frame.numItems()-1))
+                    ileg.AddEntry(obj,"%s J=%d" % (cat,ispin) ,"l")
+
+            itotal = ROOT.RooAddition("all%d"%ispin,"all%d"%ispin,terms)
+            itotal.plotOn(frame,*([ROOT.RooFit.LineColor(ROOT.kBlack)]+spinStyles[ii]))
+            obj = frame.getObject(int(frame.numItems()-1))
+            ileg.AddEntry(obj,"Total J=%d" %ispin  ,"l")
+            self.keep( [itotal,terms,ileg] )
+            legs.append(ileg)
+                
+        frame.GetYaxis().SetTitle("#varepsilon #times A")
+        frame.GetXaxis().SetNdivisions(505)
+        frame.GetYaxis().SetRangeUser(0,0.75)
+        frame.Draw()
+        map( lambda x: x.Draw("same"), legs )
+        map( lambda x: self.keep(x,True), legs )
         self.format(canv,options.postproc)
         self.keep([canv,frame])
         self.autosave()

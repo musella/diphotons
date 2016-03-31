@@ -180,6 +180,8 @@ class PlotApp(PyRApp):
                                     default=1.,help="default: %default"),
                         make_option("--sqrts",dest="sqrts",action="store",type="string",
                                     default="13TeV",help="default: %default"),
+                        make_option("--mag-field",action="store", dest="mag_field", type="string",
+                                    default=None),
                         make_option("--sig-file",dest="sig_file",action="store",type="string",
                                     default=None,help="default: %default"),
                         make_option("--bkg-file",dest="bkg_file",action="store",type="string",
@@ -647,7 +649,10 @@ class PlotApp(PyRApp):
         
         if self.lumistr:
             ROOT.gROOT.ProcessLine( 'lumi_%s = "%s fb^{-1}";' % (  self.options.sqrts, self.lumistr ) )
-
+            
+        if self.options.mag_field:
+            ROOT.gROOT.ProcessLine( 'magText = ", %s";' % (  self.options.mag_field ) )
+            
         ## self.dev_null = ROOT.std.ofstream("/dev/null")
         ## ROOT.std.cout.rdbuf(self.dev_null.rdbuf())
         ## ROOT.std.cerr.rdbuf(self.dev_null.rdbuf())

@@ -9,13 +9,16 @@ fin = ROOT.TFile.Open(sys.argv[1])
 fin.ls()
 
 ## for comp in "mctruth_pp", "mctruth_pf", "mctruth_ff", "data":
-for comp in "mc", "data":
+## for comp in "mc", "data":
+for comp in ["data"]:
 	if comp != "data":
 		scl = 2.4
 	else:
 		scl =1.
 	for cat,cut in ("EBEB",230), ("EBEE",320):
+	## for cat,cut in ("EBEB0T",230), ("EBEE0T",320):
 		tree = fin.Get("tree_%s_cic2_%s" % (comp,cat) )
+		## tree = fin.Get("tree_%s_cic0T_%s" % (comp,cat) )
 		sums_250 = {}
 		sums_500 = {}
 		for iev in range(tree.GetEntries()):
