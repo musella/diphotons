@@ -53,16 +53,16 @@ CMS_lumi( TPad* pad, int iPeriod, int iPosX )
     {
       lumiText += lumi_13TeV;
       if (lumi_13TeV != "") {
-	      lumiText += " (13 TeV)";
+	      lumiText += " (13 TeV"+magText+")";
       } else {
-	      lumiText += " 13 TeV";
+	      lumiText += " 13 TeV"+magText;
       }
     }
   else if ( iPeriod==5 )
     { 
       if( outOfFrame ) lumiText += "#scale[0.85]{";
       lumiText += lumi_13TeV; 
-      lumiText += " (13 TeV)";
+      lumiText += " (13 TeV"+magText+")";
       lumiText += " + ";
       lumiText += lumi_8TeV; 
       lumiText += " (8 TeV)";
@@ -72,7 +72,7 @@ CMS_lumi( TPad* pad, int iPeriod, int iPosX )
     { 
       if( outOfFrame ) lumiText += "#scale[0.85]{";
       lumiText += lumi_13TeV; 
-      lumiText += " (13 TeV)";
+      lumiText += " (13 TeV"+magText+")";
       lumiText += " + ";
       lumiText += lumi_8TeV; 
       lumiText += " (8 TeV)";
@@ -85,7 +85,7 @@ CMS_lumi( TPad* pad, int iPeriod, int iPosX )
     {
       lumiText += "8 TeV";
     }
-   
+     
   // cout << lumiText << endl;
 
   TLatex latex;

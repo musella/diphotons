@@ -221,7 +221,10 @@ class PyRApp(object):
         fname = name
         if folder and not fname.startswith("/"):
             if not os.path.exists(folder):
-                os.mkdir(folder)
+                try:
+                    os.mkdir(folder)
+                except:
+                    pass
             fname = "%s/%s" % ( folder, name )
         if ".root/" in name:
             fname, tdir = name.split(".root/")

@@ -132,6 +132,10 @@ class CombineApp(TemplatesApp):
                                                             },
                                     help="Binning to be used for plots",
                                     ),
+                        make_option("--plot-shift",dest="plot_shift",action="callback",callback=optpars_utils.Load(scratch=True),
+                                    type="string",default={ "EBEB0T" : 1.e-2,
+                                                            "EBEE0T" : 1.e-2 },
+                                    help="Shift observable when plotting background fit"),
                         make_option("--plot-blind",dest="plot_blind",action="callback",callback=optpars_utils.ScratchAppend(float),
                                     type="string",default=[],
                                     help="Blinding region for background plot",
@@ -2471,12 +2475,21 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         if doBands:
             invisible.append(RooFit.Invisible())
 
+
         if binning:
             dataopts.append(RooFit.Binning(binning))         
+            ### if( "Shift" in obs.GetName() ):
+            ###     if "EBEB" in obs.GetName():
+            ###         frame = obs.frame(227.7,1606.7)
+            ###         resid = obs.frame(227.7,1606.7)
+            ###     else:
+            ###         frame = obs.frame(228.35,1608.35)
+            ###         resid = obs.frame(228.35,1608.35)
+            ### else:
             frame = obs.frame(230,1610)
             resid = obs.frame(230,1610)
-            ## frame = obs.frame(RooFit.Range("plotBinning"))
-            ## resid  = obs.frame(RooFit.Range("plotBinning"))
+            ## frame = fmobs.frame(RooFit.Range("plotBinning"))
+            ## resid  = fmobs.frame(RooFit.Range("plotBinning"))
             curveopts.append(RooFit.Range("plotBinning"))
             dataopts.append(RooFit.Range("plotBinning"))
         else:
@@ -2498,6 +2511,20 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             plotDset = dset.reduce(RooFit.Cut("%s < %f || %s > %f" % (obs.GetName(),blind[0],obs.GetName(),blind[1]) ))
         else:
             plotDset = dset
+        ### cat = label.split("_")[1]
+        ### if cat in options.plot_shift:
+        ###     zero = ROOT.RooFit.RooConst(0.)
+        ###     shift = ROOT.RooFit.RooConst(1.+options.plot_shift[cat])
+        ###     fmobs = ROOT.RooLinearVar("sobs",obs.GetTitle(),obs,shift,zero)
+        ###     self.keep( [zero,shift,fmobs] )
+        ###     formula = ROOT.RooFormulaVar( "sobs", "@0*@1+@2", ROOT.RooArgList(obs,shift,zero) )
+        ###     dset.addColumn( formula )
+        ###     
+        ###     custom = ROOT.RooCustomizer(pdf,"")
+        ###     custom.replaceArg(obs,fmobs)
+        ###     self.keep( pdf )
+        ###     pdf = custom.build(True)
+        ###     self.keep( pdf )
 
         print "Plotting dataset"
         dset.plotOn(frame,*(dataopts+invisible+[RooFit.Invisible()]))
@@ -2594,6 +2621,13 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 
             resid.addObject(rtwosigma,"E2")
             resid.addObject(ronesigma,"E2")
+            
+            bands_file = self.open("bands_%s.root" % label.split("_")[1],"recreate")
+            bands_file.cd()
+            onesigma.Clone("onesigma").Write()
+            twosigma.Clone("twosigma").Write()
+            bands_file.Close()
+            
             print "done"
         # one = ROOT.TLine(resid.GetXaxis().GetXmin(),0,resid.GetXaxis().GetXmax(),0)
         one = ROOT.TLine(rngmin,0,rngmax,0)
@@ -2707,11 +2741,13 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             legend.Draw("same")
             self.keep(legend)
         ## pt=ROOT.TPaveText(0.78,0.85,0.95,0.995,"nbNDC")
-        pt=ROOT.TPaveText(0.24,0.82,0.5,0.97,"nbNDC")
+        ## pt=ROOT.TPaveText(0.24,0.82,0.5,0.97,"nbNDC")
+        pt=ROOT.TPaveText(0.35,0.88,0.46,0.97,"nbNDC")
         
         pt.SetFillStyle(0)
         pt.SetLineColor(ROOT.kWhite)
-        pt.AddText("%s category" % label.split("_")[1])
+        ## pt.AddText("%s category" % label.split("_")[1])
+        pt.AddText("%s" % label.split("_")[1].replace("0T",""))
         pt.Draw("same")
         self.keep(pt)
         

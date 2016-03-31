@@ -120,6 +120,16 @@ class LimitPlot(PlotApp):
                             default=True),
                 make_option("--spin0",action="store_false", dest="spin2", 
                             ),
+                make_option("--width-in-header",action="store_true", dest="width_in_header", 
+                            default=True),
+                make_option("--no-width-in-header",action="store_false", dest="width_in_header", 
+                            ),
+                make_option("--spin-in-header",action="store_true", dest="spin_in_header", 
+                            default=True),
+                make_option("--no-spin-in-header",action="store_false", dest="spin_in_header", 
+                            ),
+                make_option("--extra-lines-style", action="store", type="int", default=2, dest="extra_lines_style",
+                            ),
                 make_option("--xtitle",action="store", dest="xtitle", type="string", default=None,
                             ),
             ])
@@ -207,8 +217,29 @@ class LimitPlot(PlotApp):
         graphs.Close()
         
 
+    def getLegendHeader(self,kappa,g0):
+      txt = ""
+      if self.options.width_in_header:
+        if kappa >= 0.1:
+          txt += "#frac{#Gamma}{m} = %g #times 10^{-2}  " % (1.4*kappa*kappa*100.)
+        else:
+          txt += "#frac{#Gamma}{m} = %g #times 10^{-4}  " % (1.4*kappa*kappa*10000.)
+        
+      if self.options.spin_in_header:
+        if self.options.spin2:
+          txt += "J=2"
+          if g0: g0.GetXaxis().SetTitle("m_{G} (GeV)")
+        else:
+          txt += "J=0"
+          if g0: g0.GetXaxis().SetTitle("m_{S} (GeV)")
+      else:
+        if g0: g0.GetXaxis().SetTitle("m_{X} (GeV)")
+        
+      return txt
+
+
     def plotNLLScan(self,options):
-        graphs = map(lambda x: (map(lambda z: scan1D(z,x[2],x[1],"\sigma^{13TeV} \cdot BR_{\gamma \gamma}    (fb)"),
+        graphs = map(lambda x: (map(lambda z: scan1D(z,x[2],x[1],"#sigma^{13TeV} #upoint B_{#gamma #gamma} (fb)"),##"\sigma^{13TeV} \cdot BR_{\gamma \gamma}    (fb)"),
                                     filter(lambda y: y.GetName() == "limit", x[0]))[0],x[1]), self.compare)
         
         styles = [ [["colors",ROOT.kBlack]], [["colors",ROOT.kBlue]], [["colors",ROOT.kRed]] ]
@@ -223,7 +254,7 @@ class LimitPlot(PlotApp):
           txt += "J=2"
         else:
           txt += "J=0"
-        legend.AddEntry(None,"m=%1.0f, %s" % (options.mass,txt),"")
+        legend.AddEntry(None,"m=%1.0f GeV, %s" % (options.mass,txt),"")
         if len(options.couplings) == 1:
           kappa = float("0.%s" % options.couplings[0][1:])
           legend.AddEntry(None,"#frac{#Gamma}{m} = %g #times 10^{-2}" % (1.4*kappa*kappa*100.),"")
@@ -283,25 +314,26 @@ class LimitPlot(PlotApp):
       
         canv  = ROOT.TCanvas("limits_k%s"%coup,"limits_k%s"%coup)
         canv.SetLogx()
-        legend = ROOT.TLegend(0.6,0.6,0.9,0.9)
+        legend = ROOT.TLegend(0.55,0.58,0.85,0.88)
         expected95.Draw("AE3")        
         expected95.GetXaxis().SetRangeUser(450,5500)
         expected95.GetXaxis().SetMoreLogLabels()
         expected68.Draw("E3L")
         expected.Draw("L")
         kappa = "0."+coup[1:]
-        if options.spin2:
-            legend.AddEntry(None,"#tilde{#kappa} = %s" % kappa,"")
-        else:
-            kappa = float(kappa)
-            legend.AddEntry(None,"#frac{#Gamma}{m} = %g #times 10^{-2}" % (1.4*kappa*kappa*100.),"")
+        ### if options.spin2:
+        ###     legend.AddEntry(None,"#tilde{#kappa} = %s" % kappa,"")
+        ### else:
+        ###     kappa = float(kappa)
+        ###     legend.AddEntry(None,"#frac{#Gamma}{m} = %g #times 10^{-2}" % (1.4*kappa*kappa*100.),"")
+        legend.AddEntry(None,self.getLegendHeader(float(kappa),None),"")
         legend.AddEntry(expected,"Expected limit","l")
-        legend.AddEntry(expected68," \pm 1 \sigma","f")
-        legend.AddEntry(expected95," \pm 2 \sigma","f")
+        legend.AddEntry(expected68," #pm 1 #sigma","f")
+        legend.AddEntry(expected95," #pm 2 #sigma","f")
         if options.unblind:
-            observed.Draw("PL")
-            ## observed.Draw("L")
-            legend.AddEntry(observed,"Observed limit","l")
+          # observed.Draw("PL")
+          observed.Draw("L")
+          legend.AddEntry(observed,"Observed limit","l")
         if coup in self.xsections_:
             grav = self.xsections_[coup]
             style_utils.apply( grav, basicStyle+[["SetLineStyle",9],["colors",ROOT.myColorB2]] )
@@ -335,8 +367,8 @@ class LimitPlot(PlotApp):
         cobserved = map(lambda x: (filter(lambda y: y.GetName().endswith("_%s" % coup), x[0])[0],x[1]), observed)
         print cobserved
         
-        ## styles = [ [["colors",ROOT.kBlue]], [["colors",ROOT.kRed+1]], [["colors",ROOT.kMagenta-2]] ]
-        styles = [ [["colors",ROOT.kBlack]], [["colors",ROOT.kBlue],["SetLineStyle",2]], [["colors",ROOT.kRed],["SetLineStyle",2]] ]
+        ## styles = [ [["colors",ROOT.kBlue]], [["colors",ROOT.kRed+1]], [["colors",ROOT.kMagenta-2]] ] 
+        styles = [ [["colors",ROOT.kBlack]], [["colors",ROOT.kBlue],["SetLineStyle",options.extra_lines_style]], [["colors",ROOT.kRed],["SetLineStyle",options.extra_lines_style]] ]
         map(lambda x: style_utils.apply(x[0],[["SetMarkerSize",0.3],["SetLineWidth",2]]+styles.pop(0)), cobserved)
     
         canv = ROOT.TCanvas("comparison_%s%s" % (options.label,coup),"comparison_%s%s"  % (options.label,coup) )
@@ -349,20 +381,30 @@ class LimitPlot(PlotApp):
         kappa = "0."+coup[1:]
         
         g0 = cobserved[0][0]
-        if options.spin2:
-            legend.AddEntry(None,"#tilde{#kappa} = %s" % kappa,"")
-            g0.GetXaxis().SetTitle("m_{G} (GeV)")
-        else:
-            kappa = float(kappa)
-            legend.AddEntry(None,"#frac{#Gamma}{m} = %g #times 10^{-2}" % (1.4*kappa*kappa*100.),"")
-            g0.GetXaxis().SetTitle("m_{S} (GeV)")
+        
+        ### kappa = float(kappa)
+        ### if kappa >= 0.1:
+        ###   txt = "#frac{#Gamma}{m} = %g #times 10^{-2}" % (1.4*kappa*kappa*100.)
+        ### else:
+        ###   txt = "#frac{#Gamma}{m} = %g #times 10^{-4}" % (1.4*kappa*kappa*10000.)
+        ### 
+        ### if options.spin2:
+        ###   txt += "  J=2"
+        ###   g0.GetXaxis().SetTitle("m_{G} (GeV)")
+        ### else:
+        ###   txt += "  J=0"
+        ###   g0.GetXaxis().SetTitle("m_{S} (GeV)")
+        kappa = float(kappa)
+        txt = self.getLegendHeader(kappa,g0)
+        legend.AddEntry(None,txt,"")
+            
         if options.xtitle:
           g0.GetXaxis().SetTitle(options.xtitle)
-        g0.Draw("apl")
+        g0.Draw("al")
         for gr,nam in cobserved:
             legend.AddEntry(gr,nam,"l")
         for gr,nam in reversed(cobserved):
-            gr.Draw("pl")
+            gr.Draw("l")
         legend.Draw("same")
         
         xmin,xmax = options.x_range
