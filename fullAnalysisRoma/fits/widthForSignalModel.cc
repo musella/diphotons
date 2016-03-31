@@ -118,7 +118,7 @@ void MakeIntrinsicWidthHisto(TString filename, bool newFile, int mass, TString c
     intWidthRDH.plotOn(myPlot, LineColor(kRed), LineStyle(kDashed));    
     myPlot->Draw();
     c1->SetLogy();
-    TString canvasName = TString(Form("CheckIntrinsicWidth_Cat"))+TString(Form(myCut))+TString(Form("_mass"))+TString(Form(myMass))+TString(Form("kpl"))+TString(Form(coupling))+TString(Form("_LOG.png"));
+    TString canvasName = TString(Form("/tmp/crovelli/CheckIntrinsicWidth_Cat"))+TString(Form(myCut))+TString(Form("_mass"))+TString(Form(myMass))+TString(Form("kpl"))+TString(Form(coupling))+TString(Form("_LOG.png"));
     c1->SaveAs(canvasName);       
     RooPlot* myPlotZoom = deltaMgen->frame(Range(-300,300),Bins(300));  
     if (coupling=="001") myPlotZoom = deltaMgen->frame(Range(-12,12),Bins(12));
@@ -132,7 +132,7 @@ void MakeIntrinsicWidthHisto(TString filename, bool newFile, int mass, TString c
     if (coupling=="04")  myPlotZoom = deltaMgen->frame(Range(-1600,1600),Bins(1600));
     intWidthRDH.plotOn(myPlotZoom, LineColor(kRed), LineStyle(kDashed));
     myPlotZoom->Draw();
-    canvasName = TString(Form("CheckIntrinsicWidthZoom_Cat"))+TString(Form(myCut))+TString(Form("_mass"))+TString(Form(myMass))+TString(Form("kpl"))+TString(Form(coupling))+TString(Form(".png"));
+    canvasName = TString(Form("/tmp/crovelli/CheckIntrinsicWidthZoom_Cat"))+TString(Form(myCut))+TString(Form("_mass"))+TString(Form(myMass))+TString(Form("kpl"))+TString(Form(coupling))+TString(Form(".png"));
     c1->SetLogy(0);
     c1->SaveAs(canvasName);
 
@@ -196,7 +196,7 @@ void WidthInterpolation(RooWorkspace* w, vector<int> masses, string coupling, bo
   if (coupling=="04")  frameCat1 = deltaMgen->frame(Range(-6000,6000),Bins(6000));    
   
   // Files with the roodatahists
-  TFile *fileWidth = new TFile("IntrinsicWidthHistos.root"); 
+  TFile *fileWidth = new TFile("/tmp/crovelli/IntrinsicWidthHistos.root"); 
 
   // Loop over masses 
   for (int ii=0; ii<(int)masses.size(); ii++) { 
@@ -263,39 +263,10 @@ void WidthInterpolation(RooWorkspace* w, vector<int> masses, string coupling, bo
   cout << endl;
   cout << "now evaluating the morphing every 50GeV, from 500GeV to 5000GeV: doing mass " << endl; 
 
-  // This is to have 10GeV steps between 500 and 1500 GeV 
-  for (int iGenMass=0; iGenMass<100; iGenMass++) {   
-    int thisMass = 500 + iGenMass*10;  
-    cout << "Fine scan: " << thisMass << endl;  
-    muWidth->setVal(thisMass);
-    for (int c=0; c<NCAT; ++c) {  
-      TString myCut = "EBEB";  
-      if (c==1) myCut = "EBEE";  
-      RooDataHist *fittWidthRDH; 
-      if (coupling=="001") deltaMgen->setBins(70);
-      if (coupling=="005") deltaMgen->setBins(500);
-      if (coupling=="007") deltaMgen->setBins(700);
-      if (coupling=="01")  deltaMgen->setBins(1000);
-      if (coupling=="015") deltaMgen->setBins(2000);
-      if (coupling=="02")  deltaMgen->setBins(2500);
-      if (coupling=="025") deltaMgen->setBins(3000);
-      if (coupling=="03")  deltaMgen->setBins(4000);
-      if (coupling=="035") deltaMgen->setBins(5000);
-      if (coupling=="04")  deltaMgen->setBins(6000);
-      if(c==0) fittWidthRDH = morphWidthCat0->generateBinned(*deltaMgen,10000,kTRUE);   
-      if(c==1) fittWidthRDH = morphWidthCat1->generateBinned(*deltaMgen,10000,kTRUE);   
-      fittWidthRDH->Print();
-      TString myFitRDHa = TString::Format("widthRDH_mass%d_cat",thisMass)+myCut;    
-      TString myFitRDH  = myFitRDHa+"_kpl"+coupling;
-      fittWidthRDH->SetTitle(myFitRDH);  
-      fittWidthRDH->SetName(myFitRDH);  
-      w->import(*fittWidthRDH);
-    }
-  }
-  // Then 50GeV steps between 1500 and 5000 GeV 
-  for (int iGenMass=0; iGenMass<71; iGenMass++) {   
-    int thisMass = 1500 + iGenMass*50;  
-    cout << "Coarse scan: " << thisMass << endl;  
+  // This is to have 2GeV steps between 500 and 1000 GeV 
+  for (int iGenMass=0; iGenMass<250; iGenMass++) {  
+    int thisMass = 500 + iGenMass*2; 
+    cout << "Fine scan (2GeV): " << thisMass << endl;  
     muWidth->setVal(thisMass);
     for (int c=0; c<NCAT; ++c) {  
       TString myCut = "EBEB";  
@@ -322,6 +293,66 @@ void WidthInterpolation(RooWorkspace* w, vector<int> masses, string coupling, bo
     }
   }
 
+  /*
+  // Then 4GeV steps between 1000 and 1600 GeV    
+  for (int iGenMass=0; iGenMass<150; iGenMass++) { 
+    int thisMass = 1000 + iGenMass*4.;  
+    cout << "Medium (4GeV) scan: " << thisMass << endl;  
+    muWidth->setVal(thisMass);
+    for (int c=0; c<NCAT; ++c) {  
+      TString myCut = "EBEB";  
+      if (c==1) myCut = "EBEE";  
+      RooDataHist *fittWidthRDH; 
+      if (coupling=="001") deltaMgen->setBins(70);
+      if (coupling=="005") deltaMgen->setBins(500);
+      if (coupling=="007") deltaMgen->setBins(700);
+      if (coupling=="01")  deltaMgen->setBins(1000);
+      if (coupling=="015") deltaMgen->setBins(2000);
+      if (coupling=="02")  deltaMgen->setBins(2500);
+      if (coupling=="025") deltaMgen->setBins(3000);
+      if (coupling=="03")  deltaMgen->setBins(4000);
+      if (coupling=="035") deltaMgen->setBins(5000);
+      if (coupling=="04")  deltaMgen->setBins(6000);
+      if(c==0) fittWidthRDH = morphWidthCat0->generateBinned(*deltaMgen,10000,kTRUE);   
+      if(c==1) fittWidthRDH = morphWidthCat1->generateBinned(*deltaMgen,10000,kTRUE);   
+      fittWidthRDH->Print();
+      TString myFitRDHa = TString::Format("widthRDH_mass%d_cat",thisMass)+myCut;    
+      TString myFitRDH  = myFitRDHa+"_kpl"+coupling;
+      fittWidthRDH->SetTitle(myFitRDH);  
+      fittWidthRDH->SetName(myFitRDH);  
+      w->import(*fittWidthRDH);
+    }
+  }
+  // Finally 10GeV steps between 1600 and 5000 GeV    
+  for (int iGenMass=0; iGenMass<34; iGenMass++) {  
+    int thisMass = 1600 + iGenMass*100.;   
+    cout << "Coarse (100GeV) scan: " << thisMass << endl; 
+    muWidth->setVal(thisMass);
+    for (int c=0; c<NCAT; ++c) {  
+      TString myCut = "EBEB";  
+      if (c==1) myCut = "EBEE";  
+      RooDataHist *fittWidthRDH; 
+      if (coupling=="001") deltaMgen->setBins(70);
+      if (coupling=="005") deltaMgen->setBins(500);
+      if (coupling=="007") deltaMgen->setBins(700);
+      if (coupling=="01")  deltaMgen->setBins(1000);
+      if (coupling=="015") deltaMgen->setBins(2000);
+      if (coupling=="02")  deltaMgen->setBins(2500);
+      if (coupling=="025") deltaMgen->setBins(3000);
+      if (coupling=="03")  deltaMgen->setBins(4000);
+      if (coupling=="035") deltaMgen->setBins(5000);
+      if (coupling=="04")  deltaMgen->setBins(6000);
+      if(c==0) fittWidthRDH = morphWidthCat0->generateBinned(*deltaMgen,10000,kTRUE);   
+      if(c==1) fittWidthRDH = morphWidthCat1->generateBinned(*deltaMgen,10000,kTRUE);   
+      fittWidthRDH->Print();
+      TString myFitRDHa = TString::Format("widthRDH_mass%d_cat",thisMass)+myCut;    
+      TString myFitRDH  = myFitRDHa+"_kpl"+coupling;
+      fittWidthRDH->SetTitle(myFitRDH);  
+      fittWidthRDH->SetName(myFitRDH);  
+      w->import(*fittWidthRDH);
+    }
+  }
+  */
 
   // Finally saving in a second rootfile 
   cout << endl;
@@ -330,23 +361,12 @@ void WidthInterpolation(RooWorkspace* w, vector<int> masses, string coupling, bo
   cout << endl;
   cout << "Now salving the histos in a root file" << endl;  
   TFile *fileFittoWidth;
-  if (newfile) fileFittoWidth = new TFile("WidthHistosGenOnlyScan.root","RECREATE");  
-  else fileFittoWidth = new TFile("WidthHistosGenOnlyScan.root","UPDATE");  
+  if (newfile) fileFittoWidth = new TFile("/tmp/crovelli/WidthHistosGenOnlyScan.root","RECREATE");  
+  else fileFittoWidth = new TFile("/tmp/crovelli/WidthHistosGenOnlyScan.root","UPDATE");  
   fileFittoWidth->cd();
 
-  for (int iGenMass=0; iGenMass<100; iGenMass++) {   
-    int thisMass = 500 + iGenMass*10;  
-    for (int c=0; c<NCAT; ++c) {    
-      TString myCut = "EBEB";  
-      if (c==1) myCut = "EBEE";  
-      TString myFitRDHa = TString::Format("widthRDH_mass%d_cat",thisMass)+myCut;    
-      TString myFitRDH  = myFitRDHa+TString::Format("_kpl")+coupling;
-      RooDataHist *RDH = (RooDataHist*)w->data(myFitRDH);   
-      RDH->Write();     
-    }
-  }
-  for (int iGenMass=0; iGenMass<71; iGenMass++) {   
-    int thisMass = 1500 + iGenMass*50;  
+  for (int iGenMass=0; iGenMass<250; iGenMass++) {   
+    int thisMass = 500 + iGenMass*2;  
     for (int c=0; c<NCAT; ++c) {    
       TString myCut = "EBEB";  
       if (c==1) myCut = "EBEE";  
@@ -357,158 +377,33 @@ void WidthInterpolation(RooWorkspace* w, vector<int> masses, string coupling, bo
     }
   }
 
+  /*
+  for (int iGenMass=0; iGenMass<150; iGenMass++) {   
+    int thisMass = 1000 + iGenMass*4;  
+    for (int c=0; c<NCAT; ++c) {    
+      TString myCut = "EBEB";  
+      if (c==1) myCut = "EBEE";  
+      TString myFitRDHa = TString::Format("widthRDH_mass%d_cat",thisMass)+myCut;    
+      TString myFitRDH  = myFitRDHa+TString::Format("_kpl")+coupling;
+      RooDataHist *RDH = (RooDataHist*)w->data(myFitRDH);   
+      RDH->Write();     
+    }
+  }
+  for (int iGenMass=0; iGenMass<34; iGenMass++) {   
+    int thisMass = 1600 + iGenMass*100;  
+    for (int c=0; c<NCAT; ++c) {    
+      TString myCut = "EBEB";  
+      if (c==1) myCut = "EBEE";  
+      TString myFitRDHa = TString::Format("widthRDH_mass%d_cat",thisMass)+myCut;    
+      TString myFitRDH  = myFitRDHa+TString::Format("_kpl")+coupling;
+      RooDataHist *RDH = (RooDataHist*)w->data(myFitRDH);   
+      RDH->Write();     
+    }
+  }
+  */
 
   fileFittoWidth->Close();
 }
-
-void controlPlots(string coupling) {
-
-  // the roorealvar
-  RooRealVar* deltaMgen;   // chiara                                                                                                                                         
-  if (coupling=="001") deltaMgen = new RooRealVar("deltaMgen", "",   -70, 70,   "GeV");
-  if (coupling=="005") deltaMgen = new RooRealVar("deltaMgen", "",  -500, 500,   "GeV");
-  if (coupling=="007") deltaMgen = new RooRealVar("deltaMgen", "",  -700, 700,   "GeV");
-  if (coupling=="01")  deltaMgen = new RooRealVar("deltaMgen", "", -1000, 1000, "GeV");
-  if (coupling=="015") deltaMgen = new RooRealVar("deltaMgen", "", -2000, 2000, "GeV");
-  if (coupling=="02")  deltaMgen = new RooRealVar("deltaMgen", "", -2500, 2500, "GeV");
-  if (coupling=="025") deltaMgen = new RooRealVar("deltaMgen", "", -3000, 3000, "GeV");
-  if (coupling=="03")  deltaMgen = new RooRealVar("deltaMgen", "", -4000, 4000, "GeV");
-  if (coupling=="035") deltaMgen = new RooRealVar("deltaMgen", "", -5000, 5000, "GeV");
-  if (coupling=="04")  deltaMgen = new RooRealVar("deltaMgen", "", -6000, 6000, "GeV");
-
-  // Files with the roodatahists
-  TFile *fileFull  = new TFile("IntrinsicWidthHistos.root");
-  TFile *fileMorph = new TFile("WidthHistosGenOnlyScan.root");
-
-  // Some example mass - full
-  RooDataHist *full750_catEBEB, *full750_catEBEE; 
-  if (coupling=="001") full750_catEBEB = (RooDataHist*)fileFull->Get("intWidthRDH_mass750_catEBEB_kpl001");  
-  if (coupling=="005") full750_catEBEB = (RooDataHist*)fileFull->Get("intWidthRDH_mass750_catEBEB_kpl005");  
-  if (coupling=="007") full750_catEBEB = (RooDataHist*)fileFull->Get("intWidthRDH_mass750_catEBEB_kpl007");  
-  if (coupling=="01")  full750_catEBEB = (RooDataHist*)fileFull->Get("intWidthRDH_mass750_catEBEB_kpl01");  
-  if (coupling=="015") full750_catEBEB = (RooDataHist*)fileFull->Get("intWidthRDH_mass750_catEBEB_kpl015");  
-  if (coupling=="02")  full750_catEBEB = (RooDataHist*)fileFull->Get("intWidthRDH_mass750_catEBEB_kpl02");  
-  if (coupling=="025") full750_catEBEB = (RooDataHist*)fileFull->Get("intWidthRDH_mass750_catEBEB_kpl025"); 
-  if (coupling=="03")  full750_catEBEB = (RooDataHist*)fileFull->Get("intWidthRDH_mass750_catEBEB_kpl03");  
-  if (coupling=="035") full750_catEBEB = (RooDataHist*)fileFull->Get("intWidthRDH_mass750_catEBEB_kpl035");  
-  if (coupling=="04")  full750_catEBEB = (RooDataHist*)fileFull->Get("intWidthRDH_mass750_catEBEB_kpl04");  
-  if (coupling=="001") full750_catEBEE = (RooDataHist*)fileFull->Get("intWidthRDH_mass750_catEBEE_kpl001");  
-  if (coupling=="005") full750_catEBEE = (RooDataHist*)fileFull->Get("intWidthRDH_mass750_catEBEE_kpl005");  
-  if (coupling=="007") full750_catEBEE = (RooDataHist*)fileFull->Get("intWidthRDH_mass750_catEBEE_kpl007");  
-  if (coupling=="01")  full750_catEBEE = (RooDataHist*)fileFull->Get("intWidthRDH_mass750_catEBEE_kpl01");  
-  if (coupling=="015") full750_catEBEE = (RooDataHist*)fileFull->Get("intWidthRDH_mass750_catEBEE_kpl015");  
-  if (coupling=="02")  full750_catEBEE = (RooDataHist*)fileFull->Get("intWidthRDH_mass750_catEBEE_kpl02");  
-  if (coupling=="025") full750_catEBEE = (RooDataHist*)fileFull->Get("intWidthRDH_mass750_catEBEE_kpl025");  
-  if (coupling=="03")  full750_catEBEE = (RooDataHist*)fileFull->Get("intWidthRDH_mass750_catEBEE_kpl03");  
-  if (coupling=="035") full750_catEBEE = (RooDataHist*)fileFull->Get("intWidthRDH_mass750_catEBEE_kpl035");  
-  if (coupling=="04")  full750_catEBEE = (RooDataHist*)fileFull->Get("intWidthRDH_mass750_catEBEE_kpl04");  
-  RooHistPdf *full750_catEBEB_pdf = new RooHistPdf("full750_catEBEB_pdf", "full750_catEBEB_pdf", *deltaMgen,*full750_catEBEB,0);
-  RooHistPdf *full750_catEBEE_pdf = new RooHistPdf("full750_catEBEE_pdf", "full750_catEBEE_pdf", *deltaMgen,*full750_catEBEE,0);
-
-  // Some example mass - morphing  
-  RooDataHist *morph750_catEBEB, *morph750_catEBEE;
-  if (coupling=="001") morph750_catEBEB = (RooDataHist*)fileMorph->Get("widthRDH_mass750_catEBEB_kpl001");  
-  if (coupling=="005") morph750_catEBEB = (RooDataHist*)fileMorph->Get("widthRDH_mass750_catEBEB_kpl005");  
-  if (coupling=="007") morph750_catEBEB = (RooDataHist*)fileMorph->Get("widthRDH_mass750_catEBEB_kpl007");  
-  if (coupling=="01")  morph750_catEBEB = (RooDataHist*)fileMorph->Get("widthRDH_mass750_catEBEB_kpl01");  
-  if (coupling=="015") morph750_catEBEB = (RooDataHist*)fileMorph->Get("widthRDH_mass750_catEBEB_kpl015");  
-  if (coupling=="02")  morph750_catEBEB = (RooDataHist*)fileMorph->Get("widthRDH_mass750_catEBEB_kpl02");  
-  if (coupling=="025") morph750_catEBEB = (RooDataHist*)fileMorph->Get("widthRDH_mass750_catEBEB_kpl025");  
-  if (coupling=="03")  morph750_catEBEB = (RooDataHist*)fileMorph->Get("widthRDH_mass750_catEBEB_kpl03");  
-  if (coupling=="035") morph750_catEBEB = (RooDataHist*)fileMorph->Get("widthRDH_mass750_catEBEB_kpl035");  
-  if (coupling=="04")  morph750_catEBEB = (RooDataHist*)fileMorph->Get("widthRDH_mass750_catEBEB_kpl04");  
-  if (coupling=="001") morph750_catEBEE = (RooDataHist*)fileMorph->Get("widthRDH_mass750_catEBEE_kpl001");  
-  if (coupling=="005") morph750_catEBEE = (RooDataHist*)fileMorph->Get("widthRDH_mass750_catEBEE_kpl005");  
-  if (coupling=="007") morph750_catEBEE = (RooDataHist*)fileMorph->Get("widthRDH_mass750_catEBEE_kpl007");  
-  if (coupling=="01")  morph750_catEBEE = (RooDataHist*)fileMorph->Get("widthRDH_mass750_catEBEE_kpl01");  
-  if (coupling=="015") morph750_catEBEE = (RooDataHist*)fileMorph->Get("widthRDH_mass750_catEBEE_kpl015");  
-  if (coupling=="02")  morph750_catEBEE = (RooDataHist*)fileMorph->Get("widthRDH_mass750_catEBEE_kpl02");  
-  if (coupling=="025") morph750_catEBEE = (RooDataHist*)fileMorph->Get("widthRDH_mass750_catEBEE_kpl025");  
-  if (coupling=="03")  morph750_catEBEE = (RooDataHist*)fileMorph->Get("widthRDH_mass750_catEBEE_kpl03");  
-  if (coupling=="035") morph750_catEBEE = (RooDataHist*)fileMorph->Get("widthRDH_mass750_catEBEE_kpl035");  
-  if (coupling=="04")  morph750_catEBEE = (RooDataHist*)fileMorph->Get("widthRDH_mass750_catEBEE_kpl04");  
-  RooHistPdf *morph750_catEBEB_pdf = new RooHistPdf("morph750_catEBEB_pdf","morph750_catEBEB_pdf",*deltaMgen,*morph750_catEBEB,0) ;
-  RooHistPdf *morph750_catEBEE_pdf = new RooHistPdf("morph750_catEBEE_pdf","morph750_catEBEE_pdf",*deltaMgen,*morph750_catEBEE,0) ;
-
-  // check EBEB                                                   
-  TCanvas *c1 = new TCanvas("c1","c1",1);
-  RooPlot* myPlot; //chiara
-  if (coupling=="001") myPlot = deltaMgen->frame(Range(  -70,70), Bins(70));    
-  if (coupling=="005") myPlot = deltaMgen->frame(Range( -500,500), Bins(500));    
-  if (coupling=="007") myPlot = deltaMgen->frame(Range( -700,700), Bins(700));    
-  if (coupling=="01")  myPlot = deltaMgen->frame(Range(-1000,1000),Bins(1000));    
-  if (coupling=="015") myPlot = deltaMgen->frame(Range(-2000,2000),Bins(2000));    
-  if (coupling=="02")  myPlot = deltaMgen->frame(Range(-2500,2500),Bins(2500));    
-  if (coupling=="025") myPlot = deltaMgen->frame(Range(-3000,3000),Bins(3000));    
-  if (coupling=="03")  myPlot = deltaMgen->frame(Range(-4000,4000),Bins(4000));    
-  if (coupling=="035") myPlot = deltaMgen->frame(Range(-5000,5000),Bins(5000));    
-  if (coupling=="04")  myPlot = deltaMgen->frame(Range(-6000,6000),Bins(6000));    
-  RooPlot* myPlotZoom = deltaMgen->frame(Range(-300,300),Bins(300));  
-  if (coupling=="001") myPlotZoom = deltaMgen->frame(Range(-12,12),Bins(12));
-  if (coupling=="005") myPlotZoom = deltaMgen->frame(Range(-60,60),Bins(60));
-  if (coupling=="007") myPlotZoom = deltaMgen->frame(Range(-100,100),Bins(100));
-  if (coupling=="015") myPlotZoom = deltaMgen->frame(Range(-400,400),Bins(400));
-  if (coupling=="02")  myPlotZoom = deltaMgen->frame(Range(-500,500),Bins(500));
-  if (coupling=="025") myPlotZoom = deltaMgen->frame(Range(-700,700),Bins(700));
-  if (coupling=="03")  myPlotZoom = deltaMgen->frame(Range(-900,900),Bins(900));
-  if (coupling=="035") myPlotZoom = deltaMgen->frame(Range(-1200,1200),Bins(1200));
-  if (coupling=="04")  myPlotZoom = deltaMgen->frame(Range(-1600,1600),Bins(1600));
-  myPlot->SetTitle("mG=750");
-  myPlotZoom->SetTitle("mG=750");
-  morph750_catEBEB_pdf->plotOn(myPlot, LineColor(kRed), LineStyle(kDashed));
-  full750_catEBEB_pdf->plotOn(myPlot, LineColor(kBlue), LineStyle(kSolid));
-  myPlot->Draw();
-  TString canvasName = TString(Form("CheckMorphing_CatEBEB_mass750.png"));
-  c1->SaveAs(canvasName);
-  c1->SetLogy();
-  canvasName = TString(Form("CheckMorphing_CatEBEB_mass750_Log.png"));
-  c1->SaveAs(canvasName);
-  morph750_catEBEB_pdf->plotOn(myPlotZoom, LineColor(kRed), LineStyle(kDashed));
-  full750_catEBEB_pdf->plotOn(myPlotZoom, LineColor(kBlue), LineStyle(kSolid));
-  myPlotZoom->Draw();
-  canvasName = TString(Form("CheckMorphing_CatEBEB_mass750_Zoom.png"));
-  c1->SaveAs(canvasName);
-
-  // check EBEE 
-  TCanvas *c11 = new TCanvas("c11","c11",1);
-  RooPlot* myPlotB; //chiara
-  if (coupling=="001") myPlotB = deltaMgen->frame(Range(  -70,70), Bins(70));    
-  if (coupling=="005") myPlotB = deltaMgen->frame(Range( -500,500), Bins(500));    
-  if (coupling=="007") myPlotB = deltaMgen->frame(Range( -700,700), Bins(700));    
-  if (coupling=="01")  myPlotB = deltaMgen->frame(Range(-1000,1000),Bins(1000));    
-  if (coupling=="015") myPlotB = deltaMgen->frame(Range(-2000,2000),Bins(2000));    
-  if (coupling=="02")  myPlotB = deltaMgen->frame(Range(-2500,2500),Bins(2500));    
-  if (coupling=="025") myPlotB = deltaMgen->frame(Range(-3000,3000),Bins(3000));    
-  if (coupling=="03")  myPlotB = deltaMgen->frame(Range(-4000,4000),Bins(4000));    
-  if (coupling=="035") myPlotB = deltaMgen->frame(Range(-5000,5000),Bins(5000));    
-  if (coupling=="04")  myPlotB = deltaMgen->frame(Range(-6000,6000),Bins(6000));    
-  RooPlot* myPlotZoomB = deltaMgen->frame(Range(-300,300),Bins(300));  
-  if (coupling=="001") myPlotZoomB = deltaMgen->frame(Range(-12,12),Bins(12));
-  if (coupling=="005") myPlotZoomB = deltaMgen->frame(Range(-60,60),Bins(60));
-  if (coupling=="007") myPlotZoomB = deltaMgen->frame(Range(-100,100),Bins(100));
-  if (coupling=="015") myPlotZoomB = deltaMgen->frame(Range(-400,400),Bins(400));
-  if (coupling=="02")  myPlotZoomB = deltaMgen->frame(Range(-500,500),Bins(500));
-  if (coupling=="025") myPlotZoomB = deltaMgen->frame(Range(-700,700),Bins(700));
-  if (coupling=="03")  myPlotZoomB = deltaMgen->frame(Range(-900,900),Bins(900));
-  if (coupling=="035") myPlotZoomB = deltaMgen->frame(Range(-1200,1200),Bins(1200));
-  if (coupling=="04")  myPlotZoomB = deltaMgen->frame(Range(-1600,1600),Bins(1600));
-  myPlotB->SetTitle("mG=750");
-  myPlotZoomB->SetTitle("mG=750");
-  morph750_catEBEE_pdf->plotOn(myPlotB, LineColor(kRed), LineStyle(kDashed));
-  full750_catEBEE_pdf->plotOn(myPlotB, LineColor(kBlue), LineStyle(kSolid));
-  myPlotB->Draw();
-  canvasName = TString(Form("CheckMorphing_CatEBEE_mass750.png"));
-  c11->SaveAs(canvasName);
-  c11->SetLogy();
-  canvasName = TString(Form("CheckMorphing_CatEBEE_mass750_Log.png"));
-  c11->SaveAs(canvasName);
-  morph750_catEBEE_pdf->plotOn(myPlotZoomB, LineColor(kRed), LineStyle(kDashed));
-  full750_catEBEE_pdf->plotOn(myPlotZoomB, LineColor(kBlue), LineStyle(kSolid));
-  myPlotZoomB->Draw();
-  canvasName = TString(Form("CheckMorphing_CatEBEE_mass750_Zoom.png"));
-  c11->SaveAs(canvasName);
-}
-
 
 // To run the analysis
 void runfits(string coupling="01") {
@@ -596,7 +491,7 @@ void runfits(string coupling="01") {
   cout << endl; 
   cout << "--------------------------------------------------------------------------" << endl; 
   cout << endl; 
-  string fileIntrinsic = "IntrinsicWidthHistos.root";
+  string fileIntrinsic = "/tmp/crovelli/IntrinsicWidthHistos.root";
   cout << "Now prepare intrinsic width histograms and save in root file " << fileIntrinsic << endl;
   for (int ii=0; ii<(int)masses.size(); ii++) {
     int theMass = masses[ii];
@@ -612,14 +507,6 @@ void runfits(string coupling="01") {
   cout << endl; 
   cout << "Now make the interpolation" << endl; 
   WidthInterpolation(w, masses, coupling, 1); 
-  
-  // control plots
-  cout << endl; 
-  cout << endl; 
-  cout << "--------------------------------------------------------------------------" << endl; 
-  cout << endl; 
-  cout << "Preparing control plots" << endl; 
-  controlPlots(coupling);
 
   return;
 }

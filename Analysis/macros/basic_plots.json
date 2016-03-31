@@ -159,6 +159,14 @@
 
 					],
     "plots": [
+	      ["mass"			,[["xtitle","m_{#gamma #gamma} (GeV)"],["Rebin",4],
+	      			  	  ["xrange",[250.0,1500]],["overflow",[null]],
+					  ["ytitle","Events / %(binw)s GeV"]
+				]					
+				,null,null]
+	],
+
+    "_plots": [
 	      ["mass"			,[["xtitle","m_{#gamma #gamma} (GeV)"],
 					  ["xrange",[100.0,750.0]],["overflow",[null]],["rebin",[[230,250,270,290,320,350,400,450,500,750]]],
 					  "density",["ytitle","Events / %(binw)s GeV"]

@@ -3,11 +3,11 @@ import FWCore.Utilities.FileUtils as FileUtils
 import FWCore.PythonUtilities.LumiList as LumiList  
 import FWCore.ParameterSet.Types as CfgTypes   
 
-isMC    = True;
+isMC    = False;
 is25ns  = True;   
 is2015B = False;    
 is2015C = False;  
-is2015D = False;   
+is2015D = True;   
 
 process = cms.Process("tnpAna")
 
@@ -47,7 +47,7 @@ process.source = cms.Source("PoolSource",
 if (isMC==False and is2015D):
     print "applying 2015D json"                                
     process.source.lumisToProcess = CfgTypes.untracked(CfgTypes.VLuminosityBlockRange())  
-    JSONfile = '/afs/cern.ch/user/c/crovelli/public/json2015/singleEle/processedAndSilver_2015D_nov2.json'
+    JSONfile = '/afs/cern.ch/user/c/crovelli/public/json2015/singleEle/processedAndSilver_2015D_final.json'
     myLumis = LumiList.LumiList(filename = JSONfile).getCMSSWString().split(',')  
     process.source.lumisToProcess.extend(myLumis)                              
 

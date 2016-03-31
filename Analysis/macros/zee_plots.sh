@@ -48,7 +48,7 @@ done
 
 
 src=$1 && shift
-www=~/www/exo/spring15_7415
+www=~/www/exo/moriond16
 echo $1
 [ -n "$1" ] && www=$1 && shift
 
@@ -59,5 +59,5 @@ if [[ $target != "/*" ]]; then
     mkdir  $www/$target/
 fi
 
-./basic_plots.py --load zee_plots.json  -O $www/$target/selection  --input-dir $src  $lumi $data_file $opts
+./basic_plots.py --load zee_plots.json  -O $www/$target/selection  --input-dir $src  $lumi $data_file $opts #2>/dev/null
 

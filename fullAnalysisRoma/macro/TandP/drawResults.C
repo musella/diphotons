@@ -5,86 +5,110 @@
 #include "TLegend.h"
 #include "TLatex.h"
 
-bool wantSyst = false;
+bool wantSyst = true;
 
 const int nEtaBins = 1;
 
-const TString lumiString = "CMS Preliminary, #sqrt{s}=13 TeV, #intLdt=553 pb^{-1}";
+const TString lumiString = "CMS Preliminary, #sqrt{s}=13 TeV, #intLdt=2.4 fb^{-1}";
 
 // EB
-const int nPtBinsEB = 9;   
-const double ptBinLimitsEB[nPtBinsEB+1]  = {20., 30., 40., 50., 60., 80., 110., 150., 250., 500.};
-const double ptBinCentersEB[nPtBinsEB]   = {25., 35., 45., 55., 70., 95., 130., 200., 375.};
-const double ptBinHalfWidthEB[nPtBinsEB] = { 5.,  5.,  5.,  5., 10., 15.,  20., 50., 125. };
+const int nPtBinsEB = 11;   
+const double ptBinLimitsEB[nPtBinsEB+1]  = {20., 30., 40., 50., 60., 80., 110., 150., 200., 270., 350., 500.};
+const double ptBinCentersEB[nPtBinsEB]   = {25., 35., 45., 55., 70., 95., 130., 175., 235., 310., 425.};
+const double ptBinHalfWidthEB[nPtBinsEB] = { 5.,  5.,  5.,  5., 10., 15.,  20.,  25.,  35.,  40.,  75.};
 const TString etaLimitsStringArrayEB[nEtaBins] = { "0. < |#eta| < 1.4442" };
 
 // EE
-const int nPtBinsEE = 7;
-const double ptBinLimitsEE[nPtBinsEE+1]  = {20., 30., 40., 50., 60., 80., 110., 500.};
-const double ptBinCentersEE[nPtBinsEE]   = {25., 35., 45., 55., 70., 95., 305.};
-const double ptBinHalfWidthEE[nPtBinsEE] = { 5.,  5.,  5.,  5., 10., 15., 195.};
+const int nPtBinsEE = 9;
+const double ptBinLimitsEE[nPtBinsEE+1]  = {20., 30., 40., 50., 60., 80., 110., 150., 200., 500.};
+const double ptBinCentersEE[nPtBinsEE]   = {25., 35., 45., 55., 70., 95., 130., 175., 350.};
+const double ptBinHalfWidthEE[nPtBinsEE] = { 5.,  5.,  5.,  5., 10., 15.,  20.,  25., 150.};
 const TString etaLimitsStringArrayEE[nEtaBins] = { "1.566 < |#eta| < 2.5" };
 
 
 // ----------------------------------------
 // Data efficiencies and statistical errors
 double dataEB[nEtaBins][nPtBinsEB] = {
-  { 8.00570e-01, 8.61596e-01, 8.92657e-01, 8.92743e-01, 8.85016e-01, 9.08816e-01, 9.07728e-01, 8.92129e-01, 9.16189e-01 }
+  { 
+    8.14784e-01, 8.63670e-01 , 8.92883e-01, 8.93278e-01, 8.88792e-01, 8.99810e-01, 8.93464e-01, 8.93338e-01, 9.22840e-01, 9.24046e-01, 9.26053e-01
+  }
 };
 
 double dataEE[nEtaBins][nPtBinsEE] = {
-  { 7.00331e-01, 7.61371e-01, 8.07817e-01, 8.02139e-01, 8.19516e-01, 8.67849e-01, 8.41647e-01 }
+  { 
+    6.91538e-01, 7.57889e-01, 7.98537e-01, 8.09125e-01, 8.29769e-01, 8.50851e-01, 8.68422e-01, 8.79020e-01, 9.19384e-01
+  }
 };
 
-// statistical only errors
+// statistical only errors 
 double dataErrStatEB[nEtaBins][nPtBinsEB] = {
-  { 5.08669e-03, 1.57728e-03, 1.07808e-03, 2.66460e-03, 5.28070e-03, 1.13455e-02, 1.80908e-02, 2.96031e-02, 6.02629e-02 }
+  { 
+    2.03773e-03, 7.25389e-04, 5.28764e-04, 1.28216e-03, 2.42247e-03, 4.93865e-03, 7.87431e-03, 1.13276e-02, 1.59638e-02, 2.77824e-02, 5.31681e-02
+  }
 };
 
 double dataErrStatEE[nEtaBins][nPtBinsEE] = {
-  { 3.98390e-03, 2.75716e-03, 2.49916e-03, 6.40746e-03, 1.30906e-02, 2.04008e-02, 2.80665e-02 }
+  { 
+    2.74125e-03, 1.40759e-03, 1.28101e-03, 3.08376e-03, 5.69046e-03, 1.01103e-02, 1.70185e-02, 2.63264e-02, 2.66311e-02
+  }
 };
 
 
 // ----------------------------------------
 // alternative fit changing the signal model and keeping nominal background
 double dataSystSigEB[nEtaBins][nPtBinsEB] = {
-  { 8.08196e-01, 8.62267e-01, 8.93072e-01, 8.96390e-01, 8.92426e-01, 9.16779e-01, 8.93150e-01, 9.00891e-01, 9.15583e-01 }
+  { 
+    8.15170e-01, 8.60076e-01, 8.93184e-01, 8.96896e-01, 8.96205e-01, 9.11385e-01, 8.92919e-01, 9.04949e-01, 9.32198e-01, 9.30125e-01, 8.47152e-01 
+  }
 };
 
 double dataSystSigEE[nEtaBins][nPtBinsEE] = {
-  { 6.94390e-01, 7.62739e-01, 8.03745e-01, 8.04993e-01, 8.21371e-01, 8.87405e-01, 8.52191e-01 }
+  { 
+    7.05637e-01, 7.57202e-01, 7.96266e-01, 8.06905e-01, 8.37237e-01, 8.60022e-01, 8.50684e-01, 8.91316e-01, 9.03238e-01 
+  }
 };
 
 
 // ----------------------------------------
-// alternative fit changing the background model and keeping nominal signal  
+// alternative fit changing the background model and keeping nominal signal
 double dataSystBackEB[nEtaBins][nPtBinsEB] = {
-  { 8.16284e-01, 8.65322e-01, 8.89082e-01, 8.91856e-01, 8.86815e-01, 9.11211e-01, 9.09204e-01, 8.90790e-01, 9.11321e-01}
+  { 
+    8.23609e-01, 8.64064e-01, 8.90442e-01, 8.90713e-01, 8.94145e-01, 8.96122e-01, 9.05821e-01, 8.92899e-01, 9.22727e-01, 9.24031e-01, 8.68644e-01 
+  }
 };
 
 double dataSystBackEE[nEtaBins][nPtBinsEE] = {
-  { 7.06016e-01, 7.64316e-01, 8.08086e-01, 8.13938e-01, 7.94921e-01, 8.63981e-01, 8.42125e-01 }
+  { 
+    6.91353e-01, 7.66270e-01, 7.98943e-01, 8.05622e-01, 8.21131e-01, 8.26827e-01, 8.97592e-01, 9.24601e-01, 9.17364e-01
+  }
 };
   
 
 // ----------------------------------------
 // MC efficiencies and errors - C&C
 double mcEB[nEtaBins][nPtBinsEB] = {
-  { 0.828477, 0.875029, 0.90507, 0.906829, 0.905063, 0.902631, 0.909605, 0.901887, 0.906542 }
+  { 
+    0.82562, 0.874696, 0.90277, 0.903433, 0.902497, 0.904019, 0.9104, 0.908949, 0.913793, 0.904762, 0.885932
+  }
 };
 
 double mcEE[nEtaBins][nPtBinsEE] = {
-  { 0.729575, 0.792775, 0.828489, 0.84262, 0.847033, 0.861675, 0.871921 }
+  { 
+    0.695045, 0.761412, 0.797101, 0.819717, 0.832361, 0.851242, 0.860569, 0.867294, 0.958333
+  }
 };
 
 // statistical only errors 
 double mcErrEB[nEtaBins][nPtBinsEB] = {
-  { 0.00202941, 0.0011372, 0.000957532, 0.00187659, 0.0029346, 0.00568145, 0.00932036, 0.0139379, 0.0329562 }
+  { 
+    0.00065036, 0.000376655, 0.000327907, 0.000620222, 0.000906508, 0.00168081,  0.00271831, 0.00443906, 0.00682152, 0.012784, 0.0216047
+  }
 };
 
 double mcErrEE[nEtaBins][nPtBinsEE] = {
-  { 0.00340956, 0.00222275, 0.00225925, 0.00456922, 0.00713331, 0.0129993, 0.0179028 }
+  { 
+    0.00112741, 0.000851825, 0.000830018, 0.00152089, 0.0021914, 0.0039127, 0.0066184, 0.0115489, 0.0130177
+  }
 };
 
 
@@ -137,7 +161,11 @@ void drawResults(){
 	 << ", statErr = " << dataErrStatEE[0][ii] << ", systErr = " <<dataSystErrEE[0][ii] << endl; 
   cout << "================================" << endl;
   
-  
+
+  cout << endl;
+  cout << endl;
+  cout << "================================" << endl;  
+  cout << "scale factors: EB" << endl;
   // Scale factors and errors
   double sfEB[nEtaBins][nPtBinsEB];
   double sfErrTotEB[nEtaBins][nPtBinsEB];
@@ -147,9 +175,13 @@ void drawResults(){
       float sigmaDoDEB   = dataErrEB[iEta][iPt]/dataEB[iEta][iPt];
       float sigmaMCoMCEB = mcErrEB[iEta][iPt]/mcEB[iEta][iPt];
       sfErrTotEB[iEta][iPt] = sfEB[iEta][iPt]*sqrt( (sigmaDoDEB*sigmaDoDEB) + (sigmaMCoMCEB*sigmaMCoMCEB) );
+      cout << sfEB[iEta][iPt] << " +/- " << sfErrTotEB[iEta][iPt] << endl;
     }
   }
 
+  cout << endl;
+  cout << "================================" << endl;  
+  cout << "scale factors: EE" << endl;
   double sfEE[nEtaBins][nPtBinsEE];
   double sfErrTotEE[nEtaBins][nPtBinsEE];
   for (int iEta=0; iEta<nEtaBins; iEta++){ 
@@ -158,6 +190,7 @@ void drawResults(){
       float sigmaDoDEE   = dataErrEE[iEta][iPt]/dataEE[iEta][iPt];
       float sigmaMCoMCEE = mcErrEE[iEta][iPt]/mcEE[iEta][iPt];
       sfErrTotEE[iEta][iPt] = sfEE[iEta][iPt]*sqrt( (sigmaDoDEE*sigmaDoDEE) + (sigmaMCoMCEE*sigmaMCoMCEE) );
+      cout << sfEE[iEta][iPt] << " +/- " << sfErrTotEE[iEta][iPt] << endl;
     }
   }
 

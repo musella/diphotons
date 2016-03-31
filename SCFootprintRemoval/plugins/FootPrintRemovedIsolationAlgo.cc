@@ -26,7 +26,8 @@ namespace diphotons {
     class FootPrintRemovedIsolationAlgo : public flashgg::IsolationAlgoBase
     {
     public:
-        FootPrintRemovedIsolationAlgo( const edm::ParameterSet &conf )  : IsolationAlgoBase( conf ),
+        FootPrintRemovedIsolationAlgo( const edm::ParameterSet &conf, edm::ConsumesCollector&& iC )  :
+            IsolationAlgoBase( conf, std::forward<edm::ConsumesCollector>(iC) ),
             removalAlgo_( conf ),
             utils_( &removalAlgo_ ),
             conesize_( conf.getParameter<double>( "coneSize" ) ),
@@ -166,7 +167,7 @@ namespace diphotons {
 
 DEFINE_EDM_PLUGIN( FlashggIsolationAlgoFactory,
                    diphotons::FootPrintRemovedIsolationAlgo,
-                   "DiphotonsFootPrintRemovedIsolationAlgo" );
+                   "DiphotonsSCFootPrintRemovedIsolationAlgo" );
 
 // Local Variables:
 // mode:c++
