@@ -33,8 +33,8 @@ void MakeIntrinsicWidthHisto(TString filename, bool newFile, int mass, string co
   TString myMass = TString::Format("%d",mass);
   Int_t ncat = NCAT;
 
-  // the roorealvar 
-  RooRealVar* deltaMgen = new RooRealVar("deltaMgen", "", -1000, 1000, "GeV");    
+  // the roorealvar  - chiara
+  RooRealVar* deltaMgen = new RooRealVar("deltaMgen", "", -4000., 4000., "GeV");    
 
   // Output file 
   TFile *theIntrinsicWFile;
@@ -57,16 +57,16 @@ void MakeIntrinsicWidthHisto(TString filename, bool newFile, int mass, string co
   // Loop over categories
   for (int c=0; c<ncat; ++c) {
 
-    // Histos
-    TH1D *intWidthH = new TH1D("intWidthH","intWidthH",10000,-1000.,1000.);
-    if (couplingS=="001") intWidthH = new TH1D("intWidthH","intWidthH",10000,-1000.,1000.);
-    else if (couplingS=="005") intWidthH = new TH1D("intWidthH","intWidthH",10000,-1000.,1000.);
-    else if (couplingS=="007") intWidthH = new TH1D("intWidthH","intWidthH",4000,-1000.,1000.);
-    else if (couplingS=="01")  intWidthH = new TH1D("intWidthH","intWidthH",2000,-1000.,1000.);
-    else if (couplingS=="015") intWidthH = new TH1D("intWidthH","intWidthH",2000,-1000.,1000.);
-    else if (couplingS=="02")  intWidthH = new TH1D("intWidthH","intWidthH",1000,-1000.,1000.);
-    else if (couplingS=="025") intWidthH = new TH1D("intWidthH","intWidthH",1000,-1000.,1000.);
-    else if (couplingS=="03")  intWidthH = new TH1D("intWidthH","intWidthH",1000,-1000.,1000.);
+    // Histos - chiara
+    TH1D *intWidthH = new TH1D("intWidthH","intWidthH",40000,-4000.,4000.);
+    if (couplingS=="001") intWidthH = new TH1D("intWidthH","intWidthH",40000,-4000.,4000.);
+    else if (couplingS=="005") intWidthH = new TH1D("intWidthH","intWidthH",40000,-4000.,4000.);
+    else if (couplingS=="007") intWidthH = new TH1D("intWidthH","intWidthH",16000,-4000.,4000.);
+    else if (couplingS=="01")  intWidthH = new TH1D("intWidthH","intWidthH",8000,-4000.,4000.);
+    else if (couplingS=="015") intWidthH = new TH1D("intWidthH","intWidthH",8000,-4000.,4000.);
+    else if (couplingS=="02")  intWidthH = new TH1D("intWidthH","intWidthH",4000,-4000.,4000.);
+    else if (couplingS=="025") intWidthH = new TH1D("intWidthH","intWidthH",4000,-4000.,4000.);
+    else if (couplingS=="03")  intWidthH = new TH1D("intWidthH","intWidthH",4000,-4000.,4000.);
     else cout << "PROBLEM!" << endl;
     intWidthH->Sumw2();
   
@@ -99,8 +99,8 @@ void MakeIntrinsicWidthHisto(TString filename, bool newFile, int mass, string co
 //-------------------------------------------------------
 void WidthInterpolation(RooWorkspace* w, int mass, vector<string> couplingsS, bool newfile) {  
   
-  // Variable for the intrinsic width
-  RooRealVar* deltaMgen = new RooRealVar("deltaMgen", "", -1000, 1000, "GeV");      
+  // Variable for the intrinsic width - chiara
+  RooRealVar* deltaMgen = new RooRealVar("deltaMgen", "", -4000., 4000., "GeV");      
   RooArgList varlist;  
   varlist.add(*deltaMgen);   
 
@@ -196,10 +196,11 @@ void WidthInterpolation(RooWorkspace* w, int mass, vector<string> couplingsS, bo
       TString myCut = "EBEB";  
       if (c==1) myCut = "EBEE";  
       RooDataHist *fittWidthRDH;                      
-      if (thisCoupl>=0 && thisCoupl<0.07)    deltaMgen->setBins(10000);
-      if (thisCoupl>=0.07 && thisCoupl<0.09) deltaMgen->setBins(4000);
-      if (thisCoupl>=0.10 && thisCoupl<0.20) deltaMgen->setBins(2000);
-      if (thisCoupl>=0.20 && thisCoupl<0.31) deltaMgen->setBins(1000);
+      // chiara
+      if (thisCoupl>=0 && thisCoupl<0.07)    deltaMgen->setBins(40000);
+      if (thisCoupl>=0.07 && thisCoupl<0.09) deltaMgen->setBins(16000);
+      if (thisCoupl>=0.10 && thisCoupl<0.20) deltaMgen->setBins(8000);
+      if (thisCoupl>=0.20 && thisCoupl<0.31) deltaMgen->setBins(4000);
       if(c==0) fittWidthRDH = morphWidthCat0->generateBinned(*deltaMgen,10000,kTRUE);   
       if(c==1) fittWidthRDH = morphWidthCat1->generateBinned(*deltaMgen,10000,kTRUE);   
       fittWidthRDH->Print();
@@ -280,3 +281,5 @@ void runfits(int mass=750) {
   return;
 }
 
+
+//  LocalWords:  chiara
