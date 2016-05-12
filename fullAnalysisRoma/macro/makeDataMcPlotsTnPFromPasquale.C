@@ -14,10 +14,10 @@
 #include <iostream>
 
 #define NSPECIES 2
-#define NVARIABLES 3
+#define NVARIABLES 1
 #define NCUTS 2
 
-void makeDataMcPlotsTnP(float lumi, bool blindData=false)
+void makeDataMcPlotsTnPFromPasquale(float lumi, bool blindData=false)
 {
   gROOT->SetStyle("Plain");
   gROOT->ProcessLine(".x ./DiphotonStyle.C");
@@ -41,8 +41,15 @@ void makeDataMcPlotsTnP(float lumi, bool blindData=false)
 
   // chiara
   TString files[NSPECIES];
-  files[0]="/afs/cern.ch/user/c/crovelli/myWorkspace/public/TaP_fall15_Moriond16_v1/formattedZ/Formatted_singleEle2015Dv1.root";
-  files[1]="/afs/cern.ch/user/c/crovelli/myWorkspace/public/TaP_fall15_Moriond16_v1/formattedZ/Formatted_DYLL_largeAndExtension__all1pb.root";
+  // 3.8T
+  //files[0]="allFilesPlotsZpas/38T/Data_13TeV.root";
+  //files[1]="allFilesPlotsZpas/38T/DYJetsToLL_M_50_TuneCUETP8M1_13TeV_madgraphMLM_pythia8_13TeV.root";
+  // 0T
+  //files[0]="allFilesPlotsZpas/0T/Data_13TeV.root";
+  //files[1]="allFilesPlotsZpas/0T/DYToEE_NNPDF30_13TeV_powheg_pythia8_13TeV.root";
+  // 0T, mass shifted by 1% in EBEB and 0.5% in EBEE
+  files[0]="allFilesPlotsZpas/0T/Data_13TeV__massShifted_1PercEBEB_5PermEBEE.root";
+  files[1]="allFilesPlotsZpas/0T/DYToEE_NNPDF30_13TeV_powheg_pythia8_13TeV__massShifted_1PercEBEB_5PermEBEE.root";
 
   TString plotsDir="./tnpPlots/";
   TFile* fOut=new TFile("tnpHistos_"+suffix+".root","RECREATE");
@@ -52,36 +59,24 @@ void makeDataMcPlotsTnP(float lumi, bool blindData=false)
   
   // chiara
   TString variables[NVARIABLES];
-  variables[0]="mass";
-  variables[1]="probe_pt";
-  variables[2]="nvtx";
+  variables[0]="mgg";
 
   // chiara
   TString units[NVARIABLES];
   units[0]="GeV";
-  units[1]="GeV";
-  units[2]="";
   
   // chiara
   int nbins[NVARIABLES];
-  nbins[0]=40;
-  nbins[1]=75;
-  nbins[2]=30;
+  nbins[0]=60;
 
   // chiara
   float range[NVARIABLES][2]; // N variables, min, max
-  range[0][0]=70.;
-  range[0][1]=110.;
-  range[1][0]=0.;
-  range[1][1]=500.;
-  range[2][0]=0.;
-  range[2][1]=30.;
+  range[0][0]=75.;
+  range[0][1]=105.;
 
   // chiara
   TString xaxisLabel[NVARIABLES];
   xaxisLabel[0]="m_{ee}";
-  xaxisLabel[1]="p_{T} probe";
-  xaxisLabel[2]="number of vertices";
 
   TString binSize[NVARIABLES];
 
@@ -100,10 +95,8 @@ void makeDataMcPlotsTnP(float lumi, bool blindData=false)
 
   // chiara
   TString cut[NCUTS];
-  cut[0]="(mass>70 && mass<110 && abs(tag_absEta)<1.5 && abs(probe_absEta)<1.5)*";
-  cut[1]="(mass>70 && mass<110 && (abs(tag_absEta)<1.5 && abs(probe_absEta)>1.5) || (abs(tag_absEta)>1.5 && abs(probe_absEta)<1.5) )*";
-  //cut[0]="(probe_fullsel && mass>70 && mass<110 && abs(tag_absEta)<1.5 && abs(probe_absEta)<1.5)*";
-  //cut[1]="(probe_fullsel && mass>70 && mass<110 && (abs(tag_absEta)<1.5 && abs(probe_absEta)>1.5) || (abs(tag_absEta)>1.5 && abs(probe_absEta)<1.5) )*";
+  cut[0]="(mgg>75 && mgg<105 && eventClass==0)*";
+  cut[1]="(mgg>75 && mgg<105 && eventClass==1)*";
 
   char lumistr[100];
   sprintf(lumistr,"%.2f",lumi);
@@ -113,15 +106,17 @@ void makeDataMcPlotsTnP(float lumi, bool blindData=false)
 
   if(!blindData) {
     _file[0]=TFile::Open(files[0]);
-    T1[0] = (TTree*)_file[0]->Get("tnpAna/TaPTree");
+    T1[0] = (TTree*)_file[0]->Get("DiPhotonTree");
   } else T1[0] = 0;
   
   for (int i=1;i<NSPECIES;++i) {
     _file[i]=TFile::Open(files[i]);
-    T1[i] = (TTree*)_file[i]->Get("tnpAna/TaPTree");
+    T1[i] = (TTree*)_file[i]->Get("DiPhotonTree");
    }
 
   int nspeciesToRun=NSPECIES;
+  float intData[NCUTS];
+  float intDY[NCUTS];
   for (int z=0;z<NVARIABLES;++z) {
     for (int j=0;j<NCUTS;++j) {
       int firstSpecie = 0;
@@ -143,17 +138,19 @@ void makeDataMcPlotsTnP(float lumi, bool blindData=false)
 	}
 	std::cout << "Done " << histoName << std::endl;
       }
-
-      // chiara: ad hoc to have correctly normalized
-      /*
-      for (int z=0;z<NVARIABLES;++z) {
-	for (int j=0;j<NCUTS;++j) {
-	  for (int i=1;i<NSPECIES;++i) 
-	    histos[i][j][z]->Scale(histos[0][j][z]->Integral()/histos[i][j][z]->Integral());
-	}
-      }	    
-      */    
-          
+	
+      // chiara: ad hoc to have correctly normalized      
+      int maxData   = histos[0][j][z]->GetMaximumBin();
+      int maxDataM2 = maxData-2;
+      int maxDataP2 = maxData+2;
+      intData[j] = histos[0][j][z]->Integral(maxDataM2,maxDataP2);
+      intDY[j]   = histos[1][j][z]->Integral(maxDataM2,maxDataP2);
+      cout << "cut " << j << " => data: " << intData[j] << ", DY: " << intDY[j] << ", data/MC: " << intData[j]/intDY[j] << endl;
+      for (int i=firstSpecie;i<nspeciesToRun;++i) {
+	if (i>0) histos[i][j][z]->Scale(intData[j]/intDY[j]);
+      }
+      // 
+    
       TnPPlot myPlot;
       myPlot.setLumi(lumi);
       myPlot.addLabel("");

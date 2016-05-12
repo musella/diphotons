@@ -297,9 +297,9 @@ void ConvolutionFromRDH(RooWorkspace* w, Int_t mass, TString coupling) {
     RooHistPdf *convRhPdf;
     if (!inZero) convRhPdf = new RooHistPdf("convRhPdf","convRHhPdf",*mgg,*convRDH,0);
     if (inZero)  convRhPdf = new RooHistPdf("convRhPdf","convRHhPdf",*zeroVar,*convRDH,0);
-    TString myConvRhPdfNameA = TString(Form("ConvolutionRhPdf_cat"+myCutR+"_mass%d",mass));  
-    TString myConvRhPdfName  = TString(Form(myConvRhPdfNameA+"_kpl"+coupling));   // chiara
-    //TString myConvRhPdfName  = TString(Form(myConvRhPdfNameA+"_kpl_smearUp"+coupling));   // chiara
+    TString myConvRhPdfNameA = TString(Form("ConvolutionRhPdf_cat"+myCutR+"_mass%d",mass));
+    TString myConvRhPdfName  = TString(Form(myConvRhPdfNameA+"_kpl"+coupling));              // chiara
+    //TString myConvRhPdfName  = TString(Form(myConvRhPdfNameA+"_kpl_smearDown"+coupling));        // chiara
     convRhPdf->SetTitle(myConvRhPdfName);   
     convRhPdf->SetName(myConvRhPdfName);    
     cout << "done with RooHistPdf from conv"<< endl;
@@ -346,7 +346,7 @@ void AddSigData(RooWorkspace* w, int mass, TString coupling) {
   RooArgSet* ntplVars = defineVariables();
 
   // Files
-  TString inDir = "../macro/allFilesWithResolAtZ_rereco76x_2classes_v4/";          // chiara
+  TString inDir = "../macro/allFilesWithResolAtZ_rereco76x_2classes_0T_v6/";          // chiara
   TChain* sigTree = new TChain();
   cout << "reading file " 
        << inDir+TString(Form("FormSigMod_kpl"))+coupling+TString(Form("_M%d.root/DiPhotonTree", mass)) << endl;
@@ -621,9 +621,9 @@ void Interpolation(RooWorkspace* w, vector<int> masses, string coupling) {
 
       if (!inZero) convRhPdf = new RooHistPdf("convRhPdf","convRHhPdf",*mgg,*convRDH,0);
       if (inZero)  convRhPdf = new RooHistPdf("convRhPdf","convRHhPdf",*zeroVar,*convRDH,0);
-      TString myConvRhPdfNameA = TString(Form("ConvolutionRhPdf_cat"+myCut+"_mass%d",theMass)); 
-      TString myConvRhPdfName  = TString(Form(myConvRhPdfNameA+"_kpl"+coupling));           // chiara
-      //TString myConvRhPdfName  = TString(Form(myConvRhPdfNameA+"_kpl_smearUp"+coupling));   // chiara
+      TString myConvRhPdfNameA = TString(Form("ConvolutionRhPdf_cat"+myCut+"_mass%d",theMass));
+      TString myConvRhPdfName  = TString(Form(myConvRhPdfNameA+"_kpl"+coupling));           // chiara 
+      //TString myConvRhPdfName  = TString(Form(myConvRhPdfNameA+"_kpl_smearDown"+coupling));   // chiara
       convRhPdf->SetTitle(myConvRhPdfName);   
       convRhPdf->SetName(myConvRhPdfName);    
       cout << "done with RooHistPdf from conv"<< endl;
@@ -797,6 +797,12 @@ void Interpolation(RooWorkspace* w, vector<int> masses, string coupling) {
 // To run the analysis
 void runfits(string coupling="01") {
 
+  cout << endl;
+  cout << endl;
+  cout << "  ====================== this is 0T ================" << endl;
+  cout << endl;
+  cout << endl;
+
   RooWorkspace *w = new RooWorkspace("w");
  
   // range for the variables
@@ -809,9 +815,12 @@ void runfits(string coupling="01") {
   vector<int> masses;
   if (!genOnly) {                     // full sim samples
     if (coupling=="01") {
+      /*
       masses.push_back(500);
       masses.push_back(750);
+      */
       masses.push_back(1000);
+      /*
       masses.push_back(1250);
       masses.push_back(1500);
       masses.push_back(1750);
@@ -823,7 +832,8 @@ void runfits(string coupling="01") {
       masses.push_back(3500);
       masses.push_back(4000);
       masses.push_back(4500);
-       //masses.push_back(5000);
+      */
+      //masses.push_back(5000);
     } else if (coupling=="001") {
       ////////////////////masses.push_back(500);
       masses.push_back(750);
@@ -864,7 +874,6 @@ void runfits(string coupling="01") {
     }
     for (int iGenMass=0; iGenMass<34; iGenMass++) {
       int thisMass = 1600 + iGenMass*100;
-
       if (thisMass==4900 && coupling=="005") continue;
       if (thisMass==4900 && coupling=="007") continue;
       masses.push_back(thisMass); 

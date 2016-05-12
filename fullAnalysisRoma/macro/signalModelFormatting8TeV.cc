@@ -114,7 +114,7 @@ void signalModelFormat8TeV(const char* filename, TString kpl, TString theMass) {
     // gen level
     mggGen = DiphotonGen_Minv;
 
-    // 2012 smearings: 1%     
+    // 2012 smearings: 1% on the mass    
     unsmearedMgg = Diphoton_Minv;    
     float theGaussMean  = 1.;
     float theGaussSigma = 0.01;
@@ -123,15 +123,6 @@ void signalModelFormat8TeV(const char* filename, TString kpl, TString theMass) {
 
     treeNew->Fill();
 
-    /*
-    cout << "mgg = "     << Diphoton_Minv << endl;
-    cout << "mggGen = "  << DiphotonGen_Minv << endl;
-    cout << "pt1 = "  << Photon1_pt << endl;
-    cout << "pt2 = "  << Photon2_pt << endl;
-    cout << "eta1 = " << Photon1_eta << endl;
-    cout << "eta2 = " << Photon2_eta << endl;
-    cout << "MCPUWeight = " << MCPUWeight << endl;
-    */
   } // loop over tree entries
 
   // new info       

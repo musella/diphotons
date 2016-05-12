@@ -42,7 +42,7 @@ void MakeResolutionHisto(TString filename, bool newFile, int mass, TString coupl
   else theResoFile = new TFile(filename,"UPDATE");
   
   // Input file and tree
-  TString inDir = "../macro/allFilesWithResolAtZ_rereco76x_2classes_v4/";   // chiara
+  TString inDir = "../macro/allFilesWithResolAtZ_rereco76x_2classes_0T_v6/";   // chiara
   TChain* sigTree = new TChain();
   cout << "reading file " 
        << inDir+TString(Form("FormSigMod_kpl"))+coupling+TString(Form("_M%d.root/DiPhotonTree", mass)) << endl;
@@ -271,6 +271,7 @@ void ResolInterpolation(RooWorkspace* w, vector<int> masses) {
 
 
   // This is to have 2GeV steps between 500 and 1000 GeV
+  /*
   for (int iGenMass=0; iGenMass<250; iGenMass++) {    
     int thisMass = 500 + iGenMass*2;
     cout << "Fine (2GeV) scan: " << thisMass << endl;    
@@ -308,8 +309,8 @@ void ResolInterpolation(RooWorkspace* w, vector<int> masses) {
       w->import(*fittResolRDH);
     }   
   }
+  */
 
-  /*
   // Then 4GeV steps between 1000 and 1600 GeV
   for (int iGenMass=0; iGenMass<150; iGenMass++) {    
     int thisMass = 1000 + iGenMass*4.;
@@ -385,7 +386,6 @@ void ResolInterpolation(RooWorkspace* w, vector<int> masses) {
       w->import(*fittResolRDH);
     }   
   }
-  */
 
   // Finally saving in a second rootfile
   cout << endl;
@@ -396,6 +396,7 @@ void ResolInterpolation(RooWorkspace* w, vector<int> masses) {
   TFile fileFittoRes("ResHistosGenOnlyScan.root","RECREATE");
   fileFittoRes.cd();
 
+  /*
   for (int iGenMass=0; iGenMass<250; iGenMass++) {    
     int thisMass = 500 + iGenMass*2;
     for (int c=0; c<NCAT; ++c) {
@@ -417,8 +418,8 @@ void ResolInterpolation(RooWorkspace* w, vector<int> masses) {
       RDH->Write();
     }
   }
-
-  /*
+  */
+  
   for (int iGenMass=0; iGenMass<150; iGenMass++) {    
     int thisMass = 1000 + iGenMass*4.;
     for (int c=0; c<NCAT; ++c) {
@@ -461,13 +462,18 @@ void ResolInterpolation(RooWorkspace* w, vector<int> masses) {
       RDH->Write();
     }
   }
-  */
 
   fileFittoRes.Close();
 }
 
 // To run the analysis
 void runfits() {
+
+  cout << endl;
+  cout << endl;
+  cout << "================ this is 0T ===============" << endl;
+  cout << endl;
+  cout << endl;
 
   RooWorkspace *w = new RooWorkspace("w");
  
@@ -499,8 +505,7 @@ void runfits() {
   for (int ii=0; ii<(int)masses.size(); ii++) {
     int theMass = masses[ii];
     string myResKpl = "01";
-    if (theMass==1500 || theMass==3000 || theMass==500 || theMass==750) myResKpl = "001";  
-    if (theMass==2000 || theMass==4000 || theMass==5000) myResKpl = "001"; 
+    if (theMass==2000 || theMass==4000 || theMass==500 || theMass==750) myResKpl = "001";  
 
     cout << "resolution at mass " << theMass << " with coupling " << myResKpl << endl;
     if (ii==0) MakeResolutionHisto(fileResol, 1, theMass, myResKpl);    
