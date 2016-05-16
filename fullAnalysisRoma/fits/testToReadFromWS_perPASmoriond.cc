@@ -49,10 +49,12 @@ void runfits() {
   lat->SetTextFont(42);
 
   // Plot
-  RooPlot *frameCat0 = mggEBEB->frame(Range(435,565),Bins(26));
+  mggEBEB->setRange(435,565);                                  // to normalize the pdf in the range of the plot
+  mggEBEB->setRange("normRange",435,565);
+  RooPlot *frameCat0 = mggEBEB->frame(Range(435,565));
   TCanvas *c1 = new TCanvas("c1","c1",1);
-  convEBEB_mor->plotOn(frameCat0, LineColor(kRed), LineStyle(kSolid));
-  convEBEB_dec->plotOn(frameCat0, LineColor(kBlue), LineStyle(kSolid));
+  convEBEB_mor->plotOn(frameCat0, LineColor(kRed), LineStyle(kSolid), NormRange("normRange"));
+  convEBEB_dec->plotOn(frameCat0, LineColor(kBlue), LineStyle(kSolid), NormRange("normRange"));
   frameCat0->GetXaxis()->SetTitleSize(0.045);
   frameCat0->GetYaxis()->SetTitleSize(0.045);
   frameCat0->GetXaxis()->SetLabelSize(0.045);
@@ -76,10 +78,12 @@ void runfits() {
   c1->SaveAs("decVsMorEBEB.pdf");
   c1->SaveAs("decVsMorEBEB.root");
 
-  RooPlot *frameCat1 = mggEBEE->frame(Range(435,565),Bins(26));
+  mggEBEE->setRange(435,565);
+  mggEBEE->setRange("normRange",435,565);
+  RooPlot *frameCat1 = mggEBEE->frame(Range(435,565));
   TCanvas *c2 = new TCanvas("c2","c2",1);
-  convEBEE_mor->plotOn(frameCat1, LineColor(kRed), LineStyle(kSolid));
-  convEBEE_dec->plotOn(frameCat1, LineColor(kBlue), LineStyle(kSolid));  
+  convEBEE_mor->plotOn(frameCat1, LineColor(kRed), LineStyle(kSolid), NormRange("normRange"));
+  convEBEE_dec->plotOn(frameCat1, LineColor(kBlue), LineStyle(kSolid), NormRange("normRange"));
   frameCat1->GetXaxis()->SetTitle("m_{#gamma#gamma} (GeV)");
   frameCat1->GetXaxis()->SetTitleSize(0.045);
   frameCat1->GetYaxis()->SetTitleSize(0.045);
