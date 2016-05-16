@@ -27,68 +27,51 @@ using namespace std;
 
 void runfits() {
 
-  TFile *fileResNominal     = new TFile("primiTestScanWidth/IntrinsicWidthHistos.root"); 
-  TFile *filePointFromMorph = new TFile("primiTestScanWidth/WidthHistosGenOnlyScan.root");
+  TFile *filePointFromMorph = new TFile("daTenere_NuovoMetodo/widthScan/WidthHistosGenOnlyScan.root");
   
-  RooRealVar* deltaMgen = new RooRealVar("deltaMgen", "", -80, 80,   "GeV");
+  RooRealVar* deltaMgen = new RooRealVar("deltaMgen", "", -395., 395., "GeV");
 
-  cout << "========== nominal" << endl;
-  RooDataHist *widthRDH_001_catEBEB_nom   = (RooDataHist*)fileResNominal->Get("intWidthRDH_mass750_catEBEB_kpl001"); 
-  widthRDH_001_catEBEB_nom->Print();
+  for (int ii=4; ii<30; ii++) {
+    
+    float coupling = 0.01 + ii*0.01;
+    TString couplingS = TString::Format("%1.2f",coupling);
 
-  cout << "========== fit" << endl;
-  RooDataHist *widthRDH_025_catEBEB_morph = (RooDataHist*)filePointFromMorph->Get("widthRDH_mass750_catEBEB_kpl0.250000");
-  widthRDH_025_catEBEB_morph->Print();
-  RooDataHist *widthRDH_026_catEBEB_morph = (RooDataHist*)filePointFromMorph->Get("widthRDH_mass750_catEBEB_kpl0.260000");
-  widthRDH_026_catEBEB_morph->Print();
-  RooDataHist *widthRDH_027_catEBEB_morph = (RooDataHist*)filePointFromMorph->Get("widthRDH_mass750_catEBEB_kpl0.270000");
-  widthRDH_027_catEBEB_morph->Print();
-  RooDataHist *widthRDH_028_catEBEB_morph = (RooDataHist*)filePointFromMorph->Get("widthRDH_mass750_catEBEB_kpl0.280000");
-  widthRDH_028_catEBEB_morph->Print();
-  RooDataHist *widthRDH_029_catEBEB_morph = (RooDataHist*)filePointFromMorph->Get("widthRDH_mass750_catEBEB_kpl0.290000");
-  widthRDH_029_catEBEB_morph->Print();
-  RooDataHist *widthRDH_030_catEBEB_morph = (RooDataHist*)filePointFromMorph->Get("widthRDH_mass750_catEBEB_kpl0.300000");
-  widthRDH_030_catEBEB_morph->Print();
+    float rangeInf = - 4. * 1.4 * coupling * coupling * 750;
+    float rangeSup = + 4. * 1.4 * coupling * coupling * 750;
+    int bins = (int)( (rangeSup-rangeInf)/0.1 );
 
+    TString stringEBEB = "widthRDH_mass750_catEBEB_kpl" + TString::Format("%1.6f",coupling);
+    cout << "coupling " << coupling << ", EBEB: " << stringEBEB << endl;
+    TString stringEBEE = "widthRDH_mass750_catEBEE_kpl" + TString::Format("%1.6f",coupling);
+    cout << "coupling " << coupling << ", EBEE: " << stringEBEE << endl;
 
-  RooPlot *frameA = deltaMgen->frame(Range(-80,80),Bins(100));
-  //widthRDH_001_catEBEB_nom->plotOn(frameA, LineColor(kBlack), LineStyle(kSolid), Rescale(1./widthRDH_001_catEBEB_nom->sumEntries()));
-  //widthRDH_001_catEBEB_morph->plotOn(frameA, MarkerColor(kGreen), LineStyle(kSolid), Rescale(1./widthRDH_001_catEBEB_morph->sumEntries()));
+    RooDataHist *widthRDH_catEBEB_morph = (RooDataHist*)filePointFromMorph->Get(stringEBEB);
+    widthRDH_catEBEB_morph->Print();
+    RooDataHist *widthRDH_catEBEE_morph = (RooDataHist*)filePointFromMorph->Get(stringEBEE);
+    widthRDH_catEBEE_morph->Print();
 
-  widthRDH_025_catEBEB_morph->plotOn(frameA, MarkerColor(kGreen), LineStyle(kDashed));
-  widthRDH_026_catEBEB_morph->plotOn(frameA, MarkerColor(kBlue), LineStyle(kDashed));
-  widthRDH_027_catEBEB_morph->plotOn(frameA, MarkerColor(kViolet), LineStyle(kDashed));
-  widthRDH_028_catEBEB_morph->plotOn(frameA, MarkerColor(kOrange), LineStyle(kDashed));
-  widthRDH_029_catEBEB_morph->plotOn(frameA, MarkerColor(kRed), LineStyle(kDashed));
-  widthRDH_030_catEBEB_morph->plotOn(frameA, MarkerColor(kBlack), LineStyle(kDashed));
-
-  // legend  
-  //TLegend* legmc = new TLegend(-4.5, 2500, -1.5, 3500, "", "");
-  //TLegend* legmc = new TLegend(-18., 400, -10., 600, "", "");
-  //TLegend* legmc = new TLegend(-28., 400, -13., 600, "", "");
-  //TLegend* legmc = new TLegend(-48., 180, -15., 260, "", "");
-  TLegend* legmc = new TLegend(-58., 140, -30., 220, "", "");
-  legmc->SetTextSize(0.0286044);
-  legmc->SetTextFont(42);
-  legmc->SetBorderSize(0);
-  legmc->SetFillStyle(0);
-  legmc->AddEntry(frameA->getObject(0),"k=0.25","LP");
-  legmc->AddEntry(frameA->getObject(1),"k=0.26","LP");
-  legmc->AddEntry(frameA->getObject(2),"k=0.27","LP");
-  legmc->AddEntry(frameA->getObject(3),"k=0.28","LP");
-  legmc->AddEntry(frameA->getObject(4),"k=0.29","LP");
-  legmc->AddEntry(frameA->getObject(5),"k=0.30","LP");
-
-  //frameA->SetMaximum(0.1);
-  frameA->SetMinimum(0.);
-  frameA->Draw();
-  frameA->GetXaxis()->SetTitle("m_{#gamma#gamma}-m_{G}");
-  frameA->SetTitle("Width");
-  TCanvas *c1 = new TCanvas("c1","c1",1);
-  frameA->Draw();
-  legmc->Draw();
-  c1->SaveAs("checkWithNominalWidth_EBEB_025-030.png");
-
+    RooPlot *frameA = deltaMgen->frame(Range(rangeInf,rangeSup));
+    widthRDH_catEBEB_morph->plotOn(frameA, MarkerColor(kRed), LineStyle(kDashed), Rescale(1./widthRDH_catEBEB_morph->sumEntries()));
+    widthRDH_catEBEE_morph->plotOn(frameA, MarkerColor(kGreen), LineStyle(kDashed), Rescale(1./widthRDH_catEBEE_morph->sumEntries()));
+    float max = frameA->GetMaximum();
+    frameA->SetMaximum(1.);
+    frameA->SetMaximum(0.5);
+    if (coupling>0.075) frameA->SetMaximum(0.25);
+    if (coupling>0.095) frameA->SetMaximum(0.15);
+    if (coupling>0.125) frameA->SetMaximum(0.1);
+    if (coupling>0.175) frameA->SetMaximum(0.05);
+    if (coupling>0.215) frameA->SetMaximum(0.03);
+    frameA->SetMinimum(0.);
+    frameA->Draw();
+    frameA->GetXaxis()->SetTitle("m_{#gamma#gamma}-m_{G}");
+    frameA->SetTitle("Width");
+    
+    TCanvas *c1 = new TCanvas("c1","c1",1);
+    frameA->Draw();
+    TString test = "TestK"+couplingS+".png";
+    c1->SaveAs(test);
+  }
+  
   return;
 }
 
