@@ -15,7 +15,7 @@ from combine_maker import CombineApp
 
 import random
 
-from math import sqrt
+from math import sqrt, fabs
 
 ## ----------------------------------------------------------------------------------------------------------------------------------------
 class BiasApp(CombineApp):
@@ -39,6 +39,9 @@ class BiasApp(CombineApp):
                                     ),
                         make_option("--throw-from-model",dest="throw_from_model",action="store_true",default=False,
                                     help="Throw toys from fit to full dataset",
+                                    ),
+                        make_option("--throw-with-slope",dest="throw_with_slope",action="store",default=None,type="float",
+                                    help="Change slope of the pdf",
                                     ),
                         make_option("--lumi-factor",dest="lumi_factor",action="store",default=1.,type="float",
                                     help="Luminosity normalization factor",
@@ -116,6 +119,7 @@ class BiasApp(CombineApp):
         global ROOT, style_utils
         import ROOT
         import diphotons.Utils.pyrapp.style_utils as style_utils
+        print style_utils
         ROOT.gSystem.Load("libdiphotonsUtils")
         
     def __call__(self,options,args):
@@ -129,6 +133,8 @@ class BiasApp(CombineApp):
 
         self.use_custom_pdfs_ = options.use_custom_pdfs
 
+        self.save_params_.append("test_categories")
+        
         options.only_subset = [options.fit_name]
         if options.analyze_bias:        
             options.skip_templates = True
@@ -152,12 +158,19 @@ class BiasApp(CombineApp):
         
         roobs = self.buildRooVar(*(self.getVar(options.observable)))
         roowe = self.buildRooVar("weight",[])
+
+        if len(options.test_categories) != 0:
+            categories = options.test_categories
+        else:
+            categories = fit["categories"].keys()
         
         for comp,model in zip(options.components,options.models):
             if comp != "":
                 comp = "%s_" % comp
-            for cat in fit["categories"]:
-                                
+            for cat in categories:
+                
+                ## roobs = self.getObservable(cat)
+                
                 treename = "mctruth_%s%s_%s" % (comp,fitname,cat)
                 
                 print treename
@@ -237,18 +250,27 @@ class BiasApp(CombineApp):
                     print norm.getVal()
                     extpdf = ROOT.RooExtendPdf("ext_%s" %  treename, "ext_%s" %  treename, pdf, norm)
                     print norm.getVal(), extpdf.expectedEvents(ROOT.RooArgSet())
-                    
+                
+                if options.throw_with_slope:
+                    slope = ROOT.RooFit.RooConst(options.throw_with_slope)
+                    slope_pdf = ROOT.RooPolynomial("slope_%s" % cat, "slope_%s" %cat, roobs, ROOT.RooArgList(slope))
+                    self.keep([pdf,slope_pdf])
+                    pdf = ROOT.RooProdPdf("prod_%s" %cat,"prod_%s" %cat,pdf,slope_pdf)
+                
                 pdf.SetName("pdf_%s" % treename)
                 norm.SetName("norm_%s" % treename)
-                norm.setVal(dset.sumEntries()*options.lumi_factor)
-                ## extpdf.SetName("geneator_%s" % treename)
+                
+                if options.lumi_factor < 0.:
+                    norm.setVal( self.rooData("data_%s_%s" % (fitname,cat)).sumEntries()*fabs(options.lumi_factor) )
+                else:
+                    norm.setVal(dset.sumEntries()*options.lumi_factor)
+                tnorm = norm.getVal()
+                print tnorm
+                ntoys = options.n_toys
+
                 self.workspace_.rooImport(pdf)
                 self.workspace_.rooImport(norm)
-                
-                tnorm = dset.sumEntries()*options.lumi_factor
-                print tnorm, norm.getVal()
-                ntoys = options.n_toys
-                
+
                 if ntoys < 0:
                     data = pdf.generate(ROOT.RooArgSet(roobs),ROOT.gRandom.Poisson(tnorm))
                     asimov = data.binnedClone()
@@ -257,6 +279,7 @@ class BiasApp(CombineApp):
                     self.workspace_.rooImport(asimov)
                 else:
                     for toy in range(ntoys):
+                        ## print "Generating", toy
                         data = pdf.generate(ROOT.RooArgSet(roobs),ROOT.gRandom.Poisson(tnorm)) ## 
                         if options.binned_toys: data=data.binnedClone()
                         toyname = "toy_%s%s_%d" % (comp,cat,toy)
@@ -274,7 +297,7 @@ class BiasApp(CombineApp):
         fout = self.openOut(options)
         fitname = options.fit_name
         fit = options.fits[fitname]
-        
+ 
         roobs = self.buildRooVar(*(self.getVar(options.observable)), recycle=True)
         roobs.setRange("fitRange",*options.fit_range)
         minx = options.fit_range[0]
@@ -326,6 +349,9 @@ class BiasApp(CombineApp):
                 gnorm.Print() 
                 
                 trueNorms = {}
+                print generator
+                generator.Print()
+                roobs.Print()
                 pobs  = generator.getDependents(ROOT.RooArgSet(roobs))[roobs.GetName()]
                 pobs.setRange("origRange",roobs.getBinning("origRange").lowBound(),roobs.getBinning("origRange").highBound())
                 renorm = generator.createIntegral(ROOT.RooArgSet(pobs),"origRange").getVal() / gnorm.getVal()
