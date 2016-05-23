@@ -483,7 +483,7 @@ class PlotApp(PyRApp):
                     sfin = self.open(fname, folder=self.options.input_dir)
                 if folder:
                     try:
-                        sfin = sfin.Get(folder)
+                        sfin = sfin.Get(str(folder))
                     except Exception, e:
                         print "Unable to read %s from %s" % ( folder, fname)
                         print e
@@ -495,8 +495,7 @@ class PlotApp(PyRApp):
                 h = None
                 for gr in group:
                     nam = self.template_ % { "name" : name, "cat" : gr, "sample" : s }
-                    # print nam
-                    hgr = sfin.Get(nam)
+                    hgr = sfin.Get(str(nam))
                     if not hgr:
                         raise IOError("Could not read %s from %s" % (nam, str(sfin)) )
                     if hgr.IsA().InheritsFrom("TH1"):
@@ -513,7 +512,7 @@ class PlotApp(PyRApp):
                         ret.append(hgr)
             else:
                 nam = self.template_ % { "name" : name, "cat" : cat, "sample" : s }
-                h = sfin.Get(nam)
+                h = sfin.Get(str(nam))
                 if not h:
                     raise IOError("Could not read %s from %s" % (nam, str(sfin)) )
                 if h.IsA().InheritsFrom("TH1"):
