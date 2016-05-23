@@ -37,24 +37,34 @@ void ConvolutionFromRDH(RooWorkspace* w, Int_t mass, float coupling) {
 
   // RooRealVars
   RooRealVar* mgg = w->var("mgg");  
+  cout << "chiara, mgg " << endl;
+  mgg->Print();
 
   TString deltaMname = TString::Format("deltaM_kpl%f",coupling);
   RooRealVar* deltaM = w->var(deltaMname);    
   deltaM->SetTitle("deltaM");     
   deltaM->SetName("deltaM");
-
+  cout << "chiara, deltaM " << endl;
+  deltaM->Print();
+  
   TString deltaMgenName = TString::Format("deltaMgen_kpl%f",coupling);
   RooRealVar* deltaMgen = w->var(deltaMgenName);    
   deltaMgen->SetTitle("deltaMgen");  
   deltaMgen->SetName("deltaMgen");   
+  cout << "chiara, deltaMgen " << endl;
+  deltaMgen->Print();
 
   TString mHname = TString::Format("mH_mass%d",mass);
   RooRealVar* mH = w->var(mHname);
   mH->setConstant();   
+  cout << "chiara: mH" << endl;
+  mH->Print();
 
   TString kHname = TString::Format("kH_kpl%f",coupling);        
   RooRealVar* kH = w->var(kHname);                          
   kH->setConstant();   
+  cout << "chiara: mk" << endl;
+  kH->Print();
 
   // Resolution centred in zero
   RooFormulaVar *deltaM_formula = new RooFormulaVar("deltaM_formula","","@0",RooArgList(*w->var("mgg")));
@@ -159,7 +169,7 @@ void ConvolutionFromRDH(RooWorkspace* w, Int_t mass, float coupling) {
     RooHistPdf *convRhPdf = new RooHistPdf("convRhPdf","convRHhPdf",*mgg,*convRDH,0);
     TString myConvRhPdfNameA = TString(Form("ConvolutionRhPdf_cat"+myCut+"_mass%d",mass));  
     TString myConvRhPdfName  = TString(Form(myConvRhPdfNameA+"_kpl"+myCoupling));   // chiara
-    //TString myConvRhPdfName  = TString(Form(myConvRhPdfNameA+"_kpl_smearUp"+myCoupling));   // chiara
+    //TString myConvRhPdfName  = TString(Form(myConvRhPdfNameA+"_kpl_smearDown"+myCoupling));   // chiara
     convRhPdf->SetTitle(myConvRhPdfName);   
     convRhPdf->SetName(myConvRhPdfName);    
     cout << "done with RooHistPdf from conv"<< endl;
@@ -198,12 +208,13 @@ void runfits(int mass=750) {
   RooWorkspace *w = new RooWorkspace("w");
  
   // range for the variables
-  w->factory("mgg[300,5050]");      
-  w->factory("mggGen[300,5050]");
+  w->factory("mgg[300,1600]");          // chiara: restringo il range, con il nuovo metodo ho tagliato
+  w->factory("mggGen[300,1600]");       // chiara: restringo il range, con il nuovo metodo ho tagliato
   
   // range of couplings
   vector<float> couplings;
-  for (int iCoupl=0; iCoupl<30; iCoupl++) {
+  //for (int iCoupl=0; iCoupl<30; iCoupl++) {    // chiara
+  for (int iCoupl=4; iCoupl<30; iCoupl++) {
     float thisCoupl = 0.01 + iCoupl*0.01;
     couplings.push_back(thisCoupl); 
   }
@@ -217,19 +228,19 @@ void runfits(int mass=750) {
 
     float coupling = couplings[ii];
     
-    RooRealVar* deltaM = new RooRealVar("deltaM", "deltaM", -10000, 10000, "GeV");   
+    RooRealVar* deltaM = new RooRealVar("deltaM", "deltaM", -200, 200, "GeV");              // chiara
     TString deltaMname = TString::Format("deltaM_kpl%f",coupling);
     deltaM->SetName(deltaMname);
     deltaM->SetTitle(deltaMname);
     w->import(*deltaM);
 
-    RooRealVar* deltaMgen = new RooRealVar("deltaMgen", "deltaMgen", -10000, 10000, "GeV");   
+    RooRealVar* deltaMgen = new RooRealVar("deltaMgen", "deltaMgen", -400, 400, "GeV");     // chiara
     TString deltaMgenName = TString::Format("deltaMgen_kpl%f",coupling);
     deltaMgen->SetName(deltaMgenName);
     deltaMgen->SetTitle(deltaMgenName);
     w->import(*deltaMgen);
     
-    RooRealVar* mH = new RooRealVar("mH", "mH", 0, 10000, "GeV");   
+    RooRealVar* mH = new RooRealVar("mH", "mH", 700, 800, "GeV");   
     TString mHname = TString::Format("mH_mass%d",mass);
     mH->SetName(mHname);
     mH->SetTitle(mHname);
@@ -237,7 +248,7 @@ void runfits(int mass=750) {
     mH->setConstant();
     if (ii==0) w->import(*mH);
     
-    RooRealVar* kH = new RooRealVar("kH", "kH", 0, 0.7, "");   
+    RooRealVar* kH = new RooRealVar("kH", "kH", 0, 0.5, "");   
     TString kHname = TString::Format("kH_kpl%f",coupling);
     kH->SetName(kHname);
     kH->SetTitle(kHname);

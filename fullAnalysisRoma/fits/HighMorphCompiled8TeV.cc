@@ -239,6 +239,7 @@ void runfits(string coupling="01") {
 
   // range of masses
   vector<int> masses;
+
   for (int iGenMass=0; iGenMass<250; iGenMass++) {
     int thisMass = 500 + iGenMass*2;
     masses.push_back(thisMass); 
@@ -248,7 +249,7 @@ void runfits(string coupling="01") {
     int thisMass = 1000 + iGenMass*4;
     masses.push_back(thisMass); 
   }
-  for (int iGenMass=0; iGenMass<15; iGenMass++) {
+  for (int iGenMass=0; iGenMass<25; iGenMass++) { // extended range
     int thisMass = 1600 + iGenMass*100;
     masses.push_back(thisMass); 
   }

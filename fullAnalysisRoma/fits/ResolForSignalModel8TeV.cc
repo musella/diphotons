@@ -25,7 +25,7 @@ using namespace RooFit;
 using namespace std;
 
 // Preparing the resolution histograms
-void MakeResolutionHisto8TeV(TString filename, bool newFile, int mass, TString coupling) {
+void MakeResolutionHisto8TeV(TString filename, bool newFile, int mass, int isExtra, TString coupling) {
   
   TString myMass = TString::Format("%d",mass);
   
@@ -54,7 +54,16 @@ void MakeResolutionHisto8TeV(TString filename, bool newFile, int mass, TString c
   resolH->Sumw2();
   
   // Projecting the tree into the histo
-  sigTree->Project("resolH","mgg-mggGen",mainCut+TString::Format(")*puweight"));
+  if (!isExtra) {                              // chiara. This works for 3500->4000 only
+    cout << "mass = " << mass << ", no correction" << endl; 
+    sigTree->Project("resolH","mgg-mggGen",mainCut+TString::Format(")*puweight"));
+  } else {
+    if (mass!=3500) cout << "ERROR" << endl;
+    cout << "mass = " << mass << ", we apply resolution scaling to go to 4000" << endl; 
+    sigTree->Project("resolH","4000.*(mgg-mggGen)/3500.",mainCut+TString::Format(")*puweight"));
+    mass = 4000;
+    myMass = "4000";
+  }
 
   // Now make the roodatahist
   RooDataHist resolRDH("resolRDH","resolRDH",*deltaM,Import(*resolH));        
@@ -203,8 +212,8 @@ void ResolInterpolation8TeV(RooWorkspace* w, vector<int> masses) {
     w->import(*fittResolRDH);
   }
 
-  // Then 100GeV steps between 1600 and 3500 GeV
-  for (int iGenMass=0; iGenMass<19; iGenMass++) {    
+  // Then 100GeV steps between 1600 and 4000 GeV
+  for (int iGenMass=0; iGenMass<25; iGenMass++) {    
     int thisMass = 1600 + iGenMass*100.;
     cout << "Coarse (100GeV) scan: " << thisMass << endl;
     muRes->setVal(thisMass);
@@ -241,7 +250,7 @@ void ResolInterpolation8TeV(RooWorkspace* w, vector<int> masses) {
     RooDataHist *RDH = (RooDataHist*)w->data(myFitRDH);
     RDH->Write();
   }
-  for (int iGenMass=0; iGenMass<19; iGenMass++) {    
+  for (int iGenMass=0; iGenMass<25; iGenMass++) {    
     int thisMass = 1600 + iGenMass*100.;
     TString myFitRDH = TString(Form("resolRDH_mass%d",thisMass));
     RooDataHist *RDH = (RooDataHist*)w->data(myFitRDH);
@@ -270,6 +279,7 @@ void runfits() {
   masses.push_back(3000);
   masses.push_back(3250);
   masses.push_back(3500);
+  masses.push_back(4000);    // chiara: new for paper. The sample does not exist. Use the 3500 file and fill wtih deltaM * 4000 / 3500 
 
   // make resolution histograms and roodatahists using k=0.01 or k=0.05 or k=0.1 according to the mass
   cout << endl; 
@@ -284,11 +294,18 @@ void runfits() {
     if (theMass==2750) myResKpl = "005";        
     if (theMass==3250) myResKpl = "01";  
     if (theMass==3500) myResKpl = "01";  
+    if (theMass==4000) myResKpl = "01";  
 
     cout << "resolution at mass " << theMass << " with coupling " << myResKpl << endl;
-    if (ii==0) MakeResolutionHisto8TeV(fileResol, 1, theMass, myResKpl);    
-    else MakeResolutionHisto8TeV(fileResol, 0, theMass, myResKpl);
-  }
+    if (theMass!=4000) {
+      if (ii==0) MakeResolutionHisto8TeV(fileResol, 1, theMass, 0, myResKpl);     
+      else MakeResolutionHisto8TeV(fileResol, 0, theMass, 0, myResKpl);           
+    }
+    if (theMass==4000) {
+      if (ii==0) MakeResolutionHisto8TeV(fileResol, 1, 3500, 1, myResKpl);  
+      else MakeResolutionHisto8TeV(fileResol, 0, 3500, 1, myResKpl);        
+    }
+  } 
 
   // make the interpolation of the resolutions and save in another file the roodatahists
   cout << endl; 

@@ -100,34 +100,11 @@ void runfits(string coupling="01") {
   // range of masses
   vector<int> masses;
   if (coupling=="01") {
-    masses.push_back(500);
     masses.push_back(750);
-    masses.push_back(1000);
-    masses.push_back(1250);
-    masses.push_back(1500);
-    masses.push_back(1750);
-    masses.push_back(2000);
-    masses.push_back(2250);
-    masses.push_back(2750);
-    masses.push_back(3000);
-    masses.push_back(3500);
-    masses.push_back(4000);
-    masses.push_back(4500);
   } else if (coupling=="001") {
     masses.push_back(750);
-    masses.push_back(1000);
-    masses.push_back(2000);
-    masses.push_back(4000);
-    masses.push_back(5000);
   } else if (coupling=="02") {  
-    masses.push_back(500);
     masses.push_back(750);
-    masses.push_back(1000);
-    masses.push_back(1500);
-    masses.push_back(2000);
-    masses.push_back(3000);
-    masses.push_back(4000);
-    masses.push_back(5000);
   }
 
   // loading dat
