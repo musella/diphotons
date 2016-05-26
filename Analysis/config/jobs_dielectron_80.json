@@ -1,9 +1,11 @@
 {
-	"processes" : {
+	"_processes" : {
 	"Data" : [ 
 "/SingleElectron/musella-EXOSpring16_v1_p3-diphotons_80_v1-v0-Run2016B-PromptReco-v1-ea408274daa18c6402a808da38fd2b89/USER",
 "/SingleElectron/musella-EXOSpring16_v1_p3-diphotons_80_v1-v0-Run2016B-PromptReco-v2-ea408274daa18c6402a808da38fd2b89/USER"
-	],
+	] 
+	}, 
+	"processes" : {
 	
 	"DYToEE-powheg" : [
 "/DYToEE_NNPDF30_13TeV-powheg-pythia8"
@@ -11,6 +13,6 @@
 	
 	},
 	
-	"cmdLine" : "campaign=EXOSpring16_v1 idversion=V2 selection=electron massCut=60 ptLead=30 ptSublead=25 trigger=HLT_Ele27_WPLoose_Gsf_v*"
+	"cmdLine" : "campaign=EXOSpring16_v1 idversion=V2 selection=electron massCut=60 ptLead=30 ptSublead=25 trigger=HLT_Ele27_WPLoose_Gsf_v* lumiMask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-273450_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt"
 
 }

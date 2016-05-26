@@ -4,14 +4,14 @@ import FWCore.ParameterSet.Config as cms
 import FWCore.Utilities.FileUtils as FileUtils
 from FWCore.ParameterSet.VarParsing import VarParsing
 
-## CMD LINE OPTIONS ##
-options = VarParsing('analysis')
-
-# maxEvents is the max number of events processed of each file, not globally
-options.maxEvents = -1
-options.inputFiles = "file:diphotonsMicroAOD.root"
-options.outputFile = "quickDump.root"
-options.parseArguments()
+### ## CMD LINE OPTIONS ##
+### options = VarParsing('analysis')
+### 
+### # maxEvents is the max number of events processed of each file, not globally
+### options.maxEvents = -1
+### options.inputFiles = "file:diphotonsMicroAOD.root"
+### options.outputFile = "quickDump.root"
+### options.parseArguments()
 
 process = cms.Process("Analysis")
 
@@ -49,7 +49,7 @@ readFiles.extend( [
 
 
 process.TFileService = cms.Service("TFileService",
-                                   fileName = cms.string(options.outputFile))
+                                   fileName = cms.string("output.root"))
 
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32( 10000 )

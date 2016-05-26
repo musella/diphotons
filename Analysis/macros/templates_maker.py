@@ -375,7 +375,7 @@ class TemplatesApp(PlotApp):
                 self.workspace_.rooImport(data)
             
         for name in cfg["stored"]:
-            self.store_[name]=fin.Get(name)
+            self.store_[name]=fin.Get(str(name))
             
         if not options.mix_templates:
             options.mix = cfg.get("mix",{})
