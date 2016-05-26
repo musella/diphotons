@@ -334,7 +334,10 @@ class IdEvolution(PlotApp):
                         wfuncs[tree] = ROOT.FlatReweight( xrng[0],xrng[-1],yrng[0],yrng[-1] )
                     hname = "%s_%s_%s" % (tree,wname,name)
                     ## win.ls()
-                    hist = win.Get( hname )
+                    print hname 
+                    win.ls()
+                    hist = win.Get( str(hname) )
+                    print hist
                     yrng, frng = options.wrng[name]
                     sf = ROOT.SliceFitter(hist,"[0]+[1]*x+[2]*x*x",yrng[0],yrng[1],frng[0],frng[1],False,True,1)
                     ## plots = sf.getPlots()
