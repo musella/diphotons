@@ -395,6 +395,13 @@ class CombineApp(TemplatesApp):
                                     default="1",
                                     help="Specify luminosity for generating data, background and signal workspaces",
                                     ),
+                        make_option("--rescale-data",dest="rescale_data",action="store_true",default=False,
+                                    help="Scale data to the luminosity specified above",
+                                     ),
+                        make_option("--dataLumi",dest="dataLumi",action="store",type="string",
+                                    default="1",
+                                    help="Specify luminosity for data rescaling",
+                                    ),
                         make_option("--real-data",dest="real_data",action="store_true",
                                     default=True,
                                     help="Running on real data",
@@ -507,6 +514,9 @@ class CombineApp(TemplatesApp):
     def lumiScale(self,name):
         if not self.options.real_data or ( not "data" in name and not "template" in name):
             return self.options.luminosity
+        if self.options.rescale_data:
+            if self.options.real_data or ( "data" in name ):
+                return self.options.dataLumi
         return "1"
     
     ## ------------------------------------------------------------------------------------------------------------
