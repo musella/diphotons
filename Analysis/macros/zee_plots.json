@@ -12,31 +12,31 @@
 	      
     ],
 	      
-    "50ns" :  ["Scale",42.5e-3],
-    "25ns" :  ["Scale",15.9e-3],
-
     "_bkg" : [
     	      ["dy","DY #rightarrow ee",
 	      [["colors","myColorD1"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",1],["legopt","f"],["SetFillColor","myColorD3tr"]],
 	      { "DYJetsToLL_M_50_TuneCUETP8M1_amcatnloFXFX_pythia8_13TeV:__infile__/%(sel)s" : [] }
 	      ]
-	      
-	      
-	     ],
+      	     ],
 
      "_bkg" : [
     	      ["dy","DY #rightarrow ee",
 	      [["colors","myColorD1"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",1],["legopt","f"],["SetFillColor","myColorD3tr"]],
 	      { "DYJetsToLL_M_50_TuneCUETP8M1_13TeV_madgraphMLM_pythia8_13TeV:__infile__/%(sel)s" : [] }
 	      ]
-	      
-	      
+	     ],
+
+     "_bkg" : [
+    	      ["dy","DY #rightarrow ee",
+	      [["colors","myColorD1"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",1],["legopt","f"],["SetFillColor","myColorD3tr"]],
+              { "DYToEE_powheg_13TeV:__infile__/%(sel)s" : [] }
+	      ]
 	     ],
 
      "bkg" : [
     	      ["dy","DY #rightarrow ee",
 	      [["colors","myColorD1"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",1],["legopt","f"],["SetFillColor","myColorD3tr"]],
-	      { "DYToEE_NNPDF30_13TeV_powheg_pythia8_13TeV:__infile__/%(sel)s" : [] }
+	      { "DYToEE_powheg_13TeV:__infile__/%(sel)s" : [] }
 	      ]
 	      
 	      
@@ -49,6 +49,11 @@
     "_categories": ["EBHighR9","EBLowR9","EEHighR9","EELowR9"], 
     "categories" : [],
 
+    "_groups": {
+        "EB"       : ["EBHighR9","EBLowR9"],
+        "EE"       : ["EEHighR9","EELowR9"]
+	}, 
+	
     "groups": {
         "EBEB"       : ["EBHighR9","EBLowR9"],
         "EBEE"       : ["EEHighR9","EELowR9"],
@@ -58,12 +63,14 @@
 	"EBEELowR9"  : ["EELowR9"]
 	}, 
 
-    "groups": {
-        "EB"       : ["EBHighR9","EBLowR9"],
-        "EE"       : ["EEHighR9","EELowR9"]
-	}, 
-	
-    "plots": [
+    "_plots": [
+
+	      ["mass"		,[["Rebin",2],["xtitle","m_{#gamma #gamma} (GeV)"],
+					  ["xrange",[60,1050]],["overflow",[null]],
+					  ["ytitle","Events / %(binw)s GeV"]
+					]
+					,null,null],
+
 
 	      ["lowmass"		,[["Rebin",2],["xtitle","m_{#gamma #gamma} (GeV)"],
 					  ["xrange",[70.0,110.0]],
@@ -81,14 +88,9 @@
 
     ],
     
-    "_plots": [
-	      ["lowmass"		,[["Rebin",4],["xtitle","m_{#gamma #gamma} (GeV)"],
-					  ["xrange",[60.0,120.0]],["overflow",[null]],
-					  ["ytitle","Events / %(binw)s GeV"]
-					]
-					,null,null],
-	      ["mass"		,[["Rebin",2],["xtitle","m_{#gamma #gamma} (GeV)"],
-					  ["xrange",[60,1050]],["overflow",[null]],
+    "plots": [
+	      ["lowmass"		,[["Rebin",2],["xtitle","m_{#gamma #gamma} (GeV)"],
+					  ["xrange",[70.0,110.0]],
 					  ["ytitle","Events / %(binw)s GeV"]
 					]
 					,null,null],
@@ -104,6 +106,13 @@
 
 	      ["rho"			,[["ytitle","Events / %(binw)s GeV"],["xtitle","#rho_{PU} (GeV)"],["overflow",[null]]	      				
 	      				]
+					,null,null],
+
+	      ["leadR9"			,[["ytitle","Events / %(binw)s"],["xtitle","R_{9} (GeV) (#gamma_{1})"]]
+					,null,null],
+	      ["subleadR9"		,[["ytitle","Events / %(binw)s"],["xtitle","R_{9} (GeV) (#gamma_{2})"]]
+					,null,null],
+	      ["phoR9"			,[["ytitle","Events / %(binw)s"],["xtitle","R_{9} (GeV) (#gamma_{1,2})"]]
 					,null,null],
 
 	      ["leadPt"			,[["ytitle","Events / %(binw)s GeV"],["xtitle","p_{T}(#gamma 1) (GeV)"],["xrange",[0,200]],["overflow",[null]]]
@@ -136,12 +145,13 @@
 	      ["subleadPhoIso"		,[["xtitle","#gamma_{2} photon isolation (GeV)"],["xrange",[0,16]],
 	      				["overflow",[null]],"density",["ytitle","Events / %(binw)s GeV"]
 	      				]
-
 					,null,null,["sig"]],
+
 	      ["leadHoE"		,[["xtitle","#gamma_{1} H/E"],
 	      				["overflow",[null]],"density",["ytitle","Events / %(binw)s"]
 	      				]
 					,null,null,["sig"]],
+
 	      ["subleadHoE"		,[["ytitle","Events / %(binw)s GeV"],["xtitle","#gamma_{2} H/E"],["overflow",[null]]]
 
 					,null,null,["sig"]],
@@ -171,49 +181,23 @@
 	      ],
 
     "_selections" : [
-        ["kin","kinOnly"]
+        ["cic",""]
     ],
 
     "selections" : [
-        ["cic",""]
-    ],
-    "_selections" : [
+        ["cic",""],
         ["cicNoSigmaIetaIeta","noSiEiE",["lowmass","leadSigmaIeIe","subleadSigmaIeIe","phoSigmaIeIe"]],
         ["cicNoChIso","noChIso",["lowmass","leadChIso","subleadChIso","nvtx","rho","phoRndConeChIso"]],
         ["cicNoPhoIso","noPhoIso",["lowmass","leadPhoIso","subleadPhoIso","nvtx","rho"]],
-        ["cicNoHoverE","noHoE",["lowmass","leadHoE","subleadHoE"]],
-        ["cicNoEleVeto","noEleVeto",["lowmass","leadPassEleVeto","subleadPassEleVeto","leadPixSeed","subleadPixSeed"]],
-        ["cicSBNoChIsoSingleSB","chIsoSingleSB",["lowmass","leadChIso","subleadChIso","nvtx","rho","phoRndConeChIso"]],
-        ["cicSBNoChIsoDoubleSB","chIsoDoubleSB",["lowmass","leadChIso","subleadChIso","nvtx","rho","phoRndConeChIso"]]
-
-    ],
-
-    "_selections" : [
-        ["cicNoChIsoSingleSB","chIsoSingleSB"],
-        ["cicNoChIsoDoubleSB","chIsoDoubleSB"],
-        ["cicNoPhoIsoSingleSB","phoIsoSingleSB"],
-        ["cicNoPhoIsoDoubleSB","phoIsoDoubleSB"]
-    ],
-
-    "selections" : [
-        ["cic",""]
+        ["cicNoHoverE","noHoE",["lowmass","leadHoE","subleadHoE"]]
     ],
 
     "styles": { 
-	"lowmass_*" : [["printIntegral",[87,93]],"printMean"],
-	"lowmass_dy_EBEEHighR9" : [["Scale",1.033]],
-	"lowmass_dy_EBEELowR9"  : [["Scale",1.037]],
-	"lowmass_dy_EBEE"       : [["Scale",1.035]],
-	"lowmass_dy_EBEBHighR9" : [["Scale",1.099]],
-	"lowmass_dy_EBEBLowR9"  : [["Scale",1.021]],
-	"lowmass_dy_EBEB"       : [["Scale",1.035]],
-	"no_lowmass_dy_EBEBLowR9" : [["Scale",1.0021]],
-	"no_lowmass_dy_EBEBHighR9" : [["Scale",1.053]],
-	"no_lowmass_dy_EBEB"       : [["Scale",0.9917]],
-	"*Iso*"  : [["logy",1e-3]],
+	"lowmass_*" : [["printIntegral",[87,93]],["printIntegral",[70,110]],["printMean",[85,95]],["printMean",[80,100]],["printMean",[70,110]]],
+	"*Iso*"  : [["logy",1e-1]],
 	"*Pt*"  : [["logy",1e-1]],
 	"*pt*"  : [["logy",1e-2]],
-	    "*HoE*"  : [["logy",1e-3]],
+	"*HoE*"  : [["logy",1e-3]],
 	"*rat"   : ["SetGridy"],
         "*ratio" : [["ytitle","Data / MC"],["applyTo",["GetYaxis",[["SetNdivisions",505],["SetRangeUser",[0.5,1.5]]]]]],
         "lowmass*ratio" : [["ytitle","Data / MC"],["applyTo",["GetYaxis",[["SetNdivisions",505],["SetRangeUser",[0.5,1.5]]]]]],
@@ -223,6 +207,19 @@
      	"*SigmaIeIe_EE*_ratio" : [ ["xrange",[1.8e-2,3e-2]] ]
 
 	},
+
+    "_styles": { 
+	"no_lowmass_dy_EBEEHighR9" : [["Scale",1.033]],
+	"no_lowmass_dy_EBEELowR9"  : [["Scale",1.037]],
+	"no_lowmass_dy_EBEE"       : [["Scale",1.035]],
+	"no_lowmass_dy_EBEBHighR9" : [["Scale",1.099]],
+	"no_lowmass_dy_EBEBLowR9"  : [["Scale",1.021]],
+	"no_lowmass_dy_EBEB"       : [["Scale",1.035]],
+	"no_lowmass_dy_EBEBLowR9" : [["Scale",1.0021]],
+	"no_lowmass_dy_EBEBHighR9" : [["Scale",1.053]],
+	"no_lowmass_dy_EBEB"       : [["Scale",0.9917]]
+    },
+
     "postproc" : {
     },
 

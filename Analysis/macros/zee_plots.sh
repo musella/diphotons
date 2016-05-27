@@ -18,10 +18,10 @@ while [[ $1 == -* ]]; do
 	    sig_file="$1 $2"
 	    shift
 	    ;;
-	--bkg-file) 
-	    bkg_file="$1 $2"
-	    shift
-	    ;;
+	## --bkg-file) 
+	##     bkg_file="$1 $2"
+	##     shift
+	##     ;;
 	-O)
 	    target="$2"
 	    shift
@@ -48,7 +48,7 @@ done
 
 
 src=$1 && shift
-www=~/www/exo/moriond16
+www=~/www/exo/spring16
 echo $1
 [ -n "$1" ] && www=$1 && shift
 
