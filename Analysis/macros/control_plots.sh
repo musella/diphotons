@@ -51,7 +51,7 @@ done
 ## echo $opts
 
 src=$1 && shift
-www=~/www/exo/spring15_7415
+www=~/www/exo/spring16
 echo $1
 [ -n "$1" ] && www=$1 && shift
 
@@ -65,6 +65,9 @@ fi
 ./basic_plots.py --load basic_plots.json  -O $www/$target/selection  --input-dir $src $lumi $data_file $opts
 ## ./basic_plots.py --load purity_plots.json -O $www/$target/purity     --input-dir $src 
 ## ./eff_plots.py --load eff_plots.json      -O $www/$target/efficiency --input-dir $src 
+
+
+
 
 ## ./eff_plots.py --load eff_plots_grav.json    -O $www/$target/efficiency_grav --input-dir $src 
 
