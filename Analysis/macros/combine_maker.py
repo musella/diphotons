@@ -137,7 +137,7 @@ class CombineApp(TemplatesApp):
                                                             "EBEE0T" : 1.e-2 },
                                     help="Shift observable when plotting background fit"),
                         make_option("--plot-blind",dest="plot_blind",action="callback",callback=optpars_utils.ScratchAppend(float),
-                                    type="string",default=[],
+                                    type="string",default=[500,4000],
                                     help="Blinding region for background plot",
                                     ),
                         make_option("--plot-signal-binning",dest="plot_signal_binning",action="callback",callback=optpars_utils.ScratchAppend(float),
