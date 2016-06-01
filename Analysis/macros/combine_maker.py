@@ -137,7 +137,7 @@ class CombineApp(TemplatesApp):
                                                             "EBEE0T" : 1.e-2 },
                                     help="Shift observable when plotting background fit"),
                         make_option("--plot-blind",dest="plot_blind",action="callback",callback=optpars_utils.ScratchAppend(float),
-                                    type="string",default=[],
+                                    type="string",default=[500,4000],
                                     help="Blinding region for background plot",
                                     ),
                         make_option("--plot-signal-binning",dest="plot_signal_binning",action="callback",callback=optpars_utils.ScratchAppend(float),
@@ -395,6 +395,13 @@ class CombineApp(TemplatesApp):
                                     default="1",
                                     help="Specify luminosity for generating data, background and signal workspaces",
                                     ),
+                        make_option("--rescale-data",dest="rescale_data",action="store_true",default=False,
+                                    help="Scale data to the luminosity specified above",
+                                     ),
+                        make_option("--dataLumi",dest="dataLumi",action="store",type="string",
+                                    default="1",
+                                    help="Specify luminosity for data rescaling",
+                                    ),
                         make_option("--real-data",dest="real_data",action="store_true",
                                     default=True,
                                     help="Running on real data",
@@ -509,6 +516,9 @@ class CombineApp(TemplatesApp):
     def lumiScale(self,name):
         if not self.options.real_data or ( not "data" in name and not "template" in name):
             return self.options.luminosity
+        if self.options.rescale_data:
+            if self.options.real_data or ( "data" in name ):
+                return self.options.dataLumi
         return "1"
     
     ## ------------------------------------------------------------------------------------------------------------
@@ -2162,7 +2172,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         ## print exp
         ## print
         for fin in map(self.open, reduce(lambda x,y: x+y, exp )): 
-            workspace.append(fin.Get(options.parametric_signal_source["ws"]))
+            fin.Print()
+            workspace.append(fin.Get(str(options.parametric_signal_source["ws"])))
             
             
         prefix_output = options.output_file.replace(".root","")

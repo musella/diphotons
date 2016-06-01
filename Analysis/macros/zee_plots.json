@@ -193,7 +193,7 @@
     ],
 
     "styles": { 
-	"lowmass_*" : [["printIntegral",[87,93]],["printIntegral",[70,110]],["printMean",[85,95]],["printMean",[80,100]],["printMean",[70,110]]],
+	"no_lowmass_*" : [["printIntegral",[87,93]],["printIntegral",[70,110]],["printMean",[85,95]],["printMean",[80,100]],["printMean",[70,110]]],
 	"*Iso*"  : [["logy",1e-1]],
 	"*Pt*"  : [["logy",1e-1]],
 	"*pt*"  : [["logy",1e-2]],

@@ -100,7 +100,8 @@ void ConvolutionFromRDH(RooWorkspace* w, Int_t mass, TString coupling) {
   RooDataHist *resRDH = (RooDataHist*)fileRes->Get(myRDHA);    
   resRDH->Print(); 
   TString myRDHBa = TString(Form("widthRDH_mass%d",mass));   
-  TString myRDHB = TString(Form(myRDHBa))+TString(Form("_kpl"))+TString(Form(coupling));
+  //TString myRDHB = TString(Form(myRDHBa))+TString(Form("_kpl"))+TString(Form(coupling));             // chiara: when reading width for 8TeV samples
+  TString myRDHB = TString(Form(myRDHBa))+TString(Form("_catEBEB_kpl"))+TString(Form(coupling));       // chiara: when reading width for 13TeV samples
   RooDataHist *inwRDH = (RooDataHist*)fileInw->Get(myRDHB);   
   cout << myRDHB << endl;
   inwRDH->Print();        
@@ -129,6 +130,20 @@ void ConvolutionFromRDH(RooWorkspace* w, Int_t mass, TString coupling) {
   TString myConvName  = TString(Form(myConvNameA+"_kpl"+coupling));   
   RooFFTConvPdf *convol = new RooFFTConvPdf("convol","convol",*mgg,*myHistPdfInw,*myHistPdfRes);          
   // ad hoc corrections - start
+  if (coupling=="001" && mass==518)  convol->setBufferFraction(0.04);
+  if (coupling=="001" && mass==524)  convol->setBufferFraction(0.04);
+  if (coupling=="001" && mass==568)  convol->setBufferFraction(0.04);
+  if (coupling=="001" && mass==584)  convol->setBufferFraction(0.04);
+  if (coupling=="001" && mass==520)  convol->setBufferFraction(0.09);
+  if (coupling=="001" && mass==536)  convol->setBufferFraction(0.09);
+  if (coupling=="001" && mass==572)  convol->setBufferFraction(0.09);
+  if (coupling=="001" && mass==578)  convol->setBufferFraction(0.09);
+  if (coupling=="001" && mass==586)  convol->setBufferFraction(0.09);
+  if (coupling=="001" && mass==624)  convol->setBufferFraction(0.09);
+  if (coupling=="001" && mass==750)  convol->setBufferFraction(0.08);
+  if (coupling=="001" && mass==786)  convol->setBufferFraction(0.09);
+  //if (coupling=="001" && mass==3200) convol->setBufferFraction(0.09);
+  //
   if (coupling=="001" && mass==528)  convol->setBufferFraction(0.11);    
   if (coupling=="001" && mass==530)  convol->setBufferFraction(0.11);    
   if (coupling=="001" && mass==582)  convol->setBufferFraction(0.11);    
@@ -224,18 +239,21 @@ void runfits(string coupling="01") {
 
   // range of masses
   vector<int> masses;
+
   for (int iGenMass=0; iGenMass<250; iGenMass++) {
     int thisMass = 500 + iGenMass*2;
     masses.push_back(thisMass); 
   }
+  /*
   for (int iGenMass=0; iGenMass<150; iGenMass++) {
     int thisMass = 1000 + iGenMass*4;
     masses.push_back(thisMass); 
   }
-  for (int iGenMass=0; iGenMass<15; iGenMass++) {
+  for (int iGenMass=0; iGenMass<25; iGenMass++) { // extended range
     int thisMass = 1600 + iGenMass*100;
     masses.push_back(thisMass); 
   }
+  */
 
   // preparing roorealvars
   cout << endl; 

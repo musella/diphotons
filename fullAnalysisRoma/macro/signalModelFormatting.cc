@@ -6,13 +6,17 @@
 #include <TRandom.h>
 
 // To be modified
-static const Int_t classes     = 2;
-static const Int_t prompt      = 0;
-static const Int_t guessRereco = 0;
-static const Int_t rereco74x   = 0;
-static const Int_t rereco76x   = 0;
-static const Int_t scaleUp     = 0;
-static const Int_t scaleDown   = 0;
+static const Int_t classes       = 2;
+static const Int_t prompt        = 0;
+static const Int_t guessRereco   = 0;
+static const Int_t rereco74x     = 0;
+static const Int_t rereco76x     = 0;
+static const Int_t scaleUp       = 0;
+static const Int_t scaleDown     = 0;
+static const Int_t extraSmUp     = 0;
+static const Int_t extraSmDown   = 0;
+static const Int_t extraSm0TUp   = 0;
+static const Int_t extraSm0TDown = 0; 
 
 using namespace std;
 
@@ -27,7 +31,12 @@ void signalModelFormat(const char* filename, TString cicGenIso, TString kpl, TSt
   if (guessRereco) cout << "guessed rereco smearings applied" << endl;
   if (rereco74x)   cout << "74x rereco smearings by Giuseppe applied" << endl;
   if (rereco76x)   cout << "76x rereco smearings by Giuseppe applied" << endl;
-  if (!prompt && !guessRereco && !rereco74x && !rereco76x) { cout << "no smearing applied" << endl; }
+  if (!prompt && !guessRereco && !rereco74x && !rereco76x) { cout << "no nominal smearing applied" << endl; }
+  if (extraSmUp)     cout << "extra smearing from high mass DY applied - 3.8T, UP"   << endl;
+  if (extraSmDown)   cout << "extra smearing from high mass DY applied - 3.8T, DOWN" << endl;
+  if (extraSm0TUp)   cout << "extra smearing from high mass DY applied - 0T, UP"     << endl;
+  if (extraSm0TDown) cout << "extra smearing from high mass DY applied - 0T, DOWN"   << endl;
+  if (!extraSmUp && !extraSmDown && !extraSm0TUp && !extraSm0TDown) { cout << "no extra smearing applied" << endl; }
   if (scaleUp)     cout << "scale 1% up"   << endl;
   if (scaleDown)   cout << "scale 1% down" << endl;
   if (!scaleDown && !scaleUp) cout << "nominal scale" << endl;
@@ -80,6 +89,10 @@ void signalModelFormat(const char* filename, TString cicGenIso, TString kpl, TSt
   Float_t subleadR9    = 0.;
   Float_t leadScEta    = 0.;
   Float_t subleadScEta = 0.;
+  Float_t leadInitialEnergy    = 0.;
+  Float_t subLeadInitialEnergy = 0.;
+  Float_t leadEnergy    = 0.;
+  Float_t subLeadEnergy = 0.;
   
   // List of branches - original tree
   TBranch  *b_puweight;
@@ -89,6 +102,10 @@ void signalModelFormat(const char* filename, TString cicGenIso, TString kpl, TSt
   TBranch  *b_subleadR9;
   TBranch  *b_leadScEta;
   TBranch  *b_subleadScEta;
+  TBranch  *b_leadInitialEnergy;
+  TBranch  *b_subLeadInitialEnergy;
+  TBranch  *b_leadEnergy;
+  TBranch  *b_subLeadEnergy;
 
   // Set branch addresses and branch pointers 
   treeOrig->SetBranchAddress("puweight",     &puweight,     &b_puweight);
@@ -98,6 +115,10 @@ void signalModelFormat(const char* filename, TString cicGenIso, TString kpl, TSt
   treeOrig->SetBranchAddress("subleadR9",    &subleadR9,    &b_subleadR9);
   treeOrig->SetBranchAddress("leadScEta",    &leadScEta,    &b_leadScEta);
   treeOrig->SetBranchAddress("subleadScEta", &subleadScEta, &b_subleadScEta);
+  treeOrig->SetBranchAddress("leadInitialEnergy",    &leadInitialEnergy,    &b_leadInitialEnergy);
+  treeOrig->SetBranchAddress("subLeadInitialEnergy", &subLeadInitialEnergy, &b_subLeadInitialEnergy);
+  treeOrig->SetBranchAddress("leadEnergy",    &leadEnergy,    &b_leadEnergy);
+  treeOrig->SetBranchAddress("subLeadEnergy", &subLeadEnergy, &b_subLeadEnergy);
 
   // New variables
   float mgg, unsmearedMgg, mggGen;
@@ -246,7 +267,7 @@ void signalModelFormat(const char* filename, TString cicGenIso, TString kpl, TSt
 	smearEEhighEtaHighR9 = 0.0236;
 	smearEEhighEtaLowR9  = 0.0268;
       }
-      
+          
       // Gaussian
       float theGaussMean = 1.;
       if (scaleUp) {
@@ -284,7 +305,85 @@ void signalModelFormat(const char* filename, TString cicGenIso, TString kpl, TSt
       lSmear  = theFirstSmear;
       slSmear = theSecondSmear;
  
-   } else {
+    } else if (extraSmUp || extraSm0TUp || extraSmDown || extraSm0TDown ) {   // for systematics
+
+      // sigma of smearings by Giuseppe at Zpeak
+      float smearEBlowEtaHighR9  = 0.;
+      float smearEBlowEtaLowR9   = 0.;
+      float smearEBhighEtaHighR9 = 0.;
+      float smearEBhighEtaLowR9  = 0.;
+      float smearEElowEtaHighR9  = 0.;
+      float smearEElowEtaLowR9   = 0.;
+      float smearEEhighEtaHighR9 = 0.;
+      float smearEEhighEtaLowR9  = 0.;
+
+      // hardcoded, 3.8T
+      if (extraSmUp || extraSmDown) {
+	smearEBlowEtaHighR9  = 0.0080;
+	smearEBlowEtaLowR9   = 0.0094;
+	smearEBhighEtaHighR9 = 0.0115;
+	smearEBhighEtaLowR9  = 0.0183;
+	smearEElowEtaHighR9  = 0.0221;
+	smearEElowEtaLowR9   = 0.0201;
+	smearEEhighEtaHighR9 = 0.0230;
+	smearEEhighEtaLowR9  = 0.0268;
+      } else if ( extraSm0TUp || extraSm0TDown ){ 
+	// hardcoded, 0T
+	smearEBlowEtaHighR9  = 0.00788265;
+	smearEBlowEtaLowR9   = 0.00788265;
+	smearEBhighEtaHighR9 = 0.014427;
+	smearEBhighEtaLowR9  = 0.014427;
+	smearEElowEtaHighR9  = 0.01977;
+	smearEElowEtaLowR9   = 0.01977;
+	smearEEhighEtaHighR9 = 0.0235932;
+	smearEEhighEtaLowR9  = 0.0235932;
+      }
+
+      float theFirstSmear = 0.;   
+      if (fabs(leadScEta)<1 && leadR9>=0.94)      theFirstSmear = smearEBlowEtaHighR9;
+      else if (fabs(leadScEta)<1 && leadR9<0.94)  theFirstSmear = smearEBlowEtaLowR9;
+      else if (fabs(leadScEta)>=1 && fabs(leadScEta)<1.5 && leadR9>=0.94)  theFirstSmear = smearEBhighEtaHighR9;
+      else if (fabs(leadScEta)>=1 && fabs(leadScEta)<1.5 && leadR9<0.94)   theFirstSmear = smearEBhighEtaLowR9;
+      else if (fabs(leadScEta)>=1.5 && fabs(leadScEta)<2. && leadR9>=0.94) theFirstSmear = smearEElowEtaHighR9;
+      else if (fabs(leadScEta)>=1.5 && fabs(leadScEta)<2. && leadR9<0.94)  theFirstSmear = smearEElowEtaLowR9;
+      else if (fabs(leadScEta)>=2 && fabs(leadScEta)<2.5 && leadR9>=0.94)  theFirstSmear = smearEEhighEtaHighR9;
+      else if (fabs(leadScEta)>=2 && fabs(leadScEta)<2.5 && leadR9<0.94)   theFirstSmear = smearEEhighEtaLowR9;
+      //
+      float theSecondSmear = 0.;   
+      if (fabs(subleadScEta)<1 && subleadR9>=0.94)      theSecondSmear = smearEBlowEtaHighR9;
+      else if (fabs(subleadScEta)<1 && subleadR9<0.94)  theSecondSmear = smearEBlowEtaLowR9;
+      else if (fabs(subleadScEta)>=1 && fabs(subleadScEta)<1.5 && subleadR9>=0.94)  theSecondSmear = smearEBhighEtaHighR9;
+      else if (fabs(subleadScEta)>=1 && fabs(subleadScEta)<1.5 && subleadR9<0.94)   theSecondSmear = smearEBhighEtaLowR9;
+      else if (fabs(subleadScEta)>=1.5 && fabs(subleadScEta)<2. && subleadR9>=0.94) theSecondSmear = smearEElowEtaHighR9;
+      else if (fabs(subleadScEta)>=1.5 && fabs(subleadScEta)<2. && subleadR9<0.94)  theSecondSmear = smearEElowEtaLowR9;
+      else if (fabs(subleadScEta)>=2 && fabs(subleadScEta)<2.5 && subleadR9>=0.94)  theSecondSmear = smearEEhighEtaHighR9;
+      else if (fabs(subleadScEta)>=2 && fabs(subleadScEta)<2.5 && subleadR9<0.94)   theSecondSmear = smearEEhighEtaLowR9;
+
+      // smearing up / down
+      float movedFirstSmear  = 0;
+      float movedSecondSmear = 0;
+      if (extraSmUp || extraSm0TUp) {
+	movedFirstSmear  = sqrt( theFirstSmear*theFirstSmear + 0.005*0.005 );
+	movedSecondSmear = sqrt( theSecondSmear*theSecondSmear + 0.005*0.005 );
+      } else {
+	movedFirstSmear  = sqrt( theFirstSmear*theFirstSmear - 0.005*0.005 );
+	movedSecondSmear = sqrt( theSecondSmear*theSecondSmear - 0.005*0.005 );
+      }
+
+      // New energy with extra smearings
+      float theLeadRatio    = (movedFirstSmear-theFirstSmear)/theFirstSmear;
+      float theSubLeadRatio = (movedSecondSmear-theSecondSmear)/theSecondSmear;
+      float movedLeadEnergy    = leadEnergy*(1+theLeadRatio) - leadInitialEnergy*theLeadRatio;
+      float movedSubLeadEnergy = subLeadEnergy*(1+theSubLeadRatio) - subLeadInitialEnergy*theSubLeadRatio;
+      
+      // corrected mass
+      mgg = mass*sqrt(movedLeadEnergy*movedSubLeadEnergy)/sqrt(leadEnergy*subLeadEnergy);
+
+      // To check ntuples
+      lSmear  = 0.;
+      slSmear = 0.;
+      
+    } else {
 
       mgg = mass;
 
