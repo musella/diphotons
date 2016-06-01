@@ -2170,7 +2170,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         ## print exp
         ## print
         for fin in map(self.open, reduce(lambda x,y: x+y, exp )): 
-            workspace.append(fin.Get(options.parametric_signal_source["ws"]))
+            fin.Print()
+            workspace.append(fin.Get(str(options.parametric_signal_source["ws"])))
             
             
         prefix_output = options.output_file.replace(".root","")
