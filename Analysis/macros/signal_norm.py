@@ -614,7 +614,7 @@ class SignalNorm(PlotApp):
                     graph.Sort()
                     fit = ROOT.TF1(graph.GetName(),"pol2")
                     self.keep( [graph,fit], True )
-                    graph.Fit(fit)
+                    graph.Fit(fit,"+")
                     avg_eff_reco.append(graph)
 
             self.plotGraphs(avg_eff_reco,"avg_eff_reco",rng=[0.,0.9])

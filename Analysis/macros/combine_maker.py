@@ -435,8 +435,10 @@ class CombineApp(TemplatesApp):
         ROOT.gSystem.Load("libdiphotonsUtils")
         if ROOT.gROOT.GetVersionInt() >= 60000:
             ROOT.gSystem.Load("libdiphotonsRooUtils")
-        ROOT.gSystem.Load("libHiggsAnalysisCombinedLimit")
-        
+        try:
+            ROOT.gSystem.Load("libHiggsAnalysisCombinedLimit")
+        except:
+            pass
         self.pdfPars_ = ROOT.RooArgSet()
         self.observables_ = {}
         self.morph_ = {}
@@ -2170,7 +2172,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         ## print exp
         ## print
         for fin in map(self.open, reduce(lambda x,y: x+y, exp )): 
-            workspace.append(fin.Get(options.parametric_signal_source["ws"]))
+            fin.Print()
+            workspace.append(fin.Get(str(options.parametric_signal_source["ws"])))
             
             
         prefix_output = options.output_file.replace(".root","")
@@ -2521,20 +2524,6 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             plotDset = dset.reduce(RooFit.Cut("%s < %f || %s > %f" % (obs.GetName(),blind[0],obs.GetName(),blind[1]) ))
         else:
             plotDset = dset
-        ### cat = label.split("_")[1]
-        ### if cat in options.plot_shift:
-        ###     zero = ROOT.RooFit.RooConst(0.)
-        ###     shift = ROOT.RooFit.RooConst(1.+options.plot_shift[cat])
-        ###     fmobs = ROOT.RooLinearVar("sobs",obs.GetTitle(),obs,shift,zero)
-        ###     self.keep( [zero,shift,fmobs] )
-        ###     formula = ROOT.RooFormulaVar( "sobs", "@0*@1+@2", ROOT.RooArgList(obs,shift,zero) )
-        ###     dset.addColumn( formula )
-        ###     
-        ###     custom = ROOT.RooCustomizer(pdf,"")
-        ###     custom.replaceArg(obs,fmobs)
-        ###     self.keep( pdf )
-        ###     pdf = custom.build(True)
-        ###     self.keep( pdf )
 
         print "Plotting dataset"
         dset.plotOn(frame,*(dataopts+invisible+[RooFit.Invisible()]))
@@ -2556,6 +2545,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     ## hist.SetPointEYhigh(ip,0.)
                     ## continue
                     nev = fitc.Eval(hist.GetX()[ip])
+                    ## el = 0.
+                    ## eu = 0.
                 else:
                     nev = hist.GetY()[ip]
                 el = (nev - ROOT.Math.gamma_quantile(alpha,nev,1.)) if nev > 0. else 0.
@@ -2583,12 +2574,14 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                         hist2.SetPoint(ip,hist2.GetX()[ip],0.)
                         ## hist2.SetPointEYlow(ip,0.)
                         ## hist2.SetPointEYhigh(ip,0.)
-                        nev = fitc.Eval(hist2.GetX()[ip])
+                        ## nev = fitc.Eval(hist2.GetX()[ip])
                         ## continue
+                        el = 0. 
+                        eu = 0.
                     else:
                         nev = hist2.GetY()[ip]
-                    el = (nev - ROOT.Math.gamma_quantile(alpha,nev,1.)) if nev > 0. else 0.
-                    eu = ROOT.Math.gamma_quantile_c(alpha,nev+1.,1.) - nev
+                        el = (nev - ROOT.Math.gamma_quantile(alpha,nev,1.)) if nev > 0. else 0.
+                        eu = ROOT.Math.gamma_quantile_c(alpha,nev+1.,1.) - nev
                     hist2.SetPointEYlow(ip,el)
                     hist2.SetPointEYhigh(ip,eu)
                     
@@ -2606,8 +2599,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 hx = hist.GetX()[ip]
                 hy = hist.GetY()[ip]
                 
-                oerrp, oerrm = ronesigma.GetErrorYhigh(ip), ronesigma.GetErrorYhigh(ip)
-                terrp, terrm = rtwosigma.GetErrorYhigh(ip), rtwosigma.GetErrorYhigh(ip)
+                oerrp, oerrm = ronesigma.GetErrorYhigh(ip), ronesigma.GetErrorYlow(ip)
+                terrp, terrm = rtwosigma.GetErrorYhigh(ip), rtwosigma.GetErrorYlow(ip)
                 herrp, herrm = hist.GetErrorYhigh(ip), hist.GetErrorYhigh(ip)
                 ## print oerrp, oerrm, herrp, herrm
                 if blind and ronesigma.GetX()[ip]-ronesigma.GetErrorXlow(ip)>blind[0] and ronesigma.GetX()[ip]+ronesigma.GetErrorXhigh(ip)<blind[1]:
@@ -2646,9 +2639,11 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         resid.addObject(one)
         self.keep(one)
         hresid = frame.residHist(hist.GetName(),fitc.GetName(),True)
-        for ip in range(hresid.GetN()):
+        npoints = hresid.GetN()
+        for ip in range(npoints,0,-1):
             if blind and hresid.GetX()[ip]-hresid.GetErrorXlow(ip)>blind[0] and hresid.GetX()[ip]+hresid.GetErrorXhigh(ip)<blind[1]:
-                hresid.SetPoint(ip,hresid.GetX()[ip],0.)
+                ## hresid.SetPoint(ip,hresid.GetX()[ip],0.)
+                hresid.RemovePoint(ip)
         
         resid.addPlotable(hresid,"PE")
         
@@ -2828,9 +2823,9 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         bias     = ROOT.TGraphAsymmErrors()
 
         bands  =  [onesigma,twosigma,bias]
-        styles = [ [(style_utils.colors,ROOT.kGreen)],  [(style_utils.colors,ROOT.kYellow)], 
+        styles = [ [(style_utils.colors,ROOT.kGreen)],  [(style_utils.colors,ROOT.kOrange)], 
                    ## [(style_utils.colors,ROOT.kGreen-7)],  [(style_utils.colors,ROOT.kOrange-4)], 
-                   [(style_utils.colors,ROOT.kOrange)]
+                   [(style_utils.colors,ROOT.kYellow)]
                    ]
         for band in bands:
             style_utils.apply( band, styles.pop(0) )

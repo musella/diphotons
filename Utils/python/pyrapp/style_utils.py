@@ -155,10 +155,14 @@ def printIntegral(h,xmin=None,xmax=None):
         pass
 
 # -----------------------------------------------------------------------------------------------------------
-def printMean(h):
+def printMean(h,xmin=None,xmax=None):
     try:
-                
-        print("Mean %s: %2.4g" % (h.GetName(), h.GetMean() ))
+        if xmin and xmax:
+            first,last=h.GetXaxis().GetFirst(),h.GetXaxis().GetLast()
+            h.GetXaxis().SetRangeUser(xmin,xmax)
+        print("Mean %s(%s,%s): %2.4g" % (h.GetName(), str(xmin), str(xmax), h.GetMean() ))
+        if xmin and xmax:
+            h.GetXaxis().SetRange(first,second)
     except:
         pass
         

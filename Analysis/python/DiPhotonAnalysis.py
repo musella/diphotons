@@ -326,7 +326,7 @@ class DiPhotonAnalysis(object):
         if self.keepFFOnly:
             postSelect = "leadingPhoton.genMatchType != 1 && subLeadingPhoton.genMatchType != 1"
         elif self.keepPFOnly:
-            postSelect = "(leadingPhoton.genMatchType != 1) != (subLeadingPhoton.genMatchType != 1 )"
+            postSelect = "((leadingPhoton.genMatchType == 1 && subLeadingPhoton.genMatchType != 1 ) || (leadingPhoton.genMatchType != 1 && subLeadingPhoton.genMatchType == 1 ))"
         elif self.vetoGenDiphotons:
             postSelect = "genP4.mass <= %1.5g" % self.vetoGenDiphotons
         sortDiPhoColl = "sorted"+diphoColl if postSelect else diphoColl
@@ -414,7 +414,7 @@ class DiPhotonAnalysis(object):
         if self.keepFFOnly:
             postSelect = "leadingExtra.type != 1 && subLeadingExtra.type != 1"
         elif self.keepPFOnly:
-            postSelect = "(leadingExtra.type != 1) != (subLeadingExtra.type != 1 )"
+            postSelect = "( ( leadingExtra.type == 1  && subLeadingExtra.type != 1 ) || ( leadingExtra.type != 1  && subLeadingExtra.type == 1 ) )"
             
         sortDiPhoColl = "sorted"+diphoColl if postSelect else diphoColl
         
