@@ -200,12 +200,15 @@
 	"*HoE*"  : [["logy",1e-3]],
 	"*rat"   : ["SetGridy"],
         "*ratio" : [["ytitle","Data / MC"],["applyTo",["GetYaxis",[["SetNdivisions",505],["SetRangeUser",[0.5,1.5]]]]]],
-        "lowmass*ratio" : [["ytitle","Data / MC"],["applyTo",["GetYaxis",[["SetNdivisions",505],["SetRangeUser",[0.5,1.5]]]]]],
-     	"*SigmaIeIe_EB*_frame" : [ ["xrange",[3e-3,1.5e-2]] ],	 
-     	"*SigmaIeIe_EE*_frame" : [ ["xrange",[1.8e-2,3e-2]],["yrezoom",0.25] ],
-     	"*SigmaIeIe_EB*_ratio" : [ ["xrange",[3e-3,1.5e-2]] ],	 
-     	"*SigmaIeIe_EE*_ratio" : [ ["xrange",[1.8e-2,3e-2]] ]
-
+        "lowmass*ratio" : [["ytitle","Data / MC"],["applyTo",["GetYaxis",[["SetNdivisions",505],["SetRangeUser",[0.8,1.2]]]]]],
+     	"*SigmaIeIe_*EB_frame" : [ ["xrange",[3e-3,1.5e-2]] ],	 
+     	"*SigmaIeIe_*EE_frame" : [ ["xrange",[1.8e-2,3e-2]],["yrezoom",0.25] ],
+     	"*SigmaIeIe_*EB_ratio" : [ ["xrange",[3e-3,1.5e-2]] ],	 
+     	"*SigmaIeIe_*EE_ratio" : [ ["xrange",[1.8e-2,3e-2]] ],
+     	"*SigmaIeIe_EBEB*R9_frame" : [ ["xrange",[3e-3,1.5e-2]] ],	 
+     	"*SigmaIeIe_EBEE*R9_frame" : [ ["xrange",[1.8e-2,3e-2]],["yrezoom",0.25] ],
+     	"*SigmaIeIe_EBEB*R9_ratio" : [ ["xrange",[3e-3,1.5e-2]] ],	 
+     	"*SigmaIeIe_EBEE*R9_ratio" : [ ["xrange",[1.8e-2,3e-2]] ]
 	},
 
     "_styles": { 

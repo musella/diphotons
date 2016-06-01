@@ -4,8 +4,8 @@
         "isEE := abs(scEta)>1.5"
     ], 
     "variables": [
-        "sieie[500, 0, 0.05]",
-        "sipip[500, 0, 0.05]"
+        "egPhotonIso[1000,-10,50]",
+	"egChargedHadronIso[1000,-10,50]"
     ],
 
     "fitMedian" : true,

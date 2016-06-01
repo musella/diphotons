@@ -62,9 +62,9 @@ if [[ $target != "/*" ]]; then
     mkdir  $www/$target/
 fi
 
-./basic_plots.py --load basic_plots.json  -O $www/$target/selection  --input-dir $src $lumi $data_file $opts
+## ./basic_plots.py --load basic_plots.json  -O $www/$target/selection  --input-dir $src $lumi $data_file $opts
 ## ./basic_plots.py --load purity_plots.json -O $www/$target/purity     --input-dir $src 
-## ./eff_plots.py --load eff_plots.json      -O $www/$target/efficiency --input-dir $src 
+./eff_plots.py --load eff_plots.json      -O $www/$target/efficiency --input-dir $src 
 
 
 
