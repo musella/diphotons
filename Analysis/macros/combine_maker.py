@@ -421,6 +421,10 @@ class CombineApp(TemplatesApp):
                                     default=None,
                                     help="Change cross section of all signals to the specified value",
                                     ),
+                        make_option("--spin2",action="store_true", dest="spin2", 
+                                    default=True),
+                        make_option("--spin0",action="store_false", dest="spin2", 
+                            ),
                         ]
                  )
                 ]+option_groups,option_list=option_list
@@ -468,12 +472,14 @@ class CombineApp(TemplatesApp):
         
         self.signal_scale_factors_ = {}
         if options.rescale_signal_to:
-            with open(os.path.expandvars("$CMSSW_BASE/src/diphotons/MetaData/data/cross_sections.json"),'r') as xsec_file:
+            print "Searching for spin %d cross sections in diphotons cross section files" % ( 2 if self.options.spin2 else 0 )
+            for xsec_file in map(lambda x:  open(os.path.expandvars('$CMSSW_BASE/src/diphotons/MetaData/data/%s'%x),'r'), ["cross_sections_gen_grid.json","cross_sections.json"] ):
                 xsections = json.loads(xsec_file.read())
                 for name,val in xsections.iteritems():
-                    if name.startswith("RSGravToGG"):
-                        coup,mass = name.split("kMpl")[1].split("_Tune")[0].replace("_","").replace("-","").split("M")
-                        ## mass = float(mass)
+                    if (self.options.spin2 and (name.startswith("RSGravToGG") or name.startswith("RSGravitonToGG"))) or (not self.options.spin2 and name.startswith("GluGluSpin0")):
+
+                        mass,coup = self.getMassAndCoup(name)
+                        ## print name, mass, coup
                         if not coup in self.signal_scale_factors_:
                             self.signal_scale_factors_[coup] = {}
                             
@@ -520,6 +526,16 @@ class CombineApp(TemplatesApp):
             if self.options.real_data or ( "data" in name ):
                 return self.options.dataLumi
         return "1"
+
+    def getMassAndCoup(self,name):
+        if "Grav" in name:
+            coup,mass = name.split("kMpl")[1].split("_Tune")[0].replace("_","").replace("-","").split("M")
+        elif "Spin0" in name:
+            width,mass = name.split("_W")[1].split("_Tune")[0].replace("_","").replace("-","").split("M")
+            coup = sqrt(float(width.replace("p","."))*1e-2/1.4)
+            coup = ( "%03d" % ( coup*100. ) ).rstrip("0")
+            
+        return mass,coup
     
     ## ------------------------------------------------------------------------------------------------------------
     def generateDatacard(self,options,args):

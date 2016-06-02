@@ -15,10 +15,10 @@
 	
     "#" : "data to be fit                                                                                                       ",
     "_data" : [
-               "GGJets_M_200To13000_sherpa_13TeV:__infile__/%(sel)sGenIso",
-               "GGJets_M_200To13000_sherpa_13TeV:__infile__/%(sel)sNonGenIso",
+               "GGJets_M_60To13000_sherpa_13TeV:__infile__/%(sel)sGenIso",
+               "GGJets_M_60To13000_sherpa_13TeV:__infile__/%(sel)sNonGenIso",
                "QCD_HT_100toInf_13TeV:__infile__/%(sel)s",
-               "GJets_HT_100toInf_13TeV:__infile__/%(sel)s"            
+               "GJets_DR_0p4_HT_40toInf_13TeV:__infile__/%(sel)s"            
              ],
 
     "data" : [
@@ -34,29 +34,27 @@
                "Data_13TeV:__infile__/%(sel)s"
              ],
     "templatesMC" : [
-               "GGJets_M_200To13000_sherpa_13TeV:__infile__/%(sel)s",
-               "GJets_HT_100toInf_13TeV:__infile__/%(sel)s",      
-               "QCD_Pt_30toInf_13TeV:__infile__/%(sel)s"
+               "GGJets_M_60To13000_Pt_50_sherpa_13TeV:__infile__/%(sel)s",
+               "GJets_DR_0p4_HT_40ToInf_13TeV:__infile__/%(sel)s"
              ],
              
      "#" : "mc dataset",
      "mc" : [
-               "GGJets_M_200To13000_sherpa_13TeV:__infile__/%(sel)sGenIso",
-               "GGJets_M_200To13000_sherpa_13TeV:__infile__/%(sel)sNonGenIso",
-               "QCD_Pt_30toInf_13TeV:__infile__/%(sel)s",
-               "GJets_HT_100toInf_13TeV:__infile__/%(sel)s"            
+               "GGJets_M_60To13000_Pt_50_sherpa_13TeV:__infile__/%(sel)sGenIso",
+               "GGJets_M_60To13000_Pt_50_sherpa_13TeV:__infile__/%(sel)sNonGenIso",
+               "GJets_DR_0p4_HT_40ToInf_13TeV:__infile__/%(sel)s"            
             ],
 
      "_mc" : [
-             "GGJets_M_200To13000_sherpa_13TeV:__infile__/%(sel)sGenIso",
-               "GGJets_M_200To13000_sherpa_13TeV:__infile__/%(sel)sNonGenIso",
+             "GGJets_M_60To13000_sherpa_13TeV:__infile__/%(sel)sGenIso",
+               "GGJets_M_60To13000_sherpa_13TeV:__infile__/%(sel)sNonGenIso",
                "QCD_HT_100toInf_13TeV:__infile__/%(sel)s",
                "GJets_HT_100toInf_13TeV:__infile__/%(sel)s"            
             ],
 
      "#" : "mc dataset",
       "signals" : { 
-	    "grav_001_750" : [ "RSGravToGG_kMpl_001_M_750_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_001_M_750_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ]
+	    "grav_001_760" : [ "RSGravToGG_kMpl_001_M_760_TuneCUEP8M1_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_001_M_760_TuneCUEP8M1_13TeV:__infile__/%(sel)sNonGenIso"  ]
       },
 
       "_signals" : { 
