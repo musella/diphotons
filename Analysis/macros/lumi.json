@@ -5,7 +5,8 @@
     ],
 
     "postproc" : {
-    	       "*" : [["addCmsLumi",[4,1,"Preliminary"]]]
+    	       "*" : [["addCmsLumi",[4,0]]],
+    	       "NONE" : [["addCmsLumi",[4,1,"Preliminary"]]]
 	       }	
     
 }

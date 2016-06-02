@@ -21,11 +21,11 @@
                "GJets_HT_100toInf_13TeV:__infile__/%(sel)s"            
              ],
 
-    "_data" : [
+    "data" : [
                "Data_13TeV:__infile__/%(sel)s"
              ],
 
-    "data" : [
+    "_data" : [
                "DoubleEG_13TeV:__infile__/%(sel)s"
              ],
 
@@ -212,7 +212,9 @@
 	       
 	       "mgg := mass",
 	       "mggEBEB := mass",
-               "mggEBEE := mass"
+               "mggEBEE := mass",
+	       "mggEBEBShift := mass*0.99",
+               "mggEBEEShift := mass*0.995"
 	       
 	       ],
 

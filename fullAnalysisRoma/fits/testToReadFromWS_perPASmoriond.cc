@@ -49,10 +49,12 @@ void runfits() {
   lat->SetTextFont(42);
 
   // Plot
-  RooPlot *frameCat0 = mggEBEB->frame(Range(435,565),Bins(26));
-  TCanvas *c1 = new TCanvas("c1","c1",1);
-  convEBEB_mor->plotOn(frameCat0, LineColor(kRed), LineStyle(kSolid));
-  convEBEB_dec->plotOn(frameCat0, LineColor(kBlue), LineStyle(kSolid));
+  RooPlot *frameCat0 = mggEBEB->frame(Range(435,565));
+  TCanvas *c1 = new TCanvas("c1","c1",1);  
+  // /convEBEB_mor->createIntegral(RooArgSet(mggEBEB))->getVal()
+  mggEBEB->setRange("normRange",435,565);
+  convEBEB_mor->plotOn(frameCat0, LineColor(kRed), LineStyle(kSolid), NormRange("normRange"));
+  convEBEB_dec->plotOn(frameCat0, LineColor(kBlue), LineStyle(kSolid), NormRange("normRange"));
   frameCat0->GetXaxis()->SetTitleSize(0.045);
   frameCat0->GetYaxis()->SetTitleSize(0.045);
   frameCat0->GetXaxis()->SetLabelSize(0.045);

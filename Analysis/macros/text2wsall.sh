@@ -2,7 +2,7 @@
 
 set -x 
 
-folder=$1
+folder=$1 && shift
 
 cd $folder
 
@@ -12,4 +12,4 @@ libs="-L libdiphotonsUtils"
 rootversion=$(root-config --version| tr '.' ' ' | awk '{print  $1}')
 [[ $rootversion -gt 5 ]] && libs="-L libdiphotonsRooUtils"
 
-echo datacard*.txt | xargs -n 1 text2workspace.py $libs
+echo datacard*.txt | xargs -n 1 text2workspace.py $libs $@

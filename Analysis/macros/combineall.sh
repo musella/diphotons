@@ -58,9 +58,9 @@ for coup in $(echo $coupl | tr ',' ' '); do
     cards=datacard*_grav_${coup}_*.txt
     outputs=""
     if [[ -n $seed ]]; then 
-	hout=higgsCombine${label}_k${kmpl}.$method.$seed.root
+	hout=higgsCombine${label}_k${coup}.$method.$seed.root
     else
-	hout=higgsCombine${label}_k${kmpl}.$method.root
+	hout=higgsCombine${label}_k${coup}.$method.root
     fi
     
     for card in $cards; do
