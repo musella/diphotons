@@ -977,8 +977,10 @@ if not customize.lastAttempt:
 
 # load appropriate scale and smearing bins here
 # systematics customization scripts will take care of adjusting flashggDiPhotonSystematics
-process.load('flashgg.Systematics.escales.escale76X_16DecRereco_2015')
+#process.load('flashgg.Systematics.escales.escale76X_16DecRereco_2015')
+process.load('flashgg.Systematics.escales.test_2016B_corr')
 
+#flashgg/Systematics/python/escales/test_2016B_corr.py
 # this will call customize(process), configure the analysis paths and make the process unscheduled
 analysis.customize(process,customize)
 
