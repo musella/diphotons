@@ -45,7 +45,7 @@
 	}, 
 	
     "plots": [
-	      ["genmass" ,[["ytitle","Events / %(binw)s GeV"],["xtitle","m^{GEN}_{#gamma #gamma} (GeV)"],["xrange",[300.0,10000.0]],["rebin",[[200,210,220,230,250,260,280,300,320,340,360,380,400,420,440,460,480,500,550,600,650,700,800,900,1000,1200,1400,1600,1800,2000,2200,2600,2800,3000,3500,4000,4500,5000,6000,7000,8000,10000]]],"density"],null,null],
+	      ["genmass" ,[["ytitle","Events / %(binw)s GeV"],["xtitle","m^{GEN}_{#gamma #gamma} (GeV)"],["xrange",[200.0,4000.0]],["rebin",[[200,250,300,350,400,450,500,550,600,650,700,800,900,1000,1200,1400,1600,1800,2000,2200,2600,2800,3000,3500,4000]]],"density"],null,null],
 	      ["mass" ,[["Rebin",5],["ytitle","Events / %(binw)s GeV"],["xtitle","m^{RECO}_{#gamma #gamma} (GeV)"],["xrange",[300.0,10000.0]]],null,null],
 	      ["leadPt" ,[["Rebin",5],["ytitle","Events / %(binw)s GeV"],["xtitle","p_{T}(#gamma 1) (GeV)"],["xrange",[100.0,6000.0]]],null,null],
 	      ["subleadPt" ,[["Rebin",5],["ytitle","Events / %(binw)s GeV"],["xtitle","p_{T}(#gamma 2) (GeV)"],["xrange",[100.0,6000.0]]],null,null]
@@ -60,7 +60,8 @@
     "postproc" : {
     },
 
-    "template": "%(sample)s/histograms/GGJets_M_200To13000_sherpa_13TeV_%(cat)s%(name)s",
+    "_template": "%(sample)s/histograms/GGJets_M_200To13000_sherpa_13TeV_%(cat)s%(name)s",
+    "template": "%(sample)s/histograms/GGJets_M_60To13000_Pt_50_sherpa_13TeV_%(cat)s%(name)s",
 
     "rootstyle_extra" : [
     		  "TGaxis::SetMaxDigits(3);",

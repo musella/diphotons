@@ -198,6 +198,48 @@
 			},
             "templates" : {}
 	},	
+        "cicTestR9" : {
+            "ndim"       : 2,                                                                "#" : "number of dimensions for the template  ",
+            "bins"       : [ "mass", [500.0,1300.0] ],                                       "#" : "kinematic bins in which the fit is run ",
+            "template_binning" : [ 0.0, 0.1, 5.0, 15.0 ],                                    "#" : "template varaible binning              ",
+		
+            "selection"    : "cic",
+            "components" : [ "pp", "pf", "ff" ],                                             "#" : "list of fit components                 ",
+            "dataset_variables" : ["mgg","mass","mggEBEB:=mgg","mggEBEE:=mgg","mggGen:=genMass","leadPt","subleadPt","leadEta","subleadEta", "leadMatchType", "subleadMatchType","leadR9","subleadR9"],      "#" : "additional variables to be stored      ",
+            "store_trees" : true,	
+
+            "#" :"categories in which to split the fit       ",
+            "categories" : {
+                "EBHighR9" : { 
+                    "src"  : "EBEB", "#" : "dataset category (or group) to use as input.",
+                     "fill" : { 
+                     "TMath::Even(event) && max(leadR9,subleadR9)>=0.93 && min(leadR9,subleadR9)>=0.93" :[ "leadChIso", "subleadChIso" ],
+                         "!TMath::Even(event) && max(leadR9,subleadR9)>=0.93 && min(leadR9,subleadR9)>=0.93" :[ "subleadChIso", "leadChIso" ]
+                      }
+                }, 
+                "EBLowR9" : { 
+                    "src"  : "EBLowR9", "#" : "dataset category (or group) to use as input.",
+                     "fill" : { 
+                     "TMath::Even(event) && (max(leadR9,subleadR9)<0.93 || min(leadR9,subleadR9)<0.93)" :[ "leadChIso", "subleadChIso" ],
+                         "!TMath::Even(event) && (max(leadR9,subleadR9)<0.93 || min(leadR9,subleadR9)<0.93)" :[ "subleadChIso", "leadChIso" ]
+                      }
+                }, 
+                "EBEE" : { "src" : "notEBEB" ,
+                        "fill" : { 
+                        "leadIsEB && ! subleadIsEB" :[ "leadChIso", "subleadChIso" ],
+                            "! leadIsEB && subleadIsEB" :[ "subleadChIso", "leadChIso" ]
+                       }
+                }
+            },
+	    "signals" : "__all__", 
+		"truth_selection" : {
+		    "pp" : "leadPrompt  && subleadPrompt",
+			"pf" : "(leadPrompt && subleadFake) || (subleadPrompt && leadFake)",
+                    "ff" : "leadFake    && subleadFake && ( leadMatchType != 0 || subleadMatchType != 0)",
+                    "all_ff" : "leadFake    && subleadFake"
+			},
+            "templates" : {}
+	},	
         "cic0T" : {
             "ndim"       : 2,                                                                "#" : "number of dimensions for the template  ",
             "bins"       : [ "mass", [500.0,1300.0] ],                                       "#" : "kinematic bins in which the fit is run ",

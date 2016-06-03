@@ -4,10 +4,18 @@
 
     "sig" : null,
 
-    "data" : [
+    "_data" : [
 	      ["ggjet","#gamma #gamma only",
 	      [["SetBinErrorOption",1],["colors","kBlack"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","l"],["SetMarkerStyle","kFullCircle"],["SetFillColor","kWhite"]],
 	      { "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)sGenIso" : [] }
+	      ]
+	      
+	     ],
+
+    "data" : [
+	      ["ggjet","#gamma #gamma only",
+	      [["SetBinErrorOption",1],["colors","kBlack"],["SetLineWidth",2],["SetFillStyle",0],["Scale",1],["legopt","l"],["SetMarkerStyle","kFullCircle"],["SetFillColor","kWhite"]],
+	      { "GGJets_M_60To13000_Pt_50_sherpa_13TeV:__infile__/%(sel)s" : [] }
 	      ]
 	      
 	     ],
@@ -16,9 +24,8 @@
 	      ["jetjet","j j",
 	      [["colors","myColorC1"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",1],["legopt","f"],["SetFillColor","myColorC3tr"]],
 	      { "QCD_Pt_30toInf_13TeV:output.root/%(sel)s" : [] }
-	      ]
-    ],	      
-    "bkg" : [
+	      ],
+
 	      ["gjet","#gamma j",
 	      [["colors","myColorA1"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",1],["legopt","f"],["SetFillColor","myColorA3tr"]],
 	      { "GJets_HT_100toInf_13TeV:output.root/%(sel)s" : [] }
@@ -27,6 +34,17 @@
 	      ["ggjet_iso","#gamma #gamma",
 	      [["colors","myColorB1"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",1],["legopt","f"],["SetFillColor","myColorB3tr"]],
 	      { "GGJets_M_200To13000_sherpa_13TeV:output.root/%(sel)s" : [] }
+	      ]
+    ],	      
+    "bkg" : [
+	      ["gjet","#gamma j",
+	      [["colors","myColorA1"],["SetLineWidth",2],["Scale",1],["SetFillStyle",1001],["legopt","f"],["SetFillColor","myColorA3tr"]],
+	      { "GJets_DR_0p4_HT_40ToInf_13TeV:__infile__/%(sel)s" : [] }
+	      ],
+
+	      ["ggjet_iso","#gamma #gamma",
+	      [["colors","myColorB1"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",1],["legopt","f"],["SetFillColor","myColorB3tr"]],
+	      { "GGJets_M_60To13000_Pt_50_sherpa_13TeV:__infile__/%(sel)s" : [] }
 	      ]
 	      
 	     ],

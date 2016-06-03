@@ -5,7 +5,8 @@ version=$1 && shift
 
 fitname=2D 
 #www=~/www/exo/spring15_7415
-www=~/www/exo/moriond16
+## www=~/www/exo/moriond16
+www=~/www/exo/spring16
 if [[ $(whoami) == "mquittna" ]]; then
     www=/afs/cern.ch/user/m/mquittna/www/diphoton/Phys14/
 fi
@@ -98,6 +99,10 @@ while [[ -n $1 ]]; do
 	--fit-background)
 	    just_fit_bkg="1"
 	    ;;
+	--load)
+	    load_also="$1 $2"
+	    shift
+	    ;;
 	*)
 	    opts="$opts $1"
 	    ;;	    
@@ -153,13 +158,13 @@ if [[ -n $rerun  ]] || [[ ! -f $input ]]; then
         subset="2D,singlePho"
         mix="--mix-templates"
     fi
-    ./templates_maker.py --load templates_maker.json,templates_maker_prepare.json --only-subset $subset $mix --input-dir $treesdir/$input_folder $prepare -o $input $verbose $input_opts 2>&1 | tee $input_log
+    ./templates_maker.py --load templates_maker.json,templates_maker_prepare.json $load_also --only-subset $subset $mix --input-dir $treesdir/$input_folder $prepare -o $input $verbose $input_opts 2>&1 | tee $input_log
     echo "**************************************************************************************************************************"
 elif [[ -n $mix ]]; then
     echo "**************************************************************************************************************************"
     echo "running event mixing"
     echo "**************************************************************************************************************************"    
-    ./templates_maker.py --load templates_maker_prepare.json --read-ws $input $mix $verbose 2>&1 | tee mix_$input_log
+    ./templates_maker.py --load templates_maker_prepare.json $load_also --read-ws $input $mix $verbose 2>&1 | tee mix_$input_log
     echo "**************************************************************************************************************************"
 fi
 	    

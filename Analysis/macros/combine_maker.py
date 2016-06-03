@@ -421,6 +421,10 @@ class CombineApp(TemplatesApp):
                                     default=None,
                                     help="Change cross section of all signals to the specified value",
                                     ),
+                        make_option("--spin2",action="store_true", dest="spin2", 
+                                    default=True),
+                        make_option("--spin0",action="store_false", dest="spin2", 
+                            ),
                         ]
                  )
                 ]+option_groups,option_list=option_list
@@ -435,8 +439,10 @@ class CombineApp(TemplatesApp):
         ROOT.gSystem.Load("libdiphotonsUtils")
         if ROOT.gROOT.GetVersionInt() >= 60000:
             ROOT.gSystem.Load("libdiphotonsRooUtils")
-        ROOT.gSystem.Load("libHiggsAnalysisCombinedLimit")
-        
+        try:
+            ROOT.gSystem.Load("libHiggsAnalysisCombinedLimit")
+        except:
+            pass
         self.pdfPars_ = ROOT.RooArgSet()
         self.observables_ = {}
         self.morph_ = {}
@@ -466,12 +472,14 @@ class CombineApp(TemplatesApp):
         
         self.signal_scale_factors_ = {}
         if options.rescale_signal_to:
-            with open(os.path.expandvars("$CMSSW_BASE/src/diphotons/MetaData/data/cross_sections.json"),'r') as xsec_file:
+            print "Searching for spin %d cross sections in diphotons cross section files" % ( 2 if self.options.spin2 else 0 )
+            for xsec_file in map(lambda x:  open(os.path.expandvars('$CMSSW_BASE/src/diphotons/MetaData/data/%s'%x),'r'), ["cross_sections_gen_grid.json","cross_sections.json"] ):
                 xsections = json.loads(xsec_file.read())
                 for name,val in xsections.iteritems():
-                    if name.startswith("RSGravToGG"):
-                        coup,mass = name.split("kMpl")[1].split("_Tune")[0].replace("_","").replace("-","").split("M")
-                        ## mass = float(mass)
+                    if (self.options.spin2 and (name.startswith("RSGravToGG") or name.startswith("RSGravitonToGG"))) or (not self.options.spin2 and name.startswith("GluGluSpin0")):
+
+                        mass,coup = self.getMassAndCoup(name)
+                        ## print name, mass, coup
                         if not coup in self.signal_scale_factors_:
                             self.signal_scale_factors_[coup] = {}
                             
@@ -518,6 +526,16 @@ class CombineApp(TemplatesApp):
             if self.options.real_data or ( "data" in name ):
                 return self.options.dataLumi
         return "1"
+
+    def getMassAndCoup(self,name):
+        if "Grav" in name:
+            coup,mass = name.split("kMpl")[1].split("_Tune")[0].replace("_","").replace("-","").split("M")
+        elif "Spin0" in name:
+            width,mass = name.split("_W")[1].split("_Tune")[0].replace("_","").replace("-","").split("M")
+            coup = sqrt(float(width.replace("p","."))*1e-2/1.4)
+            coup = ( "%03d" % ( coup*100. ) ).rstrip("0")
+            
+        return mass,coup
     
     ## ------------------------------------------------------------------------------------------------------------
     def generateDatacard(self,options,args):
@@ -2170,7 +2188,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         ## print exp
         ## print
         for fin in map(self.open, reduce(lambda x,y: x+y, exp )): 
-            workspace.append(fin.Get(options.parametric_signal_source["ws"]))
+            fin.Print()
+            workspace.append(fin.Get(str(options.parametric_signal_source["ws"])))
             
             
         prefix_output = options.output_file.replace(".root","")
@@ -2521,20 +2540,6 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             plotDset = dset.reduce(RooFit.Cut("%s < %f || %s > %f" % (obs.GetName(),blind[0],obs.GetName(),blind[1]) ))
         else:
             plotDset = dset
-        ### cat = label.split("_")[1]
-        ### if cat in options.plot_shift:
-        ###     zero = ROOT.RooFit.RooConst(0.)
-        ###     shift = ROOT.RooFit.RooConst(1.+options.plot_shift[cat])
-        ###     fmobs = ROOT.RooLinearVar("sobs",obs.GetTitle(),obs,shift,zero)
-        ###     self.keep( [zero,shift,fmobs] )
-        ###     formula = ROOT.RooFormulaVar( "sobs", "@0*@1+@2", ROOT.RooArgList(obs,shift,zero) )
-        ###     dset.addColumn( formula )
-        ###     
-        ###     custom = ROOT.RooCustomizer(pdf,"")
-        ###     custom.replaceArg(obs,fmobs)
-        ###     self.keep( pdf )
-        ###     pdf = custom.build(True)
-        ###     self.keep( pdf )
 
         print "Plotting dataset"
         dset.plotOn(frame,*(dataopts+invisible+[RooFit.Invisible()]))
@@ -2556,6 +2561,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     ## hist.SetPointEYhigh(ip,0.)
                     ## continue
                     nev = fitc.Eval(hist.GetX()[ip])
+                    ## el = 0.
+                    ## eu = 0.
                 else:
                     nev = hist.GetY()[ip]
                 el = (nev - ROOT.Math.gamma_quantile(alpha,nev,1.)) if nev > 0. else 0.
@@ -2583,12 +2590,14 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                         hist2.SetPoint(ip,hist2.GetX()[ip],0.)
                         ## hist2.SetPointEYlow(ip,0.)
                         ## hist2.SetPointEYhigh(ip,0.)
-                        nev = fitc.Eval(hist2.GetX()[ip])
+                        ## nev = fitc.Eval(hist2.GetX()[ip])
                         ## continue
+                        el = 0. 
+                        eu = 0.
                     else:
                         nev = hist2.GetY()[ip]
-                    el = (nev - ROOT.Math.gamma_quantile(alpha,nev,1.)) if nev > 0. else 0.
-                    eu = ROOT.Math.gamma_quantile_c(alpha,nev+1.,1.) - nev
+                        el = (nev - ROOT.Math.gamma_quantile(alpha,nev,1.)) if nev > 0. else 0.
+                        eu = ROOT.Math.gamma_quantile_c(alpha,nev+1.,1.) - nev
                     hist2.SetPointEYlow(ip,el)
                     hist2.SetPointEYhigh(ip,eu)
                     
@@ -2606,8 +2615,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 hx = hist.GetX()[ip]
                 hy = hist.GetY()[ip]
                 
-                oerrp, oerrm = ronesigma.GetErrorYhigh(ip), ronesigma.GetErrorYhigh(ip)
-                terrp, terrm = rtwosigma.GetErrorYhigh(ip), rtwosigma.GetErrorYhigh(ip)
+                oerrp, oerrm = ronesigma.GetErrorYhigh(ip), ronesigma.GetErrorYlow(ip)
+                terrp, terrm = rtwosigma.GetErrorYhigh(ip), rtwosigma.GetErrorYlow(ip)
                 herrp, herrm = hist.GetErrorYhigh(ip), hist.GetErrorYhigh(ip)
                 ## print oerrp, oerrm, herrp, herrm
                 if blind and ronesigma.GetX()[ip]-ronesigma.GetErrorXlow(ip)>blind[0] and ronesigma.GetX()[ip]+ronesigma.GetErrorXhigh(ip)<blind[1]:
@@ -2646,9 +2655,11 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         resid.addObject(one)
         self.keep(one)
         hresid = frame.residHist(hist.GetName(),fitc.GetName(),True)
-        for ip in range(hresid.GetN()):
+        npoints = hresid.GetN()
+        for ip in range(npoints,0,-1):
             if blind and hresid.GetX()[ip]-hresid.GetErrorXlow(ip)>blind[0] and hresid.GetX()[ip]+hresid.GetErrorXhigh(ip)<blind[1]:
-                hresid.SetPoint(ip,hresid.GetX()[ip],0.)
+                ## hresid.SetPoint(ip,hresid.GetX()[ip],0.)
+                hresid.RemovePoint(ip)
         
         resid.addPlotable(hresid,"PE")
         
@@ -2828,9 +2839,9 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         bias     = ROOT.TGraphAsymmErrors()
 
         bands  =  [onesigma,twosigma,bias]
-        styles = [ [(style_utils.colors,ROOT.kGreen)],  [(style_utils.colors,ROOT.kYellow)], 
+        styles = [ [(style_utils.colors,ROOT.kGreen)],  [(style_utils.colors,ROOT.kOrange)], 
                    ## [(style_utils.colors,ROOT.kGreen-7)],  [(style_utils.colors,ROOT.kOrange-4)], 
-                   [(style_utils.colors,ROOT.kOrange)]
+                   [(style_utils.colors,ROOT.kYellow)]
                    ]
         for band in bands:
             style_utils.apply( band, styles.pop(0) )
