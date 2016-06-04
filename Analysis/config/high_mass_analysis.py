@@ -983,7 +983,7 @@ if not customize.lastAttempt:
 
 # load appropriate scale and smearing bins here
 # systematics customization scripts will take care of adjusting flashggDiPhotonSystematics
-if "76X" in customize.datasetName():
+if "Run2015" in customize.datasetName() or "76X" in customize.datasetName():
     process.load('flashgg.Systematics.escales.escale76X_16DecRereco_2015')
     print "energy corrections file is escale76X_16DecRereco_2015"
 else:
