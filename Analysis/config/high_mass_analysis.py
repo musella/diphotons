@@ -44,8 +44,8 @@ customize.setDefault("targetLumi",1.e+3)
 ##                    "1.34e+05,6.34e+05,8.42e+05,1.23e+06,2.01e+06,4.24e+06,1.26e+07,4.88e+07,1.56e+08,3.07e+08,4.17e+08,4.48e+08,4.04e+08,3.05e+08,1.89e+08,9.64e+07,4.19e+07,1.71e+07,7.85e+06,4.2e+06,2.18e+06,9.43e+05,3.22e+05,8.9e+04,2.16e+04,5.43e+03,1.6e+03,551,206,80.1,31.2,11.9,4.38,1.54,0.518,0.165,0.0501,0.0144,0.00394,0.00102,0.000251,5.87e-05,1.3e-05,2.74e-06,5.47e-07,1.04e-07,1.86e-08,3.18e-09,5.16e-10,9.35e-11")
 
 ## Spring16 2016 0.2/fb
-customize.setDefault("puTarget",
-                     "1.109e-08,1.277e-05,8.702e-05,0.0001387,0.000164,0.0002515,0.0001906,0.0005275,0.0008447,0.001411,0.002905,0.006861,0.02123,0.05716,0.09932,0.1283,0.1471,0.1517,0.1324,0.09691,0.06379,0.0402,0.02412,0.0132,0.006383,0.002693,0.0009978,0.0003421,0.0001291,7.043e-05,5.531e-05,4.97e-05,4.545e-05,4.136e-05,3.762e-05,3.449e-05,3.209e-05,3.039e-05,2.924e-05,2.846e-05,2.786e-05,2.727e-05,2.661e-05,2.582e-05,2.486e-05,2.372e-05,2.243e-05,2.1e-05,1.947e-05,1.788e-05")
+#customize.setDefault("puTarget",
+#                     "1.109e-08,1.277e-05,8.702e-05,0.0001387,0.000164,0.0002515,0.0001906,0.0005275,0.0008447,0.001411,0.002905,0.006861,0.02123,0.05716,0.09932,0.1283,0.1471,0.1517,0.1324,0.09691,0.06379,0.0402,0.02412,0.0132,0.006383,0.002693,0.0009978,0.0003421,0.0001291,7.043e-05,5.531e-05,4.97e-05,4.545e-05,4.136e-05,3.762e-05,3.449e-05,3.209e-05,3.039e-05,2.924e-05,2.846e-05,2.786e-05,2.727e-05,2.661e-05,2.582e-05,2.486e-05,2.372e-05,2.243e-05,2.1e-05,1.947e-05,1.788e-05")
 
 ## Spring16 2016 0.6/fb
 customize.setDefault("puTarget",
@@ -278,6 +278,9 @@ variables=["mass","pt","rapidity","eta",
            "subLeadInitialEnergy := subLeadingPhoton.energyAtStep('initial')",
            "leadEnergy := leadingPhoton.p4.energy",
            "subLeadEnergy := subLeadingPhoton.p4.energy",
+           "lead_5x5_Energy := leadingPhoton.full5x5_e5x5",
+           "subLead_5x5_Energy := subLeadingPhoton.full5x5_e5x5",
+           "mass_5x5 := mass*sqrt(leadingPhoton.full5x5_e5x5*subLeadingPhoton.full5x5_e5x5/(leadingPhoton.p4.energy*subLeadingPhoton.p4.energy))",
            "leadIsSat := leadingPhoton.checkStatusFlag('kSaturated')",
            "subLeadIsSat := subLeadingPhoton.checkStatusFlag('kSaturated')",
            "leadIsWeird := leadingPhoton.checkStatusFlag('kWeird')",
@@ -980,9 +983,15 @@ if not customize.lastAttempt:
 
 # load appropriate scale and smearing bins here
 # systematics customization scripts will take care of adjusting flashggDiPhotonSystematics
-process.load('flashgg.Systematics.escales.escale76X_16DecRereco_2015')
+if "Run2015" in customize.datasetName() or "76X" in customize.datasetName():
+    process.load('flashgg.Systematics.escales.escale76X_16DecRereco_2015')
+    print "energy corrections file is escale76X_16DecRereco_2015"
+else:
+    process.load('flashgg.Systematics.escales.test_2016B_corr')
+    #flashgg/Systematics/python/escales/test_2016B_corr.py
+    print "energy corrections file is test_2016B_corr"
 
 # this will call customize(process), configure the analysis paths and make the process unscheduled
 analysis.customize(process,customize)
 
-## print process.dumpPython()
+##print process.dumpPython()
