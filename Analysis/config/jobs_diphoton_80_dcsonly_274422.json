@@ -1,0 +1,11 @@
+{
+
+	"processes" : {
+	"Data" : [ 
+"/DoubleEG/musella-EXOSpring16_v1_p8-Moriond16WSFinal-106-ga327d4a-v0-Run2016B-PromptReco-v2-a5f1c0c964d9d1f7d2e18cd5bbce5233/USER"
+	]
+
+	},
+	
+	"cmdLine" : "campaign=EXOSpring16_v1 selection=diphoton idversion=V2 trigger=HLT_DoublePhoton60_v* ptLead=75 ptSublead=75 massCut=230:330 lumiMask=/afs/cern.ch/user/m/musella/public/workspace/exo/myjson_DCSONLY3.8T-274422.txt"
+}

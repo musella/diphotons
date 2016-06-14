@@ -230,7 +230,12 @@
 
     "rootstyle_extra" : [
     		  "TGaxis::SetMaxDigits(3);",
-		  "TH1::SetDefaultSumw2(1);"
-    ]
+		  "TH1::SetDefaultSumw2(1);",
+		  "lumiTextSize = 0.5; lumiTextOffset = 0.55; cmsTextSize = 0.6; relExtraDY = -2.1; relExtraDX = -1.6;"
+    ],
+
+    "postproc" : {
+    	       "*" : [["addCmsLumi",[4,1,"Internal"]],"addCatLabel"]
+	       }	
     
 }

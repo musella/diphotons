@@ -15,7 +15,7 @@ for comp in ["data"]:
 		scl = 2.4
 	else:
 		scl =1.
-	for cat,cut in ("EBEB",230), ("EBEE",320):
+	for cat,cut in ("EBEB",230), ("EBEE",330):
 	## for cat,cut in ("EBEB0T",230), ("EBEE0T",320):
 		tree = fin.Get("tree_%s_cic2_%s" % (comp,cat) )
 		## tree = fin.Get("tree_%s_cic0T_%s" % (comp,cat) )

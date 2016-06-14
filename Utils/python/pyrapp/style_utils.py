@@ -140,6 +140,20 @@ def addCmsLumi(canv,period,pos,extraText=None):
     ROOT.CMS_lumi(canv,period,pos)
 
 
+def addCatLabel(canv,cat=None,x1=0.19,y1=0.81,x2=0.26,y2=0.91):
+    if not cat:
+        cat = canv.GetName().rsplit("_",1)[-1]
+    pt=ROOT.TPaveText(x1,y1,x2,y2,"nbNDC")    
+    pt.SetFillStyle(0)
+    pt.SetLineColor(ROOT.kWhite)
+    pt.AddText(cat)
+    canv.cd()
+    pt.Draw("same")
+    setattr(canv,"objs",getattr(canv,"objs",[]))
+    canv.objs.append(pt)
+    return canv
+
+
 # -----------------------------------------------------------------------------------------------------------
 def printIntegral(h,xmin=None,xmax=None):
     try:

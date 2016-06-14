@@ -25,6 +25,20 @@
 	     
 	      ], 
 
+"_bkg" : [
+              ["gjet","#gamma j",
+              [["colors","myColorA1"],["SetLineWidth",2],["Scale",1],["SetFillStyle",1001],["legopt","f"],["SetFillColor","myColorA3tr"]],
+              { "GJets_HT_40ToInf_13TeV:__infile__/%(sel)s" : [] }
+              ],
+
+              ["ggjet_iso","#gamma #gamma",
+              [["colors","myColorB1"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",1],["legopt","f"],["SetFillColor","myColorB3tr"]],
+              { "GGJets_M_60To13000_13TeV:__infile__/%(sel)s" : [] }
+              ]
+              
+             ],
+
+
     "bkg" : [
 	      ["gjet","#gamma j",
 	      [["colors","myColorA1"],["SetLineWidth",2],["Scale",1],["SetFillStyle",1001],["legopt","f"],["SetFillColor","myColorA3tr"]],
@@ -69,12 +83,12 @@
     "categories" : [],
 
     "groups": {
-        "EB"       : ["EBHighR9","EBLowR9"],
-        "EE"       : ["EEHighR9","EELowR9"],
-        "EBHighR9" : ["EBHighR9"],
-	"EBLowR9"  : ["EBLowR9"],
-	"EEHighR9" : ["EEHighR9"],
-	"EELowR9"  : ["EELowR9"]
+        "EBEB"       : ["EBHighR9","EBLowR9"],
+        "EBEE"       : ["EEHighR9","EELowR9"],
+        "EBEBHighR9" : ["EBHighR9"],
+	"EBEBLowR9"  : ["EBLowR9"],
+	"EBEEHighR9" : ["EEHighR9"],
+	"EBEELowR9"  : ["EELowR9"]
 	}, 
 
 	"_plots" : [	
@@ -100,7 +114,7 @@
 
     "plots": [
 	      ["mass"			,[["xtitle","m_{#gamma #gamma} (GeV)"],
-					  ["xrange",[100.0,1050.0]],["overflow",[null]],["rebin",[[100,150,180,200,250,300,400,500,1050]]],
+					  ["xrange",[100.0,1050.0]],["overflow",[null]],["rebin",[[230,250,270,290,320,350,400,450,500,1050]]],
 					  "density",["ytitle","Events / %(binw)s GeV"]
 					]
 					,null,null],
@@ -197,20 +211,16 @@
     ],
 
     "selections" : [
-        ["cic","cic","mass"],
-        ["cicNoChIso","noChIso"]
+        ["cic","cic","mass"]
     ],
 
-    "selections" : [
+    "_selections" : [
         ["cic",""],
         ["cicNoChIso","noChIso"],
         ["cicNoSigmaIetaIeta","noSiEiE",["mass","leadSigmaIeIe","subleadSigmaIeIe"]],
         ["cicNoPhoIso","noPhoIso",["mass","leadPhoIso","subleadPhoIso","nvtx","rho"]],
         ["cicNoHoverE","noHoE",["mass","leadHoE","subleadHoE"]],
-        ["cicNoEleVeto","noEleVeto",["mass","leadPassEleVeto","subleadPassEleVeto","leadPixSeed","subleadPixSeed"]],
-        ["cicSBNoChIsoSingleSB","chIsoSingleSB",["mass","leadChIso","subleadChIso","nvtx","rho","phoRndConeChIso"]],
-        ["cicSBNoChIsoDoubleSB","chIsoDoubleSB",["mass","leadChIso","subleadChIso","nvtx","rho","phoRndConeChIso"]]
-
+        ["cicNoEleVeto","noEleVeto",["mass","leadPassEleVeto","subleadPassEleVeto","leadPixSeed","subleadPixSeed"]]
     ],
 
     "_selections" : [
@@ -221,6 +231,7 @@
     ],
 	      
     "styles": { 
+    	"mass_*_EBE[BE]" : [["printIntegral",[230,13000]],["printIntegral",[330,13000]],["printIntegral",[500,13000]]],
 	"*mass*" : [["logy",1e-1]],
 	"*Iso*"  : [["logy",1e-2]],
 	"*Pt*"  : [["logy",1e-1]],
@@ -241,11 +252,11 @@
     "rootstyle_extra" : [
     		  "TGaxis::SetMaxDigits(3);",
 		  "TH1::SetDefaultSumw2(1);",
-		  "lumiTextSize = 0.5; lumiTextOffset = 0.4; cmsTextSize = 0.6; relExtraDY = 0.;"
+		  "lumiTextSize = 0.5; lumiTextOffset = 0.55; cmsTextSize = 0.6; relExtraDY = -2.1; relExtraDX = -1.6;"
     ],
 
     "postproc" : {
-    	       "*" : [["addCmsLumi",[4,1,"Preliminary"]]]
+    	       "*" : [["addCmsLumi",[4,1,"Internal"]],"addCatLabel"]
 	       }	
     
 }

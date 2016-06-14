@@ -101,6 +101,7 @@ while [[ -n $1 ]]; do
 	    ;;
 	--load)
 	    load_also="$1 $2"
+	    opts="$opts $1 $2"
 	    shift
 	    ;;
 	*)

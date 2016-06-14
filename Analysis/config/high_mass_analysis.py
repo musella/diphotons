@@ -43,16 +43,22 @@ customize.setDefault("targetLumi",1.e+3)
 ## customize.setDefault("puTarget",
 ##                    "1.34e+05,6.34e+05,8.42e+05,1.23e+06,2.01e+06,4.24e+06,1.26e+07,4.88e+07,1.56e+08,3.07e+08,4.17e+08,4.48e+08,4.04e+08,3.05e+08,1.89e+08,9.64e+07,4.19e+07,1.71e+07,7.85e+06,4.2e+06,2.18e+06,9.43e+05,3.22e+05,8.9e+04,2.16e+04,5.43e+03,1.6e+03,551,206,80.1,31.2,11.9,4.38,1.54,0.518,0.165,0.0501,0.0144,0.00394,0.00102,0.000251,5.87e-05,1.3e-05,2.74e-06,5.47e-07,1.04e-07,1.86e-08,3.18e-09,5.16e-10,9.35e-11")
 
-## Spring16 2016 0.2/fb
-#customize.setDefault("puTarget",
-#                     "1.109e-08,1.277e-05,8.702e-05,0.0001387,0.000164,0.0002515,0.0001906,0.0005275,0.0008447,0.001411,0.002905,0.006861,0.02123,0.05716,0.09932,0.1283,0.1471,0.1517,0.1324,0.09691,0.06379,0.0402,0.02412,0.0132,0.006383,0.002693,0.0009978,0.0003421,0.0001291,7.043e-05,5.531e-05,4.97e-05,4.545e-05,4.136e-05,3.762e-05,3.449e-05,3.209e-05,3.039e-05,2.924e-05,2.846e-05,2.786e-05,2.727e-05,2.661e-05,2.582e-05,2.486e-05,2.372e-05,2.243e-05,2.1e-05,1.947e-05,1.788e-05")
+# # Spring16 2016 0.2/fb
+# customize.setDefault("puTarget",
+#                      "1.109e-08,1.277e-05,8.702e-05,0.0001387,0.000164,0.0002515,0.0001906,0.0005275,0.0008447,0.001411,0.002905,0.006861,0.02123,0.05716,0.09932,0.1283,0.1471,0.1517,0.1324,0.09691,0.06379,0.0402,0.02412,0.0132,0.006383,0.002693,0.0009978,0.0003421,0.0001291,7.043e-05,5.531e-05,4.97e-05,4.545e-05,4.136e-05,3.762e-05,3.449e-05,3.209e-05,3.039e-05,2.924e-05,2.846e-05,2.786e-05,2.727e-05,2.661e-05,2.582e-05,2.486e-05,2.372e-05,2.243e-05,2.1e-05,1.947e-05,1.788e-05")
 
-## Spring16 2016 0.6/fb
+# ## Spring16 2016 0.6/fb
+# customize.setDefault("puTarget",
+#                      "2.699e-08,2.225e-05,9.239e-05,0.0001369,0.0002404,0.0003861,0.000503,0.001261,0.003494,0.01008,0.02443,0.04579,0.07122,0.102,0.1304,0.1456,0.1417,0.1154,0.07907,0.04912,0.03089,0.02043,0.01319,0.007653,0.003846,0.001661,0.0006239,0.0002155,8.165e-05,4.459e-05,3.503e-05,3.147e-05,2.878e-05,2.619e-05,2.382e-05,2.184e-05,2.032e-05,1.924e-05,1.852e-05,1.802e-05,1.764e-05,1.727e-05,1.685e-05,1.635e-05,1.574e-05,1.502e-05,1.42e-05,1.33e-05,1.233e-05,1.132e-05")
+
+# ## Spring16 2016 2/fb
+# customize.setDefault("puTarget",
+#                     "2.7e-08,2.225e-05,9.24e-05,0.0001369,0.0002404,0.0003862,0.000503,0.001261,0.003494,0.01008,0.02443,0.0458,0.07122,0.102,0.1304,0.1456,0.1417,0.1154,0.07907,0.04912,0.03088,0.02042,0.01319,0.007654,0.003846,0.001661,0.000624,0.0002156,8.165e-05,4.46e-05,3.503e-05,3.148e-05,2.879e-05,2.62e-05,2.382e-05,2.184e-05,2.033e-05,1.925e-05,1.852e-05,1.802e-05,1.764e-05,1.727e-05,1.686e-05,1.635e-05,1.574e-05,1.502e-05,1.42e-05,1.33e-05,1.233e-05,1.132e-05")
+
+
+## Spring16 2016 2.55/fb, but many runs missing from pu json
 customize.setDefault("puTarget",
-                     "2.699e-08,2.225e-05,9.239e-05,0.0001369,0.0002404,0.0003861,0.000503,0.001261,0.003494,0.01008,0.02443,0.04579,0.07122,0.102,0.1304,0.1456,0.1417,0.1154,0.07907,0.04912,0.03089,0.02043,0.01319,0.007653,0.003846,0.001661,0.0006239,0.0002155,8.165e-05,4.459e-05,3.503e-05,3.147e-05,2.878e-05,2.619e-05,2.382e-05,2.184e-05,2.032e-05,1.924e-05,1.852e-05,1.802e-05,1.764e-05,1.727e-05,1.685e-05,1.635e-05,1.574e-05,1.502e-05,1.42e-05,1.33e-05,1.233e-05,1.132e-05")
-
-## customize.setDefault("puTarget",
-##                      '3.82e+03,1.77e+05,4.26e+05,3.55e+05,5.22e+05,7.1e+05,9.13e+05,2.06e+06,9.03e+06,4.3e+07,1.19e+08,2.07e+08,2.67e+08,2.82e+08,2.55e+08,1.97e+08,1.28e+08,6.95e+07,3.18e+07,1.24e+07,4.21e+06,1.3e+06,3.84e+05,1.16e+05,3.85e+04,1.48e+04,6.8e+03,3.54e+03,1.96e+03,1.09e+03,589,308,155,74.8,34.7,15.4,6.59,2.7,1.06,0.4,0.145,0.0503,0.0168,0.00537,0.00165,0.000486,0.000137,3.73e-05,9.71e-06,2.43e-06,5.82e-07,1.34e-07')
+                     "1.369e-06,1.549e-05,4.233e-05,9.232e-05,0.0001865,0.0002974,0.0007702,0.005968,0.01452,0.01918,0.02569,0.03709,0.05417,0.07408,0.0928,0.1055,0.1095,0.1042,0.09134,0.07505,0.05881,0.04434,0.03206,0.02198,0.01415,0.008512,0.004783,0.002515,0.001241,0.0005762,0.0002533,0.0001068,4.449e-05,1.956e-05,1.006e-05,6.499e-06,5.098e-06,4.461e-06,4.107e-06,3.879e-06,3.722e-06,3.607e-06,3.514e-06,3.427e-06,3.337e-06,3.236e-06,3.119e-06,2.984e-06,2.833e-06,2.666e-06")
 
 import FWCore.ParameterSet.VarParsing as VarParsing
 customize.options.register ('selection',
@@ -115,6 +121,12 @@ customize.options.register ('addRegressionInput',
                             VarParsing.VarParsing.multiplicity.singleton, # singleton or list
                             VarParsing.VarParsing.varType.bool,          # string, int, or float
                             "addRegressionInput")
+customize.options.register ('histosOnly',
+                            False, # default value
+                            VarParsing.VarParsing.multiplicity.singleton, # singleton or list
+                            VarParsing.VarParsing.varType.bool,          # string, int, or float
+                            "histosOnly")
+
 customize.parse()
 
 from Configuration.AlCa.autoCond import autoCond
@@ -729,10 +741,7 @@ elif customize.selection == "photon":
     mcTriggers=dataTriggers
     doSinglePho=True
     doDoublePho=False
-    ## askTriggerOnMc=True
 elif customize.selection == "electron":
-    ## dataTriggers=["HLT_Ele23_WPLoose*"]
-    ## mcTriggers=[]
     dataTriggers=["HLT_Ele27_eta2p1_WPLoose_Gsf_v*"]
     ## mcTriggers=["HLT_Ele27_eta2p1_WP75_Gsf_v*"]
     mcTriggers=dataTriggers
@@ -852,7 +861,13 @@ if customize.datasetName():
         dumpKinTree=True
         minimalDumper=diphotonDumper
 
+dumpTrees=True
+if options.histosOnly:
+    dumpKinTree=False
+    dumpTrees=False
 
+dumpNm1Trees=dumpTrees and not invertEleVeto
+    
 ## kinematic selection
 analysis.addKinematicSelection(process,dumpTrees=dumpKinTree,splitByIso=True
                                )
@@ -889,20 +904,20 @@ if( customize.processType!="data" ):
 if doDoublePho0T:
     analysis.addAnalysisSelection(process, "cic",
                                   highMassCiCDiPhotons0T,
-                                  dumpTrees=True, dumpWorkspace=False, dumpHistos=True, splitByIso=True,
+                                  dumpTrees=dumpTrees, dumpWorkspace=False, dumpHistos=True, splitByIso=True,
                                   dumperTemplate=diphotonDumper,
-                                  nMinusOne=[(0,"NoSieie",        True, False, True), ## removeIndex(es), label, dumpTree, dumpWorkspace, dumpHistos
-                                             (1,"NoSipip",        True, False, False),
-                                             (2,"NoTrkIso",       True, False, False),
-                                             (3,"NoPhoIso",       True, False, False),
-                                             (4,"NoEleVeto",      True, False, False)
+                                  nMinusOne=[(0,"NoSieie",        dumpNm1Trees, False, True), ## removeIndex(es), label, dumpTree, dumpWorkspace, dumpHistos
+                                             (1,"NoSipip",        dumpNm1Trees, False, False),
+                                             (2,"NoTrkIso",       dumpNm1Trees, False, False),
+                                             (3,"NoPhoIso",       dumpNm1Trees, False, False),
+                                             (4,"NoEleVeto",      dumpNm1Trees, False, False)
                                          ]
                               )    
     
 elif doDoublePho:
-    analysis.addAnalysisSelection(process,"cic",highMassCiCDiPhotons,dumpTrees=True,dumpWorkspace=False,dumpHistos=True,splitByIso=True,
+    analysis.addAnalysisSelection(process,"cic",highMassCiCDiPhotons,dumpTrees=dumpTrees,dumpWorkspace=False,dumpHistos=True,splitByIso=True,
                                   dumperTemplate=minimalDumper,
-                                  nMinusOne=[(0,"NoChIso",        True, False,True), ## removeIndex(es), label, dumpTree, dumpWorkspace, dumpHistos
+                                  nMinusOne=[(0,"NoChIso",        dumpNm1Trees, False,True), ## removeIndex(es), label, dumpTree, dumpWorkspace, dumpHistos
                                              (1,"NoPhoIso",       False, False,True),
                                              (2,"NoNeuIso",       False,False,True),
                                              (3,"NoHoverE",       False,False,True),
@@ -911,14 +926,14 @@ elif doDoublePho:
                                              ]
                                   )
     
-    analysis.addAnalysisSelection(process,"cicSB",highMassCiCDiPhotonsSB,dumpTrees=True,dumpWorkspace=False,dumpHistos=True,splitByIso=True,
-                                  dumperTemplate=minimalDumper,
-                                  nMinusOne=[## Sidebands
-                                             ## removeIndex, (ignoreIndex(es),ingnoreNtimes), dumpTree, dumpWorkspace, dumpHistos, splitByIso
-                                             ((0),(4,1),"NoChIsoSingleSB",  True, False,True,False),
-                                             ((0),(4,2),"NoChIsoDoubleSB",  True, False,True,False)
-                                             ]
-                                  )
+    ### analysis.addAnalysisSelection(process,"cicSB",highMassCiCDiPhotonsSB,dumpTrees=dumpTrees,dumpWorkspace=False,dumpHistos=True,splitByIso=True,
+    ###                               dumperTemplate=minimalDumper,
+    ###                               nMinusOne=[## Sidebands
+    ###                                          ## removeIndex, (ignoreIndex(es),ingnoreNtimes), dumpTree, dumpWorkspace, dumpHistos, splitByIso
+    ###                                          ((0),(4,1),"NoChIsoSingleSB",  True, False,True,False),
+    ###                                          ((0),(4,2),"NoChIsoDoubleSB",  True, False,True,False)
+    ###                                          ]
+    ###                               )
 
 # single photon selection
 if customize.idversion != "":
@@ -971,27 +986,16 @@ if not customize.lastAttempt:
         )
 
 
-### process.p = cms.Path(process.genGr)
-### 
-### ### process.out = cms.OutputModule("PoolOutputModule", 
-###                                fileName = cms.untracked.string('diphotonsMicroAOD.root'),
-###                                outputCommands = cms.untracked.vstring("drop *","keep *_genGr_*_*", "keep *_genGravitons_*_*"),
-###                                SelectEvents = cms.untracked.PSet(SelectEvents = cms.vstring('p')),
-###                                )
-### process.e = cms.EndPath(process.out)
-
-
 # load appropriate scale and smearing bins here
 # systematics customization scripts will take care of adjusting flashggDiPhotonSystematics
 if "Run2015" in customize.datasetName() or "76X" in customize.datasetName():
     process.load('flashgg.Systematics.escales.escale76X_16DecRereco_2015')
     print "energy corrections file is escale76X_16DecRereco_2015"
 else:
-    process.load('flashgg.Systematics.escales.test_2016B_corr')
-    #flashgg/Systematics/python/escales/test_2016B_corr.py
+    ## process.load('flashgg.Systematics.escales.test_2016B_corr_DCSOnly')
+    process.load('flashgg.Systematics.escales.Golden10June_plus_DCS')
     print "energy corrections file is test_2016B_corr"
 
 # this will call customize(process), configure the analysis paths and make the process unscheduled
 analysis.customize(process,customize)
 
-##print process.dumpPython()
