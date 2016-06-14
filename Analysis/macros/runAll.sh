@@ -8,11 +8,37 @@ fi
 
 set -x 
 
-fggRunJobs.py --load ../config/jobs_diphoton_80.json     ../config/high_mass_analysis.py applyDiphotonCorrections=1 maxEvents=-1  -d full_analysis_spring16v1_sync_${version} -n 50 -H -q 1nh  &
 
-fggRunJobs.py --load ../config/jobs_dielectron_80.json      ../config/high_mass_analysis.py applyDiphotonCorrections=1 maxEvents=-1  -d double_ele_spring16v1_sync_${version} -n 40 -q 1nd -H &
+fggRunJobs.py --load ../config/jobs_diphoton_80_cert_274421.json     ../config/high_mass_analysis.py applyDiphotonCorrections=1 maxEvents=-1  -d full_analysis_spring16v1_sync_${version}_cert_274421 -n 50 -H -q 8nh  &
+
+fggRunJobs.py --load ../config/jobs_diphoton_80_dcsonly_274422.json     ../config/high_mass_analysis.py applyDiphotonCorrections=1 maxEvents=-1  -d full_analysis_spring16v1_sync_${version}_dcsonly_274422 -n 30 -H -q 8nh  &
+
+## fggRunJobs.py --load ../config/jobs_diphoton_80_p8_withz.json     ../config/high_mass_analysis.py applyDiphotonCorrections=1 maxEvents=-1  -d full_analysis_spring16v1_sync_${version}_p8_withz -n 30 -H -q 8nh  &
+
+## fggRunJobs.py --load ../config/jobs_diphoton_80_p8_noz.json     ../config/high_mass_analysis.py applyDiphotonCorrections=1 maxEvents=-1  -d full_analysis_spring16v1_sync_${version}_p8_noz -n 5 -H -q 8nh  &
+
+## fggRunJobs.py --load ../config/jobs_dielectron_80_p8_cert.json      ../config/high_mass_analysis.py applyDiphotonCorrections=1 maxEvents=-1  -d double_ele_spring16v1_sync_${version}_p8_cert -n 5 -q 8nh -H &
+
+fggRunJobs.py --load ../config/jobs_dielectron_80.json      ../config/high_mass_analysis.py applyDiphotonCorrections=1 maxEvents=-1 histosOnly=1 -d double_ele_spring16v1_sync_${version}_mc -n 60 -q 8nh -H &
+
+fggRunJobs.py --load ../config/jobs_dielectron_80_cert_274421.json     ../config/high_mass_analysis.py applyDiphotonCorrections=1 maxEvents=-1 histosOnly=1 -d double_ele_spring16v1_sync_${version}_cert_274421 -n 50 -H -q 8nh  &
+
+fggRunJobs.py --load ../config/jobs_dielectron_80_dcsonly_274422.json     ../config/high_mass_analysis.py applyDiphotonCorrections=1 maxEvents=-1 histosOnly=1 -d double_ele_spring16v1_sync_${version}_dcsonly_274422 -n 30 -H -q 8nh  &
 
 
+### fggRunJobs.py --load ../config/jobs_dielectron_80_p8_withz.json      ../config/high_mass_analysis.py applyDiphotonCorrections=1 maxEvents=-1  -d double_ele_spring16v1_sync_${version}_p8_withz -n 30 -q 8nh -H &
+### 
+### fggRunJobs.py --load ../config/jobs_dielectron_80.json      ../config/high_mass_analysis.py applyDiphotonCorrections=1 maxEvents=-1  -d double_ele_spring16v1_sync_${version}_p34568 -n 40 -q 8nh -H &
+
+### fggRunJobs.py --load ../config/jobs_dielectron_80_p8_noz.json      ../config/high_mass_analysis.py applyDiphotonCorrections=1 maxEvents=-1  -d double_ele_spring16v1_sync_${version}_p8_noz -n 30 -q 8nd -H &
+
+
+
+### fggRunJobs.py --load ../config/jobs_diphoton_80.json     ../config/high_mass_analysis.py applyDiphotonCorrections=1 maxEvents=-1  -d full_analysis_spring16v1_sync_${version} -n 50 -H -q 8nh  &
+### 
+### fggRunJobs.py --load ../config/jobs_dielectron_80.json      ../config/high_mass_analysis.py applyDiphotonCorrections=1 maxEvents=-1  -d double_ele_spring16v1_sync_${version} -n 40 -q 8nd -H &
+
+# fggRunJobs.py --load ../config/jobs_diphoton_80.json     ../config/high_mass_analysis.py applyDiphotonCorrections=1 maxEvents=10  -d full_analysis_spring16v1_sync_${version} -n 1  &
 
 
 ## fggRunJobs.py --load ../config/jobs_diphoton_80.json     ../config/high_mass_analysis.py applyDiphotonCorrections=1 maxEvents=-1  -d full_analysis_spring16v1_sync_${version}_data -n 50 -H -q 1nh  &

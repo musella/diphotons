@@ -1,6 +1,5 @@
 {
 
-"GGJets_M-60To200_Pt-50_13TeV-sherpa": {"xs": 5.971, "xs_err": 0.05872},
  "RSGravToGG_kMpl-001_M-1250_TuneCUEP8M1_13TeV-pythia8": {"xs": 0.003735,
                                                           "xs_err": 4.054e-05},
  "RSGravToGG_kMpl-001_M-1750_TuneCUEP8M1_13TeV-pythia8": {"xs": 1.55,
@@ -71,9 +70,10 @@
     "QCD_HT1500to2000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8" : { "xs" : 1.174e+02 },
     "QCD_HT2000toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"  : { "xs" : 2.520e+01 },
     
-    "GGJets_M-200To500_Pt-50_13TeV-sherpa"    : { "xs" : 2.047e+00  },
+    "GGJets_M-60To200_Pt-50_13TeV-sherpa"     : { "xs" : 5.971, "xs_err" : 0.05872 },
+    "GGJets_M-200To500_Pt-50_13TeV-sherpa"    : { "xs" : 2.416e+00  },
     "GGJets_M-500To1000_Pt-50_13TeV-sherpa"   : { "xs" : 1.510e-01  },
-    "GGJets_M-1000To2000_Pt-50_13TeV-sherpa"  : { "xs" : 1.084e-02  },
+    "GGJets_M-1000To2000_Pt-50_13TeV-sherpa"  : { "xs" : 1.181e-02  },
     "GGJets_M-2000To4000_Pt-50_13TeV-sherpa"  : { "xs" : 3.690e-04  },
     "GGJets_M-4000To6000_Pt-50_13TeV-sherpa"  : { "xs" : 2.451e-06  },
     "GGJets_M-6000To8000_Pt-50_13TeV-sherpa"  : { "xs" : 1.753e-08  },
