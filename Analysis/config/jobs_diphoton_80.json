@@ -2,14 +2,16 @@
 
 
 
-	"processes" : {
+	"_processes" : {
 	"Data" : [ 
 "/DoubleEG/musella-EXOSpring16_v1_p3-diphotons_80_v1-v0-Run2016B-PromptReco-v1-ea408274daa18c6402a808da38fd2b89/USER",
 "/DoubleEG/musella-EXOSpring16_v1_p3-diphotons_80_v1-v0-Run2016B-PromptReco-v2-ea408274daa18c6402a808da38fd2b89/USER",
 "/DoubleEG/musella-EXOSpring16_v1_p5-Moriond16WSFinal-70-ga303087-v0-Run2016B-PromptReco-v2-5c50ce53d80a6fec7ad55686b342f79d/USER",
 "/DoubleEG/musella-EXOSpring16_v1_p5-Moriond16WSFinal-70-ga303087-v1-Run2016B-PromptReco-v2-5c50ce53d80a6fec7ad55686b342f79d/USER",
 "/DoubleEG/spigazzi-EXOSpring16_v1_p6-Moriond16WSFinal-74-g8fd901f-v0-Run2016B-PromptReco-v2-5c50ce53d80a6fec7ad55686b342f79d/USER"
-	],
+	] },
+
+	"processes" : {
 
 "GGJets_M-60To13000_Pt-50-sherpa" : [
 "/GGJets_M-60To200_Pt-50_13TeV-sherpa",
@@ -29,29 +31,7 @@
 "/GJets_DR-0p4_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8",
 "/GJets_DR-0p4_HT-40To100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8",
 "/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"
-],
-
-"/RSGravToGG_kMpl-001_M-1250_TuneCUEP8M1" : [ [ "/RSGravToGG_kMpl-001_M-1250_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 }  ] ],
-"/RSGravToGG_kMpl-001_M-1500_TuneCUEP8M1" : [ [ "/RSGravToGG_kMpl-001_M-1500_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 }  ] ],
-"/RSGravToGG_kMpl-001_M-1750_TuneCUEP8M1" : [ [ "/RSGravToGG_kMpl-001_M-1750_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 }  ] ],
-"/RSGravToGG_kMpl-001_M-2250_TuneCUEP8M1" : [ [ "/RSGravToGG_kMpl-001_M-2250_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 }  ] ],
-"/RSGravToGG_kMpl-001_M-2500_TuneCUEP8M1" : [ [ "/RSGravToGG_kMpl-001_M-2500_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 }  ] ],
-"/RSGravToGG_kMpl-001_M-2750_TuneCUEP8M1" : [ [ "/RSGravToGG_kMpl-001_M-2750_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 }  ] ],
-"/RSGravToGG_kMpl-001_M-3000_TuneCUEP8M1" : [ [ "/RSGravToGG_kMpl-001_M-3000_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 }  ] ],
-"/RSGravToGG_kMpl-001_M-3250_TuneCUEP8M1" : [ [ "/RSGravToGG_kMpl-001_M-3250_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 }  ] ],
-"/RSGravToGG_kMpl-001_M-3500_TuneCUEP8M1" : [ [ "/RSGravToGG_kMpl-001_M-3500_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 }  ] ],
-"/RSGravToGG_kMpl-001_M-3750_TuneCUEP8M1" : [ [ "/RSGravToGG_kMpl-001_M-3750_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 }  ] ],
-"/RSGravToGG_kMpl-001_M-4000_TuneCUEP8M1" : [ [ "/RSGravToGG_kMpl-001_M-4000_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 }  ] ],
-"/RSGravToGG_kMpl-001_M-4500_TuneCUEP8M1" : [ [ "/RSGravToGG_kMpl-001_M-4500_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 }  ] ],
-"/RSGravToGG_kMpl-001_M-5000_TuneCUEP8M1" : [ [ "/RSGravToGG_kMpl-001_M-5000_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 }  ] ],
-"/RSGravToGG_kMpl-001_M-500_TuneCUEP8M1" : [ [ "/RSGravToGG_kMpl-001_M-500_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 }  ] ],
-"/RSGravToGG_kMpl-001_M-740_TuneCUEP8M1" : [ [ "/RSGravToGG_kMpl-001_M-740_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 }  ] ],
-"/RSGravToGG_kMpl-001_M-745_TuneCUEP8M1" : [ [ "/RSGravToGG_kMpl-001_M-745_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 }  ] ],
-"/RSGravToGG_kMpl-001_M-760_TuneCUEP8M1" : [ [ "/RSGravToGG_kMpl-001_M-760_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 }  ] ],
-"/RSGravToGG_kMpl-001_M-765_TuneCUEP8M1" : [ [ "/RSGravToGG_kMpl-001_M-765_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 }  ] ],
-"/RSGravToGG_kMpl-001_M-770_TuneCUEP8M1" : [ [ "/RSGravToGG_kMpl-001_M-770_TuneCUEP8M1_13TeV-pythia8", { "njobs" : 2 }  ] ]
-
-
+]
 
 	},
 	

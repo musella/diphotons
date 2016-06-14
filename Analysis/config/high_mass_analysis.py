@@ -862,7 +862,7 @@ if customize.datasetName():
         minimalDumper=diphotonDumper
 
 dumpTrees=True
-if options.histosOnly:
+if customize.histosOnly:
     dumpKinTree=False
     dumpTrees=False
 
