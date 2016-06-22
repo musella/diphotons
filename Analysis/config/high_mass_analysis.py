@@ -730,7 +730,7 @@ doSinglePho=False
 doDoublePho=True
 doDoublePho0T=False
 invertEleVeto=False
-dumpBits=["HLT_DoublePhoton60","HLT_DoublePhoton85","HLT_Photon250_NoHE","HLT_Photon165_HE"]
+dumpBits=["HLT_DoublePhoton60","HLT_DoublePhoton85","HLT_Photon250_NoHE","HLT_Photon165_HE","HLT_ECALHT800"]
 askTriggerOnMc=False
 
 if customize.selection == "diphoton":
