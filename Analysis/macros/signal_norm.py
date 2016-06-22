@@ -124,6 +124,8 @@ class SignalNorm(PlotApp):
                 make_option("--compare-param-acceptance",dest="compare_param_acceptance", action="callback",type="string", 
                             callback=optpars_utils.ScratchAppend(str),
                             default=[]),
+                make_option("--mass-range",dest="mass_range",action="callback",type="string",callback=optpars_utils.ScratchAppend(float),
+                            default=[]),
                 make_option("--cat-postfix",action="store", dest="cat_postfix", type="string",
                             default=""),
                 make_option("--reco-file",action="store", dest="reco_file", type="string",
@@ -198,6 +200,13 @@ class SignalNorm(PlotApp):
         for name,val in self.xsections_.iteritems():
             val.Sort()
 
+    def inMassRange(self,name):
+        print self.options.mass_range
+        if len(self.options.mass_range) == 0: return True
+        mass,coup = self.getMassAndCoup(name,store=False)
+        print mass,coup,self.options.mass_range
+        return mass>=self.options.mass_range[0] and mass<=self.options.mass_range[1]
+
     def computeIntegrals(self,histograms,mean,postFix=""):
         if mean: 
             fnc = lambda x: ( x.GetMean(), x.Integral())
@@ -207,10 +216,14 @@ class SignalNorm(PlotApp):
 
     def getIntegrals(self,fin,sels,hname="genmass",mean=False,isGen=False):
         folders = getObjects( getObjects( [fin], sels ), ["histograms"] )
+        print "here"
         histograms = map(lambda x: (os.path.basename(os.path.dirname(x.GetPath())), 
-                                    filter(lambda y: hname in y.GetName() and ("Grav" in y.GetName() or "Spin0" in y.GetName()),  getObjects([x]))),
-                         folders )
-        
+                                    filter(lambda y: hname in y.GetName() and (self.options.spin2 and ("Grav" in y.GetName()) or  
+                                                                               (not self.options.spin2 and ("Spin0" in y.GetName())))
+                                                                               and self.inMassRange(y.GetName()
+                                                                               ),  getObjects([x]))),
+                                    folders )
+                         
         if isGen and self.options.split_by_r9:
             return self.computeIntegrals(histograms,mean,"HighR9")+self.computeIntegrals(histograms,mean,"LowR9")
         else:
@@ -504,7 +517,7 @@ class SignalNorm(PlotApp):
     def plotAcceptance(self):
         gen_fin = self.open(self.options.gen_file)
         gen_integrals=self.getIntegrals(gen_fin,["genGenIso"],isGen=True)
-        print gen_integrals
+        ## print gen_integrals
         
         if self.options.reco_file:
             reco_fin = self.open(self.options.reco_file)
@@ -527,7 +540,7 @@ class SignalNorm(PlotApp):
             map( lambda x: map(lambda y: (addTo(reco[x[0]],y), addTo(cat_reco[x[0]],y,True)), x[1]), reco_integrals  )
 
         if self.options.reco_file:
-            pprint( cat_reco )
+            ## pprint( cat_reco )
             eff_reco = deepcopy(cat_reco)
             eff_acc_reco = deepcopy(cat_reco)
             eff_acc_tot_reco = deepcopy(reco)
@@ -608,7 +621,7 @@ class SignalNorm(PlotApp):
                 for cat, points in vals.iteritems():
                     graph = ROOT.TGraph()
                     graph.SetName("%s_avg_reco_eff_%s" % (sel,cat))
-                    print points
+                    ## print points
                     for x,y in points.iteritems():
                         graph.SetPoint(graph.GetN(),x,y[0]/y[1])
                     graph.Sort()
@@ -664,7 +677,7 @@ class SignalNorm(PlotApp):
         ## refc = coups[-4]
         if len(coups)>1:
             refc = coups[-min(4,len(coups)-1)]
-            print refc, coups
+            ## print refc, coups
             scaled = map( lambda x: (x[0],scaleGraph(x[1], lambda y: refc[0]*refc[0]/((x[0]*x[0])*refc[1].Eval(y)))), coups )
             
             mypol = ROOT.TF1("mypol","[0]+[1]*(x-[2])**2")

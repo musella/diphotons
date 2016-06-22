@@ -18,9 +18,11 @@ def xtitle(h,tit):
 # -----------------------------------------------------------------------------------------------------------
 def ytitle(h,tit):
     ## print "ytitle", h.GetName(), tit
-    binw = h.GetBinWidth(1) if not getattr(h,"isDensity",False) else h.isDensity
-    h.GetYaxis().SetTitle( tit % { "binw" : binw } )
-    # h.GetYaxis().SetTitle(tit)
+    try:
+        binw = h.GetBinWidth(1) if not getattr(h,"isDensity",False) else h.isDensity
+        h.GetYaxis().SetTitle( tit % { "binw" : binw } )
+    except:
+        h.GetYaxis().SetTitle(tit)
 
 # -----------------------------------------------------------------------------------------------------------
 def ztitle(h,tit):
@@ -42,6 +44,7 @@ def logy(h,ymin=None):
 
 # -----------------------------------------------------------------------------------------------------------
 def overflow(h,limit=None):
+    from math import sqrt
     if not limit:
         limitBin=h.GetXaxis().GetLast()
     else:
@@ -57,7 +60,7 @@ def overflow(h,limit=None):
         h.SetBinContent(ibin,0.)
         h.SetBinError(ibin,0.)
     h.SetBinContent(limitBin,sumw)
-    h.SetBinError(limitBin,sumw2)
+    h.SetBinError(limitBin,sqrt(sumw2))
 
 # -----------------------------------------------------------------------------------------------------------
 def rebin(h,rebin):

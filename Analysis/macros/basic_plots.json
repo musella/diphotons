@@ -210,11 +210,11 @@
         ["cicNoSigmaIetaIeta","noSiEiE",["mass","leadSigmaIeIe","subleadSigmaIeIe"]]
     ],
 
-    "selections" : [
+    "_selections" : [
         ["cic","cic","mass"]
     ],
 
-    "_selections" : [
+    "selections" : [
         ["cic",""],
         ["cicNoChIso","noChIso"],
         ["cicNoSigmaIetaIeta","noSiEiE",["mass","leadSigmaIeIe","subleadSigmaIeIe"]],

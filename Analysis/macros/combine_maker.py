@@ -46,11 +46,15 @@ class CombineApp(TemplatesApp):
                                     ),
                         make_option("--observables",dest="observables",action="callback",callback=optpars_utils.Load(scratch=True),type="string",
                                     default={ 
-                                "EBEE"     : "mggEBEE[15600,330,10000]",
+                                ## "EBEE"     : "mggEBEE[15600,330,10000]",
+                                "EBEE"     : "mggEBEE[6800,330,10000]",
+                                "EBEE016"  : "mggEBEE[6800,330,10000]",
                                 "EBEE0T"   : "mggEBEE[6800,330,10000]",
                                 "EEHighR9" : "mggEBEE[6800,330,10000]",
                                 "EEHighR9" : "mggEBEE[6800,330,10000]",
-                                "EBEB"     : "mggEBEB[16000,230,10000]",
+                                ## "EBEB"     : "mggEBEB[16000,230,10000]",
+                                "EBEB016"  : "mggEBEB[8000,230,10000]",
+                                "EBEB"     : "mggEBEB[8000,230,10000]",
                                 "EBEB0T"   : "mggEBEB[8000,230,10000]",
                                 "EBHighR9" : "mggEBEB[8000,230,10000]",
                                 "EBHighR9" : "mggEBEB[8000,230,10000]",
@@ -62,6 +66,8 @@ class CombineApp(TemplatesApp):
                                 "eff13TeV_38T" : {
                                     "EBEB" : 0.08,
                                     "EBEE" : 0.08,
+                                    "EBEB016" : 0.08,
+                                    "EBEE016" : 0.08,
                                     },
                                 "eff13TeV_0T" : {
                                     "EBEB0T" : 0.16,
@@ -72,6 +78,10 @@ class CombineApp(TemplatesApp):
                                 "lumi13TeV_38T" : {
                                     "EBEB" : 0.027,
                                     "EBEE" : 0.027,
+                                    },
+                                "lumi13TeV_38T_016" : {
+                                    "EBEB016" : 0.1,
+                                    "EBEE016" : 0.1,
                                     },
                                 "lumi13TeV_0T" : {
                                     "EBEB0T" : 0.12,
@@ -122,6 +132,7 @@ class CombineApp(TemplatesApp):
                                     type="string",default={ 
                                                             "EBEE0T": [64,330,1610], 
                                                             "EBEE": [64,330,1610], 
+                                                            "EBEE016": [64,330,1610], 
                                                             "EEHighR9": [64,330,1610], 
                                                             "EELowR9": [64,330,1610], 
                                                             },
@@ -187,6 +198,10 @@ class CombineApp(TemplatesApp):
                                     default="dijet",
                                     help="Default background mode : [%default]",
                                     ),
+                        make_option("--model-strip-coeff-names",dest="model_strip_coeff_names",action="callback",type="string",callback=optpars_utils.ScratchAppend(str),
+                                    default=[],
+                                    help="Remove patterns from background model coefficients : [%default]",
+                                    ),
                         make_option("--data-source",dest="data_source",action="store",type="string",
                                     default="data",
                                     help="Dataset to be used as 'data' default : [%default]",
@@ -217,8 +232,8 @@ class CombineApp(TemplatesApp):
                                               "masses" : ## [500,505,506,510],
                                               ## sorted(list(np.concatenate((np.arange(500,2000,100),np.arange(2000,4500,500),np.arange(740,770,2))))),
                                               ## [750.,760.],
-                                              [500.,750.,1000.,1500.,2000.,2500.,3000.,3500.,4000.,4500.],
-                                              ## list(np.concatenate((np.arange(500,750,2),np.arange(750,1000,2),np.arange(1000,1600,4),np.arange(1600,4500,100)))),
+                                              ## [500.,750.,1000.,1500.,2000.,2500.,3000.,3500.,4000.,4500.],
+                                              list(np.concatenate((np.arange(500,750,2),np.arange(750,1000,2),np.arange(1000,1600,4),np.arange(1600,4500,100)))),
                                               ## list(np.concatenate(np.arange(850,1000,2),np.arange(1000,1600,4),np.arange(1600,3500,100)))),
                                               ## [600.],
                                               ## list(np.arange(700,800,2)),
@@ -226,6 +241,8 @@ class CombineApp(TemplatesApp):
                                               "interpolate_below" : 0,
                                               "pdfs"    : { "001" : {"EBEB" : "ConvolutionRhPdf_catEBEB_mass%1.5g_kpl%s001", 
                                                                      "EBEE" : "ConvolutionRhPdf_catEBEE_mass%1.5g_kpl%s001",
+                                                                     "EBEB016" : "ConvolutionRhPdf_catEBEB_mass%1.5g_kpl%s001", 
+                                                                     "EBEE016" : "ConvolutionRhPdf_catEBEE_mass%1.5g_kpl%s001",
                                                                      "EBEB0T" : "ConvolutionRhPdf_catEBEB_mass%1.5g_kpl%s001", 
                                                                      "EBEE0T" : "ConvolutionRhPdf_catEBEE_mass%1.5g_kpl%s001",
                                                                      "EBHighR9" : "ConvolutionRhPdf_catEBHighR9_mass%1.5g_kpl%s001", 
@@ -235,10 +252,16 @@ class CombineApp(TemplatesApp):
                                                                      },
                                                             "01" : {"EBEB" : "ConvolutionRhPdf_catEBEB_mass%1.5g_kpl%s01", 
                                                                     "EBEE" : "ConvolutionRhPdf_catEBEE_mass%1.5g_kpl%s01",
+                                                                    "EBEB016" : "ConvolutionRhPdf_catEBEB_mass%1.5g_kpl%s01", 
+                                                                    "EBEE016" : "ConvolutionRhPdf_catEBEE_mass%1.5g_kpl%s01",
                                                                     "EBEB0T" : "ConvolutionRhPdf_catEBEB_mass%1.5g_kpl%s01", 
                                                                     "EBEE0T" : "ConvolutionRhPdf_catEBEE_mass%1.5g_kpl%s01"},
                                                             "02" : {"EBEB" : "ConvolutionRhPdf_catEBEB_mass%1.5g_kpl%s02", 
                                                                     "EBEE" : "ConvolutionRhPdf_catEBEE_mass%1.5g_kpl%s02",
+                                                                    "EBEB016" : "ConvolutionRhPdf_catEBEB_mass%1.5g_kpl%s02", 
+                                                                    "EBEE016" : "ConvolutionRhPdf_catEBEE_mass%1.5g_kpl%s02",
+                                                                    "EBEB016" : "ConvolutionRhPdf_catEBEB_mass%1.5g_kpl%s02", 
+                                                                    "EBEE016" : "ConvolutionRhPdf_catEBEE_mass%1.5g_kpl%s02",
                                                                     "EBEB0T" : "ConvolutionRhPdf_catEBEB_mass%1.5g_kpl%s02", 
                                                                     "EBEE0T" : "ConvolutionRhPdf_catEBEE_mass%1.5g_kpl%s02"},
                                                             "005" : {"EBEB" : "ConvolutionRhPdf_catEBEB_mass%1.5g_kpl%s005", 
@@ -260,8 +283,8 @@ class CombineApp(TemplatesApp):
                                     ),
                         make_option("--parametric-signal-nuisances",dest="parametric_signal_nuisances",action="callback",callback=optpars_utils.Load(scratch=True),
                                     type="string",
-                                    default={"energyResolutionEBEB_13TeV_38T" : { "up" : "_smearUp", "down" : "_smearDown", "categories" : ["EBEB"] },
-                                             "energyResolutionEBEE_13TeV_38T" : { "up" : "_smearUp", "down" : "_smearDown", "categories" : ["EBEE"] },
+                                    default={"energyResolutionEBEB_13TeV_38T" : { "up" : "_smearUp", "down" : "_smearDown", "categories" : ["EBEB","EBEB016"] },
+                                             "energyResolutionEBEE_13TeV_38T" : { "up" : "_smearUp", "down" : "_smearDown", "categories" : ["EBEE","EBEE016"] },
                                              "energyResolutionEBEB0T_13TeV_38T" : { "up" : "_smearUp", "down" : "_smearDown", "categories" : ["EBEB0T"] },
                                              "energyResolutionEBEE0T_13TeV_38T" : { "up" : "_smearUp", "down" : "_smearDown", "categories" : ["EBEE0T"] }
                                              }
@@ -285,10 +308,10 @@ class CombineApp(TemplatesApp):
                                     ),
                         make_option("--energy-scale-eigenvec",dest="energy_scale_eigenvec",action="callback",callback=optpars_utils.Load(scratch=True),
                                     type="string",
-                                    default={ "EBEBeig1" : { "EBEB0T" :  0.9923, "EBEB" :  0.9923, "EBHighR9" :  0.9923, "EBLowR9" :  0.9923 },
-                                              "EBEBeig2" : { "EBEB0T" : -0.1201, "EBEB" : -0.1201, "EBHighR9" : -0.1201, "EBLowR9" : -0.1201 },
-                                              "EBEEeig1" : { "EBEE0T" :  0.9674, "EBEE" :  0.9674, "EEHighR9" :  0.9674, "EELowR9" :  0.9674 },
-                                              "EBEEeig2" : { "EBEE0T" : -0.2532, "EBEE" : -0.2532, "EEHighR9" : -0.2532, "EELowR9" : -0.2532 },
+                                    default={ "EBEBeig1" : { "EBEB0T" :  0.9923, "EBEB" :  0.9923, "EBEB016" :  0.9923, "EBHighR9" :  0.9923, "EBLowR9" :  0.9923 },
+                                              "EBEBeig2" : { "EBEB0T" : -0.1201, "EBEB" : -0.1201, "EBEB016" : -0.1201, "EBHighR9" : -0.1201, "EBLowR9" : -0.1201 },
+                                              "EBEEeig1" : { "EBEE0T" :  0.9674, "EBEE" :  0.9674, "EBEE016" :  0.9674, "EEHighR9" :  0.9674, "EELowR9" :  0.9674 },
+                                              "EBEEeig2" : { "EBEE0T" : -0.2532, "EBEE" : -0.2532, "EBEE016" : -0.2532, "EEHighR9" : -0.2532, "EELowR9" : -0.2532 },
                                               "ZeroT"    : { "EBEB0T" : 1.     , "EBEE0T" : 1. }
                                               }
                                     ),
@@ -358,8 +381,10 @@ class CombineApp(TemplatesApp):
                                               ### 
                                               ### "EBEB_8TeV_dijet_300_10000" : "((0.06*((x/600.)^-4))+1e-6)/6.",
                                               
-                                              "EBEB_dijet_230_10000" : "(x>500.)*(pow(x,2.2-0.4*log(x)))/10.",
-                                              "EBEE_dijet_330_10000" : "(x>500.)*(0.10*(x/600.)^(-5)+2e-5)/10.",
+                                              "EBEB_dijet_230_10000" : "(pow(x,2.2-0.4*log(x)))/10.",
+                                              "EBEE_dijet_330_10000" : "(0.10*(x/600.)^(-5)+2e-5)/10.",
+                                              "EBEB016_dijet_230_10000" : "(pow(x,2.2-0.4*log(x)))/10.",
+                                              "EBEE016_dijet_330_10000" : "(0.10*(x/600.)^(-5)+2e-5)/10.",
                                               },
                                     help="Bias as a function of diphoton mass to compute the bias uncertainty values inside the datacard",
                                     ),
@@ -956,9 +981,14 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     rooNdata.SetName("%s_norm" % bkgPdf.GetName())
                     ## build list of coefficients 
                     roolist = ROOT.RooArgList()
+                    thetaBias = self.buildRooVar("thetaBias_%s_%s" % (comp,self.getPdfCoeffLabel(cat)), [], importToWs=False )
+                    thetaBias.setVal(0.)
+                    thetaBias.setConstant(True)
                     nBias = self.buildRooVar("nBias_%s_%s" % (comp,cat), [], importToWs=False )
                     nBias.setVal(0.)
                     nBias.setConstant(True)
+                    nBias_theta = ROOT.RooProduct("nBias_%s_%s_theta" % (comp,cat), "nBias_%s_%s_theta" % (comp,cat),
+                                                 ROOT.RooArgList(nBias,thetaBias) )
                     
                     # compute the nuisance values if bias_func and fwhm_input_file are provided 
                     nB = 0.
@@ -979,14 +1009,16 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                             if "%s_norm" % cat in options.fwhm_input_file[signame]:
                                 fit["sig_params"][signame].append( ("# %s_norm" % nBias.GetName(),  nB/options.fwhm_input_file[signame]["%s_norm" % cat], 0.) )
                             #print "%f" % nB
-                    fit["sig_params"][signame].append( (nBias.GetName(), nBias.getVal(), nB) )                    
+                    ## fit["sig_params"][signame].append( (nBias.GetName(), nBias.getVal(), nB) )                    
+                    nBias.setVal(nB)
+                    fit["sig_params"][signame].append( ("# %s " % nBias.GetName(), 0., nBias.getVal() ) )
+                    fit["sig_params"][signame].append( ("%s " % thetaBias.GetName(), thetaBias.getVal(), 1.) )
                     pdfSum_norm = ROOT.RooFormulaVar("model_%s_%s_norm" % (comp,cat),"model_%s_%s_norm" % (comp,cat),"@0",ROOT.RooArgList(rooNdata)) 
                 
-                    fracsignuis = ROOT.RooFormulaVar("signal_%s_%s_nuisanced_frac" % (comp,cat),"signal_%s_%s_nuisanced_frac" % (comp,cat),"@0*1./@1",ROOT.RooArgList(nBias,pdfSum_norm) )
+                    fracsignuis = ROOT.RooFormulaVar("signal_%s_%s_nuisanced_frac" % (comp,cat),"signal_%s_%s_nuisanced_frac" % (comp,cat),"@0*1./@1",ROOT.RooArgList(nBias_theta,pdfSum_norm) )
                     fracbkg = ROOT.RooFormulaVar("background_%s_%s_frac" % (comp,cat), "background_%s_%s_frac" % (comp,cat), "1.-@0",ROOT.RooArgList(fracsignuis))
                     roolist.add(fracbkg)
                     roolist.add(fracsignuis)
-                    
                     
                     ## summing pdfs
                     pdfSum = ROOT.RooAddPdf("model_%s_%s" % (comp,cat),"model_%s_%s" % (comp,cat), roopdflist, roolist)
@@ -1629,7 +1661,9 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             self.keep([canv,xL,xR])
             self.autosave(True)
             del canv
-        del hist
+        # del hist
+        hist.SetDirectory(0)
+        hist.Delete()
         
         return xWidth
 
@@ -2255,7 +2289,9 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     pdf.Print()
                     
                     if options.compute_fwhm:
-                        xWidth = self.computePdfFHWM(options,pdf,obsCat,signame,plot=False)
+                        # plot = int(mass) % 250  == 0
+                        plot = False
+                        xWidth = self.computePdfFHWM(options,pdf,obsCat,signame,plot=plot)
                         if xWidth>0.:
                             sublist_fwhm[cat] = "%f" % xWidth
                             
@@ -2570,11 +2606,15 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             resid.addObject(rtwosigma,"E2")
             resid.addObject(ronesigma,"E2")
             
-            bands_file = self.open("bands_%s.root" % label.split("_")[1],"recreate")
-            bands_file.cd()
-            onesigma.Clone("onesigma").Write()
-            twosigma.Clone("twosigma").Write()
-            bands_file.Close()
+            try:
+                bands_file = self.open("bands_%s.root" % label.split("_")[1],"recreate")
+                bands_file.cd()
+                hist.Clone("data").Write()
+                onesigma.Clone("onesigma").Write()
+                twosigma.Clone("twosigma").Write()
+                bands_file.Close()
+            except:
+                pass
             
             print "done"
         # one = ROOT.TLine(resid.GetXaxis().GetXmin(),0,resid.GetXaxis().GetXmax(),0)
@@ -2904,17 +2944,25 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
     def importObservables(self):
         for cat,roobs in self.observables_.iteritems():
             self.workspace_.rooImport(roobs)
-        
+
+    def getPdfCoeffLabel(self,pname):
+        cname = pname
+        for pattern in self.options.model_strip_coeff_names:
+            cname = cname.replace(pattern,"")
+        return cname 
+    
     ## ------------------------------------------------------------------------------------------------------------
     def buildPdf(self,model,name,xvar,order=0,label=None,load=None,norm_range=None):
         
         pdf = None
         if not label:
             label = model
+            
         if model == "dijet":                
             pname = "dijet_%s" % name
-            linc = self.buildRooVar("%s_lin" % pname,[-100.0,100.0], importToWs=False)
-            logc = self.buildRooVar("%s_log" % pname,[-100.0,100.0], importToWs=False)
+            cname = self.getPdfCoeffLabel(pname)
+            linc = self.buildRooVar("%s_lin" % cname,[-100.0,100.0], importToWs=False)
+            logc = self.buildRooVar("%s_log" % cname,[-100.0,100.0], importToWs=False)
             linc.setVal(5.)
             logc.setVal(-1.)
             
@@ -2934,7 +2982,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
 
         elif model == "pow":                
             pname = "pow_%s" % name
-            linc = self.buildRooVar("%s_lin" % pname,[-100.0,100.0], importToWs=False)
+            cname = self.getPdfCoeffLabel(pname)
+            linc = self.buildRooVar("%s_lin" % cname,[-100.0,100.0], importToWs=False)
             linc.setVal(-5.)
             
             self.pdfPars_.add(linc)
@@ -2953,8 +3002,9 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             
         if model == "maxdijet":
             pname = "maxdijet_%s" % name
-            linc = self.buildRooVar("%s_lin" % pname,[-100.0,100.0], importToWs=False)
-            logc = self.buildRooVar("%s_log" % pname,[-100.0,100.0], importToWs=False)
+            cname = self.getPdfCoeffLabel(pname)
+            linc = self.buildRooVar("%s_lin" % cname,[-100.0,100.0], importToWs=False)
+            logc = self.buildRooVar("%s_log" % cname,[-100.0,100.0], importToWs=False)
             linc.setVal(2.)
             logc.setVal(-10.)
             
@@ -2968,10 +3018,11 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             
         elif model == "moddijet":
             pname = "moddijet_%s" % name
-            lina = self.buildRooVar("%s_lina" % pname,[-100,10], importToWs=False)
-            loga = self.buildRooVar("%s_loga" % pname,[-100,10], importToWs=False)
-            linb = self.buildRooVar("%s_linb" % pname,[-100,10], importToWs=False)
-            sqrb = self.buildRooVar("%s_sqrb" % pname,[], importToWs=False)
+            cname = self.getPdfCoeffLabel(pname)
+            lina = self.buildRooVar("%s_lina" % cname,[-100,10], importToWs=False)
+            loga = self.buildRooVar("%s_loga" % cname,[-100,10], importToWs=False)
+            linb = self.buildRooVar("%s_linb" % cname,[-100,10], importToWs=False)
+            sqrb = self.buildRooVar("%s_sqrb" % cname,[], importToWs=False)
             lina.setVal(5.)
             loga.setVal(-1.)
             linb.setVal(-0.1)
@@ -2991,8 +3042,9 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         elif model == "expow":
             
             pname = "expow_%s" % name
-            lam = self.buildRooVar("%s_lambda" % pname,[], importToWs=False)
-            alp = self.buildRooVar("%s_alpha"  % pname,[], importToWs=False)
+            cname = self.getPdfCoeffLabel(pname)
+            lam = self.buildRooVar("%s_lambda" % cname,[], importToWs=False)
+            alp = self.buildRooVar("%s_alpha"  % cname,[], importToWs=False)
             lam.setVal(0.)
             alp.setVal(-4.)
             
@@ -3007,9 +3059,10 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         elif model == "expow2":
             
             pname = "expow2_%s" % name
-            lam0 = self.buildRooVar("%s_lambda0" % pname,[], importToWs=False)
-            lam1 = self.buildRooVar("%s_lambda1" % pname,[], importToWs=False)
-            alp = self.buildRooVar("%s_alpha"  % pname,[], importToWs=False)
+            cname = self.getPdfCoeffLabel(pname)
+            lam0 = self.buildRooVar("%s_lambda0" % cname,[], importToWs=False)
+            lam1 = self.buildRooVar("%s_lambda1" % cname,[], importToWs=False)
+            alp = self.buildRooVar("%s_alpha"  % cname,[], importToWs=False)
             lam0.setVal(0.)
             lam1.setVal(0.)
             alp.setVal(2.)
@@ -3019,7 +3072,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             self.pdfPars_.add(lam1)
             
             bla = ROOT.RooArgList(lam0,lam1)
-            hmax = ROOT.RooFormulaVar("%s_hmax" %pname,"( @1 != 0. ? (-@0/(4.*@1)>300. && -@0/(4.*@1)<3500. ? @0*@0/(4.*@1+@1) : TMath::Max(@0*3500+2*@1*3500.*3500,@0*3500+2*@1*300.*300)) : @0*3500.)", bla )
+            hmax = ROOT.RooFormulaVar("%s_hmax" % cname,"( @1 != 0. ? (-@0/(4.*@1)>300. && -@0/(4.*@1)<3500. ? @0*@0/(4.*@1+@1) : TMath::Max(@0*3500+2*@1*3500.*3500,@0*3500+2*@1*300.*300)) : @0*3500.)", bla )
             roolist = ROOT.RooArgList( xvar, lam0, lam1, alp, hmax )
             pdf = ROOT.RooGenericPdf( pname, pname, "exp( @1*@0+@2*@0*@0   )*pow(@0, -@3*@3 + @4  )", roolist )
             
@@ -3028,8 +3081,9 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         elif model == "invpow":
             
             pname = "invpow_%s" % name
-            slo = self.buildRooVar("%s_slo" % pname,[], importToWs=False)
-            alp = self.buildRooVar("%s_alp" % pname,[], importToWs=False)
+            cname = self.getPdfCoeffLabel(pname)
+            slo = self.buildRooVar("%s_slo" % cname,[], importToWs=False)
+            alp = self.buildRooVar("%s_alp" % cname,[], importToWs=False)
             slo.setVal(2.e-3)
             alp.setVal(-7.)
             
@@ -3044,9 +3098,10 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         elif model == "invpowlog":
             
             pname = "invpowlog_%s" % name
-            slo = self.buildRooVar("%s_slo" % pname,[], importToWs=False)
-            alp = self.buildRooVar("%s_alp" % pname,[], importToWs=False)
-            bet = self.buildRooVar("%s_bet" % pname,[], importToWs=False)
+            cname = self.getPdfCoeffLabel(pname)
+            slo = self.buildRooVar("%s_slo" % cname,[], importToWs=False)
+            alp = self.buildRooVar("%s_alp" % cname,[], importToWs=False)
+            bet = self.buildRooVar("%s_bet" % cname,[], importToWs=False)
             slo.setVal(1.e-3)
             alp.setVal(-4.)
             bet.setVal(0.)
@@ -3063,9 +3118,10 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         elif model == "invpowlin":
             
             pname = "invpowlin_%s" % name
-            slo = self.buildRooVar("%s_slo" % pname,[], importToWs=False)
-            alp = self.buildRooVar("%s_alp" % pname,[], importToWs=False)
-            bet = self.buildRooVar("%s_bet" % pname,[], importToWs=False)
+            cname = self.getPdfCoeffLabel(pname)
+            slo = self.buildRooVar("%s_slo" % cname,[], importToWs=False)
+            alp = self.buildRooVar("%s_alp" % cname,[], importToWs=False)
+            bet = self.buildRooVar("%s_bet" % cname,[], importToWs=False)
             slo.setVal(1.e-3)
             alp.setVal(-4.)
             bet.setVal(0.)
@@ -3082,9 +3138,10 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         elif model == "invpow2":
             
             pname = "invpow2_%s" % name
-            slo = self.buildRooVar("%s_slo" % pname,[], importToWs=False)
-            qua = self.buildRooVar("%s_qua" % pname,[], importToWs=False)
-            alp = self.buildRooVar("%s_alp" % pname,[], importToWs=False)
+            cname = self.getPdfCoeffLabel(pname)
+            slo = self.buildRooVar("%s_slo" % cname,[], importToWs=False)
+            qua = self.buildRooVar("%s_qua" % cname,[], importToWs=False)
+            alp = self.buildRooVar("%s_alp" % cname,[], importToWs=False)
             slo.setVal(1.e-4)
             qua.setVal(1.e-6)
             alp.setVal(-4.)
