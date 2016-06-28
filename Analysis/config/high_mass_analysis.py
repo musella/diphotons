@@ -993,7 +993,8 @@ if "Run2015" in customize.datasetName() or "76X" in customize.datasetName():
     print "energy corrections file is escale76X_16DecRereco_2015"
 else:
     ## process.load('flashgg.Systematics.escales.test_2016B_corr_DCSOnly')
-    process.load('flashgg.Systematics.escales.Golden10June_plus_DCS')
+    ## process.load('flashgg.Systematics.escales.Golden10June_plus_DCS')
+    process.load('flashgg.Systematics.escales.Golden22June')
     print "energy corrections file is test_2016B_corr"
 
 # this will call customize(process), configure the analysis paths and make the process unscheduled
