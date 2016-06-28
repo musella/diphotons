@@ -102,7 +102,7 @@ customize.options.register ('idversion',
                             VarParsing.VarParsing.varType.string,          # string, int, or float
                             "idversion")
 customize.options.register ('applyDiphotonCorrections',
-                            False, # default value
+                            True, # default value
                             VarParsing.VarParsing.multiplicity.singleton, # singleton or list
                             VarParsing.VarParsing.varType.bool,          # string, int, or float
                             "applyDiphotonCorrections")
