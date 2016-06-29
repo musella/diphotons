@@ -21,7 +21,8 @@ class DiPhotonAnalysis(object):
                  mcTriggers=["HLT_DoublePhoton60*","HLT_DoublePhoton85*","HLT_Photon250_NoHE*"],
                  askTriggerOnMc=False,sortTemplate=False,singlePhoDumperTemplate=False,computeRechitFlags=False,removeEEEE=True,
                  applyDiphotonCorrections=False,diphotonCorrectionsVersion="",
-                 sourceDiphotons="flashggDiPhotons"):
+                 sourceDiphotons="flashggDiPhotons",
+                 extraSysModules=[]):
         
         super(DiPhotonAnalysis,self).__init__()
         
@@ -41,6 +42,9 @@ class DiPhotonAnalysis(object):
         self.computeRechitFlags = computeRechitFlags
         self.sourceDiphotons = sourceDiphotons
 
+        self.extraSysModules = extraSysModules
+        assert( len(self.extraSysModules) == 0 or self.applyDiphotonCorrections )
+        
         self.analysisSelections = []
         self.photonSelections = []
         self.splitByIso = []
@@ -86,7 +90,9 @@ class DiPhotonAnalysis(object):
                 for pset in vpset:
                     if (processType != "signal") or (not pset.Label.value().startswith("MCSmear")):
                         pset.NSigmas = cms.vint32()
-
+        
+        process.flashggDiPhotonSystematics.SystMethods.extend(self.extraSysModules)
+        
     # ----------------------------------------------------------------------------------------------------------------------
     def customize(self,process,jobConfig):
 
@@ -230,7 +236,8 @@ class DiPhotonAnalysis(object):
                 process.load("flashgg.Systematics.flashggDiPhotonSystematics_cfi")
             process.flashggDiPhotonSystematics.src=src
             src = "flashggDiPhotonSystematics"
-            
+                        
+        
 
         template = simpleTemplate.clone(src=cms.InputTag(src),
                                         cut = cms.string(

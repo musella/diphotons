@@ -22,6 +22,17 @@ process.RandomNumberGeneratorService = cms.Service("RandomNumberGeneratorService
                                                   )
 
 
+### process.genGravitons = cms.EDProducer("GenParticlePruner",
+###                                     src = cms.InputTag("flashggPrunedGenParticles"),
+###                                     select = cms.vstring("drop  *  ", # this is the default
+###                                                          "keep pdgId = 5100039",
+###                                                          )
+###                                     )
+### if "Grav" in customize.datasetName():
+###     bookCandViewNtProducer(process,"genGr","genGravitons")
+###     addGloabalFloat(diphotonDumper.globalVariables,process,"genGr","genVtxZ","vertex.z")
+### 
+
 #
 # load job options
 #
@@ -86,6 +97,16 @@ customize.options.register ('scaling',
                             VarParsing.VarParsing.multiplicity.singleton, # singleton or list
                             VarParsing.VarParsing.varType.bool,          # string, int, or float
                             "scaling")
+customize.options.register ('doeleId',
+                            False, # default value
+                            VarParsing.VarParsing.multiplicity.singleton, # singleton or list
+                            VarParsing.VarParsing.varType.bool,          # string, int, or float
+                            "doeleId")
+customize.options.register ('eleId',
+                            "passLooseId", # default value
+                            VarParsing.VarParsing.multiplicity.singleton, # singleton or list
+                            VarParsing.VarParsing.varType.string,          # string, int, or float
+                            "eleId")
 customize.options.register ('trigger',
                             "", # default value
                             VarParsing.VarParsing.multiplicity.singleton, # singleton or list
@@ -96,6 +117,16 @@ customize.options.register ('mctrigger',
                             VarParsing.VarParsing.multiplicity.singleton, # singleton or list
                             VarParsing.VarParsing.varType.string,          # string, int, or float
                             "mctrigger")
+customize.options.register ('dohltMatch',
+                            False, # default value
+                            VarParsing.VarParsing.multiplicity.singleton, # singleton or list
+                            VarParsing.VarParsing.varType.bool,          # string, int, or float
+                            "dohltMatch")
+customize.options.register ('dol1Match',
+                            False, # default value
+                            VarParsing.VarParsing.multiplicity.singleton, # singleton or list
+                            VarParsing.VarParsing.varType.bool,          # string, int, or float
+                            "dol1Match")
 customize.options.register ('idversion',
                             "V2", # default value
                             VarParsing.VarParsing.multiplicity.singleton, # singleton or list
@@ -126,6 +157,12 @@ customize.options.register ('histosOnly',
                             VarParsing.VarParsing.multiplicity.singleton, # singleton or list
                             VarParsing.VarParsing.varType.bool,          # string, int, or float
                             "histosOnly")
+customize.options.register ('extraActvity',
+                            False, # default value
+                            VarParsing.VarParsing.multiplicity.singleton, # singleton or list
+                            VarParsing.VarParsing.varType.bool,          # string, int, or float
+                            "extraActvity")
+
 
 customize.parse()
 
@@ -134,6 +171,61 @@ if customize.options.processType == "data":
     process.GlobalTag = GlobalTag(process.GlobalTag, autoCond['run2_data'].replace("::All","") )
 else:
     process.GlobalTag = GlobalTag(process.GlobalTag, autoCond['run2_mc'].replace("::All",""))
+
+
+
+#
+# analysis configuration
+#
+
+
+dataTriggers=[]
+mcTriggers=[]
+doSinglePho=False
+doDoublePho=True
+doDoublePho0T=False
+invertEleVeto=False
+## dumpBits=["HLT_DoublePhoton60","HLT_DoublePhoton85","HLT_Photon250_NoHE","HLT_Photon165_HE","HLT_ECALHT800"]
+dumpBits=["HLT_DoublePhoton60","HLT_ECALHT800"]
+askTriggerOnMc=False
+extraSysModules=[]
+
+# parse selection and trigger config options
+if customize.selection == "diphoton":
+    mcTriggers=["HLT_DoublePhoton85*","HLT_Photon250_NoHE*","HLT_DoublePhoton60*"] ## ,
+    dataTriggers=mcTriggers
+elif customize.selection == "photon":
+    dataTriggers=["HLT_Photon165*"]
+    mcTriggers=dataTriggers
+    doSinglePho=True
+    doDoublePho=False
+elif customize.selection == "electron":
+    dataTriggers=["HLT_Ele27_eta2p1_WPLoose_Gsf_v*"]
+    ## mcTriggers=["HLT_Ele27_eta2p1_WP75_Gsf_v*"]
+    mcTriggers=dataTriggers
+    askTriggerOnMc=True
+    invertEleVeto=True
+elif customize.selection == "dielectron":
+    dataTriggers=["*"]
+    mcTriggers=dataTriggers
+    if customize.options.trigger == "":
+        sys.exit("please complete dielectron selection",-1)
+        invertEleVeto=True
+elif customize.selection == "dielectron0T":
+    invertEleVeto=True
+    doDoublePho0T=True
+    mcTriggers=[]
+    askTriggerOnMc=False
+
+if customize.options.trigger != "":
+    dataTriggers = customize.options.trigger.split(",")
+    mcTriggers = [] ## dataTriggers
+    dumpBits.extend( map(lambda x: x.rstrip("*"), dataTriggers)  )
+    askTriggerOnMc=False
+
+if customize.options.mctrigger != "":
+    mcTriggers = customize.options.mctrigger.split(",")
+dumpBits=set(dumpBits)
 
 #
 # define minitrees and histograms
@@ -146,7 +238,6 @@ sourceDiphotons = "flashggDiPhotons"
 
 # Track count vertex
 if "0T" in customize.idversion:
-    # diphotonDumper.src = "flashggDiPhotonsTrkCount"
     sourceDiphotons = "flashggDiPhotonsTrkCount"
 
 if customize.useVtx0:
@@ -162,510 +253,112 @@ diphotonDumper.maxCandPerEvent=1
 diphotonDumper.nameTemplate = "$PROCESS_$SQRTS_$LABEL_$SUBCAT"
 diphotonDumper.throwOnUnclassified = cms.bool(False)
 
-def addGloabalFloat(globalVariables,process,producer,name,expr):    
-    getattr(process,producer).variables.append( cms.PSet(tag=cms.untracked.string(name),quantity=cms.untracked.string(expr)) )
-    setattr(globalVariables.extraFloats,name,cms.InputTag(producer,name))
+# import default dumper configuration
+import diphotons.Analysis.dumperConfig as dumpCfg
 
-def bookCandViewNtProducer(process,name,collection):    
-    setattr(process,name,cms.EDProducer(
-            "CandViewNtpProducer", 
-            src = cms.InputTag(collection), lazyParser = cms.untracked.bool(True),
-            variables = cms.VPSet()
-            )
-            )
-process.flashggUnpackedJets = cms.EDProducer("FlashggVectorVectorJetUnpacker",
-                                             JetsTag = cms.InputTag("flashggFinalJets"),
-                                             NCollections = cms.uint32(8)
-                                             )
-process.selectedJsets60 = cms.EDFilter("FlashggJetSelector",
-                                     src=cms.InputTag("flashggUnpackedJets","0"),
-                                     cut=cms.string("pt>60 && abs(eta)<2.5"),
-                                )
+variables, histograms, variablesSinglePho, histogramsSinglePho = dumpCfg.getDefaultConfig()
 
-process.selectedJsets30 = cms.EDFilter("FlashggJetSelector",
-                                     src=cms.InputTag("flashggUnpackedJets","0"),
-                                     cut=cms.string("pt>30 && abs(eta)<2.5"),
-                                )
-
-process.selectedJsets60Fwd = cms.EDFilter("FlashggJetSelector",
-                                     src=cms.InputTag("flashggUnpackedJets","0"),
-                                     cut=cms.string("pt>30 && abs(eta)<4.7"),
-                                )
-
-process.genGravitons = cms.EDProducer("GenParticlePruner",
-                                    src = cms.InputTag("flashggPrunedGenParticles"),
-                                    select = cms.vstring("drop  *  ", # this is the default
-                                                         "keep pdgId = 5100039",
-                                                         )
-                                    )
-### if "Grav" in customize.datasetName():
-###     bookCandViewNtProducer(process,"genGr","genGravitons")
-###     addGloabalFloat(diphotonDumper.globalVariables,process,"genGr","genVtxZ","vertex.z")
-### 
-### process.MHT60 = cms.EDProducer("MyMHTProducer",src=cms.InputTag("selectedJsets60"))
-### process.MHT30 = cms.EDProducer("MyMHTProducer",src=cms.InputTag("selectedJsets30"))
-### process.MHT60Clean = cms.EDProducer("MyMHTProducer",src=cms.InputTag("selectedJsets60"),veto=cms.InputTag("cicDiPhotons"))
-### process.MHT30Clean = cms.EDProducer("MyMHTProducer",src=cms.InputTag("selectedJsets30"),veto=cms.InputTag("cicDiPhotons"))
-### process.dijet60Clean = cms.EDProducer("MyMHTProducer",src=cms.InputTag("selectedJsets60"),maxCand=cms.int32(2),veto=cms.InputTag("cicDiPhotons"))
-### process.dijet30Clean = cms.EDProducer("MyMHTProducer",src=cms.InputTag("selectedJsets30"),maxCand=cms.int32(2),veto=cms.InputTag("cicDiPhotons"))
-### 
-### bookCandViewNtProducer(process,"mht60","MHT60")
-### bookCandViewNtProducer(process,"mht30","MHT30")
-### bookCandViewNtProducer(process,"mht60clean","MHT60Clean")
-### bookCandViewNtProducer(process,"mht30clean","MHT30Clean")
-### bookCandViewNtProducer(process,"dijet60clean","dijet60Clean")
-### bookCandViewNtProducer(process,"dijet30clean","dijet30Clean")
-### 
-### addGloabalFloat(diphotonDumper.globalVariables,process,"mht60","mht60Mass","mass")
-### addGloabalFloat(diphotonDumper.globalVariables,process,"mht60","mht60Pt","pt")
-### addGloabalFloat(diphotonDumper.globalVariables,process,"mht60","mht60Rapidity","rapidity")
-### addGloabalFloat(diphotonDumper.globalVariables,process,"mht60","mht60Phi","phi")
-### 
-### addGloabalFloat(diphotonDumper.globalVariables,process,"mht60clean","mht60CleanMass","mass")
-### addGloabalFloat(diphotonDumper.globalVariables,process,"mht60clean","mht60CleanPt","pt")
-### addGloabalFloat(diphotonDumper.globalVariables,process,"mht60clean","mht60CleanRapidity","rapidity")
-### addGloabalFloat(diphotonDumper.globalVariables,process,"mht60clean","mht60CleanPhi","phi")
-### addGloabalFloat(diphotonDumper.globalVariables,process,"mht60clean","nJets60","numberOfDaughters")
-### 
-### addGloabalFloat(diphotonDumper.globalVariables,process,"dijet60clean","dijet60CleanMass","mass")
-### addGloabalFloat(diphotonDumper.globalVariables,process,"dijet60clean","dijet60CleanPt","pt")
-### addGloabalFloat(diphotonDumper.globalVariables,process,"dijet60clean","dijet60CleanRapidity","rapidity")
-### addGloabalFloat(diphotonDumper.globalVariables,process,"dijet60clean","dijet60CleanPhi","phi")
-### 
-### addGloabalFloat(diphotonDumper.globalVariables,process,"dijet30clean","dijet30CleanMass","mass")
-### addGloabalFloat(diphotonDumper.globalVariables,process,"dijet30clean","dijet30CleanPt","pt")
-### addGloabalFloat(diphotonDumper.globalVariables,process,"dijet30clean","dijet30CleanRapidity","rapidity")
-### addGloabalFloat(diphotonDumper.globalVariables,process,"dijet30clean","dijet30CleanPhi","phi")
-### 
-### addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","mht30Mass","mass")
-### addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","mht30Pt","pt")
-### addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","mht30Rapidity","rapidity")
-### addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","mht30Phi","phi")
-### addGloabalFloat(diphotonDumper.globalVariables,process,"mht30","nJets30","numberOfDaughters")
-### 
-### addGloabalFloat(diphotonDumper.globalVariables,process,"mht30clean","mht30CleanMass","mass")
-### addGloabalFloat(diphotonDumper.globalVariables,process,"mht30clean","mht30CleanPt","pt")
-### addGloabalFloat(diphotonDumper.globalVariables,process,"mht30clean","mht30CleanRapidity","rapidity")
-### addGloabalFloat(diphotonDumper.globalVariables,process,"mht30clean","mht30CleanPhi","phi")
-### addGloabalFloat(diphotonDumper.globalVariables,process,"mht30clean","nJets30","numberOfDaughters")
-### 
-### addGloabalFloat(diphotonDumper.globalVariables,process,"mht30clean","jet1Btag","?numberOfDaughters>0?daughter(0).bDiscriminator('combinedInclusiveSecondaryVertexV2BJetTags'):0")
-### addGloabalFloat(diphotonDumper.globalVariables,process,"mht30clean","jet1Pt","?numberOfDaughters>0?daughter(0).pt:0")
-### addGloabalFloat(diphotonDumper.globalVariables,process,"mht30clean","jet1Eta","?numberOfDaughters>0?daughter(0).eta:0")
-### addGloabalFloat(diphotonDumper.globalVariables,process,"mht30clean","jet1Phi","?numberOfDaughters>0?daughter(0).phi:0")
-### 
-### addGloabalFloat(diphotonDumper.globalVariables,process,"mht30clean","jet2Btag","?numberOfDaughters>1?daughter(1).bDiscriminator('combinedInclusiveSecondaryVertexV2BJetTags'):0")
-### addGloabalFloat(diphotonDumper.globalVariables,process,"mht30clean","jet2Pt","?numberOfDaughters>1?daughter(1).pt:0")
-### addGloabalFloat(diphotonDumper.globalVariables,process,"mht30clean","jet2Eta","?numberOfDaughters>1?daughter(1).eta:0")
-### addGloabalFloat(diphotonDumper.globalVariables,process,"mht30clean","jet2Phi","?numberOfDaughters>1?daughter(1).phi:0")
-### 
-### addGloabalFloat(diphotonDumper.globalVariables,process,"mht30clean","jet3Btag","?numberOfDaughters>2?daughter(2).bDiscriminator('combinedInclusiveSecondaryVertexV2BJetTags'):0")
-### addGloabalFloat(diphotonDumper.globalVariables,process,"mht30clean","jet3Pt","?numberOfDaughters>2?daughter(2).pt:0")
-### addGloabalFloat(diphotonDumper.globalVariables,process,"mht30clean","jet3Eta","?numberOfDaughters>2?daughter(2).eta:0")
-### addGloabalFloat(diphotonDumper.globalVariables,process,"mht30clean","jet3Phi","?numberOfDaughters>2?daughter(2).phi:0")
-### 
-### addGloabalFloat(diphotonDumper.globalVariables,process,"mht30clean","jet4Btag","?numberOfDaughters>3?daughter(3).bDiscriminator('combinedInclusiveSecondaryVertexV2BJetTags'):0")
-### addGloabalFloat(diphotonDumper.globalVariables,process,"mht30clean","jet4Pt","?numberOfDaughters>3?daughter(3).pt:0")
-### addGloabalFloat(diphotonDumper.globalVariables,process,"mht30clean","jet4Eta","?numberOfDaughters>3?daughter(3).eta:0")
-### addGloabalFloat(diphotonDumper.globalVariables,process,"mht30clean","jet4Phi","?numberOfDaughters>3?daughter(3).phi:0")
-### 
-### bookCandViewNtProducer(process,"met","slimmedMETs")
-### addGloabalFloat(diphotonDumper.globalVariables,process,"met","metPt","pt")
-### addGloabalFloat(diphotonDumper.globalVariables,process,"met","metPhi","phi")
-### addGloabalFloat(diphotonDumper.globalVariables,process,"met","sumEt","sumEt")
-
-
-
-variables=["mass","pt","rapidity","eta",
-           "vertexZ  := vtx.z", 
-           "vertexId := vtx.key",
-           ## "satRegressedMass := sqrt( (leadingPhoton.energyAtStep('satRegressedEnergy','initial')*subLeadingPhoton.energyAtStep('satRegressedEnergy','initial')) / (leadingPhoton.energy*subLeadingPhoton.energy) ) * genP4.mass",
-           ## "regressedMass := sqrt( (leadingPhoton.energyAtStep('regressedEnergy')*subLeadingPhoton.energyAtStep('regressedEnergy')) / (leadingPhoton.energy*subLeadingPhoton.energy) ) * genP4.mass",
-           "genMass := genP4.mass",
-           ### "leadSatRegressedEnergy := leadingPhoton.userFloat('satRegressedEnergy')",
-           ### "subLeadSatRegressedEnergy := subLeadingPhoton.userFloat('satRegressedEnergy')",
-           ### "leadRegressedEnergy := leadingPhoton.userFloat('regressedEnergy')",
-           ### "subLeadRegressedEnergy := subLeadingPhoton.userFloat('regressedEnergy')",
-           "leadInitialEnergy := leadingPhoton.energyAtStep('initial')",
-           "subLeadInitialEnergy := subLeadingPhoton.energyAtStep('initial')",
-           "leadEnergy := leadingPhoton.p4.energy",
-           "subLeadEnergy := subLeadingPhoton.p4.energy",
-           "lead_5x5_Energy := leadingPhoton.full5x5_e5x5",
-           "subLead_5x5_Energy := subLeadingPhoton.full5x5_e5x5",
-           "mass_5x5 := mass*sqrt(leadingPhoton.full5x5_e5x5*subLeadingPhoton.full5x5_e5x5/(leadingPhoton.p4.energy*subLeadingPhoton.p4.energy))",
-           "leadIsSat := leadingPhoton.checkStatusFlag('kSaturated')",
-           "subLeadIsSat := subLeadingPhoton.checkStatusFlag('kSaturated')",
-           "leadIsWeird := leadingPhoton.checkStatusFlag('kWeird')",
-           "subLeadIsWeird := subLeadingPhoton.checkStatusFlag('kWeird')",
-           "genLeadPt := ?leadingPhoton.hasMatchedGenPhoton?leadingPhoton.matchedGenPhoton.pt:0",
-           "genSubLeadPt := ?subLeadingPhoton.hasMatchedGenPhoton?subLeadingPhoton.matchedGenPhoton.pt:0",
-           "deltaEta                 := abs( leadingPhoton.eta - subLeadingPhoton.eta )",
-           "cosDeltaPhi              := cos( leadingPhoton.phi - subLeadingPhoton.phi )",
-           "leadPt                   :=leadingPhoton.pt",
-           "subleadPt                :=subLeadingPhoton.pt",
-           "leadEta                  :=leadingPhoton.eta",
-           "subleadEta               :=subLeadingPhoton.eta",
-           "leadR9                   :=leadingPhoton.r9",
-           "subleadR9                :=subLeadingPhoton.r9",
-           "leadScEta                :=leadingPhoton.superCluster.eta",
-           "subleadScEta             :=subLeadingPhoton.superCluster.eta",
-           "leadPhi                  :=leadingPhoton.phi",
-           "subleadPhi               :=subLeadingPhoton.phi",
-           ## "leadCShapeMVA            :=leadingPhoton.userFloat('cShapeMVA')",
-           ## "subleadCShapeMVA         :=subLeadingPhoton.userFloat('cShapeMVA')",
-           "minR9                    :=min(leadingPhoton.r9,subLeadingPhoton.r9)",
-           "maxEta                   :=max(abs(leadingPhoton.superCluster.eta),abs(subLeadingPhoton.superCluster.eta))",
-           
-           "leadBlockChIso   := leadingView.pfChIso03WrtChosenVtx", 
-           "leadBlockPhoIso  := leadingPhoton.pfPhoIso03", 
-           
-           "leadPhoIsoEA :=  map( abs(leadingPhoton.superCluster.eta) :: 0.,0.9,1.5,2.0,2.2,3. :: 0.21,0.2,0.14,0.22,0.31 )",
-           "subleadPhoIsoEA :=  map( abs(subLeadingPhoton.superCluster.eta) :: 0.,0.9,1.5,2.0,2.2,3. :: 0.21,0.2,0.14,0.22,0.31 )",
-           
-           "leadMatchType            :=leadingPhoton.genMatchType",
-           "leadGenIso               :=?leadingPhoton.hasUserFloat('genIso')?leadingPhoton.userFloat('genIso'):0",
-           "subleadMatchType         :=subLeadingPhoton.genMatchType",
-           "subleadGenIso            :=?subLeadingPhoton.hasUserFloat('genIso')?subLeadingPhoton.userFloat('genIso'):0",
-           
-           "leadChIso   := leadingPhoton.egChargedHadronIso", 
-           "leadPhoIso  := leadingPhoton.egPhotonIso", 
-           "leadNeutIso := leadingPhoton.egNeutralHadronIso",
-           "leadHoE     := leadingPhoton.hadTowOverEm",
-           "leadSigmaIeIe := leadingPhoton.full5x5_sigmaIetaIeta",
-           "leadPixSeed  := leadingPhoton.hasPixelSeed",
-           "leadPassEleVeto := leadingPhoton.passElectronVeto",
-           
-           
-           ## "subleadBlockChIso   := subLeadingView.pfChIso03WrtChosenVtx", 
-           "subleadBlockPhoIso  := subLeadingPhoton.pfPhoIso03", 
-           ## "subleadRndConePhoIso:= subLeadingPhoton.extraPhoIso('rnd03')",
-           
-           "subleadChIso   := subLeadingPhoton.egChargedHadronIso", 
-           "subleadPhoIso  := subLeadingPhoton.egPhotonIso", 
-           "subleadNeutIso := subLeadingPhoton.egNeutralHadronIso",
-           "subleadHoE     := subLeadingPhoton.hadTowOverEm",
-           "subleadSigmaIeIe := subLeadingPhoton.full5x5_sigmaIetaIeta",
-           "subleadPixSeed := subLeadingPhoton.hasPixelSeed",
-           "subleadPassEleVeto := subLeadingPhoton.passElectronVeto",
-           ]
-
-def makeOneLegInputs(label,obj,inputs):
-    out = []
-    for inp in inputs:
-        if type(inp) == str: 
-            name, expr = inp, inp
-        else:
-            expr, name = inp
-        if not name.startswith("_"): name = name[0].capitalize()+name[1:]
-        name = "%s%s"  % ( label, name )        
-        expr = "%s.%s" % ( obj,   expr )
-        ## print expr[14]
-        out.append( "%s := %s" % (name,expr) )
-        print out[-1]
-    return out
-
-
-variables.extend( makeOneLegInputs("lead","leadingPhoton",[("superCluster.preshowerEnergy","scPreshowerEnergy"),
-                                                           ("superCluster.rawEnergy","scRawEnergy"),
-                                                           ("superCluster.preshowerEnergyPlane1","scPreshowerEnergyPlane1"),
-                                                           ("superCluster.preshowerEnergyPlane2","scPreshowerEnergyPlane2")]) ),
-variables.extend( makeOneLegInputs("sublead","subLeadingPhoton",[("superCluster.preshowerEnergy","scPreshowerEnergy"),
-                                                                 ("superCluster.rawEnergy","scRawEnergy"),
-                                                                 ("superCluster.preshowerEnergyPlane1","preshowerEnergyPlane1"),
-                                                                 ("superCluster.preshowerEnergyPlane2","preshowerEnergyPlane2")]) ),
-
-
+# add extra variables if needed
 if customize.addRegressionInput:
-    regInputs = [
-        ("superCluster.clustersSize","scClustersSize"),
-        ("superCluster.seed.energy","scSeedEnergy"),
-        ("superCluster.energy","scEnergy"),
-        
-        # ("? hasMatchedGenPhoton ? matchedGenPhoton.energy : 0","etrue"),
-        
-        ("userInt('seedRecoFlag')","seedRecoFlag"),
-        
-        ## cluster shapes
-        "e1x5",           "full5x5_e1x5",           
-        "e2x5",           "full5x5_e2x5",           
-        "e3x3",           "full5x5_e3x3",           
-        "e5x5",           "full5x5_e5x5",           
-        "maxEnergyXtal",  "full5x5_maxEnergyXtal",  
-        "sigmaIetaIeta",  "full5x5_sigmaIetaIeta",  
-        "r1x5",           "full5x5_r1x5",           
-        "r2x5",           "full5x5_r2x5",           
-        "r9",             "full5x5_r9",             
-        "eMax","e2nd","eTop","eBottom","eLeft","eRight",
-        "iEta","iPhi","cryEta","cryPhi",
-        
-        ## more cluster shapes
-        ("e2x5right" ,"e2x5Right"  ),
-        ("e2x5left"  ,"e2x5Left"   ),
-        ("e2x5top"   ,"e2x5Top"    ),
-        ("e2x5bottom","e2x5Bottom" ),
-        ("e2x5max"   ,"e2x5Max"    ),
-        ("e1x3"      ,"e1x3"       ),
-        ("s4"        ,"s4"         ),
-        
-        ("esEffSigmaRR","sigmaRR"),
-        ("spp","covarianceIphiIphi"),
-        ("sep","covarianceIetaIphi"),
-        ("superCluster.etaWidth","etaWidth"),("superCluster.phiWidth","phiWidth"),
-        
-        ("checkStatusFlag('kSaturated')","kSaturated"),("checkStatusFlag('kWeird')","kWeird"),
-        ]
-    
-    variables.extend( makeOneLegInputs("lead","leadingPhoton",regInputs))
-    variables.extend( makeOneLegInputs("sublead","subLeadingPhoton",regInputs))
-    
-histograms=["mass>>mass(1500,0,15000)",
-            "mass>>lowmass(560,60,200)",
-            "genMass>>genmass(1500,0,15000)",            
-            "pt>>pt(200,0,200)",
-            "rapidity>>rapidity(200,-5,5)",
-            "deltaEta>>deltaEta(200,0,5)",
-            "cosDeltaPhi>>cosDeltaPhi(200,0,1)",
-            "global.rho>>rho(20,0,50)",
-            "global.nvtx>>nvtx(51,0.5,50.5)",
-            
-            ### "global.mht60>>mht60(1500,0,15000)",
-            ### "global.mht30>>mht30(1500,0,15000)",
-            ### "global.metPt>>met(200,0,200)",
-            ### "global.sumEt>>sumEt(1500,0,15000)",
-              
-            "leadPt>>phoPt(150,0,3000)",
-            "subleadPt>>phoPt(150,0,3000)",
-            "leadR9>>leadR9(110,0,1.1)",
-            "subleadR9>>subleadR9(110,0,1.1)",
-            "leadR9>>phoR9(110,0,1.1)",
-            "subleadR9>>phoR9(110,0,1.1)",
-            
-            "leadPt>>leadPt(200,0,800)",
-            "subleadPt>>subleadPt(200,0,800)",
-            "leadEta>>leadEta(55,-2.75,2.75)",
-            "subleadEta>>subleadEta(55,-2.75,2.75)",
-            
-            "leadBlockChIso>>leadBlockChIso(120,-10,50)",
-            "leadBlockPhoIso>>leadBlockPhoIso(120,-10,50)",
-            "leadChIso>>leadChIso(120,-10,50)",
-            "leadPhoIso>>leadPhoIso(120,-10,50)",
-            "leadNeutIso>>leadNeutIso(120,-10,50)",
-            "leadHoE>>leadHoE(40,0,0.2)",
-            "leadSigmaIeIe>>leadSigmaIeIe(320,0,3.2e-2)",
-            "leadPixSeed>>leadPixSeed(2,-0.5,1.5)",
-            "leadPassEleVeto>>leadPassEleVeto(2,-0.5,1.5)",
-            
-            "subleadBlockChIso>>subleadBlockChIso(120,-10,50)",
-            "subleadBlockPhoIso>>subleadBlockPhoIso(120,-10,50)",
-            "subleadChIso>>subleadChIso(120,-10,50)",
-            "subleadPhoIso>>subleadPhoIso(120,-10,50)",
-            "subleadNeutIso>>subleadNeutIso(120,-10,50)",
-            "subleadHoE>>subleadHoE(40,0,0.2)",
-            "subleadSigmaIeIe>>subleadSigmaIeIe(320,0,3.2e-2)",
-            "subleadPixSeed>>subleadPixSeed(2,-0.5,1.5)",
-            "subleadPassEleVeto>>subleadPassEleVeto(2,-0.5,1.5)",
-            
-            
-            "leadChIso>>phoChIso(120,-10,50)",
-            "subleadChIso>>phoChIso(120,-10,50)",
-            "leadPhoIso>>phoPhoIso(120,-10,50)",
-            "subleadPhoIso>>phoPhoIso(120,-10,50)",
-            "leadSigmaIeIe>>phoSigmaIeIe(320,0,3.2e-2)",
-            "subleadSigmaIeIe>>phoSigmaIeIe(320,0,3.2e-2)",
-            "leadHoE>>phoHoE(40,0,0.2)",                                   
-            "subleadHoE>>phoHoE(40,0,0.2)",                                   
-            "leadPassEleVeto>>phoPassEleVeto(2,-0.5,1.5)",
-            "subleadPassEleVeto>>phoPassEleVeto(2,-0.5,1.5)",
-            
-            "subleadPt:leadPt>>ptSubVsLead(145,100,3000:145,100,3000)",
-            "minR9>>minR9(110,0,1.1)",
-            "maxEta>>maxEta(250,0,2.5)"
-            ]
-
-
-variablesSinglePho=[
-    "phoPt                   :=pt",
-    "genPt                   :=?hasMatchedGenPhoton?matchedGenPhoton.pt:0",
-    "phoEta                  :=eta",
-    "phoR9                   :=r9",
-    "phoScEta                :=superCluster.eta",
-    "phoPhi                  :=phi",
-    
-    "phoBlockChIso   := pfChgIso03WrtVtx0", 
-    
-    "phoBlockPhoIso  := pfPhoIso03", 
-    ## "phoRndConePhoIso:= extraPhoIso('rnd03')",
-    
-    "phoPhoIsoEA :=  map( abs(superCluster.eta) :: 0.,0.9,1.5,2.0,2.2,3. :: 0.21,0.2,0.14,0.22,0.31 )",
-    
-    "phoMatchType            :=genMatchType",
-    "phoGenIso               :=?hasUserFloat('genIso')?userFloat('genIso'):0",
-    "phoChIso   := egChargedHadronIso", 
-    "phoPhoIso  := egPhotonIso", 
-    "phoNeutIso := egNeutralHadronIso",
-    "phoHoE     := hadTowOverEm",
-    "phoSigmaIeIe := full5x5_sigmaIetaIeta",
-    "phoSigmaIpIp := sqrt(sipip)",
-    "eMax","e2nd","eTop","eBottom","eLeft","eRight",
-    "phoPixSeed  := hasPixelSeed",
-    "phoPassEleVeto := passElectronVeto",
-    ]
-
-
-histogramsSinglePho = [
-    "phoPt>>phoPt(145,100,3000)",
-    "genPt>>phoPt(145,100,3000)",
-    "phoEta>>phoEta(55,-2.75,2.75)",
-    "phoPhi>>phoPhi(65,-3.25,3.25)",
-    
-    "phoBlockChIso>>phoBlockChIso(120,-10,50)",
-    "phoBlockPhoIso>>phoBlockPhoIso(120,-10,50)",
-    "phoChIso>>phoChIso(120,-10,50)",
-    "phoPhoIso>>phoPhoIso(120,-10,50)",
-    "phoNeutIso>>phoNeutIso(120,-10,50)",
-    "phoHoE>>phoHoE(40,0,0.2)",
-    "phoSigmaIeIe>>phoSigmaIeIe(50,0,5.e-2)",
-    "phoPixSeed>>phoPixSeed(2,-0.5,1.5)",
-    "phoScEta:phoPhi>>phoEtaVsPhi(65,-3.25,3.25:55,-2.75,2.75)"
-    ]
+    dumpCfg.addRegressionInput(variables)
 
 if (customize.selection=="diphoton" or customize.selection=="photon"):
-    if customize.datasetName() and (not "EXOSpring15_v3" in customize.datasetName() or "EXOSpring15_v3v8" in customize.datasetName()):
-        variables.extend( [
-                "leadRndConeChIso := leadingView.extraChIsoWrtChoosenVtx('rnd03')",
-                "leadRndConeChIso0 := leadingView.extraChIsoWrtChoosenVtx('rnd03_0')",
-                "leadRndConeChIso1 := leadingView.extraChIsoWrtChoosenVtx('rnd03_1')",
-                "leadRndConeChIso2 := leadingView.extraChIsoWrtChoosenVtx('rnd03_2')",
-                "leadRndConeChIso3 := leadingView.extraChIsoWrtChoosenVtx('rnd03_3')",
-                "leadRndConeChIso4 := leadingView.extraChIsoWrtChoosenVtx('rnd03_4')",
-                "leadRndConeChIso5 := leadingView.extraChIsoWrtChoosenVtx('rnd03_5')",
-                "leadRndConeChIso6 := leadingView.extraChIsoWrtChoosenVtx('rnd03_6')",
-                "leadRndConeChIso7 := leadingView.extraChIsoWrtChoosenVtx('rnd03_7')",
-                "leadRndConeChIso8 := leadingView.extraChIsoWrtChoosenVtx('rnd03_8')",
-                
-                "subleadRndConeChIso := subLeadingView.extraChIsoWrtChoosenVtx('rnd03')",
-                "subleadRndConeChIso0 := subLeadingView.extraChIsoWrtChoosenVtx('rnd03_0')",
-                "subleadRndConeChIso1 := subLeadingView.extraChIsoWrtChoosenVtx('rnd03_1')",
-                "subleadRndConeChIso2 := subLeadingView.extraChIsoWrtChoosenVtx('rnd03_2')",
-                "subleadRndConeChIso3 := subLeadingView.extraChIsoWrtChoosenVtx('rnd03_3')",
-                "subleadRndConeChIso4 := subLeadingView.extraChIsoWrtChoosenVtx('rnd03_4')",
-                "subleadRndConeChIso5 := subLeadingView.extraChIsoWrtChoosenVtx('rnd03_5')",
-                "subleadRndConeChIso6 := subLeadingView.extraChIsoWrtChoosenVtx('rnd03_6')",
-                "subleadRndConeChIso7 := subLeadingView.extraChIsoWrtChoosenVtx('rnd03_7')",
-                "subleadRndConeChIso8 := subLeadingView.extraChIsoWrtChoosenVtx('rnd03_8')",
-                ])
-        
-        histograms.extend([
-                "leadRndConeChIso0>>leadRndConeChIso(120,-10,50)",
-                "leadRndConeChIso1>>leadRndConeChIso(120,-10,50)",
-                "leadRndConeChIso2>>leadRndConeChIso(120,-10,50)",
-                "leadRndConeChIso3>>leadRndConeChIso(120,-10,50)",
-                "leadRndConeChIso4>>leadRndConeChIso(120,-10,50)",
-                "leadRndConeChIso5>>leadRndConeChIso(120,-10,50)",
-                "leadRndConeChIso6>>leadRndConeChIso(120,-10,50)",
-                "leadRndConeChIso7>>leadRndConeChIso(120,-10,50)",
-                "leadRndConeChIso8>>leadRndConeChIso(120,-10,50)",
-                
-                "subleadRndConeChIso0>>subleadRndConeChIso(120,-10,50)",
-                "subleadRndConeChIso1>>subleadRndConeChIso(120,-10,50)",
-                "subleadRndConeChIso2>>subleadRndConeChIso(120,-10,50)",
-                "subleadRndConeChIso3>>subleadRndConeChIso(120,-10,50)",
-                "subleadRndConeChIso4>>subleadRndConeChIso(120,-10,50)",
-                "subleadRndConeChIso5>>subleadRndConeChIso(120,-10,50)",
-                "subleadRndConeChIso6>>subleadRndConeChIso(120,-10,50)",
-                "subleadRndConeChIso7>>subleadRndConeChIso(120,-10,50)",
-                "subleadRndConeChIso8>>subleadRndConeChIso(120,-10,50)",
-                
-                "leadRndConeChIso0>>phoRndConeChIso(120,-10,50)",
-                "leadRndConeChIso1>>phoRndConeChIso(120,-10,50)",
-                "leadRndConeChIso2>>phoRndConeChIso(120,-10,50)",
-                "leadRndConeChIso3>>phoRndConeChIso(120,-10,50)",
-                "leadRndConeChIso4>>phoRndConeChIso(120,-10,50)",
-                "leadRndConeChIso5>>phoRndConeChIso(120,-10,50)",
-                "leadRndConeChIso6>>phoRndConeChIso(120,-10,50)",
-                "leadRndConeChIso7>>phoRndConeChIso(120,-10,50)",
-                "leadRndConeChIso8>>phoRndConeChIso(120,-10,50)",
-                
-                "subleadRndConeChIso0>>phoRndConeChIso(120,-10,50)",
-                "subleadRndConeChIso1>>phoRndConeChIso(120,-10,50)",
-                "subleadRndConeChIso2>>phoRndConeChIso(120,-10,50)",
-                "subleadRndConeChIso3>>phoRndConeChIso(120,-10,50)",
-                "subleadRndConeChIso4>>phoRndConeChIso(120,-10,50)",
-                "subleadRndConeChIso5>>phoRndConeChIso(120,-10,50)",
-                "subleadRndConeChIso6>>phoRndConeChIso(120,-10,50)",
-                "subleadRndConeChIso7>>phoRndConeChIso(120,-10,50)",
-                "subleadRndConeChIso8>>phoRndConeChIso(120,-10,50)",
-                ])
-        
-        variablesSinglePho.extend([    
-                "phoRndConeChIso := extraChgIsoWrtVtx0('rnd03')",
-                "phoRndConeChIso0 := extraChgIsoWrtVtx0('rnd03_0')",
-                "phoRndConeChIso1 := extraChgIsoWrtVtx0('rnd03_1')",
-                "phoRndConeChIso2 := extraChgIsoWrtVtx0('rnd03_2')",
-                "phoRndConeChIso3 := extraChgIsoWrtVtx0('rnd03_3')",
-                "phoRndConeChIso4 := extraChgIsoWrtVtx0('rnd03_4')",
-                "phoRndConeChIso5 := extraChgIsoWrtVtx0('rnd03_5')",
-                "phoRndConeChIso6 := extraChgIsoWrtVtx0('rnd03_6')",
-                "phoRndConeChIso7 := extraChgIsoWrtVtx0('rnd03_7')",
-                "phoRndConeChIso8 := extraChgIsoWrtVtx0('rnd03_8')",
-                ])
-        
-        histogramsSinglePho.extend([
-                "phoRndConeChIso0>>phoRndConeChIso(120,-10,50)",
-                "phoRndConeChIso1>>phoRndConeChIso(120,-10,50)",
-                "phoRndConeChIso2>>phoRndConeChIso(120,-10,50)",
-                "phoRndConeChIso3>>phoRndConeChIso(120,-10,50)",
-                "phoRndConeChIso4>>phoRndConeChIso(120,-10,50)",
-                "phoRndConeChIso5>>phoRndConeChIso(120,-10,50)",
-                "phoRndConeChIso6>>phoRndConeChIso(120,-10,50)",
-                "phoRndConeChIso7>>phoRndConeChIso(120,-10,50)",
-                "phoRndConeChIso8>>phoRndConeChIso(120,-10,50)"
-                ])
-    else:
-        variables.extend( [
-                "leadRndConeChIso  := 999",
-                "leadRndConeChIso0 := 999",
-                "leadRndConeChIso1 := 999",
-                "leadRndConeChIso2 := 999",
-                "leadRndConeChIso3 := 999",
-                "leadRndConeChIso4 := 999",
-                "leadRndConeChIso5 := 999",
-                "leadRndConeChIso6 := 999",
-                "leadRndConeChIso7 := 999",
-                "leadRndConeChIso8 := 999",
-                
-                "subleadRndConeChIso  := 999",
-                "subleadRndConeChIso0 := 999",
-                "subleadRndConeChIso1 := 999",
-                "subleadRndConeChIso2 := 999",
-                "subleadRndConeChIso3 := 999",
-                "subleadRndConeChIso4 := 999",
-                "subleadRndConeChIso5 := 999",
-                "subleadRndConeChIso6 := 999",
-                "subleadRndConeChIso7 := 999",
-                "subleadRndConeChIso8 := 999",
-                ])
-        
-        variablesSinglePho.extend([    
-                "phoRndConeChIso  := 999",
-                "phoRndConeChIso0 := 999",
-                "phoRndConeChIso1 := 999",
-                "phoRndConeChIso2 := 999",
-                "phoRndConeChIso3 := 999",
-                "phoRndConeChIso4 := 999",
-                "phoRndConeChIso5 := 999",
-                "phoRndConeChIso6 := 999",
-                "phoRndConeChIso7 := 999",
-                "phoRndConeChIso8 := 999",
-                ])
+    dumpCfg.addRandomCones(variables,histograms)
 
+if customize.extraActvity:
+    from diphotons.Analysis.extraActivityConfig import addGlobalVariables
+    addGlobalVariables(process,diphotonDumper)
+
+# HLT matching
+if customize.processType == "data" and customize.dohltMatch:
+    extraSysModules.append(
+        cms.PSet( PhotonMethodName = cms.string("FlashggPhotonHLTMatch"),
+                  MethodName = cms.string("FlashggDiPhotonFromPhoton"),
+                  Label = cms.string("hltMatch"),
+                  NSigmas = cms.vint32(),
+                  ApplyCentralValue = cms.bool(True),
+                  trgBitsSrc = cms.InputTag("TriggerResults","","HLT"),
+                  trgObjectsSrc = cms.InputTag("selectedPatTrigger"),
+                  pathNames = cms.vstring(dumpBits),
+                  deltaRmax = cms.double(0.3),
+                  )
+        )
+    for bit in dumpBits:
+        variables.extend( [ "lead%sMatch   := leadingPhoton.userInt('%s')"                                                    % (bit,bit),
+                            "lead%sDr      := ?leadingPhoton.userInt('%s')==1?leadingPhoton.userFloat('%sCandDR'):999."       % (bit,bit,bit),
+                            "lead%sPt      := ?leadingPhoton.userInt('%s')==1?leadingPhoton.userFloat('%sCandPt'):0."         % (bit,bit,bit),
+                            "sublead%sMatch:= subLeadingPhoton.userInt('%s')"                                                 % (bit,bit),
+                            "sublead%sDr   := ?subLeadingPhoton.userInt('%s')==1?subLeadingPhoton.userFloat('%sCandDR'):999." % (bit,bit,bit),
+                            "sublead%sPt   := ?subLeadingPhoton.userInt('%s')==1?subLeadingPhoton.userFloat('%sCandPt'):0."   % (bit,bit,bit),
+                            ] )
+    
+# L1 matching
+if customize.processType == "data" and customize.dol1Match:
+    extraSysModules.append(
+        cms.PSet( PhotonMethodName = cms.string("FlashggPhotonL1Match"),
+                  MethodName = cms.string("FlashggDiPhotonFromPhoton"),
+                  Label = cms.string("l1Match"),
+                  NSigmas = cms.vint32(),
+                  ApplyCentralValue = cms.bool(True),
+                  l1EgmSrc = cms.InputTag("caloStage2Digis:EGamma"),
+                  ## l1JetSrc = cms.InputTag("caloStage2Digis:Jet"),
+                  deltaRmax = cms.double(0.3),
+                  )
+        )
+    ## for obj in ["Egm", "Jet"]:
+    for obj in ["Egm"]:
+        variables.extend(  ["leadL1%sMatch   := leadingPhoton.userInt('l1%sMatch')"                                                      % (obj,obj),                
+                            "leadL1%sDr      := ?leadingPhoton.userInt('l1%sMatch')==1?leadingPhoton.userFloat('l1%sCandDR'):999."       % (obj,obj,obj),
+                            "leadL1%sPt      := ?leadingPhoton.userInt('l1%sMatch')==1?leadingPhoton.userFloat('l1%sCandPt'):0."         % (obj,obj,obj),
+                            "subleadL1%sMatch:= subLeadingPhoton.userInt('l1%sMatch')"                                                   % (obj,obj),                
+                            "subleadL1%sDr   := ?subLeadingPhoton.userInt('l1%sMatch')==1?subLeadingPhoton.userFloat(l1'%sCandDR'):999." % (obj,obj,obj),
+                            "subleadL1%sPt   := ?subLeadingPhoton.userInt('l1%sMatch')==1?subLeadingPhoton.userFloat('l1%sCandPt'):0."   % (obj,obj,obj),
+                            ] )
+
+# electron matching
+if invertEleVeto and customize.doeleId:
+    process.load("flashgg.MicroAOD.flashggLeptonSelectors_cff")
+    process.flashggSelectedElectrons.cut = customize.eleId
+    extraSysModules.append(
+        cms.PSet( PhotonMethodName = cms.string("FlashggPhotonEleMatch"),
+                  MethodName = cms.string("FlashggDiPhotonFromPhoton"),
+                  Label = cms.string("eleMatch"),
+                  NSigmas = cms.vint32(),
+                  ApplyCentralValue = cms.bool(True),
+                  electronsSrc = cms.InputTag("flashggSelectedElectrons")
+                  )
+        )
+    variables.extend( ["leadEleMatch    := leadingPhoton.hasUserCand('eleMatch')",
+                       "subleadEleMatch := subLeadingPhoton.hasUserCand('eleMatch')"
+                       ] )
+
+# trigger filtering
+from HLTrigger.HLTfilters.hltHighLevel_cfi import hltHighLevel
+if customize.processType == "data" and not "electron" in customize.selection:
+    if "Prompt" in customize.datasetName() or "04Dec" in customize.datasetName() or "16Dec2015" in customize.datasetName(): 
+        filterProc = "RECO"
+    else: 
+        filterProc = "PAT"
+    diphotonDumper.globalVariables.addTriggerBits = cms.PSet(
+        tag=cms.InputTag("TriggerResults","",filterProc),bits=cms.vstring("eeBadScFilter","goodVertices")
+        )
+elif len(dumpBits) > 0:
+    if doDoublePho:
+        diphotonDumper.globalVariables.addTriggerBits = cms.PSet(
+            tag=cms.InputTag("TriggerResults","","HLT"),bits=cms.vstring(dumpBits)
+            )
+    if doSinglePho:
+        photonDumper.globalVariables.addTriggerBits = cms.PSet(
+            tag=cms.InputTag("TriggerResults","","HLT"),bits=cms.vstring(dumpBits)
+            )
+
+# categories definition
 if ":" in customize.massCut:
     massCutEB,massCutEE = map(float,customize.massCut.split(":"))
     massCut = min(massCutEB,massCutEE)
 else:
     massCutEB,massCutEE = None,None
     massCut = float(customize.massCut)
-
 
 if massCutEB or massCutEE:
     cfgTools.addCategory(diphotonDumper,"RejectLowMass",
@@ -704,91 +397,7 @@ cfgTools.addCategories(photonDumper,
                        histograms=histogramsSinglePho,
                        )
 
-#
-# input and output
-#
-process.source = cms.Source("PoolSource",
-                            fileNames=cms.untracked.vstring(
-        "file:diphotonsMicroAOD.root"
-        #"/store/group/phys_higgs/cmshgg/musella/flashgg/EXOSpring15_v5/Spring15BetaV2-2-gfceadad/SinglePhoton/EXOSpring15_v5-Spring15BetaV2-2-gfceadad-v0-Run2015B-PromptReco-v1/150813_095357/0000/diphotonsMicroAOD_99.root"
-        # "/store/group/phys_higgs/cmshgg/musella/flashgg/ExoPhys14ANv1/diphotonsPhys14AnV1/GGJets_M-1000To2000_Pt-50_13TeV-sherpa/ExoPhys14ANv1-diphotonsPhys14AnV1-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150330_192709/0000/diphotonsMicroAOD_1.root")
-        )
-)
-process.TFileService = cms.Service("TFileService",
-                                   fileName = cms.string("test.root")
-)
-
-
-#
-# analysis configuration
-#
-
-
-dataTriggers=[]
-mcTriggers=[]
-doSinglePho=False
-doDoublePho=True
-doDoublePho0T=False
-invertEleVeto=False
-dumpBits=["HLT_DoublePhoton60","HLT_DoublePhoton85","HLT_Photon250_NoHE","HLT_Photon165_HE","HLT_ECALHT800"]
-askTriggerOnMc=False
-
-if customize.selection == "diphoton":
-    mcTriggers=["HLT_DoublePhoton85*","HLT_Photon250_NoHE*","HLT_DoublePhoton60*"] ## ,
-    dataTriggers=mcTriggers
-elif customize.selection == "photon":
-    dataTriggers=["HLT_Photon165*"]
-    mcTriggers=dataTriggers
-    doSinglePho=True
-    doDoublePho=False
-elif customize.selection == "electron":
-    dataTriggers=["HLT_Ele27_eta2p1_WPLoose_Gsf_v*"]
-    ## mcTriggers=["HLT_Ele27_eta2p1_WP75_Gsf_v*"]
-    mcTriggers=dataTriggers
-    askTriggerOnMc=True
-    invertEleVeto=True
-elif customize.selection == "dielectron":
-    dataTriggers=["*"]
-    mcTriggers=dataTriggers
-    if customize.options.trigger == "":
-        sys.exit("please complete dielectron selection",-1)
-        invertEleVeto=True
-elif customize.selection == "dielectron0T":
-    invertEleVeto=True
-    doDoublePho0T=True
-    mcTriggers=[]
-    askTriggerOnMc=False
-
-if customize.options.trigger != "":
-    dataTriggers = customize.options.trigger.split(",")
-    mcTriggers = [] ## dataTriggers
-    dumpBits.extend( map(lambda x: x.rstrip("*"), dataTriggers)  )
-    askTriggerOnMc=False
-
-if customize.options.mctrigger != "":
-    mcTriggers = customize.options.mctrigger.split(",")
-    
-from HLTrigger.HLTfilters.hltHighLevel_cfi import hltHighLevel
-dumpBits=set(dumpBits)
-if customize.processType == "data" and not "electron" in customize.selection:
-    if "Prompt" in customize.datasetName() or "04Dec" in customize.datasetName() or "16Dec2015" in customize.datasetName(): 
-        filterProc = "RECO"
-    else: 
-        filterProc = "PAT"
-    diphotonDumper.globalVariables.addTriggerBits = cms.PSet(
-        tag=cms.InputTag("TriggerResults","",filterProc),bits=cms.vstring("eeBadScFilter","goodVertices")
-        )
-elif len(dumpBits) > 0:
-    if doDoublePho:
-        diphotonDumper.globalVariables.addTriggerBits = cms.PSet(
-            tag=cms.InputTag("TriggerResults","","HLT"),bits=cms.vstring(dumpBits)
-            )
-    if doSinglePho:
-        photonDumper.globalVariables.addTriggerBits = cms.PSet(
-            tag=cms.InputTag("TriggerResults","","HLT"),bits=cms.vstring(dumpBits)
-            )
-            
-
+# gen-level diphoton pairs dumper    
 from flashgg.Taggers.genDiphotonDumper_cfi import genDiphotonDumper
 from flashgg.Taggers.globalVariables_cff import globalVariables
 genDiphotonDumper.dumpGlobalVariables = True
@@ -805,6 +414,7 @@ cfgTools.addCategories(genDiphotonDumper,
                                    ]
                        )
 
+# restricted set of variables to be dumped for ancillary event selections
 minimalDumper = diphotonDumper.clone()
 cfgTools.dumpOnly(minimalDumper,
                   ["mass","pt","genMass","satRegressedMass","regressedMass",
@@ -832,6 +442,8 @@ cfgTools.dumpOnly(minimalDumper,
                    ])
 
 
+
+# set up event selection(s)
 from diphotons.Analysis.DiPhotonAnalysis import DiPhotonAnalysis
 analysis = DiPhotonAnalysis(diphotonDumper,
                             massCut=massCut,ptLead=customize.ptLead,ptSublead=customize.ptSublead,scaling=customize.scaling, ## kinematic cuts
@@ -843,7 +455,8 @@ analysis = DiPhotonAnalysis(diphotonDumper,
                             singlePhoDumperTemplate=photonDumper,
                             applyDiphotonCorrections=customize.applyDiphotonCorrections,
                             diphotonCorrectionsVersion=customize.diphotonCorrectionsVersion,
-                            sourceDiphotons=sourceDiphotons
+                            sourceDiphotons=sourceDiphotons,
+                            extraSysModules=extraSysModules
                             )
 
 dumpKinTree=False
@@ -875,7 +488,6 @@ analysis.addKinematicSelection(process,dumpTrees=dumpKinTree,splitByIso=True
 if not dumpKinTree: minimalDumper=diphotonDumper
 
 ## analysis selections
-# CiC
 if customize.idversion != "":
     if customize.idversion == "V2":
         from diphotons.Analysis.highMassCiCDiPhotons_cfi import highMassCiCDiPhotonsV2   as highMassCiCDiPhotons
@@ -895,6 +507,12 @@ if invertEleVeto:
         ## highMassCiCDiPhotons.variables[-1] = "-(passElectronVeto-1)"
         ## highMassCiCDiPhotonsSB.variables[-1] = "-(passElectronVeto-1)"
 
+    if customize.doeleId:
+        highMassCiCDiPhotons.cut = "( leadingPhoton.hasUserCand('eleMatch') || subLeadingPhoton.hasUserCand('eleMatch') ) && (%s)" % highMassCiCDiPhotons.cut.value()
+    ###     ## highMassCiCDiPhotons.variables.append( "hasUserCand('matchedElectron')")
+    ###     ## for cat in highMassCiCDiPhotons.categories:
+    ###     ## cat.append( cms.PSet(min=cms.string("0.5"))  )        
+            
 # gen-only analysis
 if( customize.processType!="data" ):
     analysis.addGenOnlySelection(process,genDiphotonDumper)
@@ -996,6 +614,19 @@ else:
     process.load('flashgg.Systematics.escales.Golden10June_plus_DCS')
     print "energy corrections file is test_2016B_corr"
 
+
+#
+# input and output
+#
+process.source = cms.Source("PoolSource",
+                            fileNames=cms.untracked.vstring(
+        "file:diphotonsMicroAOD.root"
+        )
+)
+process.TFileService = cms.Service("TFileService",
+                                   fileName = cms.string("test.root")
+)
+
+
 # this will call customize(process), configure the analysis paths and make the process unscheduled
 analysis.customize(process,customize)
-
