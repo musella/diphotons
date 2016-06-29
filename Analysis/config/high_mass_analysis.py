@@ -166,6 +166,7 @@ customize.options.register ('extraActvity',
 
 customize.parse()
 
+
 from Configuration.AlCa.autoCond import autoCond
 if customize.options.processType == "data":
     process.GlobalTag = GlobalTag(process.GlobalTag, autoCond['run2_data'].replace("::All","") )
@@ -177,8 +178,6 @@ else:
 #
 # analysis configuration
 #
-
-
 dataTriggers=[]
 mcTriggers=[]
 doSinglePho=False
@@ -311,27 +310,37 @@ if customize.processType == "data" and customize.dol1Match:
                             "leadL1%sDr      := ?leadingPhoton.userInt('l1%sMatch')==1?leadingPhoton.userFloat('l1%sCandDR'):999."       % (obj,obj,obj),
                             "leadL1%sPt      := ?leadingPhoton.userInt('l1%sMatch')==1?leadingPhoton.userFloat('l1%sCandPt'):0."         % (obj,obj,obj),
                             "subleadL1%sMatch:= subLeadingPhoton.userInt('l1%sMatch')"                                                   % (obj,obj),                
-                            "subleadL1%sDr   := ?subLeadingPhoton.userInt('l1%sMatch')==1?subLeadingPhoton.userFloat(l1'%sCandDR'):999." % (obj,obj,obj),
+                            "subleadL1%sDr   := ?subLeadingPhoton.userInt('l1%sMatch')==1?subLeadingPhoton.userFloat('l1%sCandDR'):999." % (obj,obj,obj),
                             "subleadL1%sPt   := ?subLeadingPhoton.userInt('l1%sMatch')==1?subLeadingPhoton.userFloat('l1%sCandPt'):0."   % (obj,obj,obj),
                             ] )
 
 # electron matching
 if invertEleVeto and customize.doeleId:
-    process.load("flashgg.MicroAOD.flashggLeptonSelectors_cff")
-    process.flashggSelectedElectrons.cut = customize.eleId
+    from flashgg.MicroAOD.flashggLeptonSelectors_cff import flashggSelectedElectrons
+    process.flashggIdentifiedElectrons = flashggSelectedElectrons.clone( 
+        src=cms.InputTag("flashggSelectedElectrons"),
+        cut=cms.string(customize.eleId)
+        )
+    # process.flashggSelectedElectrons.cut = customize.eleId
     extraSysModules.append(
         cms.PSet( PhotonMethodName = cms.string("FlashggPhotonEleMatch"),
                   MethodName = cms.string("FlashggDiPhotonFromPhoton"),
                   Label = cms.string("eleMatch"),
                   NSigmas = cms.vint32(),
                   ApplyCentralValue = cms.bool(True),
-                  electronsSrc = cms.InputTag("flashggSelectedElectrons")
+                  electronsSrc = cms.InputTag("flashggIdentifiedElectrons"),
                   )
         )
     variables.extend( ["leadEleMatch    := leadingPhoton.hasUserCand('eleMatch')",
                        "subleadEleMatch := subLeadingPhoton.hasUserCand('eleMatch')"
                        ] )
-
+    # store cut-based IDs
+    for eid in "Loose", "Medium", "Tight":
+        variables.extend( [
+                       "leadEleIs%s    := ?leadingPhoton.hasUserCand('eleMatch')?leadingPhoton.userCand('eleMatch').pass%sId:0"       % (eid,eid),
+                       "subleadEleIs%s := ?subLeadingPhoton.hasUserCand('eleMatch')?subLeadingPhoton.userCand('eleMatch').pass%sId:0" % (eid,eid)
+                       ])
+        
 # trigger filtering
 from HLTrigger.HLTfilters.hltHighLevel_cfi import hltHighLevel
 if customize.processType == "data" and not "electron" in customize.selection:
@@ -378,7 +387,7 @@ cfgTools.addCategories(diphotonDumper,
                        histograms=histograms
                        )
 
-# single photon dumpoer
+# single photon dumper
 photonDumper.processId = "test"
 photonDumper.dumpTrees = False
 photonDumper.dumpWorkspace = False
@@ -611,7 +620,8 @@ if "Run2015" in customize.datasetName() or "76X" in customize.datasetName():
     print "energy corrections file is escale76X_16DecRereco_2015"
 else:
     ## process.load('flashgg.Systematics.escales.test_2016B_corr_DCSOnly')
-    process.load('flashgg.Systematics.escales.Golden10June_plus_DCS')
+    ## process.load('flashgg.Systematics.escales.Golden10June_plus_DCS')
+    process.load('flashgg.Systematics.escales.Golden22June')
     print "energy corrections file is test_2016B_corr"
 
 
