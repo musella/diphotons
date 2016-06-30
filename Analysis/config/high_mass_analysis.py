@@ -262,7 +262,7 @@ if customize.addRegressionInput:
     dumpCfg.addRegressionInput(variables)
 
 if (customize.selection=="diphoton" or customize.selection=="photon"):
-    dumpCfg.addRandomCones(variables,histograms)
+    dumpCfg.addRandomCones(variables,variablesSinglePho,histograms,histogramsSinglePho)
 
 if customize.extraActvity:
     from diphotons.Analysis.extraActivityConfig import addGlobalVariables
