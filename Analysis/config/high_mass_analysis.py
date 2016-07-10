@@ -621,7 +621,8 @@ if "Run2015" in customize.datasetName() or "76X" in customize.datasetName():
 else:
     ## process.load('flashgg.Systematics.escales.test_2016B_corr_DCSOnly')
     ## process.load('flashgg.Systematics.escales.Golden10June_plus_DCS')
-    process.load('flashgg.Systematics.escales.Golden22June')
+    ## process.load('flashgg.Systematics.escales.Golden22June')
+    process.load('flashgg.Systematics.escales.80X_DCS05July_plus_Golden22.py')
     print "energy corrections file is test_2016B_corr"
 
 
