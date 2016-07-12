@@ -522,7 +522,8 @@ class CombineApp(TemplatesApp):
         # ROOT.TGaxis.SetMaxDigits(5)
         from ROOT import RooFit
         from ROOT import TH1D, TCanvas, TAxis
-        ROOT.gSystem.Load("RooDCBShape_cc.so")
+        #ROOT.gSystem.Load("RooDCBShape_cc.so")
+        ROOT.gSystem.Load("libHiggsAnalysisCombinedLimit")
         printLevel = ROOT.RooMsgService.instance().globalKillBelow()
         ROOT.RooMsgService.instance().setGlobalKillBelow(RooFit.FATAL)
         ROOT.TH1D.SetDefaultSumw2(True)
@@ -568,7 +569,7 @@ class CombineApp(TemplatesApp):
         if options.generate_signal_dataset:
             if len(options.parametric_signal_new) > 0:
                 self.generateParametricSignalNew(options,args)
-            if len(options.parametric_signal) > 0:
+            elif len(options.parametric_signal) > 0:
                 self.generateParametricSignal(options,args)
             else:
                 self.generateSignalDataset(options,args)
