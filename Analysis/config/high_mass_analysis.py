@@ -319,6 +319,7 @@ if invertEleVeto and customize.doeleId:
     from flashgg.MicroAOD.flashggLeptonSelectors_cff import flashggSelectedElectrons
     process.flashggIdentifiedElectrons = flashggSelectedElectrons.clone( 
         src=cms.InputTag("flashggSelectedElectrons"),
+#        src=cms.InputTag("flashggElectrons"),
         cut=cms.string(customize.eleId)
         )
     # process.flashggSelectedElectrons.cut = customize.eleId
@@ -622,7 +623,7 @@ else:
     ## process.load('flashgg.Systematics.escales.test_2016B_corr_DCSOnly')
     ## process.load('flashgg.Systematics.escales.Golden10June_plus_DCS')
     ## process.load('flashgg.Systematics.escales.Golden22June')
-    process.load('flashgg.Systematics.escales.80X_DCS05July_plus_Golden22.py')
+    process.load('flashgg.Systematics.escales.80X_DCS05July_plus_Golden22')
     print "energy corrections file is test_2016B_corr"
 
 
