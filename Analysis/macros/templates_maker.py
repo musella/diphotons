@@ -1062,7 +1062,7 @@ class TemplatesApp(PlotApp):
             rooVar = self.workspace_.var(name)
             if not rooVar and self.store_new_:
                 rooVar = self.workspace_input_.var(name)
-            if setConstant: rooVar.setConstant(True)
+            if rooVar and setConstant: rooVar.setConstant(True)
         if not rooVar:
             if name in self.aliases_:
                 title = self.aliases_[name]
