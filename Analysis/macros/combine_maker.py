@@ -209,6 +209,10 @@ class CombineApp(TemplatesApp):
                         make_option("--generate-signal-dataset",dest="generate_signal_dataset",action="store_true",default=False,
                                     help="Generate signal dataset",
                                     ),
+                        make_option("--parametric-signal-new",dest="parametric_signal_new",type="string",action="callback",callback=optpars_utils.ScratchAppend(str),
+                                    default=[],
+                                    help="Read parametric signal from new root file.",
+                                    ),
                         make_option("--parametric-signal",dest="parametric_signal",type="string",action="callback",callback=optpars_utils.ScratchAppend(str),
                                     default=[],
                                     help="Read parametric signal from root file.",
@@ -232,8 +236,8 @@ class CombineApp(TemplatesApp):
                                               "masses" : ## [500,505,506,510],
                                               ## sorted(list(np.concatenate((np.arange(500,2000,100),np.arange(2000,4500,500),np.arange(740,770,2))))),
                                               ## [750.,760.],
-                                              ## [500.,750.,1000.,1500.,2000.,2500.,3000.,3500.,4000.,4500.],
-                                              list(np.concatenate((np.arange(500,750,2),np.arange(750,1000,2),np.arange(1000,1600,4),np.arange(1600,4500,100)))),
+                                              [500.,750.,1000.,1500.,2000.,2500.,3000.,3500.,4000.,4500.],
+                                              ## list(np.concatenate((np.arange(500,750,2),np.arange(750,1000,2),np.arange(1000,1600,4),np.arange(1600,4500,100)))),
                                               ## list(np.concatenate(np.arange(850,1000,2),np.arange(1000,1600,4),np.arange(1600,3500,100)))),
                                               ## [600.],
                                               ## list(np.arange(700,800,2)),
@@ -275,6 +279,34 @@ class CombineApp(TemplatesApp):
                                               },
                                     help="Details about parametric signal",
                                     ),
+                        make_option("--parametric-signal-source-new",dest="parametric_signal_source_new",action="callback",callback=optpars_utils.Load(scratch=True),
+                                    type="string",
+                                    default={ "ws" : "ws_inputs", 
+                                              "interpolate_below" : 0,
+                                              "reparam_by_cat" : { "EBEB016" : {"thetaSmearEBEB" : "thetaSmearEBEB_13TeV_016"},
+                                                                   "EBEE016" : {"thetaSmearEBEE" : "thetaSmearEBEE_13TeV_016"},
+                                                                   "EBEB" : {"thetaSmearEBEB" : "thetaSmearEBEB_13TeV_38T"},
+                                                                   "EBEE" : {"thetaSmearEBEE" : "thetaSmearEBEE_13TeV_38T"},
+                                                                   "EBEB0T" : {"thetaSmearEBEB" : "thetaSmearEBEB_13TeV_0T"},
+                                                                   "EBEE0T" : {"thetaSmearEBEE" : "thetaSmearEBEE_13TeV_0T"},
+                                                                 },
+                                              "pdfs"    : { "001" : {"EBEB" : "SignalShape_kMpl001_EBEB", 
+                                                                     "EBEE" : "SignalShape_kMpl001_EBEE",
+                                                                     "EBEB016" : "SignalShape_kMpl001_EBEB016", 
+                                                                     "EBEE016" : "SignalShape_kMpl001_EBEE016"},
+                                                            "01" : {"EBEB" : "SignalShape_kMpl01_EBEB", 
+                                                                    "EBEE" : "SignalShape_kMpl01_EBEE",
+                                                                    "EBEB016" : "SignalShape_kMpl01_EBEB016", 
+                                                                    "EBEE016" : "SignalShape_kMpl01_EBEE016"},
+                                                            "02" : {"EBEB" : "SignalShape_kMpl02_EBEB", 
+                                                                    "EBEE" : "SignalShape_kMpl02_EBEE",
+                                                                    "EBEB016" : "SignalShape_kMpl02_EBEB016", 
+                                                                    "EBEE016" : "SignalShape_kMpl02_EBEE016"},
+                                                            },
+
+                                              },
+                                    help="Details about parametric new signal",
+                                    ),
                         make_option("--do-parametric-signal-nuisances",dest="do_parametric_signal_nuisances",action="store_true",default=True,
                                     help="Add energy scale uncertainty",
                                     ),
@@ -283,10 +315,22 @@ class CombineApp(TemplatesApp):
                                     ),
                         make_option("--parametric-signal-nuisances",dest="parametric_signal_nuisances",action="callback",callback=optpars_utils.Load(scratch=True),
                                     type="string",
-                                    default={"energyResolutionEBEB_13TeV_38T" : { "up" : "_smearUp", "down" : "_smearDown", "categories" : ["EBEB","EBEB016"] },
-                                             "energyResolutionEBEE_13TeV_38T" : { "up" : "_smearUp", "down" : "_smearDown", "categories" : ["EBEE","EBEE016"] },
-                                             "energyResolutionEBEB0T_13TeV_38T" : { "up" : "_smearUp", "down" : "_smearDown", "categories" : ["EBEB0T"] },
-                                             "energyResolutionEBEE0T_13TeV_38T" : { "up" : "_smearUp", "down" : "_smearDown", "categories" : ["EBEE0T"] }
+                                    default={"energyResolutionEBEB_13TeV_38T" : { "up" : "_smearUp", "down" : "_smearDown", "categories" : ["EBEB"] },
+                                             "energyResolutionEBEE_13TeV_38T" : { "up" : "_smearUp", "down" : "_smearDown", "categories" : ["EBEE"] },
+                                             "energyResolutionEBEB_13TeV_016" : { "up" : "_smearUp", "down" : "_smearDown", "categories" : ["EBEB016"] },
+                                             "energyResolutionEBEE_13TeV_016" : { "up" : "_smearUp", "down" : "_smearDown", "categories" : ["EBEE016"] },
+                                             "energyResolutionEBEB_13TeV_0T" : { "up" : "_smearUp", "down" : "_smearDown", "categories" : ["EBEB0T"] },
+                                             "energyResolutionEBEE_13TeV_0T" : { "up" : "_smearUp", "down" : "_smearDown", "categories" : ["EBEE0T"] }
+                                             }
+                                    ),
+                        make_option("--parametric-signal-nuisances-new",dest="parametric_signal_nuisances_new",action="callback",callback=optpars_utils.Load(scratch=True),
+                                    type="string",
+                                    default={"thetaSmearEBEB_13TeV_38T" : ["EBEB"],
+                                             "thetaSmearEBEE_13TeV_38T" : ["EBEE"],
+                                             "thetaSmearEBEB_13TeV_0T"  : ["EBEB0T"],
+                                             "thetaSmearEBEE_13TeV_0T"  : ["EBEE0T"],
+                                             "thetaSmearEBEB_13TeV_016" : ["EBEB016"],
+                                             "thetaSmearEBEE_13TeV_016" : ["EBEE016"]
                                              }
                                     ),
                         make_option("--parametric-signal-xsection",dest="parametric_signal_xsection",action="callback",callback=optpars_utils.Load(scratch=True),
@@ -352,6 +396,12 @@ class CombineApp(TemplatesApp):
                                     default=None,
                                     help="Name of generated card",
                                     ),
+                        make_option("--store-fwhm-parametrization",dest="store_fwhm_parametrization",action="store_true",default=True,
+                                    help="Store the parametrization of FHMW vs MH",
+                                    ),
+                        make_option("--fhmw-parametrized-formula",dest="fwhm_parametrized_formula",action="store",type="string",default=None,
+                                    help="Analytical expression of the fhwm parametrization",
+                                    ),
                         make_option("--compute-fwhm",dest="compute_fwhm",action="store_true",default=False,
                                     help="Compute the Full Width Half Maximum (FWHM) when generating signals",
                                     ),
@@ -361,6 +411,9 @@ class CombineApp(TemplatesApp):
                                     ),
                         make_option("--generate-ws-bkgnbias",dest="generate_ws_bkgnbias",action="store_true",default=False,
                                     help="Read signal and background workspaces and generate background+bias model",
+                                    ),
+                        make_option("--generate-ws-bkgnbias-new",dest="generate_ws_bkgnbias_new",action="store_true",default=False,
+                                    help="Read signal and background workspaces and generate background+bias model using parametrized fhwm",
                                     ),
                         make_option("--bkgnbias-components",dest="bkgnbias_components",action="callback",default=["bkg","pp"],
                                     type="string",callback=optpars_utils.ScratchAppend(),
@@ -466,7 +519,7 @@ class CombineApp(TemplatesApp):
         self.observables_ = {}
         self.morph_ = {}
         self.interpolated_ = {}
-        
+       
         
     def __call__(self,options,args):
         
@@ -476,7 +529,8 @@ class CombineApp(TemplatesApp):
         # ROOT.TGaxis.SetMaxDigits(5)
         from ROOT import RooFit
         from ROOT import TH1D, TCanvas, TAxis
-        
+        ## ROOT.gSystem.Load("RooDCBShape_cc.so")
+        ROOT.gSystem.Load("libHiggsAnalysisCombinedLimit")
         printLevel = ROOT.RooMsgService.instance().globalKillBelow()
         ROOT.RooMsgService.instance().setGlobalKillBelow(RooFit.FATAL)
         ROOT.TH1D.SetDefaultSumw2(True)
@@ -520,7 +574,9 @@ class CombineApp(TemplatesApp):
                 self.runKSTest(options,args)
 
         if options.generate_signal_dataset:
-            if len(options.parametric_signal) > 0:
+            if len(options.parametric_signal_new) > 0:
+                self.generateParametricSignalNew(options,args)
+            elif len(options.parametric_signal) > 0:
                 self.generateParametricSignal(options,args)
             else:
                 self.generateSignalDataset(options,args)
@@ -530,6 +586,8 @@ class CombineApp(TemplatesApp):
             
         if options.generate_ws_bkgnbias:
             self.generateWsBkgnbias(options,args)
+        if options.generate_ws_bkgnbias_new:
+            self.generateWsBkgnbiasNew(options,args)
         
         if options.generate_datacard:
             self.generateDatacard(options,args)
@@ -881,6 +939,181 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 self.plotBkgFit(options,data,model,roobs,"%s%s" % (comp,cat),poissonErrs=True, plot_binning=options.cat_plot_binning.get(cat,options.plot_binning),
                                 blabel=bias_name, signalmodel=signal, signalmodel_norm=signal_norm, blind=options.plot_blind)
 
+
+    ## ------------------------------------------------------------------------------------------------------------        
+    def generateWsBkgnbiasNew(self,options,args):
+
+        print "--------------------------------------------------------------------------------------------------------------------------"
+        print "including bias term in the background w/ fhmw parametrized vs MH"
+        print "--------------------------------------------------------------------------------------------------------------------------"
+        
+        fit = options.fits[options.fit_name]
+        
+        ### signame = options.signal_name
+        ### if (options.signal_name == None or options.fit_name == None):
+        ###     print "Please provide --signal-name and --fit-name"
+        ###     return
+
+        # build observable variable
+        ### roobs = self.buildRooVar(*(self.getVar(options.observable)), recycle=True, importToWs=True)
+        ### roobs.setRange("fullRange",roobs.getMin(),roobs.getMax()) 
+        ### roowe = self.buildRooVar("weight",[])        
+        ### rooset = ROOT.RooArgSet(roobs,roowe)        
+        roowe = self.buildRooVar("weight",[])   
+     
+        if not "params" in fit:
+            fit["params"] = []
+        if not "sig_params" in fit:
+            fit["sig_params"] = {}
+        
+        if options.signal_name:
+            signals = [options.signal_name]
+        else:
+            signals = options.signals.keys()
+            
+        if (len(signals) == 0 or options.fit_name == None):
+            print "Please provide --signal-name and --fit-name"
+            return
+        
+        #if len(signals) > 1:
+        options.background_root_file = options.background_root_file.replace(".root","_bkgnbias_") ## change this for generateDatacard
+        
+
+        bkg = {}
+        for cat in fit["categories"]:
+            for comp in options.components :
+                bkgPdf = self.rooPdf("model_%s_%s" % (comp,cat))
+                ## retrieve norm of pdf 
+                rooNdata = self.buildRooVar("%s_norm" % (bkgPdf.GetName()),[],recycle=True,importToWs=False)
+                
+                bkg[ "%s_%s" % (cat,comp)  ] = (bkgPdf,rooNdata)
+                
+        # make sure we don't loose the bkg workspace
+        self.bookNewWs(True)
+        
+        for signame in signals:            
+            if not signame in fit["sig_params"]:
+                fit["sig_params"][signame] = []
+
+            for cat in fit["categories"]:
+                
+                roobs = self.getObservable(cat)
+                rooset = ROOT.RooArgSet(roobs,roowe)
+                self.keep(rooset)
+
+                dataBinned = self.rooData("binned_data_%s" % cat)
+                data = self.rooData("data_%s" % cat)
+                if options.use_signal_datahist:
+                    signalDataHist = self.rooData("signal_%s_%s" % (signame,cat))
+                    signalPdf = ROOT.RooHistPdf("signal_model_%s_%s"% (signame,cat),"signalPdf_%s_%s"% (signame,cat),ROOT.RooArgSet(roobs),signalDataHist)
+                else:
+                    signalPdf = self.rooPdf("model_signal_%s_%s"% (signame,cat))
+                self.workspace_.rooImport(data)
+                self.workspace_.rooImport(dataBinned)
+                
+                for comp in options.components :
+                
+                    ## # import source datasets too
+                    ## dset = self.rooData("source_dataset_%s%s"% (comp,cat))
+                    ## self.workspace_.rooImport(dset)
+                    
+                    (bkgPdf,rooNdata) = bkg[ "%s_%s" % (cat,comp)  ] 
+                    (bkgPdf,rooNdata) = (bkgPdf.Clone(bkgPdf.GetName()),rooNdata.Clone(rooNdata.GetName()))
+                    
+                    ## self.workspace_input_.Print()
+                    rooNdata.Print()
+
+                    roopdflist = ROOT.RooArgList()
+                    roopdflist.add(bkgPdf)
+                    roopdflist.add(signalPdf)
+                    
+                    
+                    ## add bias term only to some background components
+                    ##     important in the case of the semi-parametric fit
+                    if not comp in options.bkgnbias_components:
+                        self.workspace_.rooImport(bkgPdf)
+                        self.workspace_.rooImport(rooNdata)
+                        continue
+                
+                    bkgPdf.SetName("bkgOnly_model_%s_%s" % (comp,cat) )
+                    rooNdata.SetName("%s_norm" % bkgPdf.GetName())
+                    ## build list of coefficients 
+                    roolist = ROOT.RooArgList()
+                    nBias = self.buildRooVar("nBias_%s_%s" % (comp,cat), [], importToWs=False )
+                    nBias.setVal(0.)
+                    nBias.setConstant(True)
+                    
+                    # compute the nuisance values if bias_func and fwhm_input_file are provided 
+                    
+                    if(len(options.bias_func) != 0):
+                        bias_name = "%s_%s_%d_%d" % (cat,options.default_model,int(roobs.getMin()),int(roobs.getMax()))
+                        if (not bias_name in options.bias_func.keys()):
+                            print
+                            print("Cannot compute the bias values: bias function for %s not provided" % bias_name)
+                            print
+                        else:
+                            bias_func = ROOT.TF1(bias_name, options.bias_func[bias_name],roobs.getMin(),roobs.getMax())
+                            bias_expformula = bias_func.GetExpFormula()
+                            bias_expformula.ReplaceAll("x", "@0")
+                            self.workspace_.Print()
+                            MH = ROOT.RooRealVar("MH", "MH", 0, 6000)
+                            MH.setConstant()
+                            bias_rooformula =  ROOT.RooFormulaVar("bias_rooformula_%s" %cat,"bias_rooformula_%s" %cat,bias_expformula.Data(),ROOT.RooArgList(MH))
+                            
+                            substr = signame[signame.index("_")+1:]
+                            
+                            fwhm_rooformula = ROOT.RooFormulaVar("fwhm_rooformula_%s" %cat,"fwhm_rooformula_%s" %cat,options.fhwm_parametrized_formula, ROOT.RooArgList(MH))# fhwm parametrized vs MH
+
+                            lumi_rooval = ROOT.RooRealVar("lumi", "lumi", float(options.luminosity), "fb");
+                            lumi_rooval.setConstant()
+                            nBias = ROOT.RooFormulaVar ("nBias_%s_%s" %(comp,cat), "nBias_%s_%s" %(comp,cat), "@0*@1*@2", ROOT.RooArgList(bias_rooformula,fwhm_rooformula,lumi_rooval ))
+                            thetaBias= self.buildRooVar("thetaBias_%s_%s" % (comp,cat), [], importToWs=False )
+                            thetaBias.setVal(0.)
+                            nBias_theta = ROOT.RooFormulaVar ("nBias_%s_%s_theta" %(comp,cat), "nBias_%s_%s_theta" %(comp,cat), "@0*@1", ROOT.RooArgList(nBias,thetaBias))
+#                            fit["sig_params"][signame].append( ("# %s " % nBias.GetName(), 0., nBias.getVal() ) )
+                    fit["sig_params"][signame].append( ("%s " % thetaBias.GetName(),0, 1.) )
+                  
+                    pdfSum_norm = ROOT.RooFormulaVar("model_%s_%s_norm" % (comp,cat),"model_%s_%s_norm" % (comp,cat),"@0",ROOT.RooArgList(rooNdata)) 
+                
+                    fracsignuis = ROOT.RooFormulaVar("signal_%s_%s_nuisanced_frac" % (comp,cat),"signal_%s_%s_nuisanced_frac" % (comp,cat),"@0*1./@1",ROOT.RooArgList(nBias_theta,pdfSum_norm) )
+                    fracbkg = ROOT.RooFormulaVar("background_%s_%s_frac" % (comp,cat), "background_%s_%s_frac" % (comp,cat), "1.-@0",ROOT.RooArgList(fracsignuis))
+                    roolist.add(fracbkg)
+                    roolist.add(fracsignuis)
+                    
+                    
+                    ## summing pdfs
+                    pdfSum = ROOT.RooAddPdf("model_%s_%s" % (comp,cat),"model_%s_%s" % (comp,cat), roopdflist, roolist)
+                    self.workspace_.rooImport(pdfSum_norm)
+                    self.workspace_.rooImport(pdfSum,RooFit.RecycleConflictNodes())
+                    
+                    shapeNuis = fit.get("shape_unc",{}).get(signame,{})
+                    ### for nuis,nuisCats in shapeNuis.iteritems():
+                    ###     if cat in nuisCats: 
+                    ###         for idir in ["Up","Down"]:
+                    ###             ipdf = self.rooPdf("model_signal_%s_%s_%s%s"% (signame,cat,nuis,idir))
+                    ###             self.workspace_.rooImport(ipdf,RooFit.RecycleConflictNodes())
+                                
+            
+            # import pdfs for the sidebands
+            for cat,comps in fit.get("sidebands",{}).iteritems():
+                for comp in comps:
+                    dataBinned = self.rooData("binned_data_%s" % cat)
+                    data = self.rooData("data_%s" % cat)
+                    self.workspace_.rooImport(data)
+                    self.workspace_.rooImport(dataBinned)
+                    
+                    sbPdf = self.rooPdf("model_%s_%s" % (comp,cat))
+                    sbNorm  = self.rooVar("%s_norm" % sbPdf.GetName())
+                    self.workspace_.rooImport(sbNorm)
+                    self.workspace_.rooImport(sbPdf,RooFit.RecycleConflictNodes())
+                
+            #if len(signals) > 1:
+            options.output_file = "%s%s.root" % (options.background_root_file,signame)
+            print options.output_file
+            self.saveWs(options)
+            self.bookNewWs(False)
+
+    ## ------------------------------------------------------------------------------------------------------------  
 
     ## ------------------------------------------------------------------------------------------------------------        
     def generateWsBkgnbias(self,options,args):
@@ -1806,6 +2039,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             signals = options.signals.keys()
 
         MH = self.buildRooVar("MH",[1000])
+        MH.setConstant()
         deltaM = self.buildRooVar("deltaM",[3200,-600,200])
         roogen = self.buildRooVar("mggGen",[0,13000])
         for signame in signals:
@@ -2138,6 +2372,220 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         return True    
         
     ## ------------------------------------------------------------------------------------------------------------
+    def generateParametricSignalNew(self,options,args):
+        
+        from templates_maker import WsList
+        tmp = self.open("/tmp/soffi/cache.root","recreate")
+        ws = ROOT.RooWorkspace("w","w")
+        workspace = WsList(ws)
+        exp = map(lambda x: glob.glob("%s/*.root" % x) if x.endswith("/") else [x], options.parametric_signal_new)
+        ## print
+        print exp
+        ## print
+        for fin in map(self.open, reduce(lambda x,y: x+y, exp )): 
+            fin.Print()
+            workspace.append(fin.Get(str(options.parametric_signal_source_new["ws"])))
+            
+        
+        prefix_output = options.output_file.replace(".root","")
+        options.signal_root_file = options.output_file ## copy this in case we want to run --generate-datacard at the same time
+        if not options.cardname:
+            options.cardname = "datacard_%s.txt" % prefix_output
+        
+        MH   = self.buildRooVar("MH",[1000.],importToWs=True,recycle=False,setConstant=True)
+        kmpl = self.buildRooVar("kmpl",[0.01],importToWs=True,recycle=False,setConstant=True)
+        
+        fit = options.fits[options.fit_name]
+        if not "sig_params" in fit:
+            fit["sig_params"] = {}
+        if not "shape_unc" in fit:
+            fit["shape_unc"] = {}
+            
+        selection = fit["selection"]
+        exAs = {}
+        categories = options.fits[options.fit_name]["categories"]
+        print options.parametric_signal_acceptance
+        for cat in categories:
+            accparams = map(lambda x: options.parametric_signal_acceptance["acc_%s_p%d" % (cat,x)], xrange(0,3) )
+            effparams = options.parametric_signal_acceptance["%s_avg_reco_eff_%s" % (selection,cat) ]
+            acc_coeffs = ROOT.RooArgList()
+
+            for ip,params in enumerate(accparams):
+                coeff_coeffs = ROOT.RooArgList()
+                map( lambda x: coeff_coeffs.add( RooFit.RooConst(x) ), params )
+                poly = ROOT.RooPolyVar("acc_%s_%d" %(cat,ip), "acc_%s_%d" %(cat,ip), kmpl, coeff_coeffs,0)
+                self.keep(poly)
+                acc_coeffs.add(poly)
+                
+            self.keep( coeff_coeffs )
+            acceptance = ROOT.RooPolyVar("acc_%s" %cat, "acc_%s" %cat, MH, acc_coeffs,0)
+            eff_coeffs = ROOT.RooArgList()
+            map( lambda x: eff_coeffs.add( RooFit.RooConst(x) ), effparams )
+            efficiency = ROOT.RooPolyVar("eff_%s" %cat, "eff_%s" %cat, MH, eff_coeffs,0)
+            exA = ROOT.RooProduct( "eff_acc_%s" % cat, "eff_acc_%s" % cat, ROOT.RooArgList(efficiency,acceptance) )
+            exAs[cat] = exA
+            self.keep( [eff_coeffs, acceptance, efficiency] )
+            
+        reparam = options.parametric_signal_source_new.get("reparam_by_cat",{}).get(cat,options.parametric_signal_source_new.get("reparam",{})) 
+        reparamVars = {}
+        one = RooFit.RooConst(1.)
+        minus_one = RooFit.RooConst(-1.)
+        zero = RooFit.RooConst(-1.)
+        minusMH = ROOT.RooLinearVar("minusMH","minusMH",MH,minus_one,zero)
+        for key,val in reparam.iteritems():
+            dst = self.getVar(val)
+            dst = self.buildRooVar(*dst,importToWs=True,recycle=True,setConstant=True)
+            reparamVars[key] = dst
+        
+        options.signals = {}
+      
+
+        masses = options.parametric_signal_source_new.get("masses",[None])
+        if len(masses) == 3:
+            masses = xrange(masses[1],masses[2],masses[0])
+        if len(options.parametric_signal_range) == 2:
+            masses = filter(lambda x: x>=options.parametric_signal_range[0] and x<options.parametric_signal_range[1], masses)
+        print masses
+        if options.rescale_signal_ratio:
+            rescaleFunc = ROOT.TF1("rescale",options.rescale_signal_ratio)
+        else:
+            rescaleFunc = ROOT.TF1("rescale","1")
+
+        print "---------------------------STARTING WITh PDF---------------------------------------"
+        for coup,pdfs in options.parametric_signal_source_new["pdfs"].iteritems():
+            print coup, options.only_coups
+
+            if len(options.only_coups) > 0 and not coup in options.only_coups: continue
+            self.morph_ = {}
+           
+            for cat,name in pdfs.iteritems():
+                if not cat in categories: continue
+                pdf = workspace.pdf(name)
+                print "----------------------------- Name of the PDF and CAT: ",name,cat
+                if not pdf: missing = True
+                self.bookNewWs()
+                sublist_fwhm = {}
+                signame = options.parametric_signal_prefix
+                print "----------------------SIG NAME: ",signame
+                if coup != "": signame += "_%s" % coup
+  
+                kmpl.setVal(self.getCoupFromNameNew(signame))
+                print "--------------------KMPL: ",kmpl
+                options.signals[signame] = signame
+                if not signame in fit["sig_params"]:
+                    fit["sig_params"][signame] = []
+                if not signame in fit["sig_params"]:
+                    fit["sig_params"][signame] = {}
+                print "-------------------------import pdf -----------------------------------------"
+      
+            print "---------------------------STARTING WITh PDF---------------------------------------"
+            for cat,name in pdfs.iteritems():  
+                print "-------------------------CAt and NAME: ",cat,name
+                if not cat in categories: continue
+                pdf = workspace.pdf(name)# % ("")
+                obsIn = workspace.var(options.parametric_signal_source_new.get("obs","mgg"))
+
+                custom = ROOT.RooCustomizer(pdf,"")
+                obsCat = self.getObservable(cat)
+                custom.replaceArg(obsIn,obsCat)
+                for src,dst in reparamVars.iteritems():
+                    srcVar = workspace.var(src)
+                    custom.replaceArg(srcVar,dst)
+
+                ## FIXME
+                xsection = 1. * float(options.luminosity)
+                norm = ROOT.RooProduct("model_signal_%s_%s_norm" % (signame,cat), "model_signal_%s_%s_norm" % (signame,cat), 
+                                       ROOT.RooArgList(RooFit.RooConst(xsection),exAs[cat]) )
+                sublist_fwhm["%s_norm" % cat] = norm.getVal()
+                
+                pdf = custom.build(True)
+                pdf.SetName("model_signal_%s_%s" % (signame,cat))
+                
+                
+                print "----------------------------------saving fhwm parametrization -----------------------------------------"
+                
+                if options.store_fwhm_parametrization:
+                    workspace.Print()
+                    fhwm_formula = workspace.arg("FHWM_%s" %cat)
+                    if cat == "EBEB": p0 = workspace.arg("p0_cat0").getVal()
+                    if cat == "EBEE": p0 = workspace.arg("p0_cat1").getVal()
+                    if cat == "EBEB": p1 = workspace.arg("p1_cat0").getVal()
+                    if cat == "EBEE": p1 = workspace.arg("p1_cat1").getVal()
+                    fhwm_tf1_formula = "%f + %f*@0" % (p0,p1)
+                    print fhwm_tf1_formula
+                    options.fhwm_parametrized_formula = fhwm_tf1_formula
+                    print options.fhwm_parametrized_formula
+                            
+                pdf.Print()
+                print "----------------------------------energy scale -----------------------------------------"
+                    #the following is to store the thetaScale uncertainty
+                if options.do_energy_scale_uncertainty:
+                                               
+                        #this is the uncertainty used on the scale
+                        unc = options.energy_scale_uncertainties.get(cat,options.energy_scale_uncertainty)
+                                                
+                        # break-down in terms of covariance matrix eigenvectors
+                        if len(options.energy_scale_eigenvec) > 0:
+                            variations = {}
+                            for eig,effects in options.energy_scale_eigenvec.iteritems():
+                                print eig,effects
+                                if cat in effects:
+                                    variations[eig] = effects[cat]
+                                   
+                        else:
+                            variations = { cat : 1. }
+
+                         # make one shifted pdf per eigenvector
+                        unc = options.energy_scale_uncertainties.get(cat,options.energy_scale_uncertainty)
+                        
+                        thetas = {}
+                        deltas = {}
+                        for nam,val in variations.iteritems():
+                            if val == 0: continue
+                            nuisName = "thetaScale%s" % nam
+                            print nam,val
+                            thetaScale = ROOT.RooRealVar("thetaScale%s" % nam,"thetaScale%s" % nam,0, -1.,1.)
+                            deltaScale = ROOT.RooRealVar("deltaScale_%s" %nam, "deltaScale_%s" %nam,val*unc)
+                            deltaScale.setConstant()
+                            thetas[nam] = thetaScale
+                            deltas[nam] = deltaScale
+                            if not nuisName in fit["sig_params"][signame]:
+                                fit["sig_params"][signame].append((nuisName,0,1))
+                        
+                        #include the systematic shift due to ecal scale                                          
+                        if len(thetas)==2:
+                            scaledMean = ROOT.RooFormulaVar("scaled_mean_%s" % (cat),"scaled_mean_%s" % (cat),"@0*(1+@1*@2+@3*@4)",ROOT.RooArgList(workspace.arg("mean_%s" %cat), deltas.values()[0],thetas.values()[0] ,deltas.values()[1],thetas.values()[1]))
+                        if len(thetas)==3:
+                            scaledMean = ROOT.RooFormulaVar("scaled_mean_%s" % (cat),"scaled_mean_%s" % (cat),"@0*(1+@1*@2+@3*@4+@5*@6)",ROOT.RooArgList(workspace.arg("mean_%s" %cat), deltas.values()[0],thetas.values()[0] ,deltas.values()[1],thetas.values()[1],deltas.values()[2],thetas.values()[2]))
+                        if len(thetas)==4:
+                            scaledMean = ROOT.RooFormulaVar("scaled_mean_%s" % (cat),"scaled_mean_%s" % (cat),"@0*(1+@1*@2+@3*@4+@5*@6+@7*@8)",ROOT.RooArgList(workspace.arg("mean_%s" %cat), deltas.values()[0],thetas.values()[0] ,deltas.values()[1],thetas.values()[1],deltas.values()[2],thetas.values()[2],deltas.values()[3],thetas.values()[3]))
+
+                        
+
+                        custom = ROOT.RooCustomizer(pdf,"")
+                        custom.replaceArg(workspace.arg("mean_%s" %cat),scaledMean)
+                        pdf = custom.build(True)
+
+                        self.workspace_.rooImport(pdf,ROOT.RooFit.RecycleConflictNodes())
+                        self.workspace_.rooImport(norm,ROOT.RooFit.RecycleConflictNodes())
+                        self.workspace_.Print()                        
+             
+                print "------------------------save smearing unc in datacard ----------------------------"
+                if options.do_parametric_signal_nuisances:
+                    for nuisName,cats in options.parametric_signal_nuisances_new.iteritems():
+                        if not cat in cats: continue
+                        fit["sig_params"][signame].append((nuisName,0,1))
+                        
+
+               
+                options.output_file = "%s_%s.root" % (prefix_output,signame)
+                
+        
+               
+        self.saveWs(options)
+
+    ## ------------------------------------------------------------------------------------------------------------
+    ## ------------------------------------------------------------------------------------------------------------
     def generateParametricSignal(self,options,args):
         
         from templates_maker import WsList
@@ -2399,6 +2847,18 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
     ## ------------------------------------------------------------------------------------------------------------
     def getCoupFromName(self,name):
         return float("0."+self.getCoupAndMassFromName(name)[0][1:])
+
+    ## ------------------------------------------------------------------------------------------------------------
+    def getCoupAndMassFromNameNew(self,name):
+        print name
+        coup = name.replace("grav_","").split("_")[0:1]
+        print coup
+        return coup
+
+    ## ------------------------------------------------------------------------------------------------------------
+    def getCoupFromNameNew(self,name):
+        print name
+        return float("0."+self.getCoupAndMassFromNameNew(name)[0][1:])
 
     ## ------------------------------------------------------------------------------------------------------------
     def getMassFromName(self,name):
