@@ -236,8 +236,8 @@ class CombineApp(TemplatesApp):
                                               "masses" : ## [500,505,506,510],
                                               ## sorted(list(np.concatenate((np.arange(500,2000,100),np.arange(2000,4500,500),np.arange(740,770,2))))),
                                               ## [750.,760.],
-                                              ## [500.,750.,1000.,1500.,2000.,2500.,3000.,3500.,4000.,4500.],
-                                              list(np.concatenate((np.arange(500,750,2),np.arange(750,1000,2),np.arange(1000,1600,4),np.arange(1600,4500,100)))),
+                                              [500.,750.,1000.,1500.,2000.,2500.,3000.,3500.,4000.,4500.],
+                                              ## list(np.concatenate((np.arange(500,750,2),np.arange(750,1000,2),np.arange(1000,1600,4),np.arange(1600,4500,100)))),
                                               ## list(np.concatenate(np.arange(850,1000,2),np.arange(1000,1600,4),np.arange(1600,3500,100)))),
                                               ## [600.],
                                               ## list(np.arange(700,800,2)),
@@ -283,6 +283,13 @@ class CombineApp(TemplatesApp):
                                     type="string",
                                     default={ "ws" : "ws_inputs", 
                                               "interpolate_below" : 0,
+                                              "reparam_by_cat" : { "EBEB016" : {"thetaSmearEBEB" : "thetaSmearEBEB_13TeV_016"},
+                                                                   "EBEE016" : {"thetaSmearEBEE" : "thetaSmearEBEE_13TeV_016"},
+                                                                   "EBEB" : {"thetaSmearEBEB" : "thetaSmearEBEB_13TeV_38T"},
+                                                                   "EBEE" : {"thetaSmearEBEE" : "thetaSmearEBEE_13TeV_38T"},
+                                                                   "EBEB0T" : {"thetaSmearEBEB" : "thetaSmearEBEB_13TeV_0T"},
+                                                                   "EBEE0T" : {"thetaSmearEBEE" : "thetaSmearEBEE_13TeV_0T"},
+                                                                 },
                                               "pdfs"    : { "001" : {"EBEB" : "SignalShape_kMpl001_EBEB", 
                                                                      "EBEE" : "SignalShape_kMpl001_EBEE",
                                                                      "EBEB016" : "SignalShape_kMpl001_EBEB016", 
@@ -308,22 +315,22 @@ class CombineApp(TemplatesApp):
                                     ),
                         make_option("--parametric-signal-nuisances",dest="parametric_signal_nuisances",action="callback",callback=optpars_utils.Load(scratch=True),
                                     type="string",
-                                    default={"energyResolutionEBEB_13TeV_38T" : { "up" : "_smearUp", "down" : "_smearDown", "categories" : ["EBEB","EBEB016"] },
-                                             "energyResolutionEBEE_13TeV_38T" : { "up" : "_smearUp", "down" : "_smearDown", "categories" : ["EBEE","EBEE016"] },
-                                             "energyResolutionEBEB0T_13TeV_38T" : { "up" : "_smearUp", "down" : "_smearDown", "categories" : ["EBEB0T"] },
-                                             "energyResolutionEBEE0T_13TeV_38T" : { "up" : "_smearUp", "down" : "_smearDown", "categories" : ["EBEE0T"] }
+                                    default={"energyResolutionEBEB_13TeV_38T" : { "up" : "_smearUp", "down" : "_smearDown", "categories" : ["EBEB"] },
+                                             "energyResolutionEBEE_13TeV_38T" : { "up" : "_smearUp", "down" : "_smearDown", "categories" : ["EBEE"] },
+                                             "energyResolutionEBEB_13TeV_016" : { "up" : "_smearUp", "down" : "_smearDown", "categories" : ["EBEB016"] },
+                                             "energyResolutionEBEE_13TeV_016" : { "up" : "_smearUp", "down" : "_smearDown", "categories" : ["EBEE016"] },
+                                             "energyResolutionEBEB_13TeV_0T" : { "up" : "_smearUp", "down" : "_smearDown", "categories" : ["EBEB0T"] },
+                                             "energyResolutionEBEE_13TeV_0T" : { "up" : "_smearUp", "down" : "_smearDown", "categories" : ["EBEE0T"] }
                                              }
-                                    ),
-                         make_option("--do-parametric-signal-nuisances-new",dest="do_parametric_signal_nuisances_new",action="store_true",default=True,
-                                    help="Add energy scale uncertainty",
-                                    ),
-                        make_option("--no-parametric-signal-nuisances-new",dest="do_parametric_signal_nuisances_new",action="store_false",
-                                    help="Add energy scale uncertainty",
                                     ),
                         make_option("--parametric-signal-nuisances-new",dest="parametric_signal_nuisances_new",action="callback",callback=optpars_utils.Load(scratch=True),
                                     type="string",
-                                    default={"thetaSmearEBEB" : { "up" : "_smearUp", "down" : "_smearDown", "categories" : ["EBEB"] },
-                                             "thetaSmearEBEE" : { "up" : "_smearUp", "down" : "_smearDown", "categories" : ["EBEE"] }
+                                    default={"thetaSmearEBEB_13TeV_38T" : ["EBEB"],
+                                             "thetaSmearEBEE_13TeV_38T" : ["EBEE"],
+                                             "thetaSmearEBEB_13TeV_0T"  : ["EBEB0T"],
+                                             "thetaSmearEBEE_13TeV_0T"  : ["EBEE0T"],
+                                             "thetaSmearEBEB_13TeV_016" : ["EBEB016"],
+                                             "thetaSmearEBEE_13TeV_016" : ["EBEE016"]
                                              }
                                     ),
                         make_option("--parametric-signal-xsection",dest="parametric_signal_xsection",action="callback",callback=optpars_utils.Load(scratch=True),
@@ -522,7 +529,7 @@ class CombineApp(TemplatesApp):
         # ROOT.TGaxis.SetMaxDigits(5)
         from ROOT import RooFit
         from ROOT import TH1D, TCanvas, TAxis
-        #ROOT.gSystem.Load("RooDCBShape_cc.so")
+        ## ROOT.gSystem.Load("RooDCBShape_cc.so")
         ROOT.gSystem.Load("libHiggsAnalysisCombinedLimit")
         printLevel = ROOT.RooMsgService.instance().globalKillBelow()
         ROOT.RooMsgService.instance().setGlobalKillBelow(RooFit.FATAL)
@@ -2385,10 +2392,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         if not options.cardname:
             options.cardname = "datacard_%s.txt" % prefix_output
         
-        MH   = self.buildRooVar("MH",[1000.],importToWs=True,recycle=False)
-        MH.setConstant()
-        kmpl = self.buildRooVar("kmpl",[0.01],importToWs=True,recycle=False)
-        kmpl.setConstant()
+        MH   = self.buildRooVar("MH",[1000.],importToWs=True,recycle=False,setConstant=True)
+        kmpl = self.buildRooVar("kmpl",[0.01],importToWs=True,recycle=False,setConstant=True)
         
         fit = options.fits[options.fit_name]
         if not "sig_params" in fit:
@@ -2421,7 +2426,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             exAs[cat] = exA
             self.keep( [eff_coeffs, acceptance, efficiency] )
             
-        reparam = options.parametric_signal_source_new.get("reparam",{})
+        reparam = options.parametric_signal_source_new.get("reparam_by_cat",{}).get(cat,options.parametric_signal_source_new.get("reparam",{})) 
         reparamVars = {}
         one = RooFit.RooConst(1.)
         minus_one = RooFit.RooConst(-1.)
@@ -2429,7 +2434,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         minusMH = ROOT.RooLinearVar("minusMH","minusMH",MH,minus_one,zero)
         for key,val in reparam.iteritems():
             dst = self.getVar(val)
-            dst = self.buildRooVar(*dst,importToWs=True,recycle=True)
+            dst = self.buildRooVar(*dst,importToWs=True,recycle=True,setConstant=True)
             reparamVars[key] = dst
         
         options.signals = {}
@@ -2566,15 +2571,11 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                         self.workspace_.Print()                        
              
                 print "------------------------save smearing unc in datacard ----------------------------"
-                    #the following is to store the thetaSmear uncertainty
-                if options.do_parametric_signal_nuisances_new:
-                        for nuisName,uncs in options.parametric_signal_nuisances_new.iteritems():
-                            cats = uncs["categories"]
-                            print nuisName,uncs
-                            if not cat in cats: continue
-                            print cat,signame
-                            fit["sig_params"][signame].append((nuisName,0,1))
-                                    
+                if options.do_parametric_signal_nuisances:
+                    for nuisName,cats in options.parametric_signal_nuisances_new.iteritems():
+                        if not cat in cats: continue
+                        fit["sig_params"][signame].append((nuisName,0,1))
+                        
 
                
                 options.output_file = "%s_%s.root" % (prefix_output,signame)
