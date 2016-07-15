@@ -280,7 +280,7 @@
 		
             "selection"    : "cic",
             "components" : [ "pp", "pf", "ff" ],                                             "#" : "list of fit components                 ",
-            "dataset_variables" : ["mgg","mass","mggEBEB:=mgg","mggEBEE:=mgg","mggGen:=genMass","leadPt","subleadPt","leadEta","subleadEta", "leadMatchType", "subleadMatchType","leadR9","subleadR9"],      "#" : "additional variables to be stored      ",
+            "dataset_variables" : ["mgg","mass","mggEBEB:=mgg","mggEBEE:=mgg","mggGen:=genMass","mggEBEBShift","mggEBEEShift","leadPt","subleadPt","leadEta","subleadEta", "leadMatchType", "subleadMatchType","leadR9","subleadR9"],      "#" : "additional variables to be stored      ",
             "store_trees" : true,	
             "categories" : {
                 "EBEB0T" : { 
