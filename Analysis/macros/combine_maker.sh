@@ -149,7 +149,7 @@ mkdir $workdir
 
 mkdir $www/$version
 
-set -x
+# set -x
 if [[ -n $rerun  ]] || [[ ! -f $input ]]; then
     echo "**************************************************************************************************************************"
     echo "creating $input"
@@ -159,13 +159,17 @@ if [[ -n $rerun  ]] || [[ ! -f $input ]]; then
         subset="2D,singlePho"
         mix="--mix-templates"
     fi
+    set -x
     ./templates_maker.py --load templates_maker.json,templates_maker_prepare.json $load_also --only-subset $subset $mix --input-dir $treesdir/$input_folder $prepare -o $input $verbose $input_opts 2>&1 | tee $input_log
+    set +x
     echo "**************************************************************************************************************************"
 elif [[ -n $mix ]]; then
     echo "**************************************************************************************************************************"
     echo "running event mixing"
     echo "**************************************************************************************************************************"    
+    set -x
     ./templates_maker.py --load templates_maker_prepare.json $load_also --read-ws $input $mix $verbose 2>&1 | tee mix_$input_log
+    set +x
     echo "**************************************************************************************************************************"
 fi
 	    
@@ -176,6 +180,7 @@ echo "**************************************************************************
 
 if [[ -z $just_fit_bkg ]]; then
     ##--binned-data-in-datacard \
+    set -x
     ./combine_maker.py \
 	--fit-name $fitname  --luminosity $lumi  --lumi $lumi \
 	--fit-background \
@@ -186,7 +191,9 @@ if [[ -z $just_fit_bkg ]]; then
 	-O $www/$version/$workdir \
 	-o $workdir.root  \
 	--cardname datacard_${workdir}.txt $opts 2>&1 | tee $workdir/combine_maker${log_label}.log
+    set +x
 else
+    set -x
     ./combine_maker.py \
 	--fit-name $fitname  --luminosity $lumi  --lumi $lumi \
 	--fit-background \
@@ -195,7 +202,7 @@ else
 	-O $www/$version/$workdir \
 	-o $workdir.root  \
 	$opts 2>&1 | tee $workdir/combine_maker_bkg_only${log_label}.log
-    
+    set +x
 fi
 
 echo "**************************************************************************************************************************"
