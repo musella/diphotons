@@ -318,8 +318,8 @@ if customize.processType == "data" and customize.dol1Match:
 if invertEleVeto and customize.doeleId:
     from flashgg.MicroAOD.flashggLeptonSelectors_cff import flashggSelectedElectrons
     process.flashggIdentifiedElectrons = flashggSelectedElectrons.clone( 
-        src=cms.InputTag("flashggSelectedElectrons"),
-#        src=cms.InputTag("flashggElectrons"),
+#        src=cms.InputTag("flashggSelectedElectrons"),
+        src=cms.InputTag("flashggElectrons"),
         cut=cms.string(customize.eleId)
         )
     # process.flashggSelectedElectrons.cut = customize.eleId
