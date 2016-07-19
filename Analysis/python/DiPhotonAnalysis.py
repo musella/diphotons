@@ -21,7 +21,7 @@ class DiPhotonAnalysis(object):
                  mcTriggers=["HLT_DoublePhoton60*","HLT_DoublePhoton85*","HLT_Photon250_NoHE*"],
                  askTriggerOnMc=False,sortTemplate=False,singlePhoDumperTemplate=False,computeRechitFlags=False,removeEEEE=True,
                  applyDiphotonCorrections=False,diphotonCorrectionsVersion="",
-                 sourceDiphotons="flashggDiPhotons",
+                 sourceDiphotons="flashggDiPhotons",sourceSinglePhotons="flashggRandomizedPhotons",
                  extraSysModules=[]):
         
         super(DiPhotonAnalysis,self).__init__()
@@ -41,6 +41,7 @@ class DiPhotonAnalysis(object):
         self.diphotonCorrectionsVersion = diphotonCorrectionsVersion
         self.computeRechitFlags = computeRechitFlags
         self.sourceDiphotons = sourceDiphotons
+        self.sourceSinglePhotons = sourceSinglePhotons
 
         self.extraSysModules = extraSysModules
         assert( len(self.extraSysModules) == 0 or self.applyDiphotonCorrections )
@@ -80,6 +81,7 @@ class DiPhotonAnalysis(object):
 
     def customizeDiphotonCorrections(self,process,processType):
         
+        process.flashggDiPhotonSystematics.SystMethods.remove(process.SigmaEOverESmearing)
         if processType == "data":
             from flashgg.Systematics.SystematicsCustomize import customizePhotonSystematicsForData
             customizePhotonSystematicsForData(process)
@@ -105,8 +107,6 @@ class DiPhotonAnalysis(object):
         
         trg = None
         splitByIso = False
-        print jobConfig.processId
-        print jobConfig.processType
         
         if self.applyDiphotonCorrections:
             self.customizeDiphotonCorrections(process,jobConfig.processType)
@@ -130,14 +130,12 @@ class DiPhotonAnalysis(object):
                     self.addTriggeredDumpers(process,splitByIso=splitByIso)
                     trg = None
         
-        print jobConfig.processId, jobConfig.processType, self.splitByIso, splitByIso
         ## add execution paths for analysis selections
         for coll,dumper in self.analysisSelections+self.photonSelections:
             if not self.useDumper(process,dumper,splitByIso): 
                 continue
             self.addPath(process,dumper,trg)
         
-        print jobConfig.parsed
         jobConfig(process)
 
         if jobConfig.dumpConfig:
@@ -375,10 +373,6 @@ class DiPhotonAnalysis(object):
                                                                                 )
                                                                  )
                     )
-            print ("leadingPhoton.genMatchType == 1 && subLeadingPhoton.genMatchType == 1 "
-                   " && leadingPhoton.%(genIsoVar)s < %(genIsoCut)f"
-                   " && subLeadingPhoton.%(genIsoVar)s < %(genIsoCut)f"
-                   % self.isoCut)
             setattr(process,dumperName+"GenIso",dumperTemplate.clone(src=cms.InputTag(diphoColl+"GenIso"), 
                                                                   dumpTrees=cms.untracked.bool(dumpTrees),
                                                                   dumpWorkspace=cms.untracked.bool(dumpWorkspace),
@@ -441,7 +435,6 @@ class DiPhotonAnalysis(object):
                                                            cut=cms.string(postSelect))
                                                            )
         
-        print diphoColl, getattr(process,diphoColl).dumpPython()
         setattr(process,dumperName,dumperTemplate.clone(src=cms.InputTag(diphoColl), 
                                                         dumpTrees=cms.untracked.bool(dumpTrees),
                                                         dumpWorkspace=cms.untracked.bool(dumpWorkspace),
@@ -539,7 +532,7 @@ class DiPhotonAnalysis(object):
         if not dumperTemplate:
             dumperTemplate = self.dumperTemplate
         
-        template = singlePhoSimpleTemplate.clone(src=cms.InputTag("flashggRandomizedPhotons"),
+        template = singlePhoSimpleTemplate.clone(src=cms.InputTag(self.sourceSinglePhotons),
                                         cut = cms.string(
                 " pt > %(ptSublead)f"
                 " && abs(superCluster.eta)<2.5 && ( abs(superCluster.eta)<1.4442 || abs(superCluster.eta)>1.566)"
