@@ -208,7 +208,13 @@
      	"*SigmaIeIe_EBEB*R9_frame" : [ ["xrange",[3e-3,1.5e-2]] ],	 
      	"*SigmaIeIe_EBEE*R9_frame" : [ ["xrange",[1.8e-2,3e-2]],["yrezoom",0.25] ],
      	"*SigmaIeIe_EBEB*R9_ratio" : [ ["xrange",[3e-3,1.5e-2]] ],	 
-     	"*SigmaIeIe_EBEE*R9_ratio" : [ ["xrange",[1.8e-2,3e-2]] ]
+     	"*SigmaIeIe_EBEE*R9_ratio" : [ ["xrange",[1.8e-2,3e-2]] ],
+        "lowmass_dy_EBEEHighR9" : [["Scale",0.81]],
+	"lowmass_dy_EBEELowR9"  : [["Scale",0.954]],
+	"lowmass_dy_EBEE"       : [["Scale",0.96]],
+	"lowmass_dy_EBEBHighR9" : [["Scale",0.89]],
+	"lowmass_dy_EBEBLowR9"  : [["Scale",0.95]],
+	"lowmass_dy_EBEB"       : [["Scale",0.94]]
 	},
 
     "_styles": { 

@@ -11,6 +11,6 @@
 	
 	},
 	
-	"cmdLine" : "campaign=EXOSpring16_v1 idversion=V2 selection=electron massCut=70 ptLead=40 ptSublead=25 trigger=HLT_Ele35_WPLoose_Gsf_v* lumiMask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-274421_13TeV_PromptReco_Collisions16_JSON.txt"
+	"cmdLine" : "campaign=EXOSpring16_v2 idversion=V2 selection=electron massCut=70 ptLead=40 ptSublead=25 trigger=HLT_Ele35_WPLoose_Gsf_v*"
 
 }
