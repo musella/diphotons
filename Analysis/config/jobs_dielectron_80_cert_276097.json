@@ -1,0 +1,13 @@
+{
+    "processes" : {
+	"Data" : [ 
+                "/SingleElectron/spigazzi-EXOSpring16_v2_p1-Moriond16WSFinal-162-ge008ac4-v0-Run2016B-PromptReco-v2-c5014acf035ffb6a7c1ada2d7a188255/USER",
+                "/SingleElectron/spigazzi-EXOSpring16_v2_p1-Moriond16WSFinal-162-ge008ac4-v0-Run2016C-PromptReco-v2-345f16d1901364deb861b0ac23627134/USER",
+                "/SingleElectron/spigazzi-EXOSpring16_v2_p2-Moriond16WSFinal-165-gbdf02f4-v0-Run2016B-PromptReco-v2-c5014acf035ffb6a7c1ada2d7a188255/USER",
+                "/SingleElectron/spigazzi-EXOSpring16_v2_p2-Moriond16WSFinal-165-gbdf02f4-v0-Run2016C-PromptReco-v2-345f16d1901364deb861b0ac23627134/USER"            
+	]
+    },
+    
+	"cmdLine" : "campaign=EXOSpring16_v2 idversion=V2 selection=electron massCut=70 ptLead=40 ptSublead=25 trigger=HLT_Ele35_WPLoose_Gsf_v* lumiMask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-276097_13TeV_PromptReco_Collisions16_JSON_NoL1T_v2.txt"
+
+}

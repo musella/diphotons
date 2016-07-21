@@ -283,25 +283,51 @@ class CombineApp(TemplatesApp):
                                     type="string",
                                     default={ "ws" : "ws_inputs", 
                                               "interpolate_below" : 0,
-                                              "reparam_by_cat" : { "EBEB016" : {"thetaSmearEBEB" : "thetaSmearEBEB_13TeV_016"},
-                                                                   "EBEE016" : {"thetaSmearEBEE" : "thetaSmearEBEE_13TeV_016"},
-                                                                   "EBEB" : {"thetaSmearEBEB" : "thetaSmearEBEB_13TeV_38T"},
-                                                                   "EBEE" : {"thetaSmearEBEE" : "thetaSmearEBEE_13TeV_38T"},
-                                                                   "EBEB0T" : {"thetaSmearEBEB" : "thetaSmearEBEB_13TeV_0T"},
-                                                                   "EBEE0T" : {"thetaSmearEBEE" : "thetaSmearEBEE_13TeV_0T"},
-                                                                 },
+                                              ### "reparam_by_cat" : { "EBEB016" : {"thetaSmearEBEB" : "thetaSmearEBEB_13TeV_016",
+                                              ###                                   "mean_EBEB" : "mean_EBEB016" , 
+                                              ###                                   "sigma_EBEB": "sigma_EBEB016",
+                                              ###                                   "aL_EBEB"   : "aL_EBEB016"   ,  
+                                              ###                                   "aR_EBEB"   : "aR_EBEB016"   ,  
+                                              ###                                   "nL_EBEB"   : "nL_EBEB016"   ,  
+                                              ###                                   "nR_EBEB"   : "nR_EBEB016"    
+                                              ###                                   },
+                                              ###                      "EBEE016" : {"thetaSmearEBEE" : "thetaSmearEBEE_13TeV_016",
+                                              ###                                   "mean_EBEE" : "mean_EBEE016" , 
+                                              ###                                   "sigma_EBEE": "sigma_EBEE016",
+                                              ###                                   "aL_EBEE"   : "aL_EBEE016"   ,  
+                                              ###                                   "aR_EBEE"   : "aR_EBEE016"   ,  
+                                              ###                                   "nL_EBEE"   : "nL_EBEE016"   ,  
+                                              ###                                   "nR_EBEE"   : "nR_EBEE016"    
+                                              ###                                   },
+                                              ###                      "EBEB" : {"thetaSmearEBEB" : "thetaSmearEBEB_13TeV_38T"},
+                                              ###                      "EBEE" : {"thetaSmearEBEE" : "thetaSmearEBEE_13TeV_38T"},
+                                              ###                      "EBEB0T" : {"thetaSmearEBEB" : "thetaSmearEBEB_13TeV_0T",
+                                              ###                                  "mean_EBEB" : "mean_EBEB0T" , 
+                                              ###                                  "sigma_EBEB": "sigma_EBEB0T",
+                                              ###                                  "aL_EBEB"   : "aL_EBEB0T"   ,  
+                                              ###                                  "aR_EBEB"   : "aR_EBEB0T"   ,  
+                                              ###                                  "nL_EBEB"   : "nL_EBEB0T"   , 
+                                              ###                                  },
+                                              ###                      "EBEE0T" : {"thetaSmearEBEE" : "thetaSmearEBEE_13TeV_0T",
+                                              ###                                  "mean_EBEE" : "mean_EBEE0T" , 
+                                              ###                                  "sigma_EBEE": "sigma_EBEE0T",
+                                              ###                                  "aL_EBEE"   : "aL_EBEE0T"   ,  
+                                              ###                                  "aR_EBEE"   : "aR_EBEE0T"   ,  
+                                              ###                                  "nL_EBEE"   : "nL_EBEE0T"   , 
+                                              ###                                  },
+                                              ###                    },
                                               "pdfs"    : { "001" : {"EBEB" : "SignalShape_kMpl001_EBEB", 
                                                                      "EBEE" : "SignalShape_kMpl001_EBEE",
-                                                                     "EBEB016" : "SignalShape_kMpl001_EBEB016", 
-                                                                     "EBEE016" : "SignalShape_kMpl001_EBEE016"},
+                                                                     "EBEB016" : "SignalShape_kMpl001_EBEB", 
+                                                                     "EBEE016" : "SignalShape_kMpl001_EBEE"},
                                                             "01" : {"EBEB" : "SignalShape_kMpl01_EBEB", 
                                                                     "EBEE" : "SignalShape_kMpl01_EBEE",
-                                                                    "EBEB016" : "SignalShape_kMpl01_EBEB016", 
-                                                                    "EBEE016" : "SignalShape_kMpl01_EBEE016"},
+                                                                    "EBEB016" : "SignalShape_kMpl01_EBEB", 
+                                                                    "EBEE016" : "SignalShape_kMpl01_EBEE"},
                                                             "02" : {"EBEB" : "SignalShape_kMpl02_EBEB", 
                                                                     "EBEE" : "SignalShape_kMpl02_EBEE",
-                                                                    "EBEB016" : "SignalShape_kMpl02_EBEB016", 
-                                                                    "EBEE016" : "SignalShape_kMpl02_EBEE016"},
+                                                                    "EBEB016" : "SignalShape_kMpl02_EBEB", 
+                                                                    "EBEE016" : "SignalShape_kMpl02_EBEE"},
                                                             },
 
                                               },
@@ -1055,7 +1081,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                             bias_func = ROOT.TF1(bias_name, options.bias_func[bias_name],roobs.getMin(),roobs.getMax())
                             bias_expformula = bias_func.GetExpFormula()
                             bias_expformula.ReplaceAll("x", "@0")
-                            self.workspace_.Print()
+                            ## self.workspace_.Print()
                             MH = ROOT.RooRealVar("MH", "MH", 0, 6000)
                             MH.setConstant()
                             bias_rooformula =  ROOT.RooFormulaVar("bias_rooformula_%s" %cat,"bias_rooformula_%s" %cat,bias_expformula.Data(),ROOT.RooArgList(MH))
@@ -1343,7 +1369,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         
         observed = self.computeKSD(datacdf,modelcdf,obs)
         
-        tmp = self.open("/tmp/musella/pippo.root","recreate")
+        tmp = self.open("/tmp/%s/cache.root" % getuser(),"recreate")
         
         ksdistrib = []
         ndata = data.sumEntries()
@@ -2373,9 +2399,13 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         
     ## ------------------------------------------------------------------------------------------------------------
     def generateParametricSignalNew(self,options,args):
+
+        print "--------------------------------------------------------------------------------------------------------------------------"
+        print "Importing parametric signal model"
+        print 
         
         from templates_maker import WsList
-        tmp = self.open("/tmp/soffi/cache.root","recreate")
+        tmp = self.open("/tmp/%s/cache.root" % getuser(),"recreate")
         ws = ROOT.RooWorkspace("w","w")
         workspace = WsList(ws)
         exp = map(lambda x: glob.glob("%s/*.root" % x) if x.endswith("/") else [x], options.parametric_signal_new)
@@ -2404,7 +2434,6 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         selection = fit["selection"]
         exAs = {}
         categories = options.fits[options.fit_name]["categories"]
-        print options.parametric_signal_acceptance
         for cat in categories:
             accparams = map(lambda x: options.parametric_signal_acceptance["acc_%s_p%d" % (cat,x)], xrange(0,3) )
             effparams = options.parametric_signal_acceptance["%s_avg_reco_eff_%s" % (selection,cat) ]
@@ -2445,7 +2474,6 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             masses = xrange(masses[1],masses[2],masses[0])
         if len(options.parametric_signal_range) == 2:
             masses = filter(lambda x: x>=options.parametric_signal_range[0] and x<options.parametric_signal_range[1], masses)
-        print masses
         if options.rescale_signal_ratio:
             rescaleFunc = ROOT.TF1("rescale",options.rescale_signal_ratio)
         else:
@@ -2453,7 +2481,6 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
 
         print "---------------------------STARTING WITh PDF---------------------------------------"
         for coup,pdfs in options.parametric_signal_source_new["pdfs"].iteritems():
-            print coup, options.only_coups
 
             if len(options.only_coups) > 0 and not coup in options.only_coups: continue
             self.morph_ = {}
@@ -2484,7 +2511,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 if not cat in categories: continue
                 pdf = workspace.pdf(name)# % ("")
                 obsIn = workspace.var(options.parametric_signal_source_new.get("obs","mgg"))
-
+                
                 custom = ROOT.RooCustomizer(pdf,"")
                 obsCat = self.getObservable(cat)
                 custom.replaceArg(obsIn,obsCat)
@@ -2505,18 +2532,17 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 print "----------------------------------saving fhwm parametrization -----------------------------------------"
                 
                 if options.store_fwhm_parametrization:
-                    workspace.Print()
+                    ## workspace.Print()
                     fhwm_formula = workspace.arg("FHWM_%s" %cat)
-                    if cat == "EBEB": p0 = workspace.arg("p0_cat0").getVal()
-                    if cat == "EBEE": p0 = workspace.arg("p0_cat1").getVal()
-                    if cat == "EBEB": p1 = workspace.arg("p1_cat0").getVal()
-                    if cat == "EBEE": p1 = workspace.arg("p1_cat1").getVal()
+                    if "EBEB" in cat: p0 = workspace.arg("p0_cat0").getVal()
+                    if "EBEE" in cat: p0 = workspace.arg("p0_cat1").getVal()
+                    if "EBEB" in cat: p1 = workspace.arg("p1_cat0").getVal()
+                    if "EBEE" in cat: p1 = workspace.arg("p1_cat1").getVal()
                     fhwm_tf1_formula = "%f + %f*@0" % (p0,p1)
                     print fhwm_tf1_formula
                     options.fhwm_parametrized_formula = fhwm_tf1_formula
                     print options.fhwm_parametrized_formula
                             
-                pdf.Print()
                 print "----------------------------------energy scale -----------------------------------------"
                     #the following is to store the thetaScale uncertainty
                 if options.do_energy_scale_uncertainty:
@@ -2538,37 +2564,35 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                          # make one shifted pdf per eigenvector
                         unc = options.energy_scale_uncertainties.get(cat,options.energy_scale_uncertainty)
                         
-                        thetas = {}
-                        deltas = {}
+                        rooList = ROOT.RooArgList(workspace.arg("mean_%s" %cat))
+                        formula = "@0*(1."
                         for nam,val in variations.iteritems():
                             if val == 0: continue
                             nuisName = "thetaScale%s" % nam
                             print nam,val
-                            thetaScale = ROOT.RooRealVar("thetaScale%s" % nam,"thetaScale%s" % nam,0, -1.,1.)
-                            deltaScale = ROOT.RooRealVar("deltaScale_%s" %nam, "deltaScale_%s" %nam,val*unc)
+                            thetaScale = ROOT.RooRealVar(nuisName,0.,-4.,4.)
+                            deltaScale = ROOT.RooRealVar("deltaScale_%s_%s" %(cat,nam), "deltaScale_%s_%s" %(cat,nam),val*unc)
                             deltaScale.setConstant()
-                            thetas[nam] = thetaScale
-                            deltas[nam] = deltaScale
+                            thetaScale.setConstant()
+                            ispot = rooList.GetN()
+                            rooList.add(thetaScale)
+                            rooList.add(deltaScale)
+                            formula += "+@%d*@%d" % ( ispot, ispot+1 )
                             if not nuisName in fit["sig_params"][signame]:
                                 fit["sig_params"][signame].append((nuisName,0,1))
+                        formula += ")"
                         
-                        #include the systematic shift due to ecal scale                                          
-                        if len(thetas)==2:
-                            scaledMean = ROOT.RooFormulaVar("scaled_mean_%s" % (cat),"scaled_mean_%s" % (cat),"@0*(1+@1*@2+@3*@4)",ROOT.RooArgList(workspace.arg("mean_%s" %cat), deltas.values()[0],thetas.values()[0] ,deltas.values()[1],thetas.values()[1]))
-                        if len(thetas)==3:
-                            scaledMean = ROOT.RooFormulaVar("scaled_mean_%s" % (cat),"scaled_mean_%s" % (cat),"@0*(1+@1*@2+@3*@4+@5*@6)",ROOT.RooArgList(workspace.arg("mean_%s" %cat), deltas.values()[0],thetas.values()[0] ,deltas.values()[1],thetas.values()[1],deltas.values()[2],thetas.values()[2]))
-                        if len(thetas)==4:
-                            scaledMean = ROOT.RooFormulaVar("scaled_mean_%s" % (cat),"scaled_mean_%s" % (cat),"@0*(1+@1*@2+@3*@4+@5*@6+@7*@8)",ROOT.RooArgList(workspace.arg("mean_%s" %cat), deltas.values()[0],thetas.values()[0] ,deltas.values()[1],thetas.values()[1],deltas.values()[2],thetas.values()[2],deltas.values()[3],thetas.values()[3]))
-
+                        #include the systematic shift due to ecal scale          
+                        scaledMean = ROOT.RooFormulaVar("scaled_mean_%s" % (cat),"scaled_mean_%s" % (cat),formula,rooList)
                         
-
                         custom = ROOT.RooCustomizer(pdf,"")
                         custom.replaceArg(workspace.arg("mean_%s" %cat),scaledMean)
                         pdf = custom.build(True)
 
                         self.workspace_.rooImport(pdf,ROOT.RooFit.RecycleConflictNodes())
                         self.workspace_.rooImport(norm,ROOT.RooFit.RecycleConflictNodes())
-                        self.workspace_.Print()                        
+                        if self.verbose:
+                            self.workspace_.Print()                        
              
                 print "------------------------save smearing unc in datacard ----------------------------"
                 if options.do_parametric_signal_nuisances:
@@ -2589,7 +2613,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
     def generateParametricSignal(self,options,args):
         
         from templates_maker import WsList
-        tmp = self.open("/tmp/musella/cache.root","recreate")
+        tmp = self.open("/tmp/%s/cache.root" % getuser(),"recreate")
         ws = ROOT.RooWorkspace("w","w")
         workspace = WsList(ws)
         exp = map(lambda x: glob.glob("%s/*.root" % x) if x.endswith("/") else [x], options.parametric_signal)
