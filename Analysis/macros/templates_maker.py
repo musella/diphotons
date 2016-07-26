@@ -1056,19 +1056,20 @@ class TemplatesApp(PlotApp):
         return rooVar
         
     ## ------------------------------------------------------------------------------------------------------------
-    def buildRooVar(self,name,binning,importToWs=True,recycle=False):
+    def buildRooVar(self,name,binning,importToWs=True,recycle=False,setConstant=False):
         rooVar = None
         if recycle:
             rooVar = self.workspace_.var(name)
             if not rooVar and self.store_new_:
                 rooVar = self.workspace_input_.var(name)
+            if rooVar and setConstant: rooVar.setConstant(True)
         if not rooVar:
             if name in self.aliases_:
                 title = self.aliases_[name]
             else:
                 title = name
             rooVar = ROOT.RooRealVar(name,title,0.)
-            rooVar.setConstant(False)
+            rooVar.setConstant(setConstant)
 
         if len(binning) > 0:
             val = None

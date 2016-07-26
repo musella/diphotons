@@ -1,0 +1,15 @@
+{
+
+	"processes" : {
+	"Data" : [ 
+"/DoubleEG/spigazzi-EXOSpring16_v2_p1-Moriond16WSFinal-162-ge008ac4-v0-Run2016B-PromptReco-v2-c5014acf035ffb6a7c1ada2d7a188255/USER",
+"/DoubleEG/spigazzi-EXOSpring16_v2_p1-Moriond16WSFinal-162-ge008ac4-v0-Run2016C-PromptReco-v2-345f16d1901364deb861b0ac23627134/USER",
+"/DoubleEG/spigazzi-EXOSpring16_v2_p2-Moriond16WSFinal-165-gbdf02f4-v0-Run2016B-PromptReco-v2-c5014acf035ffb6a7c1ada2d7a188255/USER",
+"/DoubleEG/spigazzi-EXOSpring16_v2_p2-Moriond16WSFinal-165-gbdf02f4-v0-Run2016C-PromptReco-v2-345f16d1901364deb861b0ac23627134/USER"
+	]
+
+	},
+	
+	"cmdLine" : "campaign=EXOSpring16_v1 selection=diphoton idversion=V2 trigger=HLT_DoublePhoton60_v*,HLT_ECALHT800_v* ptLead=75 ptSublead=75 massCut=230:330 lumiMask=/afs/cern.ch/user/m/musella/public/workspace/exo/Cert_275126-276097_13TeV_PromptReco_Collisions16_JSON_NoL1T_v2.txt"
+
+}

@@ -67,9 +67,15 @@ customize.setDefault("targetLumi",1.e+3)
 #                     "2.7e-08,2.225e-05,9.24e-05,0.0001369,0.0002404,0.0003862,0.000503,0.001261,0.003494,0.01008,0.02443,0.0458,0.07122,0.102,0.1304,0.1456,0.1417,0.1154,0.07907,0.04912,0.03088,0.02042,0.01319,0.007654,0.003846,0.001661,0.000624,0.0002156,8.165e-05,4.46e-05,3.503e-05,3.148e-05,2.879e-05,2.62e-05,2.382e-05,2.184e-05,2.033e-05,1.925e-05,1.852e-05,1.802e-05,1.764e-05,1.727e-05,1.686e-05,1.635e-05,1.574e-05,1.502e-05,1.42e-05,1.33e-05,1.233e-05,1.132e-05")
 
 
-## Spring16 2016 2.55/fb, but many runs missing from pu json
+### ## Spring16 2016 2.55/fb, but many runs missing from pu json
+### customize.setDefault("puTarget",
+###                      "1.369e-06,1.549e-05,4.233e-05,9.232e-05,0.0001865,0.0002974,0.0007702,0.005968,0.01452,0.01918,0.02569,0.03709,0.05417,0.07408,0.0928,0.1055,0.1095,0.1042,0.09134,0.07505,0.05881,0.04434,0.03206,0.02198,0.01415,0.008512,0.004783,0.002515,0.001241,0.0005762,0.0002533,0.0001068,4.449e-05,1.956e-05,1.006e-05,6.499e-06,5.098e-06,4.461e-06,4.107e-06,3.879e-06,3.722e-06,3.607e-06,3.514e-06,3.427e-06,3.337e-06,3.236e-06,3.119e-06,2.984e-06,2.833e-06,2.666e-06")
+
+
+## Spring16 2016 7.6/fb
 customize.setDefault("puTarget",
-                     "1.369e-06,1.549e-05,4.233e-05,9.232e-05,0.0001865,0.0002974,0.0007702,0.005968,0.01452,0.01918,0.02569,0.03709,0.05417,0.07408,0.0928,0.1055,0.1095,0.1042,0.09134,0.07505,0.05881,0.04434,0.03206,0.02198,0.01415,0.008512,0.004783,0.002515,0.001241,0.0005762,0.0002533,0.0001068,4.449e-05,1.956e-05,1.006e-05,6.499e-06,5.098e-06,4.461e-06,4.107e-06,3.879e-06,3.722e-06,3.607e-06,3.514e-06,3.427e-06,3.337e-06,3.236e-06,3.119e-06,2.984e-06,2.833e-06,2.666e-06")
+                     "3.346e-07,1.258e-05,5.837e-05,0.0001258,0.0001997,0.0002678,0.0004307,0.002148,0.007292,0.01615,0.02609,0.03412,0.04254,0.05406,0.06786,0.08055,0.08895,0.09209,0.0906,0.08499,0.07607,0.06527,0.05352,0.04133,0.02964,0.01967,0.01211,0.006904,0.003646,0.0018,0.0008437,0.0003792,0.0001637,6.784e-05,2.71e-05,1.064e-05,4.348e-06,2.076e-06,1.289e-06,1.019e-06,9.191e-07,8.751e-07,8.488e-07,8.269e-07,8.05e-07,7.805e-07,7.522e-07,7.198e-07,6.832e-07,6.431e-07")
+
 
 import FWCore.ParameterSet.VarParsing as VarParsing
 customize.options.register ('selection',
@@ -234,6 +240,7 @@ from flashgg.Taggers.photonDumper_cfi import photonDumper
 import flashgg.Taggers.dumperConfigTools as cfgTools
 
 sourceDiphotons = "flashggDiPhotons"
+sourceSinglePhotons = "flashggRandomizedPhotons"
 
 # Track count vertex
 if "0T" in customize.idversion:
@@ -304,6 +311,21 @@ if customize.processType == "data" and customize.dol1Match:
                   deltaRmax = cms.double(0.3),
                   )
         )
+    if doSinglePho:
+        process.load("flashgg.Systematics.flashggPhotonSystematics_cfi")
+        process.flashggPhotonSystematics.SystMethods.append(
+            cms.PSet( 
+                MethodName = cms.string("FlashggPhotonL1Match"),
+                Label = cms.string("l1Match"),
+                NSigmas = cms.vint32(),
+                ApplyCentralValue = cms.bool(True),
+                  l1EgmSrc = cms.InputTag("caloStage2Digis:EGamma"),
+                ## l1JetSrc = cms.InputTag("caloStage2Digis:Jet"),
+                deltaRmax = cms.double(0.3),
+                )
+            )
+        sourceSinglePhotons="flashggPhotonSystematics"
+
     ## for obj in ["Egm", "Jet"]:
     for obj in ["Egm"]:
         variables.extend(  ["leadL1%sMatch   := leadingPhoton.userInt('l1%sMatch')"                                                      % (obj,obj),                
@@ -313,7 +335,13 @@ if customize.processType == "data" and customize.dol1Match:
                             "subleadL1%sDr   := ?subLeadingPhoton.userInt('l1%sMatch')==1?subLeadingPhoton.userFloat('l1%sCandDR'):999." % (obj,obj,obj),
                             "subleadL1%sPt   := ?subLeadingPhoton.userInt('l1%sMatch')==1?subLeadingPhoton.userFloat('l1%sCandPt'):0."   % (obj,obj,obj),
                             ] )
-
+        if doSinglePho:
+            variablesSinglePho.extend(
+                ["phoL1%sMatch   := userInt('l1%sMatch')"                                        % (obj,obj),                
+                 "phoL1%sDr      := ?userInt('l1%sMatch')==1?userFloat('l1%sCandDR'):999."       % (obj,obj,obj),
+                 "phoL1%sPt      := ?userInt('l1%sMatch')==1?userFloat('l1%sCandPt'):0."         % (obj,obj,obj),
+                 ]
+                )
 # electron matching
 if invertEleVeto and customize.doeleId:
     from flashgg.MicroAOD.flashggLeptonSelectors_cff import flashggSelectedElectrons
@@ -465,7 +493,7 @@ analysis = DiPhotonAnalysis(diphotonDumper,
                             singlePhoDumperTemplate=photonDumper,
                             applyDiphotonCorrections=customize.applyDiphotonCorrections,
                             diphotonCorrectionsVersion=customize.diphotonCorrectionsVersion,
-                            sourceDiphotons=sourceDiphotons,
+                            sourceDiphotons=sourceDiphotons,sourceSinglePhotons=sourceSinglePhotons,
                             extraSysModules=extraSysModules
                             )
 
