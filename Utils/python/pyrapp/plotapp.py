@@ -204,7 +204,7 @@ class PlotApp(PyRApp):
             self.options.lumi = self.options.fudge
             self.lumistr = None
         else:
-            self.lumistr = "%1.2g" % self.options.lumi
+            self.lumistr = "%1.3g" % self.options.lumi
             self.options.lumi *= self.options.fudge
         if self.options.lumistr:
             self.lumistr=self.options.lumistr

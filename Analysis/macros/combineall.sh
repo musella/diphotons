@@ -11,6 +11,7 @@ cd $folder
 
 args=""
 masses=""
+sub=""
 while [[ -n $1 ]]; do
     case $1 in
 	-M)
@@ -30,6 +31,9 @@ while [[ -n $1 ]]; do
 	    label=$2
 	    shift
 	    ;;
+	--mass-in-label)
+	    mass_in_label="1"
+	    ;;
 	-s)
 	    seed=$2
 	    args="$args $1 $2"
@@ -47,6 +51,10 @@ while [[ -n $1 ]]; do
 	    ;;
 	--cont)
 	    cont="1"
+	    ;;
+	--sub)
+	    sub="$2"
+	    shift
 	    ;;
 	*)	    
 	    args="$args $1"
@@ -77,12 +85,19 @@ if [[ -n $outfolder ]] && [[ ! -d $outfolder ]]; then
     mkdir -p $outfolder
 fi
 
+if [[ -n $sub ]]; then
+    cat > env.sh <<EOF
+export PATH=$PATH
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH
+EOF
+fi
+
 libs="-L libdiphotonsUtils"
 rootversion=$(root-config --version| tr '.' ' ')
 ##[[ $rootversion -gt 5 ]] && libs="-L libdiphotonsRooUtils"
 for coup in $(echo $coupl | tr ',' ' '); do
     if [[ -n $isparametric ]]; then
-	cards=datacard*_grav_${coup}*.txt
+	cards=datacard*_grav_${coup}.txt
     else
 	cards=datacard*_grav_${coup}_*.txt
     fi
@@ -112,24 +127,33 @@ for coup in $(echo $coupl | tr ',' ' '); do
 	for mass in $cardmasses; do
 	    log=combine_log_${method}_${label}_${kmpl}_${mass}.log
 	    set -x
+	    jlabel="${label}_k${kmpl}"
+	    if [[ $mass_in_label ]]; then
+		jlabel="${jlabel}_${mass}"
+	    fi
 	    if [[ -n $seed ]]; then 
-		filename=higgsCombine${label}_k${kmpl}.${method}.mH$mass.$seed.root 
+		filename=higgsCombine${jlabel}.${method}.mH$mass.$seed.root 
 	    else
-		filename=higgsCombine${label}_k${kmpl}.${method}.mH$mass.root 
+		filename=higgsCombine${jlabel}.${method}.mH$mass.root 
 	    fi
 	    if [[ -z $dry ]] && ( [[ -z $cont ]] || [[ ! -f $filename ]] ); then 
 		if [[ -f $binary ]] && [[ $binary -nt $card ]]; then
 		    card=$binary
 		fi
-		echo combine $libs $args -n "${label}_k${kmpl}" -m $mass $card > $log
-		combine $libs $args -n "${label}_k${kmpl}" -m $mass $card 2>&1 | tee -a $log
+		if [[ -z $sub ]]; then 
+		    echo combine $libs $args -n $jlabel -m $mass $card > $log
+		    combine $libs $args -n $jlabel -m $mass $card 2>&1 | tee -a $log
+		else
+		    rm $log
+		    bsub -o $log -q $sub run.sh -env $PWD/env.sh -copy $filename -outdir $PWD  -- combine $libs $args -n $jlabel -m $mass $PWD/$card
+		fi    
 		
 	    elif [[ -n $outfolder ]]; then
 		filename=$outfolder/$filename
 	    fi
+	    [[ -f $filename ]] && outputs="$outputs $filename"
 	    set +x
 	    tail -5 $log 
-	    [[ -f $filename ]] && outputs="$outputs $filename"
 	done
     done
     

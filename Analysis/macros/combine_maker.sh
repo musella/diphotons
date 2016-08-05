@@ -100,8 +100,9 @@ while [[ -n $1 ]]; do
 	    just_fit_bkg="1"
 	    ;;
 	--load)
-	    load_also="$1 $2"
+	    load_also="$load_also $1 $2"
 	    opts="$opts $1 $2"
+	    echo $load_also
 	    shift
 	    ;;
 	*)

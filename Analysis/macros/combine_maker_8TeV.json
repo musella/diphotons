@@ -1,5 +1,5 @@
 {
-	"observables" : { "EBEB_8TeV" : "mgg8TeV[3400,300,10000]" },
+	"observables" : { "EBEB_8TeV" : "mgg8TeV[2350,300,5000]" },
 	"plot_binning" : [65,300,1600],
 	"rootstyle_extra" : [
     		  "TGaxis::SetMaxDigits(3);",

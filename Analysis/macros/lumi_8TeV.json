@@ -1,0 +1,11 @@
+{
+    "rootstyle_extra" : [
+		  "TH1::SetDefaultSumw2(1);",
+		  "lumiTextSize = 0.5; lumiTextOffset = 0.55; cmsTextSize = 0.6; relExtraDY = -2.1; relExtraDX = -1.6;",
+		  "cmsText = \"\"; "
+    ],
+
+    "postproc" : {
+    	       "*" : [["addCmsLumi",[2,0]]]
+	       }
+}
