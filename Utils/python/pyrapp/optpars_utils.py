@@ -23,9 +23,10 @@ class ScratchAppend:
                                                     
 # -----------------------------------------------------------------------------
 class Load:
-    def __init__(self,scratch=False,empty={},comma=","):
+    def __init__(self,scratch=False,merge=False,empty={},comma=","):
         self.cold = True
         self.scratch = scratch
+        self.merge = merge
         self.empty = copy.copy(empty)
         self.comma = comma
         
@@ -33,14 +34,14 @@ class Load:
         appendlst = True
         if self.scratch and self.cold:
             if option.dest == "__opts__":
-                appendlst = False
+                appendlst = self.merge
             else:
                 setattr(parser.values,option.dest,copy.copy(self.empty))
             self.cold = False
             
         if option.dest == "__opts__":
             dest = parser.values
-            appendlst = False
+            appendlst = self.merge
         else:
             dest = getattr(parser.values,option.dest)
             

@@ -210,7 +210,9 @@
 	       
 	       "mgg := mass",
 	       "mggEBEB := mass",
-               "mggEBEE := mass"
+               "mggEBEE := mass",
+	       "mggEBEBShift := mass*0.99",
+               "mggEBEEShift := mass*0.995"
 	       
 	       ],
 

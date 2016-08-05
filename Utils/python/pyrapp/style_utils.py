@@ -137,7 +137,7 @@ def mvStatBox(h,prev=None,vert=-1,horiz=0.):
 # -----------------------------------------------------------------------------------------------------------
 def addCmsLumi(canv,period,pos,extraText=None):
     if extraText:
-        ROOT.gROOT.ProcessLine("writeExtraText = true;")
+        ROOT.gROOT.ProcessLine("writeExtraText = true && ! disableExtraText;")
         if type(extraText) == str or type(extraText) == unicode and extraText != "":
             ROOT.gROOT.ProcessLine('extraText = "%s";' % extraText)
     ROOT.CMS_lumi(canv,period,pos)
