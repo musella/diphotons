@@ -6,6 +6,7 @@ sig_file=""
 bkg_file=""
 lumi=""
 target=""
+config="zee_plots.json"
 while [[ $1 == -* ]]; do
     case $1 in 
 	--data-file) 
@@ -30,6 +31,10 @@ while [[ $1 == -* ]]; do
 	    lumi="$1 $2"
 	    shift
 	    ;;
+        --config)
+            config="$2"
+            shift
+            ;;
 	--)
 	    break
 	    ;;
@@ -59,5 +64,5 @@ if [[ $target != "/*" ]]; then
     mkdir  $www/$target/
 fi
 
-./basic_plots.py --load zee_plots.json  -O $www/$target/selection  --input-dir $src  $lumi $data_file $opts #2>/dev/null
+./basic_plots.py --saveas pdf,png,root --load $config -O $www/$target/selection  --input-dir $src  $lumi $data_file $opts #2>/dev/null
 
