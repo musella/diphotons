@@ -64,6 +64,10 @@ class PyRApp(object):
                         action="callback", dest="__opts__", type="string", callback=Load(), metavar="JSON",
                         help="default: %default"
                         ),
+            make_option("--load-merge",
+                        action="callback", dest="__opts__", type="string", callback=Load(merge=True), metavar="JSON",
+                        help="default: %default"
+                        ),
             make_option("--load-scratch",
                         action="callback", dest="__opts__", type="string", callback=Load(scratch=True), metavar="JSON",
                         help="default: %default"

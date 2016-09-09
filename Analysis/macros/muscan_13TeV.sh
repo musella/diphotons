@@ -3,7 +3,8 @@ folder=$1 && shift
 coup=$1 && shift
 mass=$1 && shift
 
-sig=${coup}_${mass}
+## sig=${coup}_${mass}
+sig=${coup}
 
 cd $folder
 

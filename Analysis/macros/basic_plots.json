@@ -256,7 +256,7 @@
     ],
 
     "postproc" : {
-    	       "*" : [["addCmsLumi",[4,1,"Internal"]],"addCatLabel"]
+    	       "*" : [["addCmsLumi",[4,1,"Preliminary"]],"addCatLabel"]
 	       }	
     
 }
