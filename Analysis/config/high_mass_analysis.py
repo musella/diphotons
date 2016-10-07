@@ -72,10 +72,14 @@ customize.setDefault("targetLumi",1.e+3)
 ###                      "1.369e-06,1.549e-05,4.233e-05,9.232e-05,0.0001865,0.0002974,0.0007702,0.005968,0.01452,0.01918,0.02569,0.03709,0.05417,0.07408,0.0928,0.1055,0.1095,0.1042,0.09134,0.07505,0.05881,0.04434,0.03206,0.02198,0.01415,0.008512,0.004783,0.002515,0.001241,0.0005762,0.0002533,0.0001068,4.449e-05,1.956e-05,1.006e-05,6.499e-06,5.098e-06,4.461e-06,4.107e-06,3.879e-06,3.722e-06,3.607e-06,3.514e-06,3.427e-06,3.337e-06,3.236e-06,3.119e-06,2.984e-06,2.833e-06,2.666e-06")
 
 
-## Spring16 2016 7.6/fb
-customize.setDefault("puTarget",
-                     "3.346e-07,1.258e-05,5.837e-05,0.0001258,0.0001997,0.0002678,0.0004307,0.002148,0.007292,0.01615,0.02609,0.03412,0.04254,0.05406,0.06786,0.08055,0.08895,0.09209,0.0906,0.08499,0.07607,0.06527,0.05352,0.04133,0.02964,0.01967,0.01211,0.006904,0.003646,0.0018,0.0008437,0.0003792,0.0001637,6.784e-05,2.71e-05,1.064e-05,4.348e-06,2.076e-06,1.289e-06,1.019e-06,9.191e-07,8.751e-07,8.488e-07,8.269e-07,8.05e-07,7.805e-07,7.522e-07,7.198e-07,6.832e-07,6.431e-07")
+## ## Spring16 2016 7.6/fb
+## customize.setDefault("puTarget",
+##                      "3.346e-07,1.258e-05,5.837e-05,0.0001258,0.0001997,0.0002678,0.0004307,0.002148,0.007292,0.01615,0.02609,0.03412,0.04254,0.05406,0.06786,0.08055,0.08895,0.09209,0.0906,0.08499,0.07607,0.06527,0.05352,0.04133,0.02964,0.01967,0.01211,0.006904,0.003646,0.0018,0.0008437,0.0003792,0.0001637,6.784e-05,2.71e-05,1.064e-05,4.348e-06,2.076e-06,1.289e-06,1.019e-06,9.191e-07,8.751e-07,8.488e-07,8.269e-07,8.05e-07,7.805e-07,7.522e-07,7.198e-07,6.832e-07,6.431e-07")
 
+
+## Spring16 2016 12.9/fb
+customize.setDefault("puTarget",
+                     "1.67e-07,1.256e-05,4.799e-05,9.767e-05,0.0001514,0.0002061,0.0002773,0.0006778,0.002333,0.005544,0.01081,0.01817,0.02777,0.03798,0.04738,0.05629,0.06433,0.07046,0.07422,0.07559,0.07468,0.07161,0.06674,0.06059,0.05353,0.04577,0.03761,0.02959,0.02228,0.01608,0.01112,0.007349,0.004629,0.002775,0.001584,0.0008616,0.0004474,0.0002221,0.0001058,4.853e-05,2.162e-05,9.47e-06,4.184e-06,1.958e-06,1.048e-06,6.866e-07,5.466e-07,4.937e-07,4.74e-07,4.66e-07")
 
 import FWCore.ParameterSet.VarParsing as VarParsing
 customize.options.register ('selection',
@@ -109,7 +113,7 @@ customize.options.register ('doeleId',
                             VarParsing.VarParsing.varType.bool,          # string, int, or float
                             "doeleId")
 customize.options.register ('eleId',
-                            "passLooseId", # default value
+                            "isHLTsafe", # default value
                             VarParsing.VarParsing.multiplicity.singleton, # singleton or list
                             VarParsing.VarParsing.varType.string,          # string, int, or float
                             "eleId")
@@ -205,10 +209,10 @@ elif customize.selection == "photon":
     doSinglePho=True
     doDoublePho=False
 elif customize.selection == "electron":
-    dataTriggers=["HLT_Ele27_eta2p1_WPLoose_Gsf_v*"]
+    ## dataTriggers=["HLT_Ele27_eta2p1_WPLoose_Gsf_v*"]
     ## mcTriggers=["HLT_Ele27_eta2p1_WP75_Gsf_v*"]
-    mcTriggers=dataTriggers
-    askTriggerOnMc=True
+    ## mcTriggers=dataTriggers
+    ## askTriggerOnMc=True
     invertEleVeto=True
 elif customize.selection == "dielectron":
     dataTriggers=["*"]
@@ -344,13 +348,16 @@ if customize.processType == "data" and customize.dol1Match:
                 )
 # electron matching
 if invertEleVeto and customize.doeleId:
-    from flashgg.MicroAOD.flashggLeptonSelectors_cff import flashggSelectedElectrons
-    process.flashggIdentifiedElectrons = flashggSelectedElectrons.clone( 
-#        src=cms.InputTag("flashggSelectedElectrons"),
-        src=cms.InputTag("flashggElectrons"),
-        cut=cms.string(customize.eleId)
-        )
-    # process.flashggSelectedElectrons.cut = customize.eleId
+    eleSource="flashggSelectedElectrons" if not "EXOSpring16_v2" in  customize.datasetName() else "flashggElectrons"
+    if customize.eleId == "isHLTsafe":
+        from flashgg.MicroAOD.flashggHltSafeElectrons_cfi import flashggHltSafeElectrons
+        process.flashggIdentifiedElectrons = flashggHltSafeElectrons.clone(src=cms.InputTag(eleSource))
+    else:
+        from flashgg.MicroAOD.flashggLeptonSelectors_cff import flashggSelectedElectrons
+        process.flashggIdentifiedElectrons = flashggSelectedElectrons.clone( 
+            src=cms.InputTag(eleSource),
+            cut=cms.string(customize.eleId)
+            )
     extraSysModules.append(
         cms.PSet( PhotonMethodName = cms.string("FlashggPhotonEleMatch"),
                   MethodName = cms.string("FlashggDiPhotonFromPhoton"),
@@ -651,7 +658,9 @@ else:
     ## process.load('flashgg.Systematics.escales.test_2016B_corr_DCSOnly')
     ## process.load('flashgg.Systematics.escales.Golden10June_plus_DCS')
     ## process.load('flashgg.Systematics.escales.Golden22June')
-    process.load('flashgg.Systematics.escales.80X_DCS05July_plus_Golden22')
+    ## process.load('flashgg.Systematics.escales.80X_DCS05July_plus_Golden22')
+    process.load('flashgg.Systematics.escales.80X_ichep_2016_pho')
+    
     print "energy corrections file is test_2016B_corr"
 
 
