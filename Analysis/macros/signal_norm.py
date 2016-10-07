@@ -264,9 +264,11 @@ class SignalNorm(PlotApp):
     def plotGraphs(self,graphs,name,rng=[0.,.8]):
         canv = ROOT.TCanvas(name,name)
         graphs[0].Draw("ap")
+        graphs[0].GetListOfFunctions().At(0).Print()
         if rng:
             graphs[0].GetYaxis().SetRangeUser(*rng)
-        for g in graphs[1:]: g.Draw("p")
+        for g in graphs[1:]: 
+            g.Draw("p")
         leg = ROOT.TLegend(0.54,0.28,0.84,0.66)
         for g in graphs:
             leg.AddEntry(g,"","lp")
@@ -274,7 +276,8 @@ class SignalNorm(PlotApp):
         self.keep( graphs, True )
         self.keep(leg,True)
         self.keep(canv)
-    
+        self.autosave(True)
+
     def setGraphTitle(self,gr):
         name = gr.GetName()
         ytit = ""
@@ -364,7 +367,8 @@ class SignalNorm(PlotApp):
                    [[RooFit.LineColor(ROOT.kRed)],[RooFit.LineColor(ROOT.kRed+2)],[RooFit.LineColor(ROOT.kRed+4)]]
                    ]
         
-        cats = ["EBEB","EBEE"]
+        ## cats = ["EBEB","EBEE"]
+        cats = ["EBEB"]
         canv = ROOT.TCanvas("param_eff_acc","param_eff_acc")
         # leg = ROOT.TLegend(0.54,0.28,0.84,0.66)
         leg = ROOT.TLegend(0.45,0.48-len(coups)*0.12,0.85,0.50+len(coups)*0.12)
@@ -383,7 +387,7 @@ class SignalNorm(PlotApp):
             
 
         terms = ROOT.RooArgList()
-        for cat,cstyles in zip(cats,styles):
+        for cat,cstyles in zip(cats,styles):            
             exA = ws.function("eff_acc_%s%s" % (cat,options.cat_postfix))
             terms.add(exA)
             for coup,style in zip(coups,cstyles):
@@ -446,7 +450,7 @@ class SignalNorm(PlotApp):
                    ]
         spinStyles = [[RooFit.LineStyle(0)],[RooFit.LineStyle(7)]]
         
-        cats = ["EBEB","EBEE"]
+        cats = ["EBEB"]#,"EBEE"]
         canv = ROOT.TCanvas("param_eff_acc","param_eff_acc")
         # leg = ROOT.TLegend(0.54,0.28,0.84,0.66)
         # legh = ROOT.TLegend(0.48,0.57,0.88,0.62)
@@ -625,7 +629,7 @@ class SignalNorm(PlotApp):
                     for x,y in points.iteritems():
                         graph.SetPoint(graph.GetN(),x,y[0]/y[1])
                     graph.Sort()
-                    fit = ROOT.TF1(graph.GetName(),"pol2")
+                    fit = ROOT.TF1("%s_fit" % graph.GetName(),"pol0")
                     self.keep( [graph,fit], True )
                     graph.Fit(fit,"+")
                     avg_eff_reco.append(graph)

@@ -204,7 +204,7 @@ class PlotApp(PyRApp):
             self.options.lumi = self.options.fudge
             self.lumistr = None
         else:
-            self.lumistr = "%1.2g" % self.options.lumi
+            self.lumistr = "%1.3g" % self.options.lumi
             self.options.lumi *= self.options.fudge
         if self.options.lumistr:
             self.lumistr=self.options.lumistr
@@ -637,6 +637,16 @@ class PlotApp(PyRApp):
         return ymax
 
     # -----------------------------------------------------------------------------------------------------------
+    def newRootColor(self,src,name,alpha):
+        
+        self.ncolors += 1
+        setattr(ROOT,name,ROOT.gROOT.GetListOfColors().Last().GetNumber()+self.ncolors)
+        
+        tmp = ROOT.gROOT.GetColor( src )
+        self.keep( ROOT.TColor( getattr(ROOT,name), tmp.GetRed(), tmp.GetGreen(), tmp.GetBlue(), "", alpha ) )
+        
+
+    # -----------------------------------------------------------------------------------------------------------
     def loadRootStyle(self):
         mypath = os.path.dirname(__file__)
 
@@ -714,7 +724,8 @@ class PlotApp(PyRApp):
         ROOT.myColorB3tr = ROOT.gROOT.GetListOfColors().Last().GetNumber()+3;
         tmp = ROOT.gROOT.GetColor( ROOT.myColorB3 )
         self.keep( ROOT.TColor( ROOT.myColorB3tr, tmp.GetRed(), tmp.GetGreen(), tmp.GetBlue(), "", 0.5  ) )
-        
+
+        self.ncolors = 3
         ROOT.gStyle.SetHatchesLineWidth(2)
         ## ROOT.gStyle.SetErrorX(1.e-6)
         

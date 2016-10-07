@@ -13,17 +13,28 @@ target=combination
 
 dir8=results_8TeV_${spin}
 dir13=combined_${spin}_wnuis_unblind
-dirCmb=combined_813_${spin}_unblind
+dirCmb=combined_813_${spin}_ext
 
 dir0T=full_analysis_moriond16v1_0T_sync_v6_data_cic0T_default_shapes_${spin}_wnuis_lumi_0.59
 dir38T=full_analysis_moriond16v1_sync_v4_data_cic2_default_shapes_${spin}_wnuis_lumi_2.69
 
 
-### ./limit_plots.py $args --do-comparison --compare-files $dirCmb/graphs_ProfileLikelihood.root,$dir8/graphs_ProfileLikelihood.root,$dir13/graphs_ProfileLikelihood.root  --do-pvalues -O  ~/www/exo/moriond16/$www/$target --load lumi_combined.json -k 001 --legend 0.54,0.15,0.85,0.42 --${spin} --x-range 500,3000 --label combination_full_mass_${spin}_ --compare-labels 'Combined,8TeV,13TeV'
+set -x 
+### ./limit_plots_76.sh $dir0T 0.6
+### ./limit_plots_76.sh $dir38T
 ### 
-### ./limit_plots.py $args --do-comparison --compare-files $dirCmb/graphs_ProfileLikelihood.root,$dir8/graphs_ProfileLikelihood.root,$dir13/graphs_ProfileLikelihood.root  --do-pvalues -O  ~/www/exo/moriond16/$www/$target --load lumi_combined.json -k 001 --legend 0.24,0.15,0.55,0.42 --${spin} --x-range 500,850 --label combination_low_mass_${spin}_ --compare-labels 'Combined,8TeV,13TeV'
-### 
-### ./limit_plots.py $args --do-comparison --compare-files $dirCmb/graphs_ProfileLikelihood.root,$dir8/graphs_ProfileLikelihood.root,$dir13/graphs_ProfileLikelihood.root  --do-pvalues -O  ~/www/exo/moriond16/$www/$target --load lumi_combined.json -k 001 --legend 0.54,0.15,0.85,0.42 --${spin} --x-range 850,3000 --label combination_high_mass_${spin}_ --compare-labels 'Combined,8TeV,13TeV'
+### ./limit_plots_76.sh $dir13 3.3
+
+./limit_plots_combination.sh $dirCmb
+
+
+
+
+./limit_plots.py $args --do-comparison --compare-files $dirCmb/graphs_ProfileLikelihood.root,$dir8/graphs_ProfileLikelihood.root,$dir13/graphs_ProfileLikelihood.root  --do-pvalues -O  ~/www/exo/moriond16/$www/$target --load lumi_combined.json -k 001 --legend 0.54,0.15,0.85,0.42 --${spin} --x-range 500,4000 --label combination_full_mass_${spin}_ --compare-labels 'Combined,8TeV,13TeV'
+
+./limit_plots.py $args --do-comparison --compare-files $dirCmb/graphs_ProfileLikelihood.root,$dir8/graphs_ProfileLikelihood.root,$dir13/graphs_ProfileLikelihood.root  --do-pvalues -O  ~/www/exo/moriond16/$www/$target --load lumi_combined.json -k 001 --legend 0.24,0.15,0.55,0.42 --${spin} --x-range 500,850 --label combination_low_mass_${spin}_ --compare-labels 'Combined,8TeV,13TeV'
+
+./limit_plots.py $args --do-comparison --compare-files $dirCmb/graphs_ProfileLikelihood.root,$dir8/graphs_ProfileLikelihood.root,$dir13/graphs_ProfileLikelihood.root  --do-pvalues -O  ~/www/exo/moriond16/$www/$target --load lumi_combined.json -k 001 --legend 0.54,0.15,0.85,0.42 --${spin} --x-range 850,4000 --label combination_high_mass_${spin}_ --compare-labels 'Combined,8TeV,13TeV'
 
 
 
@@ -46,13 +57,4 @@ dir38T=full_analysis_moriond16v1_sync_v4_data_cic2_default_shapes_${spin}_wnuis_
 ### ./limit_plots.py $args --do-comparison  --compare-files $spin0/graphs_ProfileLikelihood.root,$spin2/graphs_ProfileLikelihood.root  --do-pvalues -O  ~/www/exo/moriond16/$www/$target --load lumi_combined.json --legend 0.24,0.15,0.55,0.42 --no-spin-in-header --x-range 500,850 --label combination_low_mass_ --compare-labels 'J = 0,J = 2' --extra-lines-style 1  --load lumi_limits.json
 ### 
 ### ./limit_plots.py $args --do-comparison --compare-files $spin0/graphs_ProfileLikelihood.root,$spin2/graphs_ProfileLikelihood.root  --do-pvalues -O  ~/www/exo/moriond16/$www/$target --load lumi_combined.json -k 001 --legend 0.54,0.15,0.85,0.42 --${spin} --x-range 850,4500 --label combination_high_mass_ --compare-labels 'J = 0,J = 2' --extra-lines-style 1  --load lumi_limits.json
-
-
-set -x 
-./limit_plots_76.sh $dir0T 0.6
-./limit_plots_76.sh $dir38T
-
-./limit_plots_76.sh $dir13 3.3
-
-./limit_plots_combination.sh $dirCmb
 

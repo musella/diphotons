@@ -1,0 +1,17 @@
+{
+    "rootstyle_extra" : [
+    		  "TGaxis::SetMaxDigits(3);",
+		  "TH1::SetDefaultSumw2(1);",
+		  "lumiTextSize = 0.5; lumiTextOffset = 0.1; cmsTextSize = 0.6; relExtraDY = -1.3; relExtraDX = -1.2;",
+		  "## cmsText = \"\"; "
+
+    ],
+
+    "postproc" : {
+    	       "*" : [["addCmsLumi",[5,1,"Preliminary"]]]
+	       },
+    "_postproc" : {
+    	       "*" : [["addCmsLumi",[5,0]]]
+	       }
+    
+}
