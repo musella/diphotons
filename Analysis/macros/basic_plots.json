@@ -25,7 +25,7 @@
 	     
 	      ], 
 
-"_bkg" : [
+   "_bkg" : [
               ["gjet","#gamma j",
               [["colors","myColorA1"],["SetLineWidth",2],["Scale",1],["SetFillStyle",1001],["legopt","f"],["SetFillColor","myColorA3tr"]],
               { "GJets_HT_40ToInf_13TeV:__infile__/%(sel)s" : [] }
@@ -38,6 +38,19 @@
               
              ],
 
+
+    "_bkg" : [
+             ["gjet","#gamma j",
+              [["colors","myColorA1"],["SetLineWidth",2],["Scale",1],["SetFillStyle",1001],["legopt","f"],["SetFillColor","myColorA3tr"],["Scale",0.5]],
+              { "GJets_HT_40ToInf_13TeV:__infile__/%(sel)s" : [] }
+              ],
+
+              ["ggjet_iso","#gamma #gamma",
+              [["colors","myColorB1"],["SetLineWidth",2],["SetFillStyle",1001],["Scale",1],["legopt","f"],["SetFillColor","myColorB3tr"]],
+              { "GGJets_M_60To13000_13TeV:__infile__/%(sel)s" : [] }
+              ]
+	      
+	     ],
 
     "bkg" : [
 	      ["gjet","#gamma j",
@@ -92,11 +105,14 @@
 	}, 
 
 	"_plots" : [	
+
+
 	      ["mass"			,[["xtitle","m_{#gamma #gamma} (GeV)"],
-					  ["xrange",[100.0,750.0]],["overflow",[null]],["rebin",[[230,250,270,290,320,350,400,450,500,750]]],
+					  ["xrange",[100.0,1000.0]],["overflow",[null]],["rebin",[[230,250,270,290,320,350,400,450,500,1000]]],
 					  "density",["ytitle","Events / %(binw)s GeV"]
 					]
 					,null,null],
+					
 
 	      ["leadR9"			,[["Rebin",5],["ytitle","Events / bin"],["xtitle","r_{9} (#gamma 1)"]	      				
 	      				]
@@ -109,16 +125,27 @@
 	      			  	  ["xrange",[250.0,1500]],["overflow",[null]],
 					  ["ytitle","Events / %(binw)s GeV"]
 				]					
-				,null,null]
+				,null,null],
+
+					
+	      ["mass"			,[["xtitle","m_{#gamma #gamma} (GeV)"],
+					  ["xrange",[100.0,1750.0]],["overflow",[null]],["rebin",[[230,250,270,290,320,350,400,450,500,550,600,700,800,900,1300,1700,1750]]],
+					  "density",["ytitle","Events / %(binw)s GeV"]
+					]
+					,null,null],
+	      ["phoRndConeChIso"	,[["xtitle","random cone charged isolation (GeV)"],["xrange",[0,16]],
+	      				["overflow",[null]],["rebin",[[0,0.25,0.5,1,1.5,5,15,16]]],"density",["ytitle","Events / %(binw)s GeV"]
+	      				]
+					,null,null,["sig"]]
 	],
 
     "plots": [
 	      ["mass"			,[["xtitle","m_{#gamma #gamma} (GeV)"],
-					  ["xrange",[100.0,1050.0]],["overflow",[null]],["rebin",[[230,250,270,290,320,350,400,450,500,1050]]],
+					  ["xrange",[100.0,1750.0]],["overflow",[null]],["rebin",[[230,240,250,260,270,280,290,310,330,350,370,400,430,460,490,520,550,580,610,640,670,700,750,800,900,1100,1300,1400,1700,1750]]],
 					  "density",["ytitle","Events / %(binw)s GeV"]
 					]
 					,null,null],
-					
+
 	      
 
 	      ["pt"			,[["xtitle","p_T_{#gamma #gamma} (GeV)"],["overflow",[null]],
@@ -192,11 +219,6 @@
 					,null,null,["sig"]],
 
 	      ["subleadPixSeed"	,[["ytitle","Events"],["xtitle","#gamma_{2} has pixel seed"]]
-					,null,null,["sig"]],
-					
-	      ["phoRndConeChIso"	,[["xtitle","random cone charged isolation (GeV)"],["xrange",[0,16]],
-	      				["overflow",[null]],["rebin",[[0,0.25,0.5,1,1.5,5,15,16]]],"density",["ytitle","Events / %(binw)s GeV"]
-	      				]
 					,null,null,["sig"]]
 				
 
@@ -210,11 +232,11 @@
         ["cicNoSigmaIetaIeta","noSiEiE",["mass","leadSigmaIeIe","subleadSigmaIeIe"]]
     ],
 
-    "_selections" : [
-        ["cic","cic","mass"]
+    "selections" : [
+        ["cic",""]
     ],
 
-    "selections" : [
+    "_selections" : [
         ["cic",""],
         ["cicNoChIso","noChIso"],
         ["cicNoSigmaIetaIeta","noSiEiE",["mass","leadSigmaIeIe","subleadSigmaIeIe"]],
