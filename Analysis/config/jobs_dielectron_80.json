@@ -1,16 +1,10 @@
 {
-	"_processes" : {
-	"Data" : [ 
-	]}, 
-
-	"processes" : {
+    "processes" : {
+	    "DYToEE-powheg" : [
+			       "/DYToEE_NNPDF30_13TeV-powheg-pythia8"
+			       ]
+	    },
 	
-	"DYToEE-powheg" : [
-"/DYToEE_NNPDF30_13TeV-powheg-pythia8"
-	]
-	
-	},
-	
-	"cmdLine" : "campaign=EXOSpring16_v2 idversion=V2 selection=electron massCut=70 ptLead=40 ptSublead=25 trigger=HLT_Ele35_WPLoose_Gsf_v*"
+	"cmdLine" : "campaign=EXOSpring16_v2 idversion=V2 selection=electron massCut=70 ptLead=35 ptSublead=25 doeleId=1 dohltMatch=0 dol1Match=0 eleId=isHLTsafe"
 
 }
