@@ -75,7 +75,8 @@ class DiPhotonAnalysis(object):
     # ----------------------------------------------------------------------------------------------------------------------
     def getHltFilter(self,process):
         if not hasattr(process,"hltHighLevel"):
-            process.hltHighLevel = hltHighLevel.clone()
+            process.hltHighLevel = hltHighLevel.clone(throw=cms.bool(False))
+        process.hltHighLevel.throw=False
         return process.hltHighLevel
 
 
@@ -198,7 +199,7 @@ class DiPhotonAnalysis(object):
             print "  to see full process dump use process.dumpPython() "
             print "------------------------------------------------------------------------------------"
             print
-            
+        
         ## unscheduled execution: cmsRun will figure out the dependencies
         process.options = cms.untracked.PSet( allowUnscheduled = cms.untracked.bool(True) )
 
