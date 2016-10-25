@@ -1,0 +1,20 @@
+{
+    "processes" : {
+	    "Data" : [
+"/SingleElectron/ferrif-RunIISpring16DR80X-2_1_0-25ns_ICHEP16-2_1_0-v0-Run2016B-PromptReco-v1-ce7c982ceb2d6ebc0677083f07225bc9/USER",
+"/SingleElectron/ferrif-RunIISpring16DR80X-2_1_0-25ns_ICHEP16-2_1_0-v0-Run2016B-PromptReco-v2-ce7c982ceb2d6ebc0677083f07225bc9/USER",
+"/SingleElectron/ferrif-RunIISpring16DR80X-2_2_0-25ns_ICHEP16_MiniAODv2_p2-2_2_0-v0-Run2016C-PromptReco-v2-9a092465adbfb13c40886e07b86f6d23/USER",
+"/SingleElectron/ferrif-RunIISpring16DR80X-2_2_0-25ns_ICHEP16_MiniAODv2_p2-2_2_0-v0-Run2016D-PromptReco-v2-9a092465adbfb13c40886e07b86f6d23/USER",
+"/SingleElectron/ferrif-RunIISpring16DR80X-2_2_0-25ns_ICHEP16_MiniAODv2_p3-2_2_0-v0-Run2016B-PromptReco-v2-6afd65c310508d0f49bd277bc7a8e5b1/USER",
+"/SingleElectron/ferrif-RunIISpring16DR80X-2_2_0-25ns_ICHEP16_MiniAODv2_p3-2_2_0-v0-Run2016D-PromptReco-v2-9a092465adbfb13c40886e07b86f6d23/USER",
+"/SingleElectron/ferrif-RunIISpring16DR80X-2_2_0-25ns_ICHEP16_MiniAODv2_p4-2_2_0-v0-Run2016D-PromptReco-v2-9a092465adbfb13c40886e07b86f6d23/USER",
+"/SingleElectron/spigazzi-EXOSpring16_v2_p1-Moriond16WSFinal-162-ge008ac4-v0-Run2016B-PromptReco-v2-c5014acf035ffb6a7c1ada2d7a188255/USER",
+"/SingleElectron/spigazzi-EXOSpring16_v2_p1-Moriond16WSFinal-162-ge008ac4-v0-Run2016C-PromptReco-v2-345f16d1901364deb861b0ac23627134/USER",
+"/SingleElectron/spigazzi-EXOSpring16_v2_p2-Moriond16WSFinal-165-gbdf02f4-v0-Run2016B-PromptReco-v2-c5014acf035ffb6a7c1ada2d7a188255/USER",
+"/SingleElectron/spigazzi-EXOSpring16_v2_p2-Moriond16WSFinal-165-gbdf02f4-v0-Run2016C-PromptReco-v2-345f16d1901364deb861b0ac23627134/USER"
+			       ]
+	    },
+	
+	"cmdLine" : "campaign=EXOSpring16_v2 idversion=V2 selection=electron massCut=70 ptLead=35 ptSublead=25 trigger=HLT_Ele27_WPTight_Gsf_v*,HLT_Ele27_WPTight_Gsf_L1JetTauSeeded_v* lumiMask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-276811_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt doeleId=1 dohltMatch=1 dol1Match=1 eleId=isHLTsafe"
+	    
+}
