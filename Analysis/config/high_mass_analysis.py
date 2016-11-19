@@ -362,18 +362,31 @@ if customize.processType == "data" and customize.dol1Match:
 
 # gain ratio corrections
 if customize.processType == "data" and customize.doGainRatioCorrections:
+# make the uncalib ECAL RecHit collection from the standard RecHits
+    process.unCalibrateMe = cms.EDProducer("EcalRecalibRecHitProducer",
+                                           doEnergyScale = cms.bool(False),
+                                           doEnergyScaleInverse = cms.bool(True),
+                                           doIntercalib = cms.bool(False),
+                                           doIntercalibInverse = cms.bool(True),
+                                           EBRecHitCollection = cms.InputTag("reducedEgamma","reducedEBRecHits"),
+                                           EERecHitCollection = cms.InputTag("reducedEgamma","reducedEERecHits"),
+                                           doLaserCorrections = cms.bool(False),
+                                           doLaserCorrectionsInverse = cms.bool(True),
+                                           EBRecalibRecHitCollection = cms.string('EcalRecalibRecHitsEB'),
+                                           EERecalibRecHitCollection = cms.string('EcalRecalibRecHitsEE')
+    )
+    process.unCalibrateMePath = cms.Path(process.unCalibrateMe)
     extraSysModules.append(
         cms.PSet( PhotonMethodName = cms.string("FlashggPhotonGainRatios"),
                   MethodName = cms.string("FlashggDiPhotonFromPhoton"),
                   Label = cms.string("gainRatios"),
                   NSigmas = cms.vint32(),
                   ApplyCentralValue = cms.bool(True),
-                  calibratedEBRechits = cms.InputTag('reducedEgamma','reducedEBRecHits'),
-                  reCalibratedEBRechits = cms.InputTag(None,None),
-                  updateEnergy = cms.bool(False)
-                  )
-        )
-    
+                  calibratedEBRechits = cms.InputTag('reducedEgamma', 'reducedEBRecHits'),
+                  reCalibratedEBRechits = cms.InputTag('unCalibrateMe', 'EcalRecalibRecHitsEB'),
+                  updateEnergy = cms.bool(True)
+              )
+        )            
 
 # electron matching
 if invertEleVeto and customize.doeleId:
@@ -705,21 +718,6 @@ process.TFileService = cms.Service("TFileService",
                                    fileName = cms.string("test.root")
 )
 
-
-# make the uncalib ECAL RecHit collection from the standard RecHits
-process.unCalibrateMe = cms.EDProducer("EcalRecalibRecHitProducer",
-                                       doEnergyScale = cms.bool(False),
-                                       doEnergyScaleInverse = cms.bool(True),
-                                       doIntercalib = cms.bool(False),
-                                       doIntercalibInverse = cms.bool(True),                                       
-                                       EERecHitCollection = cms.InputTag("reducedEgamma","reducedEBRecHits"),
-                                       EBRecHitCollection = cms.InputTag("reducedEgamma","reducedEBRecHits"),
-                                       doLaserCorrections = cms.bool(False),
-                                       doLaserCorrectionsInverse = cms.bool(True),
-                                       EBRecalibRecHitCollection = cms.string('pippoEB'),
-                                       EERecalibRecHitCollection = cms.string('pippoEB')
-                                   )
-process.unCalibrateMePath = cms.Path(process.unCalibrateMe)
 
 # this will call customize(process), configure the analysis paths and make the process unscheduled
 analysis.customize(process,customize)
