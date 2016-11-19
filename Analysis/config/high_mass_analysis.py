@@ -172,6 +172,11 @@ customize.options.register ('extraActvity',
                             VarParsing.VarParsing.multiplicity.singleton, # singleton or list
                             VarParsing.VarParsing.varType.bool,          # string, int, or float
                             "extraActvity")
+customize.options.register ('addGainFlags',
+                            False, # default value
+                            VarParsing.VarParsing.multiplicity.singleton, # singleton or list
+                            VarParsing.VarParsing.varType.bool,          # string, int, or float
+                            "addGainFlags")
 
 
 customize.parse()
@@ -279,6 +284,9 @@ if customize.extraActvity:
     from diphotons.Analysis.extraActivityConfig import addGlobalVariables
     addGlobalVariables(process,diphotonDumper)
 
+if customize.addGainFlags:
+    dumpCfg.addGainSwitchFlags(variables, histograms)
+    
 # HLT matching
 if customize.processType == "data" and customize.dohltMatch:
     extraSysModules.append(
@@ -676,6 +684,21 @@ process.TFileService = cms.Service("TFileService",
                                    fileName = cms.string("test.root")
 )
 
+
+# make the uncalib ECAL RecHit collection from the standard RecHits
+process.unCalibrateMe = cms.EDProducer("EcalRecalibRecHitProducer",
+                                       doEnergyScale = cms.bool(False),
+                                       doEnergyScaleInverse = cms.bool(True),
+                                       doIntercalib = cms.bool(False),
+                                       doIntercalibInverse = cms.bool(True),                                       
+                                       EERecHitCollection = cms.InputTag("reducedEgamma","reducedEBRecHits"),
+                                       EBRecHitCollection = cms.InputTag("reducedEgamma","reducedEBRecHits"),
+                                       doLaserCorrections = cms.bool(False),
+                                       doLaserCorrectionsInverse = cms.bool(True),
+                                       EBRecalibRecHitCollection = cms.string('pippoEB'),
+                                       EERecalibRecHitCollection = cms.string('pippoEB')
+                                   )
+process.unCalibrateMePath = cms.Path(process.unCalibrateMe)
 
 # this will call customize(process), configure the analysis paths and make the process unscheduled
 analysis.customize(process,customize)
