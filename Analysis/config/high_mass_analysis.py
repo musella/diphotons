@@ -137,6 +137,11 @@ customize.options.register ('dol1Match',
                             VarParsing.VarParsing.multiplicity.singleton, # singleton or list
                             VarParsing.VarParsing.varType.bool,          # string, int, or float
                             "dol1Match")
+customize.options.register ('doGainRatioCorrections',
+                            False, # default value
+                            VarParsing.VarParsing.multiplicity.singleton, # singleton or list
+                            VarParsing.VarParsing.varType.bool,          # string, int, or float
+                            "doGainRatioCorrections")
 customize.options.register ('idversion',
                             "V2", # default value
                             VarParsing.VarParsing.multiplicity.singleton, # singleton or list
@@ -354,6 +359,22 @@ if customize.processType == "data" and customize.dol1Match:
                  "phoL1%sPt      := ?userInt('l1%sMatch')==1?userFloat('l1%sCandPt'):0."         % (obj,obj,obj),
                  ]
                 )
+
+# gain ratio corrections
+if customize.processType == "data" and customize.doGainRatioCorrections:
+    extraSysModules.append(
+        cms.PSet( PhotonMethodName = cms.string("FlashggPhotonGainRatios"),
+                  MethodName = cms.string("FlashggDiPhotonFromPhoton"),
+                  Label = cms.string("gainRatios"),
+                  NSigmas = cms.vint32(),
+                  ApplyCentralValue = cms.bool(True),
+                  calibratedEBRechits = cms.InputTag('reducedEgamma','reducedEBRecHits'),
+                  reCalibratedEBRechits = cms.InputTag(None,None),
+                  updateEnergy = cms.bool(False)
+                  )
+        )
+    
+
 # electron matching
 if invertEleVeto and customize.doeleId:
     eleSource="flashggSelectedElectrons" if not "EXOSpring16_v2" in  customize.datasetName() else "flashggElectrons"
