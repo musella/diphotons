@@ -137,6 +137,11 @@ customize.options.register ('dol1Match',
                             VarParsing.VarParsing.multiplicity.singleton, # singleton or list
                             VarParsing.VarParsing.varType.bool,          # string, int, or float
                             "dol1Match")
+customize.options.register ('doGainRatioCorrections',
+                            False, # default value
+                            VarParsing.VarParsing.multiplicity.singleton, # singleton or list
+                            VarParsing.VarParsing.varType.bool,          # string, int, or float
+                            "doGainRatioCorrections")
 customize.options.register ('idversion',
                             "V2", # default value
                             VarParsing.VarParsing.multiplicity.singleton, # singleton or list
@@ -172,6 +177,11 @@ customize.options.register ('extraActvity',
                             VarParsing.VarParsing.multiplicity.singleton, # singleton or list
                             VarParsing.VarParsing.varType.bool,          # string, int, or float
                             "extraActvity")
+customize.options.register ('addGainFlags',
+                            False, # default value
+                            VarParsing.VarParsing.multiplicity.singleton, # singleton or list
+                            VarParsing.VarParsing.varType.bool,          # string, int, or float
+                            "addGainFlags")
 
 
 customize.parse()
@@ -279,6 +289,9 @@ if customize.extraActvity:
     from diphotons.Analysis.extraActivityConfig import addGlobalVariables
     addGlobalVariables(process,diphotonDumper)
 
+if customize.addGainFlags:
+    dumpCfg.addGainSwitchFlags(variables, histograms)
+    
 # HLT matching
 if customize.processType == "data" and customize.dohltMatch:
     extraSysModules.append(
@@ -346,6 +359,35 @@ if customize.processType == "data" and customize.dol1Match:
                  "phoL1%sPt      := ?userInt('l1%sMatch')==1?userFloat('l1%sCandPt'):0."         % (obj,obj,obj),
                  ]
                 )
+
+# gain ratio corrections
+if customize.processType == "data" and customize.doGainRatioCorrections:
+# make the uncalib ECAL RecHit collection from the standard RecHits
+    process.unCalibrateMe = cms.EDProducer("EcalRecalibRecHitProducer",
+                                           doEnergyScale = cms.bool(False),
+                                           doEnergyScaleInverse = cms.bool(True),
+                                           doIntercalib = cms.bool(False),
+                                           doIntercalibInverse = cms.bool(True),
+                                           EBRecHitCollection = cms.InputTag("reducedEgamma","reducedEBRecHits"),
+                                           EERecHitCollection = cms.InputTag("reducedEgamma","reducedEERecHits"),
+                                           doLaserCorrections = cms.bool(False),
+                                           doLaserCorrectionsInverse = cms.bool(True),
+                                           EBRecalibRecHitCollection = cms.string('EcalRecalibRecHitsEB'),
+                                           EERecalibRecHitCollection = cms.string('EcalRecalibRecHitsEE')
+    )
+    process.unCalibrateMePath = cms.Path(process.unCalibrateMe)
+    extraSysModules.append(
+        cms.PSet( PhotonMethodName = cms.string("FlashggPhotonGainRatios"),
+                  MethodName = cms.string("FlashggDiPhotonFromPhoton"),
+                  Label = cms.string("gainRatios"),
+                  NSigmas = cms.vint32(),
+                  ApplyCentralValue = cms.bool(True),
+                  calibratedEBRechits = cms.InputTag('reducedEgamma', 'reducedEBRecHits'),
+                  reCalibratedEBRechits = cms.InputTag('unCalibrateMe', 'EcalRecalibRecHitsEB'),
+                  updateEnergy = cms.bool(True)
+              )
+        )            
+
 # electron matching
 if invertEleVeto and customize.doeleId:
     eleSource="flashggSelectedElectrons" if not "EXOSpring16_v2" in  customize.datasetName() else "flashggElectrons"
