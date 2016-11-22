@@ -189,7 +189,10 @@ customize.parse()
 
 from Configuration.AlCa.autoCond import autoCond
 if customize.options.processType == "data":
-    process.GlobalTag = GlobalTag(process.GlobalTag, autoCond['run2_data'].replace("::All","") )
+    if "Run2016" in customize.datasetName() and "PromptReco" in customize.datasetName():
+        process.GlobalTag = GlobalTag(process.GlobalTag, "80X_dataRun2_Prompt_v15" )
+    else:
+        process.GlobalTag = GlobalTag(process.GlobalTag, autoCond['run2_data'].replace("::All","") )
 else:
     process.GlobalTag = GlobalTag(process.GlobalTag, autoCond['run2_mc'].replace("::All",""))
 
@@ -364,13 +367,13 @@ if customize.processType == "data" and customize.dol1Match:
 if customize.processType == "data" and customize.doGainRatioCorrections:
 # make the uncalib ECAL RecHit collection from the standard RecHits
     process.unCalibrateMe = cms.EDProducer("EcalRecalibRecHitProducer",
-                                           doEnergyScale = cms.bool(False),
+                                           doEnergyScale = cms.bool(True),
                                            doEnergyScaleInverse = cms.bool(True),
-                                           doIntercalib = cms.bool(False),
+                                           doIntercalib = cms.bool(True),
                                            doIntercalibInverse = cms.bool(True),
                                            EBRecHitCollection = cms.InputTag("reducedEgamma","reducedEBRecHits"),
                                            EERecHitCollection = cms.InputTag("reducedEgamma","reducedEERecHits"),
-                                           doLaserCorrections = cms.bool(False),
+                                           doLaserCorrections = cms.bool(True),
                                            doLaserCorrectionsInverse = cms.bool(True),
                                            EBRecalibRecHitCollection = cms.string('EcalRecalibRecHitsEB'),
                                            EERecalibRecHitCollection = cms.string('EcalRecalibRecHitsEE')
@@ -384,7 +387,7 @@ if customize.processType == "data" and customize.doGainRatioCorrections:
                   ApplyCentralValue = cms.bool(True),
                   calibratedEBRechits = cms.InputTag('reducedEgamma', 'reducedEBRecHits'),
                   reCalibratedEBRechits = cms.InputTag('unCalibrateMe', 'EcalRecalibRecHitsEB'),
-                  updateEnergy = cms.bool(True)
+                  updateEnergy = cms.bool(False)
               )
         )            
 
