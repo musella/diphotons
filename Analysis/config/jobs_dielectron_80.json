@@ -5,6 +5,6 @@
 			       ]
 	    },
 	
-	"cmdLine" : "campaign=EXOSpring16_v2 idversion=V2 selection=electron massCut=70 ptLead=35 ptSublead=25 doeleId=1 dohltMatch=0 dol1Match=0 eleId=isHLTsafe"
+	"cmdLine" : "campaign=EXOSpring16_v2 idversion=V2 selection=electron massCut=70 ptLead=35 ptSublead=25 doeleId=1 dohltMatch=0 dol1Match=0 eleId=isHLTsafe addRegressionInput=1"
 
 }
