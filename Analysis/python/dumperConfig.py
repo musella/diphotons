@@ -15,11 +15,11 @@ def makeOneLegInputs(label,obj,inputs):
 
 def addPreshowerEnergy(variables):
     variables.extend( makeOneLegInputs("lead","leadingPhoton",[("superCluster.preshowerEnergy","scPreshowerEnergy"),
-                                                               ("superCluster.rawEnergy","scRawEnergy"),
+                                                               # ("superCluster.rawEnergy","scRawEnergy"),
                                                                ("superCluster.preshowerEnergyPlane1","scPreshowerEnergyPlane1"),
                                                                ("superCluster.preshowerEnergyPlane2","scPreshowerEnergyPlane2")]) ),
     variables.extend( makeOneLegInputs("sublead","subLeadingPhoton",[("superCluster.preshowerEnergy","scPreshowerEnergy"),
-                                                                     ("superCluster.rawEnergy","scRawEnergy"),
+                                                                     # ("superCluster.rawEnergy","scRawEnergy"),
                                                                      ("superCluster.preshowerEnergyPlane1","preshowerEnergyPlane1"),
                                                                      ("superCluster.preshowerEnergyPlane2","preshowerEnergyPlane2")]) ),
     
@@ -27,34 +27,34 @@ def addPreshowerEnergy(variables):
 def addRegressionInput(variables):
     regInputs = [
         ("superCluster.clustersSize","scClustersSize"),
-        ("superCluster.seed.energy","scSeedEnergy"),
+        # ("superCluster.seed.energy","scSeedEnergy"),
         ("superCluster.energy","scEnergy"),
         
         # ("? hasMatchedGenPhoton ? matchedGenPhoton.energy : 0","etrue"),
         
-        ("userInt('seedRecoFlag')","seedRecoFlag"),
+        # ("userInt('seedRecoFlag')","seedRecoFlag"),
         
         ## cluster shapes
-        "e1x5",           "full5x5_e1x5",           
-        "e2x5",           "full5x5_e2x5",           
-        "e3x3",           "full5x5_e3x3",           
-        "e5x5",           "full5x5_e5x5",           
-        "maxEnergyXtal",  "full5x5_maxEnergyXtal",  
-        "sigmaIetaIeta",  "full5x5_sigmaIetaIeta",  
-        "r1x5",           "full5x5_r1x5",           
-        "r2x5",           "full5x5_r2x5",           
-        "r9",             "full5x5_r9",             
+        "full5x5_e1x5",             # "e1x5",           
+        "full5x5_e2x5",             # "e2x5",           
+        "full5x5_e3x3",             # "e3x3",           
+        "full5x5_e5x5",             # "e5x5",           
+        "full5x5_maxEnergyXtal",    # "maxEnergyXtal",  
+        "full5x5_sigmaIetaIeta",    # "sigmaIetaIeta",  
+        "full5x5_r1x5",             # "r1x5",           
+        "full5x5_r2x5",             # "r2x5",           
+        "full5x5_r9",               # "r9",             
         "eMax","e2nd","eTop","eBottom","eLeft","eRight",
         "iEta","iPhi","cryEta","cryPhi",
         
         ## more cluster shapes
-        ("e2x5right" ,"e2x5Right"  ),
-        ("e2x5left"  ,"e2x5Left"   ),
-        ("e2x5top"   ,"e2x5Top"    ),
-        ("e2x5bottom","e2x5Bottom" ),
-        ("e2x5max"   ,"e2x5Max"    ),
-        ("e1x3"      ,"e1x3"       ),
-        ("s4"        ,"s4"         ),
+        "e2x5right"  , # ("e2x5right" ,"e2x5Right"  ),
+        "e2x5left"   , # ("e2x5left"  ,"e2x5Left"   ),
+        "e2x5top"    , # ("e2x5top"   ,"e2x5Top"    ),
+        "e2x5bottom" , # ("e2x5bottom","e2x5Bottom" ),
+        "e2x5max"    , # ("e2x5max"   ,"e2x5Max"    ),
+        "e1x3"       , # ("e1x3"      ,"e1x3"       ),
+        "s4"         , # ("s4"        ,"s4"         ),
         
         ("esEffSigmaRR","sigmaRR"),
         ("spp","covarianceIphiIphi"),
@@ -199,8 +199,12 @@ def getDefaultConfig():
                "minR9                    :=min(leadingPhoton.r9,subLeadingPhoton.r9)",
                "maxEta                   :=max(abs(leadingPhoton.superCluster.eta),abs(subLeadingPhoton.superCluster.eta))",
                
-               "leadBlockChIso   := leadingView.pfChIso03WrtChosenVtx", 
-               "leadBlockPhoIso  := leadingPhoton.pfPhoIso03", 
+               "leadChIso03   := leadingView.pfChIso03WrtChosenVtx", 
+               "leadPhoIso03  := leadingPhoton.pfPhoIso03", 
+               "leadChIso03worst :=  leadingPhoton.pfChgIsoWrtWorstVtx03",
+               
+               "leadPhoIDMVA      := leadingView.phoIdMvaWrtChosenVtx",
+               "subLeadPhoIDMVA   := subLeadingView.phoIdMvaWrtChosenVtx",
                
                "leadPhoIsoEA :=  map( abs(leadingPhoton.superCluster.eta) :: 0.,0.9,1.5,2.0,2.2,3. :: 0.21,0.2,0.14,0.22,0.31 )",
                "subleadPhoIsoEA :=  map( abs(subLeadingPhoton.superCluster.eta) :: 0.,0.9,1.5,2.0,2.2,3. :: 0.21,0.2,0.14,0.22,0.31 )",
@@ -220,9 +224,13 @@ def getDefaultConfig():
            
            
                ## "subleadBlockChIso   := subLeadingView.pfChIso03WrtChosenVtx", 
-               "subleadBlockPhoIso  := subLeadingPhoton.pfPhoIso03", 
+               ## "subleadBlockPhoIso  := subLeadingPhoton.pfPhoIso03", 
                ## "subleadRndConePhoIso:= subLeadingPhoton.extraPhoIso('rnd03')",
                
+               "subleadChIso03   := subLeadingView.pfChIso03WrtChosenVtx", 
+               "subleadPhoIso03  := subLeadingPhoton.pfPhoIso03", 
+               "subleadChIso03worst :=  subLeadingPhoton.pfChgIsoWrtWorstVtx03",
+
                "subleadChIso   := subLeadingPhoton.egChargedHadronIso", 
                "subleadPhoIso  := subLeadingPhoton.egPhotonIso", 
                "subleadNeutIso := subLeadingPhoton.egNeutralHadronIso",

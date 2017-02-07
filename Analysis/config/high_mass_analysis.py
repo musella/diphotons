@@ -281,6 +281,7 @@ variables, histograms, variablesSinglePho, histogramsSinglePho = dumpCfg.getDefa
 # add extra variables if needed
 if customize.addRegressionInput:
     dumpCfg.addRegressionInput(variables)
+    dumpCfg.addPreshowerEnergy(variables)
 
 if (customize.selection=="diphoton" or customize.selection=="photon"):
     dumpCfg.addRandomCones(variables,variablesSinglePho,histograms,histogramsSinglePho)
@@ -620,14 +621,14 @@ if doDoublePho0T:
                               )    
     
 elif doDoublePho:
-    analysis.addAnalysisSelection(process,"cic",highMassCiCDiPhotons,dumpTrees=dumpTrees,dumpWorkspace=False,dumpHistos=True,splitByIso=True,
-                                  dumperTemplate=minimalDumper,
-                                  nMinusOne=[(0,"NoChIso",        dumpNm1Trees, False,True), ## removeIndex(es), label, dumpTree, dumpWorkspace, dumpHistos
-                                             (1,"NoPhoIso",       False, False,True),
-                                             (2,"NoNeuIso",       False,False,True),
-                                             (3,"NoHoverE",       False,False,True),
-                                             (4,"NoSigmaIetaIeta",False,False,True),
-                                             (5,"NoEleVeto",      False,False,True),
+    analysis.addAnalysisSelection(process,"cic",highMassCiCDiPhotons,dumpTrees=False,dumpWorkspace=False,dumpHistos=True,splitByIso=True,
+                                  dumperTemplate=diphotonDumper,
+                                  nMinusOne=[(0,"NoChIso",        dumpNm1Trees, False,False), ## removeIndex(es), label, dumpTree, dumpWorkspace, dumpHistos
+                                             (1,"NoPhoIso",       False, False,False),
+                                             (2,"NoNeuIso",       False,False,False),
+                                             (3,"NoHoverE",       False,False,False),
+                                             (4,"NoSigmaIetaIeta",dumpTrees,False,False),
+                                             (5,"NoEleVeto",      False,False,False),
                                              ]
                                   )
     

@@ -25,7 +25,8 @@ set -x
 
 ## fggRunJobs.py --load ../config/jobs_dielectron_80_ichep_tauseed.json     ../config/high_mass_analysis.py applyDiphotonCorrections=1 maxEvents=-1  -d double_ele_spring16v2_sync_${version}_ichep_tauseed  -n 50 -H -q 8nh &
 ## 
-## fggRunJobs.py --load ../config/jobs_dielectron_80_ichep_notauseed.json     ../config/high_mass_analysis.py applyDiphotonCorrections=1 maxEvents=-1  -d double_ele_spring16v2_sync_${version}_ichep_notauseed  -n 30 -H -q 8nh &
+
+fggRunJobs.py --load ../config/jobs_dielectron_80_ichep.json     ../config/high_mass_analysis.py applyDiphotonCorrections=1 maxEvents=-1  -d double_ele_spring16v2_sync_${version}_ichep  -n 50 -H -q 8nh &
  
 fggRunJobs.py --load ../config/jobs_dielectron_80.json     ../config/high_mass_analysis.py applyDiphotonCorrections=1 maxEvents=-1  -d double_ele_spring16v2_sync_${version}_mc -n 75 -H -q 8nh &
 
