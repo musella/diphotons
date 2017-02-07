@@ -82,7 +82,7 @@ class DiPhotonAnalysis(object):
 
     def customizeDiphotonCorrections(self,process,processType):
         
-        process.flashggDiPhotonSystematics.SystMethods.remove(process.SigmaEOverESmearing)
+#        process.flashggDiPhotonSystematics.SystMethods.remove(process.SigmaEOverESmearing)
         if processType == "data":
             from flashgg.Systematics.SystematicsCustomize import customizePhotonSystematicsForData
             customizePhotonSystematicsForData(process)
@@ -95,7 +95,10 @@ class DiPhotonAnalysis(object):
                         pset.NSigmas = cms.vint32()
         
         process.flashggDiPhotonSystematics.SystMethods.extend(self.extraSysModules)
-        
+
+        from flashgg.Systematics.SystematicsCustomize import useEGMTools
+        useEGMTools(process)
+
     # ----------------------------------------------------------------------------------------------------------------------
     def customize(self,process,jobConfig):
 

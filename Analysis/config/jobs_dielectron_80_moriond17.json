@@ -1,0 +1,25 @@
+{
+    "processes" : {
+	    "Data" : [
+	    "/SingleElectron/ferrif-RunIISpring16DR80X-2_3_0-25ns_Moriond17_MiniAODv2-2_3_0-v0-Run2016B-23Sep2016-v2-2366c4343141c765b2996ae305da0b97/USER",
+	    "/SingleElectron/ferrif-RunIISpring16DR80X-2_3_0-25ns_Moriond17_MiniAODv2-2_3_0-v0-Run2016B-23Sep2016-v3-2366c4343141c765b2996ae305da0b97/USER",
+	    "/SingleElectron/ferrif-RunIISpring16DR80X-2_3_0-25ns_Moriond17_MiniAODv2-2_3_0-v0-Run2016C-23Sep2016-v1-2366c4343141c765b2996ae305da0b97/USER",
+	    "/SingleElectron/ferrif-RunIISpring16DR80X-2_3_0-25ns_Moriond17_MiniAODv2-2_3_0-v0-Run2016D-23Sep2016-v1-2366c4343141c765b2996ae305da0b97/USER",
+	    "/SingleElectron/ferrif-RunIISpring16DR80X-2_3_0-25ns_Moriond17_MiniAODv2-2_3_0-v0-Run2016E-23Sep2016-v1-2366c4343141c765b2996ae305da0b97/USER",
+	    "/SingleElectron/ferrif-RunIISpring16DR80X-2_3_0-25ns_Moriond17_MiniAODv2-2_3_0-v0-Run2016F-23Sep2016-v1-2366c4343141c765b2996ae305da0b97/USER",
+	    "/SingleElectron/ferrif-RunIISpring16DR80X-2_3_0-25ns_Moriond17_MiniAODv2-2_3_0-v0-Run2016G-23Sep2016-v1-56157a2727a0c1c384898c280a0f972f/USER",
+	    "/SingleElectron/ferrif-RunIISpring16DR80X-2_3_0-25ns_Moriond17_MiniAODv2_p2-2_3_0-v0-Run2016F-23Sep2016-v1-b0a68ca6495dcf1771ba574653f4d95c/USER",
+	    "/SingleElectron/ferrif-RunIISpring16DR80X-2_3_0-25ns_Moriond17_MiniAODv2_p3-2_3_0-v0-Run2016C-23Sep2016-v1-b0a68ca6495dcf1771ba574653f4d95c/USER",
+	    "/SingleElectron/ferrif-RunIISpring16DR80X-2_3_0-25ns_Moriond17_MiniAODv2_p3-2_3_0-v0-Run2016D-23Sep2016-v1-b0a68ca6495dcf1771ba574653f4d95c/USER",
+	    "/SingleElectron/ferrif-RunIISpring16DR80X-2_3_0-25ns_Moriond17_MiniAODv2_p3-2_3_0-v0-Run2016F-23Sep2016-v1-b0a68ca6495dcf1771ba574653f4d95c/USER",
+	    "/SingleElectron/ferrif-RunIISpring16DR80X-2_3_0-25ns_Moriond17_MiniAODv2_p3-2_3_0-v0-Run2016G-23Sep2016-v1-2e468837300ac1a7953c87d48f2376a1/USER",
+	    "/SingleElectron/ferrif-RunIISpring16DR80X-2_3_0-25ns_Moriond17_MiniAODv2-2_3_0-v0-Run2016H-PromptReco-v2-531158c93170d8cd2bdb89d7c81ef33d/USER",
+	    "/SingleElectron/ferrif-RunIISpring16DR80X-2_3_0-25ns_Moriond17_MiniAODv2-2_3_0-v0-Run2016H-PromptReco-v3-531158c93170d8cd2bdb89d7c81ef33d/USER",
+	    "/SingleElectron/ferrif-RunIISpring16DR80X-2_3_0-25ns_Moriond17_MiniAODv2_p2-2_3_0-v0-Run2016H-PromptReco-v2-76b69d38a3fb4303c643ef9735fcd7e1/USER",
+	    "/SingleElectron/ferrif-RunIISpring16DR80X-2_3_0-25ns_Moriond17_MiniAODv2_p3-2_3_0-v0-Run2016H-PromptReco-v2-76b69d38a3fb4303c643ef9735fcd7e1/USER"
+	      ]
+	    },
+	
+	"cmdLine" : "campaign=RunIISpring16DR80X-2_3_0-25ns_Moriond17_MiniAODv2 idversion=V2 selection=electron massCut=70 ptLead=35 ptSublead=25 trigger=HLT_Ele27_WPTight_Gsf_v* lumiMask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-284044_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt doeleId=1 dohltMatch=1 dol1Match=1 eleId=isHLTsafe addRegressionInput=1"
+	    
+}

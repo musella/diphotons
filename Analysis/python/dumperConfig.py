@@ -238,6 +238,10 @@ def getDefaultConfig():
                "subleadSigmaIeIe := subLeadingPhoton.full5x5_sigmaIetaIeta",
                "subleadPixSeed := subLeadingPhoton.hasPixelSeed",
                "subleadPassEleVeto := subLeadingPhoton.passElectronVeto",
+
+               "leadSigEOverE    := leadingPhoton.sigEOverE",
+               "subleadSigEOverE := subLeadingPhoton.sigEOverE"
+
                ]
     
     histograms=["mass>>mass(1500,0,15000)",

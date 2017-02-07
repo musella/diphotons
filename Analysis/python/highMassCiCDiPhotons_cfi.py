@@ -187,7 +187,7 @@ highMassCiCCutsV1SB = cms.VPSet(
 highMassCiCCutsV2 = cms.VPSet(
         cms.PSet(cut=cms.string("abs(superCluster.eta)<1.5 && checkStatusFlag('kSaturated') && ! checkStatusFlag('kWeird')"),
                  selection = cms.VPSet(
-                cms.PSet(max=cms.string("5.")),
+                cms.PSet(max=cms.string("15.")),
                 cms.PSet(# max=cms.string("0.25+4.5e-3*pt"), 
                          # rhocorr=phoEffAreaV2,
                         ),
@@ -200,7 +200,7 @@ highMassCiCCutsV2 = cms.VPSet(
                  ),
         cms.PSet(cut=cms.string("abs(superCluster.eta)<1.5"),
                  selection = cms.VPSet(
-                cms.PSet(max=cms.string("5.")),
+                cms.PSet(max=cms.string("15.")),
                 cms.PSet(#max=cms.string("0.25+4.5e-3*pt"), 
                          #rhocorr=phoEffAreaV2
                         ),
@@ -213,7 +213,7 @@ highMassCiCCutsV2 = cms.VPSet(
                 ),
          cms.PSet(cut=cms.string("abs(superCluster.eta)>=1.5 && checkStatusFlag('kSaturated') && ! checkStatusFlag('kWeird')"),
                   selection = cms.VPSet(
-                cms.PSet(max=cms.string("5.")),
+                cms.PSet(max=cms.string("15.")),
                 cms.PSet(#max=cms.string("-0.5+3e-3*pt"), 
                          #rhocorr=phoEffAreaV2
                          ),
@@ -226,7 +226,7 @@ highMassCiCCutsV2 = cms.VPSet(
                  ),
         cms.PSet(cut=cms.string("abs(superCluster.eta)>=1.5"),
                  selection = cms.VPSet(
-                cms.PSet(max=cms.string("5.")),
+                cms.PSet(max=cms.string("15.")),
                 cms.PSet(#max=cms.string("-0.5+3e-3*pt"), 
                          #rhocorr=phoEffAreaV2
                         ),
