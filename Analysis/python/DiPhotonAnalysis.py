@@ -82,6 +82,11 @@ class DiPhotonAnalysis(object):
 
     def customizeDiphotonCorrections(self,process,processType):
         
+        from flashgg.Systematics.SystematicsCustomize import useEGMTools
+        useEGMTools(process)
+
+        from copy import deepcopy as copy
+        
 #        process.flashggDiPhotonSystematics.SystMethods.remove(process.SigmaEOverESmearing)
         if processType == "data":
             from flashgg.Systematics.SystematicsCustomize import customizePhotonSystematicsForData
@@ -89,16 +94,16 @@ class DiPhotonAnalysis(object):
         else:
             from flashgg.Systematics.SystematicsCustomize import customizePhotonSystematicsForMC
             customizePhotonSystematicsForMC(process)
-            for vpset in process.flashggDiPhotonSystematics.SystMethods,process.flashggDiPhotonSystematics.SystMethods2D:
+            default1sig = cms.vint32()
+            default2sig = cms.PSet( firstVar = cms.vint32(), secondVar = cms.vint32())
+            for vpset,dflt in (process.flashggDiPhotonSystematics.SystMethods,default1sig),(process.flashggDiPhotonSystematics.SystMethods2D,default2sig):
                 for pset in vpset:
                     if (processType != "signal") or (not pset.Label.value().startswith("MCSmear")):
-                        pset.NSigmas = cms.vint32()
-        
+                        pset.NSigmas = copy(dflt)
+                        
         process.flashggDiPhotonSystematics.SystMethods.extend(self.extraSysModules)
 
-        from flashgg.Systematics.SystematicsCustomize import useEGMTools
-        useEGMTools(process)
-
+        
     # ----------------------------------------------------------------------------------------------------------------------
     def customize(self,process,jobConfig):
 
@@ -234,7 +239,7 @@ class DiPhotonAnalysis(object):
         if self.applyDiphotonCorrections:
             if self.diphotonCorrectionsVersion == "OT":
                 process.load("flashgg.Systematics.flashggDiPhotonSystematics0T_cfi")
-            else:
+            elif not hasattr(process,"flashggDiPhotonSystematics"):
                 process.load("flashgg.Systematics.flashggDiPhotonSystematics_cfi")
             process.flashggDiPhotonSystematics.src=src
             src = "flashggDiPhotonSystematics"

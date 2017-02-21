@@ -31,9 +31,11 @@ set -x
  
 ## fggRunJobs.py --load ../config/jobs_dielectron_80.json     ../config/high_mass_analysis.py applyDiphotonCorrections=1 maxEvents=-1  -d double_ele_spring16v2_sync_${version}_mc -n 75 -H -q 8nh &
 
-fggRunJobs.py --load ../config/jobs_dielectron_80_moriond17.json   ../config/high_mass_analysis.py applyDiphotonCorrections=1 maxEvents=10000  -d double_ele_${version}_moriond17_data -H  &
-##fggRunJobs.py --load ../config/jobs_dielectron_80_moriond17.json   ../config/high_mass_analysis.py applyDiphotonCorrections=1 maxEvents=-1  -d double_ele_${version}_moriond17_data  -n 50 -H -q 8nh &
-##fggRunJobs.py --load ../config/jobs_dielectron_80.json     ../config/high_mass_analysis.py applyDiphotonCorrections=1 maxEvents=-1  -d double_ele_spring16v2_sync_${version}_mc -n 75 -H -q 8nh &
+## fggRunJobs.py --load ../config/jobs_dielectron_80_moriond17.json   ../config/high_mass_analysis.py applyDiphotonCorrections=1 maxEvents=10000  -d double_ele_${version}_moriond17_data -H  --no-use-tarball &
+fggRunJobs.py --load ../config/jobs_dielectron_80_moriond17.json   ../config/high_mass_analysis.py applyDiphotonCorrections=1 maxEvents=-1  -d double_ele_${version}_moriond17_data  -n 50 -H -q 8nh &
+
+## fggRunJobs.py --load ../config/jobs_dielectron_80_moriond17_mc.json   ../config/high_mass_analysis.py applyDiphotonCorrections=1 maxEvents=1000  -d double_ele_${version}_moriond17_mc  -H --no-use-tarball &
+fggRunJobs.py --load ../config/jobs_dielectron_80_moriond17_mc.json   ../config/high_mass_analysis.py applyDiphotonCorrections=1 maxEvents=-1  -d double_ele_${version}_moriond17_mc -n 200 -H -q 1nd &
 
 
 ## fggRunJobs.py --load ../config/jobs_diphoton_80_cert_274421.json     ../config/high_mass_analysis.py applyDiphotonCorrections=1 maxEvents=-1  -d full_analysis_spring16v1_sync_${version}_cert_274421 -n 50 -H -q 8nh  &

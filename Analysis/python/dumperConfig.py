@@ -190,13 +190,13 @@ def getDefaultConfig():
                "subleadPt                :=subLeadingPhoton.pt",
                "leadEta                  :=leadingPhoton.eta",
                "subleadEta               :=subLeadingPhoton.eta",
-               "leadR9                   :=leadingPhoton.r9",
-               "subleadR9                :=subLeadingPhoton.r9",
+               "leadR9                   :=leadingPhoton.full5x5_r9",
+               "subleadR9                :=subLeadingPhoton.full5x5_r9",
                "leadScEta                :=leadingPhoton.superCluster.eta",
                "subleadScEta             :=subLeadingPhoton.superCluster.eta",
                "leadPhi                  :=leadingPhoton.phi",
                "subleadPhi               :=subLeadingPhoton.phi",
-               "minR9                    :=min(leadingPhoton.r9,subLeadingPhoton.r9)",
+               "minR9                    :=min(leadingPhoton.full5x5_r9,subLeadingPhoton.full5x5_r9)",
                "maxEta                   :=max(abs(leadingPhoton.superCluster.eta),abs(subLeadingPhoton.superCluster.eta))",
                
                "leadChIso03   := leadingView.pfChIso03WrtChosenVtx", 
@@ -240,7 +240,28 @@ def getDefaultConfig():
                "subleadPassEleVeto := subLeadingPhoton.passElectronVeto",
 
                "leadSigEOverE    := leadingPhoton.sigEOverE",
-               "subleadSigEOverE := subLeadingPhoton.sigEOverE"
+               "subleadSigEOverE := subLeadingPhoton.sigEOverE",
+               
+               "leadRecoEreg              := leadingPhoton.userFloat('reco_regr_E')",
+               "leadRecoSigEOverE     := leadingPhoton.userFloat('reco_regr_E_err') / leadingPhoton.userFloat('reco_regr_E')",
+               "subleadRecoEreg           := subLeadingPhoton.userFloat('reco_regr_E')",
+               "subleadRecoSigEOverE  := subLeadingPhoton.userFloat('reco_regr_E_err') / subLeadingPhoton.userFloat('reco_regr_E')",
+               
+               "leadAfterSSTrEreg              := leadingPhoton.userFloat('afterShShTransf_regr_E')",
+               "leadAfterSSTrSigEOverE     := leadingPhoton.userFloat('afterShShTransf_regr_E_err') / leadingPhoton.userFloat('afterShShTransf_regr_E')",
+               "subleadAfterSSTrEreg           := subLeadingPhoton.userFloat('afterShShTransf_regr_E')",
+               "subleadAfterSSTrSigEOverE  := subLeadingPhoton.userFloat('afterShShTransf_regr_E_err') / subLeadingPhoton.userFloat('afterShShTransf_regr_E')",
+
+               "leadUnsmearedSigmaEoE      := leadingPhoton.userFloat('unsmearedSigmaEoE')",
+               "subleadUnsmearedSigmaEoE      := subLeadingPhoton.userFloat('unsmearedSigmaEoE')",
+
+               "leadUncorrR9              := ? leadingPhoton.hasUserFloat('uncorr_r9') ? leadingPhoton.userFloat('uncorr_r9') : -1.",
+               "leadUncorrEtaWidth        := ? leadingPhoton.hasUserFloat('uncorr_etaWidth') ? leadingPhoton.userFloat('uncorr_etaWidth') : -1.",
+               "leadUncorrS4              := ? leadingPhoton.hasUserFloat('uncorr_s4') ? leadingPhoton.userFloat('uncorr_s4') : -1.",
+               
+               "subleadUncorrR9              := ? subLeadingPhoton.hasUserFloat('uncorr_r9') ? subLeadingPhoton.userFloat('uncorr_r9') : -1.",
+               "subleadUncorrEtaWidth        := ? subLeadingPhoton.hasUserFloat('uncorr_etaWidth') ? subLeadingPhoton.userFloat('uncorr_etaWidth') : -1.",
+               "subleadUncorrS4              := ? subLeadingPhoton.hasUserFloat('uncorr_s4') ? subLeadingPhoton.userFloat('uncorr_s4') : -1.",
 
                ]
     
@@ -313,7 +334,7 @@ def getDefaultConfig():
         "phoPt                   :=pt",
         "genPt                   :=?hasMatchedGenPhoton?matchedGenPhoton.pt:0",
         "phoEta                  :=eta",
-        "phoR9                   :=r9",
+        "phoR9                   :=full5x5_r9",
         "phoScEta                :=superCluster.eta",
         "phoPhi                  :=phi",
         

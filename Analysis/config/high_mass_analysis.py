@@ -298,7 +298,8 @@ if customize.addGainFlags:
     dumpCfg.addGainSwitchFlags(variables, histograms)
     
 # HLT matching
-if customize.processType == "data" and customize.dohltMatch:
+## if customize.processType == "data" and customize.dohltMatch:
+if customize.dohltMatch:
     extraSysModules.append(
         cms.PSet( PhotonMethodName = cms.string("FlashggPhotonHLTMatch"),
                   MethodName = cms.string("FlashggDiPhotonFromPhoton"),
@@ -460,11 +461,17 @@ if massCutEB or massCutEE:
 cfgTools.addCategories(diphotonDumper,
                        [## cuts are applied in cascade
                         ## ("all","1"),
+#MD                        ("EBHighR9","max(abs(leadingPhoton.superCluster.eta),abs(subLeadingPhoton.superCluster.eta))<1.4442"
+#                         "&& min(leadingPhoton.full5x5_r9,subLeadingPhoton.full5x5_r9)>0.94",0),
+#                        ("EBLowR9","max(abs(leadingPhoton.superCluster.eta),abs(subLeadingPhoton.superCluster.eta))<1.4442",0),
+#                        ("EEHighR9","min(leadingPhoton.full5x5_r9,subLeadingPhoton.full5x5_r9)>0.94",0),
+#                        ("EELowR9","1",0),
                         ("EBHighR9","max(abs(leadingPhoton.superCluster.eta),abs(subLeadingPhoton.superCluster.eta))<1.4442"
-                         "&& min(leadingPhoton.r9,subLeadingPhoton.r9)>0.94",0),
+                         "&& min(leadingPhoton.full5x5_r9,subLeadingPhoton.full5x5_r9)>0.85",0),
                         ("EBLowR9","max(abs(leadingPhoton.superCluster.eta),abs(subLeadingPhoton.superCluster.eta))<1.4442",0),
-                        ("EEHighR9","min(leadingPhoton.r9,subLeadingPhoton.r9)>0.94",0),
+                        ("EEHighR9","min(leadingPhoton.full5x5_r9,subLeadingPhoton.full5x5_r9)>0.90",0),
                         ("EELowR9","1",0),
+
                         ],
                        variables=variables,
                        histograms=histograms
@@ -710,6 +717,10 @@ if not customize.lastAttempt:
 #     ## print "energy corrections file is "
 
 
+process.load("flashgg.Systematics.flashggDiPhotonSystematics_cfi")
+process.load("flashgg.Taggers.flashggUpdatedIdMVADiPhotons_cfi")
+process.flashggDiPhotonSystematics.src = cms.InputTag("flashggUpdatedIdMVADiPhotons")
+
 #
 # input and output
 #
@@ -721,6 +732,7 @@ process.source = cms.Source("PoolSource",
 process.TFileService = cms.Service("TFileService",
                                    fileName = cms.string("test.root")
 )
+
 
 
 # this will call customize(process), configure the analysis paths and make the process unscheduled
