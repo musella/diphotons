@@ -32,8 +32,8 @@ forked the flashgg and this repository.
 ## FLASHGG_BRANCH= # set empty if you want the master (safe as long as you are not producing MicroAOD)
 
 # 80x settings
-PROJECT_AREA=EXO_8_0_3_patch2
-CMSSW_VERSION=CMSSW_8_0_3_patch2
+PROJECT_AREA=EXO_8_0_26_patch1
+CMSSW_VERSION=CMSSW_8_0_26_patch1
 FLASHGG_BRANCH=diphotons_80 # set empty if you want the master (safe as long as you are not producing MicroAOD)
 
 
