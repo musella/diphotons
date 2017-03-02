@@ -540,6 +540,8 @@ class CombineApp(TemplatesApp):
                                     default=True),
                         make_option("--spin0",action="store_false", dest="spin2", 
                             ),
+                        make_option("--add-signal",action="store_true", dest="add_signal", default=False
+                            ),
                         ]
                  )
                 ]+option_groups,option_list=option_list
@@ -601,6 +603,7 @@ class CombineApp(TemplatesApp):
                         self.signal_scale_factors_[coup][mass] = options.rescale_signal_to/val["xs"]
                 xsec_file.close()
 
+                
         # make sure that relevant 
         #  config parameters are read/written to the workspace
         self.save_params_.append("signals")
@@ -626,6 +629,10 @@ class CombineApp(TemplatesApp):
                 self.generateParametricSignal(options,args)
             else:
                 self.generateSignalDataset(options,args)
+
+        if options.add_signal:
+            self.makeADDplots(options)
+            exit(0)
 
             
         if options.generate_ws_bkgnbias:
@@ -954,7 +961,120 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 self.plotBkgFit(options,data,model,roobs,"%s%s" % (comp,cat),poissonErrs=True, plot_binning=options.cat_plot_binning.get(cat,options.plot_binning),
                                 blabel=bias_name, signalmodel=signal, signalmodel_norm=(model_norm,signal_norm), blind=options.plot_blind)
 
+    ## ------------------------------------------------------------------------------------------------------------        
+    def makeADDplots(self, options):
+        """
+        Read ADD sample with coherent and destructive interference
+        and build separate templates for the signal and interference components
+        """
 
+        roobs = self.getObservable("cic2_EBEB")
+        smggDataHist = self.rooData("add_ms5000_sm_cic2_EBEB").reduce(ROOT.RooArgSet(roobs)).binnedClone()
+        smggPdf = ROOT.RooHistPdf("smgg", "SMggPdf", ROOT.RooArgSet(roobs), smggDataHist)
+        cohIntDataHist = self.rooData("add_ms5000_cohInt_cic2_EBEB").reduce(ROOT.RooArgSet(roobs)).binnedClone()
+        cohIntPdf = ROOT.RooHistPdf("coherent_int", "coherentIntPdf", ROOT.RooArgSet(roobs), cohIntDataHist)
+        desIntDataHist = self.rooData("add_ms5000_desInt_cic2_EBEB").reduce(ROOT.RooArgSet(roobs)).binnedClone()
+        desIntPdf = ROOT.RooHistPdf("destructive_int", "destructiveIntPdf", ROOT.RooArgSet(roobs), desIntDataHist)
+        smggHisto = smggDataHist.createHistogram(roobs.GetName(), roobs.getBins())
+        cohIntHisto = cohIntDataHist.createHistogram(roobs.GetName(), roobs.getBins())
+        desIntHisto = desIntDataHist.createHistogram(roobs.GetName(), roobs.getBins())
+        ###---Signal hist
+        sigHisto = cohIntHisto.Clone("h_sig")
+        sigHisto.Add(desIntHisto, 1.)
+        sigHisto.Add(smggHisto, -2.)
+        for ibin in range(sigHisto.GetXaxis().GetNbins()):
+            if sigHisto.GetBinContent(ibin+1) < 0:
+                sigHisto.SetBinContent(ibin+1, 0.)
+        sigDataHist = ROOT.RooDataHist("sigDataHist", "", ROOT.RooArgList(roobs), sigHisto)
+
+        ###---signal smoothing
+        chebSigPar0 = ROOT.RooRealVar("chebSigPar0", "chebSigPar0", 0.05, -1, 1)
+        chebSigPar1 = ROOT.RooRealVar("chebSigPar1", "chebSigPar1", 0, -1, 1)
+        chebSigPar2 = ROOT.RooRealVar("chebSigPar2", "chebSigPar2", 0, -1, 1)
+        chebSigPar3 = ROOT.RooRealVar("chebSigPar3", "chebSigPar3", 0, -1, 1)
+        chebSigPar4 = ROOT.RooRealVar("chebSigPar4", "chebSigPar4", 0, -1, 1)
+        chebSigPdf = ROOT.RooChebychev("cheb_signal_pdf", "", roobs,
+                                       ROOT.RooArgList(chebSigPar0, chebSigPar1, chebSigPar2, chebSigPar3, chebSigPar4))
+        chebSigPdf.fitTo(sigDataHist, ROOT.RooFit.Range(1300, 5000))
+        chebHisto = chebSigPdf.createHistogram("mgg")
+        slope = (chebHisto.GetBinContent(chebHisto.FindBin(1400))-chebHisto.GetBinContent(chebHisto.FindBin(1300)))/(chebHisto.GetBinCenter(chebHisto.FindBin(1400))-chebHisto.GetBinCenter(chebHisto.FindBin(1300)))
+        q = chebHisto.GetBinContent(chebHisto.FindBin(1300)-1) - 1300*slope
+        for ibin in range(1, chebHisto.FindBin(1300)):
+            print q, slope
+            chebHisto.SetBinContent(ibin, q + slope*chebHisto.GetBinCenter(ibin))
+        chebDataHist = ROOT.RooDataHist("chebDataHist", "", ROOT.RooArgList(roobs), chebHisto)
+        sigPdf = ROOT.RooHistPdf("signal_pdf", "Interference only shape", ROOT.RooArgSet(roobs), chebDataHist)        
+                
+        ###---Interference
+        intHisto = cohIntHisto.Clone("h_int")
+        intHisto.Add(desIntHisto, -1.)
+        intDataHist = ROOT.RooDataHist("intDataHist", "", ROOT.RooArgList(roobs), intHisto)
+
+        ###---interference smoothing
+        chebIntPar0 = ROOT.RooRealVar("chebIntPar0", "chebIntPar0", 0.05, -1, 1)
+        chebIntPar1 = ROOT.RooRealVar("chebIntPar1", "chebIntPar1", 0, -1, 1)
+        chebIntPar2 = ROOT.RooRealVar("chebIntPar2", "chebIntPar2", 0, -1, 1)
+        chebIntPar3 = ROOT.RooRealVar("chebIntPar3", "chebIntPar3", 0, -1, 1)
+        intPdf = ROOT.RooChebychev("interference_pdf", "Interference only shape", roobs,
+                                   ROOT.RooArgList(chebIntPar0, chebIntPar1, chebIntPar2, chebIntPar3))
+        intPdf.fitTo(intDataHist, ROOT.RooFit.Range(1300, 5000))
+        
+        #intPdf = ROOT.RooHistPdf("interference_pdf", "Interference only shape", ROOT.RooArgSet(roobs), intDataHist)
+        
+        f = ROOT.TFile.Open("templates.root", "RECREATE")
+        smggPdf.Write("smggpdf")
+        cohIntPdf.Write("cohpdf")
+        desIntPdf.Write("despdf")
+        sigDataHist.Write("sighist")
+        intDataHist.Write("inthist")        
+        sigPdf.Write("sigpdf")
+        intPdf.Write("intpdf")
+        f.Close()
+
+        fit = options.fits[options.fit_name]
+        print "Fit name", options.fit_name
+        for cat in fit["categories"]:
+            for comp in options.components:
+                for sig in options.signals:
+                    print(cat, comp, sig)
+                
+    ## ------------------------------------------------------------------------------------------------------------        
+    def generateADDsigWs(self, options):
+        """
+        Read ADD sample with coherent and destructive interference
+        and build separate templates for the signal and interference components
+        """
+
+        roobs = self.getObservable("cic2_EBEB")
+        smggDataHist = self.rooData("add_ms5000_sm_cic2_EBEB").reduce(ROOT.RooArgSet(roobs)).binnedClone()
+        smggPdf = ROOT.RooHistPdf("smgg", "SMggPdf", ROOT.RooArgSet(roobs), smggDataHist)
+        cohIntDataHist = self.rooData("add_ms5000_cohInt_cic2_EBEB").reduce(ROOT.RooArgSet(roobs)).binnedClone()
+        cohIntPdf = ROOT.RooHistPdf("coherent_int", "coherentIntPdf", ROOT.RooArgSet(roobs), cohIntDataHist)
+        desIntDataHist = self.rooData("add_ms5000_desInt_cic2_EBEB").reduce(ROOT.RooArgSet(roobs)).binnedClone()
+        desIntPdf = ROOT.RooHistPdf("destructive_int", "destructiveIntPdf", ROOT.RooArgSet(roobs), desIntDataHist)
+        smggHisto = smggDataHist.createHistogram(roobs.GetName(), roobs.getBins())
+        cohIntHisto = cohIntDataHist.createHistogram(roobs.GetName(), roobs.getBins())
+        desIntHisto = desIntDataHist.createHistogram(roobs.GetName(), roobs.getBins())
+        ###---Signal
+        sigHisto = cohIntHisto.Clone("h_sig")
+        sigHisto.Add(desIntHisto, 1.)
+        sigHisto.Add(smggHisto, -2.)
+        sigDataHist = ROOT.RooDataHist("sigDataHist", "", ROOT.RooArgList(roobs), sigHisto)
+        sigPdf = ROOT.RooHistPdf("signal_pdf", "Signal only shape", ROOT.RooArgSet(roobs), sigDataHist)        
+        ###---Interference
+        intHisto = cohIntHisto.Clone("h_int")
+        intHisto.Add(desIntHisto, -1.)
+        intDataHist = ROOT.RooDataHist("intDataHist", "", ROOT.RooArgList(roobs), intHisto)
+        intPdf = ROOT.RooHistPdf("interference_pdf", "Interference only shape", ROOT.RooArgSet(roobs), intDataHist)
+        
+        f = ROOT.TFile.Open("templates.root", "RECREATE")
+        smggPdf.Write("smggpdf")
+        cohIntPdf.Write("cohpdf")
+        desIntPdf.Write("despdf")
+        sigPdf.Write("sigpdf")
+        intPdf.Write("intpdf")
+        f.Close()
+        
     ## ------------------------------------------------------------------------------------------------------------        
     def generateWsBkgnbiasNew(self,options,args):
 
