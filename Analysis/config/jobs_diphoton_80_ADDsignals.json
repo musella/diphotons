@@ -1,0 +1,137 @@
+{
+    "processes" : {        
+        "ADDGravToGG_MS-3000_NED-2_KK-1" : [
+            "/ADDGravToGG_MS-3000_NED-2_KK-1_M-1000To2000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-3000_NED-2_KK-1_M-2000To3000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-3000_NED-2_KK-1_M-500To1000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER"
+        ],        
+        "ADDGravToGG_MS-3000_NED-2_KK-4" : [
+            "/ADDGravToGG_MS-3000_NED-2_KK-4_M-1000To2000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v2-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-3000_NED-2_KK-4_M-2000To3000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-3000_NED-2_KK-4_M-500To1000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER" ],
+        
+        "ADDGravToGG_MS-3000_NED-4_KK-1" :
+        ["/ADDGravToGG_MS-3000_NED-4_KK-1_M-1000To2000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+         "/ADDGravToGG_MS-3000_NED-4_KK-1_M-2000To3000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+         "/ADDGravToGG_MS-3000_NED-4_KK-1_M-200To500_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+         "/ADDGravToGG_MS-3000_NED-4_KK-1_M-500To1000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER" ],
+        
+        "ADDGravToGG_MS-3500_NED-2_KK-1" : [
+            "/ADDGravToGG_MS-3500_NED-2_KK-1_M-1000To2000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-3500_NED-2_KK-1_M-2000To3500_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-3500_NED-2_KK-1_M-500To1000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER" ],
+        
+        "ADDGravToGG_MS-3500_NED-2_KK-4" : [
+            "/ADDGravToGG_MS-3500_NED-2_KK-4_M-1000To2000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-3500_NED-2_KK-4_M-2000To3500_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-3500_NED-2_KK-4_M-500To1000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER" ],
+        
+        "ADDGravToGG_MS-3500_NED-4_KK-1" : [
+            "/ADDGravToGG_MS-3500_NED-4_KK-1_M-1000To2000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-3500_NED-4_KK-1_M-2000To3500_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-3500_NED-4_KK-1_M-200To500_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-3500_NED-4_KK-1_M-500To1000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER" ],
+        
+        "ADDGravToGG_MS-4000_NED-2_KK-1" : [
+            "/ADDGravToGG_MS-4000_NED-2_KK-1_M-1000To2000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-4000_NED-2_KK-1_M-2000To4000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-4000_NED-2_KK-1_M-500To1000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER" ],
+        
+        "ADDGravToGG_MS-4000_NED-2_KK-4" : [
+            "/ADDGravToGG_MS-4000_NED-2_KK-4_M-1000To2000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-4000_NED-2_KK-4_M-2000To4000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-4000_NED-2_KK-4_M-500To1000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v3-bf542db0b7147cd02b1b44db0f0581c8/USER" ],
+        
+        "ADDGravToGG_MS-4000_NED-4_KK-1" : [
+            "/ADDGravToGG_MS-4000_NED-4_KK-1_M-1000To2000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-4000_NED-4_KK-1_M-2000To4000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-4000_NED-4_KK-1_M-200To500_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-4000_NED-4_KK-1_M-500To1000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER" ],
+        
+        "ADDGravToGG_MS-4500_NED-2_KK-1" : [
+            "/ADDGravToGG_MS-4500_NED-2_KK-1_M-1000To2000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-4500_NED-2_KK-1_M-2000To3000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-4500_NED-2_KK-1_M-3000To4500_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-4500_NED-2_KK-1_M-500To1000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER" ],
+        
+        "ADDGravToGG_MS-4500_NED-2_KK-4" : [
+            "/ADDGravToGG_MS-4500_NED-2_KK-4_M-1000To2000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-4500_NED-2_KK-4_M-2000To3000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-4500_NED-2_KK-4_M-3000To4500_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-4500_NED-2_KK-4_M-500To1000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER" ],
+        
+        "ADDGravToGG_MS-4500_NED-4_KK-1" : [
+            "/ADDGravToGG_MS-4500_NED-4_KK-1_M-1000To2000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-4500_NED-4_KK-1_M-2000To3000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-4500_NED-4_KK-1_M-200To500_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-4500_NED-4_KK-1_M-3000To4500_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-4500_NED-4_KK-1_M-500To1000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER" ],
+        
+        "ADDGravToGG_MS-5000_NED-2_KK-1" : [
+            "/ADDGravToGG_MS-5000_NED-2_KK-1_M-1000To2000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-5000_NED-2_KK-1_M-2000To3000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-5000_NED-2_KK-1_M-3000To5000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-5000_NED-2_KK-1_M-500To1000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER" ],
+        
+        "ADDGravToGG_MS-5000_NED-2_KK-4" : [
+            "/ADDGravToGG_MS-5000_NED-2_KK-4_M-1000To2000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-5000_NED-2_KK-4_M-2000To3000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-5000_NED-2_KK-4_M-3000To5000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-5000_NED-2_KK-4_M-500To1000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER" ],
+        
+        "ADDGravToGG_MS-5000_NED-4_KK-1" : [
+            "/ADDGravToGG_MS-5000_NED-4_KK-1_M-1000To2000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-5000_NED-4_KK-1_M-2000To3000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-5000_NED-4_KK-1_M-200To500_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-5000_NED-4_KK-1_M-3000To5000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-5000_NED-4_KK-1_M-500To1000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER" ],
+        
+        "ADDGravToGG_MS-5500_NED-2_KK-1" : [
+            "/ADDGravToGG_MS-5500_NED-2_KK-1_M-1000To2000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-5500_NED-2_KK-1_M-2000To4000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-5500_NED-2_KK-1_M-4000To5500_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-5500_NED-2_KK-1_M-500To1000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER" ],
+        
+        "ADDGravToGG_MS-5500_NED-2_KK-4" : [
+            "/ADDGravToGG_MS-5500_NED-2_KK-4_M-1000To2000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-5500_NED-2_KK-4_M-2000To4000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-5500_NED-2_KK-4_M-4000To5500_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-5500_NED-2_KK-4_M-500To1000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER" ],
+         
+        "ADDGravToGG_MS-5500_NED-4_KK-1" : [
+            "/ADDGravToGG_MS-5500_NED-4_KK-1_M-1000To2000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-5500_NED-4_KK-1_M-2000To4000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-5500_NED-4_KK-1_M-200To500_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-5500_NED-4_KK-1_M-4000To5500_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-5500_NED-4_KK-1_M-500To1000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER" ],
+        
+        "ADDGravToGG_MS-6000_NED-2_KK-1" : [
+            "/ADDGravToGG_MS-6000_NED-2_KK-1_M-1000To2000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-6000_NED-2_KK-1_M-2000To4000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-6000_NED-2_KK-1_M-4000To6000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-6000_NED-2_KK-1_M-500To1000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER" ],
+        
+        "ADDGravToGG_MS-6000_NED-2_KK-4" : [
+            "/ADDGravToGG_MS-6000_NED-2_KK-4_M-1000To2000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-6000_NED-2_KK-4_M-2000To4000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-6000_NED-2_KK-4_M-4000To6000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-6000_NED-2_KK-4_M-500To1000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER" ],
+        
+        "ADDGravToGG_MS-6000_NED-4_KK-1" : [
+            "/ADDGravToGG_MS-6000_NED-4_KK-1_M-1000To2000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-6000_NED-4_KK-1_M-200To500_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-6000_NED-4_KK-1_M-4000To6000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v2-bf542db0b7147cd02b1b44db0f0581c8/USER",
+            "/ADDGravToGG_MS-6000_NED-4_KK-1_M-500To1000_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1-bf542db0b7147cd02b1b44db0f0581c8/USER" ],
+        
+        "GG_Pt-70_13TeV-sherpa" : [
+            "/GG_M-1000To2000_Pt-70_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1-833b091a644b7e99ffff6304568c4398/USER",
+            "/GG_M-2000To4000_Pt-70_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1-833b091a644b7e99ffff6304568c4398/USER",
+            "/GG_M-200To500_Pt-70_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1-833b091a644b7e99ffff6304568c4398/USER",
+            "/GG_M-4000To8000_Pt-70_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1-833b091a644b7e99ffff6304568c4398/USER",
+            "/GG_M-500To1000_Pt-70_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1-833b091a644b7e99ffff6304568c4398/USER",
+            "/GG_M-8000To13000_Pt-70_13TeV-sherpa/spigazzi-EXOSpring16_v3-Moriond16WSFinal-328-g206ab29-v0-RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1-833b091a644b7e99ffff6304568c4398/USER" ]
+
+    },
+
+    "cmdLine" : "campaign=EXOSpring16_v3 selection=diphoton idversion=V2 trigger=HLT_DoublePhoton60_v* ptLead=75 ptSublead=75 massCut=230:320"
+}

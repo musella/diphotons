@@ -1,0 +1,114 @@
+{
+   "#" : "---------------------------------------------------------------------------------------------------------------------",
+   "#" : "Configuration file for templates_maker.py script.",
+   "#" : "Run as ./templates_maker.py --load templates_maker.json --input-dir <input_dir> -o <outfile>",
+
+   "#" : "Note: comments are not supported in JSON.",
+   "#" : "The trick here is to encapsulate them as well formatted input with key #",
+   "#" : "Configuration items are commented prepending an _ to the name (any other character would work)",
+
+    "#" : "---------------------------------------------------------------------------------------------------------------------",
+    "#" : "Dataset definition                                                                                                   ",
+    "#" : "---------------------------------------------------------------------------------------------------------------------",
+    "#" : "  %(sel)s is replaced with the appropriate string                                                                    ",
+    "#" : "  format is <sample-name>:[[input-file][/file-folder]] order irrelevant                                                               ",
+	
+    "#" : "data to be fit                                                                                                       ",
+    "signals" : { 
+	"add_ms5000_cohInt" : [ "ADDGravToGG_MS_5000_NED_4_KK_1_13TeV:__infile__/%(sel)s" ],
+        "add_ms5000_desInt" : [ "ADDGravToGG_MS_5000_NED_2_KK_4_13TeV:__infile__/%(sel)s" ],
+        "add_ms5000_sm" : [ "GG_Pt_70_13TeV_sherpa_13TeV:__infile__/%(sel)s" ]
+      },
+
+    "#" : "file names for different datasets. Files folder can be specified by --input-dir on the command line",
+    "data_file"  : "output.root",
+    "mc_file"    : "output.root",
+    "sig_file"    : null,  "#" : "implies to use same as mc",
+    "templates_file" : null, "#" : "implies to use same as data",
+
+    "#" : "categories for the input datasets",
+    "categories" : [],
+    "#" :  "groups of categories can be defined to resum some of the categories",
+    "groups": {
+        "EBHighR9"   : ["EBHighR9"],
+        "EBLowR9"    : ["EBLowR9"],
+        "EEHighR9"   : ["EEHighR9"],
+        "EELowR9"    : ["EELowR9"],
+        "EBEB"       : ["EBHighR9","EBLowR9"],
+        "notEBEB"    : ["EEHighR9","EELowR9"],
+        "eta_inclusive"    : ["EBHighR9","EBLowR9","EEHighR9","EELowR9"]
+        }, 
+
+    "#" : "how to compose the tree name starting from sub-pieces       ",
+    "#" : " %(sample)s is replaced with the items in dataset definition",
+    "#" : " %(cat)s is replaced with the category name                 ", 
+    "treeName": "trees/%(sample)s_%(cat)s",
+
+    "preselection" : "(leadChIso < 15. && subleadChIso < 15. && ((mass > 200 && max(abs(leadScEta),abs(subleadScEta))<1.5) || mass > 320) )",   
+    "_preselection" : "(leadChIso < 15. && subleadChIso < 15. && ((mass > 200 && max(abs(leadScEta),abs(subleadScEta))<1.5) || mass > 300) ) && ( max(abs(leadScEta),abs(subleadScEta))<1.5 || (leadPt>100 && subleadPt>100 )  )",                                                                                                                      
+    "_preselection" : "(leadChIso < 15. && subleadChIso < 15. && leadPt> 75. && subleadPt > 75. && mass > 200. && (max(abs(leadScEta),abs(subleadScEta))<1.5 ||  mass > 300.)&&( max(abs(leadScEta),abs(subleadScEta))<1.5  || !(leadPixSeed||subleadPixSeed) ))",	"#" : "preselection cut applied to all trees",
+    "selection"    : "cic",                              "#" : "nominal selection",
+    
+    "#" : "---------------------------------------------------------------------------------------------------------------------",
+    "#" : "Fit definition                                                                                                       ",
+    "#" : "---------------------------------------------------------------------------------------------------------------------",
+
+    "dataset_variables" : ["rho","nvtx","run","lumi","event"],     "#" :"list of variables to be put in the dataset (other than the template ones)",
+    "weight_expression" : "weight",           "#" :"event weight expression  ",
+
+    "#" : "List of aliases. Used to define variables/simplify expressions selection.",
+    "aliases"  : [ 
+
+               "phoIsEB    := abs(phoScEta) < 1.5",
+               "phoIsSB    := (((phoPhoIso - rho*phoPhoIsoEA) -0.0045*phoPt < 2. ) && (phoIsEB    && (phoSigmaIeIe    > 0.012) ))||( ((phoPhoIso - rho*phoPhoIsoEA) -0.003*phoPt < 11. ) &&!phoIsEB    && (phoSigmaIeIe>0.035 )  )",
+               "leadIsEB    := abs(leadScEta) < 1.5",
+               "subleadIsEB := abs(subleadScEta) < 1.5",
+               "leadIsSB := (((leadPhoIso - rho*leadPhoIsoEA) -0.0045*leadPt < 2. ) && (leadIsEB    && (leadSigmaIeIe    > 0.012) ))||( ((leadPhoIso - rho*leadPhoIsoEA) -0.003*leadPt < 11. ) &&!leadIsEB    && (leadSigmaIeIe>0.035    )  )",
+               "subleadIsSB := ((((subleadPhoIso - rho*subleadPhoIsoEA) -0.0045*subleadPt < 2. ) && (subleadIsEB    && (subleadSigmaIeIe    > 0.012) ))||( ((subleadPhoIso - rho*subleadPhoIsoEA) -0.003*subleadPt < 11. ) &&!subleadIsEB    && (subleadSigmaIeIe>0.035     )) )",
+               "leadPrompt    := leadGenIso < 10. && leadMatchType == 1",
+               "leadFake      := ! leadPrompt",
+               "subleadPrompt := subleadGenIso < 10. && subleadMatchType == 1",
+               "subleadFake   := ! subleadPrompt",
+               "phoPrompt := phoGenIso < 10. && phoMatchType == 1",
+               "phoFake   := ! phoPrompt",
+               "phoPhoIsoEB    := ((phoPhoIso - rho*phoPhoIsoEA) -0.0045*phoPt < 0.25 ) && phoIsEB",
+				"phoPhoIsoEE    := ((phoPhoIso - rho*phoPhoIsoEA) -0.003*phoPt < -0.5 )&& !phoIsEB",
+               "subleadPhoIsoEB    := ((subleadPhoIso - rho*subleadPhoIsoEA) -0.0045*subleadPt < 0.25 ) && subleadIsEB ",
+				"subleadPhoIsoEE    := ((subleadPhoIso - rho*subleadPhoIsoEA) -0.003*subleadPt < -0.5 ) && !subleadIsEB",
+               "leadPhoIsoEB    := ((leadPhoIso - rho*leadPhoIsoEA) -0.0045*leadPt < 0.25 ) && leadIsEB ",
+				"leadPhoIsoEE    := ((leadPhoIso - rho*leadPhoIsoEA) -0.003*leadPt < -0.5 )&& !leadIsEB",
+
+	       "leadEcorr := leadEnergy / leadInitialEnergy",
+               "subleadEcorr := subLeadEnergy / subLeadInitialEnergy",
+               "massCorr := sqrt(leadEcorr*subleadEcorr)",
+	       
+	       "mgg := mass",
+	       "mggEBEB := mass",
+               "mggEBEE := mass",
+	       "mggEBEBShift := mass*0.99",
+               "mggEBEEShift := mass*0.995"
+	       
+	       ],
+
+    "_aliases" : [
+
+
+		"leadEcorr := (abs(leadScEta)<1 && leadR9>0.94)*(1./0.9988) + (abs(leadScEta)<1 && leadR9<=0.94)*(1./0.9954) + (abs(leadScEta)>=1 && abs(leadScEta)<1.5 && leadR9>0.94)*(1./1.0065) + (abs(leadScEta)>=1  && abs(leadScEta)<1.5 && leadR9<=0.94)*(1./0.9966) + (abs(leadScEta)>=1.5 && abs(leadScEta)<2 && leadR9>0.94)*(1./0.9953) + (abs(leadScEta)>=1.5  && abs(leadScEta)<2 && leadR9<=0.94)*(1./0.9863) + (abs(leadScEta)>=2 && abs(leadScEta)<3 && leadR9>0.94)*(1./0.9857) + (abs(leadScEta)>=2  && abs(leadScEta)<3 && leadR9<=0.94)*(1./0.9786)",
+               "subleadEcorr := (abs(subleadScEta)<1 && subleadR9>0.94)*(1./0.9988) + (abs(subleadScEta)<1 && subleadR9<=0.94)*(1./0.9954) + (abs(subleadScEta)>=1 && abs(subleadScEta)<1.5 && subleadR9>0.94)*(1./1.0065) + (abs(subleadScEta)>=1  && abs(subleadScEta)<1.5 && subleadR9<=0.94)*(1./0.9966) + (abs(subleadScEta)>=1.5 && abs(subleadScEta)<2 && subleadR9>0.94)*(1./0.9953) + (abs(subleadScEta)>=1.5  && abs(subleadScEta)<2 && subleadR9<=0.94)*(1./0.9863) + (abs(subleadScEta)>=2 && abs(subleadScEta)<3 && subleadR9>0.94)*(1./0.9857) + (abs(subleadScEta)>=2  && abs(subleadScEta)<3 && subleadR9<=0.94)*(1./0.9786)",
+               "massCorr := sqrt(leadEcorr*subleadEcorr)",
+
+	       "mgg := mass*massCorr",
+	       "mggEBEB := mass*massCorr",
+               "mggEBEE := mass*massCorr",    
+
+		"leadEcorr := (abs(leadScEta)<1 && leadR9>0.94)*(1./0.99661) + (abs(leadScEta)<1 && leadR9<=0.94)*(1./1.00079) + (abs(leadScEta)>=1 && abs(leadScEta)<1.5 && leadR9>0.94)*(1./0.99582) + (abs(leadScEta)>=1  && abs(leadScEta)<1.5 && leadR9<=0.94)*(1./1.00756) + (abs(leadScEta)>=1.5 && abs(leadScEta)<2 && leadR9>0.94)*(1./1.00068) + (abs(leadScEta)>=1.5  && abs(leadScEta)<2 && leadR9<=0.94)*(1./1.00917) + (abs(leadScEta)>=2 && abs(leadScEta)<3 && leadR9>0.94)*(1./0.99910) + (abs(leadScEta)>=2  && abs(leadScEta)<3 && leadR9<=0.94)*(1./1.00748)",
+		"subleadEcorr := (abs(subleadScEta)<1 && subleadR9>0.94)*(1./0.99661) + (abs(subleadScEta)<1 && subleadR9<=0.94)*(1./1.00079) + (abs(subleadScEta)>=1 && abs(subleadScEta)<1.5 && subleadR9>0.94)*(1./0.99582) + (abs(subleadScEta)>=1  && abs(subleadScEta)<1.5 && subleadR9<=0.94)*(1./1.00756) + (abs(subleadScEta)>=1.5 && abs(subleadScEta)<2 && subleadR9>0.94)*(1./1.00068) + (abs(subleadScEta)>=1.5  && abs(subleadScEta)<2 && subleadR9<=0.94)*(1./1.00917) + (abs(subleadScEta)>=2 && abs(subleadScEta)<3 && subleadR9>0.94)*(1./0.99910) + (abs(subleadScEta)>=2  && abs(subleadScEta)<3 && subleadR9<=0.94)*(1./1.00748)",
+               "massCorr := sqrt(leadEcorr*subleadEcorr)"
+
+    ],
+    "rootstyle_extra" : [
+                  "TGaxis::SetMaxDigits(3);",
+                  "TH1::SetDefaultSumw2(1);"
+    ]
+    
+}

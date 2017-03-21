@@ -430,13 +430,23 @@ if customize.processType == "data" and not "electron" in customize.selection:
         tag=cms.InputTag("TriggerResults","",filterProc),bits=cms.vstring("eeBadScFilter","goodVertices")
         )
 elif len(dumpBits) > 0:
-    if doDoublePho:
-        diphotonDumper.globalVariables.addTriggerBits = cms.PSet(
-            tag=cms.InputTag("TriggerResults","","HLT"),bits=cms.vstring(dumpBits)
+    if customize.processType == "data":
+        if doDoublePho:        
+            diphotonDumper.globalVariables.addTriggerBits = cms.PSet(
+                tag=cms.InputTag("TriggerResults","","HLT"),bits=cms.vstring(dumpBits)
             )
-    if doSinglePho:
-        photonDumper.globalVariables.addTriggerBits = cms.PSet(
-            tag=cms.InputTag("TriggerResults","","HLT"),bits=cms.vstring(dumpBits)
+        if doSinglePho:
+            photonDumper.globalVariables.addTriggerBits = cms.PSet(
+                tag=cms.InputTag("TriggerResults","","HLT"),bits=cms.vstring(dumpBits)
+            )
+    else:
+        if doDoublePho:        
+            diphotonDumper.globalVariables.addTriggerBits = cms.PSet(
+                tag=cms.InputTag("TriggerResults","","RECO"),bits=cms.vstring(dumpBits)
+            )
+        if doSinglePho:
+            photonDumper.globalVariables.addTriggerBits = cms.PSet(
+                tag=cms.InputTag("TriggerResults","","RECO"),bits=cms.vstring(dumpBits)
             )
 
 # categories definition

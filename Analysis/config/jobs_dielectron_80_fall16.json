@@ -1,0 +1,16 @@
+{
+    "processes" : {
+        "Data" : [
+            "/SingleElectron/ferrif-RunIISpring16DR80X-2_3_0-25ns_Moriond17_MiniAODv2-2_3_0-v0-Run2016B-23Sep2016-v2-2366c4343141c765b2996ae305da0b97/USER",
+            "/SingleElectron/ferrif-RunIISpring16DR80X-2_3_0-25ns_Moriond17_MiniAODv2-2_3_0-v0-Run2016B-23Sep2016-v3-2366c4343141c765b2996ae305da0b97/USER",
+            "/SingleElectron/ferrif-RunIISpring16DR80X-2_3_0-25ns_Moriond17_MiniAODv2-2_3_0-v0-Run2016C-23Sep2016-v1-2366c4343141c765b2996ae305da0b97/USER",
+            "/SingleElectron/ferrif-RunIISpring16DR80X-2_3_0-25ns_Moriond17_MiniAODv2-2_3_0-v0-Run2016D-23Sep2016-v1-2366c4343141c765b2996ae305da0b97/USER",
+            "/SingleElectron/ferrif-RunIISpring16DR80X-2_3_0-25ns_Moriond17_MiniAODv2-2_3_0-v0-Run2016E-23Sep2016-v1-2366c4343141c765b2996ae305da0b97/USER",
+            "/SingleElectron/ferrif-RunIISpring16DR80X-2_3_0-25ns_Moriond17_MiniAODv2-2_3_0-v0-Run2016F-23Sep2016-v1-2366c4343141c765b2996ae305da0b97/USER",
+            "/SingleElectron/ferrif-RunIISpring16DR80X-2_3_0-25ns_Moriond17_MiniAODv2-2_3_0-v0-Run2016G-23Sep2016-v1-56157a2727a0c1c384898c280a0f972f/USER"
+	]
+    },
+    
+    "cmdLine" : "campaign=EXOSpring16_v3 idversion=V2 selection=electron massCut=70 ptLead=35 ptSublead=25 trigger=HLT_Ele27_WPTight_Gsf_v*,HLT_Ele27_WPTight_Gsf_L1JetTauSeeded_v* doeleId=0 dohltMatch=0 dol1Match=0 eleId=isHLTsafe lumiMask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/ReReco/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt"
+    
+}
