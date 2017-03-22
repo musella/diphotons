@@ -15,11 +15,11 @@ def makeOneLegInputs(label,obj,inputs):
 
 def addPreshowerEnergy(variables):
     variables.extend( makeOneLegInputs("lead","leadingPhoton",[("superCluster.preshowerEnergy","scPreshowerEnergy"),
-                                                               ("superCluster.rawEnergy","scRawEnergy"),
+                                                               # ("superCluster.rawEnergy","scRawEnergy"),
                                                                ("superCluster.preshowerEnergyPlane1","scPreshowerEnergyPlane1"),
                                                                ("superCluster.preshowerEnergyPlane2","scPreshowerEnergyPlane2")]) ),
     variables.extend( makeOneLegInputs("sublead","subLeadingPhoton",[("superCluster.preshowerEnergy","scPreshowerEnergy"),
-                                                                     ("superCluster.rawEnergy","scRawEnergy"),
+                                                                     # ("superCluster.rawEnergy","scRawEnergy"),
                                                                      ("superCluster.preshowerEnergyPlane1","preshowerEnergyPlane1"),
                                                                      ("superCluster.preshowerEnergyPlane2","preshowerEnergyPlane2")]) ),
     
@@ -27,34 +27,34 @@ def addPreshowerEnergy(variables):
 def addRegressionInput(variables):
     regInputs = [
         ("superCluster.clustersSize","scClustersSize"),
-        ("superCluster.seed.energy","scSeedEnergy"),
+        # ("superCluster.seed.energy","scSeedEnergy"),
         ("superCluster.energy","scEnergy"),
         
         # ("? hasMatchedGenPhoton ? matchedGenPhoton.energy : 0","etrue"),
         
-        ("userInt('seedRecoFlag')","seedRecoFlag"),
+        # ("userInt('seedRecoFlag')","seedRecoFlag"),
         
         ## cluster shapes
-        "e1x5",           "full5x5_e1x5",           
-        "e2x5",           "full5x5_e2x5",           
-        "e3x3",           "full5x5_e3x3",           
-        "e5x5",           "full5x5_e5x5",           
-        "maxEnergyXtal",  "full5x5_maxEnergyXtal",  
-        "sigmaIetaIeta",  "full5x5_sigmaIetaIeta",  
-        "r1x5",           "full5x5_r1x5",           
-        "r2x5",           "full5x5_r2x5",           
-        "r9",             "full5x5_r9",             
+        "full5x5_e1x5",             # "e1x5",           
+        "full5x5_e2x5",             # "e2x5",           
+        "full5x5_e3x3",             # "e3x3",           
+        "full5x5_e5x5",             # "e5x5",           
+        "full5x5_maxEnergyXtal",    # "maxEnergyXtal",  
+        "full5x5_sigmaIetaIeta",    # "sigmaIetaIeta",  
+        "full5x5_r1x5",             # "r1x5",           
+        "full5x5_r2x5",             # "r2x5",           
+        "full5x5_r9",               # "r9",             
         "eMax","e2nd","eTop","eBottom","eLeft","eRight",
         "iEta","iPhi","cryEta","cryPhi",
         
         ## more cluster shapes
-        ("e2x5right" ,"e2x5Right"  ),
-        ("e2x5left"  ,"e2x5Left"   ),
-        ("e2x5top"   ,"e2x5Top"    ),
-        ("e2x5bottom","e2x5Bottom" ),
-        ("e2x5max"   ,"e2x5Max"    ),
-        ("e1x3"      ,"e1x3"       ),
-        ("s4"        ,"s4"         ),
+        "e2x5right"  , # ("e2x5right" ,"e2x5Right"  ),
+        "e2x5left"   , # ("e2x5left"  ,"e2x5Left"   ),
+        "e2x5top"    , # ("e2x5top"   ,"e2x5Top"    ),
+        "e2x5bottom" , # ("e2x5bottom","e2x5Bottom" ),
+        "e2x5max"    , # ("e2x5max"   ,"e2x5Max"    ),
+        "e1x3"       , # ("e1x3"      ,"e1x3"       ),
+        "s4"         , # ("s4"        ,"s4"         ),
         
         ("esEffSigmaRR","sigmaRR"),
         ("spp","covarianceIphiIphi"),
@@ -190,17 +190,21 @@ def getDefaultConfig():
                "subleadPt                :=subLeadingPhoton.pt",
                "leadEta                  :=leadingPhoton.eta",
                "subleadEta               :=subLeadingPhoton.eta",
-               "leadR9                   :=leadingPhoton.r9",
-               "subleadR9                :=subLeadingPhoton.r9",
+               "leadR9                   :=leadingPhoton.full5x5_r9",
+               "subleadR9                :=subLeadingPhoton.full5x5_r9",
                "leadScEta                :=leadingPhoton.superCluster.eta",
                "subleadScEta             :=subLeadingPhoton.superCluster.eta",
                "leadPhi                  :=leadingPhoton.phi",
                "subleadPhi               :=subLeadingPhoton.phi",
-               "minR9                    :=min(leadingPhoton.r9,subLeadingPhoton.r9)",
+               "minR9                    :=min(leadingPhoton.full5x5_r9,subLeadingPhoton.full5x5_r9)",
                "maxEta                   :=max(abs(leadingPhoton.superCluster.eta),abs(subLeadingPhoton.superCluster.eta))",
                
-               "leadBlockChIso   := leadingView.pfChIso03WrtChosenVtx", 
-               "leadBlockPhoIso  := leadingPhoton.pfPhoIso03", 
+               "leadChIso03   := leadingView.pfChIso03WrtChosenVtx", 
+               "leadPhoIso03  := leadingPhoton.pfPhoIso03", 
+               "leadChIso03worst :=  leadingPhoton.pfChgIsoWrtWorstVtx03",
+               
+               "leadPhoIDMVA      := leadingView.phoIdMvaWrtChosenVtx",
+               "subLeadPhoIDMVA   := subLeadingView.phoIdMvaWrtChosenVtx",
                
                "leadPhoIsoEA :=  map( abs(leadingPhoton.superCluster.eta) :: 0.,0.9,1.5,2.0,2.2,3. :: 0.21,0.2,0.14,0.22,0.31 )",
                "subleadPhoIsoEA :=  map( abs(subLeadingPhoton.superCluster.eta) :: 0.,0.9,1.5,2.0,2.2,3. :: 0.21,0.2,0.14,0.22,0.31 )",
@@ -220,9 +224,13 @@ def getDefaultConfig():
            
            
                ## "subleadBlockChIso   := subLeadingView.pfChIso03WrtChosenVtx", 
-               "subleadBlockPhoIso  := subLeadingPhoton.pfPhoIso03", 
+               ## "subleadBlockPhoIso  := subLeadingPhoton.pfPhoIso03", 
                ## "subleadRndConePhoIso:= subLeadingPhoton.extraPhoIso('rnd03')",
                
+               "subleadChIso03   := subLeadingView.pfChIso03WrtChosenVtx", 
+               "subleadPhoIso03  := subLeadingPhoton.pfPhoIso03", 
+               "subleadChIso03worst :=  subLeadingPhoton.pfChgIsoWrtWorstVtx03",
+
                "subleadChIso   := subLeadingPhoton.egChargedHadronIso", 
                "subleadPhoIso  := subLeadingPhoton.egPhotonIso", 
                "subleadNeutIso := subLeadingPhoton.egNeutralHadronIso",
@@ -230,6 +238,31 @@ def getDefaultConfig():
                "subleadSigmaIeIe := subLeadingPhoton.full5x5_sigmaIetaIeta",
                "subleadPixSeed := subLeadingPhoton.hasPixelSeed",
                "subleadPassEleVeto := subLeadingPhoton.passElectronVeto",
+
+               "leadSigEOverE    := leadingPhoton.sigEOverE",
+               "subleadSigEOverE := subLeadingPhoton.sigEOverE",
+               
+               "leadRecoEreg              := leadingPhoton.userFloat('reco_regr_E')",
+               "leadRecoSigEOverE     := leadingPhoton.userFloat('reco_regr_E_err') / leadingPhoton.userFloat('reco_regr_E')",
+               "subleadRecoEreg           := subLeadingPhoton.userFloat('reco_regr_E')",
+               "subleadRecoSigEOverE  := subLeadingPhoton.userFloat('reco_regr_E_err') / subLeadingPhoton.userFloat('reco_regr_E')",
+               
+               "leadAfterSSTrEreg              := leadingPhoton.userFloat('afterShShTransf_regr_E')",
+               "leadAfterSSTrSigEOverE     := leadingPhoton.userFloat('afterShShTransf_regr_E_err') / leadingPhoton.userFloat('afterShShTransf_regr_E')",
+               "subleadAfterSSTrEreg           := subLeadingPhoton.userFloat('afterShShTransf_regr_E')",
+               "subleadAfterSSTrSigEOverE  := subLeadingPhoton.userFloat('afterShShTransf_regr_E_err') / subLeadingPhoton.userFloat('afterShShTransf_regr_E')",
+
+               "leadUnsmearedSigmaEoE      := leadingPhoton.userFloat('unsmearedSigmaEoE')",
+               "subleadUnsmearedSigmaEoE      := subLeadingPhoton.userFloat('unsmearedSigmaEoE')",
+
+               "leadUncorrR9              := ? leadingPhoton.hasUserFloat('uncorr_r9') ? leadingPhoton.userFloat('uncorr_r9') : -1.",
+               "leadUncorrEtaWidth        := ? leadingPhoton.hasUserFloat('uncorr_etaWidth') ? leadingPhoton.userFloat('uncorr_etaWidth') : -1.",
+               "leadUncorrS4              := ? leadingPhoton.hasUserFloat('uncorr_s4') ? leadingPhoton.userFloat('uncorr_s4') : -1.",
+               
+               "subleadUncorrR9              := ? subLeadingPhoton.hasUserFloat('uncorr_r9') ? subLeadingPhoton.userFloat('uncorr_r9') : -1.",
+               "subleadUncorrEtaWidth        := ? subLeadingPhoton.hasUserFloat('uncorr_etaWidth') ? subLeadingPhoton.userFloat('uncorr_etaWidth') : -1.",
+               "subleadUncorrS4              := ? subLeadingPhoton.hasUserFloat('uncorr_s4') ? subLeadingPhoton.userFloat('uncorr_s4') : -1.",
+
                ]
     
     histograms=["mass>>mass(1500,0,15000)",
@@ -301,7 +334,7 @@ def getDefaultConfig():
         "phoPt                   :=pt",
         "genPt                   :=?hasMatchedGenPhoton?matchedGenPhoton.pt:0",
         "phoEta                  :=eta",
-        "phoR9                   :=r9",
+        "phoR9                   :=full5x5_r9",
         "phoScEta                :=superCluster.eta",
         "phoPhi                  :=phi",
         

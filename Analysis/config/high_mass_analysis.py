@@ -78,8 +78,12 @@ customize.setDefault("targetLumi",1.e+3)
 
 
 ## Spring16 2016 12.9/fb
+## customize.setDefault("puTarget",
+##                      "1.67e-07,1.256e-05,4.799e-05,9.767e-05,0.0001514,0.0002061,0.0002773,0.0006778,0.002333,0.005544,0.01081,0.01817,0.02777,0.03798,0.04738,0.05629,0.06433,0.07046,0.07422,0.07559,0.07468,0.07161,0.06674,0.06059,0.05353,0.04577,0.03761,0.02959,0.02228,0.01608,0.01112,0.007349,0.004629,0.002775,0.001584,0.0008616,0.0004474,0.0002221,0.0001058,4.853e-05,2.162e-05,9.47e-06,4.184e-06,1.958e-06,1.048e-06,6.866e-07,5.466e-07,4.937e-07,4.74e-07,4.66e-07")
+
+## Spring16 2016 12.9/fb
 customize.setDefault("puTarget",
-                     "1.67e-07,1.256e-05,4.799e-05,9.767e-05,0.0001514,0.0002061,0.0002773,0.0006778,0.002333,0.005544,0.01081,0.01817,0.02777,0.03798,0.04738,0.05629,0.06433,0.07046,0.07422,0.07559,0.07468,0.07161,0.06674,0.06059,0.05353,0.04577,0.03761,0.02959,0.02228,0.01608,0.01112,0.007349,0.004629,0.002775,0.001584,0.0008616,0.0004474,0.0002221,0.0001058,4.853e-05,2.162e-05,9.47e-06,4.184e-06,1.958e-06,1.048e-06,6.866e-07,5.466e-07,4.937e-07,4.74e-07,4.66e-07")
+                     "2.39e+05,8.38e+05,2.31e+06,3.12e+06,4.48e+06,6e+06,7e+06,1.29e+07,3.53e+07,7.87e+07,1.77e+08,3.6e+08,6.03e+08,8.77e+08,1.17e+09,1.49e+09,1.76e+09,1.94e+09,2.05e+09,2.1e+09,2.13e+09,2.15e+09,2.13e+09,2.06e+09,1.96e+09,1.84e+09,1.7e+09,1.55e+09,1.4e+09,1.24e+09,1.09e+09,9.37e+08,7.92e+08,6.57e+08,5.34e+08,4.27e+08,3.35e+08,2.58e+08,1.94e+08,1.42e+08,1.01e+08,6.9e+07,4.55e+07,2.88e+07,1.75e+07,1.02e+07,5.64e+06,2.99e+06,1.51e+06,7.32e+05,3.4e+05,1.53e+05,6.74e+04,3.05e+04,1.52e+04,8.98e+03,6.5e+03,5.43e+03,4.89e+03,4.52e+03,4.21e+03,3.91e+03,3.61e+03,3.32e+03,3.03e+03,2.75e+03,2.47e+03,2.21e+03,1.97e+03,1.74e+03,1.52e+03,1.32e+03,1.14e+03,983,839")
 
 import FWCore.ParameterSet.VarParsing as VarParsing
 customize.options.register ('selection',
@@ -281,6 +285,7 @@ variables, histograms, variablesSinglePho, histogramsSinglePho = dumpCfg.getDefa
 # add extra variables if needed
 if customize.addRegressionInput:
     dumpCfg.addRegressionInput(variables)
+    dumpCfg.addPreshowerEnergy(variables)
 
 if (customize.selection=="diphoton" or customize.selection=="photon"):
     dumpCfg.addRandomCones(variables,variablesSinglePho,histograms,histogramsSinglePho)
@@ -293,7 +298,8 @@ if customize.addGainFlags:
     dumpCfg.addGainSwitchFlags(variables, histograms)
     
 # HLT matching
-if customize.processType == "data" and customize.dohltMatch:
+## if customize.processType == "data" and customize.dohltMatch:
+if customize.dohltMatch:
     extraSysModules.append(
         cms.PSet( PhotonMethodName = cms.string("FlashggPhotonHLTMatch"),
                   MethodName = cms.string("FlashggDiPhotonFromPhoton"),
@@ -465,11 +471,17 @@ if massCutEB or massCutEE:
 cfgTools.addCategories(diphotonDumper,
                        [## cuts are applied in cascade
                         ## ("all","1"),
+#MD                        ("EBHighR9","max(abs(leadingPhoton.superCluster.eta),abs(subLeadingPhoton.superCluster.eta))<1.4442"
+#                         "&& min(leadingPhoton.full5x5_r9,subLeadingPhoton.full5x5_r9)>0.94",0),
+#                        ("EBLowR9","max(abs(leadingPhoton.superCluster.eta),abs(subLeadingPhoton.superCluster.eta))<1.4442",0),
+#                        ("EEHighR9","min(leadingPhoton.full5x5_r9,subLeadingPhoton.full5x5_r9)>0.94",0),
+#                        ("EELowR9","1",0),
                         ("EBHighR9","max(abs(leadingPhoton.superCluster.eta),abs(subLeadingPhoton.superCluster.eta))<1.4442"
-                         "&& min(leadingPhoton.r9,subLeadingPhoton.r9)>0.94",0),
+                         "&& min(leadingPhoton.full5x5_r9,subLeadingPhoton.full5x5_r9)>0.85",0),
                         ("EBLowR9","max(abs(leadingPhoton.superCluster.eta),abs(subLeadingPhoton.superCluster.eta))<1.4442",0),
-                        ("EEHighR9","min(leadingPhoton.r9,subLeadingPhoton.r9)>0.94",0),
+                        ("EEHighR9","min(leadingPhoton.full5x5_r9,subLeadingPhoton.full5x5_r9)>0.90",0),
                         ("EELowR9","1",0),
+
                         ],
                        variables=variables,
                        histograms=histograms
@@ -630,14 +642,14 @@ if doDoublePho0T:
                               )    
     
 elif doDoublePho:
-    analysis.addAnalysisSelection(process,"cic",highMassCiCDiPhotons,dumpTrees=dumpTrees,dumpWorkspace=False,dumpHistos=True,splitByIso=True,
-                                  dumperTemplate=minimalDumper,
-                                  nMinusOne=[(0,"NoChIso",        dumpNm1Trees, False,True), ## removeIndex(es), label, dumpTree, dumpWorkspace, dumpHistos
-                                             (1,"NoPhoIso",       False, False,True),
-                                             (2,"NoNeuIso",       False,False,True),
-                                             (3,"NoHoverE",       False,False,True),
-                                             (4,"NoSigmaIetaIeta",False,False,True),
-                                             (5,"NoEleVeto",      False,False,True),
+    analysis.addAnalysisSelection(process,"cic",highMassCiCDiPhotons,dumpTrees=False,dumpWorkspace=False,dumpHistos=True,splitByIso=True,
+                                  dumperTemplate=diphotonDumper,
+                                  nMinusOne=[(0,"NoChIso",        dumpNm1Trees, False,False), ## removeIndex(es), label, dumpTree, dumpWorkspace, dumpHistos
+                                             (1,"NoPhoIso",       False, False,False),
+                                             (2,"NoNeuIso",       False,False,False),
+                                             (3,"NoHoverE",       False,False,False),
+                                             (4,"NoSigmaIetaIeta",dumpTrees,False,False),
+                                             (5,"NoEleVeto",      False,False,False),
                                              ]
                                   )
     
@@ -703,18 +715,21 @@ if not customize.lastAttempt:
 
 # load appropriate scale and smearing bins here
 # systematics customization scripts will take care of adjusting flashggDiPhotonSystematics
-if "Run2015" in customize.datasetName() or "76X" in customize.datasetName():
-    process.load('flashgg.Systematics.escales.escale76X_16DecRereco_2015')
-    print "energy corrections file is escale76X_16DecRereco_2015"
-else:
-    ## process.load('flashgg.Systematics.escales.test_2016B_corr_DCSOnly')
-    ## process.load('flashgg.Systematics.escales.Golden10June_plus_DCS')
-    ## process.load('flashgg.Systematics.escales.Golden22June')
-    ## process.load('flashgg.Systematics.escales.80X_DCS05July_plus_Golden22')
-    process.load('flashgg.Systematics.escales.80X_ichep_2016_pho')
-    
-    print "energy corrections file is test_2016B_corr"
+# if "Run2015" in customize.datasetName() or "76X" in customize.datasetName():
+#     process.load('flashgg.Systematics.escales.escale76X_16DecRereco_2015')
+#     print "energy corrections file is escale76X_16DecRereco_2015"
+# else:
+#     ## process.load('flashgg.Systematics.escales.test_2016B_corr_DCSOnly')
+#     ## process.load('flashgg.Systematics.escales.Golden10June_plus_DCS')
+#     ## process.load('flashgg.Systematics.escales.Golden22June')
+#     ## process.load('flashgg.Systematics.escales.80X_DCS05July_plus_Golden22')
+#     ## process.load('flashgg.Systematics.escales.80X_ichep_2016_pho')
+#     ## print "energy corrections file is "
 
+
+process.load("flashgg.Systematics.flashggDiPhotonSystematics_cfi")
+process.load("flashgg.Taggers.flashggUpdatedIdMVADiPhotons_cfi")
+process.flashggDiPhotonSystematics.src = cms.InputTag("flashggUpdatedIdMVADiPhotons")
 
 #
 # input and output
@@ -727,6 +742,7 @@ process.source = cms.Source("PoolSource",
 process.TFileService = cms.Service("TFileService",
                                    fileName = cms.string("test.root")
 )
+
 
 
 # this will call customize(process), configure the analysis paths and make the process unscheduled

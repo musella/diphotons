@@ -15,6 +15,6 @@
 			       ]
 	    },
 	
-	"cmdLine" : "campaign=EXOSpring16_v2 idversion=V2 selection=electron massCut=70 ptLead=35 ptSublead=25 trigger=HLT_Ele27_WPTight_Gsf_v*,HLT_Ele27_WPTight_Gsf_L1JetTauSeeded_v* lumiMask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-276811_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt doeleId=1 dohltMatch=1 dol1Match=1 eleId=isHLTsafe"
+	"cmdLine" : "campaign=EXOSpring16_v2 idversion=V2 selection=electron massCut=70 ptLead=35 ptSublead=25 trigger=HLT_Ele27_WPTight_Gsf_v* lumiMask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-276811_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt doeleId=1 dohltMatch=1 dol1Match=1 eleId=isHLTsafe addRegressionInput=1"
 	    
 }
