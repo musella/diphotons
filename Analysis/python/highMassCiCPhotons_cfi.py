@@ -7,7 +7,7 @@ highMassCiCPhotons = cms.EDFilter(
     src = cms.InputTag("kinPhotons"),
     rho = cms.InputTag("fixedGridRhoAll"),
     cut = cms.string(
-        "    (r9>0.8||egChargedHadronIso<20||egChargedHadronIso/pt<0.3)"
+        "    (full5x5_r9>0.8||egChargedHadronIso<20||egChargedHadronIso/pt<0.3)"
         "&&  egChargedHadronIso < 15"
         )
     ,
@@ -22,7 +22,7 @@ highMassCiCPhotonsV2 = cms.EDFilter(
     src = cms.InputTag("kinPhotons"),
     rho = cms.InputTag("fixedGridRhoAll"),
     cut = cms.string(
-        "    (r9>0.8||egChargedHadronIso<20||egChargedHadronIso/pt<0.3)"
+        "    (full5x5_r9>0.8||egChargedHadronIso<20||egChargedHadronIso/pt<0.3)"
         "&&  egChargedHadronIso < 15"
         )
     ,

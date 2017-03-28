@@ -1,7 +1,7 @@
 import FWCore.ParameterSet.Config as cms
 
 scaleBins = cms.PSet(
-    variables = cms.vstring("abs(superCluster.eta)","r9"),
+    variables = cms.vstring("abs(superCluster.eta)","full5x5_r9"),
     bins = cms.VPSet(
         cms.PSet( lowBounds = cms.vdouble(0.,-999.), upBounds = cms.vdouble(1.,0.940),
                   values = cms.vdouble( 1./.9954 - 1. ), uncertainties = cms.vdouble( 0.0 ) ),
@@ -25,7 +25,7 @@ scaleBins = cms.PSet(
         ))
 
 smearBins = cms.PSet(
-    variables = cms.vstring("abs(superCluster.eta)","r9"),
+    variables = cms.vstring("abs(superCluster.eta)","full5x5_r9"),
     bins = cms.VPSet(
         cms.PSet( lowBounds = cms.vdouble(0.,-999.), upBounds = cms.vdouble(1.,0.940),
                   values = cms.vdouble( 0.0136 ), uncertainties = cms.vdouble( 0.0 ) ),
