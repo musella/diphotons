@@ -187,9 +187,9 @@ highMassCiCCutsV1SB = cms.VPSet(
 highMassCiCCutsV2 = cms.VPSet(
         cms.PSet(cut=cms.string("abs(superCluster.eta)<1.5 && checkStatusFlag('kSaturated') && ! checkStatusFlag('kWeird')"),
                  selection = cms.VPSet(
-                cms.PSet(max=cms.string("15.")),
-                cms.PSet(# max=cms.string("0.25+4.5e-3*pt"), 
-                         # rhocorr=phoEffAreaV2,
+                cms.PSet(max=cms.string("5.")),
+                cms.PSet(max=cms.string("0.25+4.5e-3*pt"), 
+                         rhocorr=phoEffAreaV2,
                         ),
                 cms.PSet(# no neutral iso cut
                     ),
@@ -200,9 +200,9 @@ highMassCiCCutsV2 = cms.VPSet(
                  ),
         cms.PSet(cut=cms.string("abs(superCluster.eta)<1.5"),
                  selection = cms.VPSet(
-                cms.PSet(max=cms.string("15.")),
-                cms.PSet(#max=cms.string("0.25+4.5e-3*pt"), 
-                         #rhocorr=phoEffAreaV2
+                cms.PSet(max=cms.string("5.")),
+                cms.PSet(max=cms.string("0.25+4.5e-3*pt"), 
+                         rhocorr=phoEffAreaV2
                         ),
                 cms.PSet(# no neutral iso cut
                     ),
@@ -213,9 +213,9 @@ highMassCiCCutsV2 = cms.VPSet(
                 ),
          cms.PSet(cut=cms.string("abs(superCluster.eta)>=1.5 && checkStatusFlag('kSaturated') && ! checkStatusFlag('kWeird')"),
                   selection = cms.VPSet(
-                cms.PSet(max=cms.string("15.")),
-                cms.PSet(#max=cms.string("-0.5+3e-3*pt"), 
-                         #rhocorr=phoEffAreaV2
+                cms.PSet(max=cms.string("5.")),
+                cms.PSet(max=cms.string("-0.5+3e-3*pt"), 
+                         rhocorr=phoEffAreaV2
                          ),
                 cms.PSet(# no neutral iso cut
                     ),
@@ -226,9 +226,9 @@ highMassCiCCutsV2 = cms.VPSet(
                  ),
         cms.PSet(cut=cms.string("abs(superCluster.eta)>=1.5"),
                  selection = cms.VPSet(
-                cms.PSet(max=cms.string("15.")),
-                cms.PSet(#max=cms.string("-0.5+3e-3*pt"), 
-                         #rhocorr=phoEffAreaV2
+                cms.PSet(max=cms.string("5.")),
+                cms.PSet(max=cms.string("-0.5+3e-3*pt"), 
+                         rhocorr=phoEffAreaV2
                         ),
                 cms.PSet(# no neutral iso cut
                     ),
@@ -236,6 +236,24 @@ highMassCiCCutsV2 = cms.VPSet(
                 cms.PSet(min=cms.string("0.001"), max=cms.string("2.80e-2")),
                 cms.PSet(min=cms.string("0.5"))
                 ),
+                 )
+        )
+
+highMassCiCCutsTnP = cms.VPSet(
+        cms.PSet(cut=cms.string("1"),
+                 selection = cms.VPSet(
+                cms.PSet(# no ch iso cut
+                ),
+                cms.PSet(# no photon iso cut
+                        ),
+                cms.PSet(# no neutral iso cut
+                    ),
+                cms.PSet(# no H/E cut                
+                ),
+                cms.PSet(min=cms.string("0.001") # no sigma ieta ieta cut
+                         ),
+                cms.PSet(min=cms.string("0.5"))
+                 ),
                  )
         )
 
@@ -330,3 +348,19 @@ highMassCiCDiPhotonsV2 = cms.EDFilter(
     )
 
 highMassCiCDiPhotonsSBV2 = highMassCiCDiPhotons.clone( categories=highMassCiCCutsV2SB )
+
+highMassCiCDiPhotonsSB = highMassCiCDiPhotons.clone( categories=highMassCiCCutsSB )
+
+highMassCiCDiPhotonsTnP = cms.EDFilter(
+    "GenericDiPhotonCandidateSelector",
+    src = cms.InputTag("kinDiPhotons"),
+    rho = cms.InputTag("fixedGridRhoAll"),
+    cut = cms.string(
+        "    (leadingPhoton.full5x5_r9>0.8||leadingPhoton.egChargedHadronIso<20||leadingPhoton.egChargedHadronIso/leadingPhoton.pt<0.3)"
+        " && (subLeadingPhoton.full5x5_r9>0.8||subLeadingPhoton.egChargedHadronIso<20||subLeadingPhoton.egChargedHadronIso/subLeadingPhoton.pt<0.3)" 
+        )
+    ,
+    variables = highMassCiCVariablesV2,
+    categories = highMassCiCCutsTnP,
+    )
+

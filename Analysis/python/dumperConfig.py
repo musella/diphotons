@@ -164,17 +164,13 @@ def getDefaultConfig():
     variables=["mass","pt","rapidity","eta",
                "vertexZ  := vtx.z", 
                "vertexId := vtx.key",
-               ## "satRegressedMass := sqrt( (leadingPhoton.energyAtStep('satRegressedEnergy','initial')*subLeadingPhoton.energyAtStep('satRegressedEnergy','initial')) / (leadingPhoton.energy*subLeadingPhoton.energy) ) * genP4.mass",
-               ## "regressedMass := sqrt( (leadingPhoton.energyAtStep('regressedEnergy')*subLeadingPhoton.energyAtStep('regressedEnergy')) / (leadingPhoton.energy*subLeadingPhoton.energy) ) * genP4.mass",
                "genMass := genP4.mass",
-               ### "leadSatRegressedEnergy := leadingPhoton.userFloat('satRegressedEnergy')",
-               ### "subLeadSatRegressedEnergy := subLeadingPhoton.userFloat('satRegressedEnergy')",
-               ### "leadRegressedEnergy := leadingPhoton.userFloat('regressedEnergy')",
-               ### "subLeadRegressedEnergy := subLeadingPhoton.userFloat('regressedEnergy')",
+
                "leadInitialEnergy := leadingPhoton.energyAtStep('initial')",
                "subLeadInitialEnergy := subLeadingPhoton.energyAtStep('initial')",
                "leadEnergy := leadingPhoton.p4.energy",
                "subLeadEnergy := subLeadingPhoton.p4.energy",
+
                "lead_5x5_Energy := leadingPhoton.full5x5_e5x5",
                "subLead_5x5_Energy := subLeadingPhoton.full5x5_e5x5",
                "mass_5x5 := mass*sqrt(leadingPhoton.full5x5_e5x5*subLeadingPhoton.full5x5_e5x5/(leadingPhoton.p4.energy*subLeadingPhoton.p4.energy))",
@@ -206,8 +202,6 @@ def getDefaultConfig():
                "leadPhoIDMVA      := leadingView.phoIdMvaWrtChosenVtx",
                "subLeadPhoIDMVA   := subLeadingView.phoIdMvaWrtChosenVtx",
                
-               "leadPhoIsoEA :=  map( abs(leadingPhoton.superCluster.eta) :: 0.,0.9,1.5,2.0,2.2,3. :: 0.21,0.2,0.14,0.22,0.31 )",
-               "subleadPhoIsoEA :=  map( abs(subLeadingPhoton.superCluster.eta) :: 0.,0.9,1.5,2.0,2.2,3. :: 0.21,0.2,0.14,0.22,0.31 )",
                
                "leadMatchType            :=leadingPhoton.genMatchType",
                "leadGenIso               :=?leadingPhoton.hasUserFloat('genIso')?leadingPhoton.userFloat('genIso'):0",
@@ -263,7 +257,12 @@ def getDefaultConfig():
                "subleadUncorrEtaWidth        := ? subLeadingPhoton.hasUserFloat('uncorr_etaWidth') ? subLeadingPhoton.userFloat('uncorr_etaWidth') : -1.",
                "subleadUncorrS4              := ? subLeadingPhoton.hasUserFloat('uncorr_s4') ? subLeadingPhoton.userFloat('uncorr_s4') : -1.",
 
+               ### "leadPhoIsoEA :=  map( abs(leadingPhoton.superCluster.eta) :: 0.,0.9,1.5,2.0,2.2,3. :: 0.21,0.2,0.14,0.22,0.31 )",
+               ### "subleadPhoIsoEA :=  map( abs(subLeadingPhoton.superCluster.eta) :: 0.,0.9,1.5,2.0,2.2,3. :: 0.21,0.2,0.14,0.22,0.31 )",
                ]
+    
+    
+
     
     histograms=["mass>>mass(1500,0,15000)",
                 "mass>>lowmass(560,60,200)",
@@ -343,7 +342,7 @@ def getDefaultConfig():
         "phoBlockPhoIso  := pfPhoIso03", 
         ## "phoRndConePhoIso:= extraPhoIso('rnd03')",
         
-        "phoPhoIsoEA :=  map( abs(superCluster.eta) :: 0.,0.9,1.5,2.0,2.2,3. :: 0.21,0.2,0.14,0.22,0.31 )",
+        ## "phoPhoIsoEA :=  map( abs(superCluster.eta) :: 0.,0.9,1.5,2.0,2.2,3. :: 0.21,0.2,0.14,0.22,0.31 )",
         
         "phoMatchType            :=genMatchType",
         "phoGenIso               :=?hasUserFloat('genIso')?userFloat('genIso'):0",
