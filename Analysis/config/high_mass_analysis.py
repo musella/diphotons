@@ -485,6 +485,26 @@ if customize.doTnP:
     # - swap diphoton dumper with TnP dumper
     # - replace lead / sublead with tag / prob in variables
     # - add flags for cuts in photon ID (needs code in dumper)
+    process.load("flashgg.Validation.FlashggTagAndProbeProducer_cfi")
+    process.load("flashgg.Validation.tagAndProbeDumper_cfi")    
+    from flashgg.Validation.FlashggTagAndProbeProducer_cfi import flashggTagAndProbe
+    process.flashggTagAndProbe = flashggTagAndProbe
+    process.flashggTagAndProbe.tagSelection = process.flashggTagAndProbe.probeSelection = "pt>5"
+    from flashgg.Validation.tagAndProbeDumper_cfi import tagAndProbeDumper
+    tagAndProbeDumper.dumpTrees = True
+    print(tagAndProbeDumper)
+    cfgTools.addCategories(tagAndProbeDumper,
+                           [
+                               ("all", "", 0)
+                           ],
+                           variables=["mass",
+                                      "tagPt := getTag.pt",
+                                      "probePt := getProbe.pt"
+                                      ],
+                           histograms=[]
+                           )
+    testseq = cms.Sequence(flashggTagAndProbe+tagAndProbeDumper)
+    process.p = cms.Path(testseq)
     
 # categories definition
 if ":" in customize.massCut:
@@ -622,6 +642,8 @@ else:
 if invertEleVeto:
     if doDoublePho0T:
         highMassCiCDiPhotons0T.variables[-1] = "? matchedGsfTrackInnerMissingHits==0 ? 2 : 0"
+    elif customize.idversion == "TnP":
+        highMassCiCDiPhotons.variables[-1] = "hasPixelSeed"
     else:
         highMassCiCDiPhotons.variables[-1] = "hasPixelSeed"
         highMassCiCDiPhotonsSB.variables[-1] = "hasPixelSeed"
