@@ -492,10 +492,9 @@ if customize.doTnP:
     process.flashggTagAndProbe.tagSelection = process.flashggTagAndProbe.probeSelection = "pt>5"
     from flashgg.Validation.tagAndProbeDumper_cfi import tagAndProbeDumper
     tagAndProbeDumper.dumpTrees = True
-    print(tagAndProbeDumper)
     cfgTools.addCategories(tagAndProbeDumper,
                            [
-                               ("all", "", 0)
+                               ("all", "1", 0)
                            ],
                            variables=["mass",
                                       "tagPt := getTag.pt",
