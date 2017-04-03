@@ -485,8 +485,8 @@ if customize.doTnP:
     # - swap diphoton dumper with TnP dumper
     # - replace lead / sublead with tag / prob in variables
     # - add flags for cuts in photon ID (needs code in dumper)
-    process.load("flashgg.Validation.FlashggTagAndProbeProducer_cfi")
-    process.load("flashgg.Validation.tagAndProbeDumper_cfi")    
+    process.load("flashgg.Taggers.FlashggTagAndProbeProducer_cfi")
+    process.load("flashgg.Taggers.tagAndProbeDumper_cfi")    
     from flashgg.Validation.FlashggTagAndProbeProducer_cfi import flashggTagAndProbe
     process.flashggTagAndProbe = flashggTagAndProbe
     process.flashggTagAndProbe.tagSelection = process.flashggTagAndProbe.probeSelection = "pt>5"
