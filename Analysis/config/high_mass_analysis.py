@@ -477,9 +477,34 @@ elif len(dumpBits) > 0:
                 tag=cms.InputTag("TriggerResults","","RECO"),bits=cms.vstring(dumpBits)
             )
 
+## analysis selections
+if customize.idversion != "":
+    if customize.idversion == "V2":
+        from diphotons.Analysis.highMassCiCDiPhotons_cfi import highMassCiCDiPhotonsV2   as highMassCiCDiPhotons
+        from diphotons.Analysis.highMassCiCDiPhotons_cfi import highMassCiCDiPhotonsSBV2 as highMassCiCDiPhotonsSB
+    else:
+        print "Unknown ID version %s " % customize.idversion
+        sys.exit(-1)
+else:
+    from diphotons.Analysis.highMassCiCDiPhotons_cfi import highMassCiCDiPhotons, highMassCiCDiPhotonsSB
+
+if invertEleVeto:
+    if doDoublePho0T:
+        highMassCiCDiPhotons0T.variables[-1] = "? matchedGsfTrackInnerMissingHits==0 ? 2 : 0"
+    else:
+        highMassCiCDiPhotons.variables[-1] = "invEleVeto := hasPixelSeed"
+        highMassCiCDiPhotonsSB.variables[-1] = "hasPixelSeed"
+        ## highMassCiCDiPhotons.variables[-1] = "-(passElectronVeto-1)"
+        ## highMassCiCDiPhotonsSB.variables[-1] = "-(passElectronVeto-1)"
+
+    if customize.doeleId:
+        highMassCiCDiPhotons.cut = "( leadingPhoton.hasUserCand('eleMatch') || subLeadingPhoton.hasUserCand('eleMatch') ) && (%s)" % highMassCiCDiPhotons.cut.value()
+    ###     ## highMassCiCDiPhotons.variables.append( "hasUserCand('matchedElectron')")
+    ###     ## for cat in highMassCiCDiPhotons.categories:
+    ###     ## cat.append( cms.PSet(min=cms.string("0.5"))  )        
+            
 # Convert configuration to tag and probe
 if customize.doTnP:
-    customize.idversion = "TnP"
     # FIXME
     # - add TnP object producer
     # - swap diphoton dumper with TnP dumper
@@ -487,23 +512,33 @@ if customize.doTnP:
     # - add flags for cuts in photon ID (needs code in dumper)
     process.load("flashgg.Taggers.FlashggTagAndProbeProducer_cfi")
     process.load("flashgg.Taggers.tagAndProbeDumper_cfi")    
-    from flashgg.Validation.FlashggTagAndProbeProducer_cfi import flashggTagAndProbe
+    from flashgg.Taggers.FlashggTagAndProbeProducer_cfi import flashggTagAndProbe
+    from diphotons.Analysis.highMassCiCPhotons_cfi import highMassCiCPhotonsV2 
     process.flashggTagAndProbe = flashggTagAndProbe
-    process.flashggTagAndProbe.tagSelection = process.flashggTagAndProbe.probeSelection = "pt>5"
-    from flashgg.Validation.tagAndProbeDumper_cfi import tagAndProbeDumper
+    process.flashggTagAndProbe.diphotonsSrc = "kinDiPhotons"
+    process.flashggTagAndProbe.tagSelection = "abs(eta) < 2.1 && pt > 30 && userInt('HLT_Ele27_WPTight_Gsf_v') && (?hasUserCand('eleMatch')?userCand('eleMatch').passTightId:0) && hasPixelSeed"
+    #process.flashggTagAndProbe.probeSelection = "1"
+    process.flashggTagAndProbe.idSelection = cms.PSet(
+        rho = highMassCiCPhotonsV2.rho,
+        cut = highMassCiCPhotonsV2.cut,        
+        variables = highMassCiCPhotonsV2.variables,
+        categories = highMassCiCPhotonsV2.categories
+        )
+    from flashgg.Taggers.tagAndProbeDumper_cfi import tagAndProbeDumper
     tagAndProbeDumper.dumpTrees = True
     cfgTools.addCategories(tagAndProbeDumper,
                            [
-                               ("all", "1", 0)
+                               ("Reject", "diPhoton.mass < 60 || diPhoton.mass > 120", -1),
+                               ("EBHighR9", "abs(getProbe.superCluster.eta)<1.4442 && getProbe.full5x5_r9>0.94", 0),
+                               ("EBLowR9", "abs(getProbe.superCluster.eta)<1.4442 && getProbe.full5x5_r9<=0.94", 0),
+                               ("EEHighR9", "abs(getProbe.superCluster.eta)>1.566 && getProbe.full5x5_r9>0.94", 0),
+                               ("EELowR9", "abs(getProbe.superCluster.eta)>1.566 && getProbe.full5x5_r9<=0.94", 0)
                            ],
-                           variables=["mass",
-                                      "tagPt := getTag.pt",
-                                      "probePt := getProbe.pt"
-                                      ],
+                           variables=dumpCfg.getTnPVariables(process.flashggTagAndProbe.idSelection.variables),
                            histograms=[]
-                           )
-    testseq = cms.Sequence(flashggTagAndProbe+tagAndProbeDumper)
-    process.p = cms.Path(testseq)
+                           )    
+    tnp_sequence = cms.Sequence(flashggTagAndProbe+tagAndProbeDumper)
+    process.p = cms.Path(tnp_sequence)
     
 # categories definition
 if ":" in customize.massCut:
@@ -624,36 +659,6 @@ analysis.addKinematicSelection(process,dumpTrees=dumpKinTree,splitByIso=True
                                )
 
 if not dumpKinTree: minimalDumper=diphotonDumper
-
-## analysis selections
-if customize.idversion != "":
-    if customize.idversion == "V2":
-        from diphotons.Analysis.highMassCiCDiPhotons_cfi import highMassCiCDiPhotonsV2   as highMassCiCDiPhotons
-        from diphotons.Analysis.highMassCiCDiPhotons_cfi import highMassCiCDiPhotonsSBV2 as highMassCiCDiPhotonsSB
-    elif customize.idversion == "TnP":
-        from diphotons.Analysis.highMassCiCDiPhotons_cfi import highMassCiCDiPhotonsTnP   as highMassCiCDiPhotons
-    else:
-        print "Unknown ID version %s " % customize.idversion
-        sys.exit(-1)
-else:
-    from diphotons.Analysis.highMassCiCDiPhotons_cfi import highMassCiCDiPhotons, highMassCiCDiPhotonsSB
-
-if invertEleVeto:
-    if doDoublePho0T:
-        highMassCiCDiPhotons0T.variables[-1] = "? matchedGsfTrackInnerMissingHits==0 ? 2 : 0"
-    elif customize.idversion == "TnP":
-        highMassCiCDiPhotons.variables[-1] = "hasPixelSeed"
-    else:
-        highMassCiCDiPhotons.variables[-1] = "hasPixelSeed"
-        highMassCiCDiPhotonsSB.variables[-1] = "hasPixelSeed"
-        ## highMassCiCDiPhotons.variables[-1] = "-(passElectronVeto-1)"
-        ## highMassCiCDiPhotonsSB.variables[-1] = "-(passElectronVeto-1)"
-
-    if customize.doeleId:
-        highMassCiCDiPhotons.cut = "( leadingPhoton.hasUserCand('eleMatch') || subLeadingPhoton.hasUserCand('eleMatch') ) && (%s)" % highMassCiCDiPhotons.cut.value()
-    ###     ## highMassCiCDiPhotons.variables.append( "hasUserCand('matchedElectron')")
-    ###     ## for cat in highMassCiCDiPhotons.categories:
-    ###     ## cat.append( cms.PSet(min=cms.string("0.5"))  )        
             
 # gen-only analysis
 if( customize.processType!="data" ):

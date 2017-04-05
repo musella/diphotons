@@ -1,3 +1,5 @@
+import re
+
 def makeOneLegInputs(label,obj,inputs):
     out = []
     for inp in inputs:
@@ -377,3 +379,45 @@ def getDefaultConfig():
 
     return variables, histograms, variablesSinglePho, histogramsSinglePho
 
+def getTnPVariables(id_var):
+    """
+    Converted default variables into TnP adding Id selection flags
+    """
+
+    variables, h, vSP, hSP = getDefaultConfig()
+
+    dipho_to_tnp_var = {"mass" : "mass := diPhoton.mass",
+                        "pt" : "pt := diPhoton.pt",
+                        "rapidity" : "rapidity := diPhoton.rapidity",
+                        "eta" : "eta := diPhoton.eta",
+                        "vertexZ  := vtx.z" : "vertexZ  := diPhoton.vtx.z", 
+                        "vertexId := vtx.key" : "vertexId := diPhoton.vtx.key",
+                        "genMass := genP4.mass" : "genMass := diPhoton.genP4.mass"
+                        }
+    
+    tnp_variables = []
+    for var in variables:
+        if var in dipho_to_tnp_var.keys():
+            var = dipho_to_tnp_var[var]
+
+        tnp_var = var
+        tnp_var = tnp_var.replace("subLeadingPhoton", "getProbe")
+        tnp_var = tnp_var.replace("subLeadingView", "getProbeView")
+        tnp_var = tnp_var.replace("leadingPhoton", "getTag")
+        tnp_var = tnp_var.replace("leadingView", "getTagView")
+        tnp_var = re.sub("[Ss]ub[lL]ead", "probe", tnp_var)
+        tnp_var = tnp_var.replace("lead", "tag")
+        tnp_var = tnp_var.replace("Lead", "tag")        
+        tnp_variables.append(tnp_var)
+
+    for var in id_var:
+        if ":=" in var:
+            name = "probePass_"+var[:var.find(":=")].strip()
+            userfloat = "probe_pass_"+var[:var.find(":=")].strip()
+        else:
+            name = "probePass_"+var
+            userfloat = "probe_pass_"+var
+        tnp_variables.append(name+" := userFloat('"+userfloat+"')")
+    tnp_variables.append("probePass_Id := userFloat('probe_pass_all')")
+
+    return tnp_variables

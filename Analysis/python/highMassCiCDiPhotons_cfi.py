@@ -10,12 +10,12 @@ phoEffArea=phoEffAreaV1
 neuEffArea=neuEffAreaV1
 
 highMassCiCVariables = cms.vstring(
-        "egChargedHadronIso", 
-        "egPhotonIso", 
-        "egNeutralHadronIso",
-        "hadTowOverEm",
-        "full5x5_sigmaIetaIeta",
-        "passElectronVeto"
+        "chIso   := egChargedHadronIso", 
+        "phoIso  := egPhotonIso", 
+        "neuIso  := egNeutralHadronIso",
+        "HoE     := hadTowOverEm",
+        "sIeIe   := full5x5_sigmaIetaIeta",
+        "eleVeto := passElectronVeto"
         )
 
 highMassCiCVariablesV2=highMassCiCVariables
