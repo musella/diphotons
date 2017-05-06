@@ -274,7 +274,7 @@ def getDefaultConfig():
                 "deltaEta>>deltaEta(200,0,5)",
                 "cosDeltaPhi>>cosDeltaPhi(200,0,1)",
                 "global.rho>>rho(20,0,50)",
-                "global.nvtx>>nvtx(51,0.5,50.5)",
+                "global.nvtx>>nvtx(50,0.5,50.5)",
                 
                 ### "global.mht60>>mht60(1500,0,15000)",
                 ### "global.mht30>>mht30(1500,0,15000)",
@@ -296,7 +296,8 @@ def getDefaultConfig():
                 "leadBlockChIso>>leadBlockChIso(120,-10,50)",
                 "leadBlockPhoIso>>leadBlockPhoIso(120,-10,50)",
                 "leadChIso>>leadChIso(120,-10,50)",
-                "leadPhoIso>>leadPhoIso(120,-10,50)",
+                "leadPhoIso>>leadEGPhoIso(120,-10,50)",
+                "leadPhoIso03>>leadPhoIso(120,-10,50)",
                 "leadNeutIso>>leadNeutIso(120,-10,50)",
                 "leadHoE>>leadHoE(40,0,0.2)",
                 "leadSigmaIeIe>>leadSigmaIeIe(320,0,3.2e-2)",
@@ -306,7 +307,8 @@ def getDefaultConfig():
                 "subleadBlockChIso>>subleadBlockChIso(120,-10,50)",
                 "subleadBlockPhoIso>>subleadBlockPhoIso(120,-10,50)",
                 "subleadChIso>>subleadChIso(120,-10,50)",
-                "subleadPhoIso>>subleadPhoIso(120,-10,50)",
+                "subleadPhoIso>>subleadEGPhoIso(120,-10,50)",
+                "subleadPhoIso03>>subleadPhoIso(120,-10,50)",                
                 "subleadNeutIso>>subleadNeutIso(120,-10,50)",
                 "subleadHoE>>subleadHoE(40,0,0.2)",
                 "subleadSigmaIeIe>>subleadSigmaIeIe(320,0,3.2e-2)",
@@ -417,7 +419,9 @@ def getTnPVariables(id_var):
         else:
             name = "probePass_"+var
             userfloat = "probe_pass_"+var
-        tnp_variables.append(name+" := userFloat('"+userfloat+"')")
-    tnp_variables.append("probePass_Id := userFloat('probe_pass_all')")
+        tnp_variables.append(name+" := userInt('"+userfloat+"')")
+    tnp_variables.append("probePass_Id := userInt('probe_pass_all')")
+    tnp_variables.append("tagGenEleMatch := userInt('tagGenMatch')")    
+    tnp_variables.append("probeGenEleMatch := userInt('probeGenMatch')")
 
     return tnp_variables

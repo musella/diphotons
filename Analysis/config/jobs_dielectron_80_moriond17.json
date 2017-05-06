@@ -16,6 +16,6 @@
                 ]
 	    },
 	
-    "cmdLine" : "metaDataSrc=flashgg campaign=ReMiniAOD-03Feb2017-2_5_X idversion=V2 selection=electron massCut=70 ptLead=35 ptSublead=25 trigger=HLT_Ele27_WPTight_Gsf_v*,HLT_Ele27_WPTight_Gsf_L1JetTauSeeded_v* doeleId=1 dohltMatch=1 dol1Match=1 doTnP=1 eleId=isHLTsafe lumiMask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/ReReco/Final/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt"
+    "cmdLine" : "metaDataSrc=flashgg campaign=ReMiniAOD-03Feb2017-2_5_X idversion=V2 selection=electron massCut=50 ptLead=20 ptSublead=10 trigger=HLT_Ele27_WPTight_Gsf_v* doeleId=1 dohltMatch=1 dol1Match=1 doTnP=1 eleId=isHLTsafe lumiMask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/ReReco/Final/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt"
 	    
 }

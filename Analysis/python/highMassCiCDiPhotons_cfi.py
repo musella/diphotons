@@ -3,7 +3,7 @@ import FWCore.ParameterSet.Config as cms
 phoEffAreaV1=cms.PSet( var=cms.string("abs(superCluster.eta)"), bins=cms.vdouble(0.,0.9,1.5,2,2.2,3), vals=cms.vdouble(0.21,0.2,0.14,0.22,0.31) )
 neuEffAreaV1=cms.PSet( var=cms.string("abs(superCluster.eta)"), bins=cms.vdouble(0.,0.9,1.5,2,2.2,3), vals=cms.vdouble(0.04,0.059,0.05,0.05,0.15) )
 
-phoEffAreaV2=cms.PSet( var=cms.string("abs(superCluster.eta)"), bins=cms.vdouble(0.,0.9,1.5,2,2.2,3), vals=cms.vdouble(0.17,0.14,0.11,0.14,0.22) )
+phoEffAreaV2=cms.PSet( var=cms.string("abs(superCluster.eta)"), bins=cms.vdouble(0.,0.9,1.5,2,2.2,3), vals=cms.vdouble(0.15,0.13,0.093,0.15,0.21) )
 neuEffAreaV2=cms.PSet( var=cms.string("abs(superCluster.eta)"), bins=cms.vdouble(0.,3), vals=cms.vdouble(0.) )
 
 phoEffArea=phoEffAreaV1
@@ -11,7 +11,7 @@ neuEffArea=neuEffAreaV1
 
 highMassCiCVariables = cms.vstring(
         "chIso   := egChargedHadronIso", 
-        "phoIso  := egPhotonIso", 
+        "phoIso  := pfPhoIso03", 
         "neuIso  := egNeutralHadronIso",
         "HoE     := hadTowOverEm",
         "sIeIe   := full5x5_sigmaIetaIeta",
@@ -188,7 +188,7 @@ highMassCiCCutsV2 = cms.VPSet(
         cms.PSet(cut=cms.string("abs(superCluster.eta)<1.5 && checkStatusFlag('kSaturated') && ! checkStatusFlag('kWeird')"),
                  selection = cms.VPSet(
                 cms.PSet(max=cms.string("5.")),
-                cms.PSet(max=cms.string("0.25+4.5e-3*pt"), 
+                cms.PSet(max=cms.string("1.76+1.6e-3*pt"), 
                          rhocorr=phoEffAreaV2,
                         ),
                 cms.PSet(# no neutral iso cut
@@ -201,7 +201,7 @@ highMassCiCCutsV2 = cms.VPSet(
         cms.PSet(cut=cms.string("abs(superCluster.eta)<1.5"),
                  selection = cms.VPSet(
                 cms.PSet(max=cms.string("5.")),
-                cms.PSet(max=cms.string("0.25+4.5e-3*pt"), 
+                cms.PSet(max=cms.string("1.76+1.6e-3*pt"), 
                          rhocorr=phoEffAreaV2
                         ),
                 cms.PSet(# no neutral iso cut
@@ -214,7 +214,7 @@ highMassCiCCutsV2 = cms.VPSet(
          cms.PSet(cut=cms.string("abs(superCluster.eta)>=1.5 && checkStatusFlag('kSaturated') && ! checkStatusFlag('kWeird')"),
                   selection = cms.VPSet(
                 cms.PSet(max=cms.string("5.")),
-                cms.PSet(max=cms.string("-0.5+3e-3*pt"), 
+                cms.PSet(max=cms.string("1.23+0.75e-3*pt"), 
                          rhocorr=phoEffAreaV2
                          ),
                 cms.PSet(# no neutral iso cut
@@ -227,7 +227,7 @@ highMassCiCCutsV2 = cms.VPSet(
         cms.PSet(cut=cms.string("abs(superCluster.eta)>=1.5"),
                  selection = cms.VPSet(
                 cms.PSet(max=cms.string("5.")),
-                cms.PSet(max=cms.string("-0.5+3e-3*pt"), 
+                cms.PSet(max=cms.string("1.23+0.75e-3*pt"), 
                          rhocorr=phoEffAreaV2
                         ),
                 cms.PSet(# no neutral iso cut
@@ -236,24 +236,6 @@ highMassCiCCutsV2 = cms.VPSet(
                 cms.PSet(min=cms.string("0.001"), max=cms.string("2.80e-2")),
                 cms.PSet(min=cms.string("0.5"))
                 ),
-                 )
-        )
-
-highMassCiCCutsTnP = cms.VPSet(
-        cms.PSet(cut=cms.string("1"),
-                 selection = cms.VPSet(
-                cms.PSet(# no ch iso cut
-                ),
-                cms.PSet(# no photon iso cut
-                        ),
-                cms.PSet(# no neutral iso cut
-                    ),
-                cms.PSet(# no H/E cut                
-                ),
-                cms.PSet(min=cms.string("0.001") # no sigma ieta ieta cut
-                         ),
-                cms.PSet(min=cms.string("0.5"))
-                 ),
                  )
         )
 
@@ -350,17 +332,4 @@ highMassCiCDiPhotonsV2 = cms.EDFilter(
 highMassCiCDiPhotonsSBV2 = highMassCiCDiPhotons.clone( categories=highMassCiCCutsV2SB )
 
 highMassCiCDiPhotonsSB = highMassCiCDiPhotons.clone( categories=highMassCiCCutsSB )
-
-highMassCiCDiPhotonsTnP = cms.EDFilter(
-    "GenericDiPhotonCandidateSelector",
-    src = cms.InputTag("kinDiPhotons"),
-    rho = cms.InputTag("fixedGridRhoAll"),
-    cut = cms.string(
-        "    (leadingPhoton.full5x5_r9>0.8||leadingPhoton.egChargedHadronIso<20||leadingPhoton.egChargedHadronIso/leadingPhoton.pt<0.3)"
-        " && (subLeadingPhoton.full5x5_r9>0.8||subLeadingPhoton.egChargedHadronIso<20||subLeadingPhoton.egChargedHadronIso/subLeadingPhoton.pt<0.3)" 
-        )
-    ,
-    variables = highMassCiCVariablesV2,
-    categories = highMassCiCCutsTnP,
-    )
 

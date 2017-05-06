@@ -1,0 +1,2975 @@
+{
+    "/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/spigazzi-EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1-0689b3a639cc88706e84c6dfd32dbd14/USER": {
+        "files": [
+            {
+                "bad": false, 
+                "events": 7530, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_108.root", 
+                "nevents": 7530, 
+                "totEvents": 7530, 
+                "weights": 7530.0
+            }, 
+            {
+                "bad": false, 
+                "events": 3711, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_14.root", 
+                "nevents": 3711, 
+                "totEvents": 3711, 
+                "weights": 3711.0
+            }, 
+            {
+                "bad": false, 
+                "events": 2892, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_15.root", 
+                "nevents": 2892, 
+                "totEvents": 2892, 
+                "weights": 2892.0
+            }, 
+            {
+                "bad": false, 
+                "events": 8271, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_17.root", 
+                "nevents": 8271, 
+                "totEvents": 8271, 
+                "weights": 8271.0
+            }, 
+            {
+                "bad": false, 
+                "events": 1470, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_19.root", 
+                "nevents": 1470, 
+                "totEvents": 1470, 
+                "weights": 1470.0
+            }, 
+            {
+                "bad": false, 
+                "events": 19724, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_24.root", 
+                "nevents": 19724, 
+                "totEvents": 19724, 
+                "weights": 19724.0
+            }, 
+            {
+                "bad": false, 
+                "events": 769, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_25.root", 
+                "nevents": 769, 
+                "totEvents": 769, 
+                "weights": 769.0
+            }, 
+            {
+                "bad": false, 
+                "events": 5264, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_29.root", 
+                "nevents": 5264, 
+                "totEvents": 5264, 
+                "weights": 5264.0
+            }, 
+            {
+                "bad": false, 
+                "events": 8195, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_30.root", 
+                "nevents": 8195, 
+                "totEvents": 8195, 
+                "weights": 8195.0
+            }, 
+            {
+                "bad": false, 
+                "events": 2190, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_38.root", 
+                "nevents": 2190, 
+                "totEvents": 2190, 
+                "weights": 2190.0
+            }, 
+            {
+                "bad": false, 
+                "events": 4100, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_41.root", 
+                "nevents": 4100, 
+                "totEvents": 4100, 
+                "weights": 4100.0
+            }, 
+            {
+                "bad": false, 
+                "events": 5653, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_42.root", 
+                "nevents": 5653, 
+                "totEvents": 5653, 
+                "weights": 5653.0
+            }, 
+            {
+                "bad": false, 
+                "events": 16117, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_44.root", 
+                "nevents": 16117, 
+                "totEvents": 16117, 
+                "weights": 16117.0
+            }, 
+            {
+                "bad": false, 
+                "events": 10464, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_48.root", 
+                "nevents": 10464, 
+                "totEvents": 10464, 
+                "weights": 10464.0
+            }, 
+            {
+                "bad": false, 
+                "events": 5837, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_49.root", 
+                "nevents": 5837, 
+                "totEvents": 5837, 
+                "weights": 5837.0
+            }, 
+            {
+                "bad": false, 
+                "events": 9156, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_57.root", 
+                "nevents": 9156, 
+                "totEvents": 9156, 
+                "weights": 9156.0
+            }, 
+            {
+                "bad": false, 
+                "events": 6083, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_64.root", 
+                "nevents": 6083, 
+                "totEvents": 6083, 
+                "weights": 6083.0
+            }, 
+            {
+                "bad": false, 
+                "events": 5250, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_68.root", 
+                "nevents": 5250, 
+                "totEvents": 5250, 
+                "weights": 5250.0
+            }, 
+            {
+                "bad": false, 
+                "events": 4984, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_69.root", 
+                "nevents": 4984, 
+                "totEvents": 4984, 
+                "weights": 4984.0
+            }, 
+            {
+                "bad": false, 
+                "events": 2259, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_75.root", 
+                "nevents": 2259, 
+                "totEvents": 2259, 
+                "weights": 2259.0
+            }, 
+            {
+                "bad": false, 
+                "events": 2159, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_78.root", 
+                "nevents": 2159, 
+                "totEvents": 2159, 
+                "weights": 2159.0
+            }, 
+            {
+                "bad": false, 
+                "events": 1147, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_87.root", 
+                "nevents": 1147, 
+                "totEvents": 1147, 
+                "weights": 1147.0
+            }, 
+            {
+                "bad": false, 
+                "events": 7145, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_100.root", 
+                "nevents": 7145, 
+                "totEvents": 7145, 
+                "weights": 7145.0
+            }, 
+            {
+                "bad": false, 
+                "events": 33646, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_12.root", 
+                "nevents": 33646, 
+                "totEvents": 33646, 
+                "weights": 33646.0
+            }, 
+            {
+                "bad": false, 
+                "events": 3304, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_123.root", 
+                "nevents": 3304, 
+                "totEvents": 3304, 
+                "weights": 3304.0
+            }, 
+            {
+                "bad": false, 
+                "events": 2210, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_132.root", 
+                "nevents": 2210, 
+                "totEvents": 2210, 
+                "weights": 2210.0
+            }, 
+            {
+                "bad": false, 
+                "events": 2550, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_142.root", 
+                "nevents": 2550, 
+                "totEvents": 2550, 
+                "weights": 2550.0
+            }, 
+            {
+                "bad": false, 
+                "events": 27606, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_31.root", 
+                "nevents": 27606, 
+                "totEvents": 27606, 
+                "weights": 27606.0
+            }, 
+            {
+                "bad": false, 
+                "events": 24024, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_32.root", 
+                "nevents": 24024, 
+                "totEvents": 24024, 
+                "weights": 24024.0
+            }, 
+            {
+                "bad": false, 
+                "events": 30299, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_46.root", 
+                "nevents": 30299, 
+                "totEvents": 30299, 
+                "weights": 30299.0
+            }, 
+            {
+                "bad": false, 
+                "events": 25190, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_61.root", 
+                "nevents": 25190, 
+                "totEvents": 25190, 
+                "weights": 25190.0
+            }, 
+            {
+                "bad": false, 
+                "events": 2682, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_90.root", 
+                "nevents": 2682, 
+                "totEvents": 2682, 
+                "weights": 2682.0
+            }, 
+            {
+                "bad": false, 
+                "events": 2228, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_96.root", 
+                "nevents": 2228, 
+                "totEvents": 2228, 
+                "weights": 2228.0
+            }, 
+            {
+                "bad": false, 
+                "events": 1812, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_98.root", 
+                "nevents": 1812, 
+                "totEvents": 1812, 
+                "weights": 1812.0
+            }, 
+            {
+                "bad": false, 
+                "events": 7531, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_128.root", 
+                "nevents": 7531, 
+                "totEvents": 7531, 
+                "weights": 7531.0
+            }, 
+            {
+                "bad": false, 
+                "events": 19756, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_80.root", 
+                "nevents": 19756, 
+                "totEvents": 19756, 
+                "weights": 19756.0
+            }, 
+            {
+                "bad": false, 
+                "events": 24514, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_111.root", 
+                "nevents": 24514, 
+                "totEvents": 24514, 
+                "weights": 24514.0
+            }, 
+            {
+                "bad": false, 
+                "events": 11378, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_107.root", 
+                "nevents": 11378, 
+                "totEvents": 11378, 
+                "weights": 11378.0
+            }, 
+            {
+                "bad": false, 
+                "events": 2213, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_115.root", 
+                "nevents": 2213, 
+                "totEvents": 2213, 
+                "weights": 2213.0
+            }, 
+            {
+                "bad": false, 
+                "events": 5701, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_118.root", 
+                "nevents": 5701, 
+                "totEvents": 5701, 
+                "weights": 5701.0
+            }, 
+            {
+                "bad": false, 
+                "events": 13515, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_55.root", 
+                "nevents": 13515, 
+                "totEvents": 13515, 
+                "weights": 13515.0
+            }, 
+            {
+                "bad": false, 
+                "events": 5744, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_160.root", 
+                "nevents": 5744, 
+                "totEvents": 5744, 
+                "weights": 5744.0
+            }, 
+            {
+                "bad": false, 
+                "events": 3185, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_162.root", 
+                "nevents": 3185, 
+                "totEvents": 3185, 
+                "weights": 3185.0
+            }, 
+            {
+                "bad": false, 
+                "events": 2460, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_174.root", 
+                "nevents": 2460, 
+                "totEvents": 2460, 
+                "weights": 2460.0
+            }, 
+            {
+                "bad": false, 
+                "events": 2688, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_187.root", 
+                "nevents": 2688, 
+                "totEvents": 2688, 
+                "weights": 2688.0
+            }, 
+            {
+                "bad": false, 
+                "events": 36242, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_92.root", 
+                "nevents": 36242, 
+                "totEvents": 36242, 
+                "weights": 36242.0
+            }, 
+            {
+                "bad": false, 
+                "events": 9479, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_181.root", 
+                "nevents": 9479, 
+                "totEvents": 9479, 
+                "weights": 9479.0
+            }, 
+            {
+                "bad": false, 
+                "events": 2696, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_208.root", 
+                "nevents": 2696, 
+                "totEvents": 2696, 
+                "weights": 2696.0
+            }, 
+            {
+                "bad": false, 
+                "events": 378, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_215.root", 
+                "nevents": 378, 
+                "totEvents": 378, 
+                "weights": 378.0
+            }, 
+            {
+                "bad": false, 
+                "events": 362, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_220.root", 
+                "nevents": 362, 
+                "totEvents": 362, 
+                "weights": 362.0
+            }, 
+            {
+                "bad": false, 
+                "events": 723, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_224.root", 
+                "nevents": 723, 
+                "totEvents": 723, 
+                "weights": 723.0
+            }, 
+            {
+                "bad": false, 
+                "events": 1955, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_227.root", 
+                "nevents": 1955, 
+                "totEvents": 1955, 
+                "weights": 1955.0
+            }, 
+            {
+                "bad": false, 
+                "events": 392, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_228.root", 
+                "nevents": 392, 
+                "totEvents": 392, 
+                "weights": 392.0
+            }, 
+            {
+                "bad": false, 
+                "events": 2244, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_238.root", 
+                "nevents": 2244, 
+                "totEvents": 2244, 
+                "weights": 2244.0
+            }, 
+            {
+                "bad": false, 
+                "events": 2169, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_239.root", 
+                "nevents": 2169, 
+                "totEvents": 2169, 
+                "weights": 2169.0
+            }, 
+            {
+                "bad": false, 
+                "events": 1780, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_240.root", 
+                "nevents": 1780, 
+                "totEvents": 1780, 
+                "weights": 1780.0
+            }, 
+            {
+                "bad": false, 
+                "events": 697, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_243.root", 
+                "nevents": 697, 
+                "totEvents": 697, 
+                "weights": 697.0
+            }, 
+            {
+                "bad": false, 
+                "events": 1084, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_249.root", 
+                "nevents": 1084, 
+                "totEvents": 1084, 
+                "weights": 1084.0
+            }, 
+            {
+                "bad": false, 
+                "events": 52039, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_26.root", 
+                "nevents": 52039, 
+                "totEvents": 52039, 
+                "weights": 52039.0
+            }, 
+            {
+                "bad": false, 
+                "events": 45652, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_66.root", 
+                "nevents": 45652, 
+                "totEvents": 45652, 
+                "weights": 45652.0
+            }, 
+            {
+                "bad": false, 
+                "events": 30078, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_71.root", 
+                "nevents": 30078, 
+                "totEvents": 30078, 
+                "weights": 30078.0
+            }, 
+            {
+                "bad": false, 
+                "events": 3732, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_216.root", 
+                "nevents": 3732, 
+                "totEvents": 3732, 
+                "weights": 3732.0
+            }, 
+            {
+                "bad": false, 
+                "events": 4071, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_234.root", 
+                "nevents": 4071, 
+                "totEvents": 4071, 
+                "weights": 4071.0
+            }, 
+            {
+                "bad": false, 
+                "events": 1337, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_252.root", 
+                "nevents": 1337, 
+                "totEvents": 1337, 
+                "weights": 1337.0
+            }, 
+            {
+                "bad": false, 
+                "events": 2128, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_253.root", 
+                "nevents": 2128, 
+                "totEvents": 2128, 
+                "weights": 2128.0
+            }, 
+            {
+                "bad": false, 
+                "events": 1741, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_265.root", 
+                "nevents": 1741, 
+                "totEvents": 1741, 
+                "weights": 1741.0
+            }, 
+            {
+                "bad": false, 
+                "events": 1071, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_276.root", 
+                "nevents": 1071, 
+                "totEvents": 1071, 
+                "weights": 1071.0
+            }, 
+            {
+                "bad": false, 
+                "events": 1461, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_278.root", 
+                "nevents": 1461, 
+                "totEvents": 1461, 
+                "weights": 1461.0
+            }, 
+            {
+                "bad": false, 
+                "events": 52068, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_33.root", 
+                "nevents": 52068, 
+                "totEvents": 52068, 
+                "weights": 52068.0
+            }, 
+            {
+                "bad": false, 
+                "events": 47498, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_53.root", 
+                "nevents": 47498, 
+                "totEvents": 47498, 
+                "weights": 47498.0
+            }, 
+            {
+                "bad": false, 
+                "events": 52595, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_60.root", 
+                "nevents": 52595, 
+                "totEvents": 52595, 
+                "weights": 52595.0
+            }, 
+            {
+                "bad": false, 
+                "events": 6603, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_214.root", 
+                "nevents": 6603, 
+                "totEvents": 6603, 
+                "weights": 6603.0
+            }, 
+            {
+                "bad": false, 
+                "events": 5611, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_222.root", 
+                "nevents": 5611, 
+                "totEvents": 5611, 
+                "weights": 5611.0
+            }, 
+            {
+                "bad": false, 
+                "events": 4354, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_225.root", 
+                "nevents": 4354, 
+                "totEvents": 4354, 
+                "weights": 4354.0
+            }, 
+            {
+                "bad": false, 
+                "events": 4491, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_229.root", 
+                "nevents": 4491, 
+                "totEvents": 4491, 
+                "weights": 4491.0
+            }, 
+            {
+                "bad": false, 
+                "events": 4402, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_231.root", 
+                "nevents": 4402, 
+                "totEvents": 4402, 
+                "weights": 4402.0
+            }, 
+            {
+                "bad": false, 
+                "events": 5736, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_232.root", 
+                "nevents": 5736, 
+                "totEvents": 5736, 
+                "weights": 5736.0
+            }, 
+            {
+                "bad": false, 
+                "events": 5212, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_242.root", 
+                "nevents": 5212, 
+                "totEvents": 5212, 
+                "weights": 5212.0
+            }, 
+            {
+                "bad": false, 
+                "events": 6627, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_246.root", 
+                "nevents": 6627, 
+                "totEvents": 6627, 
+                "weights": 6627.0
+            }, 
+            {
+                "bad": false, 
+                "events": 4891, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_256.root", 
+                "nevents": 4891, 
+                "totEvents": 4891, 
+                "weights": 4891.0
+            }, 
+            {
+                "bad": false, 
+                "events": 6156, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_260.root", 
+                "nevents": 6156, 
+                "totEvents": 6156, 
+                "weights": 6156.0
+            }, 
+            {
+                "bad": false, 
+                "events": 4664, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_266.root", 
+                "nevents": 4664, 
+                "totEvents": 4664, 
+                "weights": 4664.0
+            }, 
+            {
+                "bad": false, 
+                "events": 1007, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_294.root", 
+                "nevents": 1007, 
+                "totEvents": 1007, 
+                "weights": 1007.0
+            }, 
+            {
+                "bad": false, 
+                "events": 471, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_325.root", 
+                "nevents": 471, 
+                "totEvents": 471, 
+                "weights": 471.0
+            }, 
+            {
+                "bad": false, 
+                "events": 54047, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_51.root", 
+                "nevents": 54047, 
+                "totEvents": 54047, 
+                "weights": 54047.0
+            }, 
+            {
+                "bad": false, 
+                "events": 48241, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_99.root", 
+                "nevents": 48241, 
+                "totEvents": 48241, 
+                "weights": 48241.0
+            }, 
+            {
+                "bad": false, 
+                "events": 51227, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_11.root", 
+                "nevents": 51227, 
+                "totEvents": 51227, 
+                "weights": 51227.0
+            }, 
+            {
+                "bad": false, 
+                "events": 46158, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_114.root", 
+                "nevents": 46158, 
+                "totEvents": 46158, 
+                "weights": 46158.0
+            }, 
+            {
+                "bad": false, 
+                "events": 4869, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_271.root", 
+                "nevents": 4869, 
+                "totEvents": 4869, 
+                "weights": 4869.0
+            }, 
+            {
+                "bad": false, 
+                "events": 6073, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_272.root", 
+                "nevents": 6073, 
+                "totEvents": 6073, 
+                "weights": 6073.0
+            }, 
+            {
+                "bad": false, 
+                "events": 4403, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_279.root", 
+                "nevents": 4403, 
+                "totEvents": 4403, 
+                "weights": 4403.0
+            }, 
+            {
+                "bad": false, 
+                "events": 3719, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_281.root", 
+                "nevents": 3719, 
+                "totEvents": 3719, 
+                "weights": 3719.0
+            }, 
+            {
+                "bad": false, 
+                "events": 1311, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_302.root", 
+                "nevents": 1311, 
+                "totEvents": 1311, 
+                "weights": 1311.0
+            }, 
+            {
+                "bad": false, 
+                "events": 350, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_304.root", 
+                "nevents": 350, 
+                "totEvents": 350, 
+                "weights": 350.0
+            }, 
+            {
+                "bad": false, 
+                "events": 63, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_305.root", 
+                "nevents": 63, 
+                "totEvents": 63, 
+                "weights": 63.0
+            }, 
+            {
+                "bad": false, 
+                "events": 2265, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_323.root", 
+                "nevents": 2265, 
+                "totEvents": 2265, 
+                "weights": 2265.0
+            }, 
+            {
+                "bad": false, 
+                "events": 1886, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_326.root", 
+                "nevents": 1886, 
+                "totEvents": 1886, 
+                "weights": 1886.0
+            }, 
+            {
+                "bad": false, 
+                "events": 750, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_360.root", 
+                "nevents": 750, 
+                "totEvents": 750, 
+                "weights": 750.0
+            }, 
+            {
+                "bad": false, 
+                "events": 56129, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_50.root", 
+                "nevents": 56129, 
+                "totEvents": 56129, 
+                "weights": 56129.0
+            }, 
+            {
+                "bad": false, 
+                "events": 47756, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_63.root", 
+                "nevents": 47756, 
+                "totEvents": 47756, 
+                "weights": 47756.0
+            }, 
+            {
+                "bad": false, 
+                "events": 52484, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_65.root", 
+                "nevents": 52484, 
+                "totEvents": 52484, 
+                "weights": 52484.0
+            }, 
+            {
+                "bad": false, 
+                "events": 53357, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_70.root", 
+                "nevents": 53357, 
+                "totEvents": 53357, 
+                "weights": 53357.0
+            }, 
+            {
+                "bad": false, 
+                "events": 53398, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_73.root", 
+                "nevents": 53398, 
+                "totEvents": 53398, 
+                "weights": 53398.0
+            }, 
+            {
+                "bad": false, 
+                "events": 32130, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_112.root", 
+                "nevents": 32130, 
+                "totEvents": 32130, 
+                "weights": 32130.0
+            }, 
+            {
+                "bad": false, 
+                "events": 8503, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_230.root", 
+                "nevents": 8503, 
+                "totEvents": 8503, 
+                "weights": 8503.0
+            }, 
+            {
+                "bad": false, 
+                "events": 7124, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_248.root", 
+                "nevents": 7124, 
+                "totEvents": 7124, 
+                "weights": 7124.0
+            }, 
+            {
+                "bad": false, 
+                "events": 6635, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_255.root", 
+                "nevents": 6635, 
+                "totEvents": 6635, 
+                "weights": 6635.0
+            }, 
+            {
+                "bad": false, 
+                "events": 5528, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_292.root", 
+                "nevents": 5528, 
+                "totEvents": 5528, 
+                "weights": 5528.0
+            }, 
+            {
+                "bad": false, 
+                "events": 1500, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_303.root", 
+                "nevents": 1500, 
+                "totEvents": 1500, 
+                "weights": 1500.0
+            }, 
+            {
+                "bad": false, 
+                "events": 524, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_306.root", 
+                "nevents": 524, 
+                "totEvents": 524, 
+                "weights": 524.0
+            }, 
+            {
+                "bad": false, 
+                "events": 742, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_307.root", 
+                "nevents": 742, 
+                "totEvents": 742, 
+                "weights": 742.0
+            }, 
+            {
+                "bad": false, 
+                "events": 3356, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_314.root", 
+                "nevents": 3356, 
+                "totEvents": 3356, 
+                "weights": 3356.0
+            }, 
+            {
+                "bad": false, 
+                "events": 6005, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_319.root", 
+                "nevents": 6005, 
+                "totEvents": 6005, 
+                "weights": 6005.0
+            }, 
+            {
+                "bad": false, 
+                "events": 2166, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_347.root", 
+                "nevents": 2166, 
+                "totEvents": 2166, 
+                "weights": 2166.0
+            }, 
+            {
+                "bad": false, 
+                "events": 1487, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_366.root", 
+                "nevents": 1487, 
+                "totEvents": 1487, 
+                "weights": 1487.0
+            }, 
+            {
+                "bad": false, 
+                "events": 33935, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_95.root", 
+                "nevents": 33935, 
+                "totEvents": 33935, 
+                "weights": 33935.0
+            }, 
+            {
+                "bad": false, 
+                "events": 33600, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_97.root", 
+                "nevents": 33600, 
+                "totEvents": 33600, 
+                "weights": 33600.0
+            }, 
+            {
+                "bad": false, 
+                "events": 11677, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_235.root", 
+                "nevents": 11677, 
+                "totEvents": 11677, 
+                "weights": 11677.0
+            }, 
+            {
+                "bad": false, 
+                "events": 5968, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_301.root", 
+                "nevents": 5968, 
+                "totEvents": 5968, 
+                "weights": 5968.0
+            }, 
+            {
+                "bad": false, 
+                "events": 6218, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_329.root", 
+                "nevents": 6218, 
+                "totEvents": 6218, 
+                "weights": 6218.0
+            }, 
+            {
+                "bad": false, 
+                "events": 4499, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_352.root", 
+                "nevents": 4499, 
+                "totEvents": 4499, 
+                "weights": 4499.0
+            }, 
+            {
+                "bad": false, 
+                "events": 4108, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_355.root", 
+                "nevents": 4108, 
+                "totEvents": 4108, 
+                "weights": 4108.0
+            }, 
+            {
+                "bad": false, 
+                "events": 7246, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_357.root", 
+                "nevents": 7246, 
+                "totEvents": 7246, 
+                "weights": 7246.0
+            }, 
+            {
+                "bad": false, 
+                "events": 1486, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_371.root", 
+                "nevents": 1486, 
+                "totEvents": 1486, 
+                "weights": 1486.0
+            }, 
+            {
+                "bad": false, 
+                "events": 6184, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_161.root", 
+                "nevents": 6184, 
+                "totEvents": 6184, 
+                "weights": 6184.0
+            }, 
+            {
+                "bad": false, 
+                "events": 30040, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_180.root", 
+                "nevents": 30040, 
+                "totEvents": 30040, 
+                "weights": 30040.0
+            }, 
+            {
+                "bad": false, 
+                "events": 12931, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_237.root", 
+                "nevents": 12931, 
+                "totEvents": 12931, 
+                "weights": 12931.0
+            }, 
+            {
+                "bad": false, 
+                "events": 11737, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_250.root", 
+                "nevents": 11737, 
+                "totEvents": 11737, 
+                "weights": 11737.0
+            }, 
+            {
+                "bad": false, 
+                "events": 7051, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_264.root", 
+                "nevents": 7051, 
+                "totEvents": 7051, 
+                "weights": 7051.0
+            }, 
+            {
+                "bad": false, 
+                "events": 9198, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_280.root", 
+                "nevents": 9198, 
+                "totEvents": 9198, 
+                "weights": 9198.0
+            }, 
+            {
+                "bad": false, 
+                "events": 6073, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_297.root", 
+                "nevents": 6073, 
+                "totEvents": 6073, 
+                "weights": 6073.0
+            }, 
+            {
+                "bad": false, 
+                "events": 2983, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_299.root", 
+                "nevents": 2983, 
+                "totEvents": 2983, 
+                "weights": 2983.0
+            }, 
+            {
+                "bad": false, 
+                "events": 10330, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_321.root", 
+                "nevents": 10330, 
+                "totEvents": 10330, 
+                "weights": 10330.0
+            }, 
+            {
+                "bad": false, 
+                "events": 11041, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_322.root", 
+                "nevents": 11041, 
+                "totEvents": 11041, 
+                "weights": 11041.0
+            }, 
+            {
+                "bad": false, 
+                "events": 6620, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_335.root", 
+                "nevents": 6620, 
+                "totEvents": 6620, 
+                "weights": 6620.0
+            }, 
+            {
+                "bad": false, 
+                "events": 44617, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_34.root", 
+                "nevents": 44617, 
+                "totEvents": 44617, 
+                "weights": 44617.0
+            }, 
+            {
+                "bad": false, 
+                "events": 722, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_341.root", 
+                "nevents": 722, 
+                "totEvents": 722, 
+                "weights": 722.0
+            }, 
+            {
+                "bad": false, 
+                "events": 45234, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_35.root", 
+                "nevents": 45234, 
+                "totEvents": 45234, 
+                "weights": 45234.0
+            }, 
+            {
+                "bad": false, 
+                "events": 5218, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_351.root", 
+                "nevents": 5218, 
+                "totEvents": 5218, 
+                "weights": 5218.0
+            }, 
+            {
+                "bad": false, 
+                "events": 44244, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_37.root", 
+                "nevents": 44244, 
+                "totEvents": 44244, 
+                "weights": 44244.0
+            }, 
+            {
+                "bad": false, 
+                "events": 46596, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_39.root", 
+                "nevents": 46596, 
+                "totEvents": 46596, 
+                "weights": 46596.0
+            }, 
+            {
+                "bad": false, 
+                "events": 46439, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_8.root", 
+                "nevents": 46439, 
+                "totEvents": 46439, 
+                "weights": 46439.0
+            }, 
+            {
+                "bad": false, 
+                "events": 10687, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_1.root", 
+                "nevents": 10687, 
+                "totEvents": 10687, 
+                "weights": 10687.0
+            }, 
+            {
+                "bad": false, 
+                "events": 51946, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_117.root", 
+                "nevents": 51946, 
+                "totEvents": 51946, 
+                "weights": 51946.0
+            }, 
+            {
+                "bad": false, 
+                "events": 33492, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_184.root", 
+                "nevents": 33492, 
+                "totEvents": 33492, 
+                "weights": 33492.0
+            }, 
+            {
+                "bad": false, 
+                "events": 16782, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_218.root", 
+                "nevents": 16782, 
+                "totEvents": 16782, 
+                "weights": 16782.0
+            }, 
+            {
+                "bad": false, 
+                "events": 15385, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_245.root", 
+                "nevents": 15385, 
+                "totEvents": 15385, 
+                "weights": 15385.0
+            }, 
+            {
+                "bad": false, 
+                "events": 12126, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_277.root", 
+                "nevents": 12126, 
+                "totEvents": 12126, 
+                "weights": 12126.0
+            }, 
+            {
+                "bad": false, 
+                "events": 12413, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_282.root", 
+                "nevents": 12413, 
+                "totEvents": 12413, 
+                "weights": 12413.0
+            }, 
+            {
+                "bad": false, 
+                "events": 2975, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_336.root", 
+                "nevents": 2975, 
+                "totEvents": 2975, 
+                "weights": 2975.0
+            }, 
+            {
+                "bad": false, 
+                "events": 2960, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_339.root", 
+                "nevents": 2960, 
+                "totEvents": 2960, 
+                "weights": 2960.0
+            }, 
+            {
+                "bad": false, 
+                "events": 8319, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_368.root", 
+                "nevents": 8319, 
+                "totEvents": 8319, 
+                "weights": 8319.0
+            }, 
+            {
+                "bad": false, 
+                "events": 48030, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_9.root", 
+                "nevents": 48030, 
+                "totEvents": 48030, 
+                "weights": 48030.0
+            }, 
+            {
+                "bad": false, 
+                "events": 47898, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_121.root", 
+                "nevents": 47898, 
+                "totEvents": 47898, 
+                "weights": 47898.0
+            }, 
+            {
+                "bad": false, 
+                "events": 17984, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_201.root", 
+                "nevents": 17984, 
+                "totEvents": 17984, 
+                "weights": 17984.0
+            }, 
+            {
+                "bad": false, 
+                "events": 17534, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_244.root", 
+                "nevents": 17534, 
+                "totEvents": 17534, 
+                "weights": 17534.0
+            }, 
+            {
+                "bad": false, 
+                "events": 12100, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_295.root", 
+                "nevents": 12100, 
+                "totEvents": 12100, 
+                "weights": 12100.0
+            }, 
+            {
+                "bad": false, 
+                "events": 18378, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_328.root", 
+                "nevents": 18378, 
+                "totEvents": 18378, 
+                "weights": 18378.0
+            }, 
+            {
+                "bad": false, 
+                "events": 49856, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_40.root", 
+                "nevents": 49856, 
+                "totEvents": 49856, 
+                "weights": 49856.0
+            }, 
+            {
+                "bad": false, 
+                "events": 52507, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_7.root", 
+                "nevents": 52507, 
+                "totEvents": 52507, 
+                "weights": 52507.0
+            }, 
+            {
+                "bad": false, 
+                "events": 49069, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_94.root", 
+                "nevents": 49069, 
+                "totEvents": 49069, 
+                "weights": 49069.0
+            }, 
+            {
+                "bad": false, 
+                "events": 53032, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_10.root", 
+                "nevents": 53032, 
+                "totEvents": 53032, 
+                "weights": 53032.0
+            }, 
+            {
+                "bad": false, 
+                "events": 35588, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_136.root", 
+                "nevents": 35588, 
+                "totEvents": 35588, 
+                "weights": 35588.0
+            }, 
+            {
+                "bad": false, 
+                "events": 8507, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_170.root", 
+                "nevents": 8507, 
+                "totEvents": 8507, 
+                "weights": 8507.0
+            }, 
+            {
+                "bad": false, 
+                "events": 13923, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_177.root", 
+                "nevents": 13923, 
+                "totEvents": 13923, 
+                "weights": 13923.0
+            }, 
+            {
+                "bad": false, 
+                "events": 44630, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_20.root", 
+                "nevents": 44630, 
+                "totEvents": 44630, 
+                "weights": 44630.0
+            }, 
+            {
+                "bad": false, 
+                "events": 6521, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_221.root", 
+                "nevents": 6521, 
+                "totEvents": 6521, 
+                "weights": 6521.0
+            }, 
+            {
+                "bad": false, 
+                "events": 4383, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_223.root", 
+                "nevents": 4383, 
+                "totEvents": 4383, 
+                "weights": 4383.0
+            }, 
+            {
+                "bad": false, 
+                "events": 1085, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_226.root", 
+                "nevents": 1085, 
+                "totEvents": 1085, 
+                "weights": 1085.0
+            }, 
+            {
+                "bad": false, 
+                "events": 19372, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_236.root", 
+                "nevents": 19372, 
+                "totEvents": 19372, 
+                "weights": 19372.0
+            }, 
+            {
+                "bad": false, 
+                "events": 4229, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_247.root", 
+                "nevents": 4229, 
+                "totEvents": 4229, 
+                "weights": 4229.0
+            }, 
+            {
+                "bad": false, 
+                "events": 20718, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_254.root", 
+                "nevents": 20718, 
+                "totEvents": 20718, 
+                "weights": 20718.0
+            }, 
+            {
+                "bad": false, 
+                "events": 2140, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_257.root", 
+                "nevents": 2140, 
+                "totEvents": 2140, 
+                "weights": 2140.0
+            }, 
+            {
+                "bad": false, 
+                "events": 5182, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_284.root", 
+                "nevents": 5182, 
+                "totEvents": 5182, 
+                "weights": 5182.0
+            }, 
+            {
+                "bad": false, 
+                "events": 734, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_285.root", 
+                "nevents": 734, 
+                "totEvents": 734, 
+                "weights": 734.0
+            }, 
+            {
+                "bad": false, 
+                "events": 3337, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_291.root", 
+                "nevents": 3337, 
+                "totEvents": 3337, 
+                "weights": 3337.0
+            }, 
+            {
+                "bad": false, 
+                "events": 731, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_296.root", 
+                "nevents": 731, 
+                "totEvents": 731, 
+                "weights": 731.0
+            }, 
+            {
+                "bad": false, 
+                "events": 13130, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_315.root", 
+                "nevents": 13130, 
+                "totEvents": 13130, 
+                "weights": 13130.0
+            }, 
+            {
+                "bad": false, 
+                "events": 18479, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_353.root", 
+                "nevents": 18479, 
+                "totEvents": 18479, 
+                "weights": 18479.0
+            }, 
+            {
+                "bad": false, 
+                "events": 56390, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_36.root", 
+                "nevents": 56390, 
+                "totEvents": 56390, 
+                "weights": 56390.0
+            }, 
+            {
+                "bad": false, 
+                "events": 735, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_363.root", 
+                "nevents": 735, 
+                "totEvents": 735, 
+                "weights": 735.0
+            }, 
+            {
+                "bad": false, 
+                "events": 54949, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_6.root", 
+                "nevents": 54949, 
+                "totEvents": 54949, 
+                "weights": 54949.0
+            }, 
+            {
+                "bad": false, 
+                "events": 50174, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_89.root", 
+                "nevents": 50174, 
+                "totEvents": 50174, 
+                "weights": 50174.0
+            }, 
+            {
+                "bad": false, 
+                "events": 45259, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_93.root", 
+                "nevents": 45259, 
+                "totEvents": 45259, 
+                "weights": 45259.0
+            }, 
+            {
+                "bad": false, 
+                "events": 21286, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_263.root", 
+                "nevents": 21286, 
+                "totEvents": 21286, 
+                "weights": 21286.0
+            }, 
+            {
+                "bad": false, 
+                "events": 32220, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_105.root", 
+                "nevents": 32220, 
+                "totEvents": 32220, 
+                "weights": 32220.0
+            }, 
+            {
+                "bad": false, 
+                "events": 50528, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_125.root", 
+                "nevents": 50528, 
+                "totEvents": 50528, 
+                "weights": 50528.0
+            }, 
+            {
+                "bad": false, 
+                "events": 49931, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_178.root", 
+                "nevents": 49931, 
+                "totEvents": 49931, 
+                "weights": 49931.0
+            }, 
+            {
+                "bad": false, 
+                "events": 47322, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_179.root", 
+                "nevents": 47322, 
+                "totEvents": 47322, 
+                "weights": 47322.0
+            }, 
+            {
+                "bad": false, 
+                "events": 47772, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_182.root", 
+                "nevents": 47772, 
+                "totEvents": 47772, 
+                "weights": 47772.0
+            }, 
+            {
+                "bad": false, 
+                "events": 64312, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_27.root", 
+                "nevents": 64312, 
+                "totEvents": 64312, 
+                "weights": 64312.0
+            }, 
+            {
+                "bad": false, 
+                "events": 25083, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_270.root", 
+                "nevents": 25083, 
+                "totEvents": 25083, 
+                "weights": 25083.0
+            }, 
+            {
+                "bad": false, 
+                "events": 8717, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_293.root", 
+                "nevents": 8717, 
+                "totEvents": 8717, 
+                "weights": 8717.0
+            }, 
+            {
+                "bad": false, 
+                "events": 6031, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_298.root", 
+                "nevents": 6031, 
+                "totEvents": 6031, 
+                "weights": 6031.0
+            }, 
+            {
+                "bad": false, 
+                "events": 2905, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_310.root", 
+                "nevents": 2905, 
+                "totEvents": 2905, 
+                "weights": 2905.0
+            }, 
+            {
+                "bad": false, 
+                "events": 12028, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_317.root", 
+                "nevents": 12028, 
+                "totEvents": 12028, 
+                "weights": 12028.0
+            }, 
+            {
+                "bad": false, 
+                "events": 8412, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_333.root", 
+                "nevents": 8412, 
+                "totEvents": 8412, 
+                "weights": 8412.0
+            }, 
+            {
+                "bad": false, 
+                "events": 4925, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_346.root", 
+                "nevents": 4925, 
+                "totEvents": 4925, 
+                "weights": 4925.0
+            }, 
+            {
+                "bad": false, 
+                "events": 7608, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_364.root", 
+                "nevents": 7608, 
+                "totEvents": 7608, 
+                "weights": 7608.0
+            }, 
+            {
+                "bad": false, 
+                "events": 14040, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_5.root", 
+                "nevents": 14040, 
+                "totEvents": 14040, 
+                "weights": 14040.0
+            }, 
+            {
+                "bad": false, 
+                "events": 56553, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_88.root", 
+                "nevents": 56553, 
+                "totEvents": 56553, 
+                "weights": 56553.0
+            }, 
+            {
+                "bad": false, 
+                "events": 50641, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_124.root", 
+                "nevents": 50641, 
+                "totEvents": 50641, 
+                "weights": 50641.0
+            }, 
+            {
+                "bad": false, 
+                "events": 50698, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_185.root", 
+                "nevents": 50698, 
+                "totEvents": 50698, 
+                "weights": 50698.0
+            }, 
+            {
+                "bad": false, 
+                "events": 31879, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_348.root", 
+                "nevents": 31879, 
+                "totEvents": 31879, 
+                "weights": 31879.0
+            }, 
+            {
+                "bad": false, 
+                "events": 52462, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_126.root", 
+                "nevents": 52462, 
+                "totEvents": 52462, 
+                "weights": 52462.0
+            }, 
+            {
+                "bad": false, 
+                "events": 47181, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_129.root", 
+                "nevents": 47181, 
+                "totEvents": 47181, 
+                "weights": 47181.0
+            }, 
+            {
+                "bad": false, 
+                "events": 69128, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_13.root", 
+                "nevents": 69128, 
+                "totEvents": 69128, 
+                "weights": 69128.0
+            }, 
+            {
+                "bad": false, 
+                "events": 50294, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_135.root", 
+                "nevents": 50294, 
+                "totEvents": 50294, 
+                "weights": 50294.0
+            }, 
+            {
+                "bad": false, 
+                "events": 27997, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_204.root", 
+                "nevents": 27997, 
+                "totEvents": 27997, 
+                "weights": 27997.0
+            }, 
+            {
+                "bad": false, 
+                "events": 12138, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_259.root", 
+                "nevents": 12138, 
+                "totEvents": 12138, 
+                "weights": 12138.0
+            }, 
+            {
+                "bad": false, 
+                "events": 19259, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_273.root", 
+                "nevents": 19259, 
+                "totEvents": 19259, 
+                "weights": 19259.0
+            }, 
+            {
+                "bad": false, 
+                "events": 19304, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_289.root", 
+                "nevents": 19304, 
+                "totEvents": 19304, 
+                "weights": 19304.0
+            }, 
+            {
+                "bad": false, 
+                "events": 8344, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_311.root", 
+                "nevents": 8344, 
+                "totEvents": 8344, 
+                "weights": 8344.0
+            }, 
+            {
+                "bad": false, 
+                "events": 16178, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_358.root", 
+                "nevents": 16178, 
+                "totEvents": 16178, 
+                "weights": 16178.0
+            }, 
+            {
+                "bad": false, 
+                "events": 11166, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_361.root", 
+                "nevents": 11166, 
+                "totEvents": 11166, 
+                "weights": 11166.0
+            }, 
+            {
+                "bad": false, 
+                "events": 54772, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_138.root", 
+                "nevents": 54772, 
+                "totEvents": 54772, 
+                "weights": 54772.0
+            }, 
+            {
+                "bad": false, 
+                "events": 53514, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_139.root", 
+                "nevents": 53514, 
+                "totEvents": 53514, 
+                "weights": 53514.0
+            }, 
+            {
+                "bad": false, 
+                "events": 49153, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_140.root", 
+                "nevents": 49153, 
+                "totEvents": 49153, 
+                "weights": 49153.0
+            }, 
+            {
+                "bad": false, 
+                "events": 54293, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_141.root", 
+                "nevents": 54293, 
+                "totEvents": 54293, 
+                "weights": 54293.0
+            }, 
+            {
+                "bad": false, 
+                "events": 21887, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_148.root", 
+                "nevents": 21887, 
+                "totEvents": 21887, 
+                "weights": 21887.0
+            }, 
+            {
+                "bad": false, 
+                "events": 49501, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_149.root", 
+                "nevents": 49501, 
+                "totEvents": 49501, 
+                "weights": 49501.0
+            }, 
+            {
+                "bad": false, 
+                "events": 35434, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_269.root", 
+                "nevents": 35434, 
+                "totEvents": 35434, 
+                "weights": 35434.0
+            }, 
+            {
+                "bad": false, 
+                "events": 27863, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_275.root", 
+                "nevents": 27863, 
+                "totEvents": 27863, 
+                "weights": 27863.0
+            }, 
+            {
+                "bad": false, 
+                "events": 12614, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_300.root", 
+                "nevents": 12614, 
+                "totEvents": 12614, 
+                "weights": 12614.0
+            }, 
+            {
+                "bad": false, 
+                "events": 28744, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_332.root", 
+                "nevents": 28744, 
+                "totEvents": 28744, 
+                "weights": 28744.0
+            }, 
+            {
+                "bad": false, 
+                "events": 45643, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_101.root", 
+                "nevents": 45643, 
+                "totEvents": 45643, 
+                "weights": 45643.0
+            }, 
+            {
+                "bad": false, 
+                "events": 50588, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_106.root", 
+                "nevents": 50588, 
+                "totEvents": 50588, 
+                "weights": 50588.0
+            }, 
+            {
+                "bad": false, 
+                "events": 44965, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_110.root", 
+                "nevents": 44965, 
+                "totEvents": 44965, 
+                "weights": 44965.0
+            }, 
+            {
+                "bad": false, 
+                "events": 33451, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_241.root", 
+                "nevents": 33451, 
+                "totEvents": 33451, 
+                "weights": 33451.0
+            }, 
+            {
+                "bad": false, 
+                "events": 7663, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_290.root", 
+                "nevents": 7663, 
+                "totEvents": 7663, 
+                "weights": 7663.0
+            }, 
+            {
+                "bad": false, 
+                "events": 31589, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_309.root", 
+                "nevents": 31589, 
+                "totEvents": 31589, 
+                "weights": 31589.0
+            }, 
+            {
+                "bad": false, 
+                "events": 45666, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_316.root", 
+                "nevents": 45666, 
+                "totEvents": 45666, 
+                "weights": 45666.0
+            }, 
+            {
+                "bad": false, 
+                "events": 22106, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_362.root", 
+                "nevents": 22106, 
+                "totEvents": 22106, 
+                "weights": 22106.0
+            }, 
+            {
+                "bad": false, 
+                "events": 41051, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_268.root", 
+                "nevents": 41051, 
+                "totEvents": 41051, 
+                "weights": 41051.0
+            }, 
+            {
+                "bad": false, 
+                "events": 33044, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_320.root", 
+                "nevents": 33044, 
+                "totEvents": 33044, 
+                "weights": 33044.0
+            }, 
+            {
+                "bad": false, 
+                "events": 50071, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_324.root", 
+                "nevents": 50071, 
+                "totEvents": 50071, 
+                "weights": 50071.0
+            }, 
+            {
+                "bad": false, 
+                "events": 45663, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_345.root", 
+                "nevents": 45663, 
+                "totEvents": 45663, 
+                "weights": 45663.0
+            }, 
+            {
+                "bad": false, 
+                "events": 17848, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_370.root", 
+                "nevents": 17848, 
+                "totEvents": 17848, 
+                "weights": 17848.0
+            }, 
+            {
+                "bad": false, 
+                "events": 49248, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_150.root", 
+                "nevents": 49248, 
+                "totEvents": 49248, 
+                "weights": 49248.0
+            }, 
+            {
+                "bad": false, 
+                "events": 46233, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_176.root", 
+                "nevents": 46233, 
+                "totEvents": 46233, 
+                "weights": 46233.0
+            }, 
+            {
+                "bad": false, 
+                "events": 45588, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_251.root", 
+                "nevents": 45588, 
+                "totEvents": 45588, 
+                "weights": 45588.0
+            }, 
+            {
+                "bad": false, 
+                "events": 48062, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_28.root", 
+                "nevents": 48062, 
+                "totEvents": 48062, 
+                "weights": 48062.0
+            }, 
+            {
+                "bad": false, 
+                "events": 36879, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_286.root", 
+                "nevents": 36879, 
+                "totEvents": 36879, 
+                "weights": 36879.0
+            }, 
+            {
+                "bad": false, 
+                "events": 31987, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_3.root", 
+                "nevents": 31987, 
+                "totEvents": 31987, 
+                "weights": 31987.0
+            }, 
+            {
+                "bad": false, 
+                "events": 12935, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_312.root", 
+                "nevents": 12935, 
+                "totEvents": 12935, 
+                "weights": 12935.0
+            }, 
+            {
+                "bad": false, 
+                "events": 32988, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_313.root", 
+                "nevents": 32988, 
+                "totEvents": 32988, 
+                "weights": 32988.0
+            }, 
+            {
+                "bad": false, 
+                "events": 16516, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_318.root", 
+                "nevents": 16516, 
+                "totEvents": 16516, 
+                "weights": 16516.0
+            }, 
+            {
+                "bad": false, 
+                "events": 11203, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_350.root", 
+                "nevents": 11203, 
+                "totEvents": 11203, 
+                "weights": 11203.0
+            }, 
+            {
+                "bad": false, 
+                "events": 10739, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_365.root", 
+                "nevents": 10739, 
+                "totEvents": 10739, 
+                "weights": 10739.0
+            }, 
+            {
+                "bad": false, 
+                "events": 46294, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_62.root", 
+                "nevents": 46294, 
+                "totEvents": 46294, 
+                "weights": 46294.0
+            }, 
+            {
+                "bad": false, 
+                "events": 47881, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_103.root", 
+                "nevents": 47881, 
+                "totEvents": 47881, 
+                "weights": 47881.0
+            }, 
+            {
+                "bad": false, 
+                "events": 46189, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_113.root", 
+                "nevents": 46189, 
+                "totEvents": 46189, 
+                "weights": 46189.0
+            }, 
+            {
+                "bad": false, 
+                "events": 38923, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_127.root", 
+                "nevents": 38923, 
+                "totEvents": 38923, 
+                "weights": 38923.0
+            }, 
+            {
+                "bad": false, 
+                "events": 45318, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_131.root", 
+                "nevents": 45318, 
+                "totEvents": 45318, 
+                "weights": 45318.0
+            }, 
+            {
+                "bad": false, 
+                "events": 45008, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_16.root", 
+                "nevents": 45008, 
+                "totEvents": 45008, 
+                "weights": 45008.0
+            }, 
+            {
+                "bad": false, 
+                "events": 52084, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_164.root", 
+                "nevents": 52084, 
+                "totEvents": 52084, 
+                "weights": 52084.0
+            }, 
+            {
+                "bad": false, 
+                "events": 52003, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_167.root", 
+                "nevents": 52003, 
+                "totEvents": 52003, 
+                "weights": 52003.0
+            }, 
+            {
+                "bad": false, 
+                "events": 46603, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_172.root", 
+                "nevents": 46603, 
+                "totEvents": 46603, 
+                "weights": 46603.0
+            }, 
+            {
+                "bad": false, 
+                "events": 45001, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_198.root", 
+                "nevents": 45001, 
+                "totEvents": 45001, 
+                "weights": 45001.0
+            }, 
+            {
+                "bad": false, 
+                "events": 45790, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_202.root", 
+                "nevents": 45790, 
+                "totEvents": 45790, 
+                "weights": 45790.0
+            }, 
+            {
+                "bad": false, 
+                "events": 46978, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_258.root", 
+                "nevents": 46978, 
+                "totEvents": 46978, 
+                "weights": 46978.0
+            }, 
+            {
+                "bad": false, 
+                "events": 47040, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_261.root", 
+                "nevents": 47040, 
+                "totEvents": 47040, 
+                "weights": 47040.0
+            }, 
+            {
+                "bad": false, 
+                "events": 48325, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_267.root", 
+                "nevents": 48325, 
+                "totEvents": 48325, 
+                "weights": 48325.0
+            }, 
+            {
+                "bad": false, 
+                "events": 44717, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_338.root", 
+                "nevents": 44717, 
+                "totEvents": 44717, 
+                "weights": 44717.0
+            }, 
+            {
+                "bad": false, 
+                "events": 38230, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_349.root", 
+                "nevents": 38230, 
+                "totEvents": 38230, 
+                "weights": 38230.0
+            }, 
+            {
+                "bad": false, 
+                "events": 50628, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_54.root", 
+                "nevents": 50628, 
+                "totEvents": 50628, 
+                "weights": 50628.0
+            }, 
+            {
+                "bad": false, 
+                "events": 48731, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_84.root", 
+                "nevents": 48731, 
+                "totEvents": 48731, 
+                "weights": 48731.0
+            }, 
+            {
+                "bad": false, 
+                "events": 48026, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_143.root", 
+                "nevents": 48026, 
+                "totEvents": 48026, 
+                "weights": 48026.0
+            }, 
+            {
+                "bad": false, 
+                "events": 35127, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_163.root", 
+                "nevents": 35127, 
+                "totEvents": 35127, 
+                "weights": 35127.0
+            }, 
+            {
+                "bad": false, 
+                "events": 51091, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_166.root", 
+                "nevents": 51091, 
+                "totEvents": 51091, 
+                "weights": 51091.0
+            }, 
+            {
+                "bad": false, 
+                "events": 48880, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_171.root", 
+                "nevents": 48880, 
+                "totEvents": 48880, 
+                "weights": 48880.0
+            }, 
+            {
+                "bad": false, 
+                "events": 47236, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_195.root", 
+                "nevents": 47236, 
+                "totEvents": 47236, 
+                "weights": 47236.0
+            }, 
+            {
+                "bad": false, 
+                "events": 50752, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_199.root", 
+                "nevents": 50752, 
+                "totEvents": 50752, 
+                "weights": 50752.0
+            }, 
+            {
+                "bad": false, 
+                "events": 48918, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_209.root", 
+                "nevents": 48918, 
+                "totEvents": 48918, 
+                "weights": 48918.0
+            }, 
+            {
+                "bad": false, 
+                "events": 50022, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_213.root", 
+                "nevents": 50022, 
+                "totEvents": 50022, 
+                "weights": 50022.0
+            }, 
+            {
+                "bad": false, 
+                "events": 49323, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_217.root", 
+                "nevents": 49323, 
+                "totEvents": 49323, 
+                "weights": 49323.0
+            }, 
+            {
+                "bad": false, 
+                "events": 52145, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_233.root", 
+                "nevents": 52145, 
+                "totEvents": 52145, 
+                "weights": 52145.0
+            }, 
+            {
+                "bad": false, 
+                "events": 53433, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_287.root", 
+                "nevents": 53433, 
+                "totEvents": 53433, 
+                "weights": 53433.0
+            }, 
+            {
+                "bad": false, 
+                "events": 52637, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_288.root", 
+                "nevents": 52637, 
+                "totEvents": 52637, 
+                "weights": 52637.0
+            }, 
+            {
+                "bad": false, 
+                "events": 38971, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_331.root", 
+                "nevents": 38971, 
+                "totEvents": 38971, 
+                "weights": 38971.0
+            }, 
+            {
+                "bad": false, 
+                "events": 51772, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_343.root", 
+                "nevents": 51772, 
+                "totEvents": 51772, 
+                "weights": 51772.0
+            }, 
+            {
+                "bad": false, 
+                "events": 36925, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_344.root", 
+                "nevents": 36925, 
+                "totEvents": 36925, 
+                "weights": 36925.0
+            }, 
+            {
+                "bad": false, 
+                "events": 44509, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_58.root", 
+                "nevents": 44509, 
+                "totEvents": 44509, 
+                "weights": 44509.0
+            }, 
+            {
+                "bad": false, 
+                "events": 39546, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_91.root", 
+                "nevents": 39546, 
+                "totEvents": 39546, 
+                "weights": 39546.0
+            }, 
+            {
+                "bad": false, 
+                "events": 54187, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_109.root", 
+                "nevents": 54187, 
+                "totEvents": 54187, 
+                "weights": 54187.0
+            }, 
+            {
+                "bad": false, 
+                "events": 48139, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_168.root", 
+                "nevents": 48139, 
+                "totEvents": 48139, 
+                "weights": 48139.0
+            }, 
+            {
+                "bad": false, 
+                "events": 47539, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_169.root", 
+                "nevents": 47539, 
+                "totEvents": 47539, 
+                "weights": 47539.0
+            }, 
+            {
+                "bad": false, 
+                "events": 68204, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_186.root", 
+                "nevents": 68204, 
+                "totEvents": 68204, 
+                "weights": 68204.0
+            }, 
+            {
+                "bad": false, 
+                "events": 65116, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_189.root", 
+                "nevents": 65116, 
+                "totEvents": 65116, 
+                "weights": 65116.0
+            }, 
+            {
+                "bad": false, 
+                "events": 55401, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_197.root", 
+                "nevents": 55401, 
+                "totEvents": 55401, 
+                "weights": 55401.0
+            }, 
+            {
+                "bad": false, 
+                "events": 54354, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_206.root", 
+                "nevents": 54354, 
+                "totEvents": 54354, 
+                "weights": 54354.0
+            }, 
+            {
+                "bad": false, 
+                "events": 55373, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_210.root", 
+                "nevents": 55373, 
+                "totEvents": 55373, 
+                "weights": 55373.0
+            }, 
+            {
+                "bad": false, 
+                "events": 55173, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_212.root", 
+                "nevents": 55173, 
+                "totEvents": 55173, 
+                "weights": 55173.0
+            }, 
+            {
+                "bad": false, 
+                "events": 47403, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_283.root", 
+                "nevents": 47403, 
+                "totEvents": 47403, 
+                "weights": 47403.0
+            }, 
+            {
+                "bad": false, 
+                "events": 24934, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_308.root", 
+                "nevents": 24934, 
+                "totEvents": 24934, 
+                "weights": 24934.0
+            }, 
+            {
+                "bad": false, 
+                "events": 78369, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_327.root", 
+                "nevents": 78369, 
+                "totEvents": 78369, 
+                "weights": 78369.0
+            }, 
+            {
+                "bad": false, 
+                "events": 51271, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_356.root", 
+                "nevents": 51271, 
+                "totEvents": 51271, 
+                "weights": 51271.0
+            }, 
+            {
+                "bad": false, 
+                "events": 53087, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_82.root", 
+                "nevents": 53087, 
+                "totEvents": 53087, 
+                "weights": 53087.0
+            }, 
+            {
+                "bad": false, 
+                "events": 47107, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_85.root", 
+                "nevents": 47107, 
+                "totEvents": 47107, 
+                "weights": 47107.0
+            }, 
+            {
+                "bad": false, 
+                "events": 45961, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_104.root", 
+                "nevents": 45961, 
+                "totEvents": 45961, 
+                "weights": 45961.0
+            }, 
+            {
+                "bad": false, 
+                "events": 47656, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_120.root", 
+                "nevents": 47656, 
+                "totEvents": 47656, 
+                "weights": 47656.0
+            }, 
+            {
+                "bad": false, 
+                "events": 50433, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_130.root", 
+                "nevents": 50433, 
+                "totEvents": 50433, 
+                "weights": 50433.0
+            }, 
+            {
+                "bad": false, 
+                "events": 44701, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_133.root", 
+                "nevents": 44701, 
+                "totEvents": 44701, 
+                "weights": 44701.0
+            }, 
+            {
+                "bad": false, 
+                "events": 44412, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_134.root", 
+                "nevents": 44412, 
+                "totEvents": 44412, 
+                "weights": 44412.0
+            }, 
+            {
+                "bad": false, 
+                "events": 84097, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_137.root", 
+                "nevents": 84097, 
+                "totEvents": 84097, 
+                "weights": 84097.0
+            }, 
+            {
+                "bad": false, 
+                "events": 48874, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_145.root", 
+                "nevents": 48874, 
+                "totEvents": 48874, 
+                "weights": 48874.0
+            }, 
+            {
+                "bad": false, 
+                "events": 51772, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_156.root", 
+                "nevents": 51772, 
+                "totEvents": 51772, 
+                "weights": 51772.0
+            }, 
+            {
+                "bad": false, 
+                "events": 51073, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_159.root", 
+                "nevents": 51073, 
+                "totEvents": 51073, 
+                "weights": 51073.0
+            }, 
+            {
+                "bad": false, 
+                "events": 73492, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_175.root", 
+                "nevents": 73492, 
+                "totEvents": 73492, 
+                "weights": 73492.0
+            }, 
+            {
+                "bad": false, 
+                "events": 50182, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_183.root", 
+                "nevents": 50182, 
+                "totEvents": 50182, 
+                "weights": 50182.0
+            }, 
+            {
+                "bad": false, 
+                "events": 57186, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_190.root", 
+                "nevents": 57186, 
+                "totEvents": 57186, 
+                "weights": 57186.0
+            }, 
+            {
+                "bad": false, 
+                "events": 77396, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_194.root", 
+                "nevents": 77396, 
+                "totEvents": 77396, 
+                "weights": 77396.0
+            }, 
+            {
+                "bad": false, 
+                "events": 60790, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_196.root", 
+                "nevents": 60790, 
+                "totEvents": 60790, 
+                "weights": 60790.0
+            }, 
+            {
+                "bad": false, 
+                "events": 29090, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_2.root", 
+                "nevents": 29090, 
+                "totEvents": 29090, 
+                "weights": 29090.0
+            }, 
+            {
+                "bad": false, 
+                "events": 55539, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_203.root", 
+                "nevents": 55539, 
+                "totEvents": 55539, 
+                "weights": 55539.0
+            }, 
+            {
+                "bad": false, 
+                "events": 72368, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_207.root", 
+                "nevents": 72368, 
+                "totEvents": 72368, 
+                "weights": 72368.0
+            }, 
+            {
+                "bad": false, 
+                "events": 48034, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_219.root", 
+                "nevents": 48034, 
+                "totEvents": 48034, 
+                "weights": 48034.0
+            }, 
+            {
+                "bad": false, 
+                "events": 60288, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_23.root", 
+                "nevents": 60288, 
+                "totEvents": 60288, 
+                "weights": 60288.0
+            }, 
+            {
+                "bad": false, 
+                "events": 44654, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_262.root", 
+                "nevents": 44654, 
+                "totEvents": 44654, 
+                "weights": 44654.0
+            }, 
+            {
+                "bad": false, 
+                "events": 46486, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_116.root", 
+                "nevents": 46486, 
+                "totEvents": 46486, 
+                "weights": 46486.0
+            }, 
+            {
+                "bad": false, 
+                "events": 55212, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_119.root", 
+                "nevents": 55212, 
+                "totEvents": 55212, 
+                "weights": 55212.0
+            }, 
+            {
+                "bad": false, 
+                "events": 44479, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_144.root", 
+                "nevents": 44479, 
+                "totEvents": 44479, 
+                "weights": 44479.0
+            }, 
+            {
+                "bad": false, 
+                "events": 63318, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_147.root", 
+                "nevents": 63318, 
+                "totEvents": 63318, 
+                "weights": 63318.0
+            }, 
+            {
+                "bad": false, 
+                "events": 63950, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_158.root", 
+                "nevents": 63950, 
+                "totEvents": 63950, 
+                "weights": 63950.0
+            }, 
+            {
+                "bad": false, 
+                "events": 51781, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_18.root", 
+                "nevents": 51781, 
+                "totEvents": 51781, 
+                "weights": 51781.0
+            }, 
+            {
+                "bad": false, 
+                "events": 85089, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_188.root", 
+                "nevents": 85089, 
+                "totEvents": 85089, 
+                "weights": 85089.0
+            }, 
+            {
+                "bad": false, 
+                "events": 64077, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_205.root", 
+                "nevents": 64077, 
+                "totEvents": 64077, 
+                "weights": 64077.0
+            }, 
+            {
+                "bad": false, 
+                "events": 61581, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_211.root", 
+                "nevents": 61581, 
+                "totEvents": 61581, 
+                "weights": 61581.0
+            }, 
+            {
+                "bad": false, 
+                "events": 61199, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_274.root", 
+                "nevents": 61199, 
+                "totEvents": 61199, 
+                "weights": 61199.0
+            }, 
+            {
+                "bad": false, 
+                "events": 78110, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_330.root", 
+                "nevents": 78110, 
+                "totEvents": 78110, 
+                "weights": 78110.0
+            }, 
+            {
+                "bad": false, 
+                "events": 37951, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_337.root", 
+                "nevents": 37951, 
+                "totEvents": 37951, 
+                "weights": 37951.0
+            }, 
+            {
+                "bad": false, 
+                "events": 45257, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_340.root", 
+                "nevents": 45257, 
+                "totEvents": 45257, 
+                "weights": 45257.0
+            }, 
+            {
+                "bad": false, 
+                "events": 64325, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_367.root", 
+                "nevents": 64325, 
+                "totEvents": 64325, 
+                "weights": 64325.0
+            }, 
+            {
+                "bad": false, 
+                "events": 47750, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_369.root", 
+                "nevents": 47750, 
+                "totEvents": 47750, 
+                "weights": 47750.0
+            }, 
+            {
+                "bad": false, 
+                "events": 68461, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_4.root", 
+                "nevents": 68461, 
+                "totEvents": 68461, 
+                "weights": 68461.0
+            }, 
+            {
+                "bad": false, 
+                "events": 37035, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_56.root", 
+                "nevents": 37035, 
+                "totEvents": 37035, 
+                "weights": 37035.0
+            }, 
+            {
+                "bad": false, 
+                "events": 63502, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_76.root", 
+                "nevents": 63502, 
+                "totEvents": 63502, 
+                "weights": 63502.0
+            }, 
+            {
+                "bad": false, 
+                "events": 48163, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_77.root", 
+                "nevents": 48163, 
+                "totEvents": 48163, 
+                "weights": 48163.0
+            }, 
+            {
+                "bad": false, 
+                "events": 51722, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_81.root", 
+                "nevents": 51722, 
+                "totEvents": 51722, 
+                "weights": 51722.0
+            }, 
+            {
+                "bad": false, 
+                "events": 87482, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_83.root", 
+                "nevents": 87482, 
+                "totEvents": 87482, 
+                "weights": 87482.0
+            }, 
+            {
+                "bad": false, 
+                "events": 49488, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_86.root", 
+                "nevents": 49488, 
+                "totEvents": 49488, 
+                "weights": 49488.0
+            }, 
+            {
+                "bad": false, 
+                "events": 49595, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_102.root", 
+                "nevents": 49595, 
+                "totEvents": 49595, 
+                "weights": 49595.0
+            }, 
+            {
+                "bad": false, 
+                "events": 54730, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_122.root", 
+                "nevents": 54730, 
+                "totEvents": 54730, 
+                "weights": 54730.0
+            }, 
+            {
+                "bad": false, 
+                "events": 83696, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_146.root", 
+                "nevents": 83696, 
+                "totEvents": 83696, 
+                "weights": 83696.0
+            }, 
+            {
+                "bad": false, 
+                "events": 49682, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_151.root", 
+                "nevents": 49682, 
+                "totEvents": 49682, 
+                "weights": 49682.0
+            }, 
+            {
+                "bad": false, 
+                "events": 50852, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_152.root", 
+                "nevents": 50852, 
+                "totEvents": 50852, 
+                "weights": 50852.0
+            }, 
+            {
+                "bad": false, 
+                "events": 55226, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_153.root", 
+                "nevents": 55226, 
+                "totEvents": 55226, 
+                "weights": 55226.0
+            }, 
+            {
+                "bad": false, 
+                "events": 48995, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_154.root", 
+                "nevents": 48995, 
+                "totEvents": 48995, 
+                "weights": 48995.0
+            }, 
+            {
+                "bad": false, 
+                "events": 77609, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_155.root", 
+                "nevents": 77609, 
+                "totEvents": 77609, 
+                "weights": 77609.0
+            }, 
+            {
+                "bad": false, 
+                "events": 65789, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_157.root", 
+                "nevents": 65789, 
+                "totEvents": 65789, 
+                "weights": 65789.0
+            }, 
+            {
+                "bad": false, 
+                "events": 53049, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_165.root", 
+                "nevents": 53049, 
+                "totEvents": 53049, 
+                "weights": 53049.0
+            }, 
+            {
+                "bad": false, 
+                "events": 83823, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_173.root", 
+                "nevents": 83823, 
+                "totEvents": 83823, 
+                "weights": 83823.0
+            }, 
+            {
+                "bad": false, 
+                "events": 84099, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_191.root", 
+                "nevents": 84099, 
+                "totEvents": 84099, 
+                "weights": 84099.0
+            }, 
+            {
+                "bad": false, 
+                "events": 79685, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_192.root", 
+                "nevents": 79685, 
+                "totEvents": 79685, 
+                "weights": 79685.0
+            }, 
+            {
+                "bad": false, 
+                "events": 50334, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_193.root", 
+                "nevents": 50334, 
+                "totEvents": 50334, 
+                "weights": 50334.0
+            }, 
+            {
+                "bad": false, 
+                "events": 77720, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_200.root", 
+                "nevents": 77720, 
+                "totEvents": 77720, 
+                "weights": 77720.0
+            }, 
+            {
+                "bad": false, 
+                "events": 44517, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_21.root", 
+                "nevents": 44517, 
+                "totEvents": 44517, 
+                "weights": 44517.0
+            }, 
+            {
+                "bad": false, 
+                "events": 77881, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_22.root", 
+                "nevents": 77881, 
+                "totEvents": 77881, 
+                "weights": 77881.0
+            }, 
+            {
+                "bad": false, 
+                "events": 50172, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_334.root", 
+                "nevents": 50172, 
+                "totEvents": 50172, 
+                "weights": 50172.0
+            }, 
+            {
+                "bad": false, 
+                "events": 39287, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_342.root", 
+                "nevents": 39287, 
+                "totEvents": 39287, 
+                "weights": 39287.0
+            }, 
+            {
+                "bad": false, 
+                "events": 48945, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_354.root", 
+                "nevents": 48945, 
+                "totEvents": 48945, 
+                "weights": 48945.0
+            }, 
+            {
+                "bad": false, 
+                "events": 45170, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_359.root", 
+                "nevents": 45170, 
+                "totEvents": 45170, 
+                "weights": 45170.0
+            }, 
+            {
+                "bad": false, 
+                "events": 81378, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_43.root", 
+                "nevents": 81378, 
+                "totEvents": 81378, 
+                "weights": 81378.0
+            }, 
+            {
+                "bad": false, 
+                "events": 80899, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_45.root", 
+                "nevents": 80899, 
+                "totEvents": 80899, 
+                "weights": 80899.0
+            }, 
+            {
+                "bad": false, 
+                "events": 63081, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_47.root", 
+                "nevents": 63081, 
+                "totEvents": 63081, 
+                "weights": 63081.0
+            }, 
+            {
+                "bad": false, 
+                "events": 77426, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_52.root", 
+                "nevents": 77426, 
+                "totEvents": 77426, 
+                "weights": 77426.0
+            }, 
+            {
+                "bad": false, 
+                "events": 48829, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_59.root", 
+                "nevents": 48829, 
+                "totEvents": 48829, 
+                "weights": 48829.0
+            }, 
+            {
+                "bad": false, 
+                "events": 86057, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_67.root", 
+                "nevents": 86057, 
+                "totEvents": 86057, 
+                "weights": 86057.0
+            }, 
+            {
+                "bad": false, 
+                "events": 86406, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_72.root", 
+                "nevents": 86406, 
+                "totEvents": 86406, 
+                "weights": 86406.0
+            }, 
+            {
+                "bad": false, 
+                "events": 75774, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_74.root", 
+                "nevents": 75774, 
+                "totEvents": 75774, 
+                "weights": 75774.0
+            }, 
+            {
+                "bad": false, 
+                "events": 53795, 
+                "name": "/store/group/phys_exotica/diphoton/spigazzi/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/EXOSpring17_v1-tag-Moriond17-v10-7-g0e93f26-v1-RunIISummer16MiniAODv2-PUMoriond17_qcut19_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170411_195515/0000/diphotonsMicroAOD_79.root", 
+                "nevents": 53795, 
+                "totEvents": 53795, 
+                "weights": 53795.0
+            }
+        ], 
+        "vetted": true
+    }
+}

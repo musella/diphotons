@@ -53,7 +53,7 @@ done
 
 
 src=$1 && shift
-www=~/www/exo/spring16
+www=~/www/exo/spring17
 echo $1
 [ -n "$1" ] && www=$1 && shift
 

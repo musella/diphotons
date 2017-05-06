@@ -5,5 +5,5 @@
 			       ]
 	    },
 	
-	"cmdLine" : "metaDataSrc=flashgg campaign=RunIISummer16-2_4_1-25ns_Moriond17 idversion=V2 selection=electron massCut=70 ptLead=35 ptSublead=25 trigger=HLT_Ele27_WPTight_Gsf_v*  doeleId=1 dohltMatch=1 dol1Match=1 eleId=isHLTsafe doTnP=1"
+	"cmdLine" : "metaDataSrc=flashgg campaign=RunIISummer16-2_4_1-25ns_Moriond17 idversion=V2 selection=electron massCut=50 ptLead=20 ptSublead=10 trigger=HLT_Ele27_WPTight_Gsf_v* doeleId=1 dohltMatch=1 dol1Match=1 eleId=isHLTsafe doTnP=1"
 }

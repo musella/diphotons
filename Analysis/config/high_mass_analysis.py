@@ -73,9 +73,14 @@ customize.setDefault("targetLumi",1.e+3)
 # customize.setDefault("puTarget",
 #                      "2.39e+05,8.38e+05,2.31e+06,3.12e+06,4.48e+06,6e+06,7e+06,1.29e+07,3.53e+07,7.87e+07,1.77e+08,3.6e+08,6.03e+08,8.77e+08,1.17e+09,1.49e+09,1.76e+09,1.94e+09,2.05e+09,2.1e+09,2.13e+09,2.15e+09,2.13e+09,2.06e+09,1.96e+09,1.84e+09,1.7e+09,1.55e+09,1.4e+09,1.24e+09,1.09e+09,9.37e+08,7.92e+08,6.57e+08,5.34e+08,4.27e+08,3.35e+08,2.58e+08,1.94e+08,1.42e+08,1.01e+08,6.9e+07,4.55e+07,2.88e+07,1.75e+07,1.02e+07,5.64e+06,2.99e+06,1.51e+06,7.32e+05,3.4e+05,1.53e+05,6.74e+04,3.05e+04,1.52e+04,8.98e+03,6.5e+03,5.43e+03,4.89e+03,4.52e+03,4.21e+03,3.91e+03,3.61e+03,3.32e+03,3.03e+03,2.75e+03,2.47e+03,2.21e+03,1.97e+03,1.74e+03,1.52e+03,1.32e+03,1.14e+03,983,839")
 
-## Moriond17 ReMiniAOD 36/fb
+## Moriond17 ReMiniAOD 35.9/fb (shorter putarget for spring16 samples)
+# customize.setDefault("puTarget",
+#                      "2.39e+05,8.38e+05,2.31e+06,3.12e+06,4.48e+06,6e+06,7e+06,1.29e+07,3.53e+07,7.87e+07,1.77e+08,3.6e+08,6.03e+08,8.77e+08,1.17e+09,1.49e+09,1.76e+09,1.94e+09,2.05e+09,2.1e+09,2.13e+09,2.15e+09,2.13e+09,2.06e+09,1.96e+09,1.84e+09,1.7e+09,1.55e+09,1.4e+09,1.24e+09,1.09e+09,9.37e+08,7.92e+08,6.57e+08,5.34e+08,4.27e+08,3.35e+08,2.58e+08,1.94e+08,1.42e+08,1.01e+08,6.9e+07,4.55e+07,2.88e+07,1.75e+07,1.02e+07,5.64e+06,2.99e+06,1.51e+06,7.32e+05")
+
+## Moriond17 ReMiniAOD 35.9/fb
 customize.setDefault("puTarget",
                      "2.39e+05,8.38e+05,2.31e+06,3.12e+06,4.48e+06,6e+06,7e+06,1.29e+07,3.53e+07,7.87e+07,1.77e+08,3.6e+08,6.03e+08,8.77e+08,1.17e+09,1.49e+09,1.76e+09,1.94e+09,2.05e+09,2.1e+09,2.13e+09,2.15e+09,2.13e+09,2.06e+09,1.96e+09,1.84e+09,1.7e+09,1.55e+09,1.4e+09,1.24e+09,1.09e+09,9.37e+08,7.92e+08,6.57e+08,5.34e+08,4.27e+08,3.35e+08,2.58e+08,1.94e+08,1.42e+08,1.01e+08,6.9e+07,4.55e+07,2.88e+07,1.75e+07,1.02e+07,5.64e+06,2.99e+06,1.51e+06,7.32e+05,3.4e+05,1.53e+05,6.74e+04,3.05e+04,1.52e+04,8.98e+03,6.5e+03,5.43e+03,4.89e+03,4.52e+03,4.21e+03,3.91e+03,3.61e+03,3.32e+03,3.03e+03,2.75e+03,2.47e+03,2.21e+03,1.97e+03,1.74e+03,1.52e+03,1.32e+03,1.14e+03,983,839")
+
 
 import FWCore.ParameterSet.VarParsing as VarParsing
 customize.options.register ('selection',
@@ -513,11 +518,11 @@ if customize.doTnP:
     process.load("flashgg.Taggers.FlashggTagAndProbeProducer_cfi")
     process.load("flashgg.Taggers.tagAndProbeDumper_cfi")    
     from flashgg.Taggers.FlashggTagAndProbeProducer_cfi import flashggTagAndProbe
-    from diphotons.Analysis.highMassCiCPhotons_cfi import highMassCiCPhotonsV2 
+    from diphotons.Analysis.highMassCiCPhotons_cfi import highMassCiCPhotonsV2
     process.flashggTagAndProbe = flashggTagAndProbe
     process.flashggTagAndProbe.diphotonsSrc = "kinDiPhotons"
-    process.flashggTagAndProbe.tagSelection = "abs(eta) < 2.1 && pt > 30 && userInt('HLT_Ele27_WPTight_Gsf_v') && (?hasUserCand('eleMatch')?userCand('eleMatch').passTightId:0) && hasPixelSeed"
-    #process.flashggTagAndProbe.probeSelection = "1"
+    process.flashggTagAndProbe.tagSelection = "abs(eta) < 2.1 && pt > 30 && userInt('HLT_Ele27_WPTight_Gsf_v') && (?hasUserCand('eleMatch')?userCand('eleMatch').passTightId:0) && hasPixelSeed && full5x5_r9>0.8 && egChargedHadronIso < 20 && egChargedHadronIso/pt < 0.3"
+    process.flashggTagAndProbe.probeSelection = "full5x5_r9>0.8 && egChargedHadronIso < 20 && egChargedHadronIso/pt < 0.3"
     process.flashggTagAndProbe.idSelection = cms.PSet(
         rho = highMassCiCPhotonsV2.rho,
         cut = highMassCiCPhotonsV2.cut,        
@@ -528,11 +533,12 @@ if customize.doTnP:
     tagAndProbeDumper.dumpTrees = True
     cfgTools.addCategories(tagAndProbeDumper,
                            [
-                               ("Reject", "diPhoton.mass < 60 || diPhoton.mass > 120", -1),
-                               ("EBHighR9", "abs(getProbe.superCluster.eta)<1.4442 && getProbe.full5x5_r9>0.94", 0),
-                               ("EBLowR9", "abs(getProbe.superCluster.eta)<1.4442 && getProbe.full5x5_r9<=0.94", 0),
-                               ("EEHighR9", "abs(getProbe.superCluster.eta)>1.566 && getProbe.full5x5_r9>0.94", 0),
-                               ("EELowR9", "abs(getProbe.superCluster.eta)>1.566 && getProbe.full5x5_r9<=0.94", 0)
+                               ("Reject", "diPhoton.mass < 50 || diPhoton.mass > 130", -1),
+                               ("All", "1", 0)
+                               # ("EBHighR9", "abs(getProbe.superCluster.eta)<1.4442 && getProbe.full5x5_r9>0.94", 0),
+                               # ("EBLowR9", "abs(getProbe.superCluster.eta)<1.4442 && getProbe.full5x5_r9<=0.94", 0),
+                               # ("EEHighR9", "abs(getProbe.superCluster.eta)>1.566 && getProbe.full5x5_r9>0.94", 0),
+                               # ("EELowR9", "abs(getProbe.superCluster.eta)>1.566 && getProbe.full5x5_r9<=0.94", 0)
                            ],
                            variables=dumpCfg.getTnPVariables(process.flashggTagAndProbe.idSelection.variables),
                            histograms=[]
@@ -680,13 +686,13 @@ if doDoublePho0T:
                               )    
     
 elif doDoublePho:
-    analysis.addAnalysisSelection(process,"cic",highMassCiCDiPhotons,dumpTrees=False,dumpWorkspace=False,dumpHistos=True,splitByIso=True,
+    analysis.addAnalysisSelection(process,"cic",highMassCiCDiPhotons,dumpTrees=dumpTrees,dumpWorkspace=False,dumpHistos=True,splitByIso=True,
                                   dumperTemplate=diphotonDumper,
-                                  nMinusOne=[(0,"NoChIso",        dumpNm1Trees, False,False), ## removeIndex(es), label, dumpTree, dumpWorkspace, dumpHistos
+                                  nMinusOne=[(0,"NoChIso",        False, False,False), ## removeIndex(es), label, dumpTree, dumpWorkspace, dumpHistos
                                              (1,"NoPhoIso",       False, False,False),
                                              (2,"NoNeuIso",       False,False,False),
                                              (3,"NoHoverE",       False,False,False),
-                                             (4,"NoSigmaIetaIeta",dumpTrees,False,False),
+                                             (4,"NoSigmaIetaIeta",False,False,False),
                                              (5,"NoEleVeto",      False,False,False),
                                              ]
                                   )
@@ -724,7 +730,7 @@ if not customize.lastAttempt:
     # make sure process doesn't get stuck due to slow I/O
     process.watchDog = cms.EDAnalyzer("IdleWatchdog",
                                       minIdleFraction=cms.untracked.double(0.1),
-                                      tolerance=cms.untracked.int32(10),
+                                      tolerance=cms.untracked.int32(1000),
                                       checkEvery=cms.untracked.int32(100),
                                       )
     process.watch = cms.Path(
