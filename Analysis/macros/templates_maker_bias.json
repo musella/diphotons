@@ -36,12 +36,12 @@
     "_templatesMC" : [
                "GGJets_M_200To13000_13TeV:__infile__/%(sel)s"
              ],
-    "templatesMC" : [
+    "_templatesMC" : [
                "GGJets_M_60To13000_Pt_50_sherpa_13TeV:__infile__/%(sel)s"
              ],
              
      "#" : "mc dataset",
-     "mc" : [
+     "_mc" : [
                "GGJets_M_60To13000_Pt_50_sherpa_13TeV:__infile__/%(sel)sNonGenIso",
                "GGJets_M_60To13000_Pt_50_sherpa_13TeV:__infile__/%(sel)sGenIso"
             ],
@@ -140,7 +140,7 @@
 		       		  "RSGravToGG_kMpl_01_M_5000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"
 		       		  ]
             },
-      "signals" : {
+      "_signals" : {
      	       	 "grav_01_allmasses" : ["RSGravToGG_kMpl_01_M_750_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso",
 		       		  "RSGravToGG_kMpl_01_M_750_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso",
      	       	 "RSGravToGG_kMpl_01_M_1000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso",

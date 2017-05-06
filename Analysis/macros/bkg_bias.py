@@ -485,8 +485,11 @@ class BiasApp(CombineApp):
             for cat in categories:
                 
                 ## roobs = self.getObservable(cat)
-                
-                treename = "mctruth_%s%s_%s" % (comp,fitname,cat)
+
+                if options.use_data:
+                    treename = "data_tree_%s%s_%s" % (comp,fitname,cat)
+                else:                    
+                    treename = "mctruth_%s%s_%s" % (comp,fitname,cat)
                 
                 print treename
                 dset = self.rooData(treename)
