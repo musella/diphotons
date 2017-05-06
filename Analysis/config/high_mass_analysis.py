@@ -21,18 +21,6 @@ process.RandomNumberGeneratorService = cms.Service("RandomNumberGeneratorService
                                                    highMassCorrectedDiphotonsMC = cms.PSet(initialSeed = cms.untracked.uint32(664)),
                                                   )
 
-
-### process.genGravitons = cms.EDProducer("GenParticlePruner",
-###                                     src = cms.InputTag("flashggPrunedGenParticles"),
-###                                     select = cms.vstring("drop  *  ", # this is the default
-###                                                          "keep pdgId = 5100039",
-###                                                          )
-###                                     )
-### if "Grav" in customize.datasetName():
-###     bookCandViewNtProducer(process,"genGr","genGravitons")
-###     addGloabalFloat(diphotonDumper.globalVariables,process,"genGr","genVtxZ","vertex.z")
-### 
-
 #
 # load job options
 #
@@ -85,9 +73,14 @@ customize.setDefault("targetLumi",1.e+3)
 # customize.setDefault("puTarget",
 #                      "2.39e+05,8.38e+05,2.31e+06,3.12e+06,4.48e+06,6e+06,7e+06,1.29e+07,3.53e+07,7.87e+07,1.77e+08,3.6e+08,6.03e+08,8.77e+08,1.17e+09,1.49e+09,1.76e+09,1.94e+09,2.05e+09,2.1e+09,2.13e+09,2.15e+09,2.13e+09,2.06e+09,1.96e+09,1.84e+09,1.7e+09,1.55e+09,1.4e+09,1.24e+09,1.09e+09,9.37e+08,7.92e+08,6.57e+08,5.34e+08,4.27e+08,3.35e+08,2.58e+08,1.94e+08,1.42e+08,1.01e+08,6.9e+07,4.55e+07,2.88e+07,1.75e+07,1.02e+07,5.64e+06,2.99e+06,1.51e+06,7.32e+05,3.4e+05,1.53e+05,6.74e+04,3.05e+04,1.52e+04,8.98e+03,6.5e+03,5.43e+03,4.89e+03,4.52e+03,4.21e+03,3.91e+03,3.61e+03,3.32e+03,3.03e+03,2.75e+03,2.47e+03,2.21e+03,1.97e+03,1.74e+03,1.52e+03,1.32e+03,1.14e+03,983,839")
 
-## Moriond17 ReMiniAOD 36/fb
+## Moriond17 ReMiniAOD 35.9/fb (shorter putarget for spring16 samples)
+# customize.setDefault("puTarget",
+#                      "2.39e+05,8.38e+05,2.31e+06,3.12e+06,4.48e+06,6e+06,7e+06,1.29e+07,3.53e+07,7.87e+07,1.77e+08,3.6e+08,6.03e+08,8.77e+08,1.17e+09,1.49e+09,1.76e+09,1.94e+09,2.05e+09,2.1e+09,2.13e+09,2.15e+09,2.13e+09,2.06e+09,1.96e+09,1.84e+09,1.7e+09,1.55e+09,1.4e+09,1.24e+09,1.09e+09,9.37e+08,7.92e+08,6.57e+08,5.34e+08,4.27e+08,3.35e+08,2.58e+08,1.94e+08,1.42e+08,1.01e+08,6.9e+07,4.55e+07,2.88e+07,1.75e+07,1.02e+07,5.64e+06,2.99e+06,1.51e+06,7.32e+05")
+
+## Moriond17 ReMiniAOD 35.9/fb
 customize.setDefault("puTarget",
                      "2.39e+05,8.38e+05,2.31e+06,3.12e+06,4.48e+06,6e+06,7e+06,1.29e+07,3.53e+07,7.87e+07,1.77e+08,3.6e+08,6.03e+08,8.77e+08,1.17e+09,1.49e+09,1.76e+09,1.94e+09,2.05e+09,2.1e+09,2.13e+09,2.15e+09,2.13e+09,2.06e+09,1.96e+09,1.84e+09,1.7e+09,1.55e+09,1.4e+09,1.24e+09,1.09e+09,9.37e+08,7.92e+08,6.57e+08,5.34e+08,4.27e+08,3.35e+08,2.58e+08,1.94e+08,1.42e+08,1.01e+08,6.9e+07,4.55e+07,2.88e+07,1.75e+07,1.02e+07,5.64e+06,2.99e+06,1.51e+06,7.32e+05,3.4e+05,1.53e+05,6.74e+04,3.05e+04,1.52e+04,8.98e+03,6.5e+03,5.43e+03,4.89e+03,4.52e+03,4.21e+03,3.91e+03,3.61e+03,3.32e+03,3.03e+03,2.75e+03,2.47e+03,2.21e+03,1.97e+03,1.74e+03,1.52e+03,1.32e+03,1.14e+03,983,839")
+
 
 import FWCore.ParameterSet.VarParsing as VarParsing
 customize.options.register ('selection',
@@ -125,6 +118,11 @@ customize.options.register ('eleId',
                             VarParsing.VarParsing.multiplicity.singleton, # singleton or list
                             VarParsing.VarParsing.varType.string,          # string, int, or float
                             "eleId")
+customize.options.register ('doTnP',
+                            False, # default value
+                            VarParsing.VarParsing.multiplicity.singleton, # singleton or list
+                            VarParsing.VarParsing.varType.bool,          # string, int, or float
+                            "doTnP")
 customize.options.register ('trigger',
                             "", # default value
                             VarParsing.VarParsing.multiplicity.singleton, # singleton or list
@@ -221,34 +219,35 @@ extraSysModules=[]
 if customize.selection == "diphoton":
     mcTriggers=["HLT_DoublePhoton85*","HLT_Photon250_NoHE*","HLT_DoublePhoton60*"] ## ,
     dataTriggers=mcTriggers
+
 elif customize.selection == "photon":
     dataTriggers=["HLT_Photon165*"]
     mcTriggers=dataTriggers
     doSinglePho=True
     doDoublePho=False
+
 elif customize.selection == "electron":
-    ## dataTriggers=["HLT_Ele27_eta2p1_WPLoose_Gsf_v*"]
-    ## mcTriggers=["HLT_Ele27_eta2p1_WP75_Gsf_v*"]
-    ## mcTriggers=dataTriggers
-    ## askTriggerOnMc=True
     invertEleVeto=True
+
 elif customize.selection == "dielectron":
     dataTriggers=["*"]
     mcTriggers=dataTriggers
     if customize.options.trigger == "":
         sys.exit("please complete dielectron selection",-1)
         invertEleVeto=True
+
 elif customize.selection == "dielectron0T":
     invertEleVeto=True
     doDoublePho0T=True
     mcTriggers=[]
     askTriggerOnMc=False
 
+# determine trigger bits to dump
 if customize.options.trigger != "":
     dataTriggers = customize.options.trigger.split(",")
-    mcTriggers = [] ## dataTriggers
     dumpBits.extend( map(lambda x: x.rstrip("*"), dataTriggers)  )
-    askTriggerOnMc=False
+    mcTriggers = [] ## just dump HLT bits on MC, no event selection
+    askTriggerOnMc=False 
 
 if customize.options.mctrigger != "":
     mcTriggers = customize.options.mctrigger.split(",")
@@ -285,6 +284,30 @@ diphotonDumper.throwOnUnclassified = cms.bool(False)
 import diphotons.Analysis.dumperConfig as dumpCfg
 
 variables, histograms, variablesSinglePho, histogramsSinglePho = dumpCfg.getDefaultConfig()
+
+minimalVariables = ["mass","pt","genMass","satRegressedMass","regressedMass",
+                    "leadEnergy","subLeadEnergy",
+                    "leadSatRegressedEnergy","subLeadSatRegressedEnergy",
+                    "leadRegressedEnergy","subLeadRegressedEnergy",
+                    "leadIsSat","subLeadIsSat","leadIsWeird","subLeadIsWeird",
+                    "leadPt","leadEta","leadScEta","leadPhi",
+                    "subleadPt","subleadEta","subleadScEta","subleadPhi",
+                    "leadBlockPhoIso","subleadBlockPhoIso",
+                    # "leadBlockChIso","subleadBlockChIso",
+                    "leadRndConePhoIso","leadRndConeChIso",
+                    "subleadRndConePhoIso","subleadRndConeChIso",
+                    #"leadRndConeChIso0","leadRndConeChIso1","leadRndConeChIso2","leadRndConeChIso3",
+                    #"leadRndConeChIso4","leadRndConeChIso5","leadRndConeChIso6","leadRndConeChIso7","leadRndConeChIso8",
+                    #"subleadRndConeChIso0","subleadRndConeChIso1","subleadRndConeChIso2","subleadRndConeChIso3",
+                    #"subleadRndConeChIso4","subleadRndConeChIso5","subleadRndConeChIso6","subleadRndConeChIso7","subleadRndConeChIso8",
+                    "leadMatchType","leadGenIso",
+                    "subleadMatchType","subleadGenIso",
+                    "leadPhoIsoEA","subleadPhoIsoEA",
+                    "leadPhoIso","subleadPhoIso",
+                    "leadChIso","subleadChIso",
+                    "leadSigmaIeIe","subleadSigmaIeIe",
+                    "leadHoE","subleadHoE",
+                    ]
 
 # add extra variables if needed
 if customize.addRegressionInput:
@@ -459,6 +482,70 @@ elif len(dumpBits) > 0:
                 tag=cms.InputTag("TriggerResults","","RECO"),bits=cms.vstring(dumpBits)
             )
 
+## analysis selections
+if customize.idversion != "":
+    if customize.idversion == "V2":
+        from diphotons.Analysis.highMassCiCDiPhotons_cfi import highMassCiCDiPhotonsV2   as highMassCiCDiPhotons
+        from diphotons.Analysis.highMassCiCDiPhotons_cfi import highMassCiCDiPhotonsSBV2 as highMassCiCDiPhotonsSB
+    else:
+        print "Unknown ID version %s " % customize.idversion
+        sys.exit(-1)
+else:
+    from diphotons.Analysis.highMassCiCDiPhotons_cfi import highMassCiCDiPhotons, highMassCiCDiPhotonsSB
+
+if invertEleVeto:
+    if doDoublePho0T:
+        highMassCiCDiPhotons0T.variables[-1] = "? matchedGsfTrackInnerMissingHits==0 ? 2 : 0"
+    else:
+        highMassCiCDiPhotons.variables[-1] = "invEleVeto := hasPixelSeed"
+        highMassCiCDiPhotonsSB.variables[-1] = "hasPixelSeed"
+        ## highMassCiCDiPhotons.variables[-1] = "-(passElectronVeto-1)"
+        ## highMassCiCDiPhotonsSB.variables[-1] = "-(passElectronVeto-1)"
+
+    if customize.doeleId:
+        highMassCiCDiPhotons.cut = "( leadingPhoton.hasUserCand('eleMatch') || subLeadingPhoton.hasUserCand('eleMatch') ) && (%s)" % highMassCiCDiPhotons.cut.value()
+    ###     ## highMassCiCDiPhotons.variables.append( "hasUserCand('matchedElectron')")
+    ###     ## for cat in highMassCiCDiPhotons.categories:
+    ###     ## cat.append( cms.PSet(min=cms.string("0.5"))  )        
+            
+# Convert configuration to tag and probe
+if customize.doTnP:
+    # FIXME
+    # - add TnP object producer
+    # - swap diphoton dumper with TnP dumper
+    # - replace lead / sublead with tag / prob in variables
+    # - add flags for cuts in photon ID (needs code in dumper)
+    process.load("flashgg.Taggers.FlashggTagAndProbeProducer_cfi")
+    process.load("flashgg.Taggers.tagAndProbeDumper_cfi")    
+    from flashgg.Taggers.FlashggTagAndProbeProducer_cfi import flashggTagAndProbe
+    from diphotons.Analysis.highMassCiCPhotons_cfi import highMassCiCPhotonsV2
+    process.flashggTagAndProbe = flashggTagAndProbe
+    process.flashggTagAndProbe.diphotonsSrc = "kinDiPhotons"
+    process.flashggTagAndProbe.tagSelection = "abs(eta) < 2.1 && pt > 30 && userInt('HLT_Ele27_WPTight_Gsf_v') && (?hasUserCand('eleMatch')?userCand('eleMatch').passTightId:0) && hasPixelSeed && full5x5_r9>0.8 && egChargedHadronIso < 20 && egChargedHadronIso/pt < 0.3"
+    process.flashggTagAndProbe.probeSelection = "full5x5_r9>0.8 && egChargedHadronIso < 20 && egChargedHadronIso/pt < 0.3"
+    process.flashggTagAndProbe.idSelection = cms.PSet(
+        rho = highMassCiCPhotonsV2.rho,
+        cut = highMassCiCPhotonsV2.cut,        
+        variables = highMassCiCPhotonsV2.variables,
+        categories = highMassCiCPhotonsV2.categories
+        )
+    from flashgg.Taggers.tagAndProbeDumper_cfi import tagAndProbeDumper
+    tagAndProbeDumper.dumpTrees = True
+    cfgTools.addCategories(tagAndProbeDumper,
+                           [
+                               ("Reject", "diPhoton.mass < 50 || diPhoton.mass > 130", -1),
+                               ("All", "1", 0)
+                               # ("EBHighR9", "abs(getProbe.superCluster.eta)<1.4442 && getProbe.full5x5_r9>0.94", 0),
+                               # ("EBLowR9", "abs(getProbe.superCluster.eta)<1.4442 && getProbe.full5x5_r9<=0.94", 0),
+                               # ("EEHighR9", "abs(getProbe.superCluster.eta)>1.566 && getProbe.full5x5_r9>0.94", 0),
+                               # ("EELowR9", "abs(getProbe.superCluster.eta)>1.566 && getProbe.full5x5_r9<=0.94", 0)
+                           ],
+                           variables=dumpCfg.getTnPVariables(process.flashggTagAndProbe.idSelection.variables),
+                           histograms=[]
+                           )    
+    tnp_sequence = cms.Sequence(flashggTagAndProbe+tagAndProbeDumper)
+    process.p = cms.Path(tnp_sequence)
+    
 # categories definition
 if ":" in customize.massCut:
     massCutEB,massCutEE = map(float,customize.massCut.split(":"))
@@ -475,16 +562,17 @@ if massCutEB or massCutEE:
 cfgTools.addCategories(diphotonDumper,
                        [## cuts are applied in cascade
                         ## ("all","1"),
-#MD                        ("EBHighR9","max(abs(leadingPhoton.superCluster.eta),abs(subLeadingPhoton.superCluster.eta))<1.4442"
-#                         "&& min(leadingPhoton.full5x5_r9,subLeadingPhoton.full5x5_r9)>0.94",0),
-#                        ("EBLowR9","max(abs(leadingPhoton.superCluster.eta),abs(subLeadingPhoton.superCluster.eta))<1.4442",0),
-#                        ("EEHighR9","min(leadingPhoton.full5x5_r9,subLeadingPhoton.full5x5_r9)>0.94",0),
-#                        ("EELowR9","1",0),
                         ("EBHighR9","max(abs(leadingPhoton.superCluster.eta),abs(subLeadingPhoton.superCluster.eta))<1.4442"
-                         "&& min(leadingPhoton.full5x5_r9,subLeadingPhoton.full5x5_r9)>0.85",0),
+                         "&& min(leadingPhoton.full5x5_r9,subLeadingPhoton.full5x5_r9)>0.94",0),
                         ("EBLowR9","max(abs(leadingPhoton.superCluster.eta),abs(subLeadingPhoton.superCluster.eta))<1.4442",0),
-                        ("EEHighR9","min(leadingPhoton.full5x5_r9,subLeadingPhoton.full5x5_r9)>0.90",0),
+                        ("EEHighR9","min(leadingPhoton.full5x5_r9,subLeadingPhoton.full5x5_r9)>0.94",0),
                         ("EELowR9","1",0),
+# These match H -> gaga trigger / preselection categories
+#                        ("EBHighR9","max(abs(leadingPhoton.superCluster.eta),abs(subLeadingPhoton.superCluster.eta))<1.4442"
+#                         "&& min(leadingPhoton.full5x5_r9,subLeadingPhoton.full5x5_r9)>0.85",0),
+#                        ("EBLowR9","max(abs(leadingPhoton.superCluster.eta),abs(subLeadingPhoton.superCluster.eta))<1.4442",0),
+#                        ("EEHighR9","min(leadingPhoton.full5x5_r9,subLeadingPhoton.full5x5_r9)>0.90",0),
+#                        ("EELowR9","1",0),
 
                         ],
                        variables=variables,
@@ -530,29 +618,7 @@ cfgTools.addCategories(genDiphotonDumper,
 # restricted set of variables to be dumped for ancillary event selections
 minimalDumper = diphotonDumper.clone()
 cfgTools.dumpOnly(minimalDumper,
-                  ["mass","pt","genMass","satRegressedMass","regressedMass",
-                   "leadEnergy","subLeadEnergy",
-                   "leadSatRegressedEnergy","subLeadSatRegressedEnergy",
-                   "leadRegressedEnergy","subLeadRegressedEnergy",
-                   "leadIsSat","subLeadIsSat","leadIsWeird","subLeadIsWeird",
-                   "leadPt","leadEta","leadScEta","leadPhi",
-                   "subleadPt","subleadEta","subleadScEta","subleadPhi",
-                   "leadBlockPhoIso","subleadBlockPhoIso",
-                   "leadBlockChIso","subleadBlockChIso",
-                   "leadRndConePhoIso","leadRndConeChIso",
-                   "subleadRndConePhoIso","subleadRndConeChIso",
-                   "leadRndConeChIso0","leadRndConeChIso1","leadRndConeChIso2","leadRndConeChIso3",
-                   "leadRndConeChIso4","leadRndConeChIso5","leadRndConeChIso6","leadRndConeChIso7","leadRndConeChIso8",
-                   "subleadRndConeChIso0","subleadRndConeChIso1","subleadRndConeChIso2","subleadRndConeChIso3",
-                   "subleadRndConeChIso4","subleadRndConeChIso5","subleadRndConeChIso6","subleadRndConeChIso7","subleadRndConeChIso8",
-                   "leadMatchType","leadGenIso",
-                   "subleadMatchType","subleadGenIso",
-                   "leadPhoIsoEA","subleadPhoIsoEA",
-                   "leadPhoIso","subleadPhoIso",
-                   "leadChIso","subleadChIso",
-                   "leadSigmaIeIe","subleadSigmaIeIe",
-                   "leadHoE","subleadHoE",
-                   ])
+                  minimalVariables)
 
 
 
@@ -599,32 +665,6 @@ analysis.addKinematicSelection(process,dumpTrees=dumpKinTree,splitByIso=True
                                )
 
 if not dumpKinTree: minimalDumper=diphotonDumper
-
-## analysis selections
-if customize.idversion != "":
-    if customize.idversion == "V2":
-        from diphotons.Analysis.highMassCiCDiPhotons_cfi import highMassCiCDiPhotonsV2   as highMassCiCDiPhotons
-        from diphotons.Analysis.highMassCiCDiPhotons_cfi import highMassCiCDiPhotonsSBV2 as highMassCiCDiPhotonsSB
-    else:
-        print "Unknown ID version %s " % customize.idversion
-        sys.exit(-1)
-else:
-    from diphotons.Analysis.highMassCiCDiPhotons_cfi import highMassCiCDiPhotons, highMassCiCDiPhotonsSB
-
-if invertEleVeto:
-    if doDoublePho0T:
-        highMassCiCDiPhotons0T.variables[-1] = "? matchedGsfTrackInnerMissingHits==0 ? 2 : 0"
-    else:
-        highMassCiCDiPhotons.variables[-1] = "hasPixelSeed"
-        highMassCiCDiPhotonsSB.variables[-1] = "hasPixelSeed"
-        ## highMassCiCDiPhotons.variables[-1] = "-(passElectronVeto-1)"
-        ## highMassCiCDiPhotonsSB.variables[-1] = "-(passElectronVeto-1)"
-
-    if customize.doeleId:
-        highMassCiCDiPhotons.cut = "( leadingPhoton.hasUserCand('eleMatch') || subLeadingPhoton.hasUserCand('eleMatch') ) && (%s)" % highMassCiCDiPhotons.cut.value()
-    ###     ## highMassCiCDiPhotons.variables.append( "hasUserCand('matchedElectron')")
-    ###     ## for cat in highMassCiCDiPhotons.categories:
-    ###     ## cat.append( cms.PSet(min=cms.string("0.5"))  )        
             
 # gen-only analysis
 if( customize.processType!="data" ):
@@ -646,37 +686,18 @@ if doDoublePho0T:
                               )    
     
 elif doDoublePho:
-    analysis.addAnalysisSelection(process,"cic",highMassCiCDiPhotons,dumpTrees=False,dumpWorkspace=False,dumpHistos=True,splitByIso=True,
+    analysis.addAnalysisSelection(process,"cic",highMassCiCDiPhotons,dumpTrees=dumpTrees,dumpWorkspace=False,dumpHistos=True,splitByIso=True,
                                   dumperTemplate=diphotonDumper,
-                                  nMinusOne=[(0,"NoChIso",        dumpNm1Trees, False,False), ## removeIndex(es), label, dumpTree, dumpWorkspace, dumpHistos
+                                  nMinusOne=[(0,"NoChIso",        False, False,False), ## removeIndex(es), label, dumpTree, dumpWorkspace, dumpHistos
                                              (1,"NoPhoIso",       False, False,False),
                                              (2,"NoNeuIso",       False,False,False),
                                              (3,"NoHoverE",       False,False,False),
-                                             (4,"NoSigmaIetaIeta",dumpTrees,False,False),
+                                             (4,"NoSigmaIetaIeta",False,False,False),
                                              (5,"NoEleVeto",      False,False,False),
                                              ]
                                   )
     
-    ### analysis.addAnalysisSelection(process,"cicSB",highMassCiCDiPhotonsSB,dumpTrees=dumpTrees,dumpWorkspace=False,dumpHistos=True,splitByIso=True,
-    ###                               dumperTemplate=minimalDumper,
-    ###                               nMinusOne=[## Sidebands
-    ###                                          ## removeIndex, (ignoreIndex(es),ingnoreNtimes), dumpTree, dumpWorkspace, dumpHistos, splitByIso
-    ###                                          ((0),(4,1),"NoChIsoSingleSB",  True, False,True,False),
-    ###                                          ((0),(4,2),"NoChIsoDoubleSB",  True, False,True,False)
-    ###                                          ]
-    ###                               )
-
 # single photon selection
-if customize.idversion != "":
-    if customize.idversion == "V2":
-        from diphotons.Analysis.highMassCiCPhotons_cfi import highMassCiCPhotonsV2 as highMassCiCPhotons
-        from diphotons.Analysis.highMassCiCPhotons_cfi import highMassCiCPhotonsSBV2 as highMassCiCPhotonsSB
-    else:
-        print "Unknown ID version %s " % customize.idversion
-        sys.exit(-1)
-else:
-    from diphotons.Analysis.highMassCiCPhotons_cfi import highMassCiCPhotons, highMassCiCPhotonsSB
-
 if doSinglePho:
 
     if invertEleVeto:
@@ -709,7 +730,7 @@ if not customize.lastAttempt:
     # make sure process doesn't get stuck due to slow I/O
     process.watchDog = cms.EDAnalyzer("IdleWatchdog",
                                       minIdleFraction=cms.untracked.double(0.1),
-                                      tolerance=cms.untracked.int32(10),
+                                      tolerance=cms.untracked.int32(1000),
                                       checkEvery=cms.untracked.int32(100),
                                       )
     process.watch = cms.Path(
@@ -717,20 +738,7 @@ if not customize.lastAttempt:
         )
 
 
-# load appropriate scale and smearing bins here
-# systematics customization scripts will take care of adjusting flashggDiPhotonSystematics
-# if "Run2015" in customize.datasetName() or "76X" in customize.datasetName():
-#     process.load('flashgg.Systematics.escales.escale76X_16DecRereco_2015')
-#     print "energy corrections file is escale76X_16DecRereco_2015"
-# else:
-#     ## process.load('flashgg.Systematics.escales.test_2016B_corr_DCSOnly')
-#     ## process.load('flashgg.Systematics.escales.Golden10June_plus_DCS')
-#     ## process.load('flashgg.Systematics.escales.Golden22June')
-#     ## process.load('flashgg.Systematics.escales.80X_DCS05July_plus_Golden22')
-#     ## process.load('flashgg.Systematics.escales.80X_ichep_2016_pho')
-#     ## print "energy corrections file is "
-
-
+# run all upstream corrections from flashgg
 process.load("flashgg.Systematics.flashggDiPhotonSystematics_cfi")
 process.load("flashgg.Taggers.flashggUpdatedIdMVADiPhotons_cfi")
 process.flashggDiPhotonSystematics.src = cms.InputTag("flashggUpdatedIdMVADiPhotons")
