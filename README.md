@@ -35,7 +35,13 @@ forked the flashgg and this repository.
 PROJECT_AREA=EXO_8_0_26_patch1
 CMSSW_VERSION=CMSSW_8_0_26_patch1
 FLASHGG_BRANCH=diphotons_80 # set empty if you want the master (safe as long as you are not producing MicroAOD)
+setup=setup
 
+# 92x settings
+PROJECT_AREA=EXO_9_2_8
+CMSSW_VERSION=CMSSW_EXO_9_2_8
+FLASHGG_BRANCH=topic_diphotons_tnp # set empty if you want the master (safe as long as you are not producing MicroAOD)
+setup=setup_9_2_X
 
 # read github name from git config
 MY_GITHUB_NAME=$(git config --get user.github)
@@ -66,7 +72,7 @@ fi
 #git checkout -b Spring15BetaV2 Spring15BetaV2
 
 cd ${CMSSW_BASE}/src
-bash flashgg/setup.sh 2>&1 | tee flashgg/setup.log
+bash flashgg/${setup}.sh 2>&1 | tee flashgg/setup.log
 
 # add your own fork as a remote. Skip if you dont have one
 cd flashgg 
