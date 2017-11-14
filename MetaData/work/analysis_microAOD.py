@@ -128,7 +128,7 @@ process.out.outputCommands.extend(microAODHLTOutputCommand)
 
 process.myPreselectedPhotons = cms.EDFilter("FlashggPhotonSelector",
                                             src=cms.InputTag("flashggPhotons"),
-                                            cut=cms.string("(r9>0.8||egChargedHadronIso<20||egChargedHadronIso/pt<0.3) && pt>50 && egChargedHadronIso<15")
+                                            cut=cms.string("(full5x5_r9>0.8||egChargedHadronIso<20||egChargedHadronIso/pt<0.3) && pt>50 && egChargedHadronIso<15")
                                             )
 
 process.myPreselectedElectrons = cms.EDFilter("ElectronSelector",

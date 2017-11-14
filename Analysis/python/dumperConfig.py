@@ -1,3 +1,5 @@
+import re
+
 def makeOneLegInputs(label,obj,inputs):
     out = []
     for inp in inputs:
@@ -164,17 +166,13 @@ def getDefaultConfig():
     variables=["mass","pt","rapidity","eta",
                "vertexZ  := vtx.z", 
                "vertexId := vtx.key",
-               ## "satRegressedMass := sqrt( (leadingPhoton.energyAtStep('satRegressedEnergy','initial')*subLeadingPhoton.energyAtStep('satRegressedEnergy','initial')) / (leadingPhoton.energy*subLeadingPhoton.energy) ) * genP4.mass",
-               ## "regressedMass := sqrt( (leadingPhoton.energyAtStep('regressedEnergy')*subLeadingPhoton.energyAtStep('regressedEnergy')) / (leadingPhoton.energy*subLeadingPhoton.energy) ) * genP4.mass",
                "genMass := genP4.mass",
-               ### "leadSatRegressedEnergy := leadingPhoton.userFloat('satRegressedEnergy')",
-               ### "subLeadSatRegressedEnergy := subLeadingPhoton.userFloat('satRegressedEnergy')",
-               ### "leadRegressedEnergy := leadingPhoton.userFloat('regressedEnergy')",
-               ### "subLeadRegressedEnergy := subLeadingPhoton.userFloat('regressedEnergy')",
+
                "leadInitialEnergy := leadingPhoton.energyAtStep('initial')",
                "subLeadInitialEnergy := subLeadingPhoton.energyAtStep('initial')",
                "leadEnergy := leadingPhoton.p4.energy",
                "subLeadEnergy := subLeadingPhoton.p4.energy",
+
                "lead_5x5_Energy := leadingPhoton.full5x5_e5x5",
                "subLead_5x5_Energy := subLeadingPhoton.full5x5_e5x5",
                "mass_5x5 := mass*sqrt(leadingPhoton.full5x5_e5x5*subLeadingPhoton.full5x5_e5x5/(leadingPhoton.p4.energy*subLeadingPhoton.p4.energy))",
@@ -206,8 +204,6 @@ def getDefaultConfig():
                "leadPhoIDMVA      := leadingView.phoIdMvaWrtChosenVtx",
                "subLeadPhoIDMVA   := subLeadingView.phoIdMvaWrtChosenVtx",
                
-               "leadPhoIsoEA :=  map( abs(leadingPhoton.superCluster.eta) :: 0.,0.9,1.5,2.0,2.2,3. :: 0.21,0.2,0.14,0.22,0.31 )",
-               "subleadPhoIsoEA :=  map( abs(subLeadingPhoton.superCluster.eta) :: 0.,0.9,1.5,2.0,2.2,3. :: 0.21,0.2,0.14,0.22,0.31 )",
                
                "leadMatchType            :=leadingPhoton.genMatchType",
                "leadGenIso               :=?leadingPhoton.hasUserFloat('genIso')?leadingPhoton.userFloat('genIso'):0",
@@ -263,7 +259,12 @@ def getDefaultConfig():
                "subleadUncorrEtaWidth        := ? subLeadingPhoton.hasUserFloat('uncorr_etaWidth') ? subLeadingPhoton.userFloat('uncorr_etaWidth') : -1.",
                "subleadUncorrS4              := ? subLeadingPhoton.hasUserFloat('uncorr_s4') ? subLeadingPhoton.userFloat('uncorr_s4') : -1.",
 
+               ### "leadPhoIsoEA :=  map( abs(leadingPhoton.superCluster.eta) :: 0.,0.9,1.5,2.0,2.2,3. :: 0.21,0.2,0.14,0.22,0.31 )",
+               ### "subleadPhoIsoEA :=  map( abs(subLeadingPhoton.superCluster.eta) :: 0.,0.9,1.5,2.0,2.2,3. :: 0.21,0.2,0.14,0.22,0.31 )",
                ]
+    
+    
+
     
     histograms=["mass>>mass(1500,0,15000)",
                 "mass>>lowmass(560,60,200)",
@@ -273,7 +274,7 @@ def getDefaultConfig():
                 "deltaEta>>deltaEta(200,0,5)",
                 "cosDeltaPhi>>cosDeltaPhi(200,0,1)",
                 "global.rho>>rho(20,0,50)",
-                "global.nvtx>>nvtx(51,0.5,50.5)",
+                "global.nvtx>>nvtx(50,0.5,50.5)",
                 
                 ### "global.mht60>>mht60(1500,0,15000)",
                 ### "global.mht30>>mht30(1500,0,15000)",
@@ -295,7 +296,8 @@ def getDefaultConfig():
                 "leadBlockChIso>>leadBlockChIso(120,-10,50)",
                 "leadBlockPhoIso>>leadBlockPhoIso(120,-10,50)",
                 "leadChIso>>leadChIso(120,-10,50)",
-                "leadPhoIso>>leadPhoIso(120,-10,50)",
+                "leadPhoIso>>leadEGPhoIso(120,-10,50)",
+                "leadPhoIso03>>leadPhoIso(120,-10,50)",
                 "leadNeutIso>>leadNeutIso(120,-10,50)",
                 "leadHoE>>leadHoE(40,0,0.2)",
                 "leadSigmaIeIe>>leadSigmaIeIe(320,0,3.2e-2)",
@@ -305,7 +307,8 @@ def getDefaultConfig():
                 "subleadBlockChIso>>subleadBlockChIso(120,-10,50)",
                 "subleadBlockPhoIso>>subleadBlockPhoIso(120,-10,50)",
                 "subleadChIso>>subleadChIso(120,-10,50)",
-                "subleadPhoIso>>subleadPhoIso(120,-10,50)",
+                "subleadPhoIso>>subleadEGPhoIso(120,-10,50)",
+                "subleadPhoIso03>>subleadPhoIso(120,-10,50)",                
                 "subleadNeutIso>>subleadNeutIso(120,-10,50)",
                 "subleadHoE>>subleadHoE(40,0,0.2)",
                 "subleadSigmaIeIe>>subleadSigmaIeIe(320,0,3.2e-2)",
@@ -343,7 +346,7 @@ def getDefaultConfig():
         "phoBlockPhoIso  := pfPhoIso03", 
         ## "phoRndConePhoIso:= extraPhoIso('rnd03')",
         
-        "phoPhoIsoEA :=  map( abs(superCluster.eta) :: 0.,0.9,1.5,2.0,2.2,3. :: 0.21,0.2,0.14,0.22,0.31 )",
+        ## "phoPhoIsoEA :=  map( abs(superCluster.eta) :: 0.,0.9,1.5,2.0,2.2,3. :: 0.21,0.2,0.14,0.22,0.31 )",
         
         "phoMatchType            :=genMatchType",
         "phoGenIso               :=?hasUserFloat('genIso')?userFloat('genIso'):0",
@@ -378,3 +381,47 @@ def getDefaultConfig():
 
     return variables, histograms, variablesSinglePho, histogramsSinglePho
 
+def getTnPVariables(id_var):
+    """
+    Converted default variables into TnP adding Id selection flags
+    """
+
+    variables, h, vSP, hSP = getDefaultConfig()
+
+    dipho_to_tnp_var = {"mass" : "mass := diPhoton.mass",
+                        "pt" : "pt := diPhoton.pt",
+                        "rapidity" : "rapidity := diPhoton.rapidity",
+                        "eta" : "eta := diPhoton.eta",
+                        "vertexZ  := vtx.z" : "vertexZ  := diPhoton.vtx.z", 
+                        "vertexId := vtx.key" : "vertexId := diPhoton.vtx.key",
+                        "genMass := genP4.mass" : "genMass := diPhoton.genP4.mass"
+                        }
+    
+    tnp_variables = []
+    for var in variables:
+        if var in dipho_to_tnp_var.keys():
+            var = dipho_to_tnp_var[var]
+
+        tnp_var = var
+        tnp_var = tnp_var.replace("subLeadingPhoton", "getProbe")
+        tnp_var = tnp_var.replace("subLeadingView", "getProbeView")
+        tnp_var = tnp_var.replace("leadingPhoton", "getTag")
+        tnp_var = tnp_var.replace("leadingView", "getTagView")
+        tnp_var = re.sub("[Ss]ub[lL]ead", "probe", tnp_var)
+        tnp_var = tnp_var.replace("lead", "tag")
+        tnp_var = tnp_var.replace("Lead", "tag")        
+        tnp_variables.append(tnp_var)
+
+    for var in id_var:
+        if ":=" in var:
+            name = "probePass_"+var[:var.find(":=")].strip()
+            userfloat = "probe_pass_"+var[:var.find(":=")].strip()
+        else:
+            name = "probePass_"+var
+            userfloat = "probe_pass_"+var
+        tnp_variables.append(name+" := userInt('"+userfloat+"')")
+    tnp_variables.append("probePass_Id := userInt('probe_pass_all')")
+    tnp_variables.append("tagGenEleMatch := userInt('tagGenMatch')")    
+    tnp_variables.append("probeGenEleMatch := userInt('probeGenMatch')")
+
+    return tnp_variables

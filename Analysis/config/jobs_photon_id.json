@@ -44,6 +44,6 @@
 
 	    },
 
-    "cmdLine" : "campaign=EXOSpring16_v1"
+    "cmdLine" : "campaign=EXOSpring17_v1 metaDataSrc=diphotons"
 
 }

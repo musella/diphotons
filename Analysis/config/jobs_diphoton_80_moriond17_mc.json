@@ -1,0 +1,26 @@
+{
+    "processes" : {
+        "GJets-HT-40toInf" : [
+            "/GJets_DR-0p4_HT-40To100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8",            
+	    "/GJets_DR-0p4_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8",
+	    "/GJets_DR-0p4_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8",
+	    "/GJets_DR-0p4_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8",
+	    "/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"
+        ]
+    },
+
+    "_processes" : {
+	"GGJets_M-200To13000-sherpa" : [
+	    "/GGJets_M-200To500_Pt-50_13TeV-sherpa",
+	    "/GGJets_M-500To1000_Pt-50_13TeV-sherpa",            
+	    "/GGJets_M-1000To2000_Pt-50_13TeV-sherpa",
+	    "/GGJets_M-2000To4000_Pt-50_13TeV-sherpa",
+	    "/GGJets_M-4000To6000_Pt-50_13TeV-sherpa",
+	    "/GGJets_M-6000To8000_Pt-50_13TeV-sherpa",
+	    "/GGJets_M-8000To13000_Pt-50_13TeV-sherpa"
+	]
+    },
+    
+    "cmdLine" : "campaign=EXOSpring17_v1 selection=diphoton idversion=V2 trigger=HLT_DoublePhoton60_v*,HLT_ECALHT800_v* ptLead=75 ptSublead=75 massCut=230:330 metaDataSrc=diphotons"
+
+}

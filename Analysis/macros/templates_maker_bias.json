@@ -1,0 +1,262 @@
+{
+   "#" : "---------------------------------------------------------------------------------------------------------------------",
+   "#" : "Configuration file for templates_maker.py script.",
+   "#" : "Run as ./templates_maker.py --load templates_maker.json --input-dir <input_dir> -o <outfile>",
+
+   "#" : "Note: comments are not supported in JSON.",
+   "#" : "The trick here is to encapsulate them as well formatted input with key #",
+   "#" : "Configuration items are commented prepending an _ to the name (any other character would work)",
+
+    "#" : "---------------------------------------------------------------------------------------------------------------------",
+    "#" : "Dataset definition                                                                                                   ",
+    "#" : "---------------------------------------------------------------------------------------------------------------------",
+    "#" : "  %(sel)s is replaced with the appropriate string                                                                    ",
+    "#" : "  fromat is <sample-name>:[[input-file][/file-folder]] order irrelevant                                                               ",
+	
+    "#" : "data to be fit                                                                                                       ",
+    "_data" : [
+               "GGJets_M_200To13000_sherpa_13TeV:__infile__/%(sel)sGenIso",
+               "GGJets_M_200To13000_sherpa_13TeV:__infile__/%(sel)sNonGenIso",
+               "QCD_HT_100toInf_13TeV:__infile__/%(sel)s",
+               "GJets_HT_100toInf_13TeV:__infile__/%(sel)s"            
+             ],
+
+    "data" : [
+               "Data_13TeV:__infile__/%(sel)s"
+             ],
+
+    "_data" : [
+               "DoubleEG_13TeV:__infile__/%(sel)s"
+             ],
+
+    "#" : "data used for template making",
+    "templates" : [
+               "Data_13TeV:__infile__/%(sel)s"
+             ],
+    "_templatesMC" : [
+               "GGJets_M_200To13000_13TeV:__infile__/%(sel)s"
+             ],
+    "_templatesMC" : [
+               "GGJets_M_60To13000_Pt_50_sherpa_13TeV:__infile__/%(sel)s"
+             ],
+             
+     "#" : "mc dataset",
+     "_mc" : [
+               "GGJets_M_60To13000_Pt_50_sherpa_13TeV:__infile__/%(sel)sNonGenIso",
+               "GGJets_M_60To13000_Pt_50_sherpa_13TeV:__infile__/%(sel)sGenIso"
+            ],
+
+     "_mc" : [
+               "GGJets_M_60To13000_13TeV:__infile__/%(sel)sGenIso",
+               "GGJets_M_60To13000_13TeV:__infile__/%(sel)sNonGenIso"
+            ],
+
+     "#" : "mc dataset",
+      "_signals" : { 
+
+	   "grav_01_1000" : [ "RSGravToGG_kMpl_01_M_1000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_1000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	   "grav_01_1250" : [ "RSGravToGG_kMpl_01_M_1250_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_1250_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	   "grav_01_1500" : [ "RSGravToGG_kMpl_01_M_1500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_1500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	   "grav_01_1750" : [ "RSGravToGG_kMpl_01_M_1750_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_1750_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	   "grav_01_2000" : [ "RSGravToGG_kMpl_01_M_2000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_2000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	   "grav_01_2250" : [ "RSGravToGG_kMpl_01_M_2250_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_2250_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	   "grav_01_2750" : [ "RSGravToGG_kMpl_01_M_2750_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_2750_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	   "grav_01_4000" : [ "RSGravToGG_kMpl_01_M_4000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_4000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	   "grav_01_4500" : [ "RSGravToGG_kMpl_01_M_4500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_4500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	   "grav_01_500" : [ "RSGravToGG_kMpl_01_M_500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	   "grav_01_5500" : [ "RSGravToGG_kMpl_01_M_5500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_5500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	   "grav_01_6000" : [ "RSGravToGG_kMpl_01_M_6000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_6000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	   "grav_01_7000" : [ "RSGravToGG_kMpl_01_M_7000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_7000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	   "grav_01_750" : [ "RSGravToGG_kMpl_01_M_750_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_750_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	   
+	   
+	    "grav_001_2000" : [ "RSGravToGG_kMpl_001_M_2000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_001_M_2000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	    "grav_001_4000" : [ "RSGravToGG_kMpl_001_M_4000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_001_M_4000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	    "grav_001_5000" : [ "RSGravToGG_kMpl_001_M_5000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_001_M_5000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	    "grav_001_500" : [ "RSGravToGG_kMpl_001_M_500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_001_M_500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	    "grav_001_6000" : [ "RSGravToGG_kMpl_001_M_6000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_001_M_6000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	    "grav_001_750" : [ "RSGravToGG_kMpl_001_M_750_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_001_M_750_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	    "grav_02_1000" : [ "RSGravToGG_kMpl_02_M_1000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_02_M_1000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	    "grav_02_1500" : [ "RSGravToGG_kMpl_02_M_1500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_02_M_1500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	    "grav_02_2000" : [ "RSGravToGG_kMpl_02_M_2000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_02_M_2000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	    "grav_02_3000" : [ "RSGravToGG_kMpl_02_M_3000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_02_M_3000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	    "grav_02_4000" : [ "RSGravToGG_kMpl_02_M_4000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_02_M_4000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	    "grav_02_5000" : [ "RSGravToGG_kMpl_02_M_5000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_02_M_5000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	    "grav_02_500" : [ "RSGravToGG_kMpl_02_M_500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_02_M_500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	    "grav_02_7000" : [ "RSGravToGG_kMpl_02_M_7000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_02_M_7000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	    "grav_02_750" : [ "RSGravToGG_kMpl_02_M_750_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_02_M_750_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ]
+      
+      },
+      "_signals" : { 
+
+	   "grav_001_1000" : [ "RSGravToGG_kMpl_001_M_1000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_001_M_1000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+
+	   "grav_01_3000" : [ "RSGravToGG_kMpl_01_M_3000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_3000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+
+	   "grav_01_3500" : [ "RSGravToGG_kMpl_01_M_3500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_3500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+
+	   "grav_01_6500" : [ "RSGravToGG_kMpl_01_M_6500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_6500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	   "grav_01_5000" : [ "RSGravToGG_kMpl_01_M_5000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_01_M_5000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	   "grav_001_1500" : [ "RSGravToGG_kMpl_001_M_1500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_001_M_1500_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	    "grav_001_3000" : [ "RSGravToGG_kMpl_001_M_3000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_001_M_3000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+	    "grav_001_7000" : [ "RSGravToGG_kMpl_001_M_7000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso", "RSGravToGG_kMpl_001_M_7000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"  ],
+
+      "grav_001_2000": [ "RSGravToGG_kMpl_001_M_2000_13TeV:__infile__/%(sel)s"],
+      "grav_001_3000": [ "RSGravToGG_kMpl_001_M_3000_13TeV:__infile__/%(sel)s"],
+      "grav_001_500" : [ "RSGravToGG_kMpl_001_M_500_13TeV:__infile__/%(sel)s"	],
+      "grav_01_1000" : [ "RSGravToGG_kMpl_01_M_1000_13TeV:__infile__/%(sel)s"	],
+      "grav_01_3500" : [ "RSGravToGG_kMpl_01_M_3500_13TeV:__infile__/%(sel)s"	],
+      "grav_01_4000" : [ "RSGravToGG_kMpl_01_M_4000_13TeV:__infile__/%(sel)s"	],
+      "grav_01_5000" : [ "RSGravToGG_kMpl_01_M_5000_13TeV:__infile__/%(sel)s"	],
+      "grav_01_7000" : [ "RSGravToGG_kMpl_01_M_7000_13TeV:__infile__/%(sel)s"	],
+      "grav_02_1000" : [ "RSGravToGG_kMpl_02_M_1000_13TeV:__infile__/%(sel)s"	],
+      "grav_02_4000" : [ "RSGravToGG_kMpl_02_M_4000_13TeV:__infile__/%(sel)s"	],
+      "grav_02_5000" : [ "RSGravToGG_kMpl_02_M_5000_13TeV:__infile__/%(sel)s" ]
+      
+      },
+      "_signals" : {
+     	       	 "grav_01_750" : ["RSGravToGG_kMpl_01_M_750_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso",
+		       		  "RSGravToGG_kMpl_01_M_750_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"
+		       		  ],
+     	       	 "grav_01_1000" : ["RSGravToGG_kMpl_01_M_1000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso",
+		       		  "RSGravToGG_kMpl_01_M_1000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"
+		       		  ],
+     	       	 "grav_01_1250" : ["RSGravToGG_kMpl_01_M_1250_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso",
+		       		  "RSGravToGG_kMpl_01_M_1250_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"
+		       		  ],
+      	       	 "grav_01_2000" : ["RSGravToGG_kMpl_01_M_2000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso",
+		       		  "RSGravToGG_kMpl_01_M_2000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"
+		       		  ],
+      	       	 "grav_01_2750" : ["RSGravToGG_kMpl_01_M_2750_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso",
+		       		  "RSGravToGG_kMpl_01_M_2750_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"
+		       		  ],
+      	       	 "grav_01_3000" : ["RSGravToGG_kMpl_01_M_3000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso",
+		       		  "RSGravToGG_kMpl_01_M_3000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"
+		       		  ],
+      	       	 "grav_01_4000" : ["RSGravToGG_kMpl_01_M_4000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso",
+		       		  "RSGravToGG_kMpl_01_M_4000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"
+		       		  ],
+      	       	 "grav_01_5000" : ["RSGravToGG_kMpl_01_M_5000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso",
+		       		  "RSGravToGG_kMpl_01_M_5000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"
+		       		  ]
+            },
+      "_signals" : {
+     	       	 "grav_01_allmasses" : ["RSGravToGG_kMpl_01_M_750_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso",
+		       		  "RSGravToGG_kMpl_01_M_750_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso",
+     	       	 "RSGravToGG_kMpl_01_M_1000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso",
+		       		  "RSGravToGG_kMpl_01_M_1000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso",
+     	       	 "RSGravToGG_kMpl_01_M_1250_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso",
+		       		  "RSGravToGG_kMpl_01_M_1250_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso",
+      	       	 "RSGravToGG_kMpl_01_M_2000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso",
+		       		  "RSGravToGG_kMpl_01_M_2000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso",
+      	       	 "RSGravToGG_kMpl_01_M_2750_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso",
+		       		  "RSGravToGG_kMpl_01_M_2750_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso",
+      	       	 "RSGravToGG_kMpl_01_M_3000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso",
+		       		  "RSGravToGG_kMpl_01_M_3000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso",
+      	       	 "RSGravToGG_kMpl_01_M_4000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso",
+		       		  "RSGravToGG_kMpl_01_M_4000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso",
+      	       	 "RSGravToGG_kMpl_01_M_5000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sGenIso",
+		       		  "RSGravToGG_kMpl_01_M_5000_TuneCUEP8M1_13TeV_pythia8_13TeV:__infile__/%(sel)sNonGenIso"
+		       		  ]
+            },
+
+    "#" : "file names for different datasets. Files folder can be specified by --input-dir on the command line",
+    "data_file"  : "output.root",
+    "mc_file"    : "output.root",
+    "sig_file"    : null,  "#" : "implies to use same as mc",
+    "templates_file" : null, "#" : "implies to use same as data",
+
+    "#" : "categories for the input datasets",
+    "categories" : [],
+    "#" :  "groups of categories can be defined to resum some of the categories",
+    "groups": {
+        "EBHighR9"   : ["EBHighR9"],
+        "EBLowR9"    : ["EBLowR9"],
+        "EEHighR9"   : ["EEHighR9"],
+        "EELowR9"    : ["EELowR9"],
+        "EBEB"       : ["EBHighR9","EBLowR9"],
+        "notEBEB"    : ["EEHighR9","EELowR9"],
+        "eta_inclusive"    : ["EBHighR9","EBLowR9","EEHighR9","EELowR9"]
+        }, 
+
+    "#" : "how to compose the tree name starting from sub-pieces       ",
+    "#" : " %(sample)s is replaced with the items in dataset definition",
+    "#" : " %(cat)s is replaced with the category name                 ", 
+    "treeName": "trees/%(sample)s_%(cat)s",
+
+    "preselection" : "( leadChIso < 15. && subleadChIso < 15. && leadPt> 75. && subleadPt > 75. && mass > 230. && (max(abs(leadScEta),abs(subleadScEta))<1.5 ||  mass > 320.)  )",   
+	"#" : "preselection cut applied to all trees",
+    "selection"    : "cicNoChIso",                              "#" : "nominal selection",
+    
+    "#" : "---------------------------------------------------------------------------------------------------------------------",
+    "#" : "Fit definition                                                                                                       ",
+    "#" : "---------------------------------------------------------------------------------------------------------------------",
+
+    "_dataset_variables" : ["rho","nvtx","run","weight","weight200_500","weight500_1000","","weight1000_2000","weight2000_4000","weight4000_6000","weight6000_8000","weight8000_13000","lumi","event"],     "#" :"list of variables to be put in the dataset (other than the template ones)",
+   
+   "dataset_variables" : ["rho","nvtx","run","puweight","weight","weight200_500","weight500_1000","weight1000_2000","lumi","event","leadScEta","subleadScEta"],     "#" :"list of variables to be put in the dataset (other than the template ones)",
+   "_dataset_variables" : ["rho","nvtx","run","puweight","lumi","event"],     "#" :"list of variables to be put in the dataset (other than the template ones)",
+    "weight_expression" : "weight2 :=(weight/puweight)",           "#" :"event weight expression  ",
+    "_weight_expression" : "weight2 :=(weight/puweight*(2.866712/4.135543)*(((genMass > 2000) + (genMass <= 200) + weight200_500 + weight500_1000 + weight1000_2000))*((max(abs(leadScEta),abs(subleadScEta))<1.5)*(1.408 + 1.014e-4*genMass) + (max(abs(leadScEta),abs(subleadScEta))>1.5)*(1.367 + 1.647e-4*genMass)))",           "#" :"event weight expression  ",
+    "_weight_expression" : "weight2 :=(weight/puweight*(2.866712/1.599150)*(((genMass > 2000) + (genMass <= 200) + weight200_500 + weight500_1000 + weight1000_2000))*((max(abs(leadScEta),abs(subleadScEta))<1.5)*(1-0.408 - 1.014e-4*genMass) + (max(abs(leadScEta),abs(subleadScEta))>1.5)*(1-0.367 -1.647e-4*genMass)))",           "#" :"event weight expression  ",
+    "_weight_expression" : "weight2 :=(weight/puweight*(((genMass > 2000) + (genMass <= 200) + weight200_500 + weight500_1000 + weight1000_2000))*((max(abs(leadScEta),abs(subleadScEta))<1.5)*(1.0 -0.408 - 1.014e-4*genMass) + (max(abs(leadScEta),abs(subleadScEta))>1.5)*(1- 0.367 - 1.647e-4*genMass)))",           "#" :"event weight expression  ",
+    "_weight_expression" : "_weight2 :=(weight/puweight*(((genMass > 2000) + (genMass <= 200) + weight200_500 + weight500_1000 + weight1000_2000))*((1./(-4.16477e-07*pow(mass-900,2)+1.0)*(mass < 900)) + (mass >=900)))",           "#" :"event weight expression  ",
+    "_weight_expression" : "weight2 :=(weight/puweight*((genMass > 2000) + (genMass <= 200) + weight200_500 + weight500_1000 + weight1000_2000))",           "#" :"event weight expression  ",
+  
+  "_weight_expression" : "weight",           "#" :"event weight expression  ",
+    "#" : "List of aliases. Used to define variables/simplify expressions selection.",
+    "aliases"  : [
+                "weight200_500:=(((genMass>200)*( genMass<=500))*(1+0.18))",
+                "weight500_1000:=((genMass>500)*(genMass<=1000) )",
+                "weight1000_2000:=(((genMass>1000)*(genMass<=2000))*(1+0.09))",
+				"phoIsSB    := (((phoPhoIso - rho*phoPhoIsoEA) -0.0045*phoPt < 2. ) && (phoIsEB    && (phoSigmaIeIe    > 0.0112) ))||( ((phoPhoIso - rho*phoPhoIsoEA) -0.003*phoPt < 11. ) &&!phoIsEB    && (phoSigmaIeIe>0.03 )  )",
+               "leadIsEB    := abs(leadScEta) < 1.5",
+               "subleadIsEB := abs(subleadScEta) < 1.5",
+               "leadIsSB := (((leadPhoIso - rho*leadPhoIsoEA) -0.0045*leadPt < 2. ) && (leadIsEB    && (leadSigmaIeIe    > 0.0112) ))||( ((leadPhoIso - rho*leadPhoIsoEA) -0.003*leadPt < 11. ) &&!leadIsEB    && (leadSigmaIeIe>0.03    )  )",
+               "subleadIsSB := ((((subleadPhoIso - rho*subleadPhoIsoEA) -0.0045*subleadPt < 2. ) && (subleadIsEB    && (subleadSigmaIeIe    > 0.0112) ))||( ((subleadPhoIso - rho*subleadPhoIsoEA) -0.003*subleadPt < 11. ) &&!subleadIsEB    && (subleadSigmaIeIe>0.03     )) )",
+               "leadPrompt    := leadGenIso < 10. && leadMatchType == 1",
+               "_leadPrompt    := leadMatchType == 1",
+               "leadFake      := ! leadPrompt",
+               "subleadPrompt := subleadGenIso < 10. && subleadMatchType == 1",
+               "_subleadPrompt :=  subleadMatchType == 1",
+               "subleadFake   := ! subleadPrompt",
+               "phoPrompt := phoGenIso < 10. && phoMatchType == 1",
+               "phoFake   := ! phoPrompt",
+               "phoPhoIsoEB    := ((phoPhoIso - rho*phoPhoIsoEA) -0.0045*phoPt < 0.25 ) && phoIsEB",
+				"phoPhoIsoEE    := ((phoPhoIso - rho*phoPhoIsoEA) -0.003*phoPt < -0.5 )&& !phoIsEB",
+               "subleadPhoIsoEB    := ((subleadPhoIso - rho*subleadPhoIsoEA) -0.0045*subleadPt < 0.25 ) && subleadIsEB ",
+				"subleadPhoIsoEE    := ((subleadPhoIso - rho*subleadPhoIsoEA) -0.003*subleadPt < -0.5 ) && !subleadIsEB",
+               "leadPhoIsoEB    := ((leadPhoIso - rho*leadPhoIsoEA) -0.0045*leadPt < 0.25 ) && leadIsEB ",
+				"leadPhoIsoEE    := ((leadPhoIso - rho*leadPhoIsoEA) -0.003*leadPt < -0.5 )&& !leadIsEB",
+
+	       "leadEcorr := leadEnergy / leadInitialEnergy",
+               "subleadEcorr := subLeadEnergy / subLeadInitialEnergy",
+               "massCorr := sqrt(leadEcorr*subleadEcorr)",
+	       "mgg := mass",
+	       "mggEBEB := mass",
+               "mggEBEE := mass"
+	       
+	       ],
+
+    "_aliases" : [
+
+
+		"leadEcorr := (abs(leadScEta)<1 && leadR9>0.94)*(1./0.9988) + (abs(leadScEta)<1 && leadR9<=0.94)*(1./0.9954) + (abs(leadScEta)>=1 && abs(leadScEta)<1.5 && leadR9>0.94)*(1./1.0065) + (abs(leadScEta)>=1  && abs(leadScEta)<1.5 && leadR9<=0.94)*(1./0.9966) + (abs(leadScEta)>=1.5 && abs(leadScEta)<2 && leadR9>0.94)*(1./0.9953) + (abs(leadScEta)>=1.5  && abs(leadScEta)<2 && leadR9<=0.94)*(1./0.9863) + (abs(leadScEta)>=2 && abs(leadScEta)<3 && leadR9>0.94)*(1./0.9857) + (abs(leadScEta)>=2  && abs(leadScEta)<3 && leadR9<=0.94)*(1./0.9786)",
+               "subleadEcorr := (abs(subleadScEta)<1 && subleadR9>0.94)*(1./0.9988) + (abs(subleadScEta)<1 && subleadR9<=0.94)*(1./0.9954) + (abs(subleadScEta)>=1 && abs(subleadScEta)<1.5 && subleadR9>0.94)*(1./1.0065) + (abs(subleadScEta)>=1  && abs(subleadScEta)<1.5 && subleadR9<=0.94)*(1./0.9966) + (abs(subleadScEta)>=1.5 && abs(subleadScEta)<2 && subleadR9>0.94)*(1./0.9953) + (abs(subleadScEta)>=1.5  && abs(subleadScEta)<2 && subleadR9<=0.94)*(1./0.9863) + (abs(subleadScEta)>=2 && abs(subleadScEta)<3 && subleadR9>0.94)*(1./0.9857) + (abs(subleadScEta)>=2  && abs(subleadScEta)<3 && subleadR9<=0.94)*(1./0.9786)",
+               "massCorr := sqrt(leadEcorr*subleadEcorr)",
+
+	       "mgg := mass*massCorr",
+	       "mggEBEB := mass*massCorr",
+               "mggEBEE := mass*massCorr",    
+
+		"leadEcorr := (abs(leadScEta)<1 && leadR9>0.94)*(1./0.99661) + (abs(leadScEta)<1 && leadR9<=0.94)*(1./1.00079) + (abs(leadScEta)>=1 && abs(leadScEta)<1.5 && leadR9>0.94)*(1./0.99582) + (abs(leadScEta)>=1  && abs(leadScEta)<1.5 && leadR9<=0.94)*(1./1.00756) + (abs(leadScEta)>=1.5 && abs(leadScEta)<2 && leadR9>0.94)*(1./1.00068) + (abs(leadScEta)>=1.5  && abs(leadScEta)<2 && leadR9<=0.94)*(1./1.00917) + (abs(leadScEta)>=2 && abs(leadScEta)<3 && leadR9>0.94)*(1./0.99910) + (abs(leadScEta)>=2  && abs(leadScEta)<3 && leadR9<=0.94)*(1./1.00748)",
+		"subleadEcorr := (abs(subleadScEta)<1 && subleadR9>0.94)*(1./0.99661) + (abs(subleadScEta)<1 && subleadR9<=0.94)*(1./1.00079) + (abs(subleadScEta)>=1 && abs(subleadScEta)<1.5 && subleadR9>0.94)*(1./0.99582) + (abs(subleadScEta)>=1  && abs(subleadScEta)<1.5 && subleadR9<=0.94)*(1./1.00756) + (abs(subleadScEta)>=1.5 && abs(subleadScEta)<2 && subleadR9>0.94)*(1./1.00068) + (abs(subleadScEta)>=1.5  && abs(subleadScEta)<2 && subleadR9<=0.94)*(1./1.00917) + (abs(subleadScEta)>=2 && abs(subleadScEta)<3 && subleadR9>0.94)*(1./0.99910) + (abs(subleadScEta)>=2  && abs(subleadScEta)<3 && subleadR9<=0.94)*(1./1.00748)",
+               "massCorr := sqrt(leadEcorr*subleadEcorr)"
+
+    ],
+    "rootstyle_extra" : [
+                  "TGaxis::SetMaxDigits(3);",
+                  "TH1::SetDefaultSumw2(1);"
+    ]
+    
+}

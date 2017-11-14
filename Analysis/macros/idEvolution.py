@@ -48,7 +48,7 @@ class IdEvolution(PlotApp):
                                      type="string",
                                      default=[
                         "absScEta := scEta*((scEta>=0.)-(scEta<0.))[100,0.,2.5]",
-                        "pt[500,70,1000]",
+                        "pt[500,75,1000]",
                         ### "rho[10000,0,100]",
                         
                         ### "phoIsoDeltaMap005 := phoIsoHybrid005*(phoIsoHybrid005<49)+49.*(phoIsoHybrid005>=49)[1000,-10,50]",
@@ -178,7 +178,7 @@ class IdEvolution(PlotApp):
                                      ###          ],
                                      help="default: %default"),
                          make_option("--xvar",dest="xvar",action="store",type="string",
-                                     default="pt[100000,70,1000]",
+                                     default="pt[100000,75,1000]",
                                      ## default="pt[100000,100,2000]",
                                      ## default="rho[1000,5,15]",
                                      help="default: %default"),
@@ -297,13 +297,13 @@ class IdEvolution(PlotApp):
             win = self.open(fnam)
             
         if options.fitMedian:
-            sigQuantiles = [0.5,0.95,0.97,0.98,0.99]
-            ## sigQuantiles = [0.05,0.10,0.5,0.9,0.95]
-            ## sigQuantiles = [0.25,0.4,0.5,0.6,0.75]
+            sigQuantiles = [0.5, 0.81, 0.82, 0.9, 0.91, 0.95, 0.99]
+            ## sigQuantiles = [0.05, 0.10, 0.5, 0.9, 0.95]
+            ## sigQuantiles = [0.25, 0.4, 0.5, 0.6, 0.75]
             bkgQuantiles = []
         else:
-            sigQuantiles = [0.99,0.95,0.9,0.85,0.5]
-            bkgQuantiles = [0.7,0.5,0.4,0.3]
+            sigQuantiles = [0.99, 0.95, 0.91, 0.9, 0.82, 0.81, 0.5]
+            bkgQuantiles = [0.7, 0.5, 0.4, 0.3]
 
         if options.fitMedian:
             ## summary = { v : { } for v in variables.keys() }

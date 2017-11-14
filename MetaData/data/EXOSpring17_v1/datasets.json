@@ -1,0 +1,771 @@
+{
+    "/GGJets_M-1000To2000_Pt-50_13TeV-sherpa/musella-EXOSpring16_v1-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1-343e485a7f3ee9ca80a97e3533f4ae19/USER": {
+        "files": [
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1/diphotons_80_v1/GGJets_M-1000To2000_Pt-50_13TeV-sherpa/EXOSpring16_v1-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/160503_231305/0000/diphotonsMicroAOD_1.root", 
+                "nevents": 45959, 
+                "totEvents": 45959, 
+                "weights": 8068.001953125
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1/diphotons_80_v1/GGJets_M-1000To2000_Pt-50_13TeV-sherpa/EXOSpring16_v1-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/160503_231305/0000/diphotonsMicroAOD_10.root", 
+                "nevents": 25200, 
+                "totEvents": 25200, 
+                "weights": 4355.6005859375
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1/diphotons_80_v1/GGJets_M-1000To2000_Pt-50_13TeV-sherpa/EXOSpring16_v1-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/160503_231305/0000/diphotonsMicroAOD_11.root", 
+                "nevents": 49464, 
+                "totEvents": 49464, 
+                "weights": 8634.599609375
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1/diphotons_80_v1/GGJets_M-1000To2000_Pt-50_13TeV-sherpa/EXOSpring16_v1-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/160503_231305/0000/diphotonsMicroAOD_12.root", 
+                "nevents": 1656, 
+                "totEvents": 1656, 
+                "weights": 295.9000244140625
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1/diphotons_80_v1/GGJets_M-1000To2000_Pt-50_13TeV-sherpa/EXOSpring16_v1-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/160503_231305/0000/diphotonsMicroAOD_13.root", 
+                "nevents": 48528, 
+                "totEvents": 48528, 
+                "weights": 8486.30078125
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1/diphotons_80_v1/GGJets_M-1000To2000_Pt-50_13TeV-sherpa/EXOSpring16_v1-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/160503_231305/0000/diphotonsMicroAOD_14.root", 
+                "nevents": 8856, 
+                "totEvents": 8856, 
+                "weights": 1583.1998291015625
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1/diphotons_80_v1/GGJets_M-1000To2000_Pt-50_13TeV-sherpa/EXOSpring16_v1-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/160503_231305/0000/diphotonsMicroAOD_15.root", 
+                "nevents": 14112, 
+                "totEvents": 14112, 
+                "weights": 2464.30126953125
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1/diphotons_80_v1/GGJets_M-1000To2000_Pt-50_13TeV-sherpa/EXOSpring16_v1-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/160503_231305/0000/diphotonsMicroAOD_16.root", 
+                "nevents": 1368, 
+                "totEvents": 1368, 
+                "weights": 239.49996948242188
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1/diphotons_80_v1/GGJets_M-1000To2000_Pt-50_13TeV-sherpa/EXOSpring16_v1-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/160503_231305/0000/diphotonsMicroAOD_17.root", 
+                "nevents": 43200, 
+                "totEvents": 43200, 
+                "weights": 7588.20166015625
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1/diphotons_80_v1/GGJets_M-1000To2000_Pt-50_13TeV-sherpa/EXOSpring16_v1-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/160503_231305/0000/diphotonsMicroAOD_18.root", 
+                "nevents": 2664, 
+                "totEvents": 2664, 
+                "weights": 472.6999816894531
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1/diphotons_80_v1/GGJets_M-1000To2000_Pt-50_13TeV-sherpa/EXOSpring16_v1-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/160503_231305/0000/diphotonsMicroAOD_19.root", 
+                "nevents": 44783, 
+                "totEvents": 44783, 
+                "weights": 7847.20166015625
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1/diphotons_80_v1/GGJets_M-1000To2000_Pt-50_13TeV-sherpa/EXOSpring16_v1-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/160503_231305/0000/diphotonsMicroAOD_2.root", 
+                "nevents": 6768, 
+                "totEvents": 6768, 
+                "weights": 1218.0001220703125
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1/diphotons_80_v1/GGJets_M-1000To2000_Pt-50_13TeV-sherpa/EXOSpring16_v1-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/160503_231305/0000/diphotonsMicroAOD_20.root", 
+                "nevents": 33192, 
+                "totEvents": 33192, 
+                "weights": 5798.6015625
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1/diphotons_80_v1/GGJets_M-1000To2000_Pt-50_13TeV-sherpa/EXOSpring16_v1-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/160503_231305/0000/diphotonsMicroAOD_21.root", 
+                "nevents": 8712, 
+                "totEvents": 8712, 
+                "weights": 1548.9998779296875
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1/diphotons_80_v1/GGJets_M-1000To2000_Pt-50_13TeV-sherpa/EXOSpring16_v1-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/160503_231305/0000/diphotonsMicroAOD_3.root", 
+                "nevents": 45936, 
+                "totEvents": 45936, 
+                "weights": 8054.9033203125
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1/diphotons_80_v1/GGJets_M-1000To2000_Pt-50_13TeV-sherpa/EXOSpring16_v1-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/160503_231305/0000/diphotonsMicroAOD_4.root", 
+                "nevents": 37440, 
+                "totEvents": 37440, 
+                "weights": 6545.99951171875
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1/diphotons_80_v1/GGJets_M-1000To2000_Pt-50_13TeV-sherpa/EXOSpring16_v1-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/160503_231305/0000/diphotonsMicroAOD_5.root", 
+                "nevents": 46008, 
+                "totEvents": 46008, 
+                "weights": 8021.79833984375
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1/diphotons_80_v1/GGJets_M-1000To2000_Pt-50_13TeV-sherpa/EXOSpring16_v1-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/160503_231305/0000/diphotonsMicroAOD_6.root", 
+                "nevents": 49608, 
+                "totEvents": 49608, 
+                "weights": 8699.8974609375
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1/diphotons_80_v1/GGJets_M-1000To2000_Pt-50_13TeV-sherpa/EXOSpring16_v1-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/160503_231305/0000/diphotonsMicroAOD_7.root", 
+                "nevents": 45936, 
+                "totEvents": 45936, 
+                "weights": 7986.20068359375
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1/diphotons_80_v1/GGJets_M-1000To2000_Pt-50_13TeV-sherpa/EXOSpring16_v1-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/160503_231305/0000/diphotonsMicroAOD_8.root", 
+                "nevents": 1296, 
+                "totEvents": 1296, 
+                "weights": 223.00001525878906
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1/diphotons_80_v1/GGJets_M-1000To2000_Pt-50_13TeV-sherpa/EXOSpring16_v1-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/160503_231305/0000/diphotonsMicroAOD_9.root", 
+                "nevents": 39167, 
+                "totEvents": 39167, 
+                "weights": 6815.20166015625
+            }
+        ], 
+        "vetted": true
+    }, 
+    "/GGJets_M-200To500_Pt-50_13TeV-sherpa/musella-EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2-343e485a7f3ee9ca80a97e3533f4ae19/USER": {
+        "files": [
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_49.root", 
+                "nevents": 1452, 
+                "totEvents": 1452, 
+                "weights": 417.79998779296875
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_1.root", 
+                "nevents": 37752, 
+                "totEvents": 37752, 
+                "weights": 10502.2998046875
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_10.root", 
+                "nevents": 36432, 
+                "totEvents": 36432, 
+                "weights": 10267.1015625
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_11.root", 
+                "nevents": 47520, 
+                "totEvents": 47520, 
+                "weights": 13362.1982421875
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_12.root", 
+                "nevents": 40655, 
+                "totEvents": 40655, 
+                "weights": 11442.201171875
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_13.root", 
+                "nevents": 18216, 
+                "totEvents": 18216, 
+                "weights": 5168.60107421875
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_14.root", 
+                "nevents": 35903, 
+                "totEvents": 35903, 
+                "weights": 10198.49609375
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_15.root", 
+                "nevents": 36432, 
+                "totEvents": 36432, 
+                "weights": 10255.69921875
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_16.root", 
+                "nevents": 36432, 
+                "totEvents": 36432, 
+                "weights": 10349.90234375
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_17.root", 
+                "nevents": 49104, 
+                "totEvents": 49104, 
+                "weights": 13796.89453125
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_18.root", 
+                "nevents": 36300, 
+                "totEvents": 36300, 
+                "weights": 10162.99609375
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_19.root", 
+                "nevents": 7127, 
+                "totEvents": 7127, 
+                "weights": 1999.6998291015625
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_2.root", 
+                "nevents": 5544, 
+                "totEvents": 5544, 
+                "weights": 1574.6998291015625
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_20.root", 
+                "nevents": 34847, 
+                "totEvents": 34847, 
+                "weights": 9781.2041015625
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_21.root", 
+                "nevents": 36036, 
+                "totEvents": 36036, 
+                "weights": 10147.306640625
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_22.root", 
+                "nevents": 35904, 
+                "totEvents": 35904, 
+                "weights": 10125.4013671875
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_23.root", 
+                "nevents": 36432, 
+                "totEvents": 36432, 
+                "weights": 10254.205078125
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_24.root", 
+                "nevents": 36432, 
+                "totEvents": 36432, 
+                "weights": 10219.69921875
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_25.root", 
+                "nevents": 36432, 
+                "totEvents": 36432, 
+                "weights": 10337.8994140625
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_26.root", 
+                "nevents": 49764, 
+                "totEvents": 49764, 
+                "weights": 14053.5947265625
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_27.root", 
+                "nevents": 36431, 
+                "totEvents": 36431, 
+                "weights": 10347.2021484375
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_28.root", 
+                "nevents": 49103, 
+                "totEvents": 49103, 
+                "weights": 13714.6005859375
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_29.root", 
+                "nevents": 36432, 
+                "totEvents": 36432, 
+                "weights": 10277.599609375
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_3.root", 
+                "nevents": 39864, 
+                "totEvents": 39864, 
+                "weights": 11274.400390625
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_30.root", 
+                "nevents": 36431, 
+                "totEvents": 36431, 
+                "weights": 10239.6982421875
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_31.root", 
+                "nevents": 48972, 
+                "totEvents": 48972, 
+                "weights": 13848.099609375
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_32.root", 
+                "nevents": 40522, 
+                "totEvents": 40522, 
+                "weights": 11505.0029296875
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_33.root", 
+                "nevents": 32604, 
+                "totEvents": 32604, 
+                "weights": 9194.9013671875
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_34.root", 
+                "nevents": 36431, 
+                "totEvents": 36431, 
+                "weights": 10339.1962890625
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_35.root", 
+                "nevents": 36300, 
+                "totEvents": 36300, 
+                "weights": 10193.3994140625
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_36.root", 
+                "nevents": 45804, 
+                "totEvents": 45804, 
+                "weights": 12925.591796875
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_37.root", 
+                "nevents": 21252, 
+                "totEvents": 21252, 
+                "weights": 5945.7021484375
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_38.root", 
+                "nevents": 46464, 
+                "totEvents": 46464, 
+                "weights": 13153.001953125
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_39.root", 
+                "nevents": 36431, 
+                "totEvents": 36431, 
+                "weights": 10290.7001953125
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_4.root", 
+                "nevents": 33924, 
+                "totEvents": 33924, 
+                "weights": 9572.099609375
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_40.root", 
+                "nevents": 36300, 
+                "totEvents": 36300, 
+                "weights": 10185.0
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_41.root", 
+                "nevents": 47124, 
+                "totEvents": 47124, 
+                "weights": 13315.0029296875
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_42.root", 
+                "nevents": 36432, 
+                "totEvents": 36432, 
+                "weights": 10244.19921875
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_43.root", 
+                "nevents": 36432, 
+                "totEvents": 36432, 
+                "weights": 10213.302734375
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_44.root", 
+                "nevents": 18216, 
+                "totEvents": 18216, 
+                "weights": 5167.19921875
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_45.root", 
+                "nevents": 36432, 
+                "totEvents": 36432, 
+                "weights": 10227.9970703125
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_46.root", 
+                "nevents": 36432, 
+                "totEvents": 36432, 
+                "weights": 10288.2939453125
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_47.root", 
+                "nevents": 48311, 
+                "totEvents": 48311, 
+                "weights": 13555.994140625
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_48.root", 
+                "nevents": 22704, 
+                "totEvents": 22704, 
+                "weights": 6408.6015625
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_5.root", 
+                "nevents": 17556, 
+                "totEvents": 17556, 
+                "weights": 4982.8994140625
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_50.root", 
+                "nevents": 30624, 
+                "totEvents": 30624, 
+                "weights": 8634.2041015625
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_51.root", 
+                "nevents": 8712, 
+                "totEvents": 8712, 
+                "weights": 2464.200439453125
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_52.root", 
+                "nevents": 22439, 
+                "totEvents": 22439, 
+                "weights": 6317.1015625
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_53.root", 
+                "nevents": 7128, 
+                "totEvents": 7128, 
+                "weights": 1999.0999755859375
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_6.root", 
+                "nevents": 36431, 
+                "totEvents": 36431, 
+                "weights": 10346.9970703125
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_7.root", 
+                "nevents": 36430, 
+                "totEvents": 36430, 
+                "weights": 10243.400390625
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_8.root", 
+                "nevents": 36300, 
+                "totEvents": 36300, 
+                "weights": 10315.8994140625
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-200To500_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/160524_183634/0000/diphotonsMicroAOD_9.root", 
+                "nevents": 30096, 
+                "totEvents": 30096, 
+                "weights": 8480.59765625
+            }
+        ], 
+        "vetted": true
+    }, 
+    "/GGJets_M-4000To6000_Pt-50_13TeV-sherpa/musella-EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v3-343e485a7f3ee9ca80a97e3533f4ae19/USER": {
+        "files": [
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-4000To6000_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v3/160524_182631/0000/diphotonsMicroAOD_1.root", 
+                "nevents": 3132, 
+                "totEvents": 3132, 
+                "weights": 525.800048828125
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-4000To6000_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v3/160524_182631/0000/diphotonsMicroAOD_2.root", 
+                "nevents": 522, 
+                "totEvents": 522, 
+                "weights": 86.89999389648438
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-4000To6000_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v3/160524_182631/0000/diphotonsMicroAOD_5.root", 
+                "nevents": 2697, 
+                "totEvents": 2697, 
+                "weights": 447.2999572753906
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-4000To6000_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v3/160524_182631/0000/diphotonsMicroAOD_9.root", 
+                "nevents": 1566, 
+                "totEvents": 1566, 
+                "weights": 262.8999938964844
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-4000To6000_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v3/160524_182631/0000/diphotonsMicroAOD_10.root", 
+                "nevents": 43761, 
+                "totEvents": 43761, 
+                "weights": 7355.1982421875
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-4000To6000_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v3/160524_182631/0000/diphotonsMicroAOD_11.root", 
+                "nevents": 34278, 
+                "totEvents": 34278, 
+                "weights": 5692.2001953125
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-4000To6000_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v3/160524_182631/0000/diphotonsMicroAOD_3.root", 
+                "nevents": 40542, 
+                "totEvents": 40542, 
+                "weights": 6752.99755859375
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-4000To6000_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v3/160524_182631/0000/diphotonsMicroAOD_4.root", 
+                "nevents": 44742, 
+                "totEvents": 44742, 
+                "weights": 7491.4013671875
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-4000To6000_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v3/160524_182631/0000/diphotonsMicroAOD_6.root", 
+                "nevents": 40280, 
+                "totEvents": 40280, 
+                "weights": 6744.103515625
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-4000To6000_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v3/160524_182631/0000/diphotonsMicroAOD_7.root", 
+                "nevents": 45762, 
+                "totEvents": 45762, 
+                "weights": 7669.8017578125
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1_p3/diphotons_80_v1/GGJets_M-4000To6000_Pt-50_13TeV-sherpa/EXOSpring16_v1_p3-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v3/160524_182631/0000/diphotonsMicroAOD_8.root", 
+                "nevents": 42717, 
+                "totEvents": 42717, 
+                "weights": 7169.2998046875
+            }
+        ], 
+        "vetted": true
+    }, 
+    "/GGJets_M-6000To8000_Pt-50_13TeV-sherpa/musella-EXOSpring16_v1-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1-343e485a7f3ee9ca80a97e3533f4ae19/USER": {
+        "files": [
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1/diphotons_80_v1/GGJets_M-6000To8000_Pt-50_13TeV-sherpa/EXOSpring16_v1-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/160503_231307/0000/diphotonsMicroAOD_1.root", 
+                "nevents": 16254, 
+                "totEvents": 16254, 
+                "weights": 2957.699951171875
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1/diphotons_80_v1/GGJets_M-6000To8000_Pt-50_13TeV-sherpa/EXOSpring16_v1-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/160503_231307/0000/diphotonsMicroAOD_10.root", 
+                "nevents": 9639, 
+                "totEvents": 9639, 
+                "weights": 1750.4002685546875
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1/diphotons_80_v1/GGJets_M-6000To8000_Pt-50_13TeV-sherpa/EXOSpring16_v1-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/160503_231307/0000/diphotonsMicroAOD_11.root", 
+                "nevents": 18648, 
+                "totEvents": 18648, 
+                "weights": 3366.199951171875
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1/diphotons_80_v1/GGJets_M-6000To8000_Pt-50_13TeV-sherpa/EXOSpring16_v1-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/160503_231307/0000/diphotonsMicroAOD_12.root", 
+                "nevents": 1638, 
+                "totEvents": 1638, 
+                "weights": 294.9999694824219
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1/diphotons_80_v1/GGJets_M-6000To8000_Pt-50_13TeV-sherpa/EXOSpring16_v1-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/160503_231307/0000/diphotonsMicroAOD_13.root", 
+                "nevents": 6552, 
+                "totEvents": 6552, 
+                "weights": 1171.10009765625
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1/diphotons_80_v1/GGJets_M-6000To8000_Pt-50_13TeV-sherpa/EXOSpring16_v1-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/160503_231307/0000/diphotonsMicroAOD_14.root", 
+                "nevents": 3024, 
+                "totEvents": 3024, 
+                "weights": 535.4000244140625
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1/diphotons_80_v1/GGJets_M-6000To8000_Pt-50_13TeV-sherpa/EXOSpring16_v1-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/160503_231307/0000/diphotonsMicroAOD_15.root", 
+                "nevents": 27216, 
+                "totEvents": 27216, 
+                "weights": 4913.5009765625
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1/diphotons_80_v1/GGJets_M-6000To8000_Pt-50_13TeV-sherpa/EXOSpring16_v1-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/160503_231307/0000/diphotonsMicroAOD_16.root", 
+                "nevents": 252, 
+                "totEvents": 252, 
+                "weights": 46.30000305175781
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1/diphotons_80_v1/GGJets_M-6000To8000_Pt-50_13TeV-sherpa/EXOSpring16_v1-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/160503_231307/0000/diphotonsMicroAOD_17.root", 
+                "nevents": 46699, 
+                "totEvents": 46699, 
+                "weights": 8454.6005859375
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1/diphotons_80_v1/GGJets_M-6000To8000_Pt-50_13TeV-sherpa/EXOSpring16_v1-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/160503_231307/0000/diphotonsMicroAOD_18.root", 
+                "nevents": 2961, 
+                "totEvents": 2961, 
+                "weights": 533.2000122070312
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1/diphotons_80_v1/GGJets_M-6000To8000_Pt-50_13TeV-sherpa/EXOSpring16_v1-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/160503_231307/0000/diphotonsMicroAOD_19.root", 
+                "nevents": 819, 
+                "totEvents": 819, 
+                "weights": 154.3999786376953
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1/diphotons_80_v1/GGJets_M-6000To8000_Pt-50_13TeV-sherpa/EXOSpring16_v1-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/160503_231307/0000/diphotonsMicroAOD_2.root", 
+                "nevents": 12978, 
+                "totEvents": 12978, 
+                "weights": 2377.099853515625
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1/diphotons_80_v1/GGJets_M-6000To8000_Pt-50_13TeV-sherpa/EXOSpring16_v1-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/160503_231307/0000/diphotonsMicroAOD_20.root", 
+                "nevents": 1512, 
+                "totEvents": 1512, 
+                "weights": 275.4000244140625
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1/diphotons_80_v1/GGJets_M-6000To8000_Pt-50_13TeV-sherpa/EXOSpring16_v1-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/160503_231307/0000/diphotonsMicroAOD_21.root", 
+                "nevents": 819, 
+                "totEvents": 819, 
+                "weights": 159.09999084472656
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1/diphotons_80_v1/GGJets_M-6000To8000_Pt-50_13TeV-sherpa/EXOSpring16_v1-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/160503_231307/0000/diphotonsMicroAOD_22.root", 
+                "nevents": 819, 
+                "totEvents": 819, 
+                "weights": 143.60000610351562
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1/diphotons_80_v1/GGJets_M-6000To8000_Pt-50_13TeV-sherpa/EXOSpring16_v1-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/160503_231307/0000/diphotonsMicroAOD_3.root", 
+                "nevents": 15939, 
+                "totEvents": 15939, 
+                "weights": 2936.000244140625
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1/diphotons_80_v1/GGJets_M-6000To8000_Pt-50_13TeV-sherpa/EXOSpring16_v1-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/160503_231307/0000/diphotonsMicroAOD_4.root", 
+                "nevents": 819, 
+                "totEvents": 819, 
+                "weights": 148.6999969482422
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1/diphotons_80_v1/GGJets_M-6000To8000_Pt-50_13TeV-sherpa/EXOSpring16_v1-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/160503_231307/0000/diphotonsMicroAOD_5.root", 
+                "nevents": 819, 
+                "totEvents": 819, 
+                "weights": 148.1000213623047
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1/diphotons_80_v1/GGJets_M-6000To8000_Pt-50_13TeV-sherpa/EXOSpring16_v1-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/160503_231307/0000/diphotonsMicroAOD_6.root", 
+                "nevents": 2457, 
+                "totEvents": 2457, 
+                "weights": 451.0999755859375
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1/diphotons_80_v1/GGJets_M-6000To8000_Pt-50_13TeV-sherpa/EXOSpring16_v1-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/160503_231307/0000/diphotonsMicroAOD_7.root", 
+                "nevents": 26649, 
+                "totEvents": 26649, 
+                "weights": 4840.80126953125
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1/diphotons_80_v1/GGJets_M-6000To8000_Pt-50_13TeV-sherpa/EXOSpring16_v1-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/160503_231307/0000/diphotonsMicroAOD_8.root", 
+                "nevents": 9009, 
+                "totEvents": 9009, 
+                "weights": 1676.5008544921875
+            }, 
+            {
+                "bad": false, 
+                "name": "/store/group/phys_exotica/diphoton/musella/flashgg/EXOSpring16_v1/diphotons_80_v1/GGJets_M-6000To8000_Pt-50_13TeV-sherpa/EXOSpring16_v1-diphotons_80_v1-v0-RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/160503_231307/0000/diphotonsMicroAOD_9.root", 
+                "nevents": 44350, 
+                "totEvents": 44350, 
+                "weights": 8055.49853515625
+            }
+        ], 
+        "vetted": true
+    }
+}

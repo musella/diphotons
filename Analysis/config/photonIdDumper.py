@@ -16,37 +16,17 @@ from FWCore.ParameterSet.VarParsing import VarParsing
 process = cms.Process("Analysis")
 
 process.load("FWCore.MessageService.MessageLogger_cfi")
+process.load("Configuration.StandardSequences.GeometryDB_cff")
+process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff")
+from Configuration.AlCa.GlobalTag import GlobalTag
+from Configuration.AlCa.autoCond import autoCond
+process.GlobalTag = GlobalTag(process.GlobalTag, autoCond['run2_mc'].replace("::All",""))
 
 # process.source = cms.Source ("PoolSource",
 #                              fileNames = cms.untracked.vstring(options.inputFiles))
 
 readFiles = cms.untracked.vstring()
 process.source = cms.Source ("PoolSource",fileNames = readFiles)
-readFiles.extend( [
-           '/store/user/spigazzi/flashgg/diphotonsIsoStudies0T/1_2_0-31-g16f7065/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotonsIsoStudies0T-1_2_0-31-g16f7065-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160119_091710/0000/myMicroAODOutputFile_1.root',
-           '/store/user/spigazzi/flashgg/diphotonsIsoStudies0T/1_2_0-31-g16f7065/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotonsIsoStudies0T-1_2_0-31-g16f7065-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160119_091710/0000/myMicroAODOutputFile_105.root',
-           '/store/user/spigazzi/flashgg/diphotonsIsoStudies0T/1_2_0-31-g16f7065/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotonsIsoStudies0T-1_2_0-31-g16f7065-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160119_091710/0000/myMicroAODOutputFile_106.root',
-           '/store/user/spigazzi/flashgg/diphotonsIsoStudies0T/1_2_0-31-g16f7065/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotonsIsoStudies0T-1_2_0-31-g16f7065-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160119_091710/0000/myMicroAODOutputFile_107.root',
-           '/store/user/spigazzi/flashgg/diphotonsIsoStudies0T/1_2_0-31-g16f7065/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotonsIsoStudies0T-1_2_0-31-g16f7065-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160119_091710/0000/myMicroAODOutputFile_109.root',
-           '/store/user/spigazzi/flashgg/diphotonsIsoStudies0T/1_2_0-31-g16f7065/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotonsIsoStudies0T-1_2_0-31-g16f7065-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160119_091710/0000/myMicroAODOutputFile_11.root',
-           '/store/user/spigazzi/flashgg/diphotonsIsoStudies0T/1_2_0-31-g16f7065/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotonsIsoStudies0T-1_2_0-31-g16f7065-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160119_091710/0000/myMicroAODOutputFile_14.root',
-           '/store/user/spigazzi/flashgg/diphotonsIsoStudies0T/1_2_0-31-g16f7065/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotonsIsoStudies0T-1_2_0-31-g16f7065-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160119_091710/0000/myMicroAODOutputFile_26.root',
-           '/store/user/spigazzi/flashgg/diphotonsIsoStudies0T/1_2_0-31-g16f7065/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotonsIsoStudies0T-1_2_0-31-g16f7065-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160119_091710/0000/myMicroAODOutputFile_30.root',
-           '/store/user/spigazzi/flashgg/diphotonsIsoStudies0T/1_2_0-31-g16f7065/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotonsIsoStudies0T-1_2_0-31-g16f7065-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160119_091710/0000/myMicroAODOutputFile_31.root',
-           '/store/user/spigazzi/flashgg/diphotonsIsoStudies0T/1_2_0-31-g16f7065/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotonsIsoStudies0T-1_2_0-31-g16f7065-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160119_091710/0000/myMicroAODOutputFile_44.root',
-           '/store/user/spigazzi/flashgg/diphotonsIsoStudies0T/1_2_0-31-g16f7065/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotonsIsoStudies0T-1_2_0-31-g16f7065-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160119_091710/0000/myMicroAODOutputFile_45.root',
-           '/store/user/spigazzi/flashgg/diphotonsIsoStudies0T/1_2_0-31-g16f7065/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotonsIsoStudies0T-1_2_0-31-g16f7065-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160119_091710/0000/myMicroAODOutputFile_47.root',
-           '/store/user/spigazzi/flashgg/diphotonsIsoStudies0T/1_2_0-31-g16f7065/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotonsIsoStudies0T-1_2_0-31-g16f7065-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160119_091710/0000/myMicroAODOutputFile_53.root',
-           '/store/user/spigazzi/flashgg/diphotonsIsoStudies0T/1_2_0-31-g16f7065/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotonsIsoStudies0T-1_2_0-31-g16f7065-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160119_091710/0000/myMicroAODOutputFile_54.root',
-           '/store/user/spigazzi/flashgg/diphotonsIsoStudies0T/1_2_0-31-g16f7065/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotonsIsoStudies0T-1_2_0-31-g16f7065-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160119_091710/0000/myMicroAODOutputFile_58.root',
-           '/store/user/spigazzi/flashgg/diphotonsIsoStudies0T/1_2_0-31-g16f7065/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotonsIsoStudies0T-1_2_0-31-g16f7065-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160119_091710/0000/myMicroAODOutputFile_63.root',
-           '/store/user/spigazzi/flashgg/diphotonsIsoStudies0T/1_2_0-31-g16f7065/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotonsIsoStudies0T-1_2_0-31-g16f7065-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160119_091710/0000/myMicroAODOutputFile_64.root',
-           '/store/user/spigazzi/flashgg/diphotonsIsoStudies0T/1_2_0-31-g16f7065/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotonsIsoStudies0T-1_2_0-31-g16f7065-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160119_091710/0000/myMicroAODOutputFile_66.root',
-           '/store/user/spigazzi/flashgg/diphotonsIsoStudies0T/1_2_0-31-g16f7065/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotonsIsoStudies0T-1_2_0-31-g16f7065-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160119_091710/0000/myMicroAODOutputFile_7.root',
-           '/store/user/spigazzi/flashgg/diphotonsIsoStudies0T/1_2_0-31-g16f7065/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotonsIsoStudies0T-1_2_0-31-g16f7065-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160119_091710/0000/myMicroAODOutputFile_71.root',
-           '/store/user/spigazzi/flashgg/diphotonsIsoStudies0T/1_2_0-31-g16f7065/GJet_Pt-15to6000_TuneCUETP8M1_Flat_13TeV_pythia8/diphotonsIsoStudies0T-1_2_0-31-g16f7065-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_magnetOff_76X_mcRun2_asymptotic_v12-v1/160119_091710/0000/myMicroAODOutputFile_8.root' ] )
-
-
 
 process.TFileService = cms.Service("TFileService",
                                    fileName = cms.string("output.root"))
@@ -67,53 +47,55 @@ process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32( 10000 )
 ##         )
 ##                                                              )
 
+# run all upstream corrections from flashgg
+process.load("flashgg.Taggers.flashggUpdatedIdMVADiPhotons_cfi")
+process.flashggSinglePhotonViews = cms.EDProducer("FlashggSinglePhotonViewProducer",
+                                                  DiPhotonTag   = cms.InputTag('flashggUpdatedIdMVADiPhotons'),
+                                                  maxCandidates = cms.int32(5)
+                                              )
 
-## process.flashggSinglePhotonViews = cms.EDProducer("FlashggSinglePhotonViewProducer",
-##                                           DiPhotonTag=cms.untracked.InputTag('kinPreselDiPhotons'),
-##                                                   
-##                                           )
-
-## process.load("flashgg.Taggers.photonViewDumper_cfi") ##  import diphotonDumper 
-process.load("flashgg.Taggers.photonDumper_cfi") 
+from flashgg.Taggers.photonViewDumper_cfi import photonViewDumper as photonDumper
+process.photonDumper = photonDumper
+## process.load("flashgg.Taggers.photonDumper_cfi") 
 import flashgg.Taggers.dumperConfigTools as cfgTools
 
-process.photonDumper.src = "flashggRandomizedPhotons"
-## process.photonDumper.src = "flashggSinglePhotonViews"
+## process.photonDumper.src = "flashggRandomizedPhotons"
+process.photonDumper.src = "flashggSinglePhotonViews"
 process.photonDumper.dumpTrees = True
 process.photonDumper.dumpWorkspace = False
 process.photonDumper.quietRooFit = True
 
 ## list of variables to be dumped in trees/datasets. Same variables for all categories
-variables=["pt := pt",
-           "energy := energy",
-           "eta := eta",
-           "phi := phi",
+variables=["pt := photon.pt",
+           "energy := photon.energy",
+           "eta := photon.eta",
+           "phi := photon.phi",
            
-           "scEta:=superCluster.eta",
-           "scRawE := superCluster.rawEnergy",
+           "scEta := photon.superCluster.eta",
+           "scRawE := photon.superCluster.rawEnergy",
            
-           "etaWidth := superCluster.etaWidth",
-           "phiWidth := superCluster.phiWidth",
-           "sipip := sqrt(sipip)",
-           "chgIsoWrtWorstVtx := pfChgIsoWrtWorstVtx03",
-           "phoIso03 := pfPhoIso03",
-           "chgIsoWrtVtx0 := pfChgIso03WrtVtx0",
-           "hcalTowerSumEtConeDR03 := hcalTowerSumEtConeDR03",
-           "trkSumPtHollowConeDR03 := trkSumPtHollowConeDR03",
-           "hadTowOverEm := hadTowOverEm",
+           "etaWidth := photon.superCluster.etaWidth",
+           "phiWidth := photon.superCluster.phiWidth",
+           "sipip := sqrt(photon.sipip)",
+           "chgIsoWrtWorstVtx := photon.pfChgIsoWrtWorstVtx03",
+           "phoIso03 := photon.pfPhoIso03",
+           "chgIsoWrtVtx0 := photon.pfChgIso03WrtVtx0",
+           "hcalTowerSumEtConeDR03 := photon.hcalTowerSumEtConeDR03",
+           "trkSumPtHollowConeDR03 := photon.trkSumPtHollowConeDR03",
+           "hadTowOverEm := photon.hadTowOverEm",
            
            ## "idMVA := phoIdMvaWrtChosenVtx",
-           "genIso := ? hasMatchedGenPhoton ? userFloat('genIso') : -1", 
+           "genIso := ? photon.hasMatchedGenPhoton ? photon.userFloat('genIso') : -1", 
            ## "etrue := ? hasMatchedGenPhoton ? matchedGenPhoton.energy : 0",
-           "sieie := sigmaIetaIeta",
-           "r9 := r9",
-           "esEffSigmaRR := esEffSigmaRR",
-           "s4 := s4",
-           "sieip := sqrt(sieip)",
+           "sieie := photon.full5x5_sigmaIetaIeta",
+           "r9 := photon.full5x5_r9",
+           "esEffSigmaRR := photon.esEffSigmaRR",
+           "s4 := photon.s4",
+           "sieip := sqrt(photon.sieip)",
            
-           "egChargedHadronIso := egChargedHadronIso" ,
-           "egNeutralHadronIso := egNeutralHadronIso",
-           "egPhotonIso := egPhotonIso" ,
+           "egChargedHadronIso := photon.egChargedHadronIso" ,
+           "egNeutralHadronIso := photon.egNeutralHadronIso",
+           "egPhotonIso := photon.egPhotonIso" ,
            
            ## "rndConeDeltaPhi := userFloat('rnd03_rndcone_deltaphi')",
            ## "fprRndConeDeltaPhi := userFloat('fprRnd03_rndcone_deltaphi')",
@@ -146,9 +128,9 @@ histograms=["r9>>r9(110,0,1.1)",
 ## define categories and associated objects to dump
 cfgTools.addCategory(process.photonDumper,
                      "Reject",
-                     "   abs(superCluster.eta)>=1.4442&&abs(superCluster.eta)<=1.566 "
-                     "|| abs(superCluster.eta)>=2.5 "
-                     "|| pt<75",
+                     "   abs(photon.superCluster.eta)>=1.4442&&abs(photon.superCluster.eta)<=1.566 "
+                     "|| abs(photon.superCluster.eta)>=2.5 "
+                     "|| photon.pt<75",
                      -1 ## if nSubcat is -1 do not store anythings
                      )
 
@@ -156,8 +138,8 @@ cfgTools.addCategory(process.photonDumper,
 cfgTools.addCategories(process.photonDumper,
                        ## categories definition
                        ## cuts are applied in cascade. Events getting to these categories have already failed the "Reject" selection
-                       [("promptTree","genMatchType == 1",0),
-                        ("fakesTree",  "genMatchType != 1",0),
+                       [("promptTree","photon.genMatchType == 1",0),
+                        ("fakesTree",  "photon.genMatchType != 1",0),
                         ],
                        ## variables to be dumped in trees/datasets. Same variables for all categories
                        ## if different variables wanted for different categories, can add categorie one by one with cfgTools.addCategory
@@ -178,6 +160,8 @@ process.idleWatchdog=cms.EDAnalyzer("IdleWatchdog",
 process.p1 = cms.Path(
 ## process.idleWatchdog*process.kinPreselDiPhotons*process.flashggSinglePhotonViews*process.photonViewDumper
     #process.idleWatchdog*
+    process.flashggUpdatedIdMVADiPhotons*
+    process.flashggSinglePhotonViews*
     process.photonDumper
     )
 
