@@ -1,0 +1,9 @@
+{
+    "processes" : {
+	    "DYJetsToLL_madgraphMLM-" : [
+					 "/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"
+			       ]
+	    },
+	
+	"cmdLine" : "metaDataSrc=flashgg campaign=RunIIFall17-2_7_5 idversion=V2 selection=electron massCut=50 ptLead=37 ptSublead=20 trigger=HLT_Ele32_WPTight_Gsf_v* doeleId=1 dohltMatch=1 dol1Match=1 eleId=isHLTsafe doTnP=1 addRegressionInput=1 histosOnly=1"
+}

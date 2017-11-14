@@ -161,7 +161,7 @@ def addRandomCones(variables,variablesSinglePho,histograms,histogramsSinglePho):
                                 ])
 
 
-def getDefaultConfig():
+def getDefaultConfig(trackAllCorrections=True):
 
     variables=["mass","pt","rapidity","eta",
                "vertexZ  := vtx.z", 
@@ -236,8 +236,9 @@ def getDefaultConfig():
                "subleadPassEleVeto := subLeadingPhoton.passElectronVeto",
 
                "leadSigEOverE    := leadingPhoton.sigEOverE",
-               "subleadSigEOverE := subLeadingPhoton.sigEOverE",
-               
+               "subleadSigEOverE := subLeadingPhoton.sigEOverE"]
+    if trackAllCorrections:
+        variables += [               
                "leadRecoEreg              := leadingPhoton.userFloat('reco_regr_E')",
                "leadRecoSigEOverE     := leadingPhoton.userFloat('reco_regr_E_err') / leadingPhoton.userFloat('reco_regr_E')",
                "subleadRecoEreg           := subLeadingPhoton.userFloat('reco_regr_E')",
@@ -381,12 +382,10 @@ def getDefaultConfig():
 
     return variables, histograms, variablesSinglePho, histogramsSinglePho
 
-def getTnPVariables(id_var):
+def getTnPVariables(id_var,variables):
     """
     Converted default variables into TnP adding Id selection flags
     """
-
-    variables, h, vSP, hSP = getDefaultConfig()
 
     dipho_to_tnp_var = {"mass" : "mass := diPhoton.mass",
                         "pt" : "pt := diPhoton.pt",
