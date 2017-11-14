@@ -44,7 +44,7 @@ class DiPhotonAnalysis(object):
         self.sourceSinglePhotons = sourceSinglePhotons
 
         self.extraSysModules = extraSysModules
-        assert( len(self.extraSysModules) == 0 or self.applyDiphotonCorrections )
+        ## assert( len(self.extraSysModules) == 0 or self.applyDiphotonCorrections )
         
         self.analysisSelections = []
         self.photonSelections = []
@@ -82,25 +82,28 @@ class DiPhotonAnalysis(object):
 
     def customizeDiphotonCorrections(self,process,processType):
         
-        from flashgg.Systematics.SystematicsCustomize import useEGMTools
-        useEGMTools(process)
-
-        from copy import deepcopy as copy
-        
-#        process.flashggDiPhotonSystematics.SystMethods.remove(process.SigmaEOverESmearing)
-        if processType == "data":
-            from flashgg.Systematics.SystematicsCustomize import customizePhotonSystematicsForData
-            customizePhotonSystematicsForData(process)
+        if self.applyDiphotonCorrections:
+            from flashgg.Systematics.SystematicsCustomize import useEGMTools
+            useEGMTools(process)
+            
+            from copy import deepcopy as copy
+            
+            if processType == "data":
+                from flashgg.Systematics.SystematicsCustomize import customizePhotonSystematicsForData
+                customizePhotonSystematicsForData(process)
+            else:
+                from flashgg.Systematics.SystematicsCustomize import customizePhotonSystematicsForMC
+                customizePhotonSystematicsForMC(process)
+                default1sig = cms.vint32()
+                default2sig = cms.PSet( firstVar = cms.vint32(), secondVar = cms.vint32())
+                for vpset,dflt in (process.flashggDiPhotonSystematics.SystMethods,default1sig),(process.flashggDiPhotonSystematics.SystMethods2D,default2sig):
+                    for pset in vpset:
+                        if (processType != "signal") or (not pset.Label.value().startswith("MCSmear")):
+                            pset.NSigmas = copy(dflt)
         else:
-            from flashgg.Systematics.SystematicsCustomize import customizePhotonSystematicsForMC
-            customizePhotonSystematicsForMC(process)
-            default1sig = cms.vint32()
-            default2sig = cms.PSet( firstVar = cms.vint32(), secondVar = cms.vint32())
-            for vpset,dflt in (process.flashggDiPhotonSystematics.SystMethods,default1sig),(process.flashggDiPhotonSystematics.SystMethods2D,default2sig):
-                for pset in vpset:
-                    if (processType != "signal") or (not pset.Label.value().startswith("MCSmear")):
-                        pset.NSigmas = copy(dflt)
-                        
+            process.flashggDiPhotonSystematics.SystMethods = cms.VPSet()
+            process.flashggDiPhotonSystematics.SystMethods2D = cms.VPSet()
+            
         process.flashggDiPhotonSystematics.SystMethods.extend(self.extraSysModules)
 
         
@@ -117,9 +120,13 @@ class DiPhotonAnalysis(object):
         trg = None
         splitByIso = False
         
-        if self.applyDiphotonCorrections:
-            self.customizeDiphotonCorrections(process,jobConfig.processType)
+        self.customizeDiphotonCorrections(process,jobConfig.processType)
 
+        import os
+        if os.environ["CMSSW_VERSION"].count("CMSSW_9_2"):
+            from flashgg.MicroAOD.MicroAODCustomize import createTaskWithAllProducersAndFilters
+            process.myTask = createTaskWithAllProducersAndFilters(process)
+        
         if jobConfig.processType == "data":
             ## data and MC menus may not be identical
             trg = self.getHltFilter(process)
@@ -210,7 +217,7 @@ class DiPhotonAnalysis(object):
         
         ## unscheduled execution: cmsRun will figure out the dependencies
         process.options = cms.untracked.PSet( allowUnscheduled = cms.untracked.bool(True) )
-
+        
         if jobConfig.dumpPython != "":
             from gzip import open
             pyout = open("%s.gz" % jobConfig.dumpPython,"w+")
@@ -236,13 +243,13 @@ class DiPhotonAnalysis(object):
                                                                reducedPreshowerRecHitCollection = cms.InputTag('reducedEgamma','reducedESRecHits')                
                                                                )
             src = "flashggDiPhotonsWithFlags"
-        if self.applyDiphotonCorrections:
-            if self.diphotonCorrectionsVersion == "OT":
-                process.load("flashgg.Systematics.flashggDiPhotonSystematics0T_cfi")
-            elif not hasattr(process,"flashggDiPhotonSystematics"):
-                process.load("flashgg.Systematics.flashggDiPhotonSystematics_cfi")
-            process.flashggDiPhotonSystematics.src=src
-            src = "flashggDiPhotonSystematics"
+            
+        if self.diphotonCorrectionsVersion == "OT":
+            process.load("flashgg.Systematics.flashggDiPhotonSystematics0T_cfi")
+        elif not hasattr(process,"flashggDiPhotonSystematics"):
+            process.load("flashgg.Systematics.flashggDiPhotonSystematics_cfi")
+        process.flashggDiPhotonSystematics.src=src
+        src = "flashggDiPhotonSystematics"
                         
         
 
@@ -740,10 +747,14 @@ class DiPhotonAnalysis(object):
     def addPath(self,process,module,trg):
         
         if trg:
-            setattr(process,"triggeredPath%s"%module, cms.Path(trg*getattr(process,module)) )
+            pname = "triggeredPath%s"%module
+            setattr(process,pname, cms.Path(trg*getattr(process,module)) )            
         else:
-            setattr(process,"path%s"%module, cms.Path(getattr(process,module)) )
-            
+            pname = "path%s"%module
+            setattr(process,pname, cms.Path(getattr(process,module)) )
+        task = getattr(process,"myTask",None)
+        if task is not None:
+            getattr(process,pname).associate(task)
     # ----------------------------------------------------------------------------------------------------------------------
     def useDumper(self,process,dumper,splitByIso):
         

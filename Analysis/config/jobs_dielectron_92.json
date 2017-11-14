@@ -1,0 +1,16 @@
+{
+    "processes" : {
+	    "Data" : [
+"/SingleElectron/sethzenz-RunIIFall17-2_7_5-2_7_5-v0-Run2017A-PromptReco-v2-9aa4e5e2c232606cfb13f5a990b86b5d/USER",
+"/SingleElectron/sethzenz-RunIIFall17-2_7_5-2_7_5-v0-Run2017A-PromptReco-v3-9aa4e5e2c232606cfb13f5a990b86b5d/USER",
+"/SingleElectron/sethzenz-RunIIFall17-2_7_5-2_7_5-v0-Run2017B-PromptReco-v1-18f9df2352cb1d4b379d985c4184dc41/USER",
+"/SingleElectron/sethzenz-RunIIFall17-2_7_5-2_7_5-v0-Run2017B-PromptReco-v2-18f9df2352cb1d4b379d985c4184dc41/USER",
+"/SingleElectron/sethzenz-RunIIFall17-2_7_5-2_7_5-v0-Run2017C-PromptReco-v1-55dd8a3831767cdcb092d16987c90615/USER",
+"/SingleElectron/sethzenz-RunIIFall17-2_7_5-2_7_5-v0-Run2017C-PromptReco-v2-55dd8a3831767cdcb092d16987c90615/USER",
+"/SingleElectron/sethzenz-RunIIFall17-2_7_5-2_7_5-v0-Run2017C-PromptReco-v3-55dd8a3831767cdcb092d16987c90615/USER",
+"/SingleElectron/sethzenz-RunIIFall17-2_7_5-2_7_5-v0-Run2017D-PromptReco-v1-55dd8a3831767cdcb092d16987c90615/USER"
+                ]
+	    },
+	
+    "cmdLine" : "metaDataSrc=flashgg campaign=RunIIFall17-2_7_5 idversion=V2 selection=electron massCut=50 ptLead=37 ptSublead=20 trigger=HLT_Ele32_WPTight_Gsf_v* doeleId=1 dohltMatch=1 dol1Match=1 doTnP=1 eleId=isHLTsafe addRegressionInput=1 histosOnly=1 lumiMask=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/PromptReco/Cert_294927-305636_13TeV_PromptReco_Collisions17_JSON.txt"
+}

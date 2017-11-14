@@ -243,9 +243,13 @@ elif customize.selection == "dielectron0T":
     askTriggerOnMc=False
 
 # determine trigger bits to dump
+matchTriggerPaths = []
 if customize.options.trigger != "":
     dataTriggers = customize.options.trigger.split(",")
-    dumpBits.extend( map(lambda x: x.rstrip("*"), dataTriggers)  )
+    strippedNames = list(map(lambda x: x.rstrip("*"), dataTriggers))
+    matchTriggerPaths = "&& ".join( map(lambda x: "userInt('%s')" % x, strippedNames) )
+    print(matchTriggerPaths)
+    dumpBits.extend( strippedNames  )
     mcTriggers = [] ## just dump HLT bits on MC, no event selection
     askTriggerOnMc=False 
 
@@ -283,7 +287,8 @@ diphotonDumper.throwOnUnclassified = cms.bool(False)
 # import default dumper configuration
 import diphotons.Analysis.dumperConfig as dumpCfg
 
-variables, histograms, variablesSinglePho, histogramsSinglePho = dumpCfg.getDefaultConfig()
+trackAllCorrections = customize.options.applyDiphotonCorrections
+variables, histograms, variablesSinglePho, histogramsSinglePho = dumpCfg.getDefaultConfig(trackAllCorrections)
 
 minimalVariables = ["mass","pt","genMass","satRegressedMass","regressedMass",
                     "leadEnergy","subLeadEnergy",
@@ -327,6 +332,7 @@ if customize.addGainFlags:
 # HLT matching
 ## if customize.processType == "data" and customize.dohltMatch:
 if customize.dohltMatch:
+    selectedPatTrigger = "slimmedPatTrigger" if "Fall17" in  customize.datasetName() else "selectedPatTrigger"
     extraSysModules.append(
         cms.PSet( PhotonMethodName = cms.string("FlashggPhotonHLTMatch"),
                   MethodName = cms.string("FlashggDiPhotonFromPhoton"),
@@ -334,7 +340,8 @@ if customize.dohltMatch:
                   NSigmas = cms.vint32(),
                   ApplyCentralValue = cms.bool(True),
                   trgBitsSrc = cms.InputTag("TriggerResults","","HLT"),
-                  trgObjectsSrc = cms.InputTag("selectedPatTrigger"),
+                  ## trgObjectsSrc = cms.InputTag("selectedPatTrigger"),
+                  trgObjectsSrc = cms.InputTag(selectedPatTrigger),
                   pathNames = cms.vstring(dumpBits),
                   deltaRmax = cms.double(0.3),
                   )
@@ -521,7 +528,7 @@ if customize.doTnP:
     from diphotons.Analysis.highMassCiCPhotons_cfi import highMassCiCPhotonsV2
     process.flashggTagAndProbe = flashggTagAndProbe
     process.flashggTagAndProbe.diphotonsSrc = "kinDiPhotons"
-    process.flashggTagAndProbe.tagSelection = "abs(eta) < 2.1 && pt > 30 && userInt('HLT_Ele27_WPTight_Gsf_v') && (?hasUserCand('eleMatch')?userCand('eleMatch').passTightId:0) && hasPixelSeed && full5x5_r9>0.8 && egChargedHadronIso < 20 && egChargedHadronIso/pt < 0.3"
+    process.flashggTagAndProbe.tagSelection = "%s && abs(eta) < 2.1 && pt > 30 && (?hasUserCand('eleMatch')?userCand('eleMatch').passTightId:0) && hasPixelSeed && full5x5_r9>0.8 && egChargedHadronIso < 20 && egChargedHadronIso/pt < 0.3" % matchTriggerPaths
     process.flashggTagAndProbe.probeSelection = "full5x5_r9>0.8 && egChargedHadronIso < 20 && egChargedHadronIso/pt < 0.3"
     process.flashggTagAndProbe.idSelection = cms.PSet(
         rho = highMassCiCPhotonsV2.rho,
@@ -540,7 +547,7 @@ if customize.doTnP:
                                # ("EEHighR9", "abs(getProbe.superCluster.eta)>1.566 && getProbe.full5x5_r9>0.94", 0),
                                # ("EELowR9", "abs(getProbe.superCluster.eta)>1.566 && getProbe.full5x5_r9<=0.94", 0)
                            ],
-                           variables=dumpCfg.getTnPVariables(process.flashggTagAndProbe.idSelection.variables),
+                           variables=dumpCfg.getTnPVariables(process.flashggTagAndProbe.idSelection.variables,variables),
                            histograms=[]
                            )    
     tnp_sequence = cms.Sequence(flashggTagAndProbe+tagAndProbeDumper)
