@@ -57,7 +57,7 @@ MyMHTProducer::~MyMHTProducer() {}
 
 void MyMHTProducer::produce(edm::StreamID, edm::Event& iEvent, const edm::EventSetup& iSetup) const {
 	//std::auto_ptr<std::vector<reco::CompositePtrCandidate> > outPtr(new std::vector<reco::CompositePtrCandidate>(1));
-        std::auto_ptr<std::vector<reco::CompositeCandidate> > outPtr(new std::vector<reco::CompositeCandidate>(1));
+        std::unique_ptr<std::vector<reco::CompositeCandidate> > outPtr(new std::vector<reco::CompositeCandidate>(1));
 	
 	auto & out = outPtr->at(0);
 	
@@ -89,7 +89,7 @@ void MyMHTProducer::produce(edm::StreamID, edm::Event& iEvent, const edm::EventS
 	AddFourMomenta addP4;
 	addP4.set(out);
 	
-	iEvent.put(outPtr);
+	iEvent.put(std::move(outPtr));
 }
 
 #include "FWCore/Framework/interface/MakerMacros.h"

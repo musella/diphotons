@@ -31,10 +31,10 @@ DummyVertexProducer::DummyVertexProducer(const edm::ParameterSet& iConfig)
 DummyVertexProducer::~DummyVertexProducer() {}
 
 void DummyVertexProducer::produce(edm::StreamID, edm::Event& iEvent, const edm::EventSetup& iSetup) const {
-    std::auto_ptr<std::vector<reco::Vertex> > outPtr(new std::vector<reco::Vertex>());
+    std::unique_ptr<std::vector<reco::Vertex> > outPtr(new std::vector<reco::Vertex>());
 
     outPtr->push_back(reco::Vertex());
-    iEvent.put(outPtr);
+    iEvent.put(std::move(outPtr));
 }
 
 #include "FWCore/Framework/interface/MakerMacros.h"

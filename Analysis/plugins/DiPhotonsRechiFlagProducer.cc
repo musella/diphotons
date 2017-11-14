@@ -40,7 +40,7 @@ namespace flashgg {
         {
             Handle<View<flashgg::DiPhotonCandidate> > input;
             evt.getByToken( srcToken_, input );
-            auto_ptr<vector<DiPhotonCandidate> > output( new vector<DiPhotonCandidate> );
+            unique_ptr<vector<DiPhotonCandidate> > output( new vector<DiPhotonCandidate> );
             
             noZS::EcalClusterLazyTools noZsLazyTool( evt, iSetup, ecalHitEBToken_, ecalHitEEToken_, ecalHitESToken_ );
 
@@ -51,7 +51,7 @@ namespace flashgg {
 
                 output->push_back( dipho );
             }
-            evt.put( output );
+            evt.put( std::move(output) );
         };
 
     private:
