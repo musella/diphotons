@@ -1,0 +1,6 @@
+{
+	"subcategories"      : [ ["cat0","cat1"],
+				 ["cat1","cat4"],
+				 ["cat2","cat7"]
+				 ]
+}

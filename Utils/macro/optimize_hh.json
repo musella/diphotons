@@ -1,0 +1,106 @@
+{ 
+    "#" : "This is a JSON file to configure categoryOptimizationMultiDim.py script",
+        "#" : "Comments are not supported in JSON.",
+        "#" : "The trick here is to encapsulate them as well formatted input with key #",
+        "#" : "Configuration items are commented prepending an # to the name (any other character would work)",
+        
+        "###" : "----------------------------------------------------------------------------------------------",
+        "observable"          : ["Mgg",[100,180,0.25],125],
+        "settings"            : [["floatLast",[1]],["setScan",[20,1,1]]],
+	"#settings"           : [],
+        
+        "###" : "----------------------------------------------------------------------------------------------",
+        "##" : "Define extra variables",
+        "aliases"             : ["MXcap := MX*(MX<800) + 800*(MX>=800)",
+				 "minusMXcap := -MXcap",
+				 "DeltaMjj := abs(Mjj-125.)",
+				 "minusDeltaMjjcap := -(DeltaMjj*(DeltaMjj<200) + 200*(DeltaMjj>=200))",
+				 "deltaMjjMin := (Mjj-125)",
+				 "minusDeltaMjjMax := -(Mjj-125)"
+				 ],
+
+	"selection"           : "1",
+	"selectioncuts"       : [],
+        "subcategories"       : [],
+
+	"##" : "--------------------------------------------------------------",
+	"##" : "MVA categorization",
+	"##" : "--------------------------------------------------------------",
+        "variables"           : [["MVAOutput", [0.0,1.01,0.01],0.5]
+                                 ],
+        "range"               : [3], "##" : "ncats to optimize",
+        "#range"               : [2,3,4,5],
+        "#selection"          : "MX >= 200",
+	"#subcategories"      : [ ["MXbin0","MX>=250 && MX<340"],
+				 ["MXbin1","MX>=340 && MX<480"],
+				 ["MXbin2","MX>=480"]
+				 ],
+	"#selectioncuts"      : [["minusDeltaMjjMax",[-70,70.0,5.0],-20],
+				["deltaMjjMin",[-70,70.0,5.0],-20]
+                                ],
+
+	"##" : "--------------------------------------------------------------",
+	"##" : "MX bins",
+	"##" : "--------------------------------------------------------------",
+	"#selection"           : "MVAOutput >= 0.55",
+        "#variables"           : [["MXcap", [200.0,800.0,20.0],350.0]
+                                 ],
+        "#range"               : [2,3,4],
+	"#selection"          : "Mjj > 95 && Mjj < 155",
+	"#subcategories"      : [ ["cat0","MVAOutput >= 0.99"],
+				  ["cat1","MVAOutput <  0.99 && MVAOutput >= 0.975" ],
+				  ["cat2","MVAOutput <  0.975 && MVAOutput >= 0.54" ]
+				 ],
+	
+
+        "#subcategories"      : [["low_mass","MX < 400"],
+                                ["high_mass","MX >= 400"]
+       			 ],
+	"#subcategories"      : [ ["MXbin0","MX>=250 && MX<340"],
+				 ["MXbin1","MX>=340 && MX<480"],
+				 ["MXbin2","MX>=480"]
+				 ],
+	"#subcategories"      : [ ["MXbin0","MX>=250 && MX<340"],
+				 ["MXbin1","MX>=340 && MX<480"],
+				 ["MXbin2","MX>=480 && MX<660"],
+				 ["MXbin3","MX>660"]
+				 ],
+	"#subcategories"      : [ ["MXbin0","MX>=250 && MX<330"],
+				 ["MXbin1","MX>=330 && MX<430"],
+				 ["MXbin2","MX>=430 && MX<530"],
+				 ["MXbin3","MX>=530 && MX<690"],
+				 ["MXbin4","MX>690"]
+				 ],
+        "###" : "----------------------------------------------------------------------------------------------",
+        "###" : "Signal and background processes",
+        "###" : "----------------------------------------------------------------------------------------------",
+        "signals"             : {
+        "signal"               : [
+				  ["reducedTree","1"]
+				  ]
+            },
+        
+        "backgrounds"        : { 
+	    "non_res"             : [["reducedTree_bkg_0","1"]
+				     ]
+
+
+            },
+	    "#backgrounds"   : { 
+	     "res"                 : [["reducedTree","1"]
+					 ]	
+		    },
+
+	"shapes"              : { "res" : "gaus" },
+
+        "weights"             : { "signal" : "2.*weight", "non_res" : "weight", "res" : "weight"  },
+        "##" : "'Ultraviolet' cutoff in number of events",
+	    "minevents"           : { "non_res" : 10.0  },
+        
+        "###" : "----------------------------------------------------------------------------------------------",
+        "##" : "When loading previous steps only look at ncat in [2:5]",
+        "mincat"              : 3,
+        "maxcat"              : 3,
+        "#" : "No direct cutoff on categorization variable (see below for minevents)",
+        "cutoff"              : 0.0
+}

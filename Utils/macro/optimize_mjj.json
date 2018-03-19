@@ -1,0 +1,170 @@
+{ 
+    "#" : "This is a JSON file to configure categoryOptimizationMultiDim.py script",
+        "#" : "Comments are not supported in JSON.",
+        "#" : "The trick here is to encapsulate them as well formatted input with key #",
+        "#" : "Configuration items are commented prepending an # to the name (any other character would work)",
+        
+        "###" : "----------------------------------------------------------------------------------------------",
+        "observable"          : ["Mgg",[100,180,0.25],125],
+        "settings"            : [["floatLast",[0]],["floatFirst",[0]],["setScan",[20,1,1]]],
+	"#settings"           : [],
+        
+        "###" : "----------------------------------------------------------------------------------------------",
+        "##" : "Define extra variables",
+        "aliases"             : ["MXcap := MX*(MX<800) + 800*(MX>=800)",
+				 "minusMXcap := -MXcap",
+				 "DeltaMjj := abs(Mjj-125.)",
+				 "minusDeltaMjjcap := -(DeltaMjj*(DeltaMjj<200) + 200*(DeltaMjj>=200))",
+				 "deltaMjjMin := (Mjj-125)",
+				 "minusDeltaMjjMax := -(Mjj-125)",
+				 "MXbin0  := MX>=250 && MX<340",
+				 "MXbin1  := MX>=340 && MX<480",
+				 "MXbin2  := MX>=480",
+				 "MVAcat0 := MVAOutput >= 0.99",
+				 "MVAcat1 := MVAOutput <  0.99 && MVAOutput >= 0.97" ,
+				 "MVAcat2 := MVAOutput <  0.97 && MVAOutput >= 0.88",
+				 "cat0 := MXbin0 * MVAcat0",
+				 "cat1 := MXbin1 * MVAcat0",
+				 "cat2 := MXbin2 * MVAcat0",
+				 "cat3 := MXbin0 * MVAcat1",
+				 "cat4 := MXbin1 * MVAcat1",
+				 "cat5 := MXbin2 * MVAcat1",
+				 "cat6 := MXbin0 * MVAcat2",
+				 "cat7 := MXbin1 * MVAcat2",
+				 "cat8 := MXbin2 * MVAcat2",
+	
+				 "deltaMjjMinMVA0 := MVAcat0*deltaMjjMin",
+				 "minusDeltaMjjMaxMVA0 := MVAcat0*minusDeltaMjjMax",
+				 "deltaMjjMinMVA1 := MVAcat1*deltaMjjMin",
+				 "minusDeltaMjjMaxMVA1 := MVAcat1*minusDeltaMjjMax",
+				 "deltaMjjMinMVA2 := MVAcat2*deltaMjjMin",
+				 "minusDeltaMjjMaxMVA2 := MVAcat2*minusDeltaMjjMax",
+
+				 "deltaMjjMinMX0 := MXbin0*deltaMjjMin",
+				 "minusDeltaMjjMaxMX0 := MXbin0*minusDeltaMjjMax",
+				 "deltaMjjMinMX1 := MXbin1*deltaMjjMin",
+				 "minusDeltaMjjMaxMX1 := MXbin1*minusDeltaMjjMax",
+				 "deltaMjjMinMX2 := MXbin2*deltaMjjMin",
+				 "minusDeltaMjjMaxMX2 := MXbin2*minusDeltaMjjMax",
+
+
+				 "deltaMjjMin0 := cat0*deltaMjjMin",
+				 "minusDeltaMjjMax0 := cat0*minusDeltaMjjMax",
+				 "deltaMjjMin1 := cat1*deltaMjjMin",
+				 "minusDeltaMjjMax1 := cat1*minusDeltaMjjMax",
+				 "deltaMjjMin2 := cat2*deltaMjjMin",
+				 "minusDeltaMjjMax2 := cat2*minusDeltaMjjMax",
+				 "deltaMjjMin3 := cat3*deltaMjjMin",
+				 "minusDeltaMjjMax3 := cat3*minusDeltaMjjMax",
+				 "deltaMjjMin4 := cat4*deltaMjjMin",
+				 "minusDeltaMjjMax4 := cat4*minusDeltaMjjMax",
+				 "deltaMjjMin5 := cat5*deltaMjjMin",
+				 "minusDeltaMjjMax5 := cat5*minusDeltaMjjMax",
+				 "deltaMjjMin6 := cat6*deltaMjjMin",
+				 "minusDeltaMjjMax6 := cat6*minusDeltaMjjMax",
+				 "deltaMjjMin7 := cat7*deltaMjjMin",
+				 "minusDeltaMjjMax7 := cat7*minusDeltaMjjMax",
+				 "deltaMjjMin8 := cat8*deltaMjjMin",
+				 "minusDeltaMjjMax8 := cat8*minusDeltaMjjMax"
+				 
+				 ],
+        
+        "###" : "----------------------------------------------------------------------------------------------",
+        "###" : "Simultaneous minimization: sigmaM/M categories with IDMVA.",
+        "###" : "----------------------------------------------------------------------------------------------",
+        "variables"           : [["MVAOutput", [0.0,1.01,0.505],0.5]
+                                 ],
+        "range"               : [1],
+	
+	"selection"           : "1",
+
+	"selectioncuts"      : [["minusDeltaMjjMax",[-70,70.0,2.5],-30],
+				["deltaMjjMin",[-70,70.0,2.5],-30]
+                                ],
+	
+        "#selectioncuts"      : [["minusDeltaMjjcap",[-200,0.0,5.0],-30]
+				 ],
+        "#selectioncuts"      : [["minusDeltaMjjMax",[-70,70.0,5.0],-20],
+				["deltaMjjMin",[-70,70.0,5.0],-20],
+				["MXcap",[200.0,800.0,40.0],400]
+				],
+	"#selectioncuts"      : [["minusDeltaMjjMaxMVA0",[-70,70.0,5.0],-20],
+				["deltaMjjMinMVA0",[-70,70.0,5.0],-20],
+				["minusDeltaMjjMaxMVA1",[-70,70.0,5.0],-20],
+				["deltaMjjMinMVA1",[-70,70.0,5.0],-20],
+				["minusDeltaMjjMaxMVA2",[-70,70.0,5.0],-20],
+				["deltaMjjMinMVA2",[-70,70.0,5.0],-20]
+                                ],
+	"#selectioncuts"      : [["minusDeltaMjjMaxMX0",[-70,70.0,5.0],-20],
+				["deltaMjjMinMX0",[-70,70.0,5.0],-20],
+				["minusDeltaMjjMaxMX1",[-70,70.0,5.0],-20],
+				["deltaMjjMinMX1",[-70,70.0,5.0],-20],
+				["minusDeltaMjjMaxMX2",[-70,70.0,5.0],-20],
+				["deltaMjjMinMX2",[-70,70.0,5.0],-20]
+                                ],
+	"#selectioncuts"      : [["minusDeltaMjjMax0",[-70,70.0,5.0],-20],
+				["deltaMjjMin0",[-70,70.0,5.0],-20],
+				["minusDeltaMjjMax1",[-70,70.0,5.0],-20],
+				["deltaMjjMin1",[-70,70.0,5.0],-20],
+				["minusDeltaMjjMax2",[-70,70.0,5.0],-20],
+				["deltaMjjMin2",[-70,70.0,5.0],-20],
+				["minusDeltaMjjMax3",[-70,70.0,5.0],-20],
+				["deltaMjjMin3",[-70,70.0,5.0],-20],
+				["minusDeltaMjjMax4",[-70,70.0,5.0],-20],
+				["deltaMjjMin4",[-70,70.0,5.0],-20],
+				["minusDeltaMjjMax5",[-70,70.0,5.0],-20],
+				["deltaMjjMin5",[-70,70.0,5.0],-20],
+				["minusDeltaMjjMax6",[-70,70.0,5.0],-20],
+				["deltaMjjMin6",[-70,70.0,5.0],-20],
+				["minusDeltaMjjMax7",[-70,70.0,5.0],-20],
+				["deltaMjjMin7",[-70,70.0,5.0],-20],
+				["minusDeltaMjjMax8",[-70,70.0,5.0],-20],
+				["deltaMjjMin8",[-70,70.0,5.0],-20]
+                                ],
+	"#subcategories"      : [ ["cat0","cat0"],
+				 ["cat1","cat1"],
+				 ["cat2","cat2"],
+				 ["cat3","cat3"],
+				 ["cat4","cat4"],
+				 ["cat5","cat5"],
+				 ["cat6","cat6"],
+				 ["cat7","cat7"],
+				 ["cat8","cat8"]
+				  ],
+	"#subcategories"      : [ ["cat0","cat2"],
+				 ["cat1","cat5"],
+				 ["cat2","cat8"]
+				 ],
+
+        "###" : "----------------------------------------------------------------------------------------------",
+        "###" : "Signal and background processes",
+        "###" : "----------------------------------------------------------------------------------------------",
+        "signals"             : {
+        "signal"               : [
+				  ["reducedTree","1"]
+				  ]
+            },
+        
+        "backgrounds"        : { 
+	    "non_res"             : [["reducedTree_bkg","1"]
+				     ]
+
+
+            },
+	    "#backgrounds"   : { 
+	     "res"                 : [["reducedTree","1"]
+					 ]	
+		    },
+	    "shapes"              : { "res" : "gaus" },
+
+        "weights"             : { "signal" : "2.*weight", "non_res" : "weight", "res" : "weight"  },
+        "##" : "'Ultraviolet' cutoff in number of events",
+	"minevents"           : { "non_res" : 10.0  },
+        
+        "###" : "----------------------------------------------------------------------------------------------",
+        "##" : "When loading previous steps only look at ncat in [2:5]",
+        "mincat"              : 3,
+        "maxcat"              : 3,
+        "#" : "No direct cutoff on categorization variable (see below for minevents)",
+        "cutoff"              : 0.0
+}
